@@ -79,35 +79,45 @@ def strip_data_html_links(text: str) -> tuple[str, int]:
 
 
 def strip_other_formats(text: str) -> tuple[str, int]:
-    """Verwijder het 'Other Formats'-blok (de PDF-downloadlink in de margin).
+    """Verwijder het 'Andere formaten'-blok (de PDF-downloadlink in de margin).
 
-    Quarto genereert per hoofdstuk een `<h2 ...>Other Formats</h2>` gevolgd door
-    `<nav class="quarto-other-links">...PDF...</nav>`, maar de bijbehorende PDF's
-    worden niet meegerenderd → dode link. Downloads zijn (nu) niet nodig, dus we
-    halen het hele blokje weg. De onschuldige "Print to PDF"-knop (href="#",
-    browser-print) blijft staan.
+    Quarto 1.8 genereert per hoofdstuk:
+        <div class="quarto-alternate-formats"><h2>Andere formaten</h2>
+         <ul><li><a href="06_regressie.pdf">...PDF</a></li></ul></div>
+    maar die PDF's worden niet meegerenderd → dode link. Downloads zijn (nu)
+    niet nodig, dus we halen het hele div-blok weg.
     """
     n = 0
-    # 1) de <nav class="quarto-other-links"> ... </nav>
+    marker = 'class="quarto-alternate-formats"'
     while True:
-        i = text.find('<nav class="quarto-other-links"')
+        i = text.find(marker)
         if i == -1:
             break
-        end = text.find("</nav>", i)
+        start = text.rfind("<div", 0, i)
+        if start == -1:
+            break
+        # vind de bijbehorende </div> met diepte-telling vanaf de open-div
+        depth = 0
+        j = start
+        end = -1
+        while j < len(text):
+            nxt_open = text.find("<div", j)
+            nxt_close = text.find("</div>", j)
+            if nxt_close == -1:
+                break
+            if nxt_open != -1 and nxt_open < nxt_close:
+                depth += 1
+                j = nxt_open + 4
+            else:
+                depth -= 1
+                j = nxt_close + 6
+                if depth == 0:
+                    end = j
+                    break
         if end == -1:
             break
-        text = text[:i] + text[end + len("</nav>"):]
+        text = text[:start] + text[end:]
         n += 1
-    # 2) de bijbehorende <h2 ...>Other Formats</h2>
-    while True:
-        i = text.find('quarto-other-links-text')
-        if i == -1:
-            break
-        h2start = text.rfind("<h2", 0, i)
-        h2end = text.find("</h2>", i)
-        if h2start == -1 or h2end == -1:
-            break
-        text = text[:h2start] + text[h2end + len("</h2>"):]
     return text, n
 
 
