@@ -3,7 +3,7 @@
 > Bijgewerkt 2026-05-30 ~17:30. Interne note (underscore = wordt niet gepubliceerd).
 
 ## Klaar ✅
-- **countcamp.org live met HTTPS** (repo CountCamp/site). Cert approved, Enforce HTTPS aan. www + apex werken.
+- **countcamp.org live over http** (repo CountCamp/site). ⚠️ HTTPS-cert nog NIET geprovisioned (`cert: none` om ~17:00) — waarschijnlijk omdat veel deploys achter elkaar de provisioning telkens resetten. Nu pushes klaar zijn: laten rijpen (~30–60 min), dan `gh api -X PUT repos/CountCamp/site/pages -f https_enforced=true`. Tot die tijd geeft https een cert-waarschuwing; http werkt.
 - **DNS** bij TransIP: 4× `@ A` (185.199.108–111.153) + `www CNAME CountCamp.github.io.`. E-mailrecords ongemoeid. (Lokale provider-DNS-cache omzeild door Bens Mac op 8.8.8.8/1.1.1.1.)
 - **KAAPA-vormgeving** live: papier-wit (#fdfcf9), Georgia/Helvetica Neue, Tol-Vibrant-accenten per sectie, hero + kleur-kaarten. Tagline: *"De regressieve ruggengraat — statistiek, helder en inzichtelijk. Door Benjamin Telkamp."*
 - **OZP 1-werkboek ONLINE**: countcamp.org/werkboeken/ozp1/ — volledig (12 hoofdstukken), 35 MB, mét figuren + styling.
