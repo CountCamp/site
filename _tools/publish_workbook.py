@@ -78,6 +78,39 @@ def strip_data_html_links(text: str) -> tuple[str, int]:
     return text, n
 
 
+def strip_other_formats(text: str) -> tuple[str, int]:
+    """Verwijder het 'Other Formats'-blok (de PDF-downloadlink in de margin).
+
+    Quarto genereert per hoofdstuk een `<h2 ...>Other Formats</h2>` gevolgd door
+    `<nav class="quarto-other-links">...PDF...</nav>`, maar de bijbehorende PDF's
+    worden niet meegerenderd → dode link. Downloads zijn (nu) niet nodig, dus we
+    halen het hele blokje weg. De onschuldige "Print to PDF"-knop (href="#",
+    browser-print) blijft staan.
+    """
+    n = 0
+    # 1) de <nav class="quarto-other-links"> ... </nav>
+    while True:
+        i = text.find('<nav class="quarto-other-links"')
+        if i == -1:
+            break
+        end = text.find("</nav>", i)
+        if end == -1:
+            break
+        text = text[:i] + text[end + len("</nav>"):]
+        n += 1
+    # 2) de bijbehorende <h2 ...>Other Formats</h2>
+    while True:
+        i = text.find('quarto-other-links-text')
+        if i == -1:
+            break
+        h2start = text.rfind("<h2", 0, i)
+        h2end = text.find("</h2>", i)
+        if h2start == -1 or h2end == -1:
+            break
+        text = text[:h2start] + text[h2end + len("</h2>"):]
+    return text, n
+
+
 def rewrite_refs(text: str) -> str:
     for old, new in RENAMES.items():
         text = text.replace(old + "/", new + "/")
@@ -184,6 +217,7 @@ def main() -> int:
 
     # 3) per .html/.css/.json: strip data:text/html + herschrijf refs
     stripped_total = 0
+    formats_total = 0
     for root, _d, files in os.walk(dst):
         for fn in files:
             if not fn.endswith((".html", ".css", ".json")):
@@ -194,10 +228,13 @@ def main() -> int:
             if fn.endswith(".html"):
                 s, n = strip_data_html_links(s)
                 stripped_total += n
+                s, m = strip_other_formats(s)
+                formats_total += m
             s = rewrite_refs(s)
             if len(s) != orig or fn.endswith((".css", ".json")):
                 open(f, "w", encoding="utf-8").write(s)
     log(f"  gestripte data:text/html-tags: {stripped_total}")
+    log(f"  gestripte 'Other Formats'-blokken: {formats_total}")
 
     # 4) validatie
     problems = validate_assets(dst)
