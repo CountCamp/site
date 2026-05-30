@@ -171,8 +171,10 @@ def dirsize(path: str) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--src", required=True, help="pad naar werkboek-_site")
-    ap.add_argument("--name", required=True, help="doelnaam onder werkboeken/")
+    ap.add_argument("--src", required=True, help="pad naar gerenderd _site/ of _book/")
+    ap.add_argument("--name", required=True, help="doelnaam onder de sectie-map")
+    ap.add_argument("--section", default="werkboeken",
+                    help="sectie-map in de site-repo (default: werkboeken; bv. manuscript)")
     ap.add_argument("--dry-run", action="store_true",
                     help="alleen rapporteren, niets wegschrijven")
     args = ap.parse_args()
@@ -182,7 +184,7 @@ def main() -> int:
         log(f"FOUT: {src} bevat geen index.html — is dit een gerenderd _site?")
         return 2
 
-    dst = os.path.join(SITE_ROOT, "werkboeken", args.name)
+    dst = os.path.join(SITE_ROOT, args.section, args.name)
     log(f"bron : {src}  ({human(dirsize(src))})")
     log(f"doel : {dst}")
 
