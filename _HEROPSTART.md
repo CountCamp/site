@@ -1,56 +1,31 @@
-# Heropstart-notitie — CountCamp site live krijgen
+# Heropstart-notitie — CountCamp site
 
-> Geschreven 2026-05-30 ~15:20, vlak na een API-overload (529) die de vorige sessie afkapte.
-> Doel van die sessie: het OZP 1-werkboek online krijgen op **countcamp.org** via GitHub Pages.
+> Bijgewerkt 2026-05-30 ~16:40. Interne note (underscore = wordt niet gepubliceerd).
 
-## Waar we stonden (✅ = klaar)
+## Klaar ✅
+- **countcamp.org live** via GitHub Pages (repo CountCamp/site). Billing-slot opgelost (Visa ...2321, €0).
+- **DNS** bij TransIP gezet: 4× `@ A` (185.199.108–111.153) + `www CNAME CountCamp.github.io.`. E-mailrecords ongemoeid.
+- **Custom domain** + CNAME in build (resource in _quarto.yml).
+- **KAAPA-vormgeving** live: papier-wit (#fdfcf9), Georgia body / Helvetica Neue koppen, Tol-Vibrant-accenten per sectie, hero + kleur-kaarten. styles.css = volledig.
+- Auto-deploy werkt: elke push naar `main` → Action `quarto publish gh-pages` → live.
 
-- ✅ **Domeinen** `countcamp.org` + `countcamp.nl` geregistreerd bij TransIP
-- ✅ **Repo** `CountCamp/site` aangemaakt, publiek
-- ✅ **Billing-slot eraf** — GitHub blokkeerde Actions omdat de nieuwe account geen
-  betaalmethode had (géén geldprobleem, puur verificatie). Visa eindigend op **2321**
-  toegevoegd, €0 in rekening (publieke repo = gratis Actions). Plan = GitHub Free.
-- ✅ **Site staat LIVE**: https://countcamp.github.io/site/ → HTTP 200, met styling,
-  werkboeken-pagina laadt. Nu nog het skelet met MVDA-placeholder, nog geen echte inhoud.
-- ✅ **gh-pages-branch** handmatig aangemaakt + gepusht (de Action faalde eerst omdat die
-  branch nog niet bestond; `quarto publish gh-pages --no-prompt` weigerde 'm aan te maken →
-  daarom handmatig gevuld vanuit `_site` + `.nojekyll` + force-push). Pages serveert die branch.
-- ✅ **Automatische deploy werkt nu** — elke `git push` naar `main` ververst de site vanzelf
-  (workflow staat in `.github/workflows/publish.yml`).
+## Open / parked
+- **HTTPS-cert**: GitHub maakt 'm automatisch (was ~16:40 nog `nog geen`). Zodra uitgegeven: `gh api -X PUT repos/CountCamp/site/pages -f https_enforced=true` (Enforce HTTPS). Tot die tijd geeft https een cert-waarschuwing — http werkt.
+- **Tagline** nog kiezen. Huidige: *"De regressieve ruggengraat — voor wie helder een onderzoekertje wil worden."* Ben twijfelt; opties #4 en #6 uit de chat waren favoriet. "helder" haakt op *helderheid is een vorm van liefde*.
+- **countcamp.nl-redirect** → Optie 1 gekozen (mini-GitHub-redirect), nog NIET gebouwd. Plan: apart repo/redirect-page met CNAME countcamp.nl + Ben zet dezelfde DNS-records voor .nl.
+- **Lokale DNS-tip**: Bens Mac/provider cachte oud IP; opgelost door Mac op 8.8.8.8/1.1.1.1 te zetten (System Settings → Network → DNS).
 
-## Wat NU openstaat (we waren net bij A begonnen)
+## ⚠️ OZP-online BLOKKADE (belangrijk voor de pedagogiek-sessie)
+Het OZP 1-werkboek (`countcamp_lab/uni_leiden/pedagogiek/ozp1_werkboek/2526_werkboek/`) is herstructureerd naar **12 hoofdstukken** (00_fundament t/m 11_chi_kwadraat) met verse `_site/`-render.
 
-### 👉 Stap A — countcamp.org koppelen (DNS) — HIER WAREN WE MEE BEZIG
-Mijn kant, deels gedaan:
-- ✅ `CNAME`-bestand geschreven met inhoud `countcamp.org` — **maar nog NIET gecommit/gepusht**
-  (`git status` toont 'm als untracked). Eerste actie na herstart: committen + pushen, zodat
-  elke deploy het domein onthoudt.
-- ⏳ Daarna in GitHub repo-settings → Pages → Custom domain: `countcamp.org` invullen +
-  "Enforce HTTPS" aanzetten (kan ik via API of jij in de UI).
+Publiceren mislukte om twee redenen — **beide moeten opgelost voordat OZP online kan**:
+1. **Veel te zware render**: hoofdstuk-HTML's zijn 23–71 MB (totaal ~367 MB). Oorzaak: een paar figuren staan als gigantische **base64-blobs inline** in de HTML → wijst op veel te hoge `fig-dpi`/figuur-afmeting (en/of embed-resources die feitelijk aanstaat, terwijl _quarto.yml `embed-resources: false` zegt). **Fix in het werkboek**: fig-dpi omlaag (bv. 96–150), figuren extern, dan worden hoofdstukken ~1–2 MB. Vereist R-re-render.
+2. **Quarto kopieert de bundel niet**: een pre-gerenderde `_site` in `werkboeken/ozp1/` werd door de site-`quarto render` NIET naar `_site` gekopieerd (bij de losse "Deel 0" lukte dat eerder wél — verschil onbekend; mogelijk grootte of de geneste site-structuur/`search.json`). Bij volgende poging: onderzoek `project: resources:` declaratie, of host het werkboek als eigen gh-pages-subsite en link ernaartoe.
 
-Jouw kant — **DNS-records plakken bij TransIP** (staan kant-en-klaar in `README.md`):
-```
-@      A      185.199.108.153
-@      A      185.199.109.153
-@      A      185.199.110.153
-@      A      185.199.111.153
-www    CNAME  CountCamp.github.io.
-```
-En `countcamp.nl` → 301 web-forwarding naar `https://countcamp.org` (TransIP "URL Doorsturen").
-DNS-propagatie kan minuten tot een uur duren; HTTPS-cert van GitHub komt daarna vanzelf.
+**Publiceer-recept dat wél werkte voor een lichte bundel** (Deel 0): kopieer rendered `_site` → `werkboeken/<naam>/`, hernoem `_common`→`common` en `site_libs`→`libs`, en `sed` de verwijzingen (`_common/`→`common/`, `site_libs/`→`libs/`) in alle html/css/json. (Underscore-/site_libs-mappen worden anders door Quarto genegeerd.)
 
-### ⏳ Stap 7 — OZP 1-werkboek erin
-Echte inhoud onder `werkboeken/` zetten i.p.v. het skelet. Bron-werkboeken staan in
-`countcamp_lab/uni_leiden/...`. (README plant per-thema gerenderde HTML in `werkboeken/<vak>/`.)
+Status nu: OZP staat op **"komt eraan"** in `werkboeken/index.qmd`; de zware bundel is uit de repo gehaald.
 
-## Geparkeerde vraag van Ben (niet nu)
-> "Kunnen we ook mijn oude manuscript hier onderbrengen, zoals het nu op wisi.nl staat?"
-
-Antwoord: **ja, kan.** README plant dit al expliciet — er is al een map `manuscript/` en de
-README noemt "Manuscript-schetsen ... een include of een Quarto-book sub-project onder
-`manuscript/`". Oppakken wanneer Ben wil.
-
-## Snelle sanity-checks na herstart
-- `gh auth status` — ben ik nog ingelogd?
-- `cd ~/Documents/Ben_OS/countcamp_site && git status` — CNAME nog untracked?
-- `curl -s -o /dev/null -w "%{http_code}\n" https://countcamp.github.io/site/` — nog 200?
+## Sanity-checks
+- `gh auth status` · `git -C ~/Documents/Ben_OS/countcamp_site status`
+- `curl -s -o /dev/null -w "%{http_code}\n" https://countcamp.github.io/site/`
