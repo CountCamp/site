@@ -5,12 +5,18 @@
 suppressMessages(library(ggplot2))
 
 # Kleuren — colorblind-safe (Okabe-Ito-achtig, pastel)
+# DATA = FIT + RESIDU streepjes-conventie (Ben_OS-breed, alle werkboeken):
+#   totaal = blauw · fit/verklaard = groen · residu/error = rood (bordeaux)
+# LET OP: Ben is rood-groen kleurenblind. Rood+groen samen onderscheidt hij
+# vooral op helderheid + positie + label, niet op kleurtoon. Bordeaux daarom
+# bewust donker-roze gehouden zodat het in helderheid van het groen scheidt.
 ozp <- list(
-  blauw  = "#33558b",  # positief / hoofdkleur
-  oranje = "#c07a2b",  # negatief / contrast
+  blauw  = "#33558b",  # positief / hoofdkleur / totaal-streepje
+  oranje = "#c07a2b",  # negatief / contrast (bv. uitbijter)
   grijs  = "#9a9a9a",  # neutraal / draagt niet bij
   donker = "#33425a",  # losse puntenwolk (één kleur)
-  groen  = "#3d7a5a",
+  groen  = "#3d7a5a",  # FIT / verklaard
+  rood   = "#a34a59",  # residu / error-streepje (bordeaux-pastel)
   paars  = "#6a5a9a",
   arcering = "#9fb3d1" # gearceerd staart-gebied normaalcurve
 )
