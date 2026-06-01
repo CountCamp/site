@@ -426,7 +426,7 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>Vrijheidsgraden: <span class="math inline">\(df = k - 1 = 3 - 1 = 2\)</span>. Kritieke waarde <span class="math inline">\(\chi^2_{.05, df=2} = 5{,}99\)</span> (uit de tabel). Onze 6,67 is groter → <strong>verwerp de nulhypothese</strong>: de pelskleuren zijn níét gelijk verdeeld.</p>
+<p>Vrijheidsgraden: <span class="math inline">\(df = k - 1 = 3 - 1 = 2\)</span> — de <span class="math inline">\(df\)</span> volgt uit het <strong>aantal categorieën</strong> (<span class="math inline">\(k = 3\)</span> kleuren), niet uit het aantal egels. Kritieke waarde <span class="math inline">\(\chi^2_{.05, df=2} = 5{,}99\)</span> (uit de tabel). Onze 6,67 is groter → <strong>verwerp de nulhypothese</strong>: de pelskleuren zijn níét gelijk verdeeld.</p>
 <p>Maar <span class="math inline">\(\chi^2\)</span> zelf zegt alleen <em>dát</em> het patroon afwijkt — de <strong>cellen</strong> vertellen <em>waar</em>. Daarvoor lees je de <strong>gestandaardiseerde residuen</strong> <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span> (de vierde kolom): bruin zit <strong>+1,83</strong> boven verwachting, zwart <strong>−1,83</strong> eronder, grijs precies goed. Een residu voorbij ongeveer ±2 is een opvallende cel. En kwadrateer je zo’n residu, dan krijg je exact die cel z’n <strong>bijdrage aan <span class="math inline">\(\chi^2\)</span></strong> (<span class="math inline">\(1{,}83^2 \approx 3{,}33\)</span>) — samen weer 6,67. Zo zie je niet alleen of het afwijkt, maar welke kleur het verschil maakt.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -442,72 +442,119 @@ Figuur&nbsp;1: Geobserveerd (blauw) vs verwacht onder gelijke verdeling (grijze 
 </div>
 </div>
 </div>
-</section>
-<section id="chi-kwadraat-onafhankelijkheid-kruistabel" class="level1">
-<h1>Chi-kwadraat onafhankelijkheid (kruistabel)</h1>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Studenten — oefenmethode × tentamen">
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Chi-kwadraat-toetsingsgrootheid">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Studenten — oefenmethode × tentamen
+<span class="screen-reader-only">Opmerking</span>Chi-kwadraat-toetsingsgrootheid
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We hebben 200 eerstejaars Pedagogiek, verdeeld over twee oefenmethoden (een <strong>nieuwe</strong> en een <strong>oude</strong>), en we turven de tentamen-uitslag (gehaald / niet). Vraag: hangt de methode samen met slagen?</p>
+<p><span class="math display">\[\chi^2 = \sum \frac{(O-E)^2}{E}\]</span></p>
+<hr>
+<ul>
+<li><span class="math inline">\(\chi^2\)</span> — de toetsingsgrootheid: hoe sterk het geobserveerde van het verwachte afwijkt</li>
+<li><span class="math inline">\(O\)</span> — het <strong>geobserveerde</strong> aantal in een cel (wat je telt)</li>
+<li><span class="math inline">\(E\)</span> — het <strong>verwachte</strong> aantal in die cel onder <span class="math inline">\(H_0\)</span></li>
+<li><span class="math inline">\((O-E)^2\)</span> — de afwijking per cel, gekwadrateerd (zodat plus en min niet wegvallen)</li>
+<li>delen door <span class="math inline">\(E\)</span> — zodat een grote cel niet vanzelf zwaarder meetelt</li>
+<li><span class="math inline">\(\sum\)</span> — tel op over <strong>álle</strong> cellen</li>
+</ul>
+<p><strong>Vrijheidsgraden</strong> — uit het aantal categorieën: goodness-of-fit <span class="math inline">\(df = k-1\)</span> (<span class="math inline">\(k\)</span> = aantal categorieën); kruistabel <span class="math inline">\(df = (r-1)(c-1)\)</span> (<span class="math inline">\(r\)</span> rijen, <span class="math inline">\(c\)</span> kolommen).</p>
+<p><strong>Wanneer:</strong> categorische data — geobserveerde tegen verwachte aantallen onder <span class="math inline">\(H_0\)</span>.</p>
+</div>
+</div>
+</section>
+<section id="chi-kwadraat-onafhankelijkheid-kruistabel" class="level1">
+<h1>Chi-kwadraat onafhankelijkheid (kruistabel)</h1>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Roken × geslacht — een vermoeden dat iedereen al heeft">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Roken × geslacht — een vermoeden dat iedereen al heeft
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We vragen 400 mensen of ze roken, en noteren hun geslacht. Hier heeft iedereen al een onderbuikgevoel bij: roken mannen vaker? Vraag: hangt roken samen met geslacht?</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">gehaald</th>
-<th style="text-align: center;">niet gehaald</th>
+<th style="text-align: center;">rookt</th>
+<th style="text-align: center;">rookt niet</th>
 <th style="text-align: center;">rij-totaal</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">nieuwe methode</td>
-<td style="text-align: center;">85</td>
-<td style="text-align: center;">15</td>
-<td style="text-align: center;">100</td>
+<td style="text-align: center;">mannen</td>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">160</td>
+<td style="text-align: center;">200</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">oude methode</td>
-<td style="text-align: center;">65</td>
-<td style="text-align: center;">35</td>
-<td style="text-align: center;">100</td>
+<td style="text-align: center;">vrouwen</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">180</td>
+<td style="text-align: center;">200</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;"><strong>kolom-totaal</strong></td>
-<td style="text-align: center;">150</td>
-<td style="text-align: center;">50</td>
-<td style="text-align: center;">200</td>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">340</td>
+<td style="text-align: center;">400</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<p>Onder <span class="math inline">\(H_0\)</span> (onafhankelijkheid) berekenen we de verwachte waarde per cel als <span class="math inline">\(E = \dfrac{\text{rij-totaal} \cdot \text{kolom-totaal}}{N}\)</span>:</p>
+<p><strong>Voel eerst wat “verwacht” betekent.</strong> In het algemeen rookt 60 van de 400 — <strong>15%</strong> (iedereen die binnen kan wandelen én rookt). Stel nu dat roken en geslacht <strong>onafhankelijk</strong> zijn, dat het één niks met het ander te maken heeft: dan zou je verwachten dat in élke groep gewoon diezelfde 15% rookt. Je past die kans niet aan omdat er toevallig een man of een vrouw komt binnenwandelen. 200 mannen → je verwacht <span class="math inline">\(0{,}15 \cdot 200 = 30\)</span> rokers. Maar er roken er <strong>40</strong>. Méér dan verwacht — precies wat je onderbuik al fluisterde. En bij de vrouwen andersom: verwacht 30, geobserveerd 20, minder. Juist in dat gat tussen <em>verwacht</em> en <em>geobserveerd</em> zit het verhaal — en daar mag je van schrikken. Die verwachte aantallen zijn het meest informatief: heb je ze eenmaal, dan vertelt de rest zich vanzelf.</p>
+<p>Het rekenen zelf is een <strong>beweging</strong>, geen formule om te stampen. Voor een cel: kijk naar zijn <strong>rijtotaal</strong> (opzij) en zijn <strong>kolomtotaal</strong> (omlaag), vermenigvuldig die twee, en deel door <span class="math inline">\(N\)</span>. <em>Cel → rij → kolom → delen door <span class="math inline">\(N\)</span>.</em></p>
 <ul>
-<li>E(nieuw, gehaald) = <span class="math inline">\(100 \cdot 150 / 200 = 75\)</span></li>
-<li>E(nieuw, niet) = <span class="math inline">\(100 \cdot 50 / 200 = 25\)</span></li>
-<li>E(oud, gehaald) = <span class="math inline">\(75\)</span>, E(oud, niet) = <span class="math inline">\(25\)</span></li>
+<li><span class="math inline">\(E\)</span>(man, rookt) <span class="math inline">\(= \dfrac{200 \cdot 60}{400} = 30\)</span> — precies die 15% van zojuist</li>
+<li><span class="math inline">\(E\)</span>(vrouw, rookt) <span class="math inline">\(= \dfrac{200 \cdot 60}{400} = 30\)</span></li>
+<li><span class="math inline">\(E\)</span>(man, niet) <span class="math inline">\(= \dfrac{200 \cdot 340}{400} = 170\)</span>, <span class="math inline">\(E\)</span>(vrouw, niet) <span class="math inline">\(= 170\)</span></li>
 </ul>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Verwachte celwaarde (onder onafhankelijkheid)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Verwachte celwaarde (onder onafhankelijkheid)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[E = \frac{\text{rijtotaal} \times \text{kolomtotaal}}{N}\]</span></p>
+<hr>
+<ul>
+<li><span class="math inline">\(E\)</span> — het <strong>verwachte</strong> aantal in een cel áls de twee variabelen onafhankelijk zijn</li>
+<li>rijtotaal — het totaal van de rij waarin de cel ligt (kijk opzij)</li>
+<li>kolomtotaal — het totaal van de kolom waarin de cel ligt (kijk omlaag)</li>
+<li><span class="math inline">\(N\)</span> — het totale aantal waarnemingen</li>
+<li>de <strong>beweging</strong>: cel → rijtotaal → kolomtotaal → delen door <span class="math inline">\(N\)</span></li>
+</ul>
+<p><strong>Wanneer:</strong> bij een kruistabel — je hebt <span class="math inline">\(E\)</span> per cel nodig vóór je <span class="math inline">\(\chi^2\)</span> kunt berekenen.</p>
+</div>
+</div>
 <p>Vervolgens <span class="math inline">\(\sum (O-E)^2/E\)</span> over alle vier de cellen:</p>
-<p><span class="math display">\[\chi^2 = \frac{(85-75)^2}{75} + \frac{(15-25)^2}{25} + \frac{(65-75)^2}{75} + \frac{(35-25)^2}{25}\]</span> <span class="math display">\[= 1{,}33 + 4{,}00 + 1{,}33 + 4{,}00 = 10{,}67\]</span></p>
-<p>Vrijheidsgraden voor een kruistabel: <span class="math inline">\(df = (r-1)(k-1) = 1 \cdot 1 = 1\)</span>. Kritieke waarde <span class="math inline">\(\chi^2_{.05, df=1} = 3{,}84\)</span>. Onze 10,67 is fors groter → <strong>verwerp de nulhypothese</strong>: de tentamen-uitslag hangt samen met de oefenmethode (in dit verzonnen voorbeeld haalt de nieuwe methode vaker).</p>
-<p>Welke cel drijft dat? Weer de gestandaardiseerde residuen <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span>: de twee <strong>niet gehaald</strong>-cellen springen eruit (<span class="math inline">\(\pm 2{,}0\)</span>: <span class="math inline">\(\tfrac{15-25}{\sqrt{25}} = -2{,}0\)</span> bij nieuw, <span class="math inline">\(+2{,}0\)</span> bij oud), terwijl de gehaald-cellen kleiner zijn (<span class="math inline">\(\pm 1{,}15\)</span>). Daar — bij wie het <em>niet</em> haalde — wijkt de werkelijkheid het sterkst van onafhankelijkheid af.</p>
+<p><span class="math display">\[\chi^2 = \frac{(40-30)^2}{30} + \frac{(20-30)^2}{30} + \frac{(160-170)^2}{170} + \frac{(180-170)^2}{170}\]</span> <span class="math display">\[= 3{,}33 + 3{,}33 + 0{,}59 + 0{,}59 = 7{,}84\]</span></p>
+<p>Ook hier volgt <span class="math inline">\(df\)</span> uit het <strong>aantal categorieën</strong> — nu in twee richtingen: het aantal <strong>rijen</strong> en het aantal <strong>kolommen</strong>. Voor een kruistabel met <span class="math inline">\(r\)</span> rijen en <span class="math inline">\(c\)</span> kolommen: <span class="math inline">\(df = (r-1)(c-1)\)</span>. Hier een <span class="math inline">\(2 \times 2\)</span>-tabel, dus <span class="math inline">\(df = 1 \cdot 1 = 1\)</span>. (Intuïtie: liggen de rij- en kolomtotalen vast, dan kun je nog <span class="math inline">\((r-1)(c-1)\)</span> cellen vrij invullen; de rest volgt dwingend.) Kritieke waarde <span class="math inline">\(\chi^2_{.05, df=1} = 3{,}84\)</span>. Onze 7,84 is groter → <strong>verwerp de nulhypothese</strong>: roken hangt samen met geslacht — mannen roken vaker dan je onder onafhankelijkheid zou verwachten, precies wat iedereen al dacht.</p>
+<p>Welke cel drijft dat? Weer de gestandaardiseerde residuen <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span>: de twee <strong>rookt</strong>-cellen springen eruit (<span class="math inline">\(\pm 1{,}83\)</span>: <span class="math inline">\(\tfrac{40-30}{\sqrt{30}} = +1{,}83\)</span> bij mannen, <span class="math inline">\(-1{,}83\)</span> bij vrouwen), terwijl de niet-rokers veel kleiner zijn (<span class="math inline">\(\pm 0{,}77\)</span>). Daar — bij wie wél rookt — wijkt de werkelijkheid het sterkst van onafhankelijkheid af.</p>
 <p>Eén waarschuwing: <span class="math inline">\(\chi^2\)</span> wordt vanzelf groter bij een grotere steekproef. Een hoge <span class="math inline">\(\chi^2\)</span> betekent dus <em>significant</em>, niet automatisch <em>een sterk verband</em> — maten voor de <strong>sterkte</strong> (zoals Cramérs V) leer je later.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-kruis" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-rookt" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-kruis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="11_chi_kwadraat_files/figure-html/fig-kruis-1.png" class="img-fluid figure-img" width="556">
+<div aria-describedby="fig-rookt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="11_chi_kwadraat_files/figure-html/fig-rookt-1.png" class="img-fluid figure-img" width="537">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kruis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;2: Kruistabel als gegroepeerde staven: per oefenmethode het aantal gehaald (blauw) en niet gehaald (oranje). De ratio’s lopen duidelijk uit elkaar — vandaar een hoge chi-kwadraat.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rookt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2: Aantal rokers per geslacht (blauw) tegen het verwachte aantal onder onafhankelijkheid (grijze stippellijn op 30). Mannen zitten erboven (40), vrouwen eronder (20) — juist dát gat tussen verwacht en geobserveerd pikt de chi-kwadraat op.
 </figcaption>
 </figure>
 </div>
@@ -529,14 +576,14 @@ Figuur&nbsp;2: Kruistabel als gegroepeerde staven: per oefenmethode het aantal g
 <li>Toetskeuze: chi-kwadraat (onafhankelijkheid of goodness-of-fit).</li>
 <li>Onder <span class="math inline">\(H_0\)</span>: bereken de verwachte aantallen per cel.</li>
 <li>Toetsingsgrootheid: <span class="math inline">\(\chi^2 = \sum (O-E)^2/E\)</span>.</li>
-<li>df = <span class="math inline">\((r-1)(k-1)\)</span> voor kruistabel; <span class="math inline">\(k-1\)</span> voor goodness-of-fit.</li>
+<li>df = <span class="math inline">\((r-1)(c-1)\)</span> voor kruistabel (<span class="math inline">\(r\)</span> rijen, <span class="math inline">\(c\)</span> kolommen); <span class="math inline">\(k-1\)</span> voor goodness-of-fit (<span class="math inline">\(k\)</span> categorieën).</li>
 <li>Vergelijk met <span class="math inline">\(\chi^2_{\alpha, df}\)</span> in de tabel.</li>
 <li>Conclusie: <em>de samenhang tussen X en Y</em> — zeg wélk verband (richting en welke cellen beoordeel je uit de tabel en de residuen, niet uit <span class="math inline">\(\chi^2\)</span> zelf).</li>
 </ol>
 </div>
 </div>
 <div class="spss-syntax callout callout-style-default callout-note no-icon callout-titled" title="In SPSS — klikpad">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -545,7 +592,7 @@ Figuur&nbsp;2: Kruistabel als gegroepeerde staven: per oefenmethode het aantal g
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Met de hand snap je nu wat er gebeurt; in SPSS doe je dezelfde toets met twee categorische variabelen.</p>
 <p><strong>Analyze → Descriptive Statistics → Crosstabs</strong> → één variabele naar <em>Row(s)</em>, de andere naar <em>Column(s)</em> → <em>Statistics… → Chi-square</em> aanvinken → <em>Continue → OK</em>.</p>
@@ -622,7 +669,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T11.1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -631,9 +678,15 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>(a)</strong> <span class="math inline">\(E = 100/3 \approx 33{,}33\)</span> per hok. <span class="math inline">\((O-E)^2/E\)</span>: links <span class="math inline">\((25-33{,}33)^2/33{,}33 = 2{,}08\)</span>; midden <span class="math inline">\((50-33{,}33)^2/33{,}33 = 8{,}33\)</span>; rechts idem als links = 2,08. <span class="math inline">\(\chi^2 = 2{,}08 + 8{,}33 + 2{,}08 = 12{,}5\)</span>.</p>
+<p><strong>(a)</strong> <span class="math inline">\(E = 100/3 \approx 33{,}33\)</span> per hok. Per hok <span class="math inline">\((O-E)^2/E\)</span>:</p>
+<ul>
+<li>links: <span class="math inline">\((25-33{,}33)^2/33{,}33 = 2{,}08\)</span></li>
+<li>midden: <span class="math inline">\((50-33{,}33)^2/33{,}33 = 8{,}33\)</span></li>
+<li>rechts: idem links <span class="math inline">\(= 2{,}08\)</span></li>
+</ul>
+<p><span class="math inline">\(\chi^2 = 2{,}08 + 8{,}33 + 2{,}08 = 12{,}5\)</span>.</p>
 <p><strong>(b)</strong> <span class="math inline">\(12{,}5 &gt; 5{,}99\)</span> → verwerpen. De egels hebben een sterke voorkeur voor het middelste hok.</p>
 </div>
 </div>
@@ -652,7 +705,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T11.2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -661,7 +714,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>School X heeft waarschijnlijk veel meer leerlingen met een hoog vooropleidingsniveau (die sowieso vaker doorstromen, op elke school). Het aggregaatcijfer reflecteert dus vooral de samenstelling van de leerlingen, niet de kwaliteit van de school. Net als bij Simpson: een meelopende derde variabele (vooropleiding) verklaart het schijnverschil. Wie scholen eerlijk wil vergelijken, vergelijkt binnen vooropleidingsniveau — niet over de hoofden heen.</p>
 </div>
@@ -672,7 +725,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 <h1>Tot slot</h1>
 <p>Chi-kwadraat brengt de toets naar categorieën, met steeds dezelfde gedachte: vergelijk wat je ziet met wat je verwacht onder <span class="math inline">\(H_0\)</span>, en tel de gestandaardiseerde afwijkingen op. En Simpson herinnert je dat aggregeren een vorm van vergeten is — de subgroepen zwijgen niet, je hoort ze alleen niet meer.</p>
 <hr>
-<p><em>Werkboek OZP 1 · Thema 11, versie 0.1 (handrekenen &amp; theorie). Doorlopend voorbeeld: de egels (+ studenten).</em></p>
+<p><em>Werkboek OZP 1 · Thema 11, versie 0.1 (handrekenen &amp; theorie). Doorlopend voorbeeld: de egels (+ alledaagse voorbeelden: roken, school).</em></p>
 
 
 </section>
