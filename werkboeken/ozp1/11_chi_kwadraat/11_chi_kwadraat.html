@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Thema 11 · Chi-kwadraat &amp; Simpson – Werkboek OZP 1</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -33,15 +36,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="../10_power/10_power.html" rel="prev">
 <script src="../libs/quarto-html/quarto.js" type="module"></script>
 <script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../libs/quarto-html/popper.min.js"></script>
 <script src="../libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../libs/quarto-html/anchor.min.js"></script>
 <link href="../libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../libs/bootstrap/bootstrap.min.js"></script>
 <link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../libs/bootstrap/bootstrap-a8976c3e89df70b272bdfba3d2fda974.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -126,15 +128,16 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
-      <div class="sidebar-tools-main">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Werkboek OZP 1</a> 
+        <div class="sidebar-tools-main">
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Schakel leesmodus">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
   </div>
 </a>
 </div>
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -427,7 +430,7 @@ window.Quarto = {
 </tbody>
 </table>
 <p>Vrijheidsgraden: <span class="math inline">\(df = k - 1 = 3 - 1 = 2\)</span> — de <span class="math inline">\(df\)</span> volgt uit het <strong>aantal categorieën</strong> (<span class="math inline">\(k = 3\)</span> kleuren), niet uit het aantal egels. Kritieke waarde <span class="math inline">\(\chi^2_{.05, df=2} = 5{,}99\)</span> (uit de tabel). Onze 6,67 is groter → <strong>verwerp de nulhypothese</strong>: de pelskleuren zijn níét gelijk verdeeld.</p>
-<p>Maar <span class="math inline">\(\chi^2\)</span> zelf zegt alleen <em>dát</em> het patroon afwijkt — de <strong>cellen</strong> vertellen <em>waar</em>. Daarvoor lees je de <strong>gestandaardiseerde residuen</strong> <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span> (de vierde kolom): bruin zit <strong>+1,83</strong> boven verwachting, zwart <strong>−1,83</strong> eronder, grijs precies goed. Een residu voorbij ongeveer ±2 is een opvallende cel. En kwadrateer je zo’n residu, dan krijg je exact die cel z’n <strong>bijdrage aan <span class="math inline">\(\chi^2\)</span></strong> (<span class="math inline">\(1{,}83^2 \approx 3{,}33\)</span>) — samen weer 6,67. Zo zie je niet alleen of het afwijkt, maar welke kleur het verschil maakt.</p>
+<p>Maar <span class="math inline">\(\chi^2\)</span> zelf zegt alleen <em>dát</em> het patroon afwijkt — de <strong>cellen</strong> vertellen <em>waar</em>. Daarvoor lees je de <strong>ruwe celresiduen</strong> <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span> (de vierde kolom): bruin zit <strong>+1,83</strong> boven verwachting, zwart <strong>−1,83</strong> eronder, grijs precies goed. Een residu voorbij ongeveer ±2 is een opvallende cel — al is dat een <em>ruwe</em> vuistregel; hoe je een cel écht standaardiseert (en waarom <span class="math inline">\(\sqrt{E}\)</span> daarvoor te grof is) zie je zo bij de kruistabel. En kwadrateer je zo’n residu, dan krijg je exact die cel z’n <strong>bijdrage aan <span class="math inline">\(\chi^2\)</span></strong> (<span class="math inline">\(1{,}83^2 \approx 3{,}33\)</span>) — samen weer 6,67. Zo zie je niet alleen of het afwijkt, maar welke kleur het verschil maakt.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-gof" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -550,7 +553,46 @@ Figuur&nbsp;1: Geobserveerd (blauw) vs verwacht onder gelijke verdeling (grijze 
 <p>Vervolgens <span class="math inline">\(\sum (O-E)^2/E\)</span> over alle vier de cellen:</p>
 <p><span class="math display">\[\chi^2 = \frac{(40-30)^2}{30} + \frac{(20-30)^2}{30} + \frac{(160-170)^2}{170} + \frac{(180-170)^2}{170}\]</span> <span class="math display">\[= 3{,}33 + 3{,}33 + 0{,}59 + 0{,}59 = 7{,}84\]</span></p>
 <p>Ook hier volgt <span class="math inline">\(df\)</span> uit het <strong>aantal categorieën</strong> — nu in twee richtingen: het aantal <strong>rijen</strong> en het aantal <strong>kolommen</strong>. Voor een kruistabel met <span class="math inline">\(r\)</span> rijen en <span class="math inline">\(c\)</span> kolommen: <span class="math inline">\(df = (r-1)(c-1)\)</span>. Hier een <span class="math inline">\(2 \times 2\)</span>-tabel, dus <span class="math inline">\(df = 1 \cdot 1 = 1\)</span>. (Intuïtie: liggen de rij- en kolomtotalen vast, dan kun je nog <span class="math inline">\((r-1)(c-1)\)</span> cellen vrij invullen; de rest volgt dwingend.) Kritieke waarde <span class="math inline">\(\chi^2_{.05, df=1} = 3{,}84\)</span>. Onze 7,84 is groter → <strong>verwerp de nulhypothese</strong>: roken hangt samen met geslacht — mannen roken vaker dan je onder onafhankelijkheid zou verwachten, precies wat iedereen al dacht.</p>
-<p>Welke cel drijft dat? Weer de gestandaardiseerde residuen <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span>: de twee <strong>rookt</strong>-cellen springen eruit (<span class="math inline">\(\pm 1{,}83\)</span>: <span class="math inline">\(\tfrac{40-30}{\sqrt{30}} = +1{,}83\)</span> bij mannen, <span class="math inline">\(-1{,}83\)</span> bij vrouwen), terwijl de niet-rokers veel kleiner zijn (<span class="math inline">\(\pm 0{,}77\)</span>). Daar — bij wie wél rookt — wijkt de werkelijkheid het sterkst van onafhankelijkheid af.</p>
+<p>Welke cel drijft dat? Weer de <strong>ruwe celresiduen</strong> <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span>: de twee <strong>rookt</strong>-cellen springen eruit (<span class="math inline">\(\pm 1{,}83\)</span>: <span class="math inline">\(\tfrac{40-30}{\sqrt{30}} = +1{,}83\)</span> bij mannen, <span class="math inline">\(-1{,}83\)</span> bij vrouwen), terwijl de niet-rokers veel kleiner zijn (<span class="math inline">\(\pm 0{,}77\)</span>). Daar — bij wie wél rookt — wijkt de werkelijkheid het sterkst van onafhankelijkheid af.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Ruw is ruk — ook bij residuen (waarom √E te kort door de bocht is)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ruw is ruk — ook bij residuen (waarom √E te kort door de bocht is)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Die <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span> is een <strong>ruwe</strong> residu. Mooi, want z’n kwadraat is precies de celbijdrage aan <span class="math inline">\(\chi^2\)</span> — maar hij heeft één vervelende eigenschap: zijn standaarddeviatie is <strong>niet</strong> 1. En je weet het inmiddels: ruw is ruk. Wil je ’m tegen <span class="math inline">\(\pm 1{,}96\)</span> leggen (de <span class="math inline">\(z\)</span> uit thema 3), dan moet hij éérst écht gestandaardiseerd worden.</p>
+<p>Waarom is <span class="math inline">\(\sqrt{E}\)</span> te groot? <span class="math inline">\(\sqrt{E}\)</span> is de spreiding van een <strong>vrije</strong> cel — een telling die los mag fluctueren (variantie = gemiddelde = <span class="math inline">\(E\)</span>, zoals bij een vrij oplopende telling). Maar jouw cel is niet vrij. Hij hangt vast aan zijn <strong>rijtotaal</strong> en zijn <strong>kolomtotaal</strong>: die liggen vast, en dat bindt de cel. Een gebonden cel kan minder ver afdwalen dan een vrije, dus zijn echte spreiding is <em>kleiner</em> dan <span class="math inline">\(\sqrt{E}\)</span>. Deel je alleen door <span class="math inline">\(\sqrt{E}\)</span>, dan deel je door te véél → je residu wordt te klein → je bent te voorzichtig en mist échte uitschieters.</p>
+<p>De <strong>gestandaardiseerde celresidu</strong> corrigeert dat: hij deelt óók door de bindingsfactor <span class="math inline">\(\sqrt{(1-\text{rij}/n)(1-\text{kol}/n)}\)</span>. Pas díé mag je als een gewone <span class="math inline">\(z\)</span> aflezen.</p>
+<p><strong>Op de rokers.</strong> De man-rookt-cel: ruw <span class="math inline">\(\dfrac{40-30}{\sqrt{30}} = 1{,}83\)</span> — netjes ónder ±2, je zou ’m bijna laten lopen. Maar de bindingsfactor is <span class="math inline">\(\sqrt{\left(1-\tfrac{200}{400}\right)\left(1-\tfrac{60}{400}\right)} = \sqrt{0{,}5 \cdot 0{,}85} = 0{,}65\)</span>, en dus: <span class="math display">\[\text{gestd. celresidu} = \frac{1{,}83}{0{,}65} = 2{,}80.\]</span> Voorbij ±2 — wél een uitschieter. De ruwe versie had je ’m bijna laten missen.</p>
+<p>En de cirkel sluit: weet je nog dat bij een <span class="math inline">\(2\times2\)</span>-tabel <span class="math inline">\(\chi^2 = z^2\)</span>? Dáár is die <span class="math inline">\(z\)</span>. <span class="math inline">\(\sqrt{7{,}84} = 2{,}80\)</span>, en <span class="math inline">\(2{,}80^2 = 7{,}84\)</span>. Rond. De ruwe 1,83 was alleen de cel z’n <em>hapje</em> van <span class="math inline">\(\chi^2\)</span>; de gestandaardiseerde 2,80 ís de hele <span class="math inline">\(z\)</span>.</p>
+</div>
+</div>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Gestandaardiseerde celresidu (adjusted standardized residual)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Gestandaardiseerde celresidu (adjusted standardized residual)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[\text{gestd. celresidu} = \frac{O-E}{\sqrt{E \left(1 - \dfrac{\text{rijtotaal}}{n}\right)\left(1 - \dfrac{\text{kolomtotaal}}{n}\right)}}\]</span></p>
+<hr>
+<ul>
+<li><span class="math inline">\(O\)</span> — het <strong>geobserveerde</strong> aantal in de cel</li>
+<li><span class="math inline">\(E\)</span> — het <strong>verwachte</strong> aantal in die cel onder <span class="math inline">\(H_0\)</span> (onafhankelijkheid)</li>
+<li>rijtotaal, kolomtotaal — de totalen van de rij en de kolom waarin de cel ligt</li>
+<li><span class="math inline">\(n\)</span> — het totale aantal waarnemingen</li>
+<li>de noemer — de <strong>echte</strong> standaarddeviatie van <span class="math inline">\(O-E\)</span>: <span class="math inline">\(\sqrt{E}\)</span>, gecorrigeerd voor de binding aan de marges (altijd kleiner dan <span class="math inline">\(\sqrt{E}\)</span>, dus de residu wordt <em>groter</em>)</li>
+</ul>
+<p><strong>Wanneer:</strong> als je een afzonderlijke cel wilt toetsen — voorbij <span class="math inline">\(\pm 1{,}96\)</span> is die cel significant (tweezijdig, <span class="math inline">\(\alpha = .05\)</span>). Het <em>ruwe</em> <span class="math inline">\(\dfrac{O-E}{\sqrt{E}}\)</span> gebruik je alleen voor de celbijdrage aan <span class="math inline">\(\chi^2\)</span>, niet om tegen <span class="math inline">\(z\)</span> te leggen.</p>
+</div>
+</div>
 <p>Eén waarschuwing: <span class="math inline">\(\chi^2\)</span> wordt vanzelf groter bij een grotere steekproef. Een hoge <span class="math inline">\(\chi^2\)</span> betekent dus <em>significant</em>, niet automatisch <em>een sterk verband</em> — maten voor de <strong>sterkte</strong> (zoals Cramérs V) leer je later.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Is chi-kwadraat één- of tweezijdig? (richtingloos)">
 <div class="callout-header d-flex align-content-center">
@@ -604,7 +646,7 @@ Figuur&nbsp;2: Aantal rokers per geslacht (blauw) tegen het verwachte aantal ond
 </div>
 </div>
 <div class="spss-syntax callout callout-style-default callout-note no-icon callout-titled" title="In SPSS — klikpad">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -613,7 +655,7 @@ Figuur&nbsp;2: Aantal rokers per geslacht (blauw) tegen het verwachte aantal ond
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Data om mee te spelen:</strong> <a href="../common/data/roken_geslacht.sav"><code>roken_geslacht.sav</code></a> en <a href="../common/data/egel_pelskleur.sav"><code>egel_pelskleur.sav</code></a> — of de <a href="../common/data/ozp1_spss_data.zip">hele zip</a>. Met de hand snap je nu wat er gebeurt; in SPSS doe je dezelfde toets met twee categorische variabelen.</p>
 <p><strong>Analyze → Descriptive Statistics → Crosstabs</strong> → één variabele naar <em>Row(s)</em>, de andere naar <em>Column(s)</em> → <em>Statistics… → Chi-square</em> aanvinken → <em>Continue → OK</em>.</p>
@@ -690,7 +732,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T11.1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -699,7 +741,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>(a)</strong> <span class="math inline">\(E = 100/3 \approx 33{,}33\)</span> per hok. Per hok <span class="math inline">\((O-E)^2/E\)</span>:</p>
 <ul>
@@ -713,7 +755,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 </div>
 <div class="spss-syntax callout callout-style-default callout-note no-icon callout-titled" title="T11.1 in SPSS — goodness-of-fit">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -722,7 +764,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Data:</strong> <a href="../common/data/egel_hok.sav"><code>egel_hok.sav</code></a> — 100 egels, één kolom <code>hok</code> (1 = links, 2 = midden, 3 = rechts; links 25, midden 50, rechts 25).</p>
 <p>Dit is een <strong>goodness-of-fit</strong> (één variabele tegen een verwachte verdeling), dus <em>niet</em> Crosstabs maar: <strong>Analyze → Nonparametric Tests → Legacy Dialogs → Chi-square</strong> → zet <code>hok</code> bij <em>Test Variable List</em> → onder <em>Expected Values</em> staat <em>All categories equal</em> (de gelijke verdeling uit <span class="math inline">\(H_0\)</span>) → <em>OK</em>.</p>
@@ -744,7 +786,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T11.2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -753,7 +795,7 @@ Figuur&nbsp;3: Simpson-paradox visueel. Per opleiding (A makkelijk, B moeilijk) 
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>School X heeft waarschijnlijk veel meer leerlingen met een hoog vooropleidingsniveau (die sowieso vaker doorstromen, op elke school). Het aggregaatcijfer reflecteert dus vooral de samenstelling van de leerlingen, niet de kwaliteit van de school. Net als bij Simpson: een meelopende derde variabele (vooropleiding) verklaart het schijnverschil. Wie scholen eerlijk wil vergelijken, vergelijkt binnen vooropleidingsniveau — niet over de hoofden heen.</p>
 </div>
