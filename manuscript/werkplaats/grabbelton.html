@@ -30,7 +30,7 @@
     box-shadow:0 8px 26px rgba(120,95,45,.18)}
   .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0 6px}
   .controls button{--rot:0deg;transform:rotate(var(--rot))}
-  #grabbel{--rot:-.7deg} #veel{--rot:.45deg} #wis{--rot:-.35deg}
+  #grabbel{--rot:-.7deg} #honderd{--rot:.3deg} #veel{--rot:.45deg} #wis{--rot:-.35deg}
   button{font:inherit;font-size:15.5px;color:#4a4030;background:#efe3c4;
     border:1.5px solid #c9a866;
     border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
@@ -79,6 +79,7 @@
 
   <div class="controls">
     <button id="grabbel" class="primary">Grabbel</button>
+    <button id="honderd">100× grabbelen</button>
     <button id="veel">Laat de computer 10.000× grabbelen</button>
     <button id="wis">Wis de muur</button>
     <span class="toggle" id="pop">
@@ -148,10 +149,14 @@
   let scaleTarget=1, scaleNow=1;
   let showBand=true;
   let diceAnim=null;                           // {t0} landings-animatie, alleen bij losse greep
+  let meanHidden=false;                        // verbergt het greep-gemiddelde tijdens fase 1 van een losse greep
+  let meanPulse=null;                          // {t0} oplicht-animatie van het gemiddelde (fase 2)
+  let witch=null;                              // {t0,dur,fromLeft} easter-egg heksje op de bezemsteel
 
   function binOf(m){ let i=Math.floor((m-LO)/(HI-LO)*NB); return Math.max(0,Math.min(NB-1,i)); }
   function reset(){ bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; sum=0;
-    lastSample=[]; lastMean=null; markerX=null; scaleTarget=1; diceAnim=null; }
+    lastSample=[]; lastMean=null; markerX=null; scaleTarget=1; diceAnim=null;
+    meanHidden=false; meanPulse=null; }
 
   // bulk-greep: ongewijzigd — snel accumuleren, geen per-greep dice-reveal
   function grabbel(k=1, animateMarker=true){
@@ -165,21 +170,29 @@
     scaleTarget = mx>0? mx : 1;
   }
 
-  // losse greep: dobbelstenen eerst laten landen, bordje ~0,25s LATER aan de muur
+  // losse greep — gefaseerde reveal in DRIE stappen:
+  //   dobbelstenen  →(0,25s)→  gemiddelde licht op  →(0,25s)→  bordje valt in de muur
   function grabbelOne(){
     let s=[], sm=0;
     for(let i=0;i<n;i++){ const v=sampleOne(popName); s.push(v); sm+=v; }
     const m=sm/n;
-    lastSample=s; lastMean=m;                   // dobbelstenen meteen tonen (met landing)
+    lastSample=s; lastMean=m;                   // fase 1: dobbelstenen meteen tonen (met landing)
     diceAnim={ t0: performance.now() };          // landings-animatie starten
+    meanHidden=true; meanPulse=null;             // gemiddelde nog verborgen
+    // fase 2 (~0,25s): het gemiddelde verschijnt en licht op
     setTimeout(function(){
-      bins[binOf(m)]++; total++; sum+=m;         // identieke binning/statistiek, alleen later gecommit
+      meanHidden=false; meanPulse={ t0: performance.now() };
+      say('Het <b>gemiddelde</b> van je greep is ' + m.toFixed(2) + '.');
+    }, 250);
+    // fase 3 (~0,25s later): het bordje valt in de muur — identieke binning/statistiek, alleen later gecommit
+    setTimeout(function(){
+      bins[binOf(m)]++; total++; sum+=m;
       markerX=m; markerAge=0;                     // vallend gemiddelde landt op het bordje
       let mx=0; for(let i=0;i<NB;i++) mx=Math.max(mx,bins[i]);
       scaleTarget = mx>0? mx : 1;
-      say(total<8?'Elke greep hangt een bordje aan de muur. Nog eens.':
+      say(total<8?'En daar hangt het bordje aan de muur. Nog eens.':
         'Zie je de hoop groeien? De muur is de <b>steekproevenverdeling</b>.');
-    }, 250);
+    }, 500);
   }
 
   // ---- kleuren & letter (daglicht / perkament / hout — licht) ----
@@ -257,6 +270,61 @@
     ctx.restore();
   }
 
+  // heksje op de bezemsteel — ode aan Hanna Kraan, klein silhouet in inkt (easter egg)
+  function drawWitch(cx,cy,s,dir,alpha){
+    ctx.save();
+    ctx.globalAlpha=alpha;
+    ctx.translate(cx,cy);
+    ctx.scale(dir,1);                         // laat 'r de vliegrichting op kijken
+    ctx.fillStyle='#4a3a2a'; ctx.strokeStyle='#4a3a2a';
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    // bezemsteel
+    ctx.lineWidth=s*0.11;
+    ctx.beginPath(); ctx.moveTo(-s*1.30, s*0.18); ctx.lineTo(s*1.15, -s*0.12); ctx.stroke();
+    // bezem-bos aan de staart
+    ctx.lineWidth=s*0.06;
+    for(let i=-2;i<=2;i++){
+      ctx.beginPath(); ctx.moveTo(-s*1.00, s*0.13);
+      ctx.lineTo(-s*1.52, s*0.13+i*s*0.15); ctx.stroke();
+    }
+    // mantel (zittend lijf)
+    ctx.beginPath();
+    ctx.moveTo(-s*0.32, s*0.02);
+    ctx.quadraticCurveTo(-s*0.18,-s*0.72, s*0.08,-s*0.68);
+    ctx.quadraticCurveTo(s*0.44,-s*0.60, s*0.30, s*0.05);
+    ctx.closePath(); ctx.fill();
+    // hoofd
+    ctx.beginPath(); ctx.arc(s*0.00,-s*0.80, s*0.19, 0, 7); ctx.fill();
+    // punthoed (iets naar achter gebogen)
+    ctx.beginPath();
+    ctx.moveTo(-s*0.28,-s*0.90); ctx.lineTo(s*0.30,-s*0.90);
+    ctx.lineTo(-s*0.16,-s*1.72); ctx.closePath(); ctx.fill();
+    // hoedrand
+    ctx.lineWidth=s*0.10;
+    ctx.beginPath(); ctx.moveTo(-s*0.36,-s*0.90); ctx.lineTo(s*0.40,-s*0.90); ctx.stroke();
+    ctx.restore();
+  }
+  function updateWitch(){
+    const now=performance.now();
+    if(!witch && Math.random()<0.0008)         // heel af en toe: ~eens per ~20-30s
+      witch={ t0:now, dur:5200, fromLeft:Math.random()<0.5 };
+    if(!witch) return;
+    const p=(now-witch.t0)/witch.dur;
+    if(p>=1){ witch=null; return; }
+    const s=14, margin=64;
+    const startX=witch.fromLeft? -margin : W+margin;
+    const endX  =witch.fromLeft?  W+margin : -margin;
+    const x=lerp(startX,endX,p);
+    const y=30 + Math.sin(p*Math.PI*3)*9;       // zachte golf langs de bovenrand
+    const fade=Math.sin(Math.max(0,Math.min(1,p))*Math.PI);
+    drawWitch(x, y, s, witch.fromLeft?1:-1, 0.5*fade);
+    // een klein sterretje in haar spoor
+    ctx.save(); ctx.globalAlpha=0.45*fade; ctx.fillStyle=C.amber;
+    ctx.beginPath();
+    ctx.arc(x-(witch.fromLeft?1:-1)*s*1.8, y+Math.sin(p*38)*3, 1.4, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+
   // ---- render ----
   const AX_Y=498, AX_L=64, AX_R=()=>W-34;   // muur-as
   function xPix(v){ return lerp(AX_L, AX_R(), (v-LO)/(HI-LO)); }
@@ -320,8 +388,21 @@
       }
       if(lastSample.length>show){ ctx.fillStyle=C.dim; ctx.font=fnt(13,'italic');
         ctx.fillText('… (n='+lastSample.length+')', gx0, gy+2*(ds+dg)+16); }
-      ctx.fillStyle=C.amberInk; ctx.font=fnt(16,'italic','600');
-      ctx.fillText('gemiddelde = '+lastMean.toFixed(2), gx0, 176);
+      if(!meanHidden){
+        ctx.save();
+        ctx.fillStyle=C.amberInk; ctx.font=fnt(16,'italic','600'); ctx.textAlign='left';
+        if(meanPulse){                                   // fase 2: even oplichten en terugzakken
+          const pp=Math.max(0,Math.min(1,(now-meanPulse.t0)/450));
+          const sc=1+0.20*(1-pp);
+          ctx.shadowColor='rgba(200,145,58,'+(0.8*(1-pp))+')'; ctx.shadowBlur=18*(1-pp);
+          ctx.translate(gx0,176); ctx.scale(sc,sc);
+          ctx.fillText('gemiddelde = '+lastMean.toFixed(2), 0, 0);
+          if(pp>=1) meanPulse=null;
+        } else {
+          ctx.fillText('gemiddelde = '+lastMean.toFixed(2), gx0, 176);
+        }
+        ctx.restore();
+      }
     } else {
       ctx.fillStyle=C.faint; ctx.font=fnt(15,'italic');
       ctx.fillText('— nog niks gepakt —', 330, 70);
@@ -395,6 +476,8 @@
     if(total>0){ ctx.fillStyle=C.green2;
       ctx.fillText('gemiddelde van de muur: '+(sum/total).toFixed(2), W-34, 58); }
 
+    updateWitch();                              // easter-egg: heksje scheert af en toe langs de bovenrand
+
     requestAnimationFrame(frame);
   }
 
@@ -404,7 +487,11 @@
 
   // ---- interactie ----
   document.getElementById('grabbel').onclick=()=>{ grabbelOne(); };
-  document.getElementById('veel').onclick=()=>{ diceAnim=null; animateMany(10000);
+  document.getElementById('honderd').onclick=()=>{ diceAnim=null; meanHidden=false; meanPulse=null;
+    animateMany(100, 1800);                      // 100 grepen, rustig opgebouwd in ~1,8s
+    say('Honderd grepen op een rij — kijk hoe de muur zich vult, bordje voor bordje.'); };
+  document.getElementById('veel').onclick=()=>{ diceAnim=null; meanHidden=false; meanPulse=null;
+    animateMany(10000);
     say('Kijk hoe de muur zich opbouwt — duizenden grepen achter elkaar. '+
       'De skyline wordt een <b>klok</b>.'); };
   document.getElementById('wis').onclick=()=>{ reset(); say('Muur leeg. Begin opnieuw.'); };
