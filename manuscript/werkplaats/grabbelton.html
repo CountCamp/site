@@ -430,9 +430,14 @@
 
     // bordjes: houten plankjes stapelen zich op tot de muur
     const maxBarH=AX_Y-224, bw=(AX_R()-AX_L)/NB;
+    // vaste plank-hoogte: elk bordje is een échte plank. Torens groeien met een vaste
+    // plank per greep; pas als de langste toren het plafond raakt gaan ze allemaal soepel krimpen.
+    const TARGET_PLANK=8;                                  // gewenste plank-hoogte (px): klein maar zichtbaar
+    const PLAFOND=Math.round(maxBarH/TARGET_PLANK);        // uit de geometrie: ≈34 bordjes → dan begint het krimpen
+    const plankH = maxBarH / Math.max(PLAFOND, scaleNow);  // = min(VASTE_PLANK, muur/hoogste_toren); soepel via scaleNow-lerp
     for(let i=0;i<NB;i++){
       if(drawn[i]<=0.01) continue;
-      const h=(drawn[i]/scaleNow)*maxBarH, bx=AX_L+i*bw+0.75, bwid=bw-1.5;
+      const h=Math.min(maxBarH, drawn[i]*plankH), bx=AX_L+i*bw+0.75, bwid=bw-1.5;
       if(h<1.4){ ctx.fillStyle=C.wood2; ctx.fillRect(bx, AX_Y-h, bwid, h); continue; }
       const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y);
       g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);
@@ -461,7 +466,8 @@
 
     // marker (vallend gemiddelde bij enkele greep) — een vonkje
     if(markerX!=null && markerAge<1){
-      const mx2=xPix(markerX), my=lerp(200, AX_Y-(drawn[binOf(markerX)]/scaleNow)*maxBarH, ease(markerAge));
+      const barTop=AX_Y-Math.min(maxBarH, drawn[binOf(markerX)]*plankH);
+      const mx2=xPix(markerX), my=lerp(200, barTop, ease(markerAge));
       ctx.save();
       ctx.globalAlpha=1-markerAge*0.3;
       ctx.shadowColor='rgba(200,145,58,.7)'; ctx.shadowBlur=9;
