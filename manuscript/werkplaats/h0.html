@@ -2869,7 +2869,7 @@ hyphens: none;
     { f: 'h7.html', n: '7', t: 'Meer dan één verschil', b: 2 },
     { f: 'h8.html', n: '8', t: 'Groepen zijn ook getallen', b: 2 },
     { f: 'h9.html', n: '9', t: 'Verschil in verschil', b: 2 },
-    { f: 'h10.html', n: '10', t: 'En hij buigt',       b: 3 }
+    { f: 'h10.html', n: '10', t: 'En hij buigt',       b: 2 }
   ];
   var BEW = [
     'Beweging 1 · Verschil onder de loep',
@@ -2880,6 +2880,23 @@ hyphens: none;
   var sb = document.getElementById('boek-sidebar');
 
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  // ---- doorklik-knop naar het volgende hoofdstuk (onder de hoofdtekst) ----
+  (function () {
+    var idx = -1;
+    for (var i = 0; i < CH.length; i++) { if (CH[i].f === here) { idx = i; break; } }
+    if (idx < 0 || idx + 1 >= CH.length) return;            // niet op een hoofdstuk, of dit is het laatste
+    var nx = CH[idx + 1];
+    var host = document.getElementById('quarto-document-content') || document.querySelector('main.content') || document.body;
+    var wrap = el('div', 'volgend-hfdst');
+    var a = el('a'); a.href = nx.f;
+    a.appendChild(el('span', 'vh-label', 'Volgend hoofdstuk'));
+    a.appendChild(el('span', 'vh-num', 'H' + nx.n));
+    a.appendChild(el('span', 'vh-titel', nx.t));
+    a.appendChild(el('span', 'vh-pijl', '→'));
+    wrap.appendChild(a);
+    host.appendChild(wrap);
+  })();
 
   // Terug + home
   var top = el('div', 'sb-top');
@@ -3040,6 +3057,19 @@ background: #fbf9f4; border-right: 1px solid #e4dccb; box-shadow: 2px 0 14px rgb
 body { width: auto; margin: 0.5em auto; padding: 1.4em 1.1em 3em; }
 #sb-toggle { top: 8px; }
 }
+
+.volgend-hfdst { margin: 3.5em 0 1em; padding-top: 1.6em; border-top: 1px solid #e4dccb; }
+.volgend-hfdst a {
+display: flex; align-items: baseline; gap: 0.5em; flex-wrap: wrap;
+text-decoration: none; color: #2a2520;
+background: #fbf9f4; border: 1px solid #e4dccb; border-radius: 4px;
+padding: 0.85em 1.1em; transition: border-color .15s, box-shadow .15s; }
+.volgend-hfdst a:hover { border-color: #2A79A7; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.volgend-hfdst .vh-label { font-size: 0.82em; color: #8a8377; text-transform: uppercase; letter-spacing: 0.04em; }
+.volgend-hfdst .vh-num { color: #2A79A7; font-weight: 600; }
+.volgend-hfdst .vh-titel { font-weight: 600; }
+.volgend-hfdst .vh-pijl { margin-left: auto; color: #2A79A7; font-size: 1.2em; }
+.volgend-hfdst .vh-slot { color: #8a8377; font-style: italic; }
 </style>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
