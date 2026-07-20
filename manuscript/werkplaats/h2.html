@@ -3022,17 +3022,17 @@ hyphens: none;
 /* ---- floating cross-chapter sidebar ---- */
 (function () {
   var CH = [
-    { f: 'h0.html', n: '0', t: 'In den beginne',       b: 0 },
-    { f: 'h1.html', n: '1', t: 'De gemiddelde slok',   b: 0 },
-    { f: 'h2.html', n: '2', t: 'De vorm van de hoop',  b: 0 },
-    { f: 'h3.html', n: '3', t: 'De grabbelton geschud', b: 0 },
-    { f: 'h4.html', n: '4', t: 'Het rechthoekje',      b: 1 },
-    { f: 'h5.html', n: '5', t: 'Bestaat het echt?',    b: 1 },
-    { f: 'h6.html', n: '6', t: 'Hoe beslis je?',        b: 1 },
-    { f: 'h7.html', n: '7', t: 'Meer dan één verschil', b: 2 },
-    { f: 'h8.html', n: '8', t: 'Groepen zijn ook getallen', b: 2 },
-    { f: 'h9.html', n: '9', t: 'Verschil in verschil', b: 2 },
-    { f: 'h10.html', n: '10', t: 'En hij buigt',       b: 2 }
+    { f: 'h0.html', n: '0', t: 'In den beginne',       b: 0, ew: 'gegevens', el: 'Latijn <em>datum</em> — het gegevene. Data máák je niet; je krijgt ze.' },
+    { f: 'h1.html', n: '1', t: 'De gemiddelde slok',   b: 0, ew: 'error', el: 'Latijn <em>errare</em> — dwalen. Een fout is geen zonde maar een omzwerving; de punten zijn onderweg.' },
+    { f: 'h2.html', n: '2', t: 'De vorm van de hoop',  b: 0, ew: 'normaal', el: 'Latijn <em>norma</em> — de winkelhaak. “Normaal” was nooit een oordeel; het was iets om recht tegenaan te leggen.' },
+    { f: 'h3.html', n: '3', t: 'De grabbelton geschud', b: 0, ew: 'steekproef', el: 'Duits <em>Stichprobe</em> — één steek met de kaasboor, en je proeft de hele kaas.' },
+    { f: 'h4.html', n: '4', t: 'Het rechthoekje',      b: 1, ew: 'regressie', el: 'Latijn <em>regredi</em> — teruggaan. Galton zag kinderen naar het gemiddelde toe lopen, alsof ze naar huis gingen.' },
+    { f: 'h5.html', n: '5', t: 'Bestaat het echt?',    b: 1, ew: 'hypothese', el: 'Grieks <em>hupó</em> + <em>thesis</em> — het eronder-gelegde. Wat je onder je denken legt vóór je erop gaat staan.' },
+    { f: 'h6.html', n: '6', t: 'Hoe beslis je?',        b: 1, ew: 'toets', el: 'van de <em>toetssteen</em> — je streek het goud langs de steen, en het spoor vertelde of het echt was.' },
+    { f: 'h7.html', n: '7', t: 'Meer dan één verschil', b: 2, ew: 'correlatie', el: 'Latijn <em>com-</em> + <em>relatio</em> — samen verslag uitbrengen: twee variabelen die elkaar vertellen wat ze weten.' },
+    { f: 'h8.html', n: '8', t: 'Groepen zijn ook getallen', b: 2, ew: 'variantie', el: 'Latijn <em>varius</em> — bont, gespikkeld. Vóór het een formule was, was het een kleur.' },
+    { f: 'h9.html', n: '9', t: 'Verschil in verschil', b: 2, ew: 'residu', el: 'Latijn <em>residere</em> — blijven zitten. Wat achterblijft als het model is uitverteld; in dat restje begint vaak het volgende hoofdstuk.' },
+    { f: 'h10.html', n: '10', t: 'En hij buigt',       b: 2, ew: 'kans', el: 'vulgair Latijn <em>cadentia</em> — “dat wat valt”, van dobbelstenen. Jij gooit; het vallen is niet van jou.' }
   ];
   var BEW = [
     'Beweging 1 · Verschil onder de loep',
@@ -3059,6 +3059,19 @@ hyphens: none;
     a.appendChild(el('span', 'vh-pijl', '→'));
     wrap.appendChild(a);
     host.appendChild(wrap);
+  })();
+
+  // ---- stille etymologie-voetregel (het woord dat bij dit hoofdstuk past) ----
+  (function () {
+    var cur = null;
+    for (var i = 0; i < CH.length; i++) { if (CH[i].f === here) { cur = CH[i]; break; } }
+    if (!cur || !cur.ew) return;
+    var host = document.getElementById('quarto-document-content') || document.querySelector('main.content') || document.body;
+    var p = el('p', 'cc-etym');
+    // bronwoord + herkomst-zin; laatste stukje linkt stil naar de verzamelpagina
+    p.innerHTML = '<em>' + cur.ew + '</em> — ' + cur.el +
+      ' <a href="../woorden.html">meer woorden &#8250;</a>';
+    host.appendChild(p);
   })();
 
   // Terug + home
