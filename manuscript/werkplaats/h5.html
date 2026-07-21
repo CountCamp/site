@@ -3427,11 +3427,19 @@ hyphens: none;
     secties.forEach(function (h) { obs.observe(h); });
   }
 
-  // hamburger (smalle schermen)
+  // zijbalk wegklikken — op breed scherm verbergen (onthouden), op smal tonen/verbergen
   var tog = document.getElementById('sb-toggle');
+  function breed() { return window.matchMedia('(min-width: 1401px)').matches; }
+  try { if (localStorage.getItem('zijbalk') === 'uit') document.documentElement.classList.add('sb-hidden'); } catch (e) {}
   tog.addEventListener('click', function () {
-    var open = document.documentElement.classList.toggle('sb-open');
-    tog.setAttribute('aria-expanded', String(open));
+    if (breed()) {
+      var verborgen = document.documentElement.classList.toggle('sb-hidden');
+      try { localStorage.setItem('zijbalk', verborgen ? 'uit' : 'aan'); } catch (e) {}
+      tog.setAttribute('aria-expanded', String(!verborgen));
+    } else {
+      var open = document.documentElement.classList.toggle('sb-open');
+      tog.setAttribute('aria-expanded', String(open));
+    }
   });
   sb.addEventListener('click', function (e) {
     if (e.target.closest('a')) document.documentElement.classList.remove('sb-open');
@@ -3499,9 +3507,15 @@ font-size: .86rem; line-height: 1.3; border-radius: 0 4px 4px 0; }
 line-height: 1.3; padding: .18rem .3rem .18rem 1.6rem; border-left: 2px solid transparent; }
 .sb-secties a:hover { color: #2a2520; }
 .sb-secties a.actief { color: #2a2520; border-left-color: #c8a97e; }
-.sb-sec-h3 a { padding-left: 2.3rem; font-size: .74rem; }
+.sb-sec-h3 a { padding-left: 2.3rem; font-size: .72rem; }
+.sb-groep { margin-bottom: .5rem; }
+.sb-secties a { font-size: .74rem; color: #9a938a; }
+.sb-hoofdstuk { font-size: .84rem; }
+.sb-deel { color: #aaa295; }
 
-#sb-toggle { display: none; position: fixed; left: 12px; top: 10px; z-index: 60;
+#boek-sidebar { transition: transform .2s ease; }
+:root.sb-hidden #boek-sidebar { transform: translateX(-102%); }
+#sb-toggle { display: flex; position: fixed; left: 12px; top: 10px; z-index: 60;
 width: 34px; height: 30px; background: #fbf9f4; border: 1px solid #e4dccb; border-radius: 6px;
 cursor: pointer; padding: 7px 8px; flex-direction: column; justify-content: space-between; }
 #sb-toggle span { display: block; height: 2px; background: #6a655c; border-radius: 2px; }
@@ -3519,18 +3533,24 @@ body { width: auto; margin: 0.5em auto; padding: 1.4em 1.1em 3em; }
 #sb-toggle { top: 8px; }
 }
 
-.volgend-hfdst { margin: 3.5em 0 1em; padding-top: 1.6em; border-top: 1px solid #e4dccb; }
+
+.volgend-hfdst { margin: 4.5em 0 1em; padding-top: 1.4em; border-top: 1px solid #e9e2d5; }
 .volgend-hfdst a {
-display: flex; align-items: baseline; gap: 0.5em; flex-wrap: wrap;
-text-decoration: none; color: #2a2520;
-background: #fbf9f4; border: 1px solid #e4dccb; border-radius: 4px;
-padding: 0.85em 1.1em; transition: border-color .15s, box-shadow .15s; }
-.volgend-hfdst a:hover { border-color: #2A79A7; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.volgend-hfdst .vh-label { font-size: 0.82em; color: #8a8377; text-transform: uppercase; letter-spacing: 0.04em; }
+display: flex; align-items: baseline; gap: 0.55em; flex-wrap: wrap;
+text-decoration: none; color: #4a4540;
+background: none; border: none; border-radius: 0; padding: 0; }
+.volgend-hfdst a:hover .vh-titel { text-decoration: underline; text-underline-offset: 3px; }
+.volgend-hfdst a:hover .vh-pijl { transform: translateX(3px); }
+.volgend-hfdst .vh-label { font-size: 0.8em; color: #a89f8e; text-transform: uppercase; letter-spacing: 0.04em; }
 .volgend-hfdst .vh-num { color: #2A79A7; font-weight: 600; }
-.volgend-hfdst .vh-titel { font-weight: 600; }
-.volgend-hfdst .vh-pijl { margin-left: auto; color: #2A79A7; font-size: 1.2em; }
-.volgend-hfdst .vh-slot { color: #8a8377; font-style: italic; }
+.volgend-hfdst .vh-titel { font-weight: 600; color: #2a2520; }
+.volgend-hfdst .vh-pijl { margin-left: auto; color: #a89f8e; font-size: 1.15em; transition: transform .15s; }
+
+.cc-etym { margin-top: 3.5em; padding-top: 1.4em; border-top: 1px solid #f0ebe1;
+font-size: 0.82em; color: rgba(74,69,64,0.42); font-style: italic; line-height: 1.6; }
+.cc-etym em { font-style: italic; }
+.cc-etym a { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(120,114,106,0.35); }
+.cc-etym a:hover { color: rgba(74,69,64,0.7); border-bottom-color: rgba(120,114,106,0.6); }
 </style>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
