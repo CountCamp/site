@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De grabbelton — H3</title>
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57;
+    --amber:#c8913a; --amber-ink:#a9701f;
+    --green:#4d8a5a; --line:#d8c69b; --paper:#fffaf0;
+    --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:190px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='10' viewBox='0 0 190 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 188 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:190px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:640px}
+  canvas{width:100%;display:block;border-radius:12px;background:#faf6ea;
+    border:1.5px solid #d8c69b;
+    box-shadow:0 8px 26px rgba(120,95,45,.18)}
+  .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0 6px}
+  .controls button{--rot:0deg;transform:rotate(var(--rot))}
+  #grabbel{--rot:-.7deg} #honderd{--rot:.3deg} #veel{--rot:.45deg} #wis{--rot:-.35deg}
+  button{font:inherit;font-size:15.5px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 16px;cursor:pointer;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);
+    transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button:active{transform:rotate(var(--rot)) translateY(1px);box-shadow:none}
+  button.primary{background:#dca94e;border-color:#b3843c;color:#3a2e15}
+  button.primary:hover{background:#e6b85e}
+  .toggle{display:inline-flex;border:1.5px solid #c9a866;background:#f3e9cd;
+    border-radius:10px 12px 9px 12px / 12px 9px 12px 10px;overflow:hidden}
+  .toggle button{border:0;border-radius:0;background:transparent;box-shadow:none}
+  .toggle button:active{transform:none}
+  .toggle button.on{background:#e3cf9c;color:#7a5a12}
+  .slider{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:15.5px;font-style:italic}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:200px;height:5px;border-radius:3px;
+    background:#d8c69b;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;
+    border-radius:50% 46% 52% 48%;background:var(--amber);cursor:pointer;
+    border:1.5px solid #9a7420}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;
+    border-radius:50%;background:var(--amber);cursor:pointer;border:1.5px solid #9a7420}
+  input[type=checkbox]{accent-color:var(--amber)}
+  .nval{color:var(--amber-ink);font-style:normal;font-variant-numeric:tabular-nums;min-width:42px}
+  .narr{margin:16px 0 0;min-height:24px;color:#4a4030;font-size:16.5px;line-height:1.55}
+  .narr b{color:var(--amber-ink);font-weight:600}
+  .sier{margin:32px 0 0;padding:16px 20px;max-width:560px;
+    background:var(--paper);color:#3a2e1a;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
+    border:1px solid #e3d3a8;
+    transform:rotate(-.35deg);
+    box-shadow:0 4px 14px rgba(120,95,45,.22)}
+  .sier code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14.5px;color:#4d7a3a}
+  .sier p{margin:10px 0 0;font-style:italic;color:#6b5f45;font-size:16px}
+  .foot{margin-top:28px;color:#8a7d63;font-size:13.5px;font-style:italic}
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a href="https://countcamp.org/manuscript/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar CountCamp</a>
+  <h1>De grabbelton</h1>
+  <p class="lede">Pak een handvol dobbelstenen, tel het gemiddelde, en hang het bordje aan de muur.
+     Doe het één keer. Doe het tienduizend keer. Kijk wat er met de muur gebeurt.</p>
+
+  <canvas id="c"></canvas>
+
+  <div class="controls">
+    <button id="grabbel" class="primary">Grabbel</button>
+    <button id="honderd">100× grabbelen</button>
+    <button id="veel">Laat de computer 10.000× grabbelen</button>
+    <button id="wis">Wis de muur</button>
+    <span class="toggle" id="pop">
+      <button data-pop="fair" class="on">Eerlijke dobbelstenen</button>
+      <button data-pop="scheef">Scheve ton</button>
+    </span>
+  </div>
+  <div class="controls">
+    <span class="slider">hoeveel pak je per greep?
+      <input type="range" id="n" min="1" max="100" value="4">
+      <span class="nval" id="nval">n = 4</span>
+    </span>
+    <span class="slider" style="margin-left:auto">
+      <label style="cursor:pointer"><input type="checkbox" id="band" checked> middelste 95% tonen</label>
+    </span>
+  </div>
+
+  <p class="narr" id="narr">De muur is nog leeg. Klik <b>Grabbel</b> voor je eerste greep.</p>
+
+  <div class="sier">
+    <code>replicate(10000, mean(sample(1:6, 4)))</code>
+    <p>Dat is de hele truc. Eén regel. De computer verveelt zich nooit.</p>
+  </div>
+
+  <p class="foot">De regressieve ruggengraat · H3 — De grabbelton geschud · speeltje bij de simulatie</p>
+</div>
+
+<script>
+(function(){
+  const cv = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio||1, 2);
+  let W=960, H=560;
+
+  function resize(){
+    W = cv.clientWidth; H = 560;
+    cv.width = W*DPR; cv.height = H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  // ---- populaties over de ogen 1..6 ----
+  const POPS = {
+    fair:   [1,1,1,1,1,1],
+    scheef: [40,25,15,10,6,4]
+  };
+  function pmf(name){ const w=POPS[name]; const s=w.reduce((a,b)=>a+b,0); return w.map(x=>x/s); }
+  function stats(name){
+    const p=pmf(name); let mu=0,va=0;
+    for(let i=0;i<6;i++) mu+=(i+1)*p[i];
+    for(let i=0;i<6;i++) va+=p[i]*(i+1-mu)**2;
+    return {mu, sd:Math.sqrt(va)};
+  }
+  function sampleOne(name){
+    const p=pmf(name); let r=Math.random(), a=0;
+    for(let i=0;i<6;i++){ a+=p[i]; if(r<=a) return i+1; }
+    return 6;
+  }
+
+  // ---- state ----
+  const NB = 60, LO = 1, HI = 6;               // muur: gemiddelden 1..6
+  let bins = new Float64Array(NB);             // targetcounts
+  let drawn = new Float64Array(NB);            // geanimeerde hoogtes
+  let total=0, sum=0;
+  let popName='fair';
+  let n=4;
+  let lastSample=[], lastMean=null, markerX=null, markerAge=1;
+  let scaleTarget=1, scaleNow=1;
+  let showBand=true;
+  let diceAnim=null;                           // {t0} landings-animatie, alleen bij losse greep
+  let meanHidden=false;                        // verbergt het greep-gemiddelde tijdens fase 1 van een losse greep
+  let meanPulse=null;                          // {t0} oplicht-animatie van het gemiddelde (fase 2)
+  let witch=null;                              // {t0,dur,fromLeft} easter-egg heksje op de bezemsteel
+
+  function binOf(m){ let i=Math.floor((m-LO)/(HI-LO)*NB); return Math.max(0,Math.min(NB-1,i)); }
+  function reset(){ bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; sum=0;
+    lastSample=[]; lastMean=null; markerX=null; scaleTarget=1; diceAnim=null;
+    meanHidden=false; meanPulse=null; }
+
+  // bulk-greep: ongewijzigd — snel accumuleren, geen per-greep dice-reveal
+  function grabbel(k=1, animateMarker=true){
+    for(let j=0;j<k;j++){
+      let s=[], sm=0;
+      for(let i=0;i<n;i++){ const v=sampleOne(popName); s.push(v); sm+=v; }
+      const m=sm/n; bins[binOf(m)]++; total++; sum+=m;
+      if(j===k-1){ lastSample=s; lastMean=m; if(animateMarker){ markerX=m; markerAge=0; } }
+    }
+    let mx=0; for(let i=0;i<NB;i++) mx=Math.max(mx,bins[i]);
+    scaleTarget = mx>0? mx : 1;
+  }
+
+  // losse greep — gefaseerde reveal in DRIE stappen:
+  //   dobbelstenen  →(0,25s)→  gemiddelde licht op  →(0,25s)→  bordje valt in de muur
+  function grabbelOne(){
+    let s=[], sm=0;
+    for(let i=0;i<n;i++){ const v=sampleOne(popName); s.push(v); sm+=v; }
+    const m=sm/n;
+    lastSample=s; lastMean=m;                   // fase 1: dobbelstenen meteen tonen (met landing)
+    diceAnim={ t0: performance.now() };          // landings-animatie starten
+    meanHidden=true; meanPulse=null;             // gemiddelde nog verborgen
+    // fase 2 (~0,25s): het gemiddelde verschijnt en licht op
+    setTimeout(function(){
+      meanHidden=false; meanPulse={ t0: performance.now() };
+      say('Het <b>gemiddelde</b> van je greep is ' + m.toFixed(2) + '.');
+    }, 250);
+    // fase 3 (~0,25s later): het bordje valt in de muur — identieke binning/statistiek, alleen later gecommit
+    setTimeout(function(){
+      bins[binOf(m)]++; total++; sum+=m;
+      markerX=m; markerAge=0;                     // vallend gemiddelde landt op het bordje
+      let mx=0; for(let i=0;i<NB;i++) mx=Math.max(mx,bins[i]);
+      scaleTarget = mx>0? mx : 1;
+      say(total<8?'En daar hangt het bordje aan de muur. Nog eens.':
+        'Zie je de hoop groeien? De muur is de <b>steekproevenverdeling</b>.');
+    }, 500);
+  }
+
+  // ---- kleuren & letter (daglicht / perkament / hout — licht) ----
+  const C={
+    ink:'#3b352b', dim:'#7a6f57', faint:'#a89a7e',
+    amber:'#c8913a', amberInk:'#a9701f',
+    wood1:'#e0b25a', wood2:'#b3843c', woodEdge:'rgba(90,66,28,.55)',
+    green1:'#6faa72', green2:'#4d8a5a',
+    paper:'#fffcf4', pip:'#3b352b',
+    axis:'#b09a6a', bordeaux:'#b0495a'
+  };
+  const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
+  function fnt(px,style,weight){ return (style?style+' ':'')+(weight?weight+' ':'')+px+'px '+SERIF; }
+
+  // ---- wiebel-gereedschap (deterministische jitter: stabiel per frame) ----
+  function jit(a,b,amp){
+    const v=Math.sin(a*12.9898+b*78.233)*43758.5453;
+    return ((v-Math.floor(v))-0.5)*2*amp;
+  }
+  function wline(x1,y1,x2,y2,amp){
+    amp=(amp==null)?1.2:amp;
+    const d=Math.hypot(x2-x1,y2-y1), segs=Math.max(2,Math.round(d/26));
+    ctx.beginPath();
+    ctx.moveTo(x1+jit(x1,y1,amp), y1+jit(y1,x1,amp));
+    for(let i=1;i<=segs;i++){
+      const t=i/segs, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t;
+      ctx.lineTo(x+jit(x,y,amp), y+jit(y,x,amp));
+    }
+    ctx.stroke();
+  }
+  function wrectPath(x,y,w,h,amp){
+    amp=(amp==null)?Math.min(1.4,w*0.06+0.5):amp;
+    const pts=[];
+    function edge(x1,y1,x2,y2){
+      const d=Math.hypot(x2-x1,y2-y1), m=Math.max(1,Math.round(d/22));
+      for(let i=0;i<m;i++){
+        const t=i/m, px=x1+(x2-x1)*t, py=y1+(y2-y1)*t;
+        pts.push([px+jit(px,py,amp), py+jit(py,px,amp)]);
+      }
+    }
+    edge(x,y,x+w,y); edge(x+w,y,x+w,y+h); edge(x+w,y+h,x,y+h); edge(x,y+h,x,y);
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+    ctx.closePath();
+  }
+
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function ease(t){ return t<.5?2*t*t:1-(-2*t+2)**2/2; }
+  function easeOutBack(t){ const c1=1.70158, c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); }
+
+  // dobbelsteen: perkament-vlakje, inkt-pippen, elk steentje net even scheef
+  const PIPS={1:[[.5,.5]],2:[[.28,.28],[.72,.72]],3:[[.28,.28],[.5,.5],[.72,.72]],
+    4:[[.28,.28],[.72,.28],[.28,.72],[.72,.72]],
+    5:[[.28,.28],[.72,.28],[.5,.5],[.28,.72],[.72,.72]],
+    6:[[.28,.26],[.72,.26],[.28,.5],[.72,.5],[.28,.74],[.72,.74]]};
+  function die(x,y,s,v,idx,scale){
+    scale=(scale==null)?1:scale;
+    ctx.save();
+    ctx.translate(x+s/2,y+s/2);
+    ctx.rotate(jit(idx*3.7+1.1, v*2.3, 0.055));
+    ctx.scale(scale,scale);
+    ctx.translate(-s/2,-s/2);
+    // zachte slagschaduw zodat het steentje loskomt van het lichte perkament
+    ctx.shadowColor='rgba(90,66,28,.28)'; ctx.shadowBlur=6; ctx.shadowOffsetY=3;
+    wrectPath(0,0,s,s,0.9);
+    ctx.fillStyle=C.paper; ctx.fill();
+    ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+    ctx.strokeStyle='rgba(90,66,28,.85)'; ctx.lineWidth=1.4; ctx.stroke();
+    ctx.fillStyle=C.pip;
+    PIPS[v].forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p[0]*s+jit(p[0]*7+idx,p[1]*5,0.4), p[1]*s+jit(p[1]*7+idx,p[0]*5,0.4), s*0.088, 0, 7);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  // heksje op de bezemsteel — ode aan Hanna Kraan, klein silhouet in inkt (easter egg)
+  function drawWitch(cx,cy,s,dir,alpha){
+    ctx.save();
+    ctx.globalAlpha=alpha;
+    ctx.translate(cx,cy);
+    ctx.scale(dir,1);                         // laat 'r de vliegrichting op kijken
+    ctx.fillStyle='#4a3a2a'; ctx.strokeStyle='#4a3a2a';
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    // bezemsteel
+    ctx.lineWidth=s*0.11;
+    ctx.beginPath(); ctx.moveTo(-s*1.30, s*0.18); ctx.lineTo(s*1.15, -s*0.12); ctx.stroke();
+    // bezem-bos aan de staart
+    ctx.lineWidth=s*0.06;
+    for(let i=-2;i<=2;i++){
+      ctx.beginPath(); ctx.moveTo(-s*1.00, s*0.13);
+      ctx.lineTo(-s*1.52, s*0.13+i*s*0.15); ctx.stroke();
+    }
+    // mantel (zittend lijf)
+    ctx.beginPath();
+    ctx.moveTo(-s*0.32, s*0.02);
+    ctx.quadraticCurveTo(-s*0.18,-s*0.72, s*0.08,-s*0.68);
+    ctx.quadraticCurveTo(s*0.44,-s*0.60, s*0.30, s*0.05);
+    ctx.closePath(); ctx.fill();
+    // hoofd
+    ctx.beginPath(); ctx.arc(s*0.00,-s*0.80, s*0.19, 0, 7); ctx.fill();
+    // punthoed (iets naar achter gebogen)
+    ctx.beginPath();
+    ctx.moveTo(-s*0.28,-s*0.90); ctx.lineTo(s*0.30,-s*0.90);
+    ctx.lineTo(-s*0.16,-s*1.72); ctx.closePath(); ctx.fill();
+    // hoedrand
+    ctx.lineWidth=s*0.10;
+    ctx.beginPath(); ctx.moveTo(-s*0.36,-s*0.90); ctx.lineTo(s*0.40,-s*0.90); ctx.stroke();
+    ctx.restore();
+  }
+  function updateWitch(){
+    const now=performance.now();
+    if(!witch && Math.random()<0.0008)         // heel af en toe: ~eens per ~20-30s
+      witch={ t0:now, dur:5200, fromLeft:Math.random()<0.5 };
+    if(!witch) return;
+    const p=(now-witch.t0)/witch.dur;
+    if(p>=1){ witch=null; return; }
+    const s=14, margin=64;
+    const startX=witch.fromLeft? -margin : W+margin;
+    const endX  =witch.fromLeft?  W+margin : -margin;
+    const x=lerp(startX,endX,p);
+    const y=30 + Math.sin(p*Math.PI*3)*9;       // zachte golf langs de bovenrand
+    const fade=Math.sin(Math.max(0,Math.min(1,p))*Math.PI);
+    drawWitch(x, y, s, witch.fromLeft?1:-1, 0.5*fade);
+    // een klein sterretje in haar spoor
+    ctx.save(); ctx.globalAlpha=0.45*fade; ctx.fillStyle=C.amber;
+    ctx.beginPath();
+    ctx.arc(x-(witch.fromLeft?1:-1)*s*1.8, y+Math.sin(p*38)*3, 1.4, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+
+  // ---- render ----
+  const AX_Y=498, AX_L=64, AX_R=()=>W-34;   // muur-as
+  function xPix(v){ return lerp(AX_L, AX_R(), (v-LO)/(HI-LO)); }
+
+  function frame(){
+    // daglicht in het bos: licht perkament + zachte warme gloed achter de muur
+    const sky=ctx.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,'#fbf5e6'); sky.addColorStop(1,'#f2e9d2');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+    const glow=ctx.createRadialGradient(W*0.5, AX_Y-70, 30, W*0.5, AX_Y-70, Math.max(W*0.55,340));
+    glow.addColorStop(0,'rgba(233,193,120,.20)'); glow.addColorStop(1,'rgba(233,193,120,0)');
+    ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
+
+    const st=stats(popName), se=st.sd/Math.sqrt(n);
+
+    // eased hoogtes + schaal
+    scaleNow=lerp(scaleNow,scaleTarget,0.12);
+    for(let i=0;i<NB;i++) drawn[i]=lerp(drawn[i],bins[i],0.18);
+    if(markerAge<1) markerAge=Math.min(1,markerAge+0.045);
+
+    // --- paneel: de ton (populatie) ---
+    ctx.fillStyle=C.dim; ctx.font=fnt(15,'italic'); ctx.textAlign='left';
+    ctx.fillText('de ton', 40, 40);
+    const p=pmf(popName), pw=30, gap=8, px0=40, pmax=Math.max(...p), pTop=58, pH=118;
+    for(let i=0;i<6;i++){
+      const h=(p[i]/pmax)*pH, bx=px0+i*(pw+gap), by=pTop+pH-h;
+      const gg=ctx.createLinearGradient(0,by,0,pTop+pH);
+      gg.addColorStop(0,C.green1); gg.addColorStop(1,C.green2);
+      wrectPath(bx,by,pw,h,0.9);
+      ctx.fillStyle=gg; ctx.fill();
+      ctx.strokeStyle='rgba(45,70,45,.55)'; ctx.lineWidth=1.2; ctx.stroke();
+      ctx.fillStyle=C.dim; ctx.font=fnt(12); ctx.textAlign='center';
+      ctx.fillText(i+1, bx+pw/2, pTop+pH+15);
+    }
+    // plankje onder de ton-staafjes
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.2;
+    wline(px0-6, pTop+pH+1, px0+6*pw+5*gap+6, pTop+pH+1, 0.9);
+    ctx.textAlign='left'; ctx.fillStyle=C.dim; ctx.font=fnt(13,'italic');
+    ctx.fillText('μ = '+st.mu.toFixed(2)+'   σ = '+st.sd.toFixed(2), px0, pTop+pH+35);
+
+    // --- paneel: je greep ---
+    ctx.fillStyle=C.dim; ctx.font=fnt(15,'italic'); ctx.fillText('je greep', 330, 40);
+    if(lastSample.length){
+      const show=Math.min(lastSample.length,14), ds=34, dg=8, gx0=330, gy=58;
+      const now=performance.now();
+      for(let i=0;i<show;i++){
+        const col=i%7, row=Math.floor(i/7);
+        const dx=gx0+col*(ds+dg), dy=gy+row*(ds+dg);
+        let scale=1, drop=0, alpha=1;
+        if(diceAnim){                              // alleen na een losse greep
+          const el=now-diceAnim.t0-i*45;           // lichte stagger per steentje
+          const p2=Math.max(0,Math.min(1, el/230));
+          scale=(el<=0)?0:easeOutBack(p2);          // veert net over 1 en zakt terug
+          drop=(1-p2)*-16;                          // valt van net boven de plek
+          alpha=Math.max(0,Math.min(1, el/120));
+        }
+        if(alpha<=0) continue;
+        ctx.globalAlpha=alpha;
+        die(dx, dy+drop, ds, lastSample[i], i, scale);
+        ctx.globalAlpha=1;
+      }
+      if(lastSample.length>show){ ctx.fillStyle=C.dim; ctx.font=fnt(13,'italic');
+        ctx.fillText('… (n='+lastSample.length+')', gx0, gy+2*(ds+dg)+16); }
+      if(!meanHidden){
+        ctx.save();
+        ctx.fillStyle=C.amberInk; ctx.font=fnt(16,'italic','600'); ctx.textAlign='left';
+        if(meanPulse){                                   // fase 2: even oplichten en terugzakken
+          const pp=Math.max(0,Math.min(1,(now-meanPulse.t0)/450));
+          const sc=1+0.20*(1-pp);
+          ctx.shadowColor='rgba(200,145,58,'+(0.8*(1-pp))+')'; ctx.shadowBlur=18*(1-pp);
+          ctx.translate(gx0,176); ctx.scale(sc,sc);
+          ctx.fillText('gemiddelde = '+lastMean.toFixed(2), 0, 0);
+          if(pp>=1) meanPulse=null;
+        } else {
+          ctx.fillText('gemiddelde = '+lastMean.toFixed(2), gx0, 176);
+        }
+        ctx.restore();
+      }
+    } else {
+      ctx.fillStyle=C.faint; ctx.font=fnt(15,'italic');
+      ctx.fillText('— nog niks gepakt —', 330, 70);
+    }
+
+    // --- de muur (steekproevenverdeling) ---
+    // 95%-band: warme kaarslicht-waas, sterkst bij de grond
+    if(showBand && total>0){
+      const lo=xPix(Math.max(LO,st.mu-2*se)), hi=xPix(Math.min(HI,st.mu+2*se));
+      const bnd=ctx.createLinearGradient(0,214,0,AX_Y);
+      bnd.addColorStop(0,'rgba(200,145,58,.04)'); bnd.addColorStop(1,'rgba(200,145,58,.20)');
+      ctx.fillStyle=bnd; ctx.fillRect(lo, 214, hi-lo, AX_Y-214);
+    }
+    // as: inkt-lijn met wiebel
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3;
+    wline(AX_L,AX_Y,AX_R(),AX_Y,1.1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(12); ctx.textAlign='center';
+    for(let v=1;v<=6;v++){ const xx=xPix(v);
+      ctx.strokeStyle=C.axis; ctx.lineWidth=1.2; wline(xx,AX_Y,xx,AX_Y+5,0.6);
+      ctx.fillText(v, xx, AX_Y+19); }
+    // μ-lijn: gestippeld bordeaux
+    const xmu=xPix(st.mu);
+    ctx.strokeStyle='rgba(176,73,90,.6)'; ctx.lineWidth=1.2; ctx.setLineDash([5,5]);
+    wline(xmu,214,xmu,AX_Y,0.8); ctx.setLineDash([]);
+
+    // bordjes: houten plankjes stapelen zich op tot de muur
+    const maxBarH=AX_Y-224, bw=(AX_R()-AX_L)/NB;
+    // vaste plank-hoogte: elk bordje is een échte plank. Torens groeien met een vaste
+    // plank per greep; pas als de langste toren het plafond raakt gaan ze allemaal soepel krimpen.
+    const TARGET_PLANK=8;                                  // gewenste plank-hoogte (px): klein maar zichtbaar
+    const PLAFOND=Math.round(maxBarH/TARGET_PLANK);        // uit de geometrie: ≈34 bordjes → dan begint het krimpen
+    const plankH = maxBarH / Math.max(PLAFOND, scaleNow);  // = min(VASTE_PLANK, muur/hoogste_toren); soepel via scaleNow-lerp
+    for(let i=0;i<NB;i++){
+      if(drawn[i]<=0.01) continue;
+      const h=Math.min(maxBarH, drawn[i]*plankH), bwid=bw-1.5, bx=AX_L+i*bw-bwid/2;  // balk gecentreerd op de tick (xPix van de bin-waarde), niet in de cel
+      if(h<1.4){ ctx.fillStyle=C.wood2; ctx.fillRect(bx, AX_Y-h, bwid, h); continue; }
+      const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y);
+      g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);
+      wrectPath(bx, AX_Y-h, bwid, h, 0.8);
+      ctx.fillStyle=g; ctx.fill();
+      ctx.strokeStyle=C.woodEdge; ctx.lineWidth=1; ctx.stroke();
+      // naden tussen de gestapelde plankjes
+      if(h>16){
+        ctx.strokeStyle='rgba(90,66,28,.28)'; ctx.lineWidth=1; ctx.beginPath();
+        for(let yy=AX_Y-10; yy>AX_Y-h+4; yy-=10){
+          ctx.moveTo(bx+1+jit(bx,yy,0.8), yy+jit(yy,bx,0.7));
+          ctx.lineTo(bx+bwid-1+jit(bx+bwid,yy,0.8), yy+jit(yy,bx+bwid,0.7));
+        }
+        ctx.stroke();
+      }
+    }
+
+    // lineaaltje σ/√n  (lengte = 1 SE)
+    const rulY=AX_Y-maxBarH-16, r0=xmu, r1=xPix(st.mu+se);
+    ctx.strokeStyle=C.amber; ctx.lineWidth=2;
+    wline(r0,rulY,r1,rulY,0.7);
+    wline(r0,rulY-4,r0,rulY+4,0.5);
+    wline(r1,rulY-4,r1,rulY+4,0.5);
+    ctx.fillStyle=C.amberInk; ctx.font=fnt(14,'italic'); ctx.textAlign='left';
+    ctx.fillText('σ/√n = '+se.toFixed(2), r1+8, rulY+4);
+
+    // marker (vallend gemiddelde bij enkele greep) — een vonkje
+    if(markerX!=null && markerAge<1){
+      const barTop=AX_Y-Math.min(maxBarH, drawn[binOf(markerX)]*plankH);
+      const mx2=xPix(markerX), my=lerp(200, barTop, ease(markerAge));
+      ctx.save();
+      ctx.globalAlpha=1-markerAge*0.3;
+      ctx.shadowColor='rgba(200,145,58,.7)'; ctx.shadowBlur=9;
+      ctx.fillStyle=C.amber;
+      ctx.beginPath(); ctx.arc(mx2,my,5,0,7); ctx.fill();
+      ctx.restore();
+    }
+
+    // stats rechtsboven
+    ctx.textAlign='right'; ctx.fillStyle=C.dim; ctx.font=fnt(13,'italic');
+    ctx.fillText('grepen: '+total, W-34, 40);
+    if(total>0){ ctx.fillStyle=C.green2;
+      ctx.fillText('gemiddelde van de muur: '+(sum/total).toFixed(2), W-34, 58); }
+
+    updateWitch();                              // easter-egg: heksje scheert af en toe langs de bovenrand
+
+    requestAnimationFrame(frame);
+  }
+
+  // ---- narratie ----
+  const narr=document.getElementById('narr');
+  function say(html){ narr.innerHTML=html; }
+
+  // ---- interactie ----
+  document.getElementById('grabbel').onclick=()=>{ grabbelOne(); };
+  document.getElementById('honderd').onclick=()=>{ diceAnim=null; meanHidden=false; meanPulse=null;
+    animateMany(100, 1800);                      // 100 grepen, rustig opgebouwd in ~1,8s
+    say('Honderd grepen op een rij — kijk hoe de muur zich vult, bordje voor bordje.'); };
+  document.getElementById('veel').onclick=()=>{ diceAnim=null; meanHidden=false; meanPulse=null;
+    animateMany(10000);
+    say('Kijk hoe de muur zich opbouwt — duizenden grepen achter elkaar. '+
+      'De skyline wordt een <b>klok</b>.'); };
+  document.getElementById('wis').onclick=()=>{ reset(); say('Muur leeg. Begin opnieuw.'); };
+  document.getElementById('band').onchange=e=>{ showBand=e.target.checked; };
+
+  const nEl=document.getElementById('n'), nval=document.getElementById('nval');
+  nEl.oninput=e=>{ n=+e.target.value; nval.textContent='n = '+n; reset();
+    say('Grotere greep → het <b>lineaaltje σ/√n</b> krimpt → de muur wordt smaller. '+
+        'Grabbel maar en zie het.'); };
+
+  document.querySelectorAll('#pop button').forEach(b=>{
+    b.onclick=()=>{ document.querySelectorAll('#pop button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); popName=b.dataset.pop; reset();
+      say(popName==='scheef'
+        ? 'De ton is nu <b>scheef</b>. Grabbel toch — en kijk of de muur alsnog een klok wordt.'
+        : 'Terug naar eerlijke dobbelstenen.'); };
+  });
+
+  // grote batch: tijd-gestuurd over ~5s, zodat je de muur ziet groeien
+  // (geen per-greep dice-reveal → wél zichtbaar opbouwen, greep na greep)
+  let anim=null;
+  function animateMany(K, durMs=5000){
+    if(anim) cancelAnimationFrame(anim);
+    let done=0; const t0=performance.now();
+    (function step(now){
+      now = now || performance.now();
+      // plaats zoveel grepen als bij de verstreken tijd hoort → constante opbouw
+      const target=Math.min(K, Math.floor(K*(now-t0)/durMs));
+      const k=target-done;
+      if(k>0){ grabbel(k,false); done=target; }
+      if(done<K) anim=requestAnimationFrame(step);
+    })(performance.now());
+  }
+
+  window.addEventListener('resize',resize);
+  resize(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
