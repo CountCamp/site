@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Hoofdstuk 7 · Power en fouten – R-oefenboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-cf5ee1d16def7895729d1ac812351ea4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_p_waarde.html">Hoofdstuk 7 · Hoe beslis je?</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_power.html">Hoofdstuk 7 · Power en fouten</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R-oefenboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 0 · Voor je begint</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 1 · Gemiddelde en spreiding</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 2 · De vorm van de hoop</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 3 · Van steekproef naar populatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 4 · Correlatie en scatterplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 5 · Cronbachs α</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 6 · Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Hoofdstuk 7 · Hoe beslis je?</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 7 · De p-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Hoofdstuk 7 · Power en fouten</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 8 · Meer dan één verschil</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Hoofdstuk 9 · Groepen zijn ook getallen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 9 · De t-toets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 9 · Cohens d</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 9 · ANOVA en η²</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 10 · Verschil in verschil</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 11 · Het doorgegeven verschil</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hoofdstuk 12 · De odds ratio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schil (naast het boek)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schil · Kruistabel en χ²</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schud-speeltjes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w4_schud_correlatie.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Correlatie schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_schud_verschil.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Het verschil schudden (t)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_p_planten.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De p geteld</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/s2_schud_tabel.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De tabel schudden (χ²)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w12_schud_odds.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De odds schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_trek_interval.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Trek opnieuw (interval)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Installatie &amp; instellingen</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">In dit hoofdstuk</h2>
+   
+  <ul>
+  <li><a href="#de-prikkel" id="toc-de-prikkel" class="nav-link active" data-scroll-target="#de-prikkel">De prikkel</a></li>
+  <li><a href="#speel-het" id="toc-speel-het" class="nav-link" data-scroll-target="#speel-het">Speel het</a></li>
+  <li><a href="#voel-het" id="toc-voel-het" class="nav-link" data-scroll-target="#voel-het">Voel het</a></li>
+  <li><a href="#snap-het" id="toc-snap-het" class="nav-link" data-scroll-target="#snap-het">Snap het</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_p_waarde.html">Hoofdstuk 7 · Hoe beslis je?</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_power.html">Hoofdstuk 7 · Power en fouten</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Hoofdstuk 7 · Power en fouten</h1>
+<p class="subtitle lead">Power, type I en II · <em>statistical power</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="de-prikkel" class="level2">
+<h2 class="anchored" data-anchor-id="de-prikkel">De prikkel</h2>
+<p>Een onderzoeker heeft iets bedacht waar ze in gelooft. Een nieuwe aanpak, zorgvuldig opgezet, dertig mensen doen mee. Aan het eind is er een verschil, de goede kant op — maar de toets zegt <em>p</em> = .21. Niet significant. En ergens in een verslag verschijnt de zin: <em>“de interventie bleek niet effectief.”</em></p>
+<p>Wacht even.</p>
+<p>Hier is het getal dat jeukt.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Stel dat de aanpak écht werkt — een keurig middelgroot effect, niks bijzonders. Bij een studie van dit formaat is de kans dat de toets dat echte effect ook <strong>víndt</strong>… ongeveer <strong>40%</strong>. De studie mist vaker dan hij raakt. Een muntje opgooien had een eerlijker kans gegeven.</p>
+<p>Die kans heeft een naam: <strong>power</strong> — de kans dat je een écht effect ook vindt. In dit blok vragen we ’m eerst op, dan gaan we ’m <em>zien</em>, en dan snappen we waarom “niet significant” zo vaak iets anders betekent dan “werkt niet”.</p>
+</section>
+<section id="speel-het" class="level2">
+<h2 class="anchored" data-anchor-id="speel-het">Speel het</h2>
+<p>Vraag R hoe sterk zo’n studie eigenlijk staat. <code>power.t.test()</code> wil drie ingrediënten: hoeveel mensen per groep (<code>n</code>), hoe groot het echte effect (<code>delta</code>), en hoeveel spreiding (<code>sd</code>). Zet je <code>sd = 1</code>, dan is <code>delta</code> meteen Cohens <em>d</em> — dus <code>delta = 0.5</code> is het klassieke middelgrote effect.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · trek eraan
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hoe groot is de kans dat 24 per groep een middelgroot effect vindt?</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">24</span>, <span class="at">delta =</span> <span class="fl">0.5</span>, <span class="at">sd =</span> <span class="dv">1</span>)        <span class="co"># → power = 0.40</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># en hoeveel heb je nodig voor de gangbare norm, power = .80?</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">delta =</span> <span class="fl">0.5</span>, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">power =</span> .<span class="dv">80</span>)   <span class="co"># → n = 64 per groep</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Daar staan de twee getallen van dit blok. Met <strong>24 per groep</strong> is de power maar <strong>.40</strong>: zes van de tien keer komt zo’n studie thuis met “niet significant” — over een effect dat er wél is. Wil je de gangbare norm van <strong>power = .80</strong> halen, dan heb je <strong>64 per groep</strong> nodig. Geen 24. Vierenzestig. En trek gerust nog even verder aan die knoppen: maak <code>delta</code> kleiner en kijk wat er met <code>n</code> gebeurt. Het wordt niet gezellig.</p>
+</section>
+<section id="voel-het" class="level2">
+<h2 class="anchored" data-anchor-id="voel-het">Voel het</h2>
+<p>Power is een kans, en kansen kun je tellen. Dus bouwen we duizend werelden waarin het effect <strong>écht bestaat</strong> — door ons eigenhandig ingebakken. In elke wereld trekken we twee groepen van 24: de ene rond 0.5, de andere rond 0, spreiding 1. Dat is een echt effect van <em>d</em> = 0.5, gegarandeerd, want wij hebben ’m er zelf in gestopt. Dan draaien we in elke wereld de <em>t</em>-toets, en tellen we hoe vaak hij het effect oppikt.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · tel hoe vaak de studie slaagt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · tel hoe vaak de studie slaagt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="dv">24</span>, <span class="fl">0.5</span>), <span class="fu">rnorm</span>(<span class="dv">24</span>, <span class="dv">0</span>))<span class="sc">$</span>p.value <span class="sc">&lt;</span> .<span class="dv">05</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># → ongeveer 0.40</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Ongeveer 400 van de duizend studies vinden het effect dat er — op ons woord — écht in zit. De andere zeshonderd komen thuis met “niet significant”, over iets dat bestáát. Verander nu de twee 24’s in 64 en tel opnieuw: ongeveer 80% slaagt. <strong>Dat aandeel ís de power</strong> — niet uit een formule, maar uit hoe vaak de studie slaagt als er echt iets te vinden valt.</p>
+<p>En zie je de spiegeling? In de schud-blokken bouwden we duizend werelden waarin <strong>niks</strong> was, en telden we hoe vaak het toeval tóch iets liet zien — dat aandeel werd de <em>p</em>. Hier bouwen we duizend werelden waarin <strong>wél</strong> iets is, en tellen we hoe vaak we het zien. Twee kanten van dezelfde telling. En dus, zo meteen: twee fouten.</p>
+</section>
+<section id="snap-het" class="level2">
+<h2 class="anchored" data-anchor-id="snap-het">Snap het</h2>
+<p>Elke toets kan op twee manieren de mist in. Ze hebben saaie namen en een heel verschillende reputatie.</p>
+<ul>
+<li><strong>Type I — het valse alarm.</strong> Er is niks, en toch zegt je toets <em>p</em> &lt; .05: je ziet een effect dat er niet is. De kans daarop heb je zelf gekozen: α = .05. Uit de schud-blokken ken je ’m al — het zijn die ~50 van de 1000 toeval- werelden die toevallig tóch ver genoeg komen.</li>
+<li><strong>Type II — het missen.</strong> Er is wél iets, en je toets ziet het niet. De kans daarop is 1 − power. Bij onze studie van 24 per groep: 1 − .40 = <strong>.60</strong>.</li>
+</ul>
+<p>Kijk even goed naar die twee getallen naast elkaar. Het valse alarm bewaken we streng en collectief — .05, afspraak, iedereen houdt zich eraan. En het missen laten we ondertussen vrolijk oplopen tot .60, zonder dat er een haan naar kraait. We zijn doodsbang om een spook te zien, en halen onze schouders op over het niet zien van wat er wél is.</p>
+<p><strong>Daarom de kern van dit blok:</strong> “niet significant” bij een kleine studie betekent vaak niet <em>“geen effect”</em> maar <em>“te weinig power om het te zien”</em>. En dit is geen randgeval: groepen van 20–25 zijn in veel onderzoek — verpleegkundig, psychologisch — eerder regel dan uitzondering. Een flink deel van de “geen effect gevonden”-conclusies gaat dus over studies die een echt effect meestal niet eens hádden kunnen zien. Afwezigheid van bewijs is geen bewijs van afwezigheid — en bij weinig power is afwezigheid van bewijs vooral afwezigheid van kijkvermogen.</p>
+<p><strong>Het wordt erger bij kleine effecten.</strong> Die 64 per groep gold voor een middelgroot effect. Is het echte effect klein (<em>d</em> = 0.2) — en veel echte effecten zíjn klein — dan heb je voor power .80 zo’n <strong>394 per groep</strong> nodig. Wie met dertig mensen naar een klein effect zoekt, zoekt met een theelepeltje naar een onderstroom.</p>
+<p><strong>Hoe beslis je dan?</strong> Twee momenten:</p>
+<ul>
+<li><em>Vooraf</em>, als het jouw studie is: kies het kleinste effect dat je nog de moeite waard vindt, en reken uit hoeveel mensen je nodig hebt voor power .80. (En besef: ook dan accepteer je nog één op de vijf kans om het te missen — .80 is een norm, geen garantie.)</li>
+<li><em>Achteraf</em>, als je andermans “niet significant” leest: kijk éérst naar de <em>n</em>. Klein? Dan is de eerlijke lezing niet “werkt niet” maar “dit onderzoek kon het niet zien”. Dat is geen detail — het is het verschil tussen een aanpak afschrijven en een vraag open houden.</li>
+</ul>
+<div class="boekvorm" data-w="W7">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: duizend werelden waarin het effect écht bestaat, en tellen hoe vaak je studie ’m ziet — dat aandeel is de power.</p>
+<p>In het boek: <strong>W7 — Hoe beslis je?</strong></p>
+<p><em>Daar wordt beslissen een afweging tussen twee fouten: het spook zien dat er niet is, en het missen van wat er wél is — en waarom we de eerste streng bewaken en de tweede stilletjes laten gebeuren.</em></p>
+</div>
+<div class="werk">
+<p>TODO (broertje, geschreven naar het charter): stem-pas nog doen; nummering/ordening van de blokken volgt later (roadmap spoor 1 — herordening naar de boek-hoofdstukken). Geen dataset in dit blok — het gaat over ontwerp; alle getallen komen uit <code>power.t.test()</code>: power bij n=24 = .3959 (afgerond .40), n voor power .80 = 63.77 → 64 per groep; d=0.2 → 393.4 → 394 per groep. De simulatie wiebelt met de seed rond die waarden (≈ .40 / ≈ .80). De JASP/SPSS-tweelingen delen deze tekst; alleen “Speel het” (en de wrapper van het leen-moment in “Voel het”) verschilt. Bij de screenshot-ronde: JASP/SPSS- power-knop per versie checken (JASP-Power-module-locatie wisselt per versie; SPSS Power Analysis bestaat pas in recente versies).</p>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
+
+<ol>
+<li id="fn1"><p>Alle getallen in dit blok zijn nagerekend met <code>power.t.test()</code> in R en met de simulatie in <em>Voel het</em> — berekend, niet overgetikt. Middelgroot effect = Cohens <em>d</em> = 0.5 (Cohen, 1988).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>
