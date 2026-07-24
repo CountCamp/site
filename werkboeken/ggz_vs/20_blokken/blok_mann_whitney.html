@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>De Mann-Whitney-toets – GGZ-VS/JASP-werkboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-cf5ee1d16def7895729d1ac812351ea4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_kruistabel_chikwadraat.html">Schil (naast het boek)</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_mann_whitney.html">De Mann-Whitney-toets</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">GGZ-VS/JASP-werkboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GGZ-VS/JASP-werkboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/00_parkeerkaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De parkeerkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meetniveaus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meetniveaus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gemiddelde en standaardafwijking</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_kwartielen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediaan, kwartielen en scheefheid</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_standaardfout.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Standaardfout en non-respons</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De correlatie <em>r</em> en de scatterplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectgrootte — Cohens <em>d</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cronbachs α</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">W6 · Bestaat het verschil echt?</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>p</em>-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets_gepaard_onafhankelijk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>t</em>-toets: gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power_significant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Significantie en power</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ANOVA en η²</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactie en moderatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De odds ratio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schil (naast het boek)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De kruistabel en χ²</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mann_whitney.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">De Mann-Whitney-toets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/99_register.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het register</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">In dit blok</h2>
+   
+  <ul>
+  <li><a href="#wat-je-ziet" id="toc-wat-je-ziet" class="nav-link active" data-scroll-target="#wat-je-ziet">Wat je ziet</a></li>
+  <li><a href="#wat-er-staat" id="toc-wat-er-staat" class="nav-link" data-scroll-target="#wat-er-staat">Wat er staat</a></li>
+  <li><a href="#waar-het-vandaan-komt" id="toc-waar-het-vandaan-komt" class="nav-link" data-scroll-target="#waar-het-vandaan-komt">Waar het vandaan komt</a></li>
+  <li><a href="#zelf-doen-in-jasp" id="toc-zelf-doen-in-jasp" class="nav-link" data-scroll-target="#zelf-doen-in-jasp">Zelf doen in JASP</a></li>
+  <li><a href="#zelf-opschrijven" id="toc-zelf-opschrijven" class="nav-link" data-scroll-target="#zelf-opschrijven">Zelf opschrijven</a></li>
+  <li><a href="#wat-het-niet-zegt" id="toc-wat-het-niet-zegt" class="nav-link" data-scroll-target="#wat-het-niet-zegt">Wat het niet zegt</a></li>
+  <li><a href="#oefening" id="toc-oefening" class="nav-link" data-scroll-target="#oefening">Oefening</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_kruistabel_chikwadraat.html">Schil (naast het boek)</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_mann_whitney.html">De Mann-Whitney-toets</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">De Mann-Whitney-toets</h1>
+<p class="subtitle lead">Als de verdeling niet meewerkt · <em>non-parametric comparison</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p><strong>Vooraf, in één zin:</strong> als de uitkomst scheef is en tegen een vloer plakt, beschrijven gemiddelde en <em>t</em>-toets de data niet eerlijk en pak je een rangtoets — maar non-parametrisch is geen wondermiddel, en een significante <em>U</em> zegt niet hóé groot het verschil is; waarom, staat onderaan bij <em>Wat het niet zegt</em>.</p>
+</blockquote>
+<section id="wat-je-ziet" class="level2">
+<h2 class="anchored" data-anchor-id="wat-je-ziet">Wat je ziet</h2>
+<p><strong>In het kort.</strong> Een toets-getal met een <em>p</em>, in een zin waar opeens <strong>medianen</strong> staan in plaats van gemiddelden: U = 219.5, p &lt; .001. Dit is de <strong>Mann-Whitney-toets</strong> / <em>Mann-Whitney U test</em> — het non-parametrische / <em>non-parametric</em> alternatief voor de onafhankelijke <em>t</em>-toets, voor als de verdeling van de uitkomst niet meewerkt. Hij loopt in artikelen onder twee namen rond: <em>Mann-Whitney U</em> en <em>Wilcoxon rank-sum</em>. Dat is (vrijwel) dezelfde toets, twee keer uitgevonden; en om het af te maken noemen R en JASP het toets-getal geen <em>U</em> maar <em>W</em>. Laat je daardoor niet afschudden — de <em>p</em> en de conclusie zijn hetzelfde.</p>
+<p>Zo ziet hij eruit in het wild:</p>
+<blockquote class="blockquote">
+<p><em>Voorbeeldfragment, geschreven in de stijl van een resultatensectie — het artikel bestaat niet.</em></p>
+<p>In a randomized pilot (N = 70), the weekly number of panic attacks at post-treatment was heavily skewed, with many patients reporting zero attacks. The exposure group reported fewer weekly panic attacks (Mdn = 1, IQR 0–2.5) than the waitlist group (Mdn = 4, IQR 2–6.5); a Mann-Whitney U test indicated a significant difference, U = 219.5, p &lt; .001, rank-biserial r = .64.</p>
+</blockquote>
+</section>
+<section id="wat-er-staat" class="level2">
+<h2 class="anchored" data-anchor-id="wat-er-staat">Wat er staat</h2>
+<p><strong>In het kort.</strong> Het aantal paniekaanvallen per week is geen nette klokvorm: veel patiënten zitten op of vlak boven de 0 (een <strong>vloereffect</strong> / <em>floor effect</em>), een paar zitten hoog — de verdeling is scheef. Dan zijn gemiddelde en standaardafwijking geen eerlijke samenvatting meer, en de <em>t</em>-toets, die op die twee getallen bouwt, wankelt mee. De Mann-Whitney gooit de meetwaarden daarom om in <strong>rangen</strong> — wie staat waar in de rij? — en vraagt of de ene groep systematisch hoger in de rij staat dan de andere. Hier: ja, ruim (<em>p</em> &lt; .001), en de rang-biseriële <em>r</em> van .64 zegt dat het verschil ook groot is.</p>
+<p>Nu rustig van voren af aan. Zeventig patiënten, gerandomiseerd: vijfendertig op de wachtlijst, vijfendertig kregen exposuretherapie. De uitkomst is het aantal paniekaanvallen in de laatste week. Tel-data als deze kunnen niet onder de nul, en een flink deel van de exposure-groep zít op die nul: de verdeling plakt tegen de vloer en heeft een lange staart naar rechts. Bij zo’n vorm trekt het gemiddelde naar de staart toe en zegt “de gemiddelde patiënt” weinig over de patiënt in het midden. Daarom beschrijft het fragment de groepen met de <strong>mediaan</strong> — de middelste patiënt — en de <strong>interkwartielafstand</strong> / <em>IQR</em>, de middelste helft: wachtlijst mediaan 4 (IQR 2–6.5), exposure mediaan 1 (IQR 0–2.5).</p>
+<p>En daarom toetst het fragment met rangen. Zet alle zeventig patiënten op één rij, van de minste naar de meeste aanvallen, en geef ze een rangnummer. Als exposure niets deed, zouden de twee groepen door elkaar heen in die rij staan en zouden hun rangsommen ongeveer gelijk zijn. Wat je ziet is anders: de exposure-groep klit onderin de rij samen. De <em>U</em> telt precies dat na — je kunt hem lezen als een paren-teller: pak telkens één patiënt uit elke groep en kijk wie de meeste aanvallen heeft. Van alle 35 × 35 = 1225 mogelijke paren wint de wachtlijst-kant in ruim acht van de tien. De <em>p</em> &lt; .001 zegt dat zo’n scheve verdeling van rangen zeldzaam is als beide groepen uit dezelfde verdeling kwamen, en de <strong>rang-biseriële correlatie</strong> / <em>rank-biserial correlation</em> van .64 is diezelfde paren-telling, herschaald tot een effectgrootte tussen −1 en 1 (0 = de groepen winnen even vaak). Onthoud die laatste — hij komt onderaan terug.</p>
+</section>
+<section id="waar-het-vandaan-komt" class="level2">
+<h2 class="anchored" data-anchor-id="waar-het-vandaan-komt">Waar het vandaan komt</h2>
+<p>Eerlijk: deze toets heeft <strong>geen eigen hoofdstuk in het boek</strong> — hij hoort bij de schil <em>Als de verdeling niet meewerkt</em>. Maar hij leunt volledig op twee dingen die je al hebt. Uit de boek-eenheid <em>De vorm van de hoop</em>: dat een verdeling een vórm heeft, dat scheefheid bestaat, en dat de mediaan de buurman van het gemiddelde is die zich niets van uitschieters aantrekt. En uit <em>Bestaat het verschil echt?</em>: de onafhankelijke <em>t</em>-toets — de vraag is hier exact dezelfde (<em>bestaat het verschil tussen twee groepen echt?</em>), alleen wordt hij gesteld aan data die het gemiddelde niet goed dragen. De Mann-Whitney is dus geen nieuw soort denken; het is dezelfde vraag met ander gereedschap.</p>
+<p>En één brug vooruit: wat de Mann-Whitney is voor de <em>onafhankelijke</em> <em>t</em>-toets, is de <em>Wilcoxon signed-rank</em> voor de <em>gepaarde</em> — kom je een scheve voor-na-vergelijking tegen, dan zoek je die naam. In JASP wonen ze op dezelfde plek als hun <em>t</em>-broers.</p>
+</section>
+<section id="zelf-doen-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-doen-in-jasp">Zelf doen in JASP</h2>
+<p><a href="../10_data/stemming_scheef.csv" class="data-download" download="stemming_scheef.csv">⬇ Download de data — <code>stemming_scheef.csv</code></a></p>
+<p>Bij dit blok hoort het databestand <code>stemming_scheef.csv</code>: 70 rijen, drie kolommen — <code>id</code>, <code>groep</code> (wachtlijst of exposure) en <code>paniek_week</code> (het aantal paniekaanvallen in de laatste week). De rijen zijn gegenereerd — er zit geen echte patiënt in — en ze reproduceren precies de uitkomsten uit het fragment.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open het bestand in JASP (menu linksboven → Open).</li>
+<li>Klik in de balk bovenin op <strong>T-Tests</strong> en kies onder Classical <strong>Independent Samples T-Test</strong>.</li>
+<li>Sleep <code>paniek_week</code> naar <strong>Dependent Variables</strong> en <code>groep</code> naar <strong>Grouping Variable</strong>.</li>
+<li>Vink onder <strong>Tests</strong> aan: <strong>Mann-Whitney</strong> — en laat <strong>Student</strong> ernaast aanstaan, ter vergelijking. Vink onder <strong>Additional Statistics</strong> aan: <strong>Effect Size</strong> en <strong>Descriptives</strong>.</li>
+<li>Voor de medianen en het plaatje: open ernaast <strong>Descriptives</strong>, sleep <code>paniek_week</code> naar Variables en <code>groep</code> naar <strong>Split</strong>; vink onder Statistics <strong>Median</strong> en de kwartielen aan, en onder Basic plots <strong>Distribution plots</strong>.</li>
+</ol>
+</div>
+</div>
+<p>Kijk eerst naar het plaatje: de verdeling hangt tegen de nul aan en loopt naar rechts uit — 16 van de 70 patiënten (23%) hebben nul aanvallen, en de scheefheid in de Descriptives-tabel is 1.28. Dít is waarom dit blok bestaat; de toetskeuze begint bij kijken, niet bij rekenen. In de toetstabel staat in de rij Mann-Whitney het toets-getal 219.5 (JASP noemt het <em>W</em>, artikelen meestal <em>U</em> — zelfde beest), met <em>p</em> &lt; .001, en als effectgrootte de rank-biserial correlation −0.642. In de Descriptives per groep: wachtlijst mediaan 4, exposure mediaan 1.</p>
+<p>Dat minteken kén je uit de andere blokken: kijk welke groep JASP van welke aftrekt. JASP zet de groepen alfabetisch — exposure min wachtlijst — en exposure staat lager in de rangen, dus −0.642. Het fragment rapporteert de grootte, .64; het teken vertelt de richting.</p>
+<p>En de rij Student erboven? Ook ruim significant: <em>t</em>(68) = −4.73, <em>p</em> &lt; .001. De twee toetsen zijn het hier dus roerend eens — onthoud dat; het scheelt je hieronder een misverstand.</p>
+</section>
+<section id="zelf-opschrijven" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-opschrijven">Zelf opschrijven</h2>
+<div class="apa callout callout-style-default callout-note callout-titled" title="Schrijf het op — de Mann-Whitney-toets">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Schrijf het op — de Mann-Whitney-toets
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor je eigen Nederlandstalige literatuurstudie:</p>
+<blockquote class="blockquote">
+<p>De exposuregroep rapporteerde na afloop minder paniekaanvallen per week (mediaan 1, interkwartielafstand 0–2.5) dan de wachtlijstgroep (mediaan 4, interkwartielafstand 2–6.5). Omdat de uitkomst sterk scheef verdeeld was met een vloereffect, zijn de groepen vergeleken met een Mann-Whitney-toets: <em>U</em> = 219.5, <em>p</em> &lt; .001, rang-biseriële <em>r</em> = .64 — een groot verschil.</p>
+</blockquote>
+<p>Drie werkafspraken daarbij:</p>
+<ul>
+<li><strong>Laat beschrijving en toets hetzelfde verhaal vertellen.</strong> Toets je non-parametrisch, beschrijf dan met mediaan en interkwartielafstand per groep — niet met <em>M</em> en <em>SD</em>. Een gemiddelde naast een rangtoets is een half omgekleed resultaat.</li>
+<li><strong>Zeg wáárom je non-parametrisch toetst</strong> — één zin is genoeg (scheve verdeling, vloereffect, uitschieters). Zonder die zin lijkt de toetskeuze willekeur, en willekeur in toetskeuze is precies waar lezers argwanend van worden.</li>
+<li><strong>Neem een effectgrootte op.</strong> Een significante <em>U</em> zonder rang-biseriële <em>r</em> (en zonder de medianen) is een half getal — significant is geen grootte, ook hier niet.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="wat-het-niet-zegt" class="level2">
+<h2 class="anchored" data-anchor-id="wat-het-niet-zegt">Wat het niet zegt</h2>
+<p>De verleidelijkste redenering die je over dit fragment kunt opschrijven is: <em>“de normaliteitstoets was significant, dus de t-toets mocht niet; de Mann-Whitney zegt dat de medianen verschillen — en non-parametrisch is sowieso de veiligste keuze.”</em> Eén korte zin, drie haarscheurtjes.</p>
+<p><strong>“De normaliteitstoets was significant, dus.”</strong> Of een verdeling normaal genoeg is, beslis je niet met één significantietoets, maar door te kíjken. Toetsen als Shapiro-Wilk hebben een gemene eigenschap: bij grote steekproeven slaan ze aan op piepkleine, onschuldige afwijkingen, en bij kleine steekproeven — waar het er juist toe doet — missen ze grove. Het plaatje, de scheefheid en de vloer vertellen je hier alles: 23% van de patiënten op nul, scheefheid 1.28, een staart naar rechts. Dát is het argument, niet een <em>p</em> uit een normaliteitstoets.</p>
+<p><strong>“De medianen verschillen.”</strong> Bijna goed, net niet. De Mann-Whitney vergelijkt geen medianen maar <strong>rangen</strong> — hij vraagt of de ene verdeling systematisch boven de andere ligt. Alleen als de twee verdelingen dezelfde vórm hebben en enkel verschoven zijn, mag je hem strikt als mediaan-toets lezen, en hier hébben ze niet dezelfde vorm: de exposure-groep plakt op de vloer, de wachtlijstgroep niet. In de praktijk rapporteer je de medianen als beschrijving en de toets als rangvergelijking — zoals het fragment doet. En vergeet de grootte niet: <em>p</em> &lt; .001 zegt niet hóé ver de groepen uit elkaar liggen; dat doen de rang-biseriële <em>r</em> van .64 en de medianen 1 tegen 4.</p>
+<p><strong>“Non-parametrisch is sowieso de veiligste keuze.”</strong> Er bestaat geen gratis veiligheid. Als de data wél netjes normaal zijn, heeft de rangtoets minder onderscheidend vermogen dan de <em>t</em>-toets — je gooit informatie weg (de afstanden tussen de scores) en houdt alleen de volgorde over, en dat kost power. En zag je in JASP dat de <em>t</em>-toets hier óók ruim significant was? De <em>t</em> is robuuster dan zijn reputatie, zeker bij twee even grote groepen. De reden om hier Mann-Whitney te rapporteren is niet dat de <em>t</em> “stuk” is — het is dat mediaan, IQR en rangtoets sámen een eerlijke beschrijving van déze scheve data vormen, waar <em>M</em>, <em>SD</em> en <em>t</em> een klokvorm suggereren die er niet is.</p>
+</section>
+<section id="oefening" class="level2">
+<h2 class="anchored" data-anchor-id="oefening">Oefening</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Oefening">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Oefening
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Leesopgave.</strong> Hieronder een voorbeeldfragment (verzonnen). Kijk eerst alleen naar de <em>M</em>’s en <em>SD</em>’s: wat valt je op, en wat zegt dat over de vorm van de verdeling (bedenk: aantal ontwakingen kan niet onder nul)? Welke getallen en welke toets had je hier willen zien? En mag de conclusie van de auteurs zo?</p>
+<blockquote class="blockquote">
+<p>In a trial of a nurse-led sleep intervention for inpatients (N = 60), nightly awakenings were compared between groups. The intervention group (M = 1.8, SD = 2.9) did not differ significantly from controls (M = 3.1, SD = 3.4), t(58) = −1.60, p = .115. The authors concluded that the intervention does not reduce awakenings.</p>
+</blockquote>
+<p><strong>Doe-opgave.</strong> Draai de analyse van hierboven (<code>stemming_scheef.csv</code>), met het distribution plot en de Descriptives per groep erbij. Drie vragen. (1) Beschrijf het vloereffect: hoeveel patiënten zitten op nul, en zit dat in beide groepen evenveel? Wat betekent dat voor de vorm van de twee verdelingen? (2) Vergelijk de rij Student met de rij Mann-Whitney: komen ze op dezelfde conclusie uit — en waarom rapporteert het fragment dan tóch de Mann-Whitney? (3) Vink onder Additional Statistics <strong>Location parameter</strong> met <strong>Confidence interval</strong> aan en lees het getal dat verschijnt: hoe groot is het verschil, in gewone paniekaanvallen per week?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Uitwerkingen — klik open">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Uitwerkingen — klik open
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="uitwerking-leesopgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-leesopgave">Uitwerking leesopgave</h3>
+<p>De standaardafwijkingen zijn bijna zo groot als of groter dan de gemiddelden — <em>M</em> = 1.8 met <em>SD</em> = 2.9 — op een variabele die niet onder de nul kan. Eén standaardafwijking onder het gemiddelde zit al op −1.1 ontwakingen, en die bestaan niet: de verdeling móét dus scheef zijn, tegen de vloer geplakt met een staart naar rechts. Dan zijn <em>M</em> en <em>SD</em> geen eerlijke beschrijving en is de <em>t</em>-toets een wankele keuze. Je had medianen met interkwartielafstanden per groep willen zien, een plaatje, en een Mann-Whitney met een effectgrootte. En de conclusie mag sowieso niet zo: <em>p</em> = .115 betekent <em>niet aangetoond</em>, niet <em>afwezig</em> — bij zestig patiënten kan een reëel effect makkelijk onder de significantiegrens blijven (dat is het power-verhaal uit het blok over power). Dubbel mis dus: de verkeerde toets, en de afwezigheid van bewijs gelezen als bewijs van afwezigheid.</p>
+</section>
+<section id="uitwerking-doe-opgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-doe-opgave">Uitwerking doe-opgave</h3>
+<ol type="1">
+<li>Zestien van de zeventig patiënten zitten op nul aanvallen — en dat is scheef verdeeld over de groepen: veertien in de exposure-groep, twee op de wachtlijst. De twee verdelingen hebben daardoor niet dezelfde vorm: exposure klontert op en vlak boven de vloer, wachtlijst ligt hoger en breder uitgesmeerd. (2) Ja, allebei ruim significant: <em>t</em>(68) = −4.73 en Mann-Whitney 219.5, beide <em>p</em> &lt; .001. Het fragment kiest de Mann-Whitney dus niet omdat de <em>t</em> hier “niks vindt” — het kiest hem omdat de hele rapportage dan klopt: bij deze vorm zijn mediaan en IQR de eerlijke beschrijving, en daar hoort de rangtoets bij. Dezelfde conclusie, eerlijker verteld. (3) De location parameter is −3, met een 95%-interval van −4 tot −2: het typische verschil is drie paniekaanvallen per week minder in de exposure-groep (precies genomen is dit de mediaan van alle paarsgewijze verschillen tussen de groepen — de Hodges-Lehmann-schatting — en het minteken is weer exposure min wachtlijst). Dat is het getal dat de effectgrootte terugvertaalt naar de kliniek: niet .64 op een rangschaal, maar drie aanvallen per week.</li>
+</ol>
+</section>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="S3">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: twee groepen vergelijken als de verdeling scheef is — via rangen in plaats van gemiddelden.</p>
+<p>In het boek: nog niet — dit hoort bij de schil <strong>S3 · Als de verdeling niet meewerkt</strong>.</p>
+<p><em>Dezelfde vraag als bij de t-toets — bestaat het verschil echt? — maar gesteld aan data die het gemiddelde niet dragen.</em></p>
+</div>
+<div class="werk">
+<p>TODO: stem-pas. En: schil S3 (<em>Als de verdeling niet meewerkt</em>) staat buiten de boek-spine — S3-plek in de schil-structuur bevestigen zodra die vorm krijgt; anker en brug-zin hier dan tegen die structuur aanhouden.</p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>
