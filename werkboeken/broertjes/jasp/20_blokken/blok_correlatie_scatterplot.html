@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Een statistiek-leerboek — van verschil en gemiddelde tot correlatie, multipele lineaire regressie en logistische regressie, in gewone taal uitgelegd.">
 
-<title>De regressieve ruggengraat – CountCamp</title>
+<title>De correlatie r en de scatterplot – JASP-oefenboek</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -34,7 +33,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -44,13 +42,13 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fe16a1d53e537998fa48ddc5ec098236.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-cf5ee1d16def7895729d1ac812351ea4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
+  "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
+  "panel-placement": "start",
+  "type": "textbox",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
@@ -72,89 +70,172 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Zoeken"
   }
 }</script>
-<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
 
 
-<link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="De regressieve ruggengraat – CountCamp">
-<meta property="og:description" content="Een statistiek-leerboek — van verschil en gemiddelde tot correlatie, multipele lineaire regressie en logistische regressie, in gewone taal uitgelegd.">
-<meta property="og:site_name" content="CountCamp">
-<meta name="twitter:title" content="De regressieve ruggengraat – CountCamp">
-<meta name="twitter:description" content="Een statistiek-leerboek — van verschil en gemiddelde tot correlatie, multipele lineaire regressie en logistische regressie, in gewone taal uitgelegd.">
-<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../werkboek.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-sidebar docked quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">CountCamp</span>
-    </a>
-  </div>
-            <div id="quarto-search" class="" title="Zoeken"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Schakel navigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
-<span class="menu-text">Thuis</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="../manuscript/index.html" aria-current="page"> 
-<span class="menu-text">Het boek</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../werkboeken/index.html"> 
-<span class="menu-text">Oefenboeken</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../archief/index.html"> 
-<span class="menu-text">Archief</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../diensten.html"> 
-<span class="menu-text">Diensten</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../over.html"> 
-<span class="menu-text">Over</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../cv.html"> 
-<span class="menu-text">CV</span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">De correlatie <em>r</em> en de scatterplot</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">JASP-oefenboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">JASP-oefenboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">De correlatie <em>r</em> en de scatterplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cronbachs α</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>p</em>-waarde</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De t-toets — gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectgrootte: Cohens <em>d</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De odds ratio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De kruistabel en χ² (chi-kwadraat)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schud-speeltjes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w4_schud_correlatie.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Correlatie schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_schud_verschil.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Het verschil schudden (t)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_p_planten.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De p geteld</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/s2_schud_tabel.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De tabel schudden (χ²)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w12_schud_odds.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De odds schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_trek_interval.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Trek opnieuw (interval)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">In dit hoofdstuk</h2>
+   
+  <ul>
+  <li><a href="#de-prikkel" id="toc-de-prikkel" class="nav-link active" data-scroll-target="#de-prikkel">De prikkel</a></li>
+  <li><a href="#speel-het" id="toc-speel-het" class="nav-link" data-scroll-target="#speel-het">Speel het</a></li>
+  <li><a href="#schud-het" id="toc-schud-het" class="nav-link" data-scroll-target="#schud-het">Schud het</a></li>
+  <li><a href="#snap-het" id="toc-snap-het" class="nav-link" data-scroll-target="#snap-het">Snap het</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">De regressieve ruggengraat</h1>
-<p class="subtitle lead">Statistiek leren voelen, onderzoek leren lezen</p>
+<h1 class="title">De correlatie <em>r</em> en de scatterplot</h1>
+<p class="subtitle lead">Samenhang tussen twee variabelen · <em>correlation &amp; scatterplot</em></p>
 </div>
 
-<div>
-  <div class="description">
-    Een statistiek-leerboek — van verschil en gemiddelde tot correlatie, multipele lineaire regressie en logistische regressie, in gewone taal uitgelegd.
-  </div>
-</div>
 
 
 <div class="quarto-title-meta">
@@ -169,98 +250,96 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Statistiek heeft de naam koud te zijn. Formules, toetsen, tabellen — iets voor mensen die er aanleg voor hebben. Ik geloof daar niets van. Statistiek gaat over verschil, en verschil voelen kon je al voordat je kon praten. Daar begint dit boek: eerst de spanning eruit, dan pas de stof erin.</p>
-<p>De ruggengraat uit de titel is regressie: de beweging terug. Een wolk punten komt thuis op één lijn — het gemiddelde, maar dan overal net even anders. Elk hoofdstuk legt er een wervel bij. De ondertitel is de belofte: <em>statistiek leren voelen, onderzoek leren lezen</em>. Eerst voelen wat een gemiddelde, een verband, een model ís; daarna blijkt een resultatensectie gewoon leesbaar.</p>
-<p>Het boek is nog niet af — het groeit waar je bij staat. Dertien hoofdstukken staan er; sommige zijn uitgeschreven, andere nog schets. Je leest dus mee terwijl het zijn vorm vindt. Wat er staat, staat er om gelezen te worden.</p>
-<section id="de-wervels" class="level2">
-<h2 class="anchored" data-anchor-id="de-wervels">De wervels</h2>
-<p>Ze staan in volgorde, en die volgorde doet werk. Begin gewoon bij hoofdstuk 0 — ook als je al statistiek kent.</p>
-<div class="cc-hfdst">
-<p class="cc-bew">Eerste beweging · Verschil onder de loep</p>
-<a href="h0.html"><span class="cc-t"><strong>0</strong> In den beginne</span></a>
-<a href="h1.html"><span class="cc-t"><strong>1</strong> De gemiddelde slok</span><span class="cc-sub">Gemiddelde en standaardafwijking</span></a>
-<a href="h2.html"><span class="cc-t"><strong>2</strong> De vorm van de hoop</span><span class="cc-sub">Mediaan, kwartielen, boxplot en scheefheid</span></a>
-<a href="h3.html"><span class="cc-t"><strong>3</strong> De grabbelton geschud</span><span class="cc-sub">De steekproevenverdeling en de standaardfout</span></a>
-
-<p class="cc-bew">Tweede beweging · Verschillen koppelen</p>
-<a href="h4.html"><span class="cc-t"><strong>4</strong> Het rechthoekje</span><span class="cc-sub">Covariantie, correlatie en enkelvoudige regressie</span></a>
-<a href="h5.html"><span class="cc-t"><strong>5</strong> Tien keer welnee</span><span class="cc-sub">Betrouwbaarheid, items en Cronbachs alfa</span></a>
-
-<p class="cc-bew">Derde beweging · Verschil op de proef</p>
-<a href="h6.html"><span class="cc-t"><strong>6</strong> Bestaat het echt?</span><span class="cc-sub">Betrouwbaarheidsinterval, bootstrap en permutatie</span></a>
-<a href="h7.html"><span class="cc-t"><strong>7</strong> Hoe beslis je?</span><span class="cc-sub">Nulhypothese, <em>p</em>-waarde, Type I en II, power</span></a>
-
-<p class="cc-bew">Vierde beweging · Verschil onthechten</p>
-<a href="h8.html"><span class="cc-t"><strong>8</strong> Meer dan één verschil</span><span class="cc-sub">Meervoudige regressie, confounding en partiële correlatie</span></a>
-<a href="h9.html"><span class="cc-t"><strong>9</strong> Groepen zijn ook getallen</span><span class="cc-sub">Dummy-codering, <em>t</em>-toets, ANOVA en ANCOVA</span></a>
-<a href="h10.html"><span class="cc-t"><strong>10</strong> Verschil in verschil</span><span class="cc-sub">Interactie en moderatie</span></a>
-<a href="h11.html"><span class="cc-t"><strong>11</strong> Het doorgegeven verschil</span><span class="cc-sub">Mediatie: het totale effect, ontleed in direct en indirect</span></a>
-<a href="h12.html"><span class="cc-t"><strong>12</strong> En hij buigt</span><span class="cc-sub">Logistische regressie: kansen, odds en odds ratio's</span></a>
+<section id="de-prikkel" class="level2">
+<h2 class="anchored" data-anchor-id="de-prikkel">De prikkel</h2>
+<p>Ergens op een kale rots bij Antarctica staat iemand met een schuifmaat en 342 pinguïns die daar niet om gevraagd hebben.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Van elke pinguïn schrijft hij twee dingen op: hoe lang de snavel is, en hoe diep. Met <em>diep</em> bedoelen we de hóógte van de snavel — van boven naar onder, van opzij bekeken, niet de breedte en niet de lengte. Meer niet: twee getallen per beest, netjes onder elkaar.</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="../_figuren/snavel_lengte_diepte.svg" class="img-fluid figure-img" style="width:62.0%"></p>
+<figcaption>De snavel in profiel: <em>lengte</em> loopt van voor naar achter, <em>diepte</em> is de hoogte van boven naar onder. (Voorlopige handschets — vervangt Bens eigen tekening.)</figcaption>
+</figure>
 </div>
-<div class="callout callout-style-simple callout-note no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>Rechtsonder op elke pagina staat een knop <strong>✎ toon werknotities</strong> — daarmee haal je de bouwtekening erbij: de aantekeningen, de open vragen, de keuzes die nog gemaakt worden.</p>
-</div>
-</div>
-</div>
-<p>Elk hoofdstuk opent met een verhaaltje. Die staan ook <a href="verhalen.html">allemaal bij elkaar</a> — met, per scène, waarom de dieren doen wat ze doen en welk begrip eronder ligt. Wie ze alleen wil lézen — of voorlezen — vindt ze <a href="verhalen_puur.html">zonder aantekeningen</a>.</p>
+<p>En nu wij. Want in die twee kolommetjes zit iets raars verstopt. Reken je de samenhang tussen snavellengte en snaveldiepte uit over alle 342 pinguïns, dan komt er een getal uit dat <strong>negatief</strong> is: <em>r</em> = −.24. In gewone taal: hoe langer de snavel, hoe <em>minder diep</em> — alsof een dier met een lange neus per se een dunne neus heeft.</p>
+<p>Voelt dat kloppen? Mij niet. Trek even mee — we gaan het zelf uitzoeken, en onderweg blijkt dat getal iets heel anders te zeggen dan het lijkt.</p>
 </section>
-<section id="de-oefenboeken" class="level2">
-<h2 class="anchored" data-anchor-id="de-oefenboeken">De oefenboeken</h2>
-<p>Dit leesboek is bewust software-vrij. Wil je het daarna zélf doen — oefenen in R of JASP? Dat leeft in de <strong>oefenboeken</strong> ernaast: dezelfde stof, maar nu met je handen.</p>
-<p>De <strong>broertjes</strong> van het boek — dezelfde stof, maar nu doe je het zélf, in R of JASP. Acht technieken, elk in vijf treden (<em>prikkel → speel → schud → snap</em>), met échte data uit mens en natuur (pinguïns, de Titanic, de Big Five). Klik en je bent binnen; links staan de hoofdstukken, plus de interactieve <strong>schud-speeltjes</strong>. <strong>Voorlopige preview</strong> — de teksten krijgen nog hun stem-pas.</p>
-<div class="callout callout-style-default callout-note no-icon callout-titled">
+<section id="speel-het" class="level2">
+<h2 class="anchored" data-anchor-id="speel-het">Speel het</h2>
+<p>Haal de pinguïns binnen en gooi ze in een plaatje. Elke pinguïn één stip: snavellengte op de ene as, snaveldiepte op de andere.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span><a href="../werkboeken/broertjes/r/index.html">Het R-oefenboek →</a>
+<span class="screen-reader-only">Opmerking</span>In JASP · trek eraan · JASP 0.98.1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>De doe-stof in <strong>R</strong> — je draait de code zelf, inclusief de schud-simulaties in drie regels.</p>
+<ol type="1">
+<li>Open <code>penguins.csv</code> in JASP (menu linksboven → Open).</li>
+<li>Klik bovenin op <strong>Regression</strong> en kies <strong>Correlation</strong>.</li>
+<li>Sleep <code>snavellengte</code> en <code>snaveldiepte</code> naar het vak <strong>Variables</strong>; de rest laat je staan.</li>
+<li>Laat <strong>Pearson’s r</strong> aan staan. Open het kopje <strong>Plots</strong> en vink <strong>Scatterplot</strong> aan.</li>
+</ol>
 </div>
 </div>
-<div class="callout callout-style-default callout-note no-icon callout-titled">
+<p>Rechts staat nu <em>r</em> = −0.235, en daaronder de wolk: een berg stippen die van linksboven naar rechtsonder hangt. Het getal −0.235 is één cijfer voor “hoe strak kantelt die wolk omláág?”. De schaal loopt van −1 (een perfecte dalende lijn) via 0 (geen rechtlijnig verband) naar +1 (een perfecte stijgende lijn). −.24 is een flauwe daling met veel rommel eromheen — zwak, maar het staat er. Langere snavel, ondiepere snavel. Zegt het getal.</p>
+</section>
+<section id="schud-het" class="level2">
+<h2 class="anchored" data-anchor-id="schud-het">Schud het</h2>
+<p>Eerst de vraag die telt: is die −.24 écht, of kan een wolk toevallig zo scheef gaan hangen? Je zou dat willen uitproberen door vals te spelen — elke snaveldiepte loskoppelen van z’n eigen pinguïn en op een willekeurige andere plakken. Dát is de truc: je <strong>koppelt de twee metingen los van elkaar</strong> — je haalt met eigen handen weg dat een lengte en een diepte bij dezelfde pinguïn horen. In zo’n losgekoppelde wereld kán er geen echt verband meer zijn; alles wat je er dan nog in meet, is puur toeval. Duizend keer schudden, en kijken waar <em>r</em> dan belandt.</p>
+<p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar husselen en duizend keer opnieuw kijken is <em>code-</em> of <em>speeltje</em>-werk. Dat is geen gemis van jou of van JASP — het boek doet het bewust zo: de simulatie-ervaring loopt via een <strong>schud-speeltje</strong> in de browser (of via het R-broertje, waar het drie regels code is).</p>
+<p>Wat je in dat speeltje ziet: <strong>duizend werelden die dansen rond nul</strong> — want in elke geschudde wereld is de échte samenhang doorgeknipt, maar toeval laat de <em>r</em> nooit precies op nul landen. Ze kruipen dicht om nul, zelden verder dan .17 van huis — en de echte −.24 valt buiten dat hele bergje. Géén enkele keer komt het toeval even ver. Dát is wat “geen toeval” betekent: geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>.</p>
+<p>Dus: de samenhang is echt. Zaak gesloten? Nee. Hier begint het pas — en dit kun je wél gewoon in JASP.</p>
+</section>
+<section id="snap-het" class="level2">
+<h2 class="anchored" data-anchor-id="snap-het">Snap het</h2>
+<p>De verleiding is nu te schrijven: <em>“bij pinguïns gaat een langere snavel samen met een ondiepere.”</em> Het getal is echt, de zin lijkt te volgen. En toch is-ie mis. Kleur de wolk eens per soort:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · kleur de wolk">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span><a href="../werkboeken/broertjes/jasp/index.html">Het JASP-oefenboek →</a>
+<span class="screen-reader-only">Opmerking</span>In JASP · kleur de wolk
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Hetzelfde, maar in <strong>JASP</strong> — klikpaden in plaats van code, met de schud-speeltjes in de browser.</p>
+<ol type="1">
+<li>In dezelfde <strong>Correlation</strong>-analyse, open <strong>Plots</strong> en zet bij de scatterplot de optie <strong>Color by / group</strong> op <code>soort</code> (JASP kleurt de stippen dan per soort).</li>
+<li>Wil je de getallen per soort: maak met <strong>Filter</strong> (het trechtertje boven de data) de selectie <code>soort == "Gentoo"</code> en lees de correlatie opnieuw af: <em>r</em> = +0.643. Herhaal voor de andere twee soorten.</li>
+</ol>
 </div>
 </div>
-<div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<p>Ineens zie je het. Er zijn <strong>drie soorten</strong> in die wolk, elk als een eigen kluitje. En binnen elk kluitje loopt de samenhang de <em>andere</em> kant op: langere snavel, juist <em>diepere</em> snavel. Reken maar na — Adélie +.39, Chinstrap +.65, Gentoo +.64. Alle drie <strong>positief</strong>. Het teken is omgeklapt.</p>
+<p>Wat gebeurde er? De Gentoo’s (rechtsonder) hebben lange, ondiepe snavels; de andere twee soorten (linksboven) korte, diepe. Gooi je ze op één hoop, dan trekt dat soortverschil de hele wolk schuin naar beneden — en dáár komt die −.24 vandaan. Niet uit een verband tussen snavellengte en -diepte, maar uit het verschil tússen de soorten. De <strong>soort</strong> is een derde speler die zich als het verband vermomt. Het boek noemt dat straks <em>confounding</em>; jij zag het hier gebeuren, in de kleuren van een scatterplot.</p>
+<p>En dat is de dubbele les van dit blok, mooier dan één van de twee alleen:</p>
+<ul>
+<li>De <strong>schud-toets</strong> zei: die −.24 is echt, geen toeval.</li>
+<li>De <strong>scatterplot</strong> zei: echt ja — maar niet wát je denkt. De richting is een luchtspiegeling van de soort.</li>
+</ul>
+<p><em>Echt</em> en <em>waar</em> zijn dus twee verschillende dingen. Een correlatie kan kraakhelder niet-toeval zijn en je tóch de verkeerde kant op wijzen. Daarom lees je <em>r</em> nooit zonder de wolk ernaast — en zeker niet zonder je af te vragen wie er nog meer in die wolk zit. Zou je het in één eerlijke zin moeten opschrijven, dan niet “langere snavels zijn ondieper”, maar: <em>over drie soorten heen hangt de wolk omlaag, maar binnen elke soort omhoog — het min-teken is een soorteffect.</em></p>
+<p>(En dat kleine getal <em>r</em>² dat je weleens ziet — hier .06 — is het “aandeel gedeelde variantie”: van alle verschil in snaveldiepte deelt maar een paar procent iets met snavellengte. Ook dat is geen “verklaring”, alleen boekhouding.)</p>
+<div class="boekvorm" data-w="W4">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: één getal voor de samenhang, en de wolk die verklapt wat het getal verzwijgt.</p>
+<p>In het boek: <strong>W4 — Hangen ze samen?</strong></p>
+<p><em>Daar begint het bij de wolk, niet bij het getal — en de rechte lijn komt pas als je hebt gezien wie er allemaal in de wolk zitten.</em></p>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span><a href="../werkboeken/ggz_vs/index.html">GGZ-VS/JASP-werkboek →</a>
+<div class="werk">
+<p>BESLIST (Ben, 24-7): “Schud het” kan JASP niet zelf → <strong>speeltje + hop</strong>. Het schud-speeltje (<code>boek/04_speeltjes/w4_schud_correlatie.html</code>) is het thuis van de simulatie; het JASP-broertje verwijst ernaar (of naar het R-broertje). Nog te doen: de echte link naar het speeltje inwiren zodra de speeltjes-plek definitief is. W4 boek-schets nog grof; verhaal-stem-opening = eerste stem-pas.</p>
 </div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Een oefenboek-schil op maat voor <strong>verpleegkundig specialisten in opleiding</strong> (VIOS, JASP): gericht op het <em>lezen en beoordelen</em> van onderzoek voor een literatuurstudie. Acht begrippen in een vaste zes-slag met het antwoord bovenaan — en telkens scherp: <strong>wat zegt het níét</strong>. <strong>Voorlopige preview.</strong></p>
-</div>
-</div>
-<p>Voor andere vakken en tools (opleiding-specifiek, ook SPSS) staan er losse <a href="../werkboeken/index.html">oefenboeken</a>.</p>
-<hr>
-<p class="cc-etym"><em>regressie</em> — Latijn <em>regredi</em>, teruggaan. Geen val, geen terugval; gewoon terug naar waar je begon. <a href="woorden.html">waar de woorden vandaan komen ›</a></p>
-<p class="cc-etym" style="margin-top:1.1rem"><a href="dankwoord.html">Dank ›</a></p>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
+
+<ol>
+<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0). Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -334,7 +413,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/countcamp\.org");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -662,19 +741,6 @@ ul.task-list li input[type="checkbox"] {
   });
   </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>© Benjamin Telkamp — CountCamp</p>
-</div>   
-    <div class="nav-footer-center">
-      &nbsp;
-    </div>
-    <div class="nav-footer-right">
-<p>Bouwt met <a href="https://quarto.org">Quarto</a>.</p>
-</div>
-  </div>
-</footer>
 
 
 
