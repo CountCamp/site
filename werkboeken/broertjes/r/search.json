@@ -1,0 +1,482 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "R-oefenboek",
+    "section": "",
+    "text": "Dit is het doe-oefenboek bij het boek — de plek waar je de statistiek niet alleen leest maar zélf draait, in R, met échte data.\nKies links een hoofdstuk, of begin gewoon bij het eerste. Elk hoofdstuk loopt dezelfde vier treden af: prikkel (waar gaat dit over) → speel (draai het zelf) → schud (haal het uit elkaar om te zien waarom het werkt) → snap (wat je nu weet). Onderaan de sidebar vind je de schud-speeltjes: kleine browser-dingetjes om aan een begrip te trekken tot het meegeeft.",
+    "crumbs": [
+      "R-oefenboek"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_effectgrootte_d.html",
+    "href": "20_blokken/blok_effectgrootte_d.html",
+    "title": "De effectgrootte: Cohens d",
+    "section": "",
+    "text": "Twee pinguïnsoorten op de weegschaal. De Gentoo’s wegen gemiddeld 5076 gram, de Adélies 3701 gram.1 Het verschil: 1375 gram — ruim een kilo pinguïn.\nIs dat veel?\nDenk er even over na vóór je verder leest. Want eerlijk: aan “1375 gram” alleen kun je het niet zien. Veel of weinig hangt ervan af hoeveel de pinguïns binnen elke soort al onderling verschillen. Een kilo is enorm als alle Gentoo’s bijna even zwaar zijn — en niks als de één 4 kilo weegt en de ander 6. Het getal 1375 staat daar maar wat te wezen, zonder maatstok.\nTrek even mee. We gaan dat verschil een maat geven die wél iets zegt.",
+    "crumbs": [
+      "De effectgrootte: Cohens *d*"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_effectgrootte_d.html#de-prikkel",
+    "href": "20_blokken/blok_effectgrootte_d.html#de-prikkel",
+    "title": "De effectgrootte: Cohens d",
+    "section": "",
+    "text": "Twee pinguïnsoorten op de weegschaal. De Gentoo’s wegen gemiddeld 5076 gram, de Adélies 3701 gram.1 Het verschil: 1375 gram — ruim een kilo pinguïn.\nIs dat veel?\nDenk er even over na vóór je verder leest. Want eerlijk: aan “1375 gram” alleen kun je het niet zien. Veel of weinig hangt ervan af hoeveel de pinguïns binnen elke soort al onderling verschillen. Een kilo is enorm als alle Gentoo’s bijna even zwaar zijn — en niks als de één 4 kilo weegt en de ander 6. Het getal 1375 staat daar maar wat te wezen, zonder maatstok.\nTrek even mee. We gaan dat verschil een maat geven die wél iets zegt.",
+    "crumbs": [
+      "De effectgrootte: Cohens *d*"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_effectgrootte_d.html#speel-het",
+    "href": "20_blokken/blok_effectgrootte_d.html#speel-het",
+    "title": "De effectgrootte: Cohens d",
+    "section": "Speel het",
+    "text": "Speel het\nHaal de pinguïns binnen, hou de twee soorten over, en kijk eerst naar de kale getallen: de twee gemiddelden, en — dit is de sleutel — hoeveel spreiding er binnen de groepen zit.\n\n\n\n\n\n\nOpmerkingIn R · trek eraan\n\n\n\npeng &lt;- read.csv(\"penguins.csv\")\nga &lt;- peng[peng$soort %in% c(\"Gentoo\", \"Adelie\"), ]\n\naggregate(gewicht ~ soort, ga, mean)     # Gentoo 5076, Adelie 3701\naggregate(gewicht ~ soort, ga, sd)        # Gentoo 504,  Adelie 459\n\n\nDaar staat het verschil (1375 g), en daar staat de spreiding binnen elke soort: zo’n 480 gram op en neer. Dát laatste getal is je lineaaltje — de gewone onderlinge variatie tussen twee willekeurige pinguïns van dezelfde soort. De vraag “is 1375 veel?” wordt nu een deelsom: hoeveel van die lineaaltjes passen er in het verschil?\n\n\n\n\n\n\nOpmerkingIn R · deel door het lineaaltje\n\n\n\ng &lt;- ga$gewicht[ga$soort == \"Gentoo\"]\na &lt;- ga$gewicht[ga$soort == \"Adelie\"]\n\n# gepoolde SD: de twee spreidingen samengevoegd tot één lineaaltje\nsp &lt;- sqrt(((length(g) - 1) * var(g) + (length(a) - 1) * var(a)) /\n           (length(g) + length(a) - 2))\nsp                                        # → 479.5\n\n(mean(g) - mean(a)) / sp                   # Cohens d → 2.87\n\n\nDaar is-ie: Cohens d = 2.87. Het verschil is bijna drie lineaaltjes groot. En let op wat er met dat getal gebeurde — er zitten geen grammen meer in. We hebben grammen door grammen gedeeld; de eenheid is weggevallen. Wat overblijft is een kaal getal, en juist daardoor kan het reizen.",
+    "crumbs": [
+      "De effectgrootte: Cohens *d*"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_effectgrootte_d.html#voel-de-maat",
+    "href": "20_blokken/blok_effectgrootte_d.html#voel-de-maat",
+    "title": "De effectgrootte: Cohens d",
+    "section": "Voel de maat",
+    "text": "Voel de maat\nWat betekent “2.87 lineaaltjes uit elkaar” nou eigenlijk? Teken de twee soorten als twee bergjes op dezelfde weegschaal — Adélie rond 3701, Gentoo rond 5076, elk met z’n eigen spreiding van ~480 — en kijk hoeveel ze over elkaar heen vallen.\n\n\n\n\n\n\nOpmerkingIn R · leg de twee bergjes over elkaar\n\n\n\nx &lt;- seq(2500, 6500, length = 400)\nplot(x, dnorm(x, 3701, 459), type = \"l\", lwd = 2,          # Adelie\n     xlab = \"gewicht (g)\", ylab = \"\")\nlines(x, dnorm(x, 5076, 504), lwd = 2, col = \"red\")         # Gentoo\n\n\nBijna geen overlap. Twee bergjes die elkaar amper raken — dát is wat d = 2.87 er in het echt uitziet: je kunt een willekeurige pinguïn oppakken en vrijwel altijd goed raden welke soort het is, puur op gewicht. Hoe groter d, hoe verder de bergjes uit elkaar schuiven; hoe kleiner, hoe meer ze in elkaar overvloeien.\nMerk op: hier hoefden we niks te schudden. De schud-zet vraagt “is dit verschil echt of toeval?” — dat is de vraag van de t-toets (zie het t-toets-blok). Effectgrootte vraagt iets anders: “hóé groot is het?” Twee verschillende vragen, en dit blok gaat over de tweede.",
+    "crumbs": [
+      "De effectgrootte: Cohens *d*"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_effectgrootte_d.html#snap-het",
+    "href": "20_blokken/blok_effectgrootte_d.html#snap-het",
+    "title": "De effectgrootte: Cohens d",
+    "section": "Snap het",
+    "text": "Snap het\nd = 2.87 is gigantisch — in de meeste onderzoeken kom je zoiets nooit tegen. Je hebt vast de vuistregels van Cohen weleens langs zien komen: 0.2 is “klein”, 0.5 “middel”, 0.8 “groot”. Handig als eerste houvast, maar het zijn noodgrepen — Cohen bedoelde ze zelf als laatste redmiddel voor als je écht niks beters hebt. Beter is terugvertalen naar de meetlat waar je net stond: 2.87 lineaaltjes, twee bergjes die elkaar nauwelijks raken. Dát zegt meer dan het etiket “groot”.\nWaaróm die kale maat de moeite waard is: omdat er geen grammen meer in zitten, kun je ’m naast een d uit een heel ander onderzoek leggen. Een d van gewichtsverschil tussen pinguïnsoorten en een d van, zeg, het effect van een therapie op een angstscore — verschillende werelden, verschillende eenheden, maar dezelfde taal. Effectgrootte is de gemeenschappelijke munt. Daarom draagt bijna elke moderne studie ’m, en daarom kan een meta-analyse tientallen onderzoeken optellen die anders onvergelijkbaar waren.\nTwee dingen om vast te houden, want hier gaan mensen de mist in:\n\n“Significant” is niet “groot”. Het t-toets-blok vraagt of een verschil echt is (geen toeval). Dit blok vraagt hoe groot het is. Bij grote steekproeven kan een piepklein, oninteressant verschil kraakhelder significant zijn — echt, maar nietig. En omgekeerd. Echt en groot zijn twee losse knoppen.\nd gaat over de groepsgemiddelden, niet over individuen. Zelfs bij deze enorme d = 2.87 zegt het iets over de bergjes als geheel, niet over elke pinguïn. In de kleine overlap die er wél is, kan een zware Adélie best boven een lichte Gentoo uitkomen. De soorten verschillen gemiddeld enorm; dat sluit een individuele uitzondering niet uit.\n\nZou je het in één eerlijke zin opschrijven, dan niet “de soorten verschillen 1375 gram”, maar: de Gentoo’s zijn gemiddeld bijna drie standaardafwijkingen zwaarder dan de Adélies (d = 2.87) — de twee soorten overlappen in gewicht nauwelijks.\n\n◠ Zelfde vorm in het boek\nHier: een verschil in grammen dat pas iets zegt als je het door de spreiding deelt.\nIn het boek: W4 — Hangen ze samen? (waar de effectgrootte als familie geplant wordt)\nDaar is de effectgrootte geen los trucje maar een familie — d, r, en de rest zijn allemaal manieren om “hoe groot?” een eenheidloze maat te geven.\n\n\nTODO (broertje-proof, geschreven naar het charter 24-7): dit blok laat trede “Schud het” bewust weg — effectgrootte meet “hoe groot?”, niet “toeval of niet?” (natuurlijk-uit-moment, charter §Simulatie). Vier treden: prikkel → speel → voel de maat → snap. W4 (Hangen ze samen?) is nog een grove boek-schets — anker en formulering checken zodra dat hoofdstuk staat; de “effectgrootte als familie”-lijn moet dáár landen. De JASP-tweeling deelt prikkel + snap; alleen “Speel het” en “Voel de maat” verschillen (JASP geeft d bij de t-toets; het over-elkaar-tekenen van de bergjes is een hop naar het R-broertje of het speeltje).",
+    "crumbs": [
+      "De effectgrootte: Cohens *d*"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_effectgrootte_d.html#footnotes",
+    "href": "20_blokken/blok_effectgrootte_d.html#footnotes",
+    "title": "De effectgrootte: Cohens d",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nPalmer Penguins — Gorman, Williams & Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket palmerpenguins (CC0). Alle getallen in dit blok zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "De effectgrootte: Cohens *d*"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_odds_ratio.html",
+    "href": "20_blokken/blok_odds_ratio.html",
+    "title": "De odds ratio",
+    "section": "",
+    "text": "Springfield, Massachusetts, 1986. In het Baystate Medical Center wordt bij elke bevalling een formulier ingevuld — honderdnegenentachtig keer, een jaar lang, echt opgeschreven.1 Van dat formulier lezen wij vandaag twee vakjes: rookte de moeder tijdens de zwangerschap (ja/nee), en woog de baby bij de geboorte te weinig (ja/nee).\nTel je de vakjes na, dan zie je dit: van de rokende moeders kreeg 41% een baby met een laag geboortegewicht; van de niet-rokende 25%. En in het artikel dat over zulke data geschreven wordt, staat dan één getal: 2.02 — “de odds zijn twee keer zo groot.”\nWacht eens even. 41 tegenover 25 — dat is toch helemaal geen verdubbeling? Waar komt die 2 vandaan? Overdrijft hier iemand?\nJa. En het gekke is: het getal klopt tóch. Trek even mee — we gaan uitzoeken wat een odds eigenlijk is, en waarom hij groter praat dan de kans.",
+    "crumbs": [
+      "De odds ratio"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_odds_ratio.html#de-prikkel",
+    "href": "20_blokken/blok_odds_ratio.html#de-prikkel",
+    "title": "De odds ratio",
+    "section": "",
+    "text": "Springfield, Massachusetts, 1986. In het Baystate Medical Center wordt bij elke bevalling een formulier ingevuld — honderdnegenentachtig keer, een jaar lang, echt opgeschreven.1 Van dat formulier lezen wij vandaag twee vakjes: rookte de moeder tijdens de zwangerschap (ja/nee), en woog de baby bij de geboorte te weinig (ja/nee).\nTel je de vakjes na, dan zie je dit: van de rokende moeders kreeg 41% een baby met een laag geboortegewicht; van de niet-rokende 25%. En in het artikel dat over zulke data geschreven wordt, staat dan één getal: 2.02 — “de odds zijn twee keer zo groot.”\nWacht eens even. 41 tegenover 25 — dat is toch helemaal geen verdubbeling? Waar komt die 2 vandaan? Overdrijft hier iemand?\nJa. En het gekke is: het getal klopt tóch. Trek even mee — we gaan uitzoeken wat een odds eigenlijk is, en waarom hij groter praat dan de kans.",
+    "crumbs": [
+      "De odds ratio"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_odds_ratio.html#speel-het",
+    "href": "20_blokken/blok_odds_ratio.html#speel-het",
+    "title": "De odds ratio",
+    "section": "Speel het",
+    "text": "Speel het\nEerst het telwerk. Haal de 189 baby’s binnen en zet de twee ja/nee-kolommen tegen elkaar af in een kruistabel.\n\n\n\n\n\n\nOpmerkingIn R · trek eraan\n\n\n\nbw &lt;- read.csv(\"geboortegewicht.csv\")\n\nt &lt;- table(bw$roken, bw$laag_geboortegewicht)\nt                                    # rokers: 30 ja, 44 nee · niet-rokers: 29 ja, 86 nee\n\n30 / 44                              # odds op laag gewicht bij rokers     → 0.68\n29 / 86                              # odds op laag gewicht bij niet-rokers → 0.34\n(30/44) / (29/86)                    # de odds ratio                       → 2.02\n\n\nKijk goed naar wat we daar deden, want hier begint bijna elk misverstand. Een kans (probability) zet de ja’s af tegen álle moeders: 30 van de 74 rokers, dus 0.41. Een odds zet de ja’s af tegen de nee’s: 30 tegenover 44, dus 0.68. Dat is de taal van het wedkantoor — “0.68 tegen 1”. Zelfde telwerk, andere breuk: odds = kans / (1 − kans). Onthoud dus als eerste: een odds is geen kans. Bij een kans van 0.5 is de odds al 1; bij een kans van 0.9 is de odds 9.\nDeel je de twee odds op elkaar, dan krijg je de odds ratio (odds ratio, OR): 0.68 / 0.34 = 2.02. De odds op een laag geboortegewicht zijn bij de rokende moeders ruim twee keer die van de niet-rokende. Dát is waar die 2 vandaan komt — niet uit de kansen, maar uit de odds.",
+    "crumbs": [
+      "De odds ratio"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_odds_ratio.html#schud-het",
+    "href": "20_blokken/blok_odds_ratio.html#schud-het",
+    "title": "De odds ratio",
+    "section": "Schud het",
+    "text": "Schud het\nNu de vraag die telt: is die 2.02 écht, of kan toeval een kruistabel zomaar zo scheef trekken? We spelen vals. We knippen alle rook-labels los van hun eigen moeder en delen ze lukraak opnieuw uit. Evenveel rokers, evenveel baby’s met laag gewicht — maar wíé rookte is nu puur toeval. Duizend keer. Duizend werelden waarin roken en geboortegewicht gegarandeerd níéts met elkaar te maken hebben.\nEén ding vooraf: bij een verschil is “niks aan de hand” nul, maar bij een verhouding is niks-aan-de-hand 1 — twee gelijke odds op elkaar gedeeld. Het bergje gaat dus niet om 0 dansen, maar om 1.\n\n\n\n\n\n\nOpmerkingIn R · schud de boel door elkaar\n\n\n\nor_van &lt;- function(roken, laag) {\n  t &lt;- table(roken, laag)\n  (t[\"ja\",\"ja\"] * t[\"nee\",\"nee\"]) / (t[\"ja\",\"nee\"] * t[\"nee\",\"ja\"])\n}\nor_van(bw$roken, bw$laag_geboortegewicht)     # → 2.02, zelfde als net\n\nset.seed(42)\nnep &lt;- replicate(1000, or_van(sample(bw$roken), bw$laag_geboortegewicht))\nhist(nep)                                     # een bergje rond 1 (niet rond 0!)\nabline(v = 2.02, col = \"red\", lwd = 2)        # en dáár staat de echte\n\n\nKijk naar dat plaatje. De duizend geschudde OR’s dansen om de 1 — de mediaan zit op 0.99, en 95% blijft tussen ongeveer 0.5 en 1.8. Maar let op: geen enkele geschudde wereld geeft precies 1, terwijl in élk van die werelden de waarheid exact 1 is. Toeval maakt van “niks” altijd “nét niet niks”. Precies daarom schudden we: om te zien hoe ver “nét niet niks” kan komen.\nEn dan de rode streep op 2.02: buiten het bergje, maar niet mijlenver. In 23 van de 1000 geschudde werelden kwam het toeval óók tot 2.02 of verder. Zeldzaam, geen nooit. De samenhang is dus vrijwel zeker echt, maar hij staat niet onaantastbaar ver van het toeval — het 95%-interval [1.08, 3.78] zegt hetzelfde met zijn onderkant, die tegen de 1 aan schuurt. Echt, ja. Met een bescheiden marge.",
+    "crumbs": [
+      "De odds ratio"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_odds_ratio.html#snap-het",
+    "href": "20_blokken/blok_odds_ratio.html#snap-het",
+    "title": "De odds ratio",
+    "section": "Snap het",
+    "text": "Snap het\nWat zegt die 2.02 nu wél, en wat niet? Drie keer opletten.\nEén: een odds ratio is geen kansen-verhouding. De verleiding is te schrijven “rokers hebben twee keer zoveel kans op een baby met laag geboortegewicht.” Niet waar. De kans ging van 25.2% naar 40.5% — deel díé twee op elkaar en je hebt het relatieve risico (relative risk, RR): 1.61. De kans werd 1.61 keer zo groot; de odds werd 2.02 keer zo groot. Zelfde data, twee getallen — en de OR is de grootste van de twee. Dat is geen toeval maar wiskunde: hoe váker de uitkomst voorkomt, hoe verder de OR boven het RR uit gaat hangen. Hier krijgt bijna één op de drie baby’s een laag gewicht, dus het gat is flink. Alleen bij zeldzame uitkomsten kruipen OR en RR naar elkaar toe. Wie een OR voorleest als “zoveel keer meer kans”, overdrijft dus — meestal zonder het te weten.\nTwee: waarom doen we dan zo moeilijk met odds? Omdat het model het zo wil. Zodra je een ja/nee-uitkomst gaat voorspellen — dat is de logistische regressie van W12 — blijkt de odds de taal te zijn waarin de wiskunde soepel rekent. Onderzoekers rapporteren OR’s omdat hun model ze die aanreikt, niet omdat OR’s lekkerder lezen. Jij weet nu wat er dan staat.\nDrie: samenhang, geen oorzaak. Niemand heeft deze moeders láten roken; er is alleen opgeschreven wat er gebeurde. Rokende en niet-rokende moeders verschillen in méér dan roken alleen — leeftijd, armoede, voeding — en elk van die derde spelers kan zich als het verband vermommen, net als de soort bij de pinguïns. De schud-toets sluit tóéval uit, niet verwarring. Uit deze tabel volgt dus niet dat roken een laag geboortegewicht veroorzaakt; wel dat de twee in dit ziekenhuis stevig samenhingen.\nZou je het in één eerlijke zin moeten zeggen, dan zo: onder de rokende moeders kwam een laag geboortegewicht vaker voor dan onder de niet-rokende (41% tegenover 25%; OR = 2.02, dus ruim tweemaal zo grote odds — niet tweemaal zoveel kans, dat is 1.61) — samenhang in één ziekenhuis in 1986, geen bewijs van oorzaak.\n\n◠ Zelfde vorm in het boek\nHier: de odds als vreemde tweede taal voor kans, en één verhouding — 2.02 — die groter praat dan de kans deed.\nIn het boek: W12 — En hij buigt\nDaar buigt de rechte lijn zich om een ja/nee-uitkomst heen, en blijkt de odds precies de taal te zijn waarin die gebogen lijn rekent.\n\n\nTODO (broertje-botten, Fable 24-7): W12 (En hij buigt) is nog niet geschreven — anker en slotzin checken zodra dat hoofdstuk staat. Alle getallen nagerekend op MASS::birthwt (kruistabel 30/44/29/86; OR 2.021944; CI 1.08–3.78 via log-OR ± 1.96·SE; RR exact 1.61 — de 1.65 uit de briefing kwam van afgeronde percentages 41/25). Schud-getallen met set.seed(42): mediaan 0.99, 95% tussen 0.52 en 1.83, 23/1000 ≥ 2.02. Stem-pas nog te doen. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt.",
+    "crumbs": [
+      "De odds ratio"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_odds_ratio.html#footnotes",
+    "href": "20_blokken/blok_odds_ratio.html#footnotes",
+    "title": "De odds ratio",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nHosmer & Lemeshow (1989), Applied Logistic Regression; verzameld in het Baystate Medical Center, Springfield MA, 1986; via het R-pakket MASS (dataset birthwt). Alle getallen in dit blok zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "De odds ratio"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_betrouwbaarheidsinterval.html",
+    "href": "20_blokken/blok_betrouwbaarheidsinterval.html",
+    "title": "Het betrouwbaarheidsinterval",
+    "section": "",
+    "text": "Dertig potten in een kas, dertig dezelfde plantjes.1 Tien kregen gewoon water, tien kregen plantenvoer één, tien plantenvoer twee. En toen — dit is het onsentimentele deel — werden alle dertig geknipt, gedroogd en gewogen. Droog, want nat gewicht is vooral water, en water zegt niks over groeien.\nDe controle-potten laten we vandaag even links staan; het gaat ons om de twee soorten voer. Voer één: gemiddeld 4.66 gram droge plant. Voer twee: 5.53 gram. Verschil: 0.87 gram, in het voordeel van voer twee.\nEn nu níét de vraag die je verwacht. Niet “is er verschil, ja of nee” — dat is de bijvraag. De echte vraag is: hoe zeker is die 0.87? Er stonden maar tien potten per groep. Had de kweker tien ándere potten gepakt, was het dan 0.9 geweest? 0.5? Nul komma niks? Een getal uit een steekproef is een schatting, en een schatting zonder onzekerheids-bandje eromheen is een mening met cijfers. Dat bandje gaan we maken.",
+    "crumbs": [
+      "Het betrouwbaarheidsinterval"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_betrouwbaarheidsinterval.html#de-prikkel",
+    "href": "20_blokken/blok_betrouwbaarheidsinterval.html#de-prikkel",
+    "title": "Het betrouwbaarheidsinterval",
+    "section": "",
+    "text": "Dertig potten in een kas, dertig dezelfde plantjes.1 Tien kregen gewoon water, tien kregen plantenvoer één, tien plantenvoer twee. En toen — dit is het onsentimentele deel — werden alle dertig geknipt, gedroogd en gewogen. Droog, want nat gewicht is vooral water, en water zegt niks over groeien.\nDe controle-potten laten we vandaag even links staan; het gaat ons om de twee soorten voer. Voer één: gemiddeld 4.66 gram droge plant. Voer twee: 5.53 gram. Verschil: 0.87 gram, in het voordeel van voer twee.\nEn nu níét de vraag die je verwacht. Niet “is er verschil, ja of nee” — dat is de bijvraag. De echte vraag is: hoe zeker is die 0.87? Er stonden maar tien potten per groep. Had de kweker tien ándere potten gepakt, was het dan 0.9 geweest? 0.5? Nul komma niks? Een getal uit een steekproef is een schatting, en een schatting zonder onzekerheids-bandje eromheen is een mening met cijfers. Dat bandje gaan we maken.",
+    "crumbs": [
+      "Het betrouwbaarheidsinterval"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_betrouwbaarheidsinterval.html#speel-het",
+    "href": "20_blokken/blok_betrouwbaarheidsinterval.html#speel-het",
+    "title": "Het betrouwbaarheidsinterval",
+    "section": "Speel het",
+    "text": "Speel het\nHaal de potten binnen, pak de twee voer-groepen eruit, en laat R het verschil uitrekenen — mét het bandje, want dat doet t.test er gratis bij.\n\n\n\n\n\n\nOpmerkingIn R · trek eraan\n\n\n\npg &lt;- read.csv(\"plantgroei.csv\")\nvoer &lt;- pg[pg$groep %in% c(\"behandeling1\", \"behandeling2\"), ]\n\ntapply(voer$gewicht, voer$groep, mean)   # → 4.66 en 5.53\nt.test(gewicht ~ groep, data = voer)     # → t = -3.01, p = .009\n                                         #   95 percent confidence interval:\n                                         #      -1.48  -0.25\n\n\nTwee regels uit die uitvoer verdienen je aandacht. Eerst het min-teken: R rekent voer één mín voer twee, en omdat voer twee zwaarder uitpakt is het verschil −0.87. Niks engs, gewoon de rekenvolgorde.\nEn dan de regel waar dit blok om draait: 95 percent confidence interval: −1.48 tot −0.25. Dat is het betrouwbaarheidsinterval / confidence interval: niet één schatting maar een héle reeks — alle waarden voor het echte verschil die goed bij deze dertig potten passen. Eerste kijkvraag, altijd: zit de 0 erin? Kijk zelf: van −1.48 tot −0.25, en nul valt erbuiten. “Geen verschil” past dus níét bij deze data. Maar waar komt zo’n bandje eigenlijk vandaan? Dat kun je vóélen, zonder één formule.",
+    "crumbs": [
+      "Het betrouwbaarheidsinterval"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_betrouwbaarheidsinterval.html#schud-het",
+    "href": "20_blokken/blok_betrouwbaarheidsinterval.html#schud-het",
+    "title": "Het betrouwbaarheidsinterval",
+    "section": "Schud het",
+    "text": "Schud het\nIn andere blokken schudden we: band doorknippen, kijken of het verschil wegvalt. Vandaag maken we een andere beweging — we trekken opnieuw. Het probleem is namelijk: je hebt maar één steekproef, en je zou willen weten wat er gebeurd was met een ándere. Nieuwe potten kweken duurt weken. Maar er is een brutale sluiproute: doe alsof je eigen data de kas is. Trek uit je tien potten opnieuw tien potten, mét teruglegging — sommige potten kom je dubbel tegen, andere sla je net over. Elke trekking is een wereld die nét even anders liep, met een nét even ander verschil. Doe dat duizend keer. Dit heet de bootstrap / bootstrap.\n\n\n\n\n\n\nOpmerkingIn R · trek duizend keer opnieuw\n\n\n\nb1 &lt;- voer$gewicht[voer$groep == \"behandeling1\"]\nb2 &lt;- voer$gewicht[voer$groep == \"behandeling2\"]\n\n# één keer opnieuw trekken: tien potten mét teruglegging, per groep\nmean(sample(b1, replace = TRUE)) - mean(sample(b2, replace = TRUE))\n\n# doe het 1000 keer en kijk waar de verschillen landen\nset.seed(42)\nwerelden &lt;- replicate(1000,\n  mean(sample(b1, replace = TRUE)) - mean(sample(b2, replace = TRUE)))\nhist(werelden)                            # een bergje rond -0.87\nabline(v = 0, col = \"red\", lwd = 2)       # en dáár staat de nul\nquantile(werelden, c(.025, .975))         # → -1.39 en -0.29\n\n\nKijk naar dat plaatje. Duizend werelden die dansen rond je schatting — niet rond nul, zoals bij het schudden, maar rond −0.87, want elke wereld is uit jóúw data getrokken en draagt het verschil in zich mee. De middelste 95% van die dans loopt van −1.39 tot −0.29. Herken je ’m? Dat is — op wat afronding na — hetzelfde bandje dat t.test je gaf. Het betrouwbaarheidsinterval ís de dans: de formule is alleen de snelweg ernaartoe.\nEn de nul? Die staat als rode streep búíten het feest: 999 van de 1000 werelden landen onder nul, één verdwaalde er net overheen. Zit nul buiten de dans, dan is het verschil er echt. Zo lees je voortaan élk interval: eerst kijken waar het ligt, dan pas of nul nog mee mag doen.",
+    "crumbs": [
+      "Het betrouwbaarheidsinterval"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_betrouwbaarheidsinterval.html#snap-het",
+    "href": "20_blokken/blok_betrouwbaarheidsinterval.html#snap-het",
+    "title": "Het betrouwbaarheidsinterval",
+    "section": "Snap het",
+    "text": "Snap het\nWat zegt dat interval nou eigenlijk? Dit: het echte verschil tussen de twee voeren — dat van álle mogelijke potten, niet alleen deze dertig — kan van alles zijn tussen een kwart gram en bijna anderhalve gram. Dat is eerlijk: het verschil is echt (nul doet niet mee), maar over hoe gróót het is, zijn deze data nog behoorlijk ruimhartig. En zie je meteen waarom het interval rijker is dan de toets: t = −3.01, p = .009 zegt alleen “niet nul”. Het interval zegt “niet nul, én ergens tussen klein en fors”. Daarom kijken we schattend eerst naar het interval; de toets is de bijvraag die er al in zit.\nNu de zin die íédereen opschrijft en die tóch fout is: “er is 95% kans dat het echte verschil tussen −1.48 en −0.25 ligt.” Klinkt redelijk. Klopt niet. Het echte verschil is geen kansspel — het ligt al ergens vast, wij weten alleen niet waar. En dít interval staat ook al vast: het vangt het echte verschil, of het mist het. Daar valt niks meer aan te verloten. De 95% gaat over de methode: doe het hele ritueel — steekproef, interval — honderd keer, en ongeveer 95 van die honderd intervallen vangen de echte waarde. Denk aan een visser met een net dat 95 van de 100 worpen raak is. Over déze ene worp kan hij maar één ding zeggen: het net komt uit een goede familie. Jouw bootstrap liet precies dat zien — élke nieuwe trekking een iets ander interval, en het vertrouwen zit in de hele dans, niet in één wereld.\nNog één blik, op de breedte. Breed interval = onzekere schatting; smal interval = precieze. Dit interval is aan de brede kant — logisch, tien potten per groep is een handjevol. Wil je het smaller? Meer potten. De vraag “hoe groot is het effect, en hoe precies weten we dat?” is bijna altijd interessanter dan “significant, ja of nee” — en het interval beantwoordt ze allebei in één regel.\n\n◠ Zelfde vorm in het boek\nHier: één verschil van 0.87 gram, en een bandje eromheen dat vertelt hoe stevig dat getal staat.\nIn het boek: W6 — Bestaat het verschil echt?\nDaar komt het interval vóór de toets — eerst hoe groot en hoe precies, en dan pas de bijvraag of nul nog mee mag doen.\n\n\nTODO (broertje-blok, geschreven 24-7 naar het charter): W6-anker en formulering checken zodra dat boek-hoofdstuk staat. Simulatie is hier bootstrap (trekken mét teruglegging), niet shuffle — dans-signatuur aangepast: werelden dansen rond de schátting, nul moet buiten de dans vallen. Kop “Schud het” aangehouden (blok-vorm vast); “trek opnieuw” leeft in de tekst — evt. later hernoemen als Ben dat wil. Bootstrap-getallen (−1.39/−0.29, 999 van 1000 onder nul) zijn nagerekend met set.seed(42). De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (bootstrap is geen JASP-knop → speeltje + hop).",
+    "crumbs": [
+      "Het betrouwbaarheidsinterval"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_betrouwbaarheidsinterval.html#footnotes",
+    "href": "20_blokken/blok_betrouwbaarheidsinterval.html#footnotes",
+    "title": "Het betrouwbaarheidsinterval",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nPlantGrowth — Dobson (1983), An Introduction to Statistical Modelling; het klassieke groei-experiment dat met R wordt meegeleverd (datasets::PlantGrowth). Alle getallen in dit blok zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "Het betrouwbaarheidsinterval"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_kruistabel_chikwadraat.html",
+    "href": "20_blokken/blok_kruistabel_chikwadraat.html",
+    "title": "De kruistabel en χ² (chi-kwadraat)",
+    "section": "",
+    "text": "In de nacht van 14 op 15 april 1912 vaart het grootste schip ter wereld tegen een ijsberg. Het water is twee graden koud. Er zijn 2201 mensen aan boord; als de ochtend komt, leven er nog 711.1 Van elke opvarende zijn later twee dingen genoteerd, meer niet: in welke klasse hij of zij reisde — eerste, tweede, derde, of bemanning — en of hij of zij het overleefde. Twee kolommetjes tekst. Elke rij was iemand.\nEn nu wij. Want tel je die twee kolommetjes tegen elkaar af, dan rolt er iets uit dat je even stil maakt. In de eerste klasse overleefde 62%. In de derde klasse 25%. Bij de bemanning 24%. Dezelfde ijsberg, hetzelfde water — en toch zulke andere kansen. De vraag jeukt meteen: had je plek op dat schip iets te maken met je plek in die reddingsboot? Of kan zo’n verschil ook gewoon… toeval zijn, het soort scheefheid dat elke telling nu eenmaal heeft?\nTrek even mee. We gaan het zelf natellen — en onderweg leer je het gereedschap dat precies voor deze vraag is gemaakt.",
+    "crumbs": [
+      "De kruistabel en χ² (chi-kwadraat)"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_kruistabel_chikwadraat.html#de-prikkel",
+    "href": "20_blokken/blok_kruistabel_chikwadraat.html#de-prikkel",
+    "title": "De kruistabel en χ² (chi-kwadraat)",
+    "section": "",
+    "text": "In de nacht van 14 op 15 april 1912 vaart het grootste schip ter wereld tegen een ijsberg. Het water is twee graden koud. Er zijn 2201 mensen aan boord; als de ochtend komt, leven er nog 711.1 Van elke opvarende zijn later twee dingen genoteerd, meer niet: in welke klasse hij of zij reisde — eerste, tweede, derde, of bemanning — en of hij of zij het overleefde. Twee kolommetjes tekst. Elke rij was iemand.\nEn nu wij. Want tel je die twee kolommetjes tegen elkaar af, dan rolt er iets uit dat je even stil maakt. In de eerste klasse overleefde 62%. In de derde klasse 25%. Bij de bemanning 24%. Dezelfde ijsberg, hetzelfde water — en toch zulke andere kansen. De vraag jeukt meteen: had je plek op dat schip iets te maken met je plek in die reddingsboot? Of kan zo’n verschil ook gewoon… toeval zijn, het soort scheefheid dat elke telling nu eenmaal heeft?\nTrek even mee. We gaan het zelf natellen — en onderweg leer je het gereedschap dat precies voor deze vraag is gemaakt.",
+    "crumbs": [
+      "De kruistabel en χ² (chi-kwadraat)"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_kruistabel_chikwadraat.html#speel-het",
+    "href": "20_blokken/blok_kruistabel_chikwadraat.html#speel-het",
+    "title": "De kruistabel en χ² (chi-kwadraat)",
+    "section": "Speel het",
+    "text": "Speel het\nGeen stippenwolk deze keer: beide variabelen zijn categorieën, dus we tellen. Het huis waar getelde categorieën wonen heet de kruistabel (contingency table): klassen als rijen, overleefd ja/nee als kolommen, en in elke cel hoeveel mensen daar zitten.\n\n\n\n\n\n\nOpmerkingIn R · trek eraan\n\n\n\ntit &lt;- read.csv(\"titanic.csv\")\n\nt &lt;- table(tit$klasse, tit$overleefd)    # de kruistabel: 4 rijen x 2 kolommen\nt\nround(prop.table(t, 1) * 100)            # rijpercentages: wie overleefde, per klasse\n\nchisq.test(t)                            # → X-squared = 190.4, df = 3, p &lt; .001\n\n\nDaar staat de tabel: 203 van de 325 eersteklassers overleefden, 212 van de 885 bemanningsleden. En daaronder één getal voor de héle tabel: χ² = 190.4 (spreek uit: chi-kwadraat, chi-square). Wat dat getal doet: het vergelijkt elke cel met de saaiste tabel denkbaar — de tabel die je zou krijgen als klasse en overleven níéts met elkaar te maken hadden en elke klasse gewoon het scheepsbrede 32% zou volgen. Onder die saaie tabel zouden er in de eerste klasse zo’n 105 overlevenden “horen” te zitten (de verwachte aantallen, expected counts); het waren er 203. χ² telt al die verschillen tussen geteld en verwacht op tot één maat voor “hoe scheef is deze tabel?”. Nul betekent: precies zo saai als verwacht. En 190.4 — is dat veel? Geen idee, nog. Daarvoor moeten we eerst weten hoe scheef púúr toeval kan zijn.",
+    "crumbs": [
+      "De kruistabel en χ² (chi-kwadraat)"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_kruistabel_chikwadraat.html#schud-het",
+    "href": "20_blokken/blok_kruistabel_chikwadraat.html#schud-het",
+    "title": "De kruistabel en χ² (chi-kwadraat)",
+    "section": "Schud het",
+    "text": "Schud het\nDus dat gaan we maken: toeval, met onze eigen handen. We knippen de kolom overleefd los van de kolom klasse en delen ’m lukraak opnieuw uit. Iedereen houdt z’n klasse, de 711 “ja”s blijven 711 “ja”s — maar wíé overleeft, is nu puur lot. Doe dat duizend keer, en je hebt duizend werelden gebouwd waarin er écht geen samenhang is tussen klasse en overleven. In elk van die werelden rekenen we χ² uit.\n\n\n\n\n\n\nOpmerkingIn R · schud de boel door elkaar\n\n\n\n# één keer schudden: 'overleefd' lukraak herverdelen over de opvarenden\nchisq.test(table(tit$klasse, sample(tit$overleefd)))$statistic   # → iets kleins\n\n# doe het 1000 keer en kijk waar χ² dan landt\nset.seed(42)\nnep &lt;- replicate(1000,\n  chisq.test(table(tit$klasse, sample(tit$overleefd)))$statistic)\n\nhist(nep, xlim = c(0, 200))              # het toeval-bergje, links in beeld\nmax(nep)                                  # → 22.3: verder komt puur geluk niet\nabline(v = 190.4, col = \"red\", lwd = 2)   # en dáár staat de echte\n\n\nKijk eerst naar het bergje zelf, want daar zit al een les in. In duizend werelden waarin de waarheid “geen verband” is, is de gemeten scheefheid nooit precies nul — de kleinste geschudde χ² was 0.02, en de meeste liggen er ruim boven. Toeval deelt nooit perfect eerlijk uit; een beetje scheefheid krijg je altijd cadeau. Dát is wat het toeval-bergje je laat zien: zó ver komt puur geluk — tot een keer of 22, en dan houdt het op.\nEn dan die rode streep op 190.4. Niet aan de rand van het bergje — er mijlenver voorbij, bijna tien keer zo ver als het wildste toeval in duizend pogingen. Geen p-waarde die je moet geloven, maar een afstand die je zíét. De echte nacht van 1912 ligt niet in de wereld van het lot. De samenhang tussen klasse en overleven is echt.",
+    "crumbs": [
+      "De kruistabel en χ² (chi-kwadraat)"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_kruistabel_chikwadraat.html#snap-het",
+    "href": "20_blokken/blok_kruistabel_chikwadraat.html#snap-het",
+    "title": "De kruistabel en χ² (chi-kwadraat)",
+    "section": "Snap het",
+    "text": "Snap het\nEcht — maar wat wéét je daarmee precies? Minder dan je denkt, en dat is de kern van dit blok. χ² beantwoordt maar één vraag, met veel gezag en weinig woorden: hangen deze twee samen, of is dit toeval-scheefheid? Antwoord: ze hangen samen. Punt. Het is een kaal ja — het zegt niet hoe stérk, niet wáár in de tabel, en al helemaal niet waaróm. Voor die drie vragen heb je drie andere dingen nodig, en die heb je eigenlijk al in handen.\nHoe sterk? Daar is een apart getal voor: Cramérs V, dat χ² terugschaalt naar een bandbreedte van 0 (geen samenhang) tot 1 (perfect voorspelbaar). Hier: V = .29 — een stevige, duidelijk zichtbare samenhang, maar geen lotsbestemming; ook in de derde klasse overleefde één op de vier.\nWáár zit het? Vraag de tabel welke cellen het hardst afwijken van verwacht — de residuen (residuals):\n\n\n\n\n\n\nOpmerkingIn R · waar zit de scheefheid?\n\n\n\nct &lt;- chisq.test(t)\nround(ct$residuals, 1)        # per cel: hoe ver van 'verwacht' af?\nsqrt(ct$statistic / sum(t))   # Cramérs V → 0.29\n\n\nDe uitschieters vertellen het verhaal: eerste klasse zit ver bóven verwacht bij de overlevenden (+9.6), bemanning en derde klasse ver erónder (−4.4 en −3.3). De scheefheid is geen gelijkmatig waas over de tabel — het is een trap, van boven naar beneden door het schip.\nEn waaróm? Hier houdt de statistiek haar mond, en terecht. De kruistabel zegt dat klasse en overleven samenhangen; ze zegt niet dat je ticket je redde. De verklaring is historisch, geen getal: de eersteklashutten lagen dekken dichter bij de reddingsboten, de bemanning bleef werken terwijl anderen instapten, hekken en gangen en taal zaten ertussen. Dat verhaal is waarschijnlijk wáár — maar het komt uit de geschiedenisboeken, niet uit χ². Wie alleen de toets rapporteert (“χ²(3) = 190.4, p &lt; .001, dus er is een verband”) heeft het minst interessante deel te pakken. De percentages — 62, 41, 25, 24 — vertellen wat er die nacht gebeurde; de residuen wijzen aan waar; χ² zegt alleen dat het geen toeval was. Je hebt ze alle drie nodig, in die volgorde. En één ding nog, omdat het makkelijk wegzakt achter de getallen: dit waren tellingen van mensen. Wat de saaie verwachte tabel “gladstrijkt”, waren er die nacht honderden.\n(Dat kleine getal df = 3 dat R erbij zet — de vrijheidsgraden — is boekhouding over de maat van de tabel: (4−1)×(2−1) = 3. Het vertelt de toets hoe groot het toeval-bergje voor een tabel van dit formaat hoort te zijn. Precies wat jij net zelf hebt gebouwd door te schudden.)\n\n◠ Zelfde vorm in het boek\nHier: hangen twee categorische variabelen samen — tellen, verwachten, en zien hoe ver de echte telling van saai afligt.\nIn het boek: nog niet — dit hoort bij de schil S2 · Tellen en kruistabellen.\nAls die schil er komt, begint ze waar dit blok begon: bij de tabel en de percentages, niet bij de toets.\n\n\nTODO (broertje, geschreven 24-7 naar het charter): S2-anker is de schil-variant — er is (nog) geen boek-hoofdstuk voor tellen/kruistabellen; anker updaten als dat verandert. Verhaal-stem-opening is een eerste stem-pas. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (JASP kan de shuffle niet zelf — speeltje + hop, zie het JASP-blok). Alle getallen nagerekend op titanic.csv (seed 42 voor het schud-bergje: max 22.3, min 0.02).",
+    "crumbs": [
+      "De kruistabel en χ² (chi-kwadraat)"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_kruistabel_chikwadraat.html#footnotes",
+    "href": "20_blokken/blok_kruistabel_chikwadraat.html#footnotes",
+    "title": "De kruistabel en χ² (chi-kwadraat)",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nDe échte passagierslijst van de Titanic, zoals samengevat in het onderzoek van de British Board of Trade (1912); via de R-dataset Titanic (zie ook Dawson, 1995, Journal of Statistics Education). Alle getallen in dit blok zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "De kruistabel en χ² (chi-kwadraat)"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_cronbach_alpha.html",
+    "href": "20_blokken/blok_cronbach_alpha.html",
+    "title": "Cronbachs α",
+    "section": "",
+    "text": "Tweeduizend zeshonderd mensen vulden ooit een persoonlijkheidsvragenlijst in — de Big Five, echt afgenomen, vrij beschikbaar.1 Vijf van die vragen willen samen één ding meten: neuroticisme, hoe snel iemand van slag raakt. “Ik word makkelijk boos.” “Ik voel me vaak somber.” Vijf losse vraagjes, en de hoop dat ze samen iets samenhangends aftasten.\nMaar hoe wéét je of die vijf vragen samen één ding meten, en niet vijf verschillende dingen? Daar is één getal voor, en het heet Cronbachs α (alpha). Trek even mee — we rekenen ’m uit, en daarna laat ik je een valkuil zien waar deze echte data zelf inloopt.",
+    "crumbs": [
+      "Cronbachs α"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_cronbach_alpha.html#de-prikkel",
+    "href": "20_blokken/blok_cronbach_alpha.html#de-prikkel",
+    "title": "Cronbachs α",
+    "section": "",
+    "text": "Tweeduizend zeshonderd mensen vulden ooit een persoonlijkheidsvragenlijst in — de Big Five, echt afgenomen, vrij beschikbaar.1 Vijf van die vragen willen samen één ding meten: neuroticisme, hoe snel iemand van slag raakt. “Ik word makkelijk boos.” “Ik voel me vaak somber.” Vijf losse vraagjes, en de hoop dat ze samen iets samenhangends aftasten.\nMaar hoe wéét je of die vijf vragen samen één ding meten, en niet vijf verschillende dingen? Daar is één getal voor, en het heet Cronbachs α (alpha). Trek even mee — we rekenen ’m uit, en daarna laat ik je een valkuil zien waar deze echte data zelf inloopt.",
+    "crumbs": [
+      "Cronbachs α"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_cronbach_alpha.html#speel-het",
+    "href": "20_blokken/blok_cronbach_alpha.html#speel-het",
+    "title": "Cronbachs α",
+    "section": "Speel het",
+    "text": "Speel het\nBij dit blok hoort bigfive.csv: 2634 rijen (de mensen), elf kolommen — id en tien items, N1–N5 (neuroticisme) en O1–O5 (openheid), elk een antwoord van 1 tot 6.\n\n\n\n\n\n\nOpmerkingIn R · bereken α\n\n\n\nbf &lt;- read.csv(\"bigfive.csv\")\n\n# psych heeft een kant-en-klare functie die ook de itemanalyse geeft\n# install.packages(\"psych\")  # eenmalig, als je 'm nog niet hebt\nlibrary(psych)\n\nalpha(bf[, c(\"N1\",\"N2\",\"N3\",\"N4\",\"N5\")])\n\n\nBovenaan de uitvoer staat raw_alpha = 0.81. α loopt van 0 tot 1, en .81 is hoog: de vijf neuroticisme-vragen bewegen flink samen op en neer. Wie op de ene hoog scoort, scoort op de andere ook hoog.\nKijk dan naar de kolom item-rest correlation (r.drop) in de itemtabel: hoe sterk hangt elk item samen met de som van de andere vier. Ze lopen van .48 (N5) tot .67 (N1 en N3) — allemaal ruim positief, geen enkel item hangt er dood bij. Zo ziet een schaal eruit waarvan de onderdelen echt samen één ding aftasten. R rekent; jij leest.",
+    "crumbs": [
+      "Cronbachs α"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_cronbach_alpha.html#snap-het",
+    "href": "20_blokken/blok_cronbach_alpha.html#snap-het",
+    "title": "Cronbachs α",
+    "section": "Snap het",
+    "text": "Snap het\nWaarom hier geen “schud het”? Omdat α geen waar-of-toeval?-vraag stelt — het is geen toets maar een maat voor hoe eensgezind de items zijn. Er is niets om los te schudden. Maar er zijn wél drie dingen die je erin kunt lezen die er níét in staan.\nα is niet hetzelfde als validiteit. Dit is de belangrijkste. α zegt of je items consistent zijn — of ze hetzelfde blijven aanwijzen. Niet of ze het juiste aanwijzen. Vijf vragen kunnen prachtig samenhangen en met z’n allen iets ánders meten dan je denkt (hoe sociaal wenselijk iemand antwoordt, bijvoorbeeld). Een keukenweegschaal die altijd 3 kilo te veel toont, is volmaakt consistent en volstrekt fout. α meet de consistentie-kant, en alleen die.\nα groeit vanzelf met de lengte. Meer items → hogere α, bijna gratis. Een lange lijst haalt bijna vanzelf een mooie α; dat bewijst niet dat elk item goed is, alleen dat er véél zijn.\nEn dan de valkuil waar deze echte data zelf inloopt. Draai dezelfde analyse op de vijf openheid-items, en er komt iets vreemds uit:\n\n\n\n\n\n\nOpmerkingIn R · de omgekeerde-item-val\n\n\n\nalpha(bf[, c(\"O1\",\"O2\",\"O3\",\"O4\",\"O5\")])            # α = -0.16 ?!\nalpha(bf[, c(\"O1\",\"O2\",\"O3\",\"O4\",\"O5\")], check.keys = TRUE)   # α = 0.60\n\n\nEen negatieve α — onmogelijk als maat, dus er is iets stuk. En dat iets is: sommige openheid-vragen zijn omgekeerd gesteld (reverse-scored). “Ik heb weinig fantasie” hoort bij lage openheid, terwijl “Ik zit vol ideeën” bij hóge openheid hoort. Tel je ze op zonder de omgekeerde eerst te draaien, dan werken ze elkaar tegen en stort α in. Met check.keys = TRUE draait R ze goed en komt er .60 uit — lager dan neuroticisme, en een eerlijker beeld van een bredere, lossere dimensie.\nDe les: α gaat ervan uit dat je items dezelfde kant op staan. Een getal onder de nul is geen slechte schaal maar een waarschuwing dat je iets vergat te draaien — en precies daarom kijk je nooit alleen naar de α, maar altijd ook naar de item-rest correlaties eronder. Die verklappen een dood of omgekeerd item; het ene totaalgetal verstopt het.\n\n◠ Zelfde vorm in het boek\nHier: één getal dat zegt hoe eensgezind de items van een schaal samen één ding meten.\nIn het boek: W5 — Deugt je vragenlijst?\nDaar draait het niet om de knop maar om de vraag eronder: wanneer mag een bundel losse items als één maat gelden — en wanneer verstopt dat ene getal wat de items apart je zouden vertellen?\n\n\nTODO: de boek-eenheid W5 (Deugt je vragenlijst?, hoofdstuk over betrouwbaarheid) is nog een grove schets — anker en formulering checken zodra dat hoofdstuk staat. Geen schud-trede (α is een maat, geen toets — charter: “natuurlijk uit”). Verhaal-stem-opening = eerste stem-pas.",
+    "crumbs": [
+      "Cronbachs α"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_cronbach_alpha.html#footnotes",
+    "href": "20_blokken/blok_cronbach_alpha.html#footnotes",
+    "title": "Cronbachs α",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nDe bfi-dataset uit het R-pakket psych (Revelle) — 2800 respondenten op een Big-Five-vragenlijst (International Personality Item Pool). Wij nemen de 2634 mensen die alle tien de items hieronder invulden. Alle getallen zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "Cronbachs α"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_correlatie_scatterplot.html",
+    "href": "20_blokken/blok_correlatie_scatterplot.html",
+    "title": "De correlatie r en de scatterplot",
+    "section": "",
+    "text": "Ergens op een kale rots bij Antarctica staat iemand met een schuifmaat en 342 pinguïns die daar niet om gevraagd hebben.1 Van elke pinguïn schrijft hij twee dingen op: hoe lang de snavel is, en hoe diep. Met diep bedoelen we de hóógte van de snavel — van boven naar onder, van opzij bekeken, niet de breedte en niet de lengte. Meer niet: twee getallen per beest, netjes onder elkaar.\n\n\n\nDe snavel in profiel: lengte loopt van voor naar achter, diepte is de hoogte van boven naar onder. (Voorlopige handschets — vervangt Bens eigen tekening.)\n\n\nEn nu wij. Want in die twee kolommetjes zit iets raars verstopt. Reken je de samenhang tussen snavellengte en snaveldiepte uit over alle 342 pinguïns, dan komt er een getal uit dat negatief is: r = −.24. In gewone taal: hoe langer de snavel, hoe minder diep — alsof een dier met een lange neus per se een dunne neus heeft.\nVoelt dat kloppen? Mij niet. Trek even mee — we gaan het zelf uitzoeken, en onderweg blijkt dat getal iets heel anders te zeggen dan het lijkt.",
+    "crumbs": [
+      "De correlatie *r* en de scatterplot"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_correlatie_scatterplot.html#de-prikkel",
+    "href": "20_blokken/blok_correlatie_scatterplot.html#de-prikkel",
+    "title": "De correlatie r en de scatterplot",
+    "section": "",
+    "text": "Ergens op een kale rots bij Antarctica staat iemand met een schuifmaat en 342 pinguïns die daar niet om gevraagd hebben.1 Van elke pinguïn schrijft hij twee dingen op: hoe lang de snavel is, en hoe diep. Met diep bedoelen we de hóógte van de snavel — van boven naar onder, van opzij bekeken, niet de breedte en niet de lengte. Meer niet: twee getallen per beest, netjes onder elkaar.\n\n\n\nDe snavel in profiel: lengte loopt van voor naar achter, diepte is de hoogte van boven naar onder. (Voorlopige handschets — vervangt Bens eigen tekening.)\n\n\nEn nu wij. Want in die twee kolommetjes zit iets raars verstopt. Reken je de samenhang tussen snavellengte en snaveldiepte uit over alle 342 pinguïns, dan komt er een getal uit dat negatief is: r = −.24. In gewone taal: hoe langer de snavel, hoe minder diep — alsof een dier met een lange neus per se een dunne neus heeft.\nVoelt dat kloppen? Mij niet. Trek even mee — we gaan het zelf uitzoeken, en onderweg blijkt dat getal iets heel anders te zeggen dan het lijkt.",
+    "crumbs": [
+      "De correlatie *r* en de scatterplot"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_correlatie_scatterplot.html#speel-het",
+    "href": "20_blokken/blok_correlatie_scatterplot.html#speel-het",
+    "title": "De correlatie r en de scatterplot",
+    "section": "Speel het",
+    "text": "Speel het\nHaal de pinguïns binnen en gooi ze in een plaatje. Elke pinguïn één stip: snavellengte op de ene as, snaveldiepte op de andere.\n\n\n\n\n\n\nOpmerkingIn R · trek eraan\n\n\n\npeng &lt;- read.csv(\"penguins.csv\")\n\nplot(peng$snavellengte, peng$snaveldiepte)      # 342 stippen, een wolk\ncor(peng$snavellengte, peng$snaveldiepte)        # → -0.235\n\n\nDaar is-ie: een wolk die van linksboven naar rechtsonder hangt, en het getal −0.235 is één cijfer voor “hoe strak kantelt die wolk omláág?”. De schaal loopt van −1 (een perfecte dalende lijn) via 0 (geen rechtlijnig verband) naar +1 (een perfecte stijgende lijn). −.24 is een flauwe daling met veel rommel eromheen — zwak, maar het staat er. Langere snavel, ondiepere snavel. Zegt het getal.",
+    "crumbs": [
+      "De correlatie *r* en de scatterplot"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_correlatie_scatterplot.html#schud-het",
+    "href": "20_blokken/blok_correlatie_scatterplot.html#schud-het",
+    "title": "De correlatie r en de scatterplot",
+    "section": "Schud het",
+    "text": "Schud het\nEerst de vraag die telt: is die −.24 écht, of kan een wolk toevallig zo scheef gaan hangen? We gaan vals spelen. We knippen elke snaveldiepte los van z’n eigen pinguïn en plakken ’m op een willekeurige andere. De lengtes blijven lengtes, de dieptes blijven dieptes — maar wie bij wie hoort, is nu lukraak.\nDát is de hele truc, en het is belangrijk genoeg om even stil bij te staan: door te husselen koppel je de twee metingen los van elkaar. Je haalt met eigen handen weg dat een bepaalde lengte en een bepaalde diepte bij dezelfde pinguïn horen. In zo’n losgekoppelde wereld kán er geen echt verband meer zijn — en dus is elke samenhang die je er tóch nog in meet, per definitie puur toeval. Zat er echte samenhang in de originele data, dan hoort die nu weg te vallen.\n\n\n\n\n\n\nOpmerkingIn R · schud de boel door elkaar\n\n\n\n# één keer schudden: de dieptes door elkaar husselen\ncor(peng$snavellengte, sample(peng$snaveldiepte))    # → iets rond 0\n\n# doe het 1000 keer en kijk waar r dan landt\nset.seed(42)\nnep &lt;- replicate(1000, cor(peng$snavellengte, sample(peng$snaveldiepte)))\nhist(nep)                                             # een bergje rond nul\nabline(v = -0.235, col = \"red\", lwd = 2)              # en dáár staat de echte\n\n\nKijk naar dat plaatje. Duizend werelden die dansen rond nul — want in elke geschudde wereld is de échte samenhang doorgeknipt, maar toeval laat de r nooit precies op nul landen. Ze kruipen allemaal dicht om nul, zelden verder dan .17 van huis. En dan die rode streep op −.24, buiten het hele bergje. In duizend keer schudden kwam geen enkele geschudde wereld even ver als de echte pinguïns. Dát is wat “geen toeval” betekent — geen p-waarde die je moet geloven, maar een afstand die je zíet. De echte pinguïns weten iets wat de geschudde niet weten.\nDus: de samenhang is echt. Zaak gesloten? Nee. Hier begint het pas.",
+    "crumbs": [
+      "De correlatie *r* en de scatterplot"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_correlatie_scatterplot.html#snap-het",
+    "href": "20_blokken/blok_correlatie_scatterplot.html#snap-het",
+    "title": "De correlatie r en de scatterplot",
+    "section": "Snap het",
+    "text": "Snap het\nDe verleiding is nu te schrijven: “bij pinguïns gaat een langere snavel samen met een ondiepere.” Het getal is echt, de zin lijkt te volgen. En toch is-ie mis. Kleur de wolk eens per soort:\n\n\n\n\n\n\nOpmerkingIn R · kleur de wolk\n\n\n\nplot(peng$snavellengte, peng$snaveldiepte, col = factor(peng$soort), pch = 16)\n\n# en reken r nu apart uit binnen één soort\ngentoo &lt;- peng[peng$soort == \"Gentoo\", ]\ncor(gentoo$snavellengte, gentoo$snaveldiepte)         # → +0.643\n\n\nIneens zie je het. Er zijn drie soorten in die wolk, elk als een eigen kluitje. En binnen elk kluitje loopt de samenhang de andere kant op: langere snavel, juist diepere snavel. Reken maar na — Adélie +.39, Chinstrap +.65, Gentoo +.64. Alle drie positief. Het teken is omgeklapt.\nWat gebeurde er? De Gentoo’s (rechtsonder) hebben lange, ondiepe snavels; de andere twee soorten (linksboven) korte, diepe. Gooi je ze op één hoop, dan trekt dat soortverschil de hele wolk schuin naar beneden — en dáár komt die −.24 vandaan. Niet uit een verband tussen snavellengte en -diepte, maar uit het verschil tússen de soorten. De soort is een derde speler die zich als het verband vermomt. Het boek noemt dat straks confounding; jij zag het hier gebeuren, in de kleuren van een scatterplot.\nEn dat is de dubbele les van dit blok, mooier dan één van de twee alleen:\n\nDe schud-toets zei: die −.24 is echt, geen toeval.\nDe scatterplot zei: echt ja — maar niet wát je denkt. De richting is een luchtspiegeling van de soort.\n\nEcht en waar zijn dus twee verschillende dingen. Een correlatie kan kraakhelder niet-toeval zijn en je tóch de verkeerde kant op wijzen. Daarom lees je r nooit zonder de wolk ernaast — en zeker niet zonder je af te vragen wie er nog meer in die wolk zit. Zou je het in één eerlijke zin moeten opschrijven, dan niet “langere snavels zijn ondieper”, maar: over drie soorten heen hangt de wolk omlaag, maar binnen elke soort omhoog — het min-teken is een soorteffect.\n(En dat kleine getal r² dat je weleens ziet — hier .06 — is het “aandeel gedeelde variantie”: van alle verschil in snaveldiepte deelt maar een paar procent iets met snavellengte. Ook dat is geen “verklaring”, alleen boekhouding.)\n\n◠ Zelfde vorm in het boek\nHier: één getal voor de samenhang, en de wolk die verklapt wat het getal verzwijgt.\nIn het boek: W4 — Hangen ze samen?\nDaar begint het bij de wolk, niet bij het getal — en de rechte lijn komt pas als je hebt gezien wie er allemaal in de wolk zitten.\n\n\nTODO (broertje-proof, herschreven 24-7 naar het charter): W4 (Hangen ze samen?) is nog een grove boek-schets — anker en formulering checken zodra dat hoofdstuk staat. Verhaal-stem-opening is een eerste stem-pas; kan nog losser/stiller. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (JASP kan de shuffle niet zelf — zie het JASP-blok voor de gekozen oplossing).",
+    "crumbs": [
+      "De correlatie *r* en de scatterplot"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_correlatie_scatterplot.html#footnotes",
+    "href": "20_blokken/blok_correlatie_scatterplot.html#footnotes",
+    "title": "De correlatie r en de scatterplot",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nPalmer Penguins — Gorman, Williams & Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket palmerpenguins (CC0). Alle getallen in dit blok zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "De correlatie *r* en de scatterplot"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_p_waarde.html",
+    "href": "20_blokken/blok_p_waarde.html",
+    "title": "De p-waarde",
+    "section": "",
+    "text": "Dertig planten, drie potjes voer.1 Tien krijgen niks bijzonders (controle), tien krijgen het ene goedje, tien het andere. Aan het eind weeg je van elke plant het droge gewicht. De controle-planten wegen gemiddeld 5.03 gram, de planten op behandeling 2 gemiddeld 5.53. Een half grammetje meer.\nDoet het voer iets? Of is dat halve grammetje gewoon toeval — hadden er nou eenmaal een paar zware planten in het verkeerde potje gestaan?\n\n\n\nDrie potjes, dertig planten: doet het voer iets, of danst het toeval? (Voorlopige handschets — vervangt Bens eigen tekening.)\n\n\nDat is de vraag onder bijna élk onderzoek. En het antwoord komt straks in één klein getalletje: p = .048. In dit blok gaan we dat getal niet geloven — we gaan het tellen.",
+    "crumbs": [
+      "De *p*-waarde"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_p_waarde.html#de-prikkel",
+    "href": "20_blokken/blok_p_waarde.html#de-prikkel",
+    "title": "De p-waarde",
+    "section": "",
+    "text": "Dertig planten, drie potjes voer.1 Tien krijgen niks bijzonders (controle), tien krijgen het ene goedje, tien het andere. Aan het eind weeg je van elke plant het droge gewicht. De controle-planten wegen gemiddeld 5.03 gram, de planten op behandeling 2 gemiddeld 5.53. Een half grammetje meer.\nDoet het voer iets? Of is dat halve grammetje gewoon toeval — hadden er nou eenmaal een paar zware planten in het verkeerde potje gestaan?\n\n\n\nDrie potjes, dertig planten: doet het voer iets, of danst het toeval? (Voorlopige handschets — vervangt Bens eigen tekening.)\n\n\nDat is de vraag onder bijna élk onderzoek. En het antwoord komt straks in één klein getalletje: p = .048. In dit blok gaan we dat getal niet geloven — we gaan het tellen.",
+    "crumbs": [
+      "De *p*-waarde"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_p_waarde.html#speel-het",
+    "href": "20_blokken/blok_p_waarde.html#speel-het",
+    "title": "De p-waarde",
+    "section": "Speel het",
+    "text": "Speel het\nHaal de planten binnen en laat de klassieke t-toets het verschil wegen tussen controle en behandeling 2.\n\n\n\n\n\n\nOpmerkingIn R · trek eraan\n\n\n\npg &lt;- read.csv(\"plantgroei.csv\")\n\n# gemiddeld gewicht per groep\ntapply(pg$gewicht, pg$groep, mean)          # controle 5.03, behandeling2 5.53\n\n# vergelijk controle vs behandeling2\ntweetal &lt;- pg[pg$groep %in% c(\"controle\", \"behandeling2\"), ]\nt.test(gewicht ~ groep, data = tweetal)     # t = -2.13, p = 0.048\n\n\nDaar staat het: het verschil is 0.50 gram, t = −2.13, en p = .048. Het 95%- betrouwbaarheidsinterval loopt van −0.98 tot −0.01 — het schampt de nul, maar gaat er nét niet overheen. Volgens de gewoonte-grens van .05 is dit “significant” — nét. Maar wat ís die .048 eigenlijk? Voor je die vraag beantwoordt uit een tabel, gaan we hem zelf maken.",
+    "crumbs": [
+      "De *p*-waarde"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_p_waarde.html#schud-het",
+    "href": "20_blokken/blok_p_waarde.html#schud-het",
+    "title": "De p-waarde",
+    "section": "Schud het",
+    "text": "Schud het\nHier is de truc, en het is de mooiste van het hele boek. Stel: het voer doet niks. Helemaal niks. Dan is het etiket “controle” of “behandeling2” op een plant volstrekt willekeurig — je had de labels net zo goed door elkaar kunnen gooien, het gewicht zou hetzelfde blijven. Dus dat doen we. Duizend keer.\nElke keer husselen we de twintig groepslabels lukraak over de twintig planten, en meten we het verschil tussen de twee nep-groepen. Zo bouwen we duizend werelden waarin het voer bewijsbaar niks doet — en kijken hoe vaak het blinde toeval alléén al een verschil oplevert dat even groot is als (of groter dan) onze echte 0.50.\n\n\n\n\n\n\nOpmerkingIn R · schud de labels door elkaar\n\n\n\ntweetal &lt;- pg[pg$groep %in% c(\"controle\", \"behandeling2\"), ]\n\necht &lt;- diff(tapply(tweetal$gewicht, tweetal$groep, mean))   # het echte verschil, 0.50\n\n# één toeval-wereld: plak de labels lukraak op de gewichten\nschud &lt;- function() {\n  nep &lt;- sample(tweetal$groep)                     # labels door elkaar\n  abs(diff(tapply(tweetal$gewicht, nep, mean)))    # verschil in die wereld\n}\n\nset.seed(42)\nwerelden &lt;- replicate(1000, schud())\nhist(werelden)                                     # een bergje rond nul\nabline(v = abs(echt), col = \"red\", lwd = 2)        # daar staat de echte 0.50\n\n# tel: hoe vaak komt het toeval even ver of verder?\nmean(werelden &gt;= abs(echt))                        # → ongeveer 0.048\n\n\nKijk naar dat plaatje. De duizend toeval-verschillen kruipen dicht om nul — de meeste werelden komen niet in de buurt van een half grammetje. En dan tel je hoe vaak het toeval tóch even ver reikt als jouw echte planten: zo’n 48 van de 1000. Dat aandeel — .048 — ís de p-waarde. Geen formule die je uit een tabel moet geloven, maar een fractie die je hebt geteld:\n\nDe p is de fractie toeval-werelden die net zo ver komen als de jouwe.\n\nZeldzaam is het, die 48 op 1000 — maar niet onmogelijk. En het staat op het randje. Dat randje is de hele les.",
+    "crumbs": [
+      "De *p*-waarde"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_p_waarde.html#snap-het",
+    "href": "20_blokken/blok_p_waarde.html#snap-het",
+    "title": "De p-waarde",
+    "section": "Snap het",
+    "text": "Snap het\nNu je p zelf geteld hebt, kun je precies zien wat het wél en niet zegt.\nWat het zegt. Onze p = .048 betekent: als het voer niks deed, zou zó’n groot verschil in maar ongeveer 5 van de 100 toeval-werelden opduiken. De data passen dus slécht bij het idee “er is niks”. Dat is precies wat een p-waarde meet — hoe slecht de data bij ‘er is niks’ passen, en niets meer.\nWat het níét zegt. Let op, want hier struikelt bijna iedereen:\n\np is niet hoe groot het effect is. Ons effect is een half grammetje — dat lees je af aan het verschil (0.50) en het interval [−0.98, −0.01], niet aan de p. Een piepklein effect kan een piepkleine p krijgen als je maar genoeg planten weegt.\np is niet de kans dat er niks aan de hand is. Hij rekent de andere kant op: hij vertrekt vanuit “er is niks” en vraagt hoe raar jouw data dan zijn — niet vanuit jouw data hoe waarschijnlijk “er is niks” is. P(data | er is niks) is iets heel anders dan P(er is niks | data).\n\nEn dat randje. Onze .048 haalt de gewoonte-grens van .05 — nét. Maar bedenk: was er één zware controle-plant net iets lichter geweest, dan stond er misschien .052, en dan zou dezelfde uitkomst ineens “niet significant” heten. Dat kan niet kloppen. .05 is een afspraak, geen natuurgrens. Een p van .048 en een p van .052 vertellen hetzelfde verhaal: een zwak, wankel signaaltje dat om nuance vraagt, niet om een ja/nee-stempel.\nEn de andere kant op. Reken voor de grap ook eens controle tegen behandeling 1 uit:\n\n\n\n\n\n\nOpmerkingIn R · de andere behandeling\n\n\n\nander &lt;- pg[pg$groep %in% c(\"controle\", \"behandeling1\"), ]\nt.test(gewicht ~ groep, data = ander)       # p = 0.25 — dik niet-significant\n\n\nDaar komt p = .25 uit: het toeval haalt zó’n verschil moeiteloos, in een kwart van de werelden. Niks aan de hand? Voorzichtig. “Niet significant” betekent niet aangetoond — niet aangetoond dat er niks is. Misschien werkt behandeling 1 wél en waren tien planten te weinig om het te zien. Afwezigheid van bewijs is geen bewijs van afwezigheid. Een p die groot is, sluit niets uit; hij zwijgt alleen.\n\n◠ Zelfde vorm in het boek\nHier: het toeval duizend keer laten dansen om nul, en tellen hoe vaak het even ver komt als jij — dat aandeel is de p.\nIn het boek: W6 — Bestaat het verschil echt?\nDaar wordt de toets een omkering: stel dat er niks is — hoe raar zijn onze data dán? De p is het antwoord op die omgekeerde vraag, nooit op de vraag zelf.\n\n\nTODO (broertje-proof, geschreven naar het charter 24-7): W6 (Bestaat het verschil echt?) is nog een grove boek-schets — anker en formulering checken zodra dat hoofdstuk staat. De schud-zet is hier de kern van het blok, niet “default aan / natuurlijk uit”: bij de p-waarde ís de simulatie de definitie. Getallen (n=30, M 5.03 / 5.53, verschil 0.50, t=−2.13, p=.048, CI [−0.98,−0.01], contrast p=.25) op de echte PlantGrowth-data nagerekend. De ~48/1000 volgt direct uit p=.048; de exacte simulatie-telling wiebelt met de seed rond .048. Verhaal-stem-opening = eerste stem-pas; kan nog stiller. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (JASP kan de shuffle niet zelf — zie het JASP-blok voor de gekozen oplossing).",
+    "crumbs": [
+      "De *p*-waarde"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_p_waarde.html#footnotes",
+    "href": "20_blokken/blok_p_waarde.html#footnotes",
+    "title": "De p-waarde",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nPlantGrowth — droog gewicht van planten onder drie condities; Dobson (1983), via R (datasets::PlantGrowth, publieke data). Alle getallen in dit blok zijn op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "De *p*-waarde"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_t_toets.html",
+    "href": "20_blokken/blok_t_toets.html",
+    "title": "De t-toets — gepaard en onafhankelijk",
+    "section": "",
+    "text": "Twee kleine raadsels, allebei over hetzelfde woord: verschil.\nHet eerste is meer dan honderd jaar oud.1 Tien mensen krijgen twee nachten lang elk een ander slaapmiddel, en iemand meet hoeveel uur extra slaap ze ervan krijgen. Middel A levert gemiddeld 0.75 uur op, middel B 2.33 uur. Middel B wint dus met 1.58 uur. Maar het zijn er maar tien, en mensen slapen de ene nacht nu eenmaal anders dan de andere. Is die 1.58 uur een echt verschil tussen de middelen — of hadden we gewoon een paar goede nachten voor B?\nHet tweede raadsel staat op een rots bij Antarctica.2 Gentoo-pinguïns wegen gemiddeld 5076 gram, Adélies 3701 gram. Dat is 1375 gram verschil — anderhalve kilo, een flink beest lichter. Maar we hebben niet álle pinguïns gewogen, alleen degene die we toevallig oppakten. Is die 1375 gram het échte soortverschil, of hadden we pech (of geluk) met wie er in onze armen belandde?\nDezelfde vraag, twee keer: bestaat het verschil echt, of danst het op toeval? En let straks op iets moois — bij de pinguïns wordt het antwoord zó overweldigend dat de interessante vraag verschuift. Trek even mee.",
+    "crumbs": [
+      "De t-toets — gepaard en onafhankelijk"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_t_toets.html#de-prikkel",
+    "href": "20_blokken/blok_t_toets.html#de-prikkel",
+    "title": "De t-toets — gepaard en onafhankelijk",
+    "section": "",
+    "text": "Twee kleine raadsels, allebei over hetzelfde woord: verschil.\nHet eerste is meer dan honderd jaar oud.1 Tien mensen krijgen twee nachten lang elk een ander slaapmiddel, en iemand meet hoeveel uur extra slaap ze ervan krijgen. Middel A levert gemiddeld 0.75 uur op, middel B 2.33 uur. Middel B wint dus met 1.58 uur. Maar het zijn er maar tien, en mensen slapen de ene nacht nu eenmaal anders dan de andere. Is die 1.58 uur een echt verschil tussen de middelen — of hadden we gewoon een paar goede nachten voor B?\nHet tweede raadsel staat op een rots bij Antarctica.2 Gentoo-pinguïns wegen gemiddeld 5076 gram, Adélies 3701 gram. Dat is 1375 gram verschil — anderhalve kilo, een flink beest lichter. Maar we hebben niet álle pinguïns gewogen, alleen degene die we toevallig oppakten. Is die 1375 gram het échte soortverschil, of hadden we pech (of geluk) met wie er in onze armen belandde?\nDezelfde vraag, twee keer: bestaat het verschil echt, of danst het op toeval? En let straks op iets moois — bij de pinguïns wordt het antwoord zó overweldigend dat de interessante vraag verschuift. Trek even mee.",
+    "crumbs": [
+      "De t-toets — gepaard en onafhankelijk"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_t_toets.html#speel-het",
+    "href": "20_blokken/blok_t_toets.html#speel-het",
+    "title": "De t-toets — gepaard en onafhankelijk",
+    "section": "Speel het",
+    "text": "Speel het\nTwee raadsels, twee toetsen — en het verschil zit in het design. Bij de slaapmiddelen meten we dezelfde tien mensen twee keer; die twee kolommen horen per rij bij elkaar. Dat vraagt een gepaarde t-toets (paired). Bij de pinguïns hebben we twee losse groepen dieren, geen koppels — dat vraagt een onafhankelijke t-toets (independent). Doe ze allebei.\n\n\n\n\n\n\nOpmerkingIn R · trek aan de slaapmiddelen (gepaard)\n\n\n\nslaap &lt;- read.csv(\"slaap_middelen.csv\")\n\nmean(slaap$slaap_middelA)                                  # → 0.75 uur\nmean(slaap$slaap_middelB)                                  # → 2.33 uur\n\nt.test(slaap$slaap_middelA, slaap$slaap_middelB, paired = TRUE)\n# verschil A - B = -1.58 u,  t(9) = -4.06,  p = 0.003\n# 95%-CI [-2.46, -0.70]\n\n\nHet min-teken zegt alleen dat A mínder oplevert dan B; de grootte is 1.58 uur. De p van 0.003 zegt: als de twee middelen in werkelijkheid even goed waren, zou je zó’n verschil bij tien mensen zelden per ongeluk tegenkomen. En dat interval [−2.46, −0.70] is eerlijker dan de p: het beste dat je over het echte verschil durft te zeggen is “ergens tussen 0.70 en 2.46 uur in B’s voordeel”. Klein onderzoek, breed interval — het interval is meteen zijn eigen slag om de arm.\n\n\n\n\n\n\nOpmerkingIn R · trek aan de pinguïns (onafhankelijk)\n\n\n\npeng &lt;- read.csv(\"penguins.csv\")\nga   &lt;- peng[peng$soort %in% c(\"Gentoo\", \"Adelie\"), ]   # twee soorten\n\ntapply(ga$gewicht, ga$soort, mean)                       # Adelie 3701, Gentoo 5076\n\nt.test(gewicht ~ soort, data = ga)\n# verschil ~ 1375 g,  t ~ -23.6,  p &lt; .001\n# 95%-CI van het verschil ~ [1261, 1490] g\n\n\nKijk eens naar die t van −23.6. Bij de slaapmiddelen was het −4.06 en dat vonden we al overtuigend; hier is-ie bijna zes keer zo groot. De p is zó klein dat R ’m niet eens meer voluit schrijft (&lt; 2.2e-16). Onthoud dat cijfer even — in “Snap het” blijkt het minder indrukwekkend dan het lijkt.",
+    "crumbs": [
+      "De t-toets — gepaard en onafhankelijk"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_t_toets.html#schud-het",
+    "href": "20_blokken/blok_t_toets.html#schud-het",
+    "title": "De t-toets — gepaard en onafhankelijk",
+    "section": "Schud het",
+    "text": "Schud het\nNu de vraag die telt: bestaat het verschil écht? We gaan het toeval nabouwen. De truc is telkens dezelfde, en hij is mooi: we bouwen duizend werelden waarin de waarheid nul is — waarin er per definitie géén verschil bestaat — en kijken hoe ver puur geluk het gemeten verschil dan tóch van nul wegtrekt. In geen enkele van die werelden meet je precies nul; het toeval laat het verschil dansen om nul. Die dans is een bergje. Ligt jouw echte verschil ín het bergje, dan kan toeval het verklaren. Ligt het erbuiten, dan is het echt.\nBij de pinguïns bouw je die nul-werelden door de soort-labels te husselen. Je houdt alle gewichten precies zoals ze zijn, maar je plakt er lukraak “Gentoo” of “Adélie” op. In zo’n wereld zegt de soort niets meer over het gewicht — het echte soortverschil is nul. En dan meet je toch, elke keer, een verschil, puur door wie er toevallig welk label kreeg.\n\n\n\n\n\n\nOpmerkingIn R · hussel de soort-labels (1000 nul-werelden)\n\n\n\necht &lt;- mean(ga$gewicht[ga$soort == \"Gentoo\"]) -\n        mean(ga$gewicht[ga$soort == \"Adelie\"])            # 1375 g\n\nset.seed(42)\nnul &lt;- replicate(1000, {\n  door_elkaar &lt;- sample(ga$soort)                          # labels husselen\n  mean(ga$gewicht[door_elkaar == \"Gentoo\"]) -\n  mean(ga$gewicht[door_elkaar == \"Adelie\"])\n})\n\nhist(nul)                                                  # het toeval-bergje rond 0\nabline(v = echt, col = \"red\", lwd = 2)                     # en dáár staat 1375\nrange(nul)                                                 # → ongeveer -386 tot 367\n\n\nKijk naar dat bergje. Duizend werelden waarin soort er niet toe doet, en het toeval komt niet verder dan zo’n 386 gram van nul — een klein beetje geschommel. En dan die rode streep op 1375, kilometers rechts van het hele bergje. Geen enkele van de duizend nul-werelden haalt jouw verschil, of komt zelfs maar in de buurt. Dát is “geen toeval”: geen p-waarde die je moet geloven, maar een afstand die je zíet.\nBij de slaapmiddelen hoort een ándere schud-zet, want het design is anders. Daar zijn geen twee groepen om te husselen — er zijn tien personen, elk met hun eigen verschil (A minus B). De nul-wereld is hier: het maakt niet uit welk middel je A en welk je B noemt. Dus voor elke persoon gooien we een muntje dat bepaalt of zijn verschil met een plus of een min meetelt. Duizend keer.\n\n\n\n\n\n\nOpmerkingIn R · draai per persoon het teken (1000 nul-werelden)\n\n\n\nverschil &lt;- slaap$slaap_middelA - slaap$slaap_middelB      # 10 verschillen\necht_gem &lt;- mean(verschil)                                 # -1.58 u\n\nset.seed(42)\nnul &lt;- replicate(1000, {\n  munt &lt;- sample(c(-1, 1), length(verschil), replace = TRUE)\n  mean(verschil * munt)                                    # teken lukraak omgooien\n})\n\nhist(nul)                                                  # bergje rond 0\nabline(v = echt_gem, col = \"red\", lwd = 2)                 # -1.58 aan de rand\n\n\nOok hier danst het toeval om nul, en de echte −1.58 uur ligt aan de uiterste rand — met tien muntjes komt het geluk daar bijna nooit. Twee designs, twee manieren van husselen, één idee: duizend werelden waarin de waarheid nul is, maar het gemeten verschil nooit precies nul. De toets vertelt je hoe raar jouw verschil zou zijn als er niks was.",
+    "crumbs": [
+      "De t-toets — gepaard en onafhankelijk"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_t_toets.html#snap-het",
+    "href": "20_blokken/blok_t_toets.html#snap-het",
+    "title": "De t-toets — gepaard en onafhankelijk",
+    "section": "Snap het",
+    "text": "Snap het\nAllebei de verschillen zijn dus echt, geen toeval. Maar “echt” is niet hetzelfde als “belangrijk”, en juist de pinguïns laten dat scherp zien.\nHerinner je die t van −23.6 en de p die niet meer op het scherm paste? Die duizelingwekkende getallen betekenen niet dat het pinguïn-verschil belangrijker is dan het slaap-verschil. Ze zijn zo groot om twee saaie redenen: het verschil is bruut (anderhalve kilo) én we hebben veel dieren (274 stuks). Een t-toets straft kleine steekproeven af en beloont grote; gooi er genoeg waarnemingen in en zelfs een schamel verschil wordt “hoogsignificant”. Bij een groot, duidelijk verschil met een royale N is significantie triviaal — de toets bevestigt alleen wat je met het blote oog al zag. De interessante vraag is dan niet óf er verschil is, maar hoe groot.\nDaarvoor bestaat de effectgrootte (effect size) — een verschil losgemaakt van de steekproefgrootte. Voor twee groepen is dat Cohens d: het verschil uitgedrukt in standaarddeviaties.\n\n\n\n\n\n\nOpmerkingIn R · hoe groot is groot? (Cohens d)\n\n\n\n# Cohens d: verschil in gewicht, gedeeld door de gepoolde spreiding\nlibrary(effectsize)                # of reken 'm met de hand uit de SD's\ncohens_d(gewicht ~ soort, data = ga)      # → d ~ 2.87\n\n\nd = 2.87. Dat is enorm — de twee soorten liggen bijna drie standaarddeviaties uit elkaar; wijs een willekeurige Gentoo en een willekeurige Adélie aan en de Gentoo is vrijwel altijd zwaarder. Dáár zit het echte verhaal, niet in de t.\nEn de slaapmiddelen, met hun bescheiden N van 10? De effectgrootte voor een gepaard verschil heet dz, en die is hier −1.28 — ook fors. Het verschil tussen A en B is meer dan één standaarddeviatie groot. Klein onderzoek, maar geen klein effect. Precies het omgekeerde plaatje van de pinguïns: daar was de t spectaculair en het nieuws de grootte; hier is de t bescheiden en is de grootte nog steeds het nieuws.\nDe les van dit blok, in drie zinnen:\n\nHet design kiest de toets. Dezelfde mensen twee keer gemeten → gepaard. Twee losse groepen → onafhankelijk. Dat is geen smaak maar een feit over je data.\nSignificant zegt “waarschijnlijk niet nul”, niet “groot”. Bij veel data is significantie goedkoop; laat je niet imponeren door een t van 23.\nDe grootte is de vraag die overblijft. Rapporteer altijd een effectgrootte naast de toets — d, een interval, of gewoon het verschil in gewone eenheden (uren, grammen). Dát is wat een mens wil weten.\n\nZou je het in één eerlijke zin opschrijven: niet “het verschil is significant (p &lt; .001)”, maar Gentoo’s zijn gemiddeld 1375 gram zwaarder dan Adélies (95%-CI [1261, 1490]), een zeer groot effect (d = 2.87). Het getal met een maat eromheen, niet een sterretje.\n\n◠ Zelfde vorm in het boek\nHier: twee groepen (of twee metingen), één verschil, en de vraag of dat verschil het toeval overleeft — plus hoe groot het eigenlijk is.\nIn het boek: W6 — Bestaat het verschil echt?\nDaar komt de toets pas ná het interval en na de simulatie: eerst vóélen hoe ver toeval reikt, dan pas de vraag “stel dat er niks was”.\n\n\nTODO (broertje-proof, 24-7, geschreven op het charter): W6 (Bestaat het verschil echt?) is nog een grove boek-schets — anker en formulering checken zodra dat hoofdstuk staat. Verhaal-stem-opening is een eerste stem-pas; kan nog stiller. Cohens d gebruikt effectsize::cohens_d — checken of dat pakket in de broertje-onboarding zit, anders met-de-hand-variant tonen. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (JASP kan het husselen niet zelf → speeltje + hop).",
+    "crumbs": [
+      "De t-toets — gepaard en onafhankelijk"
+    ]
+  },
+  {
+    "objectID": "20_blokken/blok_t_toets.html#footnotes",
+    "href": "20_blokken/blok_t_toets.html#footnotes",
+    "title": "De t-toets — gepaard en onafhankelijk",
+    "section": "Voetnoten",
+    "text": "Voetnoten\n\n\nCushny & Peebles (1905), het klassieke slaapmiddelen-experiment — dezelfde data waarop Student in 1908 zijn t-verdeling demonstreerde. slaap_middelen.csv, 10 personen. Alle getallen nagerekend.↩︎\nPalmer Penguins — Gorman, Williams & Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket palmerpenguins (CC0). penguins.csv. Alle getallen op die échte data nagerekend.↩︎",
+    "crumbs": [
+      "De t-toets — gepaard en onafhankelijk"
+    ]
+  }
+]
