@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schud de tabel — chi-kwadraat</title>
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57;
+    --amber:#c8913a; --amber-ink:#a9701f;
+    --green:#4d8a5a; --line:#d8c69b; --paper:#fffaf0;
+    --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:210px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 192 5.5 T 208 5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:210px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:680px}
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media (max-width:760px){ .panels{grid-template-columns:1fr} }
+  .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
+    margin:0 0 8px;letter-spacing:.2px}
+  canvas{width:100%;display:block;border-radius:12px;background:#faf6ea;
+    border:1.5px solid #d8c69b;
+    box-shadow:0 8px 26px rgba(120,95,45,.18)}
+
+  /* --- de kruistabel (houten kraam, geen dashboard) --- */
+  .tblcard{background:#faf6ea;border:1.5px solid #d8c69b;border-radius:12px;
+    box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 16px 12px;transform:rotate(-.25deg)}
+  table.kruis{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+  table.kruis caption{caption-side:top;text-align:left;font-style:italic;color:var(--dim);
+    font-size:13.5px;margin-bottom:8px}
+  table.kruis th,table.kruis td{padding:7px 8px;text-align:right;font-size:15px}
+  table.kruis thead th{color:var(--dim);font-weight:600;font-style:italic;
+    border-bottom:2px solid #d8c69b}
+  table.kruis tbody th{text-align:left;font-weight:600;color:var(--ink)}
+  table.kruis tbody tr+tr td,table.kruis tbody tr+tr th{border-top:1px solid #ecdfbc}
+  table.kruis tfoot th,table.kruis tfoot td{border-top:2px solid #d8c69b;color:var(--dim);font-size:14px}
+  .pctcell{text-align:left;min-width:118px}
+  .pctnum{display:inline-block;width:44px;color:var(--bordeaux);font-weight:600}
+  .pctbar{display:inline-block;height:11px;vertical-align:middle;
+    background:linear-gradient(#e0b25a,#b3843c);
+    border:1px solid rgba(90,66,28,.45);border-radius:3px 5px 3px 5px}
+  .chi{margin:14px 2px 2px;font-size:16.5px;color:var(--ink)}
+  .chi b{color:var(--bordeaux);font-weight:600;font-variant-numeric:tabular-nums}
+
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 0}
+  .controls button{--rot:0deg;transform:rotate(var(--rot))}
+  #schud1{--rot:-.7deg} #schud100{--rot:.3deg} #schud1000{--rot:.45deg} #wis{--rot:-.35deg}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 15px;cursor:pointer;min-height:42px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);
+    transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button:active{transform:rotate(var(--rot)) translateY(1px);box-shadow:none}
+  button.primary{background:#dca94e;border-color:#b3843c;color:#3a2e15}
+  button.primary:hover{background:#e6b85e}
+  .count{margin:12px 0 0;color:#4a4030;font-size:16px;line-height:1.5;min-height:24px}
+  .count b{color:var(--bordeaux);font-weight:600;font-variant-numeric:tabular-nums}
+  .narr{margin:26px 0 0;color:#4a4030;font-size:16.5px;line-height:1.6;max-width:720px}
+  .narr b{color:var(--amber-ink);font-weight:600}
+  .sier{margin:26px 0 0;padding:16px 20px;max-width:620px;
+    background:var(--paper);color:#3a2e1a;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
+    border:1px solid #e3d3a8;
+    transform:rotate(-.35deg);
+    box-shadow:0 4px 14px rgba(120,95,45,.22)}
+  .sier code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;color:#4d7a3a}
+  .sier p{margin:10px 0 0;font-style:italic;color:#6b5f45;font-size:15.5px}
+  .foot{margin-top:30px;color:#8a7d63;font-size:13px;font-style:italic;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="https://countcamp.org/manuscript/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar CountCamp</a>
+  <h1>Schud de tabel</h1>
+  <p class="lede">2201 mensen op de Titanic. In de eerste klasse overleefde 62%, in het ruim maar 25%.
+     Links de tabel. Rechts de vraag: hoe scheef zou het <em>toeval</em> alleen al worden, als klasse
+     en overleven niets met elkaar te maken hadden?</p>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>de tabel — klasse × overleefd</h2>
+      <div class="tblcard">
+        <table class="kruis">
+          <caption>Titanic (Dawson 1995) &middot; 2201 opvarenden</caption>
+          <thead>
+            <tr><th scope="col">klasse</th><th scope="col">overleefd</th><th scope="col">niet</th>
+                <th scope="col">totaal</th><th scope="col" class="pctcell">% overleefd</th></tr>
+          </thead>
+          <tbody id="tblbody"><!-- gevuld door script --></tbody>
+          <tfoot>
+            <tr><th scope="row">totaal</th><td>711</td><td>1490</td><td>2201</td>
+                <td class="pctcell">32%</td></tr>
+          </tfoot>
+        </table>
+        <p class="chi">De scheefheid als één getal — de echte <b id="chiReal">χ²</b>.
+           <span style="color:var(--dim);font-size:14px">(df = 3)</span></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>de geschudde werelden — nulverdeling van χ²</h2>
+      <canvas id="hist"></canvas>
+      <div class="controls">
+        <button id="schud1" class="primary">Schud 1×</button>
+        <button id="schud100">Schud 100×</button>
+        <button id="schud1000">Schud 1000×</button>
+        <button id="wis">leeg</button>
+      </div>
+      <p class="count" id="count">De muur is nog leeg. Schud de overleefd-kolom door elkaar en kijk waar χ² landt.</p>
+    </div>
+  </div>
+
+  <p class="narr" id="narr">
+    <b>Schudden</b> koppelt klasse los van overleven: iedereen houdt zijn klasse, maar krijgt willekeurig
+    de <em>ja</em> of <em>nee</em> van een wildvreemde. Zo bouw je werelden waarin klasse en overleven
+    niets meer met elkaar te maken hebben — puur toeval. En tóch wordt de tabel nooit precies gelijk;
+    de scheefheid, de χ², is nooit exact nul. De vraag is: komt dat toeval óóit zo ver als de echte tabel?
+  </p>
+
+  <div class="sier">
+    <code>chisq.test(klasse, sample(overleefd))</code>
+    <p>Eén woord verschil met de echte som: <code>sample()</code>. Dat husselt de overleefd-kolom.
+       Doe het duizend keer en je hebt duizend werelden waarin klasse en overleven vreemden zijn —
+       maar de scheefheid nooit precies nul.</p>
+  </div>
+
+  <p class="foot">
+    De regressieve ruggengraat &middot; S2 — het schud-blok bij de chi-kwadraat &middot; speeltje bij de simulatie<br>
+    Data: Titanic (Robert J. MacG. Dawson 1995, <em>JSE</em>) &middot; 2201 opvarenden.
+  </p>
+</div>
+
+<script>
+(function(){
+  // ================================================================
+  //  ECHTE DATA — de 8 celtellingen (klasse × overleefd), inline
+  //  klasse-volgorde: 1st, 2nd, 3rd, Crew
+  // ================================================================
+  const KLASSE=['1ste klasse','2de klasse','3de klasse','Bemanning'];
+  const JA =[203,118,178,212];        // overleefd
+  const NEE=[122,167,528,673];        // niet
+  const K=4;
+  const ROWTOT=JA.map((v,i)=>v+NEE[i]);          // [325,285,706,885]
+  const N=ROWTOT.reduce((a,b)=>a+b,0);           // 2201
+  const COL_JA =JA.reduce((a,b)=>a+b,0);         // 711
+  const COL_NEE=NEE.reduce((a,b)=>a+b,0);        // 1490
+
+  // per-rij blok-grenzen voor het schudden
+  const OFF=[0]; for(let i=0;i<K;i++) OFF.push(OFF[i]+ROWTOT[i]);   // [0,325,610,1316,2201]
+
+  // ---- chi-kwadraat: de pagina rekent zelf ----
+  //  a = aantal 'ja' per klasse; rij-totalen & kolom-totalen liggen vast
+  function chi2FromA(a){
+    let x=0;
+    for(let i=0;i<K;i++){
+      const r=ROWTOT[i];
+      const eja=r*COL_JA/N, enee=r*COL_NEE/N;
+      const oja=a[i], onee=r-a[i];
+      x += (oja-eja)*(oja-eja)/eja + (onee-enee)*(onee-enee)/enee;
+    }
+    return x;
+  }
+  const CHI_REAL = chi2FromA(JA);                 // ≈ 190.40
+  const CHI_SHOW = CHI_REAL.toFixed(1);           // "190.4"
+
+  // overlevings-% per klasse
+  const PCT = JA.map((v,i)=>100*v/ROWTOT[i]);
+
+  // ---- schud-machinerie: één outcome-array van 2201, Fisher-Yates ----
+  const out=new Int8Array(N); for(let i=0;i<COL_JA;i++) out[i]=1;   // 711 enen, rest 0
+  const aBuf=new Int32Array(K);
+  function shuffleChi(){
+    for(let i=N-1;i>0;i--){ const j=(Math.random()*(i+1))|0; const t=out[i]; out[i]=out[j]; out[j]=t; }
+    for(let b=0;b<K;b++){ let s=0; for(let k=OFF[b];k<OFF[b+1];k++) s+=out[k]; aBuf[b]=s; }
+    return chi2FromA(aBuf);
+  }
+
+  // ================================================================
+  //  KRUISTABEL vullen (HTML, toegankelijk)
+  // ================================================================
+  (function(){
+    const tb=document.getElementById('tblbody');
+    let html='';
+    const maxpct=Math.max.apply(null,PCT);
+    for(let i=0;i<K;i++){
+      const barw=Math.round(72*PCT[i]/maxpct);
+      html+='<tr><th scope="row">'+KLASSE[i]+'</th>'
+          +'<td>'+JA[i]+'</td><td>'+NEE[i]+'</td><td>'+ROWTOT[i]+'</td>'
+          +'<td class="pctcell"><span class="pctnum">'+PCT[i].toFixed(0)+'%</span>'
+          +'<span class="pctbar" style="width:'+barw+'px" aria-hidden="true"></span></td></tr>';
+    }
+    tb.innerHTML=html;
+    document.getElementById('chiReal').innerHTML='χ² = '+CHI_SHOW;
+  })();
+
+  // ================================================================
+  //  gedeeld tekengereedschap — wiebel-lijnen, houten plankjes
+  // ================================================================
+  function jit(a,b,amp){ const v=Math.sin(a*12.9898+b*78.233)*43758.5453; return ((v-Math.floor(v))-0.5)*2*amp; }
+  function wline(ctx,x1,y1,x2,y2,amp){
+    amp=(amp==null)?1.1:amp;
+    const d=Math.hypot(x2-x1,y2-y1), segs=Math.max(2,Math.round(d/26));
+    ctx.beginPath(); ctx.moveTo(x1+jit(x1,y1,amp), y1+jit(y1,x1,amp));
+    for(let i=1;i<=segs;i++){ const t=i/segs, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t; ctx.lineTo(x+jit(x,y,amp), y+jit(y,x,amp)); }
+    ctx.stroke();
+  }
+  function wrectPath(ctx,x,y,w,h,amp){
+    amp=(amp==null)?Math.min(1.4,w*0.06+0.5):amp;
+    const pts=[];
+    function edge(x1,y1,x2,y2){ const d=Math.hypot(x2-x1,y2-y1), m=Math.max(1,Math.round(d/22));
+      for(let i=0;i<m;i++){ const t=i/m, px=x1+(x2-x1)*t, py=y1+(y2-y1)*t; pts.push([px+jit(px,py,amp), py+jit(py,px,amp)]); } }
+    edge(x,y,x+w,y); edge(x+w,y,x+w,y+h); edge(x+w,y+h,x,y+h); edge(x,y+h,x,y);
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.closePath();
+  }
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function ease(t){ return t<.5?2*t*t:1-(-2*t+2)**2/2; }
+
+  const C={
+    ink:'#3b352b', dim:'#7a6f57', faint:'#a89a7e',
+    amber:'#c8913a', amberInk:'#a9701f',
+    wood1:'#e0b25a', wood2:'#b3843c', woodEdge:'rgba(90,66,28,.55)',
+    paper:'#fffcf4', axis:'#b09a6a', bordeaux:'#b0495a'
+  };
+  const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
+  function fnt(px,style,weight){ return (style?style+' ':'')+(weight?weight+' ':'')+px+'px '+SERIF; }
+  function paperBg(ctx,W,H){
+    const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#fbf5e6'); sky.addColorStop(1,'#f2e9d2');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+  }
+
+  // ================================================================
+  //  HISTOGRAM — de geschudde nulverdeling van χ²
+  //  as loopt 0..XHI; de echte χ² (190.4) valt VÉR buiten het plaatje
+  // ================================================================
+  const hcv=document.getElementById('hist'), hctx=hcv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let hW=460, hH=380;
+  const XLO=0, XHI=25, NB=50;                     // bins over χ² in [0,25]
+  const binw=(XHI-XLO)/NB;
+  let bins=new Float64Array(NB), drawn=new Float64Array(NB);
+  let total=0, extreme=0, maxSeen=0, lastX=null, markerAge=1, scaleT=1, scaleNow=1;
+  function binOf(x){ return Math.max(0,Math.min(NB-1,Math.floor((x-XLO)/binw))); }
+
+  function oneShuffle(animate){
+    const x=shuffleChi();
+    if(x<XHI) bins[binOf(x)]++;                   // (schud-χ² blijft ruim onder XHI)
+    else bins[NB-1]++;
+    total++;
+    if(x>=CHI_REAL) extreme++;                     // zo ver of verder dan de echte tabel
+    if(x>maxSeen) maxSeen=x;
+    if(animate){ lastX=x; markerAge=0; }
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+  }
+  function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
+
+  function hResize(){ hW=hcv.clientWidth; hH=Math.max(300,Math.min(420,Math.round(hW*0.82)));
+    hcv.width=hW*DPR; hcv.height=hH*DPR; hctx.setTransform(DPR,0,0,DPR,0,0); }
+
+  function drawHist(){
+    const ctx=hctx, W=hW, H=hH; paperBg(ctx,W,H);
+    const L=22, R=W-16, AX_Y=H-40, T=30;
+    const px=x=>lerp(L,R,(x-XLO)/(XHI-XLO));
+    scaleNow=lerp(scaleNow,scaleT,0.12);
+    for(let i=0;i<NB;i++) drawn[i]=lerp(drawn[i],bins[i],0.18);
+    if(markerAge<1) markerAge=Math.min(1,markerAge+0.05);
+
+    const maxBarH=AX_Y-T-8;
+    const bwid=Math.max(2,(px(XLO+binw)-px(XLO))-1.5);
+    for(let i=0;i<NB;i++){
+      if(drawn[i]<=0.01) continue;
+      const h=Math.min(maxBarH,(drawn[i]/Math.max(1,scaleNow))*maxBarH);
+      const bx=px(XLO+i*binw)+0.75;
+      const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y); g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);
+      if(h<1.6){ ctx.fillStyle=C.wood2; ctx.fillRect(bx,AX_Y-h,bwid,h); continue; }
+      wrectPath(ctx,bx,AX_Y-h,bwid,h,0.7); ctx.fillStyle=g; ctx.fill();
+      ctx.strokeStyle=C.woodEdge; ctx.lineWidth=1; ctx.stroke();
+    }
+    // as
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,AX_Y,R,AX_Y,1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='center';
+    for(let x=0;x<=XHI+0.01;x+=5){ const xx=px(x); wline(ctx,xx,AX_Y,xx,AX_Y+4,0.5); ctx.fillText(x,xx,AX_Y+16); }
+
+    // "de echte χ² valt buiten het plaatje" — pijl naar rechts bij de rechterrand
+    const ex=R-2;
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
+    wline(ctx,ex,T-2,ex,AX_Y,1.0); ctx.setLineDash([]);
+    // pijltje richting buiten-het-plaatje
+    const ay=T+16;
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.2;
+    wline(ctx,ex-30,ay,ex+8,ay,0.6);
+    ctx.beginPath(); ctx.moveTo(ex+8,ay); ctx.lineTo(ex,ay-5); ctx.lineTo(ex,ay+5); ctx.closePath();
+    ctx.fillStyle=C.bordeaux; ctx.fill();
+    ctx.textAlign='right'; ctx.fillStyle=C.bordeaux; ctx.font=fnt(13,'italic','600');
+    ctx.fillText('echte χ² = '+CHI_SHOW, ex-2, T+10);
+    ctx.font=fnt(11.5,'italic');
+    const verder = maxSeen>0 ? (CHI_REAL/maxSeen).toFixed(0) : '9';
+    ctx.fillText('buiten het plaatje →', ex-2, T-6);
+    if(total>0){
+      ctx.fillStyle=C.dim; ctx.font=fnt(11,'italic'); ctx.textAlign='right';
+      ctx.fillText('≈ '+verder+'× verder dan het verste toeval', ex-2, ay+18);
+    }
+
+    // as-label
+    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
+    ctx.fillText('geschudde scheefheid  χ²', (L+R)/2, H-6);
+
+    // vallend vonkje bij losse schud
+    if(lastX!=null && markerAge<1 && lastX<XHI){
+      const barTop=AX_Y-Math.min(maxBarH,(drawn[binOf(lastX)]/Math.max(1,scaleNow))*maxBarH);
+      const mxp=px(lastX), myp=lerp(T+4,barTop,ease(markerAge));
+      ctx.save(); ctx.globalAlpha=1-markerAge*0.3; ctx.shadowColor='rgba(200,145,58,.7)'; ctx.shadowBlur=9;
+      ctx.fillStyle=C.amber; ctx.beginPath(); ctx.arc(mxp,myp,5,0,7); ctx.fill(); ctx.restore();
+    }
+    // teller op canvas
+    ctx.textAlign='left'; ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic');
+    ctx.fillText('geschud: '+total, L, T-6);
+  }
+
+  // ---- teller-tekst in DOM (toegankelijk) ----
+  const countEl=document.getElementById('count');
+  function updateCount(){
+    if(total===0){ countEl.innerHTML='De muur is nog leeg. Schud de overleefd-kolom door elkaar en kijk waar χ² landt.'; return; }
+    const verder = maxSeen>0 ? (CHI_REAL/maxSeen).toFixed(0) : '9';
+    countEl.innerHTML='<b>'+extreme+' van '+total+'</b> geschudde werelden kwamen zo ver als de echte tabel '+
+      '(χ² ≥ '+CHI_SHOW+'). Het verste toeval haalde χ² ≈ '+maxSeen.toFixed(1)+' — de echte tabel ligt daar nog '+
+      '<b>'+verder+'×</b> voorbij.';
+  }
+
+  // ---- narratie ----
+  const narr=document.getElementById('narr'); const narrBase=narr.innerHTML;
+  function say(html){ narr.innerHTML=html; }
+
+  // ---- batch-animatie: bouw de muur zichtbaar op ----
+  let anim=null;
+  function animateMany(Kn, durMs){
+    if(anim) cancelAnimationFrame(anim);
+    let done=0; const t0=performance.now();
+    (function step(now){
+      now=now||performance.now();
+      const target=Math.min(Kn, Math.floor(Kn*(now-t0)/durMs));
+      const k=target-done; if(k>0){ manyShuffle(k); done=target; updateCount(); }
+      if(done<Kn) anim=requestAnimationFrame(step); else updateCount();
+    })(performance.now());
+  }
+
+  // ---- knoppen ----
+  document.getElementById('schud1').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    oneShuffle(true); updateCount();
+    say('Eén geschudde wereld. Deze χ² hangt <b>laag</b> — ergens tussen bijna-nul en een paar — want klasse '+
+        'en overleven zijn nu vreemden. Toch niet exact nul: schudden maakt nooit een perfect gelijke tabel. Schud er honderd, duizend.'); };
+  document.getElementById('schud100').onclick=()=>{ animateMany(100,1400);
+    say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien laag tegen de nul aan — en de echte tabel staat er niet eens; die valt ver rechts buiten het plaatje.'); };
+  document.getElementById('schud1000').onclick=()=>{ animateMany(1000,2400);
+    say('Duizend keer schudden. Het toeval kruipt hooguit tot een χ² van rond de twintig. De echte tabel zit op <b>'+CHI_SHOW+'</b> — negen keer verder dan het verste dat het toeval ooit haalde. Dát is een afstand die je ziet, geen p-waarde die je gelooft.'); };
+  document.getElementById('wis').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; extreme=0; maxSeen=0; lastX=null; scaleT=1;
+    updateCount(); say(narrBase); };
+
+  // ---- render loop ----
+  function tick(){ drawHist(); requestAnimationFrame(tick); }
+  window.addEventListener('resize',hResize);
+  hResize(); updateCount(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
