@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schud het — correlatie</title>
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57;
+    --amber:#c8913a; --amber-ink:#a9701f;
+    --green:#4d8a5a; --line:#d8c69b; --paper:#fffaf0;
+    --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:190px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='10' viewBox='0 0 190 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 188 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:190px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:660px}
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media (max-width:760px){ .panels{grid-template-columns:1fr} }
+  .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
+    margin:0 0 8px;letter-spacing:.2px}
+  canvas{width:100%;display:block;border-radius:12px;background:#faf6ea;
+    border:1.5px solid #d8c69b;
+    box-shadow:0 8px 26px rgba(120,95,45,.18)}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 0}
+  .controls button{--rot:0deg;transform:rotate(var(--rot))}
+  #schud1{--rot:-.7deg} #schud100{--rot:.3deg} #schud1000{--rot:.45deg} #wis{--rot:-.35deg}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 15px;cursor:pointer;min-height:42px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);
+    transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button:active{transform:rotate(var(--rot)) translateY(1px);box-shadow:none}
+  button.primary{background:#dca94e;border-color:#b3843c;color:#3a2e15}
+  button.primary:hover{background:#e6b85e}
+  .toggle{display:inline-flex;border:1.5px solid #c9a866;background:#f3e9cd;
+    border-radius:10px 12px 9px 12px / 12px 9px 12px 10px;overflow:hidden}
+  .toggle button{border:0;border-radius:0;background:transparent;box-shadow:none;min-height:42px}
+  .toggle button:active{transform:none}
+  .toggle button.on{background:#e3cf9c;color:#7a5a12}
+  .count{margin:12px 0 0;color:#4a4030;font-size:16px;line-height:1.5;min-height:24px}
+  .count b{color:var(--bordeaux);font-weight:600;font-variant-numeric:tabular-nums}
+  .narr{margin:26px 0 0;color:#4a4030;font-size:16.5px;line-height:1.6;max-width:720px}
+  .narr b{color:var(--amber-ink);font-weight:600}
+  .sier{margin:26px 0 0;padding:16px 20px;max-width:600px;
+    background:var(--paper);color:#3a2e1a;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
+    border:1px solid #e3d3a8;
+    transform:rotate(-.35deg);
+    box-shadow:0 4px 14px rgba(120,95,45,.22)}
+  .sier code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;color:#4d7a3a}
+  .sier p{margin:10px 0 0;font-style:italic;color:#6b5f45;font-size:15.5px}
+  .foot{margin-top:30px;color:#8a7d63;font-size:13px;font-style:italic;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="https://countcamp.org/manuscript/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar CountCamp</a>
+  <h1>Schud het</h1>
+  <p class="lede">342 pinguïns, elk met een snavel. Is een langere snavel ook een diepere snavel?
+     Links de wolk. Rechts de vraag: hoe ver zou het <em>toeval</em> alleen al komen?</p>
+
+  <div style="display:flex;gap:1.1rem;align-items:center;flex-wrap:wrap;margin:0 0 1.6rem;max-width:640px">
+    <div style="flex:0 0 190px;max-width:190px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" style="width:100%;height:auto" role="img" aria-label="Handschets: snavellengte loopt van voor naar achter, snaveldiepte is de hoogte van boven naar onder.">
+<defs><filter id="wiebelSp" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="turbulence" baseFrequency="0.018" numOctaves="2" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="3.2"/></filter></defs>
+<g filter="url(#wiebelSp)" fill="none" stroke="#4a3f30" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M150,118 C118,110 92,124 90,152 C88,182 116,200 150,192"/>
+<path d="M150,118 C146,108 150,100 160,99"/><path d="M150,192 C150,204 156,212 166,214"/>
+<path d="M150,120 C205,126 262,140 300,150"/><path d="M150,190 C200,186 258,168 300,150"/>
+<path d="M154,155 C205,156 260,153 298,150" stroke-width="1.6"/>
+<circle cx="118" cy="146" r="3.4" fill="#4a3f30"/>
+<path d="M150,238 L300,238"/><path d="M150,238 l12,-6 M150,238 l12,6"/><path d="M300,238 l-12,-6 M300,238 l-12,6"/>
+<path d="M138,120 L138,190"/><path d="M138,120 l-6,12 M138,120 l6,12"/><path d="M138,190 l-6,-12 M138,190 l6,-12"/>
+</g>
+<g font-family="Iowan Old Style, Palatino, Georgia, serif" fill="#4a3f30">
+<text x="225" y="262" font-size="19" font-style="italic" text-anchor="middle">lengte</text>
+<text x="225" y="280" font-size="12.5" fill="#7a6f5c" text-anchor="middle">van voor naar achter</text>
+<text x="86" y="150" font-size="19" font-style="italic" text-anchor="end">diepte</text>
+<text x="86" y="167" font-size="12.5" fill="#7a6f5c" text-anchor="end">= hoogte, boven&#8594;onder</text>
+</g></svg></div>
+    <p style="flex:1 1 230px;margin:0;font-size:.96rem;opacity:.85">Even dit, want iedereen struikelt erover: met <em>snaveldiepte</em> bedoelen we de <strong>hoogte</strong> van de snavel &mdash; van boven naar onder, van opzij bekeken. Niet de breedte, en niet de lengte. <span style="opacity:.6">(Voorlopige schets &mdash; hier komt Bens eigen tekening.)</span></p>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>de wolk — snavellengte × snaveldiepte</h2>
+      <canvas id="scatter"></canvas>
+      <div class="controls">
+        <span class="toggle" id="soortToggle">
+          <button data-kleur="uit" class="on">grijze wolk</button>
+          <button data-kleur="aan">kleur per soort</button>
+        </span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>de geschudde werelden — nulverdeling van r</h2>
+      <canvas id="hist"></canvas>
+      <div class="controls">
+        <button id="schud1" class="primary">Schud 1×</button>
+        <button id="schud100">Schud 100×</button>
+        <button id="schud1000">Schud 1000×</button>
+        <button id="wis">leeg</button>
+      </div>
+      <p class="count" id="count">De muur is nog leeg. Schud een pinguïn-wereld door elkaar en kijk waar r landt.</p>
+    </div>
+  </div>
+
+  <p class="narr" id="narr">
+    <b>Schudden</b> knipt de band door: elke pinguïn houdt zijn eigen snavel<em>lengte</em>, maar
+    krijgt de snavel<em>diepte</em> van een wildvreemde. Zo bouw je werelden waarin lengte en diepte
+    niets meer met elkaar te maken hebben — puur toeval. De vraag is: komt dat toeval óóit zo ver als
+    de echte <b id="rInline">r</b>? Kijk hoe het bergje rond nul hangt, en waar die rode lijn staat.
+  </p>
+
+  <div class="sier">
+    <code>cor(snavellengte, sample(snaveldiepte))</code>
+    <p>Eén woord verschil met de echte som: <code>sample()</code>. Dat husselt de diepte-kolom.
+       Doe het duizend keer en je hebt duizend werelden waarin niets samenhangt.</p>
+  </div>
+
+  <p class="foot">
+    De regressieve ruggengraat · W4 — het schud-blok bij correlatie · speeltje bij de simulatie<br>
+    Data: Palmer Penguins (Gorman, Williams &amp; Fraser 2014) · Palmer Station LTER · CC0 · 342 pinguïns.
+  </p>
+</div>
+
+<script>
+(function(){
+  // ---- echte data: [soort, snavellengte, snaveldiepte] · A=Adelie C=Chinstrap G=Gentoo ----
+  const PENG=[
+["A",39.1,18.7],["A",39.5,17.4],["A",40.3,18],["A",36.7,19.3],["A",39.3,20.6],["A",38.9,17.8],["A",39.2,19.6],["A",34.1,18.1],
+["A",42,20.2],["A",37.8,17.1],["A",37.8,17.3],["A",41.1,17.6],["A",38.6,21.2],["A",34.6,21.1],["A",36.6,17.8],["A",38.7,19],
+["A",42.5,20.7],["A",34.4,18.4],["A",46,21.5],["A",37.8,18.3],["A",37.7,18.7],["A",35.9,19.2],["A",38.2,18.1],["A",38.8,17.2],
+["A",35.3,18.9],["A",40.6,18.6],["A",40.5,17.9],["A",37.9,18.6],["A",40.5,18.9],["A",39.5,16.7],["A",37.2,18.1],["A",39.5,17.8],
+["A",40.9,18.9],["A",36.4,17],["A",39.2,21.1],["A",38.8,20],["A",42.2,18.5],["A",37.6,19.3],["A",39.8,19.1],["A",36.5,18],
+["A",40.8,18.4],["A",36,18.5],["A",44.1,19.7],["A",37,16.9],["A",39.6,18.8],["A",41.1,19],["A",37.5,18.9],["A",36,17.9],
+["A",42.3,21.2],["A",39.6,17.7],["A",40.1,18.9],["A",35,17.9],["A",42,19.5],["A",34.5,18.1],["A",41.4,18.6],["A",39,17.5],
+["A",40.6,18.8],["A",36.5,16.6],["A",37.6,19.1],["A",35.7,16.9],["A",41.3,21.1],["A",37.6,17],["A",41.1,18.2],["A",36.4,17.1],
+["A",41.6,18],["A",35.5,16.2],["A",41.1,19.1],["A",35.9,16.6],["A",41.8,19.4],["A",33.5,19],["A",39.7,18.4],["A",39.6,17.2],
+["A",45.8,18.9],["A",35.5,17.5],["A",42.8,18.5],["A",40.9,16.8],["A",37.2,19.4],["A",36.2,16.1],["A",42.1,19.1],["A",34.6,17.2],
+["A",42.9,17.6],["A",36.7,18.8],["A",35.1,19.4],["A",37.3,17.8],["A",41.3,20.3],["A",36.3,19.5],["A",36.9,18.6],["A",38.3,19.2],
+["A",38.9,18.8],["A",35.7,18],["A",41.1,18.1],["A",34,17.1],["A",39.6,18.1],["A",36.2,17.3],["A",40.8,18.9],["A",38.1,18.6],
+["A",40.3,18.5],["A",33.1,16.1],["A",43.2,18.5],["A",35,17.9],["A",41,20],["A",37.7,16],["A",37.8,20],["A",37.9,18.6],
+["A",39.7,18.9],["A",38.6,17.2],["A",38.2,20],["A",38.1,17],["A",43.2,19],["A",38.1,16.5],["A",45.6,20.3],["A",39.7,17.7],
+["A",42.2,19.5],["A",39.6,20.7],["A",42.7,18.3],["A",38.6,17],["A",37.3,20.5],["A",35.7,17],["A",41.1,18.6],["A",36.2,17.2],
+["A",37.7,19.8],["A",40.2,17],["A",41.4,18.5],["A",35.2,15.9],["A",40.6,19],["A",38.8,17.6],["A",41.5,18.3],["A",39,17.1],
+["A",44.1,18],["A",38.5,17.9],["A",43.1,19.2],["A",36.8,18.5],["A",37.5,18.5],["A",38.1,17.6],["A",41.1,17.5],["A",35.6,17.5],
+["A",40.2,20.1],["A",37,16.5],["A",39.7,17.9],["A",40.2,17.1],["A",40.6,17.2],["A",32.1,15.5],["A",40.7,17],["A",37.3,16.8],
+["A",39,18.7],["A",39.2,18.6],["A",36.6,18.4],["A",36,17.8],["A",37.8,18.1],["A",36,17.1],["A",41.5,18.5],["G",46.1,13.2],
+["G",50,16.3],["G",48.7,14.1],["G",50,15.2],["G",47.6,14.5],["G",46.5,13.5],["G",45.4,14.6],["G",46.7,15.3],["G",43.3,13.4],
+["G",46.8,15.4],["G",40.9,13.7],["G",49,16.1],["G",45.5,13.7],["G",48.4,14.6],["G",45.8,14.6],["G",49.3,15.7],["G",42,13.5],
+["G",49.2,15.2],["G",46.2,14.5],["G",48.7,15.1],["G",50.2,14.3],["G",45.1,14.5],["G",46.5,14.5],["G",46.3,15.8],["G",42.9,13.1],
+["G",46.1,15.1],["G",44.5,14.3],["G",47.8,15],["G",48.2,14.3],["G",50,15.3],["G",47.3,15.3],["G",42.8,14.2],["G",45.1,14.5],
+["G",59.6,17],["G",49.1,14.8],["G",48.4,16.3],["G",42.6,13.7],["G",44.4,17.3],["G",44,13.6],["G",48.7,15.7],["G",42.7,13.7],
+["G",49.6,16],["G",45.3,13.7],["G",49.6,15],["G",50.5,15.9],["G",43.6,13.9],["G",45.5,13.9],["G",50.5,15.9],["G",44.9,13.3],
+["G",45.2,15.8],["G",46.6,14.2],["G",48.5,14.1],["G",45.1,14.4],["G",50.1,15],["G",46.5,14.4],["G",45,15.4],["G",43.8,13.9],
+["G",45.5,15],["G",43.2,14.5],["G",50.4,15.3],["G",45.3,13.8],["G",46.2,14.9],["G",45.7,13.9],["G",54.3,15.7],["G",45.8,14.2],
+["G",49.8,16.8],["G",46.2,14.4],["G",49.5,16.2],["G",43.5,14.2],["G",50.7,15],["G",47.7,15],["G",46.4,15.6],["G",48.2,15.6],
+["G",46.5,14.8],["G",46.4,15],["G",48.6,16],["G",47.5,14.2],["G",51.1,16.3],["G",45.2,13.8],["G",45.2,16.4],["G",49.1,14.5],
+["G",52.5,15.6],["G",47.4,14.6],["G",50,15.9],["G",44.9,13.8],["G",50.8,17.3],["G",43.4,14.4],["G",51.3,14.2],["G",47.5,14],
+["G",52.1,17],["G",47.5,15],["G",52.2,17.1],["G",45.5,14.5],["G",49.5,16.1],["G",44.5,14.7],["G",50.8,15.7],["G",49.4,15.8],
+["G",46.9,14.6],["G",48.4,14.4],["G",51.1,16.5],["G",48.5,15],["G",55.9,17],["G",47.2,15.5],["G",49.1,15],["G",47.3,13.8],
+["G",46.8,16.1],["G",41.7,14.7],["G",53.4,15.8],["G",43.3,14],["G",48.1,15.1],["G",50.5,15.2],["G",49.8,15.9],["G",43.5,15.2],
+["G",51.5,16.3],["G",46.2,14.1],["G",55.1,16],["G",44.5,15.7],["G",48.8,16.2],["G",47.2,13.7],["G",46.8,14.3],["G",50.4,15.7],
+["G",45.2,14.8],["G",49.9,16.1],["C",46.5,17.9],["C",50,19.5],["C",51.3,19.2],["C",45.4,18.7],["C",52.7,19.8],["C",45.2,17.8],
+["C",46.1,18.2],["C",51.3,18.2],["C",46,18.9],["C",51.3,19.9],["C",46.6,17.8],["C",51.7,20.3],["C",47,17.3],["C",52,18.1],
+["C",45.9,17.1],["C",50.5,19.6],["C",50.3,20],["C",58,17.8],["C",46.4,18.6],["C",49.2,18.2],["C",42.4,17.3],["C",48.5,17.5],
+["C",43.2,16.6],["C",50.6,19.4],["C",46.7,17.9],["C",52,19],["C",50.5,18.4],["C",49.5,19],["C",46.4,17.8],["C",52.8,20],
+["C",40.9,16.6],["C",54.2,20.8],["C",42.5,16.7],["C",51,18.8],["C",49.7,18.6],["C",47.5,16.8],["C",47.6,18.3],["C",52,20.7],
+["C",46.9,16.6],["C",53.5,19.9],["C",49,19.5],["C",46.2,17.5],["C",50.9,19.1],["C",45.5,17],["C",50.9,17.9],["C",50.8,18.5],
+["C",50.1,17.9],["C",49,19.6],["C",51.5,18.7],["C",49.8,17.3],["C",48.1,16.4],["C",51.4,19],["C",45.7,17.3],["C",50.7,19.7],
+["C",42.5,17.3],["C",52.2,18.8],["C",45.2,16.6],["C",49.3,19.9],["C",50.2,18.8],["C",45.6,19.4],["C",51.9,19.5],["C",46.8,16.5],
+["C",45.7,17],["C",55.8,19.8],["C",43.5,18.1],["C",49.6,18.2],["C",50.8,19],["C",50.2,18.7]
+  ];
+
+  const N=PENG.length;                 // 342
+  const XS=new Float64Array(N), YS=new Float64Array(N);
+  const SP=new Array(N);               // soort-codes
+  for(let i=0;i<N;i++){ SP[i]=PENG[i][0]; XS[i]=PENG[i][1]; YS[i]=PENG[i][2]; }
+
+  // ---- Pearson-machinerie: pagina rekent zelf, reproduceert ----
+  let mx=0,my=0; for(let i=0;i<N;i++){ mx+=XS[i]; my+=YS[i]; } mx/=N; my/=N;
+  const DX=new Float64Array(N), DY=new Float64Array(N);
+  let sxx=0, syy=0;
+  for(let i=0;i<N;i++){ DX[i]=XS[i]-mx; DY[i]=YS[i]-my; sxx+=DX[i]*DX[i]; syy+=DY[i]*DY[i]; }
+  const DENOM=Math.sqrt(sxx*syy);      // constant onder permutatie (y-waarden onveranderd)
+  function corReal(){ let sxy=0; for(let i=0;i<N;i++) sxy+=DX[i]*DY[i]; return sxy/DENOM; }
+  const R_REAL=corReal();              // -0.235053...
+  const R_SHOW=R_REAL.toFixed(3);      // "-0.235"
+
+  // permutatie-correlatie: shuffle index-array van DY, herbereken alleen de teller
+  const perm=new Int32Array(N); for(let i=0;i<N;i++) perm[i]=i;
+  function corShuffle(){
+    for(let i=N-1;i>0;i--){ const j=(Math.random()*(i+1))|0; const t=perm[i]; perm[i]=perm[j]; perm[j]=t; }
+    let sxy=0; for(let i=0;i<N;i++) sxy+=DX[i]*DY[perm[i]]; return sxy/DENOM;
+  }
+
+  // toon de echte r in de tekst
+  document.getElementById('rInline').textContent='r = '+R_SHOW.replace('-','−');
+
+  // ---- gedeeld: wiebel-gereedschap (deterministische jitter, stabiel per frame) ----
+  function jit(a,b,amp){ const v=Math.sin(a*12.9898+b*78.233)*43758.5453; return ((v-Math.floor(v))-0.5)*2*amp; }
+  function wline(ctx,x1,y1,x2,y2,amp){
+    amp=(amp==null)?1.1:amp;
+    const d=Math.hypot(x2-x1,y2-y1), segs=Math.max(2,Math.round(d/26));
+    ctx.beginPath(); ctx.moveTo(x1+jit(x1,y1,amp), y1+jit(y1,x1,amp));
+    for(let i=1;i<=segs;i++){ const t=i/segs, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t; ctx.lineTo(x+jit(x,y,amp), y+jit(y,x,amp)); }
+    ctx.stroke();
+  }
+  function wrectPath(ctx,x,y,w,h,amp){
+    amp=(amp==null)?Math.min(1.4,w*0.06+0.5):amp;
+    const pts=[];
+    function edge(x1,y1,x2,y2){ const d=Math.hypot(x2-x1,y2-y1), m=Math.max(1,Math.round(d/22));
+      for(let i=0;i<m;i++){ const t=i/m, px=x1+(x2-x1)*t, py=y1+(y2-y1)*t; pts.push([px+jit(px,py,amp), py+jit(py,px,amp)]); } }
+    edge(x,y,x+w,y); edge(x+w,y,x+w,y+h); edge(x+w,y+h,x,y+h); edge(x,y+h,x,y);
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.closePath();
+  }
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function ease(t){ return t<.5?2*t*t:1-(-2*t+2)**2/2; }
+
+  const C={
+    ink:'#3b352b', dim:'#7a6f57', faint:'#a89a7e',
+    amber:'#c8913a', amberInk:'#a9701f',
+    wood1:'#e0b25a', wood2:'#b3843c', woodEdge:'rgba(90,66,28,.55)',
+    green1:'#6faa72', green2:'#4d8a5a', paper:'#fffcf4',
+    axis:'#b09a6a', bordeaux:'#b0495a'
+  };
+  // per-soort: kleur EN vorm (kleur is nooit de enige drager)
+  const SOORT={
+    A:{naam:'Adelie',    kleur:'#c8913a', vorm:'cirkel'},
+    C:{naam:'Chinstrap', kleur:'#b0495a', vorm:'driehoek'},
+    G:{naam:'Gentoo',    kleur:'#4d8a5a', vorm:'vierkant'}
+  };
+  const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
+  function fnt(px,style,weight){ return (style?style+' ':'')+(weight?weight+' ':'')+px+'px '+SERIF; }
+
+  function paperBg(ctx,W,H){
+    const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#fbf5e6'); sky.addColorStop(1,'#f2e9d2');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+  }
+  function marker(ctx,x,y,vorm,r){
+    if(vorm==='cirkel'){ ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.stroke(); }
+    else if(vorm==='vierkant'){ const s=r*1.75; wrectPath(ctx,x-s/2,y-s/2,s,s,0.5); ctx.fill(); ctx.stroke(); }
+    else { const s=r*2.0; ctx.beginPath(); ctx.moveTo(x,y-s*0.62); ctx.lineTo(x+s*0.58,y+s*0.5); ctx.lineTo(x-s*0.58,y+s*0.5); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  }
+
+  // =========================================================================
+  //  SCATTER
+  // =========================================================================
+  const scv=document.getElementById('scatter'), sctx=scv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let sW=460, sH=380, kleurAan=false;
+  // data-grenzen
+  let xlo=Infinity,xhi=-Infinity,ylo=Infinity,yhi=-Infinity;
+  for(let i=0;i<N;i++){ if(XS[i]<xlo)xlo=XS[i]; if(XS[i]>xhi)xhi=XS[i]; if(YS[i]<ylo)ylo=YS[i]; if(YS[i]>yhi)yhi=YS[i]; }
+  xlo=Math.floor(xlo)-1; xhi=Math.ceil(xhi)+1; ylo=Math.floor(ylo)-1; yhi=Math.ceil(yhi)+1;
+
+  function sResize(){ sW=scv.clientWidth; sH=Math.max(300,Math.min(420,Math.round(sW*0.82)));
+    scv.width=sW*DPR; scv.height=sH*DPR; sctx.setTransform(DPR,0,0,DPR,0,0); drawScatter(); }
+
+  function drawScatter(){
+    const ctx=sctx, W=sW, H=sH; paperBg(ctx,W,H);
+    const L=52, R=W-16, T=18, B=H-42;
+    const px=v=>lerp(L,R,(v-xlo)/(xhi-xlo));
+    const py=v=>lerp(B,T,(v-ylo)/(yhi-ylo));
+    // assen
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,B,R,B,1); wline(ctx,L,T,L,B,1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='center';
+    for(let v=Math.ceil(xlo/5)*5; v<=xhi; v+=5){ const xx=px(v); wline(ctx,xx,B,xx,B+4,0.5); ctx.fillText(v,xx,B+17); }
+    ctx.textAlign='right';
+    for(let v=Math.ceil(ylo/2)*2; v<=yhi; v+=2){ const yy=py(v); wline(ctx,L-4,yy,L,yy,0.5); ctx.fillText(v,L-7,yy+4); }
+    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic');
+    ctx.textAlign='center'; ctx.fillText('snavellengte (mm)', (L+R)/2, H-6);
+    ctx.save(); ctx.translate(13,(T+B)/2); ctx.rotate(-Math.PI/2); ctx.fillText('snaveldiepte (mm)',0,0); ctx.restore();
+
+    // stippen
+    ctx.lineWidth=1;
+    for(let i=0;i<N;i++){
+      const s=SOORT[SP[i]];
+      if(kleurAan){ ctx.fillStyle=s.kleur; ctx.strokeStyle='rgba(60,45,25,.45)'; ctx.globalAlpha=0.85;
+        marker(ctx,px(XS[i]),py(YS[i]),s.vorm,4.1); }
+      else { ctx.fillStyle='rgba(90,80,60,.42)'; ctx.strokeStyle='rgba(90,80,60,.18)'; ctx.globalAlpha=1;
+        ctx.beginPath(); ctx.arc(px(XS[i]),py(YS[i]),3.6,0,7); ctx.fill(); ctx.stroke(); }
+    }
+    ctx.globalAlpha=1;
+
+    // r-bordje (echte, over álle pinguïns)
+    const bx=R-146, by=T+6;
+    wrectPath(ctx,bx,by,132,30,0.7); ctx.fillStyle='rgba(255,250,240,.92)'; ctx.fill();
+    ctx.strokeStyle='rgba(176,73,90,.55)'; ctx.lineWidth=1.4; ctx.stroke();
+    ctx.fillStyle=C.bordeaux; ctx.font=fnt(15,'italic','600'); ctx.textAlign='center';
+    ctx.fillText('r = '+R_SHOW.replace('-','−')+'  (alle 342)', bx+66, by+20);
+
+    // legenda (alleen bij kleur) — kleur + vorm + naam
+    if(kleurAan){
+      let lx=L+6, ly=T+14; ctx.textAlign='left'; ctx.font=fnt(12.5);
+      ['A','G','C'].forEach(k=>{
+        const s=SOORT[k]; ctx.fillStyle=s.kleur; ctx.strokeStyle='rgba(60,45,25,.45)'; ctx.lineWidth=1;
+        marker(ctx,lx+6,ly-4,s.vorm,4.2);
+        ctx.fillStyle=C.ink; ctx.fillText(s.naam, lx+18, ly);
+        ly+=19;
+      });
+    }
+  }
+  document.querySelectorAll('#soortToggle button').forEach(b=>{
+    b.onclick=()=>{ document.querySelectorAll('#soortToggle button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); kleurAan=(b.dataset.kleur==='aan'); drawScatter();
+      say(kleurAan
+        ? 'Drie <b>kluitjes</b>. Binnen elke soort loopt langer-is-dieper juist óp — maar de wolk als geheel kantelt de andere kant op. Dat is de Simpson-paradox: de soort is een verborgen verteller.'
+        : 'De grijze wolk, alle pinguïns door elkaar. Hij helt zachtjes naar beneden: r = '+R_SHOW.replace('-','−')+'.'); };
+  });
+
+  // =========================================================================
+  //  HISTOGRAM — de geschudde nulverdeling
+  // =========================================================================
+  const hcv=document.getElementById('hist'), hctx=hcv.getContext('2d');
+  let hW=460, hH=380;
+  const RLO=-0.30, RHI=0.30, NB=49;              // bins over r in [-0.3, 0.3]
+  const binw=(RHI-RLO)/NB;
+  let bins=new Float64Array(NB), drawn=new Float64Array(NB);
+  let total=0, extreme=0, lastR=null, markerAge=1, scaleT=1, scaleNow=1;
+  function binOf(r){ return Math.max(0,Math.min(NB-1,Math.floor((r-RLO)/binw))); }
+
+  function oneShuffle(animate){
+    const r=corShuffle();
+    bins[binOf(r)]++; total++;
+    if(r<=R_REAL) extreme++;                       // "zo ver of verder" in de echte richting (naar links)
+    if(animate){ lastR=r; markerAge=0; }
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+  }
+  function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
+
+  function hResize(){ hW=hcv.clientWidth; hH=Math.max(300,Math.min(420,Math.round(hW*0.82)));
+    hcv.width=hW*DPR; hcv.height=hH*DPR; hctx.setTransform(DPR,0,0,DPR,0,0); }
+
+  function drawHist(){
+    const ctx=hctx, W=hW, H=hH; paperBg(ctx,W,H);
+    const L=20, R=W-14, AX_Y=H-40, T=26;
+    const px=r=>lerp(L,R,(r-RLO)/(RHI-RLO));
+    // eased
+    scaleNow=lerp(scaleNow,scaleT,0.12);
+    for(let i=0;i<NB;i++) drawn[i]=lerp(drawn[i],bins[i],0.18);
+    if(markerAge<1) markerAge=Math.min(1,markerAge+0.05);
+
+    const maxBarH=AX_Y-T-8;
+    // bars: houten plankjes
+    const bwid=Math.max(2,(px(RLO+binw)-px(RLO))-1.5);
+    for(let i=0;i<NB;i++){
+      if(drawn[i]<=0.01) continue;
+      const h=Math.min(maxBarH, (drawn[i]/Math.max(1,scaleNow))*maxBarH);
+      const bx=px(RLO+i*binw)+0.75;
+      const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y); g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);
+      if(h<1.6){ ctx.fillStyle=C.wood2; ctx.fillRect(bx,AX_Y-h,bwid,h); continue; }
+      wrectPath(ctx,bx,AX_Y-h,bwid,h,0.7); ctx.fillStyle=g; ctx.fill();
+      ctx.strokeStyle=C.woodEdge; ctx.lineWidth=1; ctx.stroke();
+    }
+    // as
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,AX_Y,R,AX_Y,1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='center';
+    for(let r=-0.2;r<=0.201;r+=0.1){ const xx=px(r); wline(ctx,xx,AX_Y,xx,AX_Y+4,0.5);
+      ctx.fillText((r<0?'−':'')+Math.abs(r).toFixed(1), xx, AX_Y+16); }
+    // nul-lijn (het toeval-midden)
+    const x0=px(0); ctx.strokeStyle='rgba(122,111,87,.5)'; ctx.lineWidth=1; ctx.setLineDash([3,4]);
+    wline(ctx,x0,T-4,x0,AX_Y,0.5); ctx.setLineDash([]);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11,'italic'); ctx.textAlign='center'; ctx.fillText('0', x0, T-8);
+    // echte-r lijn: rode wiebel, dik
+    const xr=px(R_REAL);
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
+    wline(ctx,xr,T,xr,AX_Y,1.0); ctx.setLineDash([]);
+    ctx.fillStyle=C.bordeaux; ctx.font=fnt(12.5,'italic','600'); ctx.textAlign='left';
+    ctx.fillText('echte r', xr+6, T+12);
+    ctx.font=fnt(11.5,'italic'); ctx.fillText(R_SHOW.replace('-','−'), xr+6, T+27);
+
+    // as-label
+    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
+    ctx.fillText('geschudde correlatie r', (L+R)/2, H-6);
+
+    // vallend vonkje bij losse schud
+    if(lastR!=null && markerAge<1){
+      const barTop=AX_Y-Math.min(maxBarH,(drawn[binOf(lastR)]/Math.max(1,scaleNow))*maxBarH);
+      const mxp=px(lastR), myp=lerp(T+4,barTop,ease(markerAge));
+      ctx.save(); ctx.globalAlpha=1-markerAge*0.3; ctx.shadowColor='rgba(200,145,58,.7)'; ctx.shadowBlur=9;
+      ctx.fillStyle=C.amber; ctx.beginPath(); ctx.arc(mxp,myp,5,0,7); ctx.fill(); ctx.restore();
+    }
+    // teller rechtsboven op canvas
+    ctx.textAlign='right'; ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic');
+    ctx.fillText('geschud: '+total, R, T-4);
+  }
+
+  // ---- teller-tekst in DOM (toegankelijk) ----
+  const countEl=document.getElementById('count');
+  function updateCount(){
+    if(total===0){ countEl.innerHTML='De muur is nog leeg. Schud een pinguïn-wereld door elkaar en kijk waar r landt.'; return; }
+    countEl.innerHTML='<b>'+extreme+' van '+total+'</b> geschudde pinguïn-werelden kwamen zo ver of verder ('+
+      'r ≤ '+R_SHOW.replace('-','−')+') als de echte snavels.';
+  }
+
+  // ---- narratie ----
+  const narr=document.getElementById('narr'); const narrBase=narr.innerHTML;
+  function say(html){ narr.innerHTML=html; }
+
+  // ---- batch-animatie: bouw de muur zichtbaar op ----
+  let anim=null;
+  function animateMany(K, durMs){
+    if(anim) cancelAnimationFrame(anim);
+    let done=0; const t0=performance.now();
+    (function step(now){
+      now=now||performance.now();
+      const target=Math.min(K, Math.floor(K*(now-t0)/durMs));
+      const k=target-done; if(k>0){ manyShuffle(k); done=target; updateCount(); }
+      if(done<K) anim=requestAnimationFrame(step); else updateCount();
+    })(performance.now());
+  }
+
+  // ---- knoppen ----
+  document.getElementById('schud1').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    oneShuffle(true); updateCount();
+    say('Eén geschudde wereld. Deze r hangt ergens rond <b>nul</b> — want lengte en diepte zijn nu vreemden. Schud er honderd, duizend.'); };
+  document.getElementById('schud100').onclick=()=>{ animateMany(100,1400);
+    say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien rond nul — en de rode lijn staat er ver vandaan.'); };
+  document.getElementById('schud1000').onclick=()=>{ animateMany(1000,2400);
+    say('Duizend keer schudden. Het bergje van het toeval is nu duidelijk — en het raakt die rode lijn <b>vrijwel nooit</b>. Dát is een afstand die je ziet, geen p-waarde die je gelooft.'); };
+  document.getElementById('wis').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; extreme=0; lastR=null; scaleT=1;
+    updateCount(); say(narrBase); };
+
+  // ---- render loops ----
+  function tick(){ drawHist(); requestAnimationFrame(tick); }
+  window.addEventListener('resize',()=>{ sResize(); hResize(); });
+  sResize(); hResize(); updateCount(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
