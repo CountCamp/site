@@ -17,6 +17,10 @@
    (ragged right) i.p.v. justified — dit is een naslagwerk, geen leesboek.
    ============================================================ */
 
+/* Broertje-fonts (2-8, Ben — "rust, altijd"): Newsreader = leestekst,
+   Source Sans 3 = UI, Source Code Pro = RStudio-code. Websites mogen @import. */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital@0;1&family=Source+Sans+3:wght@400;600&family=Source+Code+Pro&display=swap');
+
 /* ============================================================
    A. PAPIER & BUREAU  (uit boek.css — zelfde bureau als het boek)
    ============================================================ */
@@ -26,11 +30,19 @@ html {
 }
 
 body {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.75;
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;  /* leestekst = warme leesserif */
+  font-size: 18px;
+  line-height: 1.7;
   color: #2a2520;
   background-color: #f0ece4;           /* bureau-beige loopt door — geen witte doos */
+}
+
+/* UI-chrome = Source Sans (sidebar, callout-koppen, kickers, ondertitel, knoppen) */
+#quarto-sidebar, .sidebar-navigation,
+.callout > .callout-header, .callout .callout-title-container,
+#title-block-header p.subtitle.lead,
+.beweging, .kicker, .data-download, #toc-toggle {
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ============================================================
@@ -112,13 +124,54 @@ h1 + p, h2 + p, h3 + p { margin-top: 0.4em; }
   text-align: left;
 }
 
+/* --- Sectie-structuur (broertjes 2-8): onderwerp-koppen (h2, Newsreader)
+   dragen de sectie; de trede staat als klein potlood-kicker (variant C)
+   erboven; de beweging-kicker bovenaan de opdracht. Alle kickers = Source Sans. --- */
+.beweging {
+  font-size: 0.68em;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6a655c;
+  margin: 0 0 0.4em;
+}
+.kicker {                        /* trede-kicker: prikkel / speel het / schud het / snap het */
+  font-size: 0.6em;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a948a;
+  margin: 0 0 0.1em;
+  line-height: 1.2;
+}
+.kicker::after {
+  content: "";
+  display: block;
+  width: 2.2em;
+  height: 1px;
+  background: #d6d0c6;
+  margin-top: 0.5em;
+}
+/* een kicker luidt een nieuwe sectie in → lucht erboven, en de kop volgt strak eronder.
+   Quarto wrapt elke kop in <section class="level2">, dus de kop is géén directe buur
+   van de kicker maar zit ín de section die er wél op volgt. */
+.kicker { margin-top: 3em; }
+.kicker p, .beweging p { margin: 0; }                 /* geen dubbele alinea-marge in de kicker-div */
+.kicker + section.level2 > h2,
+.kicker + section.level3 > h3 { margin-top: 0.3em; }
+.beweging + .kicker { margin-top: 1.6em; }            /* iets minder lucht direct onder de beweging */
+.verhaal {                       /* verhaal-vleugje: Newsreaders eigen cursief, géén vreemde serif */
+  font-style: italic;
+  color: #4a4540;
+}
+
 /* --- Code (bestandsnamen, kolommen, JASP-velden in lopende tekst) --- */
 code {
   background-color: #f5f0e8;
   padding: 0.1em 0.35em;
   border-radius: 3px;
   font-size: 0.9em;
-  font-family: 'Fira Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  font-family: 'Source Code Pro', 'Fira Code', Menlo, Consolas, monospace;  /* RStudio-eigen */
   color: #4a3f30;
 }
 pre {
@@ -126,10 +179,11 @@ pre {
   border-left: 3px solid #c8a97e;
   padding: 1.1em 1.4em;
   margin: 1.6em 0;
-  font-size: 0.92em;
+  font-size: 0.86em;
   line-height: 1.55;
   border-radius: 4px;
   overflow-x: auto;
+  font-family: 'Source Code Pro', 'Fira Code', Menlo, Consolas, monospace;
 }
 
 /* --- Het "Vooraf, in één zin"-blockquote bovenaan + citaten --- */
@@ -313,7 +367,8 @@ hr {
    zand, ◠. Smalle strook aan de voet, dunne zandlijn erboven.
    ============================================================ */
 .boekvorm {
-  font-family: 'EB Garamond', 'Crimson Pro', Georgia, serif;
+  font-family: 'Newsreader', Georgia, serif;   /* in-familie met de leestekst (2-8) */
+  font-style: italic;
   font-size: 0.98em;
   line-height: 1.7;
   color: #4a3f1e;
@@ -396,6 +451,38 @@ img[src*="/pics/"], img[src*="screenshot"] {
   .callout, .boekvorm, table { page-break-inside: avoid; break-inside: avoid; }
   h1, h2, h3 { page-break-after: avoid; break-after: avoid; }
   .werk { display: none; }
+}
+
+/* ---------- R-code-blok (.rcode) — zelfde slate als .jasp elders:
+   "de plek waar de software woont", nu R/RStudio i.p.v. JASP. ---------- */
+.callout-note.rcode {
+  border-color: #4A5D7E !important;
+  border-left: none !important;
+}
+.callout-note.rcode > .callout-header,
+.callout-note.rcode > .callout-header .callout-title-container {
+  background-color: #4A5D7E !important;
+  color: #ffffff !important;
+}
+.callout-note.rcode > .callout-body-container,
+.callout-note.rcode > div.callout-collapse {
+  background-color: #E1E7EF !important;
+}
+
+/* ---------- SPSS-menu-blok (.spss) — zelfde slate als .rcode/.jasp:
+   "de plek waar de software woont", nu SPSS. ---------- */
+.callout-note.spss {
+  border-color: #4A5D7E !important;
+  border-left: none !important;
+}
+.callout-note.spss > .callout-header,
+.callout-note.spss > .callout-header .callout-title-container {
+  background-color: #4A5D7E !important;
+  color: #ffffff !important;
+}
+.callout-note.spss > .callout-body-container,
+.callout-note.spss > div.callout-collapse {
+  background-color: #E1E7EF !important;
 }
 
 /* ============================================================
