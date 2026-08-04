@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Power begrijpen — onderscheidingsvermogen | CountCamp</title>
+<meta name="description" content="Speel met effectgrootte, aantal en α, en zie power (onderscheidingsvermogen) live meebewegen in twee klokken. Power is geen vaste eigenschap van een toets — het is wat je krijgt.">
+<meta property="og:title" content="Power begrijpen — onderscheidingsvermogen">
+<meta property="og:description" content="Sleep aan effect, aantal en α; de twee klokken bewegen mee en de power verandert. De uil legt uit.">
+<link rel="canonical" href="https://countcamp.org/power/">
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57; --faint:#9d906f;
+    --paper:#fffdf7; --line:#d8c69b; --edge:#cbb37e;
+    --green:#4d8a5a; --green-f:#cfe3d0; --bordeaux:#b0495a; --bord-f:#e7bcc4;
+    --grey-f:#d8d2c6; --amber:#c8913a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Nunito','Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.55;}
+  .wrap{max-width:760px;margin:0 auto;padding:2.2rem 1.2rem 4rem;}
+  h1{font-size:1.9rem;margin:0 0 .2rem;font-weight:800;letter-spacing:-.01em;}
+  .lede{color:var(--dim);margin:0 0 1.4rem;max-width:52ch;}
+  .stage{position:relative;background:var(--paper);border:1px solid var(--edge);
+    border-radius:10px;padding:.6rem .6rem 0;box-shadow:0 2px 14px rgba(80,60,20,.06);}
+  canvas{width:100%;height:auto;display:block;}
+  .readout{display:flex;gap:1.4rem;flex-wrap:wrap;justify-content:center;
+    padding:.7rem 0 1rem;font-size:1rem;}
+  .readout b{font-variant-numeric:tabular-nums;}
+  .r-power b{color:var(--green)} .r-beta b{color:var(--dim)} .r-alpha b{color:var(--bordeaux)}
+  .knobs{margin-top:1.3rem;display:grid;gap:1.05rem;}
+  .knob{display:grid;grid-template-columns:8.5rem 1fr 3.4rem;align-items:center;gap:.8rem;}
+  .knob label{font-weight:700;font-size:.95rem;}
+  .knob .val{text-align:right;font-variant-numeric:tabular-nums;color:var(--dim);}
+  input[type=range]{width:100%;accent-color:var(--amber);height:1.4rem;}
+  .owl-row{display:flex;gap:.9rem;align-items:flex-start;margin:1.6rem 0 0;}
+  .owl{flex:0 0 74px}
+  .bubble{position:relative;background:var(--paper);border:1px solid var(--edge);
+    border-radius:12px;padding:.7rem .95rem;font-size:.98rem;color:var(--ink);
+    box-shadow:0 1px 8px rgba(80,60,20,.05);min-height:2.6rem;}
+  .bubble::before{content:"";position:absolute;left:-9px;top:16px;width:0;height:0;
+    border-top:7px solid transparent;border-bottom:7px solid transparent;border-right:9px solid var(--edge);}
+  .bubble::after{content:"";position:absolute;left:-7px;top:17px;width:0;height:0;
+    border-top:6px solid transparent;border-bottom:6px solid transparent;border-right:8px solid var(--paper);}
+  .note{margin-top:1.8rem;font-size:.85rem;color:var(--faint);border-top:1px solid var(--line);padding-top:1rem;}
+  .note a{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Onderscheidingsvermogen</h1>
+  <p class="lede">Power is niet iets wat een toets vást heeft. Het is wat je <em>krijgt</em> — uit hoe groot het verschil is, hoeveel je meet, en hoe streng je bent. Sleep, en kijk.</p>
+
+  <div class="stage">
+    <canvas id="cv" width="1400" height="820" aria-label="Twee klokken: H0 en H1, met alfa, bèta en power ingekleurd"></canvas>
+  </div>
+
+  <div class="readout">
+    <span class="r-power">onderscheidingsvermogen (power): <b id="oPower">–</b></span>
+    <span class="r-beta">gemist (β): <b id="oBeta">–</b></span>
+    <span class="r-alpha">vals alarm (α): <b id="oAlpha">–</b></span>
+  </div>
+
+  <div class="knobs">
+    <div class="knob">
+      <label>grootte verschil</label>
+      <input type="range" id="kEffect" min="0.1" max="1.2" step="0.05" value="0.5">
+      <span class="val" id="vEffect">0.50</span>
+    </div>
+    <div class="knob">
+      <label>aantal (per groep)</label>
+      <input type="range" id="kN" min="5" max="80" step="1" value="25">
+      <span class="val" id="vN">25</span>
+    </div>
+    <div class="knob">
+      <label>streng (α)</label>
+      <input type="range" id="kAlpha" min="0.005" max="0.10" step="0.005" value="0.05">
+      <span class="val" id="vAlpha">.05</span>
+    </div>
+  </div>
+
+  <div class="owl-row">
+    <svg class="owl" viewBox="0 0 90 96" aria-hidden="true">
+      <ellipse cx="45" cy="55" rx="30" ry="34" fill="#b9945a" stroke="#3b352b" stroke-width="2.4"/>
+      <path d="M20 30 L30 12 L38 30 Z" fill="#b9945a" stroke="#3b352b" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M70 30 L60 12 L52 30 Z" fill="#b9945a" stroke="#3b352b" stroke-width="2.4" stroke-linejoin="round"/>
+      <ellipse cx="45" cy="60" rx="24" ry="26" fill="#e9dcc0"/>
+      <circle cx="34" cy="48" r="12" fill="#fffdf7" stroke="#3b352b" stroke-width="2.2"/>
+      <circle cx="56" cy="48" r="12" fill="#fffdf7" stroke="#3b352b" stroke-width="2.2"/>
+      <circle cx="34" cy="49" r="4.6" fill="#3b352b" id="pupilL"/>
+      <circle cx="56" cy="49" r="4.6" fill="#3b352b" id="pupilR"/>
+      <path d="M40 60 L50 60 L45 69 Z" fill="#c8913a" stroke="#3b352b" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M28 84 q17 10 34 0" fill="none" stroke="#3b352b" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="bubble" id="owl">Hoi. Ik ben goed in verschil zien in het donker — dat heet power. Draai maar aan een knop, dan vertel ik wat er met mijn vangst gebeurt.</div>
+  </div>
+
+  <p class="note">Eén klok is de wereld waarin er niets is (H0), de andere waarin er wél iets is (H1); de streep is de grens waarboven je verwerpt. Eenzijdig, conceptueel — dezelfde figuur als in het hoofdstuk <em>Hoe beslis je?</em>, nu in beweging. Geen vervanging voor G*Power; bedoeld om het te <em>voelen</em>. <a href="https://countcamp.org/">countcamp.org</a></p>
+</div>
+
+<script>
+/* ---- normale verdeling ---- */
+function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y;}
+function Phi(x){return 0.5*(1+erf(x/Math.SQRT2));}
+function dnorm(x){return Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);}
+function qnorm(p){
+  var a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00];
+  var b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01];
+  var c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00];
+  var d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];
+  var pl=0.02425,ph=1-pl,q,r;
+  if(p<pl){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);}
+  if(p<=ph){q=p-0.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);}
+  q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+}
+
+/* ---- staat ---- */
+var CV=document.getElementById('cv'), CX=CV.getContext('2d');
+var kE=document.getElementById('kEffect'), kN=document.getElementById('kN'), kA=document.getElementById('kAlpha');
+var last='';
+function state(){
+  var d=+kE.value, n=+kN.value, al=+kA.value;
+  var lambda=d*Math.sqrt(n/2);            // tweezijdige-groep noncentraliteit (Cohen)
+  var z=qnorm(1-al);                       // eenzijdige grens
+  var power=1-Phi(z-lambda);
+  return {d:d,n:n,al:al,lambda:lambda,z:z,power:power,beta:1-power};
+}
+
+/* ---- tekenen ---- */
+function draw(){
+  var s=state();
+  var W=CV.width, H=CV.height, pad=54, base=H-64;
+  CX.clearRect(0,0,W,H);
+  var xmin=-4, xmax=Math.max(6.2, s.lambda+4);
+  function X(x){return pad+(x-xmin)/(xmax-xmin)*(W-2*pad);}
+  var peak=dnorm(0), Y0=base, yScale=(base-70)/peak;
+  function Y(y){return Y0-y*yScale;}
+  var zx=X(s.z);
+
+  function areaPath(mu, from, to){
+    CX.beginPath(); CX.moveTo(X(from),Y0);
+    for(var x=from;x<=to;x+=(to-from)/240){CX.lineTo(X(x),Y(dnorm(x-mu)));}
+    CX.lineTo(X(to),Y0); CX.closePath();
+  }
+  // beta (H1, links van grens)
+  areaPath(s.lambda, xmin, s.z); CX.fillStyle='#d8d2c6'; CX.fill();
+  // power (H1, rechts van grens)
+  areaPath(s.lambda, s.z, xmax); CX.fillStyle='#cfe3d0'; CX.fill();
+  // alpha (H0, rechts van grens)
+  areaPath(0, s.z, xmax); CX.fillStyle='#e7bcc4'; CX.fill();
+
+  // krommen
+  function curve(mu){CX.beginPath();for(var x=xmin;x<=xmax;x+=(xmax-xmin)/500){var px=X(x),py=Y(dnorm(x-mu));if(x===xmin)CX.moveTo(px,py);else CX.lineTo(px,py);}CX.strokeStyle='#3b352b';CX.lineWidth=2.4;CX.stroke();}
+  curve(0); curve(s.lambda);
+
+  // grens
+  CX.setLineDash([6,7]); CX.beginPath(); CX.moveTo(zx,Y(peak)-8); CX.lineTo(zx,Y0); CX.strokeStyle='#3b352b'; CX.lineWidth=1.6; CX.stroke(); CX.setLineDash([]);
+
+  // as-lijn
+  CX.beginPath(); CX.moveTo(pad-6,Y0); CX.lineTo(W-pad+6,Y0); CX.strokeStyle='#3b352b'; CX.lineWidth=2; CX.stroke();
+
+  // labels
+  CX.fillStyle='#7a6f57'; CX.font='600 26px Nunito,sans-serif'; CX.textAlign='center';
+  CX.fillText('H0 · er is niks', X(0), Y(peak)-16);
+  CX.fillText('H1 · er is wél iets', X(s.lambda), Math.min(Y(peak)-16, Y0-40));
+  CX.fillStyle='#3b352b'; CX.font='500 22px Nunito,sans-serif';
+  CX.fillText('de grens', zx, Y(peak)*1.0-20);
+  CX.fillStyle='#4d8a5a'; CX.font='700 26px Nunito,sans-serif';
+  CX.fillText('power', X(s.z)+(X(xmax)-X(s.z))*0.42, Y0-70);
+  CX.fillStyle='#8a8377'; CX.fillText('β', X(s.lambda)-30, Y0-40);
+  CX.fillStyle='#b0495a'; CX.font='700 22px Nunito,sans-serif';
+  CX.fillText('α', zx+34, Y0-16);
+
+  // readout
+  document.getElementById('oPower').textContent=Math.round(s.power*100)+'%';
+  document.getElementById('oBeta').textContent=Math.round(s.beta*100)+'%';
+  document.getElementById('oAlpha').textContent=Math.round(s.al*100)+'%';
+  document.getElementById('vEffect').textContent=s.d.toFixed(2);
+  document.getElementById('vN').textContent=s.n;
+  document.getElementById('vAlpha').textContent=s.al.toFixed(3).replace(/^0\./,'.');
+}
+
+/* ---- de uil ---- */
+function owlSay(which){
+  var s=state(), p=Math.round(s.power*100), msgs;
+  if(which==='n') msgs=[
+    'Meer waarnemingen — de klokken schuiven uit elkaar. Ik zie het verschil scherper, en vang er nu '+p+' van de honderd.',
+    'Hoe meer je meet, hoe smaller de twijfel. Mijn vangst: '+p+'%.'];
+  else if(which==='e') msgs=[
+    'Een groter verschil is makkelijker te zien. Ik mis er minder — power '+p+'%.',
+    'Klein verschil, klein zicht; groot verschil, scherp zicht. Nu vang ik '+p+'%.'];
+  else if(which==='a') msgs=[
+    'Strenger nu: ik roep minder loos... maar mis ook meer echte wolven. Vangst zakt naar '+p+'%.',
+    'Soepeler grens — meer vals alarm, maar ik vang er meer: '+p+'%.'];
+  else msgs=['Ik vang er '+p+' van de honderd. Draai maar aan een knop.'];
+  var m=msgs[Math.floor(p/50)%msgs.length]||msgs[0];
+  if(p>=80) m+=' Lekker helder, dit.';
+  else if(p<35) m+=' Zo zie ik bijna niks — dat is het stille tekort (β).';
+  document.getElementById('owl').textContent=m;
+}
+
+kE.addEventListener('input',function(){draw();owlSay('e');});
+kN.addEventListener('input',function(){draw();owlSay('n');});
+kA.addEventListener('input',function(){draw();owlSay('a');});
+draw();
+</script>
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
