@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>p-waarde en significantie aflezen — z, t, F en χ²-tabellen | CountCamp</title>
+<meta name="description" content="Typ een toetsgetal uit een artikel (z, t, F of χ²) en zie de p-waarde als oppervlakte onder de kromme — met de bijbehorende tabel erbij. Significantie eindelijk zien in plaats van opzoeken.">
+<meta property="og:title" content="p-waarde en significantie aflezen — z, t, F en χ²">
+<meta property="og:description" content="Typ een toetsgetal en zie de p-waarde als oppervlakte onder de kromme, met de tabel erbij.">
+<link rel="canonical" href="https://countcamp.org/tabellen/">
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57; --faint:#9d906f;
+    --amber:#c8913a; --amber-ink:#a2701c;
+    --green:#4d8a5a; --line:#d8c69b; --edge:#cbb37e; --paper:#fffdf7;
+    --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1200px 600px at 50% -80px, rgba(214,166,88,.16), rgba(0,0,0,0) 66%),
+      #f5eed9;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:40px 24px 72px}
+  .back{display:inline-block;margin-bottom:26px;font-size:.92rem;text-decoration:none;color:inherit;opacity:.62}
+  .back:hover{opacity:.9}
+  h1{font-weight:600;font-size:32px;letter-spacing:.2px;margin:0 0 12px;line-height:1.15}
+  .lede{color:#6b5f45;font-size:16.5px;line-height:1.62;margin:0 0 26px;max-width:600px}
+  .lede b{color:var(--amber-ink);font-weight:600}
+
+  .tabs{display:inline-flex;gap:4px;background:#ece0c2;padding:4px;border-radius:12px;
+    border:1px solid var(--edge);margin-bottom:18px}
+  .tabs button{border:0;background:transparent;font:inherit;font-size:15.5px;color:#6b5f45;
+    padding:8px 17px;border-radius:9px;cursor:pointer;transition:background .15s,color .15s}
+  .tabs button i{font-style:italic}
+  .tabs button.on{background:var(--amber);color:#3a2a08;font-weight:600;
+    box-shadow:0 1px 3px rgba(120,95,45,.25)}
+
+  .paste{width:100%;font:inherit;font-size:15.5px;color:#4a4030;background:var(--paper);
+    border:1px solid var(--edge);border-radius:10px;padding:11px 14px;margin:0 0 6px;outline:none;
+    transition:border-color .15s,box-shadow .15s}
+  .paste:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(200,145,58,.14)}
+  .paste::placeholder{color:#b3a67f;font-style:italic}
+  .pastehint{color:var(--faint);font-size:12.5px;font-style:italic;margin:0 2px 20px}
+  .pastehint i{font-style:normal;color:var(--dim)}
+
+  .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:0 0 6px}
+  .fld{display:flex;align-items:center;gap:9px;color:var(--dim);font-size:14.5px;font-style:italic}
+  .fld input[type=number],select{font:inherit;font-size:15px;font-style:normal;
+    font-variant-numeric:tabular-nums;color:#4a4030;background:var(--paper);
+    border:1px solid var(--edge);border-radius:8px;padding:6px 9px;outline:none}
+  .fld input[type=number]{width:78px}
+  .fld input:focus,select:focus{border-color:var(--amber)}
+  select{cursor:pointer}
+  .toggle{display:inline-flex;gap:3px;background:#ece0c2;padding:3px;border-radius:9px;border:1px solid var(--edge)}
+  .toggle button{border:0;background:transparent;font:inherit;font-size:14px;color:#6b5f45;
+    padding:6px 12px;border-radius:6px;cursor:pointer}
+  .toggle button.on{background:#e6d3a2;color:#7a5a12;font-weight:600}
+
+  canvas{width:100%;display:block;border-radius:12px;background:#fffdf6;
+    border:1px solid var(--line);box-shadow:0 10px 30px rgba(120,95,45,.14);margin-top:12px}
+
+  .readout{margin:20px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px}
+  .pbig{font-size:31px;color:var(--amber-ink);font-variant-numeric:tabular-nums;letter-spacing:.3px}
+  .pbig .lab{font-size:15px;color:var(--dim);font-style:italic;margin-right:5px}
+  .verdict{font-size:15px;font-style:italic;color:#6b5f45}
+  .verdict b{font-style:normal}
+  .verdict.sig b{color:var(--green)}
+  .verdict.ns b{color:var(--bordeaux)}
+  .narr{margin:12px 0 0;color:#4a4030;font-size:16px;line-height:1.58;max-width:600px}
+  .narr b{color:var(--amber-ink);font-weight:600}
+
+  .tblwrap{margin:34px 0 0;padding:20px 22px 22px;background:var(--paper);
+    border:1px solid #ecdcb3;border-radius:12px;box-shadow:0 6px 20px rgba(120,95,45,.10);overflow-x:auto}
+  .tblwrap h3{margin:0 0 4px;font-size:16.5px;font-weight:600;color:#4a4030}
+  .tblwrap .cap{margin:0 0 15px;font-size:14px;font-style:italic;color:#6b5f45;max-width:580px;line-height:1.5}
+  #tbl{position:relative}
+  table.mini{position:relative;z-index:1;border-collapse:collapse;font-variant-numeric:tabular-nums;
+    font-size:14px;color:#544a38;margin:0 auto}
+  table.mini th,table.mini td{padding:5px 12px;text-align:center}
+  table.mini thead th{color:var(--dim);font-style:italic;font-weight:400;border-bottom:1.5px solid #d3c191}
+  table.mini .side{color:var(--dim);font-style:italic;text-align:right;border-right:1.5px solid #d3c191;padding-right:14px}
+  table.mini td.hot{color:#3a2a08;font-weight:700}
+  table.mini td.cross{color:#5a4310;font-weight:700}
+  table.mini tr.hotrow .side{color:var(--amber-ink);font-weight:700}
+  table.mini th.colhot{color:var(--amber-ink);font-weight:700}
+  /* continu kruis: gloed donkerst op de exacte percentiel-plek + scherp verticaal lijntje */
+  #tbl .xglow{position:absolute;left:0;top:0;z-index:0;pointer-events:none}
+  #tbl .vline{position:absolute;z-index:2;width:2px;pointer-events:none;border-radius:1px;
+    background:rgba(162,112,28,.92)}
+  .zsum{margin:16px 0 0;text-align:center;font-size:15.5px;color:#6b5f45;font-style:italic}
+  .zsum b{font-style:normal;color:var(--amber-ink);font-variant-numeric:tabular-nums}
+  .zsum b.res{font-weight:700;font-size:16.5px}
+
+  .more{margin:30px 0 0;display:block;text-decoration:none;padding:16px 20px;background:#f4ead0;
+    border:1px solid var(--edge);border-radius:12px;transition:background .15s}
+  .more:hover{background:#f9f1de}
+  .more .k{display:block;font-size:16px;color:#7a5a12;font-weight:600}
+  .more .k::after{content:"  →";color:var(--amber)}
+  .more .s{display:block;font-size:14px;font-style:italic;color:#6b5f45;margin-top:4px;line-height:1.5}
+
+  .foot{margin-top:34px;color:var(--faint);font-size:13px;font-style:italic}
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="https://countcamp.org/">← CountCamp</a>
+  <h1>Wat betekent dat getal?</h1>
+  <p class="lede">Je las in een onderzoek iets als <b>t(38) = 2,24, p = ,03</b> — of een
+     <b>F</b>, een <b>χ²</b>, een <b>z</b> — en je wilt weten wat daar staat. Type het over.
+     Het getal verschijnt op de kromme, en de <b>p‑waarde is niets anders dan de gekleurde
+     oppervlakte in de staart</b>.</p>
+
+  <div class="tabs" id="tabs">
+    <button data-d="z" class="on" title="normaalverdeling"><i>z</i></button>
+    <button data-d="t" title="t-verdeling"><i>t</i></button>
+    <button data-d="F" title="F-verdeling"><i>F</i></button>
+    <button data-d="chi" title="chi-kwadraat"><i>χ²</i></button>
+  </div>
+
+  <input class="paste" id="paste" type="text" spellcheck="false"
+         placeholder="Plak uit het onderzoek…   bijv.   z = 1.96">
+  <div class="pastehint" id="pastehint">Herkent o.a. <i>t(38)=2.24</i>, <i>F(2,45)=3.6</i>, <i>χ²(1)=6.3</i>, <i>z = 1.96</i> — of stel het hieronder met de hand in.</div>
+
+  <div class="row">
+    <span class="fld" id="valfld">de waarde
+      <input type="number" id="val" step="0.01" value="1.96">
+    </span>
+    <span class="fld" id="pfld">of de p
+      <input type="number" id="pin" step="0.001" min="0" max="1" value="0.05">
+    </span>
+    <span class="fld" id="dffld" style="display:none"><span id="dflab">df</span>
+      <input type="number" id="df" step="1" min="1" value="38">
+    </span>
+    <span class="fld" id="df2fld" style="display:none">df₂
+      <input type="number" id="df2" step="1" min="1" value="45">
+    </span>
+    <span class="toggle" id="tails">
+      <button data-t="2" class="on">twee kanten</button>
+      <button data-t="1">één kant</button>
+    </span>
+    <span class="fld">grens bij α =
+      <select id="alpha">
+        <option value="0.10">.10</option>
+        <option value="0.05" selected>.05</option>
+        <option value="0.01">.01</option>
+      </select>
+    </span>
+  </div>
+
+  <canvas id="c"></canvas>
+
+  <div class="readout">
+    <span class="pbig"><span class="lab">p =</span><span id="pval">—</span></span>
+    <span class="verdict" id="verdict"></span>
+  </div>
+  <p class="narr" id="narr"></p>
+
+  <div class="tblwrap" id="tblwrap">
+    <h3 id="tblh">Zo staat het in de tabel</h3>
+    <p class="cap" id="tblcap"></p>
+    <div id="tbl"></div>
+  </div>
+
+  <a class="more" id="more" href="#kans-tabellen">
+    <span class="k">Kans‑tabellen gebruiken en begrijpen</span>
+    <span class="s">De hele uitleg: waar die tabellen vandaan komen, waarom een t‑tabel er anders uitziet dan een z‑tabel, en hoe je er precies tussen afleest.</span>
+  </a>
+
+  <p class="foot">CountCamp · één getal, één plaatje — statistiek leren voelen, onderzoek leren lezen</p>
+</div>
+
+<script>
+(function(){
+  // ================= kansrekening (geverifieerd tegen textbook-waarden) =================
+  function erf(x){                                   // Abramowitz & Stegun 7.1.26
+    const s=x<0?-1:1; x=Math.abs(x);
+    const t=1/(1+0.3275911*x);
+    const y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+    return s*y;
+  }
+  const Phi = z => 0.5*(1+erf(z/Math.SQRT2));
+  function gammln(xx){
+    const cof=[76.18009172947146,-86.50532032941677,24.01409824083091,
+      -1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+    let x=xx,y=xx,tmp=x+5.5; tmp-=(x+0.5)*Math.log(tmp);
+    let ser=1.000000000190015;
+    for(let j=0;j<6;j++){ y++; ser+=cof[j]/y; }
+    return -tmp+Math.log(2.5066282746310005*ser/x);
+  }
+  // regularized incomplete beta (voor t en F)
+  function betacf(a,b,x){
+    const MAXIT=300,EPS=3e-12,FPMIN=1e-300;
+    let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;
+    if(Math.abs(d)<FPMIN)d=FPMIN; d=1/d; let h=d;
+    for(let m=1;m<=MAXIT;m++){
+      const m2=2*m;
+      let aa=m*(b-m)*x/((qam+m2)*(a+m2));
+      d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+      d=1/d; h*=d*c;
+      aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
+      d=1+aa*d; if(Math.abs(d)<FPMIN)d=FPMIN; c=1+aa/c; if(Math.abs(c)<FPMIN)c=FPMIN;
+      d=1/d; const del=d*c; h*=del;
+      if(Math.abs(del-1)<EPS) break;
+    }
+    return h;
+  }
+  function betai(a,b,x){
+    if(x<=0)return 0; if(x>=1)return 1;
+    const bt=Math.exp(gammln(a+b)-gammln(a)-gammln(b)+a*Math.log(x)+b*Math.log(1-x));
+    return x<(a+1)/(a+b+2) ? bt*betacf(a,b,x)/a : 1-bt*betacf(b,a,1-x)/b;
+  }
+  // regularized incomplete gamma P(a,x) (voor chi-kwadraat)
+  function gser(a,x){
+    const EPS=3e-12; let ap=a,sum=1/a,del=sum;
+    for(let n=0;n<300;n++){ ap++; del*=x/ap; sum+=del; if(Math.abs(del)<Math.abs(sum)*EPS) break; }
+    return sum*Math.exp(-x+a*Math.log(x)-gammln(a));
+  }
+  function gcf(a,x){
+    const FPMIN=1e-300,EPS=3e-12; let b=x+1-a,c=1/FPMIN,d=1/b,h=d;
+    for(let i=1;i<=300;i++){ const an=-i*(i-a); b+=2; d=an*d+b; if(Math.abs(d)<FPMIN)d=FPMIN;
+      c=b+an/c; if(Math.abs(c)<FPMIN)c=FPMIN; d=1/d; const del=d*c; h*=del; if(Math.abs(del-1)<EPS) break; }
+    return Math.exp(-x+a*Math.log(x)-gammln(a))*h;
+  }
+  function gammp(a,x){ if(x<=0)return 0; return x<a+1 ? gser(a,x) : 1-gcf(a,x); }
+
+  // staart-kansen (oppervlakte in de rechterstaart voorbij x)
+  const tTwoTail = (t,df)=> betai(df/2,0.5, df/(df+t*t));      // twee kanten samen
+  const chiUpper = (x,k)=> x<=0?1 : 1-gammp(k/2, x/2);
+  const fUpper   = (x,d1,d2)=> x<=0?1 : betai(d2/2,d1/2, d2/(d2+d1*x));
+
+  // dichtheden
+  const dNorm = x => Math.exp(-x*x/2)/Math.sqrt(2*Math.PI);
+  function dT(x,df){ const c=Math.exp(gammln((df+1)/2)-gammln(df/2))/Math.sqrt(df*Math.PI);
+    return c*Math.pow(1+x*x/df, -(df+1)/2); }
+  function dChi(x,k){ if(x<=0) return k<2?1e9:(k===2?0.5:0);
+    return Math.exp((k/2-1)*Math.log(x) - x/2 - (k/2)*Math.log(2) - gammln(k/2)); }
+  function dF(x,d1,d2){ if(x<=0) return d1<2?1e9:(d1===2?1:0);
+    const lnB=gammln(d1/2)+gammln(d2/2)-gammln((d1+d2)/2);
+    return Math.exp(0.5*d1*Math.log(d1)+0.5*d2*Math.log(d2)+(0.5*d1-1)*Math.log(x)
+      -0.5*(d1+d2)*Math.log(d2+d1*x) - lnB); }
+
+  // ================= toestand =================
+  let DIST='z', val=1.96, df=38, df2=45, tails=2, alpha=0.05, lastEntry='z';
+  let xhairFcol=0;
+  const oneSided = ()=> DIST==='chi'||DIST==='F';   // scheef, alleen rechterstaart
+
+  function upperTail(x){
+    if(DIST==='z') return 1-Phi(Math.abs(x));
+    if(DIST==='t') return tTwoTail(Math.abs(x),df)/2;
+    if(DIST==='chi') return chiUpper(x,df);
+    return fUpper(x,df,df2);
+  }
+  function density(x){
+    if(DIST==='z') return dNorm(x);
+    if(DIST==='t') return dT(x,dispDf);
+    if(DIST==='chi') return dChi(x,df);
+    return dF(x,df,df2);
+  }
+  function pValue(){ const u=upperTail(val);
+    return (DIST==='z'||DIST==='t') && tails===2 ? 2*u : u; }
+  function alphaTarget(){ return (DIST==='z'||DIST==='t') && tails===2 ? alpha/2 : alpha; }
+  function bisect(fn,target){ let lo=0,hi=1e5;                 // fn dalend in x
+    for(let i=0;i<100;i++){ const m=(lo+hi)/2; if(fn(m)>target) lo=m; else hi=m; } return (lo+hi)/2; }
+  function critical(target){ return bisect(upperTail,target); }
+
+  // ================= tekenen =================
+  const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let W=820,H=350;
+  function resize(){ W=cv.clientWidth; H=350; cv.width=W*DPR; cv.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0); }
+  const C={ ink:'#3b352b', dim:'#7a6f57', faint:'#b0a074',
+    amber:'#c8913a', amberInk:'#a2701c',
+    fill:'rgba(200,145,58,.26)', fillEdge:'rgba(180,125,40,.5)',
+    green:'#4d8a5a', axis:'#c3b085', bordeaux:'#b0495a' };
+  const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
+  const fnt=(px,st,w)=>(st?st+' ':'')+(w?w+' ':'')+px+'px '+SERIF;
+  const PADX=32, AX_Y=296, TOP=34;
+  let dispVal=1.96, dispDf=38;
+
+  function domain(){
+    if(oneSided()){
+      const xmax = DIST==='chi' ? Math.max(dispVal*1.25, df+4*Math.sqrt(2*Math.max(1,df)), 8)
+                                : Math.max(dispVal*1.4, 5);
+      return [0, xmax];
+    }
+    const m=Math.max(4.2, Math.abs(dispVal)+0.9); return [-m,m];
+  }
+
+  function frame(){
+    dispVal += (val-dispVal)*0.16; dispDf += (df-dispDf)*0.16;
+    if(Math.abs(dispVal-val)<0.001) dispVal=val;
+    if(Math.abs(dispDf-df)<0.01) dispDf=df;
+
+    ctx.clearRect(0,0,W,H);
+    const [xMin,xMax]=domain();
+    const xPix=x=>PADX+(x-xMin)/(xMax-xMin)*(W-2*PADX);
+    let peak=1e-9; for(let i=0;i<=200;i++){ const d=density(xMin+i/200*(xMax-xMin));
+      if(isFinite(d)&&d>peak) peak=d; }
+    const yPix=d=>AX_Y-(Math.min(d,peak)/peak)*(AX_Y-TOP-4);
+    const one=oneSided();
+    const a=(DIST==='z'||DIST==='t')?Math.abs(dispVal):dispVal, dir=dispVal>=0?1:-1;
+
+    // gekleurde staart(en) = de p-waarde
+    function shade(fromX,toX){ fromX=Math.max(xMin,fromX); toX=Math.min(xMax,toX); if(toX<=fromX) return;
+      ctx.beginPath(); ctx.moveTo(xPix(fromX),AX_Y);
+      for(let x=fromX;x<=toX+1e-9;x+=(toX-fromX)/90) ctx.lineTo(xPix(x),yPix(density(x)));
+      ctx.lineTo(xPix(toX),AX_Y); ctx.closePath();
+      ctx.fillStyle=C.fill; ctx.fill(); ctx.strokeStyle=C.fillEdge; ctx.lineWidth=1; ctx.stroke();
+    }
+    if(one) shade(a,xMax);
+    else if(tails===2){ shade(xMin,-a); shade(a,xMax); }
+    else { dir>0? shade(a,xMax) : shade(xMin,-a); }
+
+    // "p" in de staart
+    const tail0 = one? a : (dir>0?a:xMin), tail1 = one? xMax : (dir>0?xMax:-a);
+    if((one||tails===1) && (tail1-tail0)>0.5){
+      ctx.fillStyle=C.amberInk; ctx.font=fnt(18,'italic'); ctx.textAlign='center';
+      ctx.fillText('p', xPix(tail0+(tail1-tail0)*0.42), AX_Y-9);
+    } else if(tails===2 && (xMax-a)>0.55){
+      ctx.fillStyle=C.amberInk; ctx.font=fnt(18,'italic'); ctx.textAlign='center';
+      ctx.fillText('p', xPix(dir*(a+(xMax-a)*0.45)), AX_Y-9);
+    }
+
+    // de kromme
+    ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.beginPath();
+    for(let i=0;i<=300;i++){ const x=xMin+i/300*(xMax-xMin), py=yPix(density(x));
+      i?ctx.lineTo(xPix(x),py):ctx.moveTo(xPix(x),py); }
+    ctx.stroke();
+
+    // as + ijkpunten
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(PADX,AX_Y); ctx.lineTo(W-PADX,AX_Y); ctx.stroke();
+    ctx.fillStyle=C.dim; ctx.font=fnt(12); ctx.textAlign='center';
+    const range=xMax-xMin, step=range>60?20:range>26?10:range>13?5:range>7?2:1;
+    for(let v=Math.ceil(xMin/step)*step; v<=xMax+1e-9; v+=step){ const xx=xPix(v);
+      ctx.strokeStyle=C.axis; ctx.beginPath(); ctx.moveTo(xx,AX_Y); ctx.lineTo(xx,AX_Y+5); ctx.stroke();
+      ctx.fillText(Math.abs(v)<1e-9?'0':(''+Math.round(v)), xx, AX_Y+19); }
+
+    // kritieke grens bij α
+    const tc=critical(alphaTarget());
+    ctx.strokeStyle='rgba(176,73,90,.5)'; ctx.lineWidth=1.3; ctx.setLineDash([5,5]);
+    const crit=cx=>{ ctx.beginPath(); ctx.moveTo(xPix(cx),AX_Y); ctx.lineTo(xPix(cx),TOP+6); ctx.stroke(); };
+    if(one) crit(tc); else if(tails===2){ crit(tc); crit(-tc); } else crit(dir*tc);
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(176,73,90,.85)'; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
+    ctx.fillText('grens α='+(''+alpha).replace('0.','.'), xPix(one?tc:dir*tc), TOP);
+
+    // de waarde zelf — leeft op de as, aan de onderkant (daar gebeurt de gebeurtenis)
+    const vx=xPix(dispVal);
+    ctx.strokeStyle=C.amber; ctx.lineWidth=2.4;
+    ctx.beginPath(); ctx.moveTo(vx,AX_Y); ctx.lineTo(vx,yPix(density(dispVal))); ctx.stroke();
+    ctx.fillStyle=C.amber; ctx.beginPath(); ctx.arc(vx,yPix(density(dispVal)),4.5,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(vx,AX_Y,3.6,0,7); ctx.fill();
+    const nm = DIST==='z'?'z = ':DIST==='t'?'t = ':DIST==='chi'?'χ² = ':'F = ';
+    const leftSide = dispVal>=0;
+    ctx.fillStyle=C.amberInk; ctx.font=fnt(15,'italic','600'); ctx.textAlign=leftSide?'right':'left';
+    ctx.fillText(nm+dispVal.toFixed(2), vx+(leftSide?-9:9), AX_Y-9);
+
+    requestAnimationFrame(frame);
+  }
+
+  // ================= p + narratie + tabel =================
+  const $=id=>document.getElementById(id);
+  function fmtp(p){ if(p<0.001) return '< .001'; return (Math.round(p*1000)/1000).toFixed(3).slice(1); }
+  const pc = c => (''+c).replace('0.','.');
+  function refresh(){
+    const p=pValue(), tc=critical(alphaTarget());
+    const a=(DIST==='z'||DIST==='t')?Math.abs(val):val, sig=a>=tc;
+    $('pval').textContent=fmtp(p);
+    const vd=$('verdict'); vd.className='verdict '+(sig?'sig':'ns');
+    vd.innerHTML= sig
+      ? 'kleiner dan α = '+pc(alpha)+' → <b>buiten de grens</b>'
+      : 'groter dan α = '+pc(alpha)+' → <b>binnen de grens</b>';
+    const naam=DIST==='z'?'z':DIST==='t'?'t':DIST==='chi'?'χ²':'F';
+    const kant= oneSided()?'in de rechterstaart' : tails===2?'aan beide kanten samen':'aan die kant';
+    const dftxt = DIST==='t'||DIST==='chi'?' met '+df+' vrijheidsgraden'
+                : DIST==='F'?' met '+df+' en '+df2+' vrijheidsgraden' : '';
+    $('narr').innerHTML =
+      'Een <b>'+naam+' van '+val.toFixed(2)+'</b>'+dftxt+' ligt hier op de as. De gekleurde oppervlakte '+
+      kant+' is <b>p = '+fmtp(p)+'</b>: de kans om, als er in werkelijkheid niets aan de hand is, een '+naam+
+      ' te zien die zó ver of verder ligt. Hoe kleiner, hoe verder de staart in — hoe zeldzamer.';
+    if(document.activeElement!==$('pin')) $('pin').value=+p.toFixed(4);
+    buildTable();
+    requestAnimationFrame(drawXhair);
+  }
+
+  function buildTable(){
+    const el=$('tbl'), cap=$('tblcap'), h=$('tblh');
+    if(DIST==='z'){ buildZ(el,cap,h); return; }
+    // ---- grenswaarde-tabel: df-ladder × staart-α (t, χ², F) ----
+    const a=Math.abs(val);
+    let cols, critAt, rowLabel, note='', infRow=false;
+    if(DIST==='t'){ cols=[0.20,0.10,0.05,0.02,0.01]; rowLabel='df'; infRow=true;
+      h.textContent='Zo staat het in een t‑tabel';
+      cap.innerHTML='Grenswaarden: rij = vrijheidsgraden, kolom = kans in de staart (twee kanten), cel = de t '+
+        'die je moet halen. Het kruis loopt mee met je df en je t; waar de armen kruisen zie je tussen welke '+
+        'twee kolommen je t valt. Onderaan, bij ∞ df, wordt t gewoon z.';
+      critAt=(d,al)=>bisect(x=>tTwoTail(x,d), al); }
+    else if(DIST==='chi'){ cols=[0.10,0.05,0.025,0.01,0.005]; rowLabel='df';
+      h.textContent='Zo staat het in een χ²‑tabel';
+      cap.innerHTML='Grenswaarden: rij = vrijheidsgraden, kolom = kans in de rechterstaart, cel = de χ² die je '+
+        'moet halen. Het kruis loopt mee met je df en je χ²; waar de armen kruisen zie je tussen welke twee '+
+        'kolommen je waarde valt.';
+      critAt=(d,al)=>bisect(x=>chiUpper(x,d), al); }
+    else { cols=[0.10,0.05,0.025,0.01,0.005]; rowLabel='df₂'; note='teller‑df (df₁) = '+df;
+      h.textContent='Zo staat het in een F‑tabel';
+      cap.innerHTML='F heeft twee vrijheidsgraden. Hier staat de teller‑df vast op <b>'+df+'</b>; de rij is de '+
+        'noemer‑df, de kolom is de kans in de rechterstaart, de cel is de F die je moet halen. Het kruis loopt '+
+        'mee met je noemer‑df en je F.';
+      critAt=(d2,al)=>bisect(x=>fUpper(x,df,d2), al); }
+
+    const ladder=[1,2,3,4,5,6,8,10,12,15,20,25,30,40,60,120];
+    const rowDf = DIST==='F'? df2 : df;
+    let rows=ladder.includes(rowDf)?ladder.slice():ladder.concat(rowDf);
+    rows=[...new Set(rows)].filter(d=>d>=1).sort((x,y)=>x-y);
+    const cvsRow=cols.map(al=>critAt(rowDf,al));
+    let jL=-1; for(let i=0;i<cols.length;i++) if(cvsRow[i]<=a) jL=i;
+    const jR=jL+1;
+    const armCols=new Set(); if(jL>=0) armCols.add(jL); if(jR<cols.length) armCols.add(jR);
+    xhairFcol = jL<0 ? 0 : jR>=cols.length ? cols.length-1
+      : jL + (a-cvsRow[jL])/(cvsRow[jR]-cvsRow[jL]);
+
+    let html='<table class="mini"><thead><tr><th class="side">'+rowLabel+'</th>';
+    cols.forEach((c,i)=>html+='<th'+(armCols.has(i)?' class="colhot"':'')+'>p='+pc(c)+'</th>');
+    html+='</tr></thead><tbody>';
+    rows.forEach(d=>{
+      const hotRow=(d===rowDf), cvs=cols.map(al=>critAt(d,al));
+      html+='<tr'+(hotRow?' class="hotrow"':'')+'><td class="side">'+d+'</td>';
+      cols.forEach((c,i)=>{
+        let attr=''; if(hotRow && armCols.has(i)) attr=' class="cross"';
+        else if(armCols.has(i)) attr=' class="coldim"';
+        html+='<td'+attr+'>'+cvs[i].toFixed(2)+'</td>';
+      });
+      html+='</tr>';
+    });
+    if(infRow){ html+='<tr><td class="side">∞</td>';
+      cols.forEach((c,i)=>{ const z=bisect(x=>2*(1-Phi(x)), c);
+        html+='<td'+(armCols.has(i)?' class="coldim"':'')+'>'+z.toFixed(2)+'</td>'; });
+      html+='</tr>'; }
+
+    const naam=DIST==='chi'?'χ²':DIST==='F'?'F':'t';
+    let tsum;
+    if(jL<0) tsum='jouw '+naam+' <b>'+a.toFixed(2)+'</b> haalt de eerste kolom niet (grens '+cvsRow[0].toFixed(2)+
+      ') → <b class="res">p &gt; '+pc(cols[0])+'</b>';
+    else if(jR>=cols.length) tsum='jouw '+naam+' <b>'+a.toFixed(2)+'</b> gaat voorbij de laatste kolom (grens '+
+      cvsRow[cols.length-1].toFixed(2)+') → <b class="res">p &lt; '+pc(cols[cols.length-1])+'</b>';
+    else tsum='jouw '+naam+' <b>'+a.toFixed(2)+'</b> ligt tussen grens <b>'+cvsRow[jL].toFixed(2)+'</b> (p='+pc(cols[jL])+
+      ') en <b>'+cvsRow[jR].toFixed(2)+'</b> (p='+pc(cols[jR])+') → <b class="res">'+pc(cols[jR])+' &lt; p &lt; '+pc(cols[jL])+'</b>';
+    if(note) tsum='<span style="opacity:.75">'+note+'</span> &nbsp;·&nbsp; '+tsum;
+    el.innerHTML=html+'</tbody></table><div class="zsum">'+tsum+'</div>';
+  }
+
+  function buildZ(el,cap,h){
+    h.textContent='Zo staat het in een z‑tabel';
+    cap.innerHTML='Je zoekt je z op: de <i>rij</i> geeft de eerste decimaal, de <i>kolom</i> de tweede. '+
+      'De cel is de oppervlakte <i>links</i> van je z. De staart is dan gewoon 1 min die cel.';
+    const a=Math.abs(val), rBase=Math.floor(a*10)/10;
+    const hotCol=Math.min(9,Math.max(0,Math.round((a-rBase)*100)));
+    xhairFcol=(a-rBase)*100;
+    let html='<table class="mini"><thead><tr><th class="side">z</th>';
+    for(let c=0;c<10;c++) html+='<th'+(c===hotCol?' class="colhot"':'')+'>.0'+c+'</th>';
+    html+='</tr></thead><tbody>';
+    for(let dr=1;dr>=-1;dr--){
+      const rz=Math.max(0,rBase+dr*0.1), hotRow=(dr===0);
+      html+='<tr'+(hotRow?' class="hotrow"':'')+'><td class="side">'+rz.toFixed(1)+'</td>';
+      for(let c=0;c<10;c++){ const hot=hotRow&&c===hotCol;
+        html+='<td'+(hot?' class="hot"':'')+'>'+Phi(rz+c/100).toFixed(4).slice(1)+'</td>'; }
+      html+='</tr>';
+    }
+    const rowStr=rBase.toFixed(1), colStr='.'+String(hotCol).padStart(2,'0'),
+          resStr=(rBase+hotCol/100).toFixed(2), cellStr=Phi(rBase+hotCol/100).toFixed(4).slice(1);
+    el.innerHTML=html+'</tbody></table>'+
+      '<div class="zsum">rij <b>'+rowStr+'</b> + kolom <b>'+colStr+'</b> = z&nbsp;<b class="res">'+resStr+
+      '</b> &nbsp;·&nbsp; cel <b>'+cellStr+'</b> = oppervlakte <i>links</i>, de staart is de rest</div>';
+  }
+
+  // continu kruis over de tabel: gloed donkerst op de exacte percentiel-plek + scherp lijntje
+  function drawXhair(){
+    const host=$('tbl'); host.querySelectorAll('.xglow,.vline').forEach(e=>e.remove());
+    const table=host.querySelector('table.mini'), hotRow=host.querySelector('tr.hotrow');
+    const ths=host.querySelectorAll('thead th');
+    if(!table||!hotRow||ths.length<2) return;
+    const base=host.getBoundingClientRect(), nCol=ths.length-1;
+    const cx=i=>{ const r=ths[i+1].getBoundingClientRect(); return r.left-base.left+r.width/2; };
+    const f=Math.max(0,Math.min(nCol-1, xhairFcol));
+    const i0=Math.floor(f), i1=Math.min(nCol-1,i0+1);
+    const x=cx(i0)+(f-i0)*(cx(i1)-cx(i0));
+    const thead=host.querySelector('thead').getBoundingClientRect();
+    const tbody=host.querySelector('tbody').getBoundingClientRect();
+    const yTop=thead.bottom-base.top, yBot=tbody.bottom-base.top;
+    const rowR=hotRow.getBoundingClientRect(), rowY=rowR.top-base.top+rowR.height/2;
+    const glow=document.createElement('div'); glow.className='xglow';
+    glow.style.width=host.clientWidth+'px'; glow.style.height=host.clientHeight+'px';
+    glow.style.background='radial-gradient(165px 30px at '+x+'px '+rowY+'px, '+
+      'rgba(200,145,58,.55), rgba(200,145,58,.15) 55%, transparent 80%)';
+    host.appendChild(glow);
+    const v=document.createElement('div'); v.className='vline';
+    v.style.left=(x-1)+'px'; v.style.top=yTop+'px'; v.style.height=(yBot-yTop)+'px';
+    host.appendChild(v);
+  }
+
+  // ================= invoer =================
+  function syncFields(){ $('val').value=+(+val.toFixed(3)); $('df').value=df; $('df2').value=df2; }
+  function setDist(d){ DIST=d;
+    document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x.dataset.d===d));
+    $('dffld').style.display = d==='z'?'none':'';
+    $('df2fld').style.display = d==='F'?'':'none';
+    $('dflab').textContent = d==='F'?'df₁':'df';
+    $('tails').style.display = (d==='z'||d==='t')?'':'none';
+    const ph={ z:'z = 1.96', t:'t(38) = 2.24', F:'F(2,45) = 3.6', chi:'χ²(1) = 6.3' }[d];
+    $('paste').placeholder = 'Plak uit het onderzoek…   bijv.   '+ph;
+  }
+  document.querySelectorAll('#tabs button').forEach(b=>{ b.onclick=()=>{ setDist(b.dataset.d); refresh(); }; });
+  $('val').oninput=e=>{ const v=parseFloat(e.target.value); if(!isNaN(v)){ val=v; lastEntry='z'; refresh(); } };
+  $('df').oninput=e=>{ const v=parseInt(e.target.value); if(v>=1){ df=v; refresh(); } };
+  $('df2').oninput=e=>{ const v=parseInt(e.target.value); if(v>=1){ df2=v; refresh(); } };
+  $('pin').oninput=e=>{ let p=parseFloat(e.target.value); if(isNaN(p)||p<=0||p>=1) return;
+    val=critical((DIST==='z'||DIST==='t')&&tails===2 ? p/2 : p);   // p → de bijbehorende waarde
+    lastEntry='p'; $('val').value=+val.toFixed(3); refresh(); };
+  document.querySelectorAll('#tails button').forEach(b=>{ b.onclick=()=>{
+    document.querySelectorAll('#tails button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); tails=+b.dataset.t; refresh(); }; });
+  $('alpha').onchange=e=>{ alpha=+e.target.value; refresh(); };
+
+  $('paste').oninput=e=>{
+    const s=e.target.value; let m;
+    if(m=s.match(/F\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)\s*=\s*(-?\d+(?:\.\d+)?)/i)){
+      setDist('F'); df=+m[1]; df2=+m[2]; val=+m[3]; lastEntry='z'; syncFields(); refresh(); return; }
+    if(/(chi|χ|χ²|x2|x\^2)/i.test(s)){
+      setDist('chi'); if(m=s.match(/\(\s*(\d+)\s*\)/)) df=+m[1];
+      if(m=s.match(/=\s*(-?\d+(?:\.\d+)?)/)){ val=+m[1]; lastEntry='z'; } syncFields(); refresh(); return; }
+    if(/(^|[^a-z])t\s*[\(=]/i.test(s) && DIST!=='t') setDist('t');
+    else if(/(^|[^a-z])z\s*=/i.test(s) && DIST!=='z') setDist('z');
+    if((m=s.match(/t\s*\(\s*(\d+(?:\.\d+)?)\s*\)/i))||(m=s.match(/\bdf\s*=?\s*(\d+(?:\.\d+)?)/i))){
+      const d=Math.round(parseFloat(m[1])); if(d>=1){ df=d; $('df').value=d; } }
+    if(m=s.match(/(?:^|[^a-z])[tz]\s*(?:\(\s*\d+(?:\.\d+)?\s*\))?\s*=\s*(-?\d+(?:\.\d+)?)/i)){
+      const v=parseFloat(m[1]); if(!isNaN(v)){ val=v; $('val').value=v; lastEntry='z'; } }
+    refresh();
+  };
+
+  window.addEventListener('resize',()=>{ resize(); requestAnimationFrame(drawXhair); });
+  resize(); refresh(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
