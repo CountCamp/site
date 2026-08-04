@@ -131,47 +131,47 @@ function state(){
 /* ---- tekenen ---- */
 function draw(){
   var s=state();
-  var W=CV.width, H=CV.height, pad=54, base=H-64;
+  var W=CV.width, H=CV.height, pad=56;
   CX.clearRect(0,0,W,H);
   var xmin=-4, xmax=Math.max(6.2, s.lambda+4);
   function X(x){return pad+(x-xmin)/(xmax-xmin)*(W-2*pad);}
-  var peak=dnorm(0), Y0=base, yScale=(base-70)/peak;
-  function Y(y){return Y0-y*yScale;}
+  var axisY=Math.round(H*0.47), gap=26, topM=66;
+  var peak=dnorm(0), yScale=(axisY-topM)/peak;
+  function Yu(y){return axisY-y*yScale;}       // H0 boven de lijn
+  function Yd(y){return axisY+gap+y*yScale;}   // H1 gespiegeld onder de lijn
   var zx=X(s.z);
 
-  function areaPath(mu, from, to){
-    CX.beginPath(); CX.moveTo(X(from),Y0);
-    for(var x=from;x<=to;x+=(to-from)/240){CX.lineTo(X(x),Y(dnorm(x-mu)));}
-    CX.lineTo(X(to),Y0); CX.closePath();
-  }
-  // beta (H1, links van grens)
-  areaPath(s.lambda, xmin, s.z); CX.fillStyle='#d8d2c6'; CX.fill();
-  // power (H1, rechts van grens)
-  areaPath(s.lambda, s.z, xmax); CX.fillStyle='#cfe3d0'; CX.fill();
-  // alpha (H0, rechts van grens)
-  areaPath(0, s.z, xmax); CX.fillStyle='#e7bcc4'; CX.fill();
+  function fillUp(mu,a,b,c){CX.beginPath();CX.moveTo(X(a),axisY);for(var x=a;x<=b;x+=(b-a)/260){CX.lineTo(X(x),Yu(dnorm(x-mu)));}CX.lineTo(X(b),axisY);CX.closePath();CX.fillStyle=c;CX.fill();}
+  function fillDn(mu,a,b,c){CX.beginPath();CX.moveTo(X(a),axisY+gap);for(var x=a;x<=b;x+=(b-a)/260){CX.lineTo(X(x),Yd(dnorm(x-mu)));}CX.lineTo(X(b),axisY+gap);CX.closePath();CX.fillStyle=c;CX.fill();}
+  // H1-wereld (onder de lijn): beta links van de grens, power rechts
+  fillDn(s.lambda, xmin, s.z, '#d8d2c6');   // beta
+  fillDn(s.lambda, s.z, xmax, '#cfe3d0');    // power
+  // H0-wereld (boven de lijn): alpha rechts van de grens
+  fillUp(0, s.z, xmax, '#e7bcc4');           // alpha
 
-  // krommen
-  function curve(mu){CX.beginPath();for(var x=xmin;x<=xmax;x+=(xmax-xmin)/500){var px=X(x),py=Y(dnorm(x-mu));if(x===xmin)CX.moveTo(px,py);else CX.lineTo(px,py);}CX.strokeStyle='#3b352b';CX.lineWidth=2.4;CX.stroke();}
-  curve(0); curve(s.lambda);
+  function line(f,mu){CX.beginPath();for(var x=xmin;x<=xmax;x+=(xmax-xmin)/520){var px=X(x),py=f(dnorm(x-mu));if(x===xmin)CX.moveTo(px,py);else CX.lineTo(px,py);}CX.strokeStyle='#3b352b';CX.lineWidth=2.4;CX.stroke();}
+  line(Yu,0); line(Yd,s.lambda);
 
-  // grens
-  CX.setLineDash([6,7]); CX.beginPath(); CX.moveTo(zx,Y(peak)-8); CX.lineTo(zx,Y0); CX.strokeStyle='#3b352b'; CX.lineWidth=1.6; CX.stroke(); CX.setLineDash([]);
-
-  // as-lijn
-  CX.beginPath(); CX.moveTo(pad-6,Y0); CX.lineTo(W-pad+6,Y0); CX.strokeStyle='#3b352b'; CX.lineWidth=2; CX.stroke();
+  // de grens door beide werelden
+  CX.setLineDash([6,7]); CX.beginPath(); CX.moveTo(zx,Yu(peak)-12); CX.lineTo(zx,Yd(peak)+12); CX.strokeStyle='#3b352b'; CX.lineWidth=1.6; CX.stroke(); CX.setLineDash([]);
+  // de getallenlijn (y=0)
+  CX.beginPath(); CX.moveTo(pad-6,axisY); CX.lineTo(W-pad+6,axisY); CX.strokeStyle='#3b352b'; CX.lineWidth=2; CX.stroke();
 
   // labels
-  CX.fillStyle='#7a6f57'; CX.font='600 26px Nunito,sans-serif'; CX.textAlign='center';
-  CX.fillText('H0 · er is niks', X(0), Y(peak)-16);
-  CX.fillText('H1 · er is wél iets', X(s.lambda), Math.min(Y(peak)-16, Y0-40));
+  CX.textAlign='center';
+  CX.fillStyle='#7a6f57'; CX.font='600 26px Nunito,sans-serif';
+  CX.fillText('H0 · er is niks', X(0), Yu(peak)-16);
+  CX.fillText('H1 · er is wél iets', X(s.lambda), Yd(peak)+40);
   CX.fillStyle='#3b352b'; CX.font='500 22px Nunito,sans-serif';
-  CX.fillText('de grens', zx, Y(peak)*1.0-20);
+  CX.fillText('de grens', zx, Yu(peak)-14);
+  CX.fillStyle='#b0495a'; CX.font='700 24px Nunito,sans-serif';
+  CX.fillText('α', zx+30, axisY-14);
   CX.fillStyle='#4d8a5a'; CX.font='700 26px Nunito,sans-serif';
-  CX.fillText('power', X(s.z)+(X(xmax)-X(s.z))*0.42, Y0-70);
-  CX.fillStyle='#8a8377'; CX.fillText('β', X(s.lambda)-30, Y0-40);
-  CX.fillStyle='#b0495a'; CX.font='700 22px Nunito,sans-serif';
-  CX.fillText('α', zx+34, Y0-16);
+  CX.fillText('power', X(s.z)+(X(xmax)-X(s.z))*0.40, axisY+gap+96);
+  CX.fillStyle='#8a8377'; CX.font='700 24px Nunito,sans-serif';
+  CX.fillText('β', X(s.lambda)-34, axisY+gap+74);
+  CX.fillStyle='#9d906f'; CX.font='500 20px Nunito,sans-serif'; CX.textAlign='right';
+  CX.fillText('het gevonden getal, groter naar rechts →', W-pad, H-14); CX.textAlign='center';
 
   // readout
   document.getElementById('oPower').textContent=Math.round(s.power*100)+'%';
