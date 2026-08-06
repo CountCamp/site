@@ -515,6 +515,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="niet-elke-millimeter-vin-weegt-even-zwaar" class="level2">
 <h2 class="anchored" data-anchor-id="niet-elke-millimeter-vin-weegt-even-zwaar">Niet elke millimeter vin weegt even zwaar</h2>
+<p><span class="begrippen">helling die per soort verschilt</span></p>
 <p>Terug naar de rots bij Antarctica, dezelfde 342 pinguïns.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> We weten al dat een langere vin samengaat met een zwaardere pinguïn — logisch, groter beest, grotere vin, meer gram. Maar hier is een vraag die daaronder ligt en die je zo makkelijk overslaat: levert een centimeter extra vin bij <em>élke</em> soort evenveel extra gewicht op?</p>
 <p>Je zou zeggen van wel. Een millimeter is een millimeter. Maar reken het in deze steekproef eens apart uit per soort, en je ziet iets vreemds: bij de Adélie’s levert elke millimeter vin er zo’n <strong>33 gram</strong> bij, bij de Gentoo’s bijna <strong>55 gram</strong>. Bij de ene soort telt een langere vin dus veel zwaarder mee dan bij de andere.</p>
 <p>Toeval van deze 342 beesten, of zit daar echt iets? En hoe noem je zoiets eigenlijk — een verband dat zelf weer afhangt van iets anders? Trek mee, we kijken het na.</p>
@@ -524,6 +525,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="reken-de-helling-per-soort-uit-in-jasp" class="level2">
 <h2 class="anchored" data-anchor-id="reken-de-helling-per-soort-uit-in-jasp">Reken de helling per soort uit in JASP</h2>
+<p><span class="begrippen">interactieterm · p-waarde van de interactie</span></p>
 <p><a href="../10_data/penguins.csv" class="data-download" download="penguins.csv">⬇ Download de data — <code>penguins.csv</code></a></p>
 <p>Vraag JASP om één model waarin de vin-gewicht-relatie <em>mag</em> verschillen per soort. Dat doe je met een ANOVA-met-covariaat (een ANCOVA): naast <code>vinlengte</code> en <code>soort</code> zet je ook hun <strong>interactieterm</strong> <code>vinlengte✻soort</code> in het model. Die term is precies de toestemming: reken het verband uit, maar laat het per soort een eigen helling hebben.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
@@ -559,6 +561,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="duizend-werelden-waarin-de-soort-niets-moduleert" class="level2">
 <h2 class="anchored" data-anchor-id="duizend-werelden-waarin-de-soort-niets-moduleert">Duizend werelden waarin de soort niets moduleert</h2>
+<p><span class="begrippen">soort-labels husselen · kloof tussen hellingen · toeval</span></p>
 <p>Is dat verschil-in-hellingen echt, of kan het toeval het namaken? Je zou dat willen uitproberen door vals te spelen. Deze keer husselen we de <strong>soort-labels</strong> los van de pinguïns: elke pinguïn houdt z’n eigen vinlengte en gewicht, maar krijgt een willekeurig soort-kaartje opgeplakt. Adélie, Gentoo, Chinstrap — lukraak rondgestrooid.</p>
 <p>Dat husselen <strong>koppelt de soort los van het vin-gewicht-verband</strong>. Je haalt met eigen handen weg dat een bepaalde soort bij een bepaalde helling hoort. In zo’n losgekoppelde wereld kán de ene soort geen steilere lijn meer hebben dan de andere — als de hellingen dan tóch verschillen, is dat puur toeval van de verdeling.</p>
 <p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar husselen en duizend keer opnieuw kijken is <em>code</em>-werk. Voor deze interactie is er (nog) geen browser-speeltje — dus voor de schud-ervaring <strong>draai je het R-broertje</strong>, waar het husselen een paar regels code is. Dat is geen gemis van jou of van JASP: het boek doet het bewust zo, de simulatie leeft in de code en in de speeltjes.</p>
@@ -569,6 +572,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="wat-een-verschil-in-hellingen-wél-en-niet-vertelt" class="level2">
 <h2 class="anchored" data-anchor-id="wat-een-verschil-in-hellingen-wél-en-niet-vertelt">Wat een verschil-in-hellingen wél en niet vertelt</h2>
+<p><span class="begrippen">interactie · moderatie · verschil in steilheid</span></p>
 <p>Wat je hier zag, heeft een naam die het boek nog uitwerkt: een <strong>interactie</strong>, en in de wandelgangen ook <em>moderatie</em>. De soort <strong>modereert</strong> het vin-gewicht-verband — ze bepaalt hóé sterk het is. Het kernidee is simpel en toch makkelijk te missen: soms volstaat één getal niet. Het effect van A (vinlengte) op de uitkomst (gewicht) is niet één helling, maar hangt af van de waarde van B (soort).</p>
 <p>Dat is precies waarom je zonder de interactie de mist in gaat. Zou je één helling voor alle pinguïns rapporteren — zeg, ergens rond de 40 gram per millimeter — dan klopt-ie voor geen enkele soort echt. Voor de Adélie’s is-ie te steil, voor de Gentoo’s te flauw. Het gemiddelde is een compromis waar niemand woont. Een interactie zegt: stop met dat ene getal zoeken, de vraag “hoeveel extra gewicht per millimeter vin?” heeft geen antwoord zonder de vervolgvraag “<em>bij welke soort?</em>”</p>
 <p>En let op de subtiele val: een interactie is iets ánders dan gewoon “Gentoo’s zijn zwaarder”. Dát zou een verschil in <em>hoogte</em> zijn — de ene wolk hoger dan de andere. Een interactie is een verschil in <em>steilheid</em> — de lijnen lopen niet parallel maar waaieren uiteen. Verschil in verschil: niet hoeveel de soorten van elkaar verschillen, maar hoe verschillend het vin-effect binnen elke soort uitpakt. Teken je de drie lijnen in één plaatje, dan zie je ze uit elkaar lopen — en die waaier ís de interactie.</p>
@@ -578,6 +582,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="van-soort-naar-sekse-parallel-of-waaier" class="level2">
 <h2 class="anchored" data-anchor-id="van-soort-naar-sekse-parallel-of-waaier">Van soort naar sekse — parallel of waaier?</h2>
+<p><span class="begrippen">niet-significante interactie · hoogte versus steilheid</span></p>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -602,6 +607,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="schrijf-het-op-als-een-onderzoeker" class="level2">
 <h2 class="anchored" data-anchor-id="schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</h2>
+<p><span class="begrippen">rapportagezin · F en p · nul-vondst</span></p>
 <div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
