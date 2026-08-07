@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Het betrouwbaarheidsinterval – GGZ-VS/JASP-werkboek</title>
+<title>Meervoudige regressie – GGZ-VS/JASP-werkboek</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -84,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_betrouwbaarheidsinterval.html">W6 · Bestaat het verschil echt?</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_betrouwbaarheidsinterval.html">Het betrouwbaarheidsinterval</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_meervoudige_regressie.html">Meervoudige regressie</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -180,7 +180,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link active">
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Het betrouwbaarheidsinterval</span></a>
   </div>
 </li>
@@ -206,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Meervoudige regressie</span></a>
   </div>
 </li>
@@ -272,10 +272,10 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_betrouwbaarheidsinterval.html">W6 · Bestaat het verschil echt?</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_betrouwbaarheidsinterval.html">Het betrouwbaarheidsinterval</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Het betrouwbaarheidsinterval</h1>
-<p class="subtitle lead">De precisie van een schatting · <em>confidence interval</em></p>
+<h1 class="title">Meervoudige regressie</h1>
+<p class="subtitle lead"><em>multiple regression</em></p>
 </div>
 
 
@@ -293,33 +293,35 @@ ul.task-list li input[type="checkbox"] {
 
 
 <blockquote class="blockquote">
-<p><strong>Vooraf, in één zin:</strong> die 95% betekent níét dat het echte verschil met 95% kans binnen dit interval ligt — waarom dat niet mag, staat onderaan bij <em>Wat het niet zegt</em>.</p>
+<p><strong>Vooraf, in één zin:</strong> een tabel met vier voorspellers onder elkaar nodigt uit om naar het sterretje te zoeken, maar de eerste vraag is hoeveel voorspellers er op hoeveel mensen losgelaten zijn — hieronder wordt dezelfde voorspeller pas significant in het model dat níéts verklaart, en waarom dat zo werkt staat onderaan bij <em>Wat het niet zegt</em>.</p>
 </blockquote>
 <section id="wat-je-ziet" class="level2">
 <h2 class="anchored" data-anchor-id="wat-je-ziet">Wat je ziet</h2>
-<p><strong>In het kort.</strong> Twee getallen tussen rechte haken, achter een schatting: 95% CI [−4.1, −0.7]. CI staat voor <em>confidence interval</em> — in het Nederlands <strong>betrouwbaarheidsinterval</strong>, in Nederlandse stukken afgekort tot BI. Je vindt hem achter vrijwel elke effectschatting: een verschil in gemiddelden, een correlatie, een odds ratio.</p>
-<p>Een resultatensectie meldt zelden alleen een getal; er staat bijna altijd een paar rechte haken achteraan. Zo bijvoorbeeld:</p>
+<p><strong>In het kort.</strong> Geen enkel getal, maar een <strong>tabel</strong>: een rijtje voorspellers onder elkaar, elk met een <em>b</em>, een standaardfout en een <em>p</em>, en eronder één regel voor het model als geheel — een <em>F</em> en een R². Dat is een <strong>meervoudige regressie</strong> / <em>multiple regression</em>: één uitkomst, meerdere voorspellers tegelijk. Je komt hem tegen zodra een onderzoek wil weten wat iets voorspelt <em>terwijl</em> er van alles anders meespeelt: leeftijd, geslacht, hoe ernstig iemand begon.</p>
+<p>Zo ziet het eruit in het wild:</p>
 <blockquote class="blockquote">
 <p><em>Voorbeeldfragment, geschreven in de stijl van een resultatensectie — het artikel bestaat niet.</em></p>
-<p>Participants in the blended care condition reported lower anxiety at 12 weeks (M = 8.1, SD = 4.2, n = 52) than participants receiving usual care (M = 10.5, SD = 4.6, n = 50), mean difference = −2.4, 95% CI [−4.1, −0.7], t(100) = −2.75, p = .007.</p>
+<p>Change in total difficulties (SDQ, T0 minus T1; higher = improvement) was regressed on baseline severity (centered), age (centered) and gender in the 24 adolescents who completed the VR intervention. The model did not explain a significant proportion of the variance, F(3, 20) = 1.58, p = .225, R² = .19. Baseline severity was the only predictor approaching significance, b = 0.38, SE = 0.19, t = 1.94, p = .066, 95% CI [−0.03, 0.78]. Neither age (b = 0.27, SE = 0.44, p = .552) nor gender (b = −1.16, SE = 1.95, p = .560) contributed.</p>
 </blockquote>
 </section>
 <section id="wat-er-staat" class="level2">
 <h2 class="anchored" data-anchor-id="wat-er-staat">Wat er staat</h2>
-<p><strong>In het kort.</strong> Het interval geeft de reeks waarden die goed bij deze data passen; de beste schatting — hier het verschil van −2.4 — staat in het midden. Eerste kijkvraag, kost twee seconden: <strong>zit de 0 erin?</strong> Hier niet: zelfs de voorzichtige rand van het interval (−0.7) is nog een verschil in het voordeel van blended care. Deze data verdragen “geen verschil” slecht.</p>
-<p>Nu hetzelfde, rustig en van voren af aan. Vertel het fragment eerst gewoon na, in het Nederlands. Twee groepen patiënten met angstklachten: de ene kreeg blended care, de andere gebruikelijke zorg. Na twaalf weken is de gemiddelde angstscore van de blended-groep 8.1, die van de andere groep 10.5. Het verschil — het gemiddelde verschil / <em>mean difference</em> — is −2.4 punten. Het minteken betekent hier goed nieuws: lager is minder angst.</p>
-<p>Dan de rechte haken: <strong>95% CI [−4.1, −0.7]</strong>. Wat het zegt: −2.4 is onze beste schatting van het verschil, maar het is een schatting uit één steekproef / <em>sample</em>. Het interval geeft de reeks waarden die goed bij deze data passen: alles tussen −4.1 en −0.7. En daar hoort het kijkmoment van hierboven bij: zit de 0 erin? Nee — zelfs de voorzichtige rand van het interval (−0.7) is nog een verschil in het voordeel van blended care. Was de 0 wél binnen de haken gevallen, dan hadden deze data ook bij “geen verschil” gepast; nu niet.</p>
-<p>Er staat ook nog <em>p</em> = .007. Die laat ik hier bewust liggen: de <em>p</em>-waarde krijgt in dit werkboek zijn eigen blok, en je hebt hem voor het lezen van dit fragment niet nodig — het interval vertelt je meer.</p>
+<p><strong>In het kort.</strong> Vierentwintig jongeren, drie voorspellers, en een model dat het niet doet: de <em>F</em> van 1.58 met <em>p</em> = .225 zegt dat deze drie samen niet meer verklaren dan toeval kan maken. De R² van .19 zegt dat ze op papier 19% van de verschillen in verbetering dekken — een getal dat groot lijkt en het hier niet is, want met 24 mensen en drie voorspellers haal je die 19% ook zonder dat er iets aan de hand is. En de enige regel die in de buurt komt, baseline, is precies de regel waar je het minst aan hebt. Waarom, dat is de rest van dit blok.</p>
+<p>Nu rustig van voren af aan. <strong>Wat een <em>b</em> betekent naast andere <em>b</em>’s.</strong> In de enkelvoudige regressie die je uit <em>Het rechthoekje</em> kent, was <em>b</em> het verschil in de uitkomst dat hoort bij één punt verschil in de voorspeller. Dat blijft zo — er komt één woord bij: <em>terwijl de andere voorspellers gelijk blijven.</em> Hier betekent <em>b</em> = 0.38 dus: <strong>twee jongeren die één SDQ-punt in ernst verschilden bij binnenkomst, verschilden gemiddeld 0.38 punt in verbetering — bij gelijke leeftijd en gelijk geslacht.</strong></p>
+<p>Let op de vorm van die zin. Er staat <em>verschilden</em>, geen <em>stegen</em>. Er is hier niets gemanipuleerd: niemand heeft iemands beginscore hoger gezet om te kijken wat er gebeurt. Twee jongeren vergelijken is iets anders dan één jongere veranderen, en de taal moet dat verschil vasthouden. Dat is geen muggenzifterij; het is het enige wat een lezer tegen de verleiding beschermt om er een oorzaak van te maken.</p>
+<p><strong>Wat “gecorrigeerd voor” doet.</strong> Elke <em>b</em> in deze tabel is berekend met de andere twee erin. Je kunt het lezen als: eerst haalt het model uit de verbetering weg wat leeftijd en geslacht ervan kunnen verklaren, en pas over wat er dan nog ligt, legt het de lijn voor baseline. Vandaar de Nederlandse formulering die je in artikelen ziet — <em>gecorrigeerd voor leeftijd en geslacht</em>, of <em>adjusted for</em>. Wat je overhoudt, is het stuk van de samenhang dat níét al door de andere voorspellers verteld werd.</p>
+<p><strong>Wat de <em>F</em> en R² samen zeggen.</strong> De R² van .19 is het aandeel van de verschillen in verbetering dat het hele model dekt: negentien procent. De <em>F</em> stelt daar de nuchtere vraag bij — is dat meer dan je met drie willekeurige voorspellers op 24 mensen sowieso zou halen? Antwoord: nee, <em>p</em> = .225. Kijk daarom altijd eerst naar die regel. Een tabel vol voorspellers waarvan het model als geheel niet significant is, is een tabel waarin je geen enkele individuele regel als bevinding mag oppakken — en dat is precies wat er in dit fragment gebeurt.</p>
+<p><strong>En de baseline-regel dan, met <em>p</em> = .066?</strong> Twee dingen. Ten eerste is .066 groter dan .05, en “randsignificant” is geen aparte categorie — het betrouwbaarheidsinterval [−0.03, 0.78] loopt over de nul heen, dus een verband van nul past nog steeds bij deze data. Ten tweede, en belangrijker: zelfs als deze regel wél een sterretje had gehad, zou hij je weinig hebben verteld. Waarom niet, staat bij <em>Wat het niet zegt</em>.</p>
 </section>
 <section id="waar-het-vandaan-komt" class="level2">
 <h2 class="anchored" data-anchor-id="waar-het-vandaan-komt">Waar het vandaan komt</h2>
-<p>Dit hoort bij de boek-eenheid <em>Bestaat het verschil echt?</em>. Daar heb je zo’n interval niet gekregen maar <strong>gebouwd</strong>: duizend keer opnieuw trekken uit je eigen steekproef (de bootstrap), duizend uitkomsten verzamelen, en dan de middelste 95 procent daarvan nemen. Dat middenstuk ís het betrouwbaarheidsinterval. Het boek zet daarbij het schatten vóór het toetsen, en dat is precies de volgorde die je hier terugziet: eerst “hoe groot is het en hoe precies weten we dat?” — pas daarna, als bijvraag, “zou het ook toeval kunnen zijn?”</p>
-<p>Eén verschil met het boek: artikelen bouwen het interval vrijwel nooit door te trekken, maar met een formule (via de <em>t</em>-verdeling). Dat is de shortcut uit het slot van diezelfde boek-eenheid — zelfde idee, andere route, en de uitkomst is vrijwel gelijk. Je hoeft die formule niet te kennen; JASP en de auteurs van je artikelen gebruiken hem voor je.</p>
+<p>Dit blok leunt op de boek-eenheid <em>Meer dan één verschil</em>. Daar wordt de stap gezet die dit hele blok draagt: van één rechthoekje naar meerdere. Zolang je één voorspeller hebt, is regressie een lijn door een wolk. Komt er een tweede bij, dan wordt het wegrekenen — je haalt uit de uitkomst eerst weg wat de ene voorspeller verklaart, en kijkt wat de andere over de rest nog te zeggen heeft. Het boek tekent dat als een tweeluik: dezelfde wolk, één keer met en één keer zonder wat de eerste voorspeller al had opgeslokt.</p>
+<p>Twee oude bekenden komen daarbij terug. R² ken je als <em>r</em>² uit het correlatie-blok — hetzelfde idee, nu met meerdere verklaarders tegelijk. En de <em>F</em> ken je van de ANOVA: nog steeds een breuk van verklaarde en onverklaarde spreiding, alleen heet “de groepen” hier “de voorspellers samen”.</p>
 </section>
 <section id="zelf-doen-in-jasp" class="level2">
 <h2 class="anchored" data-anchor-id="zelf-doen-in-jasp">Zelf doen in JASP</h2>
-<p><a href="../10_data/angst_blended.csv" class="data-download" download="angst_blended.csv">⬇ Download de data — <code>angst_blended.csv</code></a></p>
-<p>Bij dit blok hoort het databestand <code>angst_blended.csv</code>: 102 rijen, drie kolommen — <code>id</code> (deelnemernummer), <code>groep</code> (blended of usual) en <code>angst_12w</code> (de angstscore na twaalf weken). De rijen zijn gegenereerd — er zit geen echte patiënt in — en ze reproduceren precies de uitkomsten uit het fragment.</p>
+<p><a href="../10_data/verschilscore_mra.csv" class="data-download" download="verschilscore_mra.csv">⬇ Download de data — <code>verschilscore_mra.csv</code></a></p>
+<p>Bij dit blok hoort <code>verschilscore_mra.csv</code>: 24 rijen, zeven kolommen — <code>id</code>, <code>tds_t0</code> en <code>tds_t1</code> (de SDQ-totaalscore vóór en na), <code>verbetering</code> (T0 min T1, dus positief = minder klachten), <code>leeftijd</code>, <code>geslacht</code> en <code>diagnose</code>. Het zijn <strong>dezelfde 24 jongeren als in het <em>t</em>-toets-blok</strong>; er is alleen bij gekomen wat je voor dit model nodig hebt. De rijen zijn gegenereerd — er zit geen echte jongere in — en ze reproduceren precies de getallen uit het fragment.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -332,44 +334,83 @@ ul.task-list li input[type="checkbox"] {
 <div class="callout-body-container callout-body">
 <ol type="1">
 <li>Open het bestand in JASP (menu linksboven → Open).</li>
-<li>Klik in de balk bovenin op <strong>T-Tests</strong> en kies onder Classical <strong>Independent Samples T-Test</strong>.</li>
-<li>Sleep <code>angst_12w</code> naar het vak <strong>Dependent Variables</strong> en <code>groep</code> naar <strong>Grouping Variable</strong>; de kolom <code>id</code> laat je staan waar hij staat.</li>
-<li>Vink onder <strong>Additional Statistics</strong> aan: <strong>Location parameter</strong> en daaronder <strong>Confidence interval</strong> (laat de 95 staan), plus <strong>Descriptives</strong>.</li>
+<li>Klik in de balk bovenin op <strong>Regression</strong> en kies <strong>Linear Regression</strong>.</li>
+<li>Sleep <code>verbetering</code> naar <strong>Dependent Variable</strong>, <code>tds_t0</code> en <code>leeftijd</code> naar <strong>Covariates</strong>, en <code>geslacht</code> naar <strong>Factors</strong>.</li>
+<li>Vink onder <strong>Statistics</strong> aan: <strong>Estimates</strong>, <strong>Model fit</strong> en <strong>Confidence intervals</strong>.</li>
+<li>Wil je de twee modellen naast elkaar zien: open het tabblad <strong>Model</strong>, maak een tweede <strong>Block</strong> aan en zet <code>diagnose</code> daarin. JASP toont dan model 1 en model 2 onder elkaar, met de R² van beide.</li>
 </ol>
 </div>
 </div>
-<p>In de tabel rechts staat nu het gemiddelde verschil, Mean Difference −2.402, met daarnaast de onder- en bovengrens van het interval: −4.133 en −0.671. In de Descriptives-tabel: de blended-groep <em>M</em> = 8.102 en <em>SD</em> = 4.203 (n = 52), de usual-groep <em>M</em> = 10.504 en <em>SD</em> = 4.605 (n = 50). Leg het fragment ernaast: dat zijn — het artikel rondt af op één decimaal — precies de getallen die daar stonden, tot en met <em>t</em>(100) = −2.75 en <em>p</em> = .007. JASP rekent; jij leest.</p>
-<p>Eén leesgewoonte om meteen aan te wennen: kijk wélke groep JASP van welke aftrekt. Hier rekent JASP blended min usual, en dus is het verschil negatief — de blended-groep scoort lager. Had usual vooropgestaan, dan was er +2.402 verschenen: zelfde informatie, ander teken. Controleer dus altijd even welke groep vooropstaat voordat je het minteken interpreteert.</p>
+<p>In de tabel rechts staat nu bij <code>tds_t0</code> een <em>b</em> van 0.377 met SE 0.194, <em>t</em> = 1.944, <em>p</em> = .066 en een 95%-interval van [−0.03, 0.78]; bij <code>leeftijd</code> 0.266 (<em>p</em> = .552) en bij geslacht −1.155 (<em>p</em> = .560). In de Model Summary: R² = .192, adjusted R² = .071, en in de ANOVA-regel <em>F</em>(3, 20) = 1.58, <em>p</em> = .225. Leg het fragment ernaast — dezelfde getallen.</p>
+<p>Eén ding valt op als je goed kijkt: het fragment noemt baseline <em>centered</em> en jij sleepte gewoon <code>tds_t0</code> naar binnen. Toch komen de <em>b</em>, de <em>p</em> en het interval exact overeen. Dat klopt: centreren verschuift alleen het nulpunt, en daarmee de intercept — de helling verandert niet. Wat centreren wél doet, is de intercept betekenis geven (de verwachte verbetering bij een gemiddelde beginscore in plaats van bij een SDQ van 0, wat niemand heeft). Het is dus een leesbaarheidstruc, geen ander model.</p>
 </section>
 <section id="zelf-opschrijven" class="level2">
 <h2 class="anchored" data-anchor-id="zelf-opschrijven">Zelf opschrijven</h2>
-<div class="apa callout callout-style-default callout-note callout-titled" title="Schrijf het op — het betrouwbaarheidsinterval">
+<div class="apa callout callout-style-default callout-note callout-titled" title="Schrijf het op — de meervoudige regressie">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Schrijf het op — het betrouwbaarheidsinterval
+<span class="screen-reader-only">Opmerking</span>Schrijf het op — de meervoudige regressie
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>Voor je eigen Nederlandstalige literatuurstudie:</p>
 <blockquote class="blockquote">
-<p>De deelnemers die blended care kregen, rapporteerden na twaalf weken minder angstklachten dan de deelnemers die gebruikelijke zorg kregen; het verschil was gemiddeld −2.4 punten (95%-betrouwbaarheidsinterval −4.1 tot −0.7).</p>
+<p>De verandering in totale probleemscore werd voorspeld uit de beginscore, leeftijd en geslacht. Het model verklaarde geen significant deel van de verschillen in verandering, <em>F</em>(3, 20) = 1.58, <em>p</em> = .225, R² = .19. Jongeren die één punt hoger begonnen, verbeterden gemiddeld 0.38 punt meer, maar dit verband was niet significant, <em>b</em> = 0.38, <em>SE</em> = 0.19, <em>p</em> = .066, 95% BI [−0.03, 0.78].</p>
 </blockquote>
 <p>Drie werkafspraken daarbij:</p>
 <ul>
-<li><strong>Noem het object.</strong> Niet “er was een significant verschil”, maar een verschil <em>in wat</em>, <em>tussen wie</em>, <em>hoe groot</em>. De lezer van jouw literatuurstudie heeft het artikel niet gelezen.</li>
-<li>Schrijf betrouwbaarheidsinterval de eerste keer voluit, daarna mag 95%-BI.</li>
-<li>In je evidencetabel neem je het over zoals het er staat: −2.4 [−4.1, −0.7]. Niet herrekenen, niet afronden naar hele punten — overnemen en duiden.</li>
+<li><strong>Rapporteer het model vóór de regels.</strong> <em>F</em>, R² en het aantal voorspellers eerst; pas daarna de losse coëfficiënten. Wie met een significante regel begint, verzwijgt de vraag of het model überhaupt iets deed.</li>
+<li><strong>Noem N én het aantal voorspellers.</strong> Vier voorspellers op 24 mensen is een ander onderzoek dan vier op 400, ook als de tabellen identiek ogen. Zonder die twee getallen kan je lezer de tabel niet wegen.</li>
+<li><strong>Verschil-taal, geen verandering-taal.</strong> “Jongeren die hoger begonnen, verbeterden meer” — niet “hoger beginnen zorgt voor meer verbetering”. Er is niets gemanipuleerd; er zijn alleen mensen met elkaar vergeleken.</li>
 </ul>
 </div>
 </div>
 </section>
 <section id="wat-het-niet-zegt" class="level2">
 <h2 class="anchored" data-anchor-id="wat-het-niet-zegt">Wat het niet zegt</h2>
-<p>De verleidelijkste zin die je over dit interval kunt opschrijven is: <em>“er is 95% kans / probability dat het echte verschil tussen −4.1 en −0.7 ligt.”</em> Die zin voelt redelijk, bijna beleefd — en hij is fout. De 95% gaat over de <strong>methode</strong>, niet over dit ene interval. Als honderd onderzoeksteams dit onderzoek zouden doen en elk hun interval zouden berekenen, dan bevatten er ongeveer 95 van de honderd het echte verschil. Dit ene interval is raak of mis, en niemand weet welke van de twee — daar valt geen kans meer over uit te delen.</p>
-<p>Wat je wél mag zeggen, en wat voor het lezen alles is wat je nodig hebt: waarden búiten het interval passen slecht bij deze data, en de breedte van het interval toont hoe precies de schatting is. Smal interval: het onderzoek weet goed hoe groot het effect ongeveer is. Breed interval: de richting is er misschien, de grootte is grotendeels gok. Dat onderscheid — precisie lezen in plaats van alleen “significant ja/nee” — is waar de kritische lezer begint.</p>
+<p>De verleidelijkste redenering die je over dit fragment kunt opschrijven is: <em>“baseline voorspelt verbetering (p = .066, bijna significant), dus wie zieker binnenkomt, heeft meer baat bij de VR-training.”</em> Eén zin, drie fouten.</p>
+<p><strong>“Bijna significant.”</strong> Die categorie bestaat niet. Het interval loopt van −0.03 tot 0.78: nul zit er nog in, dus “geen verband” is een uitkomst die bij deze data past. En het model als geheel deed het niet (<em>p</em> = .225). Wat je mag opschrijven is dat dit onderzoek geen significante voorspellers van verandering vond — niet dat het er bijna één vond.</p>
+<p><strong>“Wie zieker binnenkomt, heeft meer baat.”</strong> Hier zit de val die in pre-post-onderzoek zonder controlegroep altijd klaarligt: <strong>regressie naar het gemiddelde</strong>. Wie hoog scoort op een meting, zit daar deels hoog door een slechte dag of door meetruis; bij een tweede meting zakt dat stukje ruis vanzelf weg. Hoog beginnen voorspelt daarom bijna mechanisch een grotere daling — ook als de behandeling niets doet, en zelfs als er helemaal geen behandeling is. De baseline-regel in deze tabel is dus de regel waar je het minst uit mag concluderen, niet de meest interessante. Wil je weten of de VR-training werkt, dan heb je een groep nodig die hem niet kreeg.</p>
+<p><strong>“Gecorrigeerd voor leeftijd en geslacht, dus het ligt niet daaraan.”</strong> Corrigeren haalt eruit wat je hebt gemeten, en niets anders. Alles wat niet in de tabel staat — motivatie, thuissituatie, of iemand er tegelijk een andere behandeling bij kreeg — zit nog gewoon in dat verband. “Gecorrigeerd voor” is geen synoniem van “dus causaal”; het is een lijst van wat er wél is meegenomen, en die lijst lees je als lezer juist op wat er níét in staat.</p>
+<p><strong>En dan de belangrijkste, want die kun je in dit databestand zelf zien gebeuren.</strong> Voeg aan dit model de diagnose toe — zeven categorieën, dus zes dummy’s erbij — en je hebt negen voorspellers op 24 mensen. Wat er dan gebeurt:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>model 1 (3 voorspellers)</th>
+<th>model 2 (9 voorspellers)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R²</td>
+<td>.19</td>
+<td><strong>.45</strong></td>
+</tr>
+<tr class="even">
+<td>adjusted R²</td>
+<td>.07</td>
+<td>.10</td>
+</tr>
+<tr class="odd">
+<td><em>F</em></td>
+<td><em>F</em>(3, 20) = 1.58, <em>p</em> = .225</td>
+<td><em>F</em>(9, 14) = 1.27, <em>p</em> = .330</td>
+</tr>
+<tr class="even">
+<td>baseline</td>
+<td><em>b</em> = 0.38, <em>p</em> = .066</td>
+<td><em>b</em> = 0.56, <strong><em>p</em> = .018</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Lees die tabel van links naar rechts en er gebeurt iets ongemakkelijks. De R² springt van .19 naar .45 — het model lijkt twee keer zo goed. Het model als geheel wordt er níét beter van (<em>p</em> gaat van .225 naar .330). En de baseline-regel, die net nog niet significant was, <strong>krijgt een sterretje</strong>: <em>p</em> = .018.</p>
+<p>Er is niets veranderd aan de wereld. Er is alleen ruis toegevoegd: dummy’s voor categorieën waarvan er drie <strong>precies één jongere</strong> bevatten. Zo’n dummy kan die ene persoon perfect natekenen, en dat kost niets aan uitleg maar wel aan vrijheidsgraden — van 20 naar 14. R² kán daarbij alleen maar omhoog: elke voorspeller die je toevoegt, verklaart altijd iets, al is het toeval. Dáárvoor bestaat adjusted R², die een verwachte toevalswinst aftrekt; die blijft hier rond de tien procent hangen en verraadt zo dat de sprong lucht was.</p>
+<p>Dit is geen verzonnen schrikbeeld. In het echte onderzoek waar dit cohort op gebaseerd is, gebeurde precies dit: het eerste model had negen voorspellers op 24 deelnemers, en daarin leek een diagnose-dummy significant (<em>p</em> = .017). Afslanken naar drie voorspellers en er bleef niets van over. Bij ons springt het sterretje op een andere regel, maar het mechanisme is hetzelfde.</p>
+<p><strong>De leesregel die je hieraan overhoudt:</strong> tel bij elke regressietabel eerst het aantal voorspellers en zoek de N erbij. Een vuistregel die in de literatuur rondgaat is tien tot vijftien deelnemers per voorspeller; negen voorspellers vragen dus honderd tot honderdvijftig mensen, en dit onderzoek had er 24. Zie je een tabel met veel voorspellers, weinig deelnemers en één sterretje — dan heb je iets gevonden voor het kopje “beperkingen”, geen bevinding.</p>
 </section>
 <section id="oefening" class="level2">
 <h2 class="anchored" data-anchor-id="oefening">Oefening</h2>
@@ -383,11 +424,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Leesopgave.</strong> Hieronder een voorbeeldfragment (verzonnen). Vertel in twee of drie gewone Nederlandse zinnen wat er staat, en zeg wat je op grond van dit interval wél en níét mag concluderen.</p>
+<p><strong>Leesopgave.</strong> Hieronder een voorbeeldfragment (verzonnen). Vertel in gewone Nederlandse zinnen wat er staat. Wat weet je na deze zinnen wél, en wat niet? En welke twee getallen zou je als eerste opzoeken voor je er iets over opschrijft?</p>
 <blockquote class="blockquote">
-<p>At 6-month follow-up, the difference in depressive symptoms between the two groups was small (mean difference = −1.1, 95% CI [−3.4, 1.2], p = .35).</p>
+<p>A multiple regression with eight predictors (age, gender, education, duration of illness, medication use, comorbidity, therapist experience and baseline severity) on 31 patients explained 52% of the variance in treatment outcome, R² = .52. Therapist experience emerged as a significant predictor, b = 2.14, p = .041. The authors recommend matching experienced therapists to complex cases.</p>
 </blockquote>
-<p><strong>Doe-opgave.</strong> Neem in JASP de analyse van hierboven (<code>angst_blended.csv</code>) en verander bij Confidence interval de 95 in 99. Kijk naar het nieuwe interval. Twee vragen: is het breder of smaller geworden, en waarom? En: verandert je conclusie over het verschil?</p>
+<p><strong>Doe-opgave.</strong> Draai op <code>verschilscore_mra.csv</code> eerst het model met drie voorspellers en daarna dat met negen (diagnose erbij, als tweede Block). Noteer van allebei R², adjusted R², <em>F</em> met vrijheidsgraden, en de regel van <code>tds_t0</code>. Beantwoord dan drie vragen. (1) Welk getal in de tweede tabel zou je op het verkeerde been zetten als je alleen díé tabel zag? (2) Waarom is adjusted R² nauwelijks meegestegen met R²? (3) De vrijheidsgraden van de <em>F</em> gingen van (3, 20) naar (9, 14) — reken na waar die 14 vandaan komt, en wat dat betekent voor hoe scherp dit onderzoek nog iets kán aantonen.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Uitwerkingen — klik open">
@@ -404,23 +445,27 @@ ul.task-list li input[type="checkbox"] {
 <div class="callout-body-container callout-body">
 <section id="uitwerking-leesopgave" class="level3">
 <h3 class="anchored" data-anchor-id="uitwerking-leesopgave">Uitwerking leesopgave</h3>
-<p>Na zes maanden verschillen de groepen gemiddeld −1.1 punt in depressieve klachten — een klein verschil, en het interval loopt van −3.4 tot +1.2. De 0 zit erin: deze data passen bij “geen verschil”, bij een bescheiden voordeel, en zelfs bij een klein nadeel. Wat je mag opschrijven: er is geen duidelijk verschil aangetoond en de schatting is onnauwkeurig. Wat je níét mag opschrijven: “er is geen effect” — dat het onderzoek het verschil niet kon vastpakken, bewijst niet dat het er niet is. Een interval dat de 0 bevat is een schouderophalen, geen vrijspraak.</p>
+<p>Wat er staat: acht voorspellers op 31 patiënten verklaren samen 52% van de verschillen in behandeluitkomst, en één daarvan — ervaring van de behandelaar — heeft een <em>p</em> onder de .05. Wat je wél weet: in déze 31 patiënten hangt ervaring samen met uitkomst, in dit model. Wat je niet weet: zo’n beetje al het andere. Acht voorspellers op 31 mensen is ongeveer vier mensen per voorspeller, ver onder elke vuistregel; een R² van .52 is bij die verhouding precies wat je van toeval mag verwachten, want elke voorspeller verklaart altijd íéts.</p>
+<p>De twee getallen die je als eerste opzoekt: de <strong>adjusted R²</strong> (die staat er niet, en zal fors lager liggen) en de <strong><em>F</em> van het hele model met zijn vrijheidsgraden en <em>p</em></strong> (die staat er ook niet — en zonder die regel weet je niet eens of het model als geheel iets deed). Ontbreken ze allebei, dan is de enige eerlijke zin in je literatuurstudie dat het onderzoek een verband rapporteert dat op deze steekproefgrootte niet te onderscheiden is van toeval. En de aanbeveling van de auteurs — ervaren behandelaars koppelen aan complexe casus — is een beleidsadvies op één <em>p</em>-waarde uit een overladen model, in een onderzoek waarin niemand behandelaars heeft toegewezen. Dat is twee stappen te ver: van samenhang naar oorzaak, en van één regel naar beleid.</p>
 </section>
 <section id="uitwerking-doe-opgave" class="level3">
 <h3 class="anchored" data-anchor-id="uitwerking-doe-opgave">Uitwerking doe-opgave</h3>
-<p>Het 99%-interval loopt van −4.693 tot −0.111: <strong>breder</strong>. Logisch, als je er even bij stilstaat: wie met meer zekerheid wil vangen, moet een groter net uitgooien. De conclusie verandert hier nét niet — ook de 99%-bovengrens (−0.111) blijft aan de goede kant van de 0, al scheelt het weinig. Precies zulke randgevallen zijn de reden om intervallen te lezen in plaats van alleen een ja/nee te turven.</p>
+<p>De twee modellen naast elkaar: model 1 geeft R² = .192, adjusted R² = .071, <em>F</em>(3, 20) = 1.58, <em>p</em> = .225, met <code>tds_t0</code> op <em>b</em> = 0.377, <em>SE</em> = 0.194, <em>p</em> = .066. Model 2 geeft R² = .450, adjusted R² = .097, <em>F</em>(9, 14) = 1.27, <em>p</em> = .330, met <code>tds_t0</code> op <em>b</em> = 0.563, <em>SE</em> = 0.211, <em>p</em> = .018.</p>
+<ol type="1">
+<li>Het getal dat je op het verkeerde been zet, is die <em>p</em> = .018 — of, als je alleen naar het model kijkt, de R² van .45. Beide zien er sterker uit dan model 1, terwijl het model als geheel juist minder significant werd. (2) Adjusted R² stijgt nauwelijks omdat hij precies corrigeert voor wat hier gebeurde: hij trekt van R² af wat je van puur toeval mocht verwachten gegeven het aantal voorspellers. Zes extra dummy’s leveren op papier veel op en na aftrek bijna niets — dat gaatje tussen .45 en .10 ís de overfit, zichtbaar gemaakt. (3) De 14: 24 deelnemers min 9 voorspellers min 1 voor de intercept. Elke voorspeller kost een vrijheidsgraad, en met 14 over is de toets bot geworden — dezelfde data, minder scherpte. Dat is de prijs van voorspellers toevoegen, en die betaal je ook als ze niets verklaren.</li>
+</ol>
 </section>
 </div>
 </div>
 </div>
-<div class="boekvorm" data-w="W6">
+<div class="boekvorm" data-w="W8">
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
-<p>Hier: de reeks waarden die bij de data passen, met de vraag of “geen verschil” er nog tussen zit.</p>
-<p>In het boek: <strong>W6 — Bestaat het verschil echt?</strong></p>
-<p><em>Daar komt het interval eerst en de toets pas daarna: hoe groot en hoe precies, vóór de vraag of het toeval kan zijn.</em></p>
+<p>Hier: meerdere voorspellers tegelijk, elke <em>b</em> gelezen als “bij gelijke andere voorspellers” — en de vraag hoeveel voorspellers er op hoeveel mensen los mogen.</p>
+<p>In het boek: <strong>W8 — Meer dan één verschil</strong>.</p>
+<p><em>Daar gaat het van één rechthoekje naar meerdere: eerst wegrekenen wat de ene voorspeller al verklaart, dan kijken wat de volgende over de rest nog te zeggen heeft.</em></p>
 </div>
 <div class="werk">
-<p>TODO: de boek-eenheid W6 (<em>Bestaat het verschil echt?</em>) is nog een grove schets (v0). Anker en formulering hier checken zodra dat hoofdstuk staat.</p>
+<p>TODO: stem-pas — dit blok is nog niet langs Bens transcript-units gelegd (Bib-query op meervoudige regressie / confounding / overfit). Data zijn expliciet synthetisch (<code>verschilscore_mra.csv</code>, gegenereerd uit hetzelfde cohort als het <em>t</em>-toets-blok); het anker en de bewuste afwijking staan in de kop van <code>genereer_verschilscore_mra.R</code>.</p>
 </div>
 
 
