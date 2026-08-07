@@ -18,7 +18,7 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      → strippen. Zie ROOT-CAUSE-notitie in _HEROPSTART.md.
   3. De map moet als project-resource in `_quarto.yml` staan, anders kopieert
      `quarto render` van de site 'm niet naar `_site/`.
-     (`resources: - "werkboeken/<naam>/**"`)
+     (`resources: - "oefenboeken/<naam>/**"`)
 
 Dit script doet 1 en 2 deterministisch + valideert dat geen enkele asset breekt.
 Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
@@ -31,7 +31,7 @@ Gebruik
 
 Daarna in countcamp_site:  quarto render  &&  git add/commit/push.
 
-Veilig: leest alleen uit --src, schrijft alleen naar werkboeken/<name>/ in de
+Veilig: leest alleen uit --src, schrijft alleen naar oefenboeken/<name>/ in de
 site-repo. Raakt de werkboek-bron NIET aan.
 """
 
@@ -173,8 +173,8 @@ def main() -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--src", required=True, help="pad naar gerenderd _site/ of _book/")
     ap.add_argument("--name", required=True, help="doelnaam onder de sectie-map")
-    ap.add_argument("--section", default="werkboeken",
-                    help="sectie-map in de site-repo (default: werkboeken; bv. manuscript)")
+    ap.add_argument("--section", default="oefenboeken",
+                    help="sectie-map in de site-repo (default: oefenboeken; bv. manuscript)")
     ap.add_argument("--dry-run", action="store_true",
                     help="alleen rapporteren, niets wegschrijven")
     args = ap.parse_args()
