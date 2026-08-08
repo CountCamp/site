@@ -579,6 +579,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tel-de-kruistabel-en-bereken-de-odds-ratio-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="tel-de-kruistabel-en-bereken-de-odds-ratio-in-r">Tel de kruistabel en bereken de odds ratio in R</h2>
 <p><span class="begrippen">odds versus kans · verhouding van twee odds</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">dplyr</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>mooi <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(d<span class="sc">$</span>glans <span class="sc">&gt;</span> <span class="dv">50</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>mooi)                                    <span class="co"># → 5 van de 12</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(mooi <span class="sc">~</span> gladheid, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 5.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mooi =</span> <span class="fu">as.integer</span>(glans <span class="sc">&gt;</span> <span class="dv">50</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">count</span>(mooi)                               <span class="co"># → 7 en 5</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(mooi <span class="sc">~</span> gladheid, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 5.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>Noem een steentje mooi als de glans boven de 50 komt — dat halen 5 van de 12 — en laat gladheid die uitkomst voorspellen: per punt gladheid worden de odds op mooi 5.24 keer zo groot. Geen rechte lijn meer, maar een kans die netjes tussen 0 en 1 blijft.</p>
+<p><strong>Nu jij</strong> — met de bekendste ja/nee-uitkomst die er is: overleven op de Titanic.</p>
 <p><a href="../10_data/geboortegewicht.csv" class="data-download" download="geboortegewicht.csv">⬇ Download de data — <code>geboortegewicht.csv</code></a></p>
 <p>Eerst het telwerk. Haal de 189 baby’s binnen en zet de twee ja/nee-kolommen tegen elkaar af in een kruistabel.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -591,14 +630,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"geboortegewicht.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">table</span>(bw<span class="sc">$</span>roken, bw<span class="sc">$</span>laag_geboortegewicht)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>t                                    <span class="co"># rokers: 30 ja, 44 nee · niet-rokers: 29 ja, 86 nee</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dv">30</span> <span class="sc">/</span> <span class="dv">44</span>                              <span class="co"># odds op laag gewicht bij rokers     → 0.68</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dv">29</span> <span class="sc">/</span> <span class="dv">86</span>                              <span class="co"># odds op laag gewicht bij niet-rokers → 0.34</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">30</span><span class="sc">/</span><span class="dv">44</span>) <span class="sc">/</span> (<span class="dv">29</span><span class="sc">/</span><span class="dv">86</span>)                    <span class="co"># de odds ratio                       → 2.02</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bw <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"geboortegewicht.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">table</span>(bw<span class="sc">$</span>roken, bw<span class="sc">$</span>laag_geboortegewicht)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>t                                    <span class="co"># rokers: 30 ja, 44 nee · niet-rokers: 29 ja, 86 nee</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dv">30</span> <span class="sc">/</span> <span class="dv">44</span>                              <span class="co"># odds op laag gewicht bij rokers     → 0.68</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dv">29</span> <span class="sc">/</span> <span class="dv">86</span>                              <span class="co"># odds op laag gewicht bij niet-rokers → 0.34</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">30</span><span class="sc">/</span><span class="dv">44</span>) <span class="sc">/</span> (<span class="dv">29</span><span class="sc">/</span><span class="dv">86</span>)                    <span class="co"># de odds ratio                       → 2.02</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk goed naar wat we daar deden, want hier begint bijna elk misverstand. Een <strong>kans</strong> (<em>probability</em>) zet de ja’s af tegen álle moeders: 30 van de 74 rokers, dus 0.41. Een <strong>odds</strong> zet de ja’s af tegen de <em>nee’s</em>: 30 tegenover 44, dus 0.68. Dat is de taal van het wedkantoor — “0.68 tegen 1”. Zelfde telwerk, andere breuk: odds = kans / (1 − kans). Onthoud dus als eerste: <strong>een odds is geen kans.</strong> Bij een kans van 0.5 is de odds al 1; bij een kans van 0.9 is de odds 9.</p>
@@ -622,16 +661,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>or_van <span class="ot">&lt;-</span> <span class="cf">function</span>(roken, laag) {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="fu">table</span>(roken, laag)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (t[<span class="st">"ja"</span>,<span class="st">"ja"</span>] <span class="sc">*</span> t[<span class="st">"nee"</span>,<span class="st">"nee"</span>]) <span class="sc">/</span> (t[<span class="st">"ja"</span>,<span class="st">"nee"</span>] <span class="sc">*</span> t[<span class="st">"nee"</span>,<span class="st">"ja"</span>])</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">or_van</span>(bw<span class="sc">$</span>roken, bw<span class="sc">$</span>laag_geboortegewicht)     <span class="co"># → 2.02, zelfde als net</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">or_van</span>(<span class="fu">sample</span>(bw<span class="sc">$</span>roken), bw<span class="sc">$</span>laag_geboortegewicht))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)                                     <span class="co"># een bergje rond 1 (niet rond 0!)</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">2.02</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)        <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>or_van <span class="ot">&lt;-</span> <span class="cf">function</span>(roken, laag) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  t <span class="ot">&lt;-</span> <span class="fu">table</span>(roken, laag)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  (t[<span class="st">"ja"</span>,<span class="st">"ja"</span>] <span class="sc">*</span> t[<span class="st">"nee"</span>,<span class="st">"nee"</span>]) <span class="sc">/</span> (t[<span class="st">"ja"</span>,<span class="st">"nee"</span>] <span class="sc">*</span> t[<span class="st">"nee"</span>,<span class="st">"ja"</span>])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">or_van</span>(bw<span class="sc">$</span>roken, bw<span class="sc">$</span>laag_geboortegewicht)     <span class="co"># → 2.02, zelfde als net</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">or_van</span>(<span class="fu">sample</span>(bw<span class="sc">$</span>roken), bw<span class="sc">$</span>laag_geboortegewicht))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)                                     <span class="co"># een bergje rond 1 (niet rond 0!)</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">2.02</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)        <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/w12_schud_odds.html" target="_blank">▶ Zie het dansen: het schud-speeltje</a></p>
@@ -670,9 +709,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li><p>Bereken de odds ratio andersom — laag geboortegewicht als ingang, roken als uitkomst: <code>or_van(bw$laag_geboortegewicht, bw$roken)</code>. Ter controle: kom je uit op <em>OR</em> = 2.02, dan zit je goed. Verrast? Precies hetzelfde getal. De odds ratio is <strong>symmetrisch</strong>: hij trekt zich niks aan van welke variabele je vooraan zet.</p></li>
 <li><p>Doe nu hetzelfde met het <em>relatieve risico</em>. Van de baby’s mét een laag gewicht: hoeveel moeders rookten? En van de baby’s zónder?</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">30</span> <span class="sc">/</span> <span class="dv">59</span>            <span class="co"># kans dat de moeder rookte, gegeven een laag gewicht   → 0.51</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dv">44</span> <span class="sc">/</span> <span class="dv">130</span>           <span class="co"># kans dat de moeder rookte, gegeven géén laag gewicht  → 0.34</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">30</span><span class="sc">/</span><span class="dv">59</span>) <span class="sc">/</span> (<span class="dv">44</span><span class="sc">/</span><span class="dv">130</span>) <span class="co"># relatief risico andersom                             → 1.50</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">30</span> <span class="sc">/</span> <span class="dv">59</span>            <span class="co"># kans dat de moeder rookte, gegeven een laag gewicht   → 0.51</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dv">44</span> <span class="sc">/</span> <span class="dv">130</span>           <span class="co"># kans dat de moeder rookte, gegeven géén laag gewicht  → 0.34</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">30</span><span class="sc">/</span><span class="dv">59</span>) <span class="sc">/</span> (<span class="dv">44</span><span class="sc">/</span><span class="dv">130</span>) <span class="co"># relatief risico andersom                             → 1.50</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: <em>RR</em> = 1.50. En dát is níét de 1.61 van daarnet. Het RR verschuift wél als je de tabel omdraait.</p></li>
 <li><p>Denk-vraag: de OR bleef exact 2.02, het RR sprong van 1.61 naar 1.50. Wat zegt dat over wat de OR eigenlijk meet? En knoop het vast aan de derde les van dit blok: als één en hetzelfde getal (2.02) evengoed “roken → laag gewicht” als “laag gewicht → roken” beschrijft — wat kan zo’n getal je dan onmogelijk vertellen over wat wat veroorzaakt?</p></li>
 </ol>

@@ -584,6 +584,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="teken-de-wolk-en-bereken-r-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="teken-de-wolk-en-bereken-r-in-r">Teken de wolk en bereken r in R</h2>
 <p><span class="begrippen">scatterplot · richting en sterkte · r tussen −1 en +1</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">dplyr</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)             <span class="co"># → .578</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)       <span class="co"># → 17.9 + 32.1 · karaat</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr); <span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">r =</span> <span class="fu">cor</span>(karaat, glans))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(karaat, glans)) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>Karaat en glans hangen samen met <em>r</em> = .578, en de lijn erdoorheen leest glans = 17.9 + 32.1 × karaat. Kwadrateer die correlatie en je hebt <em>R</em>² = .33: een derde van de verschillen in glans loopt langs het gewicht. In de scatterplot zie je meteen waarom niet méér dan een derde — de punten liggen niet op de lijn maar eromheen.</p>
+<p><strong>Nu jij</strong> — zoek dezelfde samenhang in de Big Five.</p>
 <p><a href="../10_data/penguins.csv" class="data-download" download="penguins.csv">⬇ Download de data — <code>penguins.csv</code></a></p>
 <p>Haal de pinguïns binnen en gooi ze in een plaatje. Elke pinguïn één stip: snavellengte op de ene as, snaveldiepte op de andere.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -596,10 +636,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte)      <span class="co"># 342 stippen, een wolk</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte)        <span class="co"># → -0.235</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte)      <span class="co"># 342 stippen, een wolk</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte)        <span class="co"># → -0.235</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar is-ie: een wolk die van linksboven naar rechtsonder hangt, en het getal −0.235 is één cijfer voor “hoe strak kantelt die wolk omláág?”. De schaal loopt van −1 (een perfecte dalende lijn) via 0 (geen rechtlijnig verband) naar +1 (een perfecte stijgende lijn). −.24 is een flauwe daling met veel rommel eromheen — zwak, maar het staat er. Langere snavel, ondiepere snavel. Zegt het getal.</p>
@@ -622,14 +662,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer schudden: de dieptes door elkaar husselen</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, <span class="fu">sample</span>(peng<span class="sc">$</span>snaveldiepte))    <span class="co"># → iets rond 0</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar r dan landt</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, <span class="fu">sample</span>(peng<span class="sc">$</span>snaveldiepte)))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)                                             <span class="co"># een bergje rond nul</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="sc">-</span><span class="fl">0.235</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)              <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer schudden: de dieptes door elkaar husselen</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, <span class="fu">sample</span>(peng<span class="sc">$</span>snaveldiepte))    <span class="co"># → iets rond 0</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar r dan landt</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, <span class="fu">sample</span>(peng<span class="sc">$</span>snaveldiepte)))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)                                             <span class="co"># een bergje rond nul</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="sc">-</span><span class="fl">0.235</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)              <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/w4_schud_correlatie.html" target="_blank">▶ Zie het dansen: het schud-speeltje</a></p>
@@ -653,11 +693,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte, <span class="at">col =</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">pch =</span> <span class="dv">16</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># en reken r nu apart uit binnen één soort</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>gentoo <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>, ]</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(gentoo<span class="sc">$</span>snavellengte, gentoo<span class="sc">$</span>snaveldiepte)         <span class="co"># → +0.643</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte, <span class="at">col =</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># en reken r nu apart uit binnen één soort</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>gentoo <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>, ]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(gentoo<span class="sc">$</span>snavellengte, gentoo<span class="sc">$</span>snaveldiepte)         <span class="co"># → +0.643</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Ineens zie je het. Er zijn <strong>drie soorten</strong> in die wolk, elk als een eigen kluitje. En binnen elk kluitje loopt de samenhang de <em>andere</em> kant op: langere snavel, juist <em>diepere</em> snavel. Reken maar na — Adélie +.39, Chinstrap +.65, Gentoo +.64. Alle drie <strong>positief</strong>. Het teken is omgeklapt.</p>

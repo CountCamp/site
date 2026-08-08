@@ -578,6 +578,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="twee-middens-en-twee-plaatjes-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="twee-middens-en-twee-plaatjes-in-r">Twee middens en twee plaatjes in R</h2>
 <p><span class="begrippen">gemiddelde · mediaan · kwartielen · histogram · boxplot</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">dplyr</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(d<span class="sc">$</span>glans)                    <span class="co"># → 50</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(d<span class="sc">$</span>glans, <span class="fu">c</span>(.<span class="dv">25</span>, .<span class="dv">75</span>))     <span class="co"># → 30 en 70</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(d<span class="sc">$</span>glans)                       <span class="co"># → 40</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(d<span class="sc">$</span>glans)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">mediaan =</span> <span class="fu">median</span>(glans),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">Q1      =</span> <span class="fu">quantile</span>(glans, .<span class="dv">25</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">Q3      =</span> <span class="fu">quantile</span>(glans, .<span class="dv">75</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">IQR     =</span> <span class="fu">IQR</span>(glans))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>De mediaan van de glans is 50, met Q1 = 30 en Q3 = 70: de middelste helft van de steentjes zit in een band van 40 punten, netjes symmetrisch om het midden. Zo ziet een boxplot eruit als er niets geks aan de hand is. Wachttijden zijn wél gek — een lange staart naar rechts — en juist dan gaan mediaan en kwartielen het werk doen waar het gemiddelde faalt.</p>
+<p><strong>Nu jij</strong> — met data die scheef trekt: wachttijden.</p>
 <p><a href="../10_data/luchtkwaliteit.csv" class="data-download" download="luchtkwaliteit.csv">⬇ Download de data — <code>luchtkwaliteit.csv</code></a></p>
 <p>Haal de zomer binnen en vraag twee dingen: de middens, en een plaatje van de hele hoop.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -590,14 +627,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"luchtkwaliteit.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lucht<span class="sc">$</span>ozon)        <span class="co"># → 42.1</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(lucht<span class="sc">$</span>ozon)      <span class="co"># → 31.5</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(lucht<span class="sc">$</span>ozon)    <span class="co"># → 1, 18, 31.5, 63.25, 168</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(lucht<span class="sc">$</span>ozon)     <span class="co"># de hoop in vijf strepen</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lucht<span class="sc">$</span>ozon)        <span class="co"># de hoop zelf</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"luchtkwaliteit.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(lucht<span class="sc">$</span>ozon)        <span class="co"># → 42.1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(lucht<span class="sc">$</span>ozon)      <span class="co"># → 31.5</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(lucht<span class="sc">$</span>ozon)    <span class="co"># → 1, 18, 31.5, 63.25, 168</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(lucht<span class="sc">$</span>ozon)     <span class="co"># de hoop in vijf strepen</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(lucht<span class="sc">$</span>ozon)        <span class="co"># de hoop zelf</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar staan ze, twee middens naast elkaar. Het <strong>gemiddelde</strong> (<em>mean</em>) is 42.1. De <strong>mediaan</strong> (<em>median</em>) — leg alle 116 dagen op volgorde en pak de middelste — is 31.5. Elf punten uit elkaar, en dat voor twee getallen die allebei “het midden” claimen. De <strong>kwartielen</strong> (<em>quartiles</em>) erbij: een kwart van de dagen blijft onder de 18, een kwart komt boven de 63.25; daartussen woont de middelste helft van de zomer.</p>

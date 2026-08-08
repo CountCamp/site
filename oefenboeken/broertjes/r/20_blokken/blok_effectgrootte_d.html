@@ -579,6 +579,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="reken-cohens-d-uit-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="reken-cohens-d-uit-in-r">Reken Cohens d uit in R</h2>
 <p><span class="begrippen">gepoolde SD · verschil gedeeld door de spreiding</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> d<span class="sc">$</span>glans[d<span class="sc">$</span>merk <span class="sc">==</span> <span class="st">"golfje"</span>]</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> d<span class="sc">$</span>glans[d<span class="sc">$</span>merk <span class="sc">==</span> <span class="st">"sterretje"</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>sd_p <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((<span class="fu">length</span>(g)<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="fu">var</span>(g) <span class="sc">+</span> (<span class="fu">length</span>(s)<span class="sc">-</span><span class="dv">1</span>)<span class="sc">*</span><span class="fu">var</span>(s)) <span class="sc">/</span> (<span class="fu">length</span>(g)<span class="sc">+</span><span class="fu">length</span>(s)<span class="sc">-</span><span class="dv">2</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sd_p                      <span class="co"># → 20</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mean</span>(s) <span class="sc">-</span> <span class="fu">mean</span>(g)) <span class="sc">/</span> sd_p   <span class="co"># → 1.00</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>De gepoolde <em>SD</em> is precies 20, dus het merkverschil is <em>d</em> = 1.00 — één hele standaardafwijking, een groot effect volgens elk tabelletje. En tóch was het net niet significant. Effectgrootte en significantie beantwoorden verschillende vragen, en deze twaalf steentjes zijn daar het bewijs van.</p>
+<p><strong>Nu jij</strong> — reken <em>d</em> uit voor de slaapmiddelen.</p>
 <p><a href="../10_data/penguins.csv" class="data-download" download="penguins.csv">⬇ Download de data — <code>penguins.csv</code></a></p>
 <p>Haal de pinguïns binnen, hou de twee soorten over, en kijk eerst naar de kale getallen: de twee gemiddelden, en — dit is de sleutel — hoeveel spreiding er <em>binnen</em> de groepen zit.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -591,11 +614,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>ga <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Gentoo"</span>, <span class="st">"Adelie"</span>), ]</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(gewicht <span class="sc">~</span> soort, ga, mean)     <span class="co"># Gentoo 5076, Adelie 3701</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(gewicht <span class="sc">~</span> soort, ga, sd)        <span class="co"># Gentoo 504,  Adelie 459</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ga <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Gentoo"</span>, <span class="st">"Adelie"</span>), ]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(gewicht <span class="sc">~</span> soort, ga, mean)     <span class="co"># Gentoo 5076, Adelie 3701</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(gewicht <span class="sc">~</span> soort, ga, sd)        <span class="co"># Gentoo 504,  Adelie 459</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar staat het verschil (1375 g), en daar staat de spreiding binnen elke soort: zo’n 480 gram op en neer. Dát laatste getal is je lineaaltje — de gewone onderlinge variatie tussen twee willekeurige pinguïns van dezelfde soort. De vraag “is 1375 veel?” wordt nu een deelsom: <strong>hoeveel van die lineaaltjes passen er in het verschil?</strong></p>
@@ -609,15 +632,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>]</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># gepoolde SD: de twee spreidingen samengevoegd tot één lineaaltje</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((<span class="fu">length</span>(g) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(g) <span class="sc">+</span> (<span class="fu">length</span>(a) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(a)) <span class="sc">/</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           (<span class="fu">length</span>(g) <span class="sc">+</span> <span class="fu">length</span>(a) <span class="sc">-</span> <span class="dv">2</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sp                                        <span class="co"># → 479.5</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mean</span>(g) <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">/</span> sp                   <span class="co"># Cohens d → 2.87</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># gepoolde SD: de twee spreidingen samengevoegd tot één lineaaltje</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((<span class="fu">length</span>(g) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(g) <span class="sc">+</span> (<span class="fu">length</span>(a) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(a)) <span class="sc">/</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>           (<span class="fu">length</span>(g) <span class="sc">+</span> <span class="fu">length</span>(a) <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>sp                                        <span class="co"># → 479.5</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mean</span>(g) <span class="sc">-</span> <span class="fu">mean</span>(a)) <span class="sc">/</span> sp                   <span class="co"># Cohens d → 2.87</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar is-ie: <strong>Cohens <em>d</em> = 2.87</strong>. Het verschil is bijna <em>drie lineaaltjes</em> groot. En let op wat er met dat getal gebeurde — er zitten geen grammen meer in. We hebben grammen door grammen gedeeld; de eenheid is weggevallen. Wat overblijft is een kaal getal, en juist daardoor kan het reizen.</p>
@@ -639,10 +662,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">2500</span>, <span class="dv">6500</span>, <span class="at">length =</span> <span class="dv">400</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="fu">dnorm</span>(x, <span class="dv">3701</span>, <span class="dv">459</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,          <span class="co"># Adelie</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"gewicht (g)"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">dnorm</span>(x, <span class="dv">5076</span>, <span class="dv">504</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)         <span class="co"># Gentoo</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">2500</span>, <span class="dv">6500</span>, <span class="at">length =</span> <span class="dv">400</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="fu">dnorm</span>(x, <span class="dv">3701</span>, <span class="dv">459</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,          <span class="co"># Adelie</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"gewicht (g)"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">dnorm</span>(x, <span class="dv">5076</span>, <span class="dv">504</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)         <span class="co"># Gentoo</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Bijna geen overlap. Twee bergjes die elkaar amper raken — dát is wat <em>d</em> = 2.87 er in het echt uitziet: je kunt een willekeurige pinguïn oppakken en vrijwel altijd goed raden welke soort het is, puur op gewicht. Hoe groter <em>d</em>, hoe verder de bergjes uit elkaar schuiven; hoe kleiner, hoe meer ze in elkaar overvloeien.</p>

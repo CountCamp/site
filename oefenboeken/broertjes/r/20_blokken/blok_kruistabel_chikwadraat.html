@@ -578,6 +578,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="tel-de-tabel-en-bereken-χ²-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="tel-de-tabel-en-bereken-χ²-in-r">Tel de tabel en bereken χ² in R</h2>
 <p><span class="begrippen">kruistabel · rijpercentages · verwachte aantallen</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">dplyr</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>mooi <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>glans <span class="sc">&gt;</span> <span class="dv">50</span>, <span class="st">"mooi"</span>, <span class="st">"gewoon"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(d<span class="sc">$</span>merk, d<span class="sc">$</span>mooi)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># golfje     5 gewoon, 1 mooi</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># sterretje  2 gewoon, 4 mooi</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mooi =</span> <span class="fu">ifelse</span>(glans <span class="sc">&gt;</span> <span class="dv">50</span>, <span class="st">"mooi"</span>, <span class="st">"gewoon"</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">count</span>(merk, mooi)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>Zet merk tegen mooi in een kruistabel: bij golfje 5 om 1, bij sterretje 2 om 4. Meer heeft een χ² niet nodig — geen gemiddelden, geen spreiding, alleen tellingen die schever verdeeld zijn dan je onder toeval zou verwachten.</p>
+<p><strong>Nu jij</strong> — tel na of nazorg terugval scheelt.</p>
 <p><a href="../10_data/titanic.csv" class="data-download" download="titanic.csv">⬇ Download de data — <code>titanic.csv</code></a></p>
 <p>Geen stippenwolk deze keer: beide variabelen zijn categorieën, dus we tellen. Het huis waar getelde categorieën wonen heet de <strong>kruistabel</strong> (<em>contingency table</em>): klassen als rijen, overleefd ja/nee als kolommen, en in elke cel hoeveel mensen daar zitten.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -590,13 +625,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tit <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"titanic.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">table</span>(tit<span class="sc">$</span>klasse, tit<span class="sc">$</span>overleefd)    <span class="co"># de kruistabel: 4 rijen x 2 kolommen</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>t</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(t, <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>)            <span class="co"># rijpercentages: wie overleefde, per klasse</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(t)                            <span class="co"># → X-squared = 190.4, df = 3, p &lt; .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tit <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"titanic.csv"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">table</span>(tit<span class="sc">$</span>klasse, tit<span class="sc">$</span>overleefd)    <span class="co"># de kruistabel: 4 rijen x 2 kolommen</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>t</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(t, <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>)            <span class="co"># rijpercentages: wie overleefde, per klasse</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(t)                            <span class="co"># → X-squared = 190.4, df = 3, p &lt; .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar staat de tabel: 203 van de 325 eersteklassers overleefden, 212 van de 885 bemanningsleden. En daaronder één getal voor de héle tabel: <strong>χ² = 190.4</strong> (spreek uit: chi-kwadraat, <em>chi-square</em>). Wat dat getal doet: het vergelijkt elke cel met de saaiste tabel denkbaar — de tabel die je zou krijgen als klasse en overleven níéts met elkaar te maken hadden en elke klasse gewoon het scheepsbrede 32% zou volgen. Onder die saaie tabel zouden er in de eerste klasse zo’n 105 overlevenden “horen” te zitten (de <strong>verwachte aantallen</strong>, <em>expected counts</em>); het waren er 203. χ² telt al die verschillen tussen geteld en verwacht op tot één maat voor “hoe scheef is deze tabel?”. Nul betekent: precies zo saai als verwacht. En 190.4 — is dat veel? Geen idee, nog. Daarvoor moeten we eerst weten hoe scheef púúr toeval kan zijn.</p>
@@ -618,17 +653,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer schudden: 'overleefd' lukraak herverdelen over de opvarenden</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse, <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd)))<span class="sc">$</span>statistic   <span class="co"># → iets kleins</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar χ² dan landt</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse, <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd)))<span class="sc">$</span>statistic)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>))              <span class="co"># het toeval-bergje, links in beeld</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(nep)                                  <span class="co"># → 22.3: verder komt puur geluk niet</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">190.4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer schudden: 'overleefd' lukraak herverdelen over de opvarenden</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse, <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd)))<span class="sc">$</span>statistic   <span class="co"># → iets kleins</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar χ² dan landt</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse, <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd)))<span class="sc">$</span>statistic)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>))              <span class="co"># het toeval-bergje, links in beeld</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(nep)                                  <span class="co"># → 22.3: verder komt puur geluk niet</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">190.4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/s2_schud_tabel.html" target="_blank">▶ Zie het dansen: het schud-speeltje</a></p>
@@ -654,9 +689,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(t)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ct<span class="sc">$</span>residuals, <span class="dv">1</span>)        <span class="co"># per cel: hoe ver van 'verwacht' af?</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(ct<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">sum</span>(t))   <span class="co"># Cramérs V → 0.29</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(t)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ct<span class="sc">$</span>residuals, <span class="dv">1</span>)        <span class="co"># per cel: hoe ver van 'verwacht' af?</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(ct<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">sum</span>(t))   <span class="co"># Cramérs V → 0.29</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>De uitschieters vertellen het verhaal: eerste klasse zit ver bóven verwacht bij de overlevenden (+9.6), bemanning en derde klasse ver erónder (−4.4 en −3.3). De scheefheid is geen gelijkmatig waas over de tabel — het is een trap, van boven naar beneden door het schip.</p>
@@ -682,11 +717,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Jouw beurt. De vier klassen verbergen nog een simpeler tweedeling: wie bétaalde om aan boord te zijn (de passagiers — eerste tot en met derde klasse) en wie er wérkte (de bemanning). Een echte kruistabel-vraag: maakte het uit of je passagier was of bemanning?</p>
 <ol type="1">
 <li><p>Plat de klasse tot twee categorieën en kruis ’m tegen overleefd:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tit<span class="sc">$</span>rol <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tit<span class="sc">$</span>klasse <span class="sc">==</span> <span class="st">"Crew"</span>, <span class="st">"bemanning"</span>, <span class="st">"passagier"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="fu">table</span>(tit<span class="sc">$</span>rol, tit<span class="sc">$</span>overleefd)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>tr</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(tr, <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>)       <span class="co"># wie overleefde, per rol</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tr)                        <span class="co"># → X-squared = 46.5, df = 1</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tit<span class="sc">$</span>rol <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tit<span class="sc">$</span>klasse <span class="sc">==</span> <span class="st">"Crew"</span>, <span class="st">"bemanning"</span>, <span class="st">"passagier"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="fu">table</span>(tit<span class="sc">$</span>rol, tit<span class="sc">$</span>overleefd)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>tr</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(tr, <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>)       <span class="co"># wie overleefde, per rol</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tr)                        <span class="co"># → X-squared = 46.5, df = 1</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: van de passagiers overleefde 38%, van de bemanning 24%, en χ²(1) = 46.54. Dat kleinere <em>df</em> = 1 klopt: een tabel van 2 rijen × 2 kolommen, dus (2−1)×(2−1) = 1.</p></li>
 <li><p>Reken de sterkte uit — Cramérs V, net als in het blok: <code>sqrt(chisq.test(tr)$statistic / sum(tr))</code>. Ter controle: V = .15.</p></li>
 <li><p>Denk-vraag: over de vier klassen heen was V = .29; plat je alles tot passagier-vs-bemanning, dan zakt V naar .15. Er is niet mínder gebeurd — je bent minder gaan kíjken. Wat heb je weggegooid door eerste, tweede en derde klasse op één hoop te vegen? Kijk terug naar de residuen: welk verschil — dat tussen +9.6 en −3.3 — verdwijnt zodra je die drie klassen samen “passagier” noemt?</p></li>
