@@ -578,6 +578,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="reken-het-verschil-uit-in-r-mét-het-bandje" class="level2">
 <h2 class="anchored" data-anchor-id="reken-het-verschil-uit-in-r-mét-het-bandje">Reken het verschil uit in R — mét het bandje</h2>
 <p><span class="begrippen">betrouwbaarheidsinterval aflezen · zit de nul erin</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(d<span class="sc">$</span>glans)<span class="sc">$</span>conf.int    <span class="co"># → 36.19 tot 63.81</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>Het 95%-betrouwbaarheidsinterval voor de gemiddelde glans loopt van 36.19 tot 63.81 — bijna dertig punten breed. Dat is geen slordigheid maar eerlijkheid: twaalf steentjes weten gewoon niet zo veel, en het interval zegt dat hardop.</p>
+<p><strong>Nu jij</strong> — met de oudste kleine steekproef uit dit boek: de slaapmiddelen van 1905.</p>
 <p><a href="../10_data/plantgroei.csv" class="data-download" download="plantgroei.csv">⬇ Download de data — <code>plantgroei.csv</code></a></p>
 <p>Haal de potten binnen, pak de twee voer-groepen eruit, en laat R het verschil uitrekenen — mét het bandje, want dat doet <code>t.test</code> er gratis bij.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -590,13 +609,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"plantgroei.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>voer <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"behandeling1"</span>, <span class="st">"behandeling2"</span>), ]</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(voer<span class="sc">$</span>gewicht, voer<span class="sc">$</span>groep, mean)   <span class="co"># → 4.66 en 5.53</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> voer)     <span class="co"># → t = -3.01, p = .009</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                                         <span class="co">#   95 percent confidence interval:</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="co">#      -1.48  -0.25</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"plantgroei.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>voer <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"behandeling1"</span>, <span class="st">"behandeling2"</span>), ]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(voer<span class="sc">$</span>gewicht, voer<span class="sc">$</span>groep, mean)   <span class="co"># → 4.66 en 5.53</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> voer)     <span class="co"># → t = -3.01, p = .009</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                                         <span class="co">#   95 percent confidence interval:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="co">#      -1.48  -0.25</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Twee regels uit die uitvoer verdienen je aandacht. Eerst het min-teken: R rekent voer één mín voer twee, en omdat voer twee zwaarder uitpakt is het verschil −0.87. Niks engs, gewoon de rekenvolgorde.</p>
@@ -619,19 +638,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> voer<span class="sc">$</span>gewicht[voer<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"behandeling1"</span>]</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> voer<span class="sc">$</span>gewicht[voer<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"behandeling2"</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer opnieuw trekken: tien potten mét teruglegging, per groep</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">sample</span>(b1, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="sc">-</span> <span class="fu">mean</span>(<span class="fu">sample</span>(b2, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar de verschillen landen</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>werelden <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">sample</span>(b1, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="sc">-</span> <span class="fu">mean</span>(<span class="fu">sample</span>(b2, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(werelden)                            <span class="co"># een bergje rond -0.87</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)       <span class="co"># en dáár staat de nul</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(werelden, <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>))         <span class="co"># → -1.39 en -0.29</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> voer<span class="sc">$</span>gewicht[voer<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"behandeling1"</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> voer<span class="sc">$</span>gewicht[voer<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"behandeling2"</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer opnieuw trekken: tien potten mét teruglegging, per groep</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">sample</span>(b1, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="sc">-</span> <span class="fu">mean</span>(<span class="fu">sample</span>(b2, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar de verschillen landen</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>werelden <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">sample</span>(b1, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="sc">-</span> <span class="fu">mean</span>(<span class="fu">sample</span>(b2, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(werelden)                            <span class="co"># een bergje rond -0.87</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)       <span class="co"># en dáár staat de nul</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(werelden, <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>))         <span class="co"># → -1.39 en -0.29</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/w6_trek_interval.html" target="_blank">▶ Zie het dansen: het trek-speeltje</a></p>

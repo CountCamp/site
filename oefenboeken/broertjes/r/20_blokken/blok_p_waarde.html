@@ -578,6 +578,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="laat-de-t-toets-het-verschil-wegen" class="level2">
 <h2 class="anchored" data-anchor-id="laat-de-t-toets-het-verschil-wegen">Laat de t-toets het verschil wegen</h2>
 <p><span class="begrippen">t · p · betrouwbaarheidsinterval · significantiegrens .05</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># helling: b = 32.14   p = .049</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>De helling van karaat op glans komt uit op <em>p</em> = .049 — nét onder de .05, met de hakken over de sloot. Precies zulke randgevallen laten zien wat een <em>p</em>-waarde wel en niet is: geen keurmerk, maar een kans onder een aanname.</p>
+<p><strong>Nu jij</strong> — dezelfde toets op steviger grond: 342 pinguïns.</p>
 <p><a href="../10_data/plantgroei.csv" class="data-download" download="plantgroei.csv">⬇ Download de data — <code>plantgroei.csv</code></a></p>
 <p>Haal de planten binnen en laat de klassieke <em>t</em>-toets het verschil wegen tussen controle en behandeling 2.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -590,14 +610,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"plantgroei.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># gemiddeld gewicht per groep</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(pg<span class="sc">$</span>gewicht, pg<span class="sc">$</span>groep, mean)          <span class="co"># controle 5.03, behandeling2 5.53</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># vergelijk controle vs behandeling2</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>tweetal <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling2"</span>), ]</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> tweetal)     <span class="co"># t = -2.13, p = 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"plantgroei.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># gemiddeld gewicht per groep</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(pg<span class="sc">$</span>gewicht, pg<span class="sc">$</span>groep, mean)          <span class="co"># controle 5.03, behandeling2 5.53</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># vergelijk controle vs behandeling2</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>tweetal <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling2"</span>), ]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> tweetal)     <span class="co"># t = -2.13, p = 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar staat het: het verschil is 0.50 gram, <em>t</em> = −2.13, en <strong>p = .048</strong>. Het 95%- betrouwbaarheidsinterval loopt van −0.98 tot −0.01 — het schampt de nul, maar gaat er nét niet overheen. Volgens de gewoonte-grens van .05 is dit “significant” — nét. Maar wat <em>ís</em> die .048 eigenlijk? Voor je die vraag beantwoordt uit een tabel, gaan we hem zelf maken.</p>
@@ -620,23 +640,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tweetal <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling2"</span>), ]</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, tweetal<span class="sc">$</span>groep, mean))   <span class="co"># het echte verschil, 0.50</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># één toeval-wereld: plak de labels lukraak op de gewichten</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>schud <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  nep <span class="ot">&lt;-</span> <span class="fu">sample</span>(tweetal<span class="sc">$</span>groep)                     <span class="co"># labels door elkaar</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(<span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, nep, mean)))    <span class="co"># verschil in die wereld</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>werelden <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">schud</span>())</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(werelden)                                     <span class="co"># een bergje rond nul</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">abs</span>(echt), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)        <span class="co"># daar staat de echte 0.50</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># tel: hoe vaak komt het toeval even ver of verder?</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(werelden <span class="sc">&gt;=</span> <span class="fu">abs</span>(echt))                        <span class="co"># → ongeveer 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tweetal <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling2"</span>), ]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, tweetal<span class="sc">$</span>groep, mean))   <span class="co"># het echte verschil, 0.50</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># één toeval-wereld: plak de labels lukraak op de gewichten</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>schud <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  nep <span class="ot">&lt;-</span> <span class="fu">sample</span>(tweetal<span class="sc">$</span>groep)                     <span class="co"># labels door elkaar</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(<span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, nep, mean)))    <span class="co"># verschil in die wereld</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>werelden <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">schud</span>())</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(werelden)                                     <span class="co"># een bergje rond nul</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">abs</span>(echt), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)        <span class="co"># daar staat de echte 0.50</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># tel: hoe vaak komt het toeval even ver of verder?</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(werelden <span class="sc">&gt;=</span> <span class="fu">abs</span>(echt))                        <span class="co"># → ongeveer 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/w6_p_planten.html" target="_blank">▶ Zie het geteld: het schud-speeltje</a></p>
@@ -671,8 +691,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ander <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling1"</span>), ]</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> ander)       <span class="co"># p = 0.25 — dik niet-significant</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ander <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling1"</span>), ]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> ander)       <span class="co"># p = 0.25 — dik niet-significant</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar komt <em>p</em> = .25 uit: het toeval haalt zó’n verschil moeiteloos, in een kwart van de werelden. Niks aan de hand? <strong>Voorzichtig.</strong> “Niet significant” betekent <em>niet aangetoond</em> — niet <em>aangetoond dat er niks is</em>. Misschien werkt behandeling 1 wél en waren tien planten te weinig om het te zien. Afwezigheid van bewijs is geen bewijs van afwezigheid. Een <em>p</em> die groot is, sluit niets uit; hij zwijgt alleen.</p>

@@ -578,6 +578,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="toets-alle-drie-de-soorten-in-één-keer" class="level2">
 <h2 class="anchored" data-anchor-id="toets-alle-drie-de-soorten-in-één-keer">Toets alle drie de soorten in één keer</h2>
 <p><span class="begrippen">variantieanalyse (ANOVA) · F · post-hoc-toets (Tukey)</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d))    <span class="co"># F = 3.00   p = .114</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="sc">-</span><span class="fl">1.732</span>)<span class="sc">^</span><span class="dv">2</span>                              <span class="co"># → 3.00     precies de F</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
+<p><a href="../10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de diamantjes — <code>diamantjes.csv</code></a></p>
+<p>Dezelfde vergelijking nog één keer, nu als ANOVA: <em>F</em> = 3.00, en dat is exact −1.73 in het kwadraat. Bij twee groepen zijn de <em>t</em>-toets en de ANOVA dezelfde toets in een andere jas. Pas bij drie of meer groepen wordt de ANOVA zichzelf — en die krijg je nu.</p>
+<p><strong>Nu jij</strong> — drie groepen in plaats van twee: plantgroei.</p>
 <p><a href="../10_data/penguins.csv" class="data-download" download="penguins.csv">⬇ Download de data — <code>penguins.csv</code></a></p>
 <p>Eén toets, drie groepen. Hij heet <strong>variantieanalyse</strong> — <em>analysis of variance</em>, kortweg <strong>ANOVA</strong>. De naam klinkt als iets anders dan de t-toets, maar de vraag is dezelfde familie: <em>verschillen de gemiddelden van de groepen meer dan je door toeval zou verwachten?</em> Alleen kijkt ANOVA naar alle groepen in één beweging.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek aan de drie soorten">
@@ -590,14 +610,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean)   <span class="co"># Adelie 3701, Chinstrap 3733, Gentoo 5076</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(a)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># soort       Df  2   Sum Sq 146864214   F value 343.6   Pr(&gt;F) &lt;2e-16</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals   Df 339</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean)   <span class="co"># Adelie 3701, Chinstrap 3733, Gentoo 5076</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(a)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># soort       Df  2   Sum Sq 146864214   F value 343.6   Pr(&gt;F) &lt;2e-16</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals   Df 339</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar staat-ie: <strong>F(2, 339) = 343.6, p &lt; .001</strong>. Die <em>F</em> is één getal voor “hoeveel groter is het verschil <em>tussen</em> de groepen dan de rommel <em>binnen</em> de groepen?”. Ligt F rond 1, dan is het verschil tussen de groepen niet groter dan de spreiding die je toch al binnen elke groep hebt — niks bijzonders. Hoe hoger F, hoe sterker de groepen uit elkaar liggen ten opzichte van hun eigen ruis. En 343.6 is geen hoge F, dat is een absurde F. Hier zit overduidelijk ergens verschil.</p>
@@ -612,10 +632,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(a)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Chinstrap-Adelie     diff    32   p adj 0.88    &lt;- geen verschil</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo-Adelie        diff  1375   p adj &lt;.001   &lt;- fors</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo-Chinstrap     diff  1343   p adj &lt;.001   &lt;- fors</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(a)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Chinstrap-Adelie     diff    32   p adj 0.88    &lt;- geen verschil</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo-Adelie        diff  1375   p adj &lt;.001   &lt;- fors</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo-Chinstrap     diff  1343   p adj &lt;.001   &lt;- fors</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>En kijk, nu wordt het interessant. Adélie en Chinstrap verschillen <strong>niet</strong> (32 gram, p = 0.88 — dat is toeval). Het is de Gentoo die het hele feest maakt: ruim 1300 gram zwaarder dan de andere twee. De ANOVA riep “ergens is verschil!”, de post-hoc wijst aan wáár.</p>
@@ -638,14 +658,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nul <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">aov</span>(gewicht <span class="sc">~</span> <span class="fu">sample</span>(soort), <span class="at">data =</span> peng))[[<span class="dv">1</span>]][<span class="dv">1</span>, <span class="st">"F value"</span>]</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nul)                          <span class="co"># de geschudde F'en, een bergje laag bij nul</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">343.6</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(nul)                         <span class="co"># → ongeveer 0 tot 7.6</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nul <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">aov</span>(gewicht <span class="sc">~</span> <span class="fu">sample</span>(soort), <span class="at">data =</span> peng))[[<span class="dv">1</span>]][<span class="dv">1</span>, <span class="st">"F value"</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nul)                          <span class="co"># de geschudde F'en, een bergje laag bij nul</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">343.6</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(nul)                         <span class="co"># → ongeveer 0 tot 7.6</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat bergje. <strong>Duizend werelden die dansen rond nul</strong> — al kunnen F’en niet negatief worden, dus ze kruipen laag: het gros dobbert rond 1, en zelfs de allergrootste toeval-uitschieter komt niet boven de 8 uit. Dat is logisch: in een losgekoppelde wereld is het verschil tussen de groepen niet groter dan de ruis binnen de groepen, dus F blijft klein. En dan die rode streep op 343.6 — kilometers, lichtjaren rechts van het hele bergje. <strong>Geen enkele</strong> van de duizend nul-werelden komt ook maar in de verte in de buurt. Dát is “geen toeval”: geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>.</p>
@@ -669,11 +689,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(a)[[<span class="dv">1</span>]]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>s[<span class="dv">1</span>, <span class="st">"Sum Sq"</span>] <span class="sc">/</span> <span class="fu">sum</span>(s[, <span class="st">"Sum Sq"</span>])       <span class="co"># → 0.67</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># of kant-en-klaar:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># library(effectsize); eta_squared(a)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(a)[[<span class="dv">1</span>]]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>s[<span class="dv">1</span>, <span class="st">"Sum Sq"</span>] <span class="sc">/</span> <span class="fu">sum</span>(s[, <span class="st">"Sum Sq"</span>])       <span class="co"># → 0.67</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># of kant-en-klaar:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># library(effectsize); eta_squared(a)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><strong>η² = 0.67.</strong> Van al het verschil in gewicht tussen deze 342 pinguïns wordt <strong>67% verklaard door welke soort het is</strong>. Dat is enorm — weet je de soort, dan weet je het gewicht al bijna. Dáár zit het verhaal, niet in de F. En η² sluit naadloos aan op de <em>r²</em> uit het correlatieblok en op Cohens <em>d</em> uit het t-toets-blok: allemaal manieren om te zeggen <em>hoe groot</em> iets is, los van <em>of</em> het er is.</p>
