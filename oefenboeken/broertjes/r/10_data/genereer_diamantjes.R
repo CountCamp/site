@@ -20,6 +20,7 @@
 #   gladheid              H8  meervoudige regressie, confounding
 #                             (Kees: veel karaat, slecht geslepen)
 #   merk (golfje/ster)    H9  dummy-codering, groepsverschil
+#   mooi (0/1)            H12 logistische regressie, kruistabel
 #   D, DxG                H10 moderatie (product van twee kolommen)
 #
 # Draaien:  Rscript genereer_diamantjes.R
@@ -34,8 +35,12 @@ diamantjes <- data.frame(
   merk     = c("golfje","sterretje","golfje","golfje","golfje","sterretje",
                "sterretje","golfje","sterretje","sterretje","sterretje","golfje")
 )
-diamantjes$D   <- ifelse(diamantjes$merk == "sterretje", 1, 0)
-diamantjes$DxG <- diamantjes$D * diamantjes$gladheid
+diamantjes$D    <- ifelse(diamantjes$merk == "sterretje", 1, 0)
+diamantjes$DxG  <- diamantjes$D * diamantjes$gladheid
+# mooi = ja/nee-uitkomst voor het logistische blok (glans boven de 50).
+# Staat als kolom in het bestand zodat JASP en SPSS hem niet eerst hoeven te
+# berekenen; het R-oefenboek laat juist zien hoe je hem zelf maakt.
+diamantjes$mooi <- as.integer(diamantjes$glans > 50)
 
 write.csv(diamantjes, "diamantjes.csv", row.names = FALSE, quote = FALSE)
 
