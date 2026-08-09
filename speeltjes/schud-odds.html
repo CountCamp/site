@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schud de odds — odds ratio</title>
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57;
+    --amber:#c8913a; --amber-ink:#a9701f;
+    --green:#4d8a5a; --line:#d8c69b; --paper:#fffaf0;
+    --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:210px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 192 6 T 208 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:210px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:680px}
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media (max-width:760px){ .panels{grid-template-columns:1fr} }
+  .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
+    margin:0 0 8px;letter-spacing:.2px}
+  canvas{width:100%;display:block;border-radius:12px;background:#faf6ea;
+    border:1.5px solid #d8c69b;
+    box-shadow:0 8px 26px rgba(120,95,45,.18)}
+
+  /* --- de 2x2-tabel: houten kraam, geen dashboard --- */
+  .kruis{background:#faf6ea;border:1.5px solid #d8c69b;border-radius:12px;
+    box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 16px 14px}
+  table.kt{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+  table.kt caption{caption-side:top;font-style:italic;color:var(--dim);
+    font-size:13px;text-align:left;padding:0 0 8px 2px}
+  table.kt th,table.kt td{padding:9px 8px;text-align:center;font-size:16px}
+  table.kt thead th{font-weight:600;font-style:italic;color:#6b5f45;font-size:14px;
+    border-bottom:1.5px solid #c9a866}
+  table.kt tbody th{text-align:left;font-weight:600;color:#4a4030;
+    border-right:1.5px solid #c9a866;white-space:nowrap}
+  table.kt tbody td{color:#3b352b}
+  table.kt .num{font-size:20px;font-weight:600}
+  table.kt .pct{color:var(--amber-ink);font-weight:600}
+  table.kt tbody tr+tr th, table.kt tbody tr+tr td{border-top:1px dashed #ddc99a}
+  table.kt .cornerlab{color:#a89a7e;font-style:italic;font-size:12.5px;font-weight:400}
+  .orbadge{margin:16px 2px 2px;display:inline-block;
+    background:var(--paper);border:1.5px solid rgba(176,73,90,.5);
+    border-radius:8px 11px 7px 12px / 11px 7px 12px 8px;
+    transform:rotate(-.5deg);
+    box-shadow:0 3px 12px rgba(120,95,45,.2);
+    padding:10px 16px;color:#3a2e1a;font-size:15px}
+  .orbadge b{color:var(--bordeaux);font-size:23px;font-weight:600;font-variant-numeric:tabular-nums}
+  .orbadge .sub{display:block;color:var(--dim);font-style:italic;font-size:12.5px;margin-top:2px}
+
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 0}
+  .controls button{--rot:0deg;transform:rotate(var(--rot))}
+  #schud1{--rot:-.7deg} #schud100{--rot:.3deg} #schud1000{--rot:.45deg} #wis{--rot:-.35deg}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 15px;cursor:pointer;min-height:42px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);
+    transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button:active{transform:rotate(var(--rot)) translateY(1px);box-shadow:none}
+  button.primary{background:#dca94e;border-color:#b3843c;color:#3a2e15}
+  button.primary:hover{background:#e6b85e}
+  .count{margin:12px 0 0;color:#4a4030;font-size:16px;line-height:1.5;min-height:24px}
+  .count b{color:var(--bordeaux);font-weight:600;font-variant-numeric:tabular-nums}
+  .narr{margin:26px 0 0;color:#4a4030;font-size:16.5px;line-height:1.6;max-width:730px}
+  .narr b{color:var(--amber-ink);font-weight:600}
+  .sier{margin:26px 0 0;padding:16px 20px;max-width:620px;
+    background:var(--paper);color:#3a2e1a;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
+    border:1px solid #e3d3a8;
+    transform:rotate(-.35deg);
+    box-shadow:0 4px 14px rgba(120,95,45,.22)}
+  .sier code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;color:#4d7a3a}
+  .sier p{margin:10px 0 0;font-style:italic;color:#6b5f45;font-size:15.5px}
+  .foot{margin-top:30px;color:#8a7d63;font-size:13px;font-style:italic;line-height:1.6}
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a href="/speeltjes/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar de speelkist</a>
+  <h1>Schud de odds</h1>
+  <p class="lede">189 zwangerschappen. In deze telling kregen de rokers vaker een baby met een laag geboortegewicht — de <em>odds</em> liggen ruim twee keer zo hoog. Maar is dat verband echt, of kan het <em>toeval</em> het namaken? Links de telling. Rechts: hoe ver komt het toeval alleen al?</p>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>de telling — roken × laag geboortegewicht</h2>
+      <div class="kruis">
+        <table class="kt">
+          <caption>aantal baby's per hokje (n = 189)</caption>
+          <thead>
+            <tr>
+              <th><span class="cornerlab">moeder \ baby</span></th>
+              <th>laag gewicht</th>
+              <th>normaal gewicht</th>
+              <th>% laag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>rookt</th>
+              <td class="num" id="c_ja_ja">30</td>
+              <td class="num" id="c_ja_nee">44</td>
+              <td class="pct" id="p_ja">41%</td>
+            </tr>
+            <tr>
+              <th>rookt niet</th>
+              <td class="num" id="c_nee_ja">29</td>
+              <td class="num" id="c_nee_nee">86</td>
+              <td class="pct" id="p_nee">25%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="orbadge">
+          odds ratio <b id="orReal">2.02</b>
+          <span class="sub">de kans-verhouding: rokers-odds gedeeld door niet-rokers-odds</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>de geschudde werelden — nulverdeling van de OR</h2>
+      <canvas id="hist"></canvas>
+      <div class="controls">
+        <button id="schud1" class="primary">Schud 1×</button>
+        <button id="schud100">Schud 100×</button>
+        <button id="schud1000">Schud 1000×</button>
+        <button id="wis">leeg</button>
+      </div>
+      <p class="count" id="count">De muur is nog leeg. Schud de moeders los van de baby's en kijk waar de odds ratio landt.</p>
+    </div>
+  </div>
+
+  <p class="narr" id="narr">
+    <b>Schudden</b> koppelt roken los van geboortegewicht: elke baby houdt zijn eigen gewicht, maar
+    krijgt een wildvreemde moeder toegewezen — de een rookt, de ander niet, puur op de gok. Zo bouw je
+    werelden waarin roken en gewicht <em>niets</em> met elkaar te maken hebben. En let op: de niks-waarde
+    van een odds ratio is <b>1</b>, niet 0 — even vaak laag als niet-laag betekent OR = 1. Kijk hoe het
+    bergje rond <b>1</b> danst, en waar die rode lijn op <b id="orInline">2.02</b> staat.
+  </p>
+
+  <div class="sier">
+    <code>odds_ratio(roken, sample(laag_geboortegewicht))</code>
+    <p>Eén woord verschil met de echte som: <code>sample()</code>. Dat husselt de kolom door elkaar.
+       Duizend werelden waarin roken en geboortegewicht niets met elkaar te maken hebben — de gemeten OR
+       danst rond <b>1</b>, niet rond 0; de echte 2.02 valt er (net) buiten.</p>
+  </div>
+
+  <p class="foot">
+    De regressieve ruggengraat · W12 — het schud-blok bij de odds ratio · speeltje bij de simulatie<br>
+    Data: geboortegewicht (Hosmer &amp; Lemeshow, birthwt) · 189 zwangerschappen · roken × laag geboortegewicht.
+  </p>
+</div>
+
+<script>
+(function(){
+  // ===== echte data, ingebakken uit geboortegewicht.csv (n=189) =====
+  //   roken=ja & laag=ja : 30      roken=ja & laag=nee : 44
+  //   roken=nee & laag=ja: 29      roken=nee & laag=nee: 86
+  const A0=30, B0=44, C0=29, D0=86;             // a b / c d
+  const N_JA = A0+B0;                           // rokers      = 74
+  const N_NEE= C0+D0;                           // niet-rokers = 115
+  const N_LAAG = A0+C0;                          // laag totaal = 59
+  const N = N_JA+N_NEE;                          // 189
+
+  // pagina rekent zelf: OR = a*d / (b*c)
+  function orFrom(a,b,c,d){ if(b===0||c===0) return Infinity; return (a*d)/(b*c); }
+  const OR_REAL = orFrom(A0,B0,C0,D0);          // 2.0219...
+  const OR_SHOW = OR_REAL.toFixed(2);           // "2.02"
+  const P_JA  = Math.round(A0/N_JA*100);         // 41
+  const P_NEE = Math.round(C0/N_NEE*100);        // 25
+
+  // spiegel de berekende waarden terug in de tabel (pagina toont wat ze rekent)
+  document.getElementById('orReal').textContent = OR_SHOW;
+  document.getElementById('orInline').textContent = OR_SHOW;
+  document.getElementById('p_ja').textContent  = P_JA+'%';
+  document.getElementById('p_nee').textContent = P_NEE+'%';
+
+  // ===== schud-machinerie =====
+  // 189 baby's: laag-vlag is shuffelbaar (59× laag, 130× normaal).
+  // De eerste N_JA posities zijn "moeder rookt". Na shufflen tellen we
+  // hoeveel van die eerste N_JA een laag gewicht kregen -> cel a.
+  const laag = new Uint8Array(N);
+  for(let i=0;i<N_LAAG;i++) laag[i]=1;          // rest blijft 0
+  function orShuffle(){
+    for(let i=N-1;i>0;i--){ const j=(Math.random()*(i+1))|0; const t=laag[i]; laag[i]=laag[j]; laag[j]=t; }
+    let a=0; for(let i=0;i<N_JA;i++) a+=laag[i];
+    const b=N_JA-a, c=N_LAAG-a, d=N_NEE-c;
+    return orFrom(a,b,c,d);
+  }
+
+  // ===== wiebel-gereedschap (deterministische jitter, stabiel per frame) =====
+  function jit(a,b,amp){ const v=Math.sin(a*12.9898+b*78.233)*43758.5453; return ((v-Math.floor(v))-0.5)*2*amp; }
+  function wline(ctx,x1,y1,x2,y2,amp){
+    amp=(amp==null)?1.1:amp;
+    const d=Math.hypot(x2-x1,y2-y1), segs=Math.max(2,Math.round(d/26));
+    ctx.beginPath(); ctx.moveTo(x1+jit(x1,y1,amp), y1+jit(y1,x1,amp));
+    for(let i=1;i<=segs;i++){ const t=i/segs, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t; ctx.lineTo(x+jit(x,y,amp), y+jit(y,x,amp)); }
+    ctx.stroke();
+  }
+  function wrectPath(ctx,x,y,w,h,amp){
+    amp=(amp==null)?Math.min(1.4,w*0.06+0.5):amp;
+    const pts=[];
+    function edge(x1,y1,x2,y2){ const d=Math.hypot(x2-x1,y2-y1), m=Math.max(1,Math.round(d/22));
+      for(let i=0;i<m;i++){ const t=i/m, px=x1+(x2-x1)*t, py=y1+(y2-y1)*t; pts.push([px+jit(px,py,amp), py+jit(py,px,amp)]); } }
+    edge(x,y,x+w,y); edge(x+w,y,x+w,y+h); edge(x+w,y+h,x,y+h); edge(x,y+h,x,y);
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.closePath();
+  }
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function ease(t){ return t<.5?2*t*t:1-(-2*t+2)**2/2; }
+
+  const C={
+    ink:'#3b352b', dim:'#7a6f57', faint:'#a89a7e',
+    amber:'#c8913a', amberInk:'#a9701f',
+    wood1:'#e0b25a', wood2:'#b3843c', woodEdge:'rgba(90,66,28,.55)',
+    green1:'#6faa72', green2:'#4d8a5a', paper:'#fffcf4',
+    axis:'#b09a6a', bordeaux:'#b0495a'
+  };
+  const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
+  function fnt(px,style,weight){ return (style?style+' ':'')+(weight?weight+' ':'')+px+'px '+SERIF; }
+  function paperBg(ctx,W,H){
+    const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#fbf5e6'); sky.addColorStop(1,'#f2e9d2');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+  }
+
+  // ===== HISTOGRAM — de geschudde nulverdeling van de OR =====
+  const hcv=document.getElementById('hist'), hctx=hcv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let hW=460, hH=380;
+  const RLO=0.2, RHI=3.2, NB=48;                 // OR-as van 0.2 tot 3.2
+  const binw=(RHI-RLO)/NB;
+  let bins=new Float64Array(NB), drawn=new Float64Array(NB);
+  let total=0, extreme=0, lastR=null, markerAge=1, scaleT=1, scaleNow=1;
+  function binOf(r){ return Math.max(0,Math.min(NB-1,Math.floor((r-RLO)/binw))); }
+
+  function oneShuffle(animate){
+    const r=orShuffle();
+    bins[binOf(r)]++; total++;
+    if(r>=OR_REAL) extreme++;                     // "zo ver of verder": OR >= echte OR (naar rechts)
+    if(animate){ lastR=r; markerAge=0; }
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+  }
+  function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
+
+  function hResize(){ hW=hcv.clientWidth; hH=Math.max(300,Math.min(420,Math.round(hW*0.82)));
+    hcv.width=hW*DPR; hcv.height=hH*DPR; hctx.setTransform(DPR,0,0,DPR,0,0); }
+
+  function drawHist(){
+    const ctx=hctx, W=hW, H=hH; paperBg(ctx,W,H);
+    const L=20, R=W-14, AX_Y=H-40, T=26;
+    const px=r=>lerp(L,R,(r-RLO)/(RHI-RLO));
+    scaleNow=lerp(scaleNow,scaleT,0.12);
+    for(let i=0;i<NB;i++) drawn[i]=lerp(drawn[i],bins[i],0.18);
+    if(markerAge<1) markerAge=Math.min(1,markerAge+0.05);
+
+    const maxBarH=AX_Y-T-8;
+    const bwid=Math.max(2,(px(RLO+binw)-px(RLO))-1.5);
+    for(let i=0;i<NB;i++){
+      if(drawn[i]<=0.01) continue;
+      const h=Math.min(maxBarH, (drawn[i]/Math.max(1,scaleNow))*maxBarH);
+      const bx=px(RLO+i*binw)+0.75;
+      const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y); g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);
+      if(h<1.6){ ctx.fillStyle=C.wood2; ctx.fillRect(bx,AX_Y-h,bwid,h); continue; }
+      wrectPath(ctx,bx,AX_Y-h,bwid,h,0.7); ctx.fillStyle=g; ctx.fill();
+      ctx.strokeStyle=C.woodEdge; ctx.lineWidth=1; ctx.stroke();
+    }
+    // as
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,AX_Y,R,AX_Y,1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='center';
+    for(let r=0.5;r<=3.01;r+=0.5){ const xx=px(r); wline(ctx,xx,AX_Y,xx,AX_Y+4,0.5);
+      ctx.fillText(r.toFixed(1), xx, AX_Y+16); }
+    // niks-lijn op OR = 1 (het toeval-midden) — dik, met bordje
+    const x1=px(1); ctx.strokeStyle='rgba(77,138,90,.75)'; ctx.lineWidth=2; ctx.setLineDash([3,4]);
+    wline(ctx,x1,T-4,x1,AX_Y,0.6); ctx.setLineDash([]);
+    ctx.fillStyle=C.green2; ctx.font=fnt(12.5,'italic','600'); ctx.textAlign='center';
+    ctx.fillText('OR = 1', x1, T-10);
+    ctx.font=fnt(11,'italic'); ctx.fillText('niks', x1, T+2);
+    // echte-OR lijn: rode wiebel, dik
+    const xr=px(OR_REAL);
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
+    wline(ctx,xr,T,xr,AX_Y,1.0); ctx.setLineDash([]);
+    ctx.fillStyle=C.bordeaux; ctx.font=fnt(12.5,'italic','600'); ctx.textAlign='left';
+    ctx.fillText('echte OR', xr+6, T+12);
+    ctx.font=fnt(11.5,'italic'); ctx.fillText(OR_SHOW, xr+6, T+27);
+    // as-label
+    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
+    ctx.fillText('geschudde odds ratio', (L+R)/2, H-6);
+    // vallend vonkje bij losse schud
+    if(lastR!=null && markerAge<1){
+      const clampR=Math.max(RLO,Math.min(RHI-1e-6,lastR));
+      const barTop=AX_Y-Math.min(maxBarH,(drawn[binOf(lastR)]/Math.max(1,scaleNow))*maxBarH);
+      const mxp=px(clampR), myp=lerp(T+4,barTop,ease(markerAge));
+      ctx.save(); ctx.globalAlpha=1-markerAge*0.3; ctx.shadowColor='rgba(200,145,58,.7)'; ctx.shadowBlur=9;
+      ctx.fillStyle=C.amber; ctx.beginPath(); ctx.arc(mxp,myp,5,0,7); ctx.fill(); ctx.restore();
+    }
+    // teller rechtsboven op canvas
+    ctx.textAlign='right'; ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic');
+    ctx.fillText('geschud: '+total, R, T-4);
+  }
+
+  // ===== teller-tekst in DOM (toegankelijk) =====
+  const countEl=document.getElementById('count');
+  function updateCount(){
+    if(total===0){ countEl.innerHTML='De muur is nog leeg. Schud de moeders los van de baby's en kijk waar de odds ratio landt.'; return; }
+    const per1000=Math.round(extreme/total*1000);
+    countEl.innerHTML='<b>'+extreme+' van '+total+'</b> geschudde werelden kwamen zo ver of verder ('+
+      'OR ≥ '+OR_SHOW+') als de echte telling'+(total>=1000?' — zo'n '+per1000+' per 1000.':'.');
+  }
+
+  // ===== narratie =====
+  const narr=document.getElementById('narr'); const narrBase=narr.innerHTML;
+  function say(html){ narr.innerHTML=html; }
+
+  // ===== batch-animatie: bouw de muur zichtbaar op =====
+  let anim=null;
+  function animateMany(K, durMs){
+    if(anim) cancelAnimationFrame(anim);
+    let done=0; const t0=performance.now();
+    (function step(now){
+      now=now||performance.now();
+      const target=Math.min(K, Math.floor(K*(now-t0)/durMs));
+      const k=target-done; if(k>0){ manyShuffle(k); done=target; updateCount(); }
+      if(done<K) anim=requestAnimationFrame(step); else updateCount();
+    })(performance.now());
+  }
+
+  // ===== knoppen =====
+  document.getElementById('schud1').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    oneShuffle(true); updateCount();
+    say('Eén geschudde wereld. Deze odds ratio hangt ergens rond <b>1</b> — want roken en gewicht zijn nu vreemden. Schud er honderd, duizend.'); };
+  document.getElementById('schud100').onclick=()=>{ animateMany(100,1400);
+    say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien rond <b>1</b> — en de rode lijn op '+OR_SHOW+' staat er rechts van, buiten de drukte.'); };
+  document.getElementById('schud1000').onclick=()=>{ animateMany(1000,2400);
+    say('Duizend keer schudden. Het bergje van het toeval staat duidelijk om <b>1</b> heen — en het raakt die rode lijn <b>bijna nooit</b>. Dát is een afstand die je ziet, geen p-waarde die je gelooft.'); };
+  document.getElementById('wis').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; extreme=0; lastR=null; scaleT=1;
+    updateCount(); say(narrBase); };
+
+  // ===== render loops =====
+  function tick(){ drawHist(); requestAnimationFrame(tick); }
+  window.addEventListener('resize',hResize);
+  hResize(); updateCount(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

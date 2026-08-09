@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schud het — verschil</title>
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57;
+    --amber:#c8913a; --amber-ink:#a9701f;
+    --green:#4d8a5a; --line:#d8c69b; --paper:#fffaf0;
+    --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:190px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='10' viewBox='0 0 190 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 188 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:190px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:660px}
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media (max-width:760px){ .panels{grid-template-columns:1fr} }
+  .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
+    margin:0 0 8px;letter-spacing:.2px}
+  canvas{width:100%;display:block;border-radius:12px;background:#faf6ea;
+    border:1.5px solid #d8c69b;
+    box-shadow:0 8px 26px rgba(120,95,45,.18)}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 0}
+  .controls button{--rot:0deg;transform:rotate(var(--rot))}
+  #schud1{--rot:-.7deg} #schud100{--rot:.3deg} #schud1000{--rot:.45deg} #wis{--rot:-.35deg}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 15px;cursor:pointer;min-height:42px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);
+    transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button:active{transform:rotate(var(--rot)) translateY(1px);box-shadow:none}
+  button.primary{background:#dca94e;border-color:#b3843c;color:#3a2e15}
+  button.primary:hover{background:#e6b85e}
+  .count{margin:12px 0 0;color:#4a4030;font-size:16px;line-height:1.5;min-height:24px}
+  .count b{color:var(--bordeaux);font-weight:600;font-variant-numeric:tabular-nums}
+  .narr{margin:26px 0 0;color:#4a4030;font-size:16.5px;line-height:1.6;max-width:720px}
+  .narr b{color:var(--amber-ink);font-weight:600}
+  .sier{margin:26px 0 0;padding:16px 20px;max-width:620px;
+    background:var(--paper);color:#3a2e1a;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
+    border:1px solid #e3d3a8;
+    transform:rotate(-.35deg);
+    box-shadow:0 4px 14px rgba(120,95,45,.22)}
+  .sier code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14px;color:#4d7a3a}
+  .sier p{margin:10px 0 0;font-style:italic;color:#6b5f45;font-size:15.5px}
+  .foot{margin-top:30px;color:#8a7d63;font-size:13px;font-style:italic;line-height:1.6}
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a href="/speeltjes/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar de speelkist</a>
+  <h1>Schud het verschil</h1>
+  <p class="lede">In deze pinguïns zijn de Gentoo's gemiddeld <em id="ledeDiff">zoveel</em> gram zwaarder dan de Adelies.
+     Maar is dat verschil echt — of had je toevallig net de zwaardere beesten te pakken?
+     Links de twee groepen. Rechts de vraag: hoe groot zou een verschil worden als de soort er niets toe deed?</p>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>de twee groepen — gewicht per soort</h2>
+      <canvas id="strip"></canvas>
+      <div class="controls" style="font-size:14px;color:#7a6f57;font-style:italic">
+        <span>elke stip is één pinguïn · de streep is het groepsgemiddelde</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>de geschudde werelden — nulverdeling van het verschil</h2>
+      <canvas id="hist"></canvas>
+      <div class="controls">
+        <button id="schud1" class="primary">Schud 1×</button>
+        <button id="schud100">Schud 100×</button>
+        <button id="schud1000">Schud 1000×</button>
+        <button id="wis">leeg</button>
+      </div>
+      <p class="count" id="count">De muur is nog leeg. Schud de soort-kaartjes door elkaar en kijk waar het verschil landt.</p>
+    </div>
+  </div>
+
+  <p class="narr" id="narr">
+    <b>Schudden</b> koppelt de soort los van het gewicht: elke pinguïn houdt zijn eigen gewicht, maar krijgt
+    lukraak het kaartje <em>Gentoo</em> of <em>Adelie</em> — net zoveel van elk als eerst. Zo bouw je werelden
+    waarin de soort niets meer betekent. De vraag: komt dat toeval ooit zo ver als de echte
+    <b id="dInline">1375 g</b>? Kijk waar het bergje hangt, en waar die rode lijn staat.
+  </p>
+
+  <div class="sier">
+    <code>mean(gewicht[groep=="Gentoo"]) − mean(gewicht[sample(groep)=="Gentoo"])</code>
+    <p>Eén woord verschil met de echte som: <code>sample()</code>. Dat husselt de soort-kaartjes.
+       Doe het duizend keer en je hebt duizend werelden waarin de waarheid nul is.</p>
+  </div>
+
+  <p class="foot">
+    De regressieve ruggengraat · W6 — het schud-blok bij de onafhankelijke t-toets · speeltje bij de simulatie<br>
+    Data: Palmer Penguins (Gorman, Williams &amp; Fraser 2014) · Palmer Station LTER · CC0 · Gentoo (n=123) &amp; Adelie (n=151).
+  </p>
+</div>
+
+<script>
+(function(){
+  // ---- echte data: [soort, gewicht in gram] · A=Adelie G=Gentoo ----
+  const PENG=[
+["A",3750],["A",3800],["A",3250],["A",3450],["A",3650],["A",3625],["A",4675],["A",3475],["A",4250],["A",3300],
+["A",3700],["A",3200],["A",3800],["A",4400],["A",3700],["A",3450],["A",4500],["A",3325],["A",4200],["A",3400],
+["A",3600],["A",3800],["A",3950],["A",3800],["A",3800],["A",3550],["A",3200],["A",3150],["A",3950],["A",3250],
+["A",3900],["A",3300],["A",3900],["A",3325],["A",4150],["A",3950],["A",3550],["A",3300],["A",4650],["A",3150],
+["A",3900],["A",3100],["A",4400],["A",3000],["A",4600],["A",3425],["A",2975],["A",3450],["A",4150],["A",3500],
+["A",4300],["A",3450],["A",4050],["A",2900],["A",3700],["A",3550],["A",3800],["A",2850],["A",3750],["A",3150],
+["A",4400],["A",3600],["A",4050],["A",2850],["A",3950],["A",3350],["A",4100],["A",3050],["A",4450],["A",3600],
+["A",3900],["A",3550],["A",4150],["A",3700],["A",4250],["A",3700],["A",3900],["A",3550],["A",4000],["A",3200],
+["A",4700],["A",3800],["A",4200],["A",3350],["A",3550],["A",3800],["A",3500],["A",3950],["A",3600],["A",3550],
+["A",4300],["A",3400],["A",4450],["A",3300],["A",4300],["A",3700],["A",4350],["A",2900],["A",4100],["A",3725],
+["A",4725],["A",3075],["A",4250],["A",2925],["A",3550],["A",3750],["A",3900],["A",3175],["A",4775],["A",3825],
+["A",4600],["A",3200],["A",4275],["A",3900],["A",4075],["A",2900],["A",3775],["A",3350],["A",3325],["A",3150],
+["A",3500],["A",3450],["A",3875],["A",3050],["A",4000],["A",3275],["A",4300],["A",3050],["A",4000],["A",3325],
+["A",3500],["A",3500],["A",4475],["A",3425],["A",3900],["A",3175],["A",3975],["A",3400],["A",4250],["A",3400],
+["A",3475],["A",3050],["A",3725],["A",3000],["A",3650],["A",4250],["A",3475],["A",3450],["A",3750],["A",3700],
+["A",4000],["G",4500],["G",5700],["G",4450],["G",5700],["G",5400],["G",4550],["G",4800],["G",5200],["G",4400],
+["G",5150],["G",4650],["G",5550],["G",4650],["G",5850],["G",4200],["G",5850],["G",4150],["G",6300],["G",4800],
+["G",5350],["G",5700],["G",5000],["G",4400],["G",5050],["G",5000],["G",5100],["G",4100],["G",5650],["G",4600],
+["G",5550],["G",5250],["G",4700],["G",5050],["G",6050],["G",5150],["G",5400],["G",4950],["G",5250],["G",4350],
+["G",5350],["G",3950],["G",5700],["G",4300],["G",4750],["G",5550],["G",4900],["G",4200],["G",5400],["G",5100],
+["G",5300],["G",4850],["G",5300],["G",4400],["G",5000],["G",4900],["G",5050],["G",4300],["G",5000],["G",4450],
+["G",5550],["G",4200],["G",5300],["G",4400],["G",5650],["G",4700],["G",5700],["G",4650],["G",5800],["G",4700],
+["G",5550],["G",4750],["G",5000],["G",5100],["G",5200],["G",4700],["G",5800],["G",4600],["G",6000],["G",4750],
+["G",5950],["G",4625],["G",5450],["G",4725],["G",5350],["G",4750],["G",5600],["G",4600],["G",5300],["G",4875],
+["G",5550],["G",4950],["G",5400],["G",4750],["G",5650],["G",4850],["G",5200],["G",4925],["G",4875],["G",4625],
+["G",5250],["G",4850],["G",5600],["G",4975],["G",5500],["G",4725],["G",5500],["G",4700],["G",5500],["G",4575],
+["G",5500],["G",5000],["G",5950],["G",4650],["G",5500],["G",4375],["G",5850],["G",4875],["G",6000],["G",4925],
+["G",4850],["G",5750],["G",5200],["G",5400]
+  ];
+
+  const N=PENG.length;                 // 274
+  const W=new Float64Array(N);         // gewichten
+  const LAB0=new Array(N);             // echte soort-codes
+  for(let i=0;i<N;i++){ LAB0[i]=PENG[i][0]; W[i]=PENG[i][1]; }
+
+  // ---- t-machinerie: pagina rekent zelf, reproduceert ----
+  let nG=0, nA=0, S=0;
+  for(let i=0;i<N;i++){ S+=W[i]; if(LAB0[i]==='G') nG++; else nA++; }
+  function meanG_real(){ let s=0; for(let i=0;i<N;i++) if(LAB0[i]==='G') s+=W[i]; return s/nG; }
+  function meanA_real(){ let s=0; for(let i=0;i<N;i++) if(LAB0[i]==='A') s+=W[i]; return s/nA; }
+  const MG=meanG_real(), MA=meanA_real();
+  const D_REAL=MG-MA;                   // 1375.35...
+  const D_SHOW=Math.round(D_REAL);      // 1375
+
+  // permutatie-verschil: shuffle index-array, eerste nG = "Gentoo"-groep
+  const perm=new Int32Array(N); for(let i=0;i<N;i++) perm[i]=i;
+  function diffShuffle(){
+    for(let i=N-1;i>0;i--){ const j=(Math.random()*(i+1))|0; const t=perm[i]; perm[i]=perm[j]; perm[j]=t; }
+    let sg=0; for(let i=0;i<nG;i++) sg+=W[perm[i]];
+    return sg/nG - (S-sg)/nA;
+  }
+
+  // toon de echte verschillen in de tekst
+  document.getElementById('dInline').textContent=D_SHOW+' g';
+  document.getElementById('ledeDiff').textContent='ruim '+(Math.round(D_REAL/25)*25)+' ';
+
+  // ---- gedeeld: wiebel-gereedschap (deterministische jitter, stabiel per frame) ----
+  function jit(a,b,amp){ const v=Math.sin(a*12.9898+b*78.233)*43758.5453; return ((v-Math.floor(v))-0.5)*2*amp; }
+  function wline(ctx,x1,y1,x2,y2,amp){
+    amp=(amp==null)?1.1:amp;
+    const d=Math.hypot(x2-x1,y2-y1), segs=Math.max(2,Math.round(d/26));
+    ctx.beginPath(); ctx.moveTo(x1+jit(x1,y1,amp), y1+jit(y1,x1,amp));
+    for(let i=1;i<=segs;i++){ const t=i/segs, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t; ctx.lineTo(x+jit(x,y,amp), y+jit(y,x,amp)); }
+    ctx.stroke();
+  }
+  function wrectPath(ctx,x,y,w,h,amp){
+    amp=(amp==null)?Math.min(1.4,w*0.06+0.5):amp;
+    const pts=[];
+    function edge(x1,y1,x2,y2){ const d=Math.hypot(x2-x1,y2-y1), m=Math.max(1,Math.round(d/22));
+      for(let i=0;i<m;i++){ const t=i/m, px=x1+(x2-x1)*t, py=y1+(y2-y1)*t; pts.push([px+jit(px,py,amp), py+jit(py,px,amp)]); } }
+    edge(x,y,x+w,y); edge(x+w,y,x+w,y+h); edge(x+w,y+h,x,y+h); edge(x,y+h,x,y);
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.closePath();
+  }
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function ease(t){ return t<.5?2*t*t:1-(-2*t+2)**2/2; }
+
+  const C={
+    ink:'#3b352b', dim:'#7a6f57', faint:'#a89a7e',
+    amber:'#c8913a', amberInk:'#a9701f',
+    wood1:'#e0b25a', wood2:'#b3843c', woodEdge:'rgba(90,66,28,.55)',
+    green1:'#6faa72', green2:'#4d8a5a', paper:'#fffcf4',
+    axis:'#b09a6a', bordeaux:'#b0495a'
+  };
+  // per-soort: kleur EN vorm (kleur is nooit de enige drager)
+  const SOORT={
+    G:{naam:'Gentoo', kleur:'#4d8a5a', vorm:'vierkant'},
+    A:{naam:'Adelie', kleur:'#c8913a', vorm:'cirkel'}
+  };
+  const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
+  function fnt(px,style,weight){ return (style?style+' ':'')+(weight?weight+' ':'')+px+'px '+SERIF; }
+
+  function paperBg(ctx,W,H){
+    const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#fbf5e6'); sky.addColorStop(1,'#f2e9d2');
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+  }
+  function marker(ctx,x,y,vorm,r){
+    if(vorm==='cirkel'){ ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.stroke(); }
+    else if(vorm==='vierkant'){ const s=r*1.75; wrectPath(ctx,x-s/2,y-s/2,s,s,0.5); ctx.fill(); ctx.stroke(); }
+    else { const s=r*2.0; ctx.beginPath(); ctx.moveTo(x,y-s*0.62); ctx.lineTo(x+s*0.58,y+s*0.5); ctx.lineTo(x-s*0.58,y+s*0.5); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+  }
+
+  // =========================================================================
+  //  STRIP — de twee groepen
+  // =========================================================================
+  const scv=document.getElementById('strip'), sctx=scv.getContext('2d');
+  const DPR=Math.min(window.devicePixelRatio||1,2);
+  let sW=460, sH=380;
+  // gewicht-grenzen (y-as)
+  let wlo=Infinity,whi=-Infinity;
+  for(let i=0;i<N;i++){ if(W[i]<wlo)wlo=W[i]; if(W[i]>whi)whi=W[i]; }
+  wlo=Math.floor(wlo/250)*250-100; whi=Math.ceil(whi/250)*250+100;
+  // stabiele horizontale jitter per pinguïn
+  const JX=new Float64Array(N); for(let i=0;i<N;i++) JX[i]=jit(i*3.1+7,i*1.7+2,1);
+
+  function sResize(){ sW=scv.clientWidth; sH=Math.max(300,Math.min(440,Math.round(sW*0.92)));
+    scv.width=sW*DPR; scv.height=sH*DPR; sctx.setTransform(DPR,0,0,DPR,0,0); drawStrip(); }
+
+  function drawStrip(){
+    const ctx=sctx, W2=sW, H=sH; paperBg(ctx,W2,H);
+    const L=54, R=W2-58, T=22, B=H-40;
+    const py=v=>lerp(B,T,(v-wlo)/(whi-wlo));
+    // groepskolommen
+    const cG=lerp(L,R,0.28), cA=lerp(L,R,0.72), halfw=Math.min(60,(cA-cG)*0.32);
+    // y-as
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,B,R,B,1); wline(ctx,L,T,L,B,1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='right';
+    for(let v=Math.ceil(wlo/500)*500; v<=whi; v+=500){ const yy=py(v); wline(ctx,L-4,yy,L,yy,0.5); ctx.fillText(v,L-7,yy+4); }
+    ctx.save(); ctx.translate(13,(T+B)/2); ctx.rotate(-Math.PI/2);
+    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center'; ctx.fillText('gewicht (gram)',0,0); ctx.restore();
+
+    // stippen per groep
+    ctx.lineWidth=1;
+    for(let i=0;i<N;i++){
+      const s=SOORT[LAB0[i]]; const cx=(LAB0[i]==='G'?cG:cA)+JX[i]*halfw;
+      ctx.fillStyle=s.kleur; ctx.strokeStyle='rgba(60,45,25,.42)'; ctx.globalAlpha=0.82;
+      marker(ctx,cx,py(W[i]),s.vorm,4.0);
+    }
+    ctx.globalAlpha=1;
+
+    // groepsgemiddelde-strepen
+    function meanLine(cx,m,kol,label){
+      const yy=py(m);
+      ctx.strokeStyle=kol; ctx.lineWidth=2.6; wline(ctx,cx-halfw-8,yy,cx+halfw+8,yy,0.8);
+    }
+    meanLine(cG,MG,'#2f6b3c'); meanLine(cA,MA,'#9c6a1c');
+
+    // groepslabels + naam onder de as (kleur + vorm + naam)
+    ctx.textAlign='center'; ctx.font=fnt(13.5,'italic','600');
+    ctx.fillStyle=SOORT.G.kleur; marker(ctx,cG-30,B+22,'vierkant',4.2);
+    ctx.fillStyle=C.ink; ctx.fillText('Gentoo',cG+6,B+27);
+    ctx.fillStyle=SOORT.A.kleur; marker(ctx,cA-26,B+22,'cirkel',4.2);
+    ctx.fillStyle=C.ink; ctx.fillText('Adelie',cA+8,B+27);
+
+    // verschil-haak rechts: van Adelie-gemiddelde omhoog naar Gentoo-gemiddelde
+    const yG=py(MG), yA=py(MA), hx=R+22;
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.0;
+    wline(ctx,cA+halfw+8,yA,hx,yA,0.6); wline(ctx,cG+halfw+8,yG,hx,yG,0.6);
+    wline(ctx,hx,yA,hx,yG,0.8);
+    // pijltjes
+    ctx.beginPath(); ctx.moveTo(hx-4,yG+6); ctx.lineTo(hx,yG); ctx.lineTo(hx+4,yG+6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx-4,yA-6); ctx.lineTo(hx,yA); ctx.lineTo(hx+4,yA-6); ctx.stroke();
+    // label verschil
+    ctx.save(); ctx.translate(hx+7,(yG+yA)/2); ctx.rotate(-Math.PI/2);
+    ctx.fillStyle=C.bordeaux; ctx.font=fnt(14,'italic','600'); ctx.textAlign='center';
+    ctx.fillText(D_SHOW+' g',0,0); ctx.restore();
+  }
+
+  // =========================================================================
+  //  HISTOGRAM — de geschudde nulverdeling
+  // =========================================================================
+  const hcv=document.getElementById('hist'), hctx=hcv.getContext('2d');
+  let hW=460, hH=380;
+  const DLO=-650, DHI=1500, NB=43;               // bins over verschil in gram
+  const binw=(DHI-DLO)/NB;
+  let bins=new Float64Array(NB), drawn=new Float64Array(NB);
+  let total=0, extreme=0, lastD=null, markerAge=1, scaleT=1, scaleNow=1;
+  function binOf(d){ return Math.max(0,Math.min(NB-1,Math.floor((d-DLO)/binw))); }
+
+  function oneShuffle(animate){
+    const d=diffShuffle();
+    bins[binOf(d)]++; total++;
+    if(Math.abs(d)>=Math.abs(D_REAL)) extreme++;   // "zo ver of verder" van nul (twee kanten op)
+    if(animate){ lastD=d; markerAge=0; }
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+  }
+  function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
+
+  function hResize(){ hW=hcv.clientWidth; hH=Math.max(300,Math.min(440,Math.round(hW*0.92)));
+    hcv.width=hW*DPR; hcv.height=hH*DPR; hctx.setTransform(DPR,0,0,DPR,0,0); }
+
+  function drawHist(){
+    const ctx=hctx, W2=hW, H=hH; paperBg(ctx,W2,H);
+    const L=18, R=W2-14, AX_Y=H-40, T=30;
+    const px=d=>lerp(L,R,(d-DLO)/(DHI-DLO));
+    // eased
+    scaleNow=lerp(scaleNow,scaleT,0.12);
+    for(let i=0;i<NB;i++) drawn[i]=lerp(drawn[i],bins[i],0.18);
+    if(markerAge<1) markerAge=Math.min(1,markerAge+0.05);
+
+    const maxBarH=AX_Y-T-8;
+    // bars: houten plankjes
+    const bwid=Math.max(2,(px(DLO+binw)-px(DLO))-1.5);
+    for(let i=0;i<NB;i++){
+      if(drawn[i]<=0.01) continue;
+      const h=Math.min(maxBarH, (drawn[i]/Math.max(1,scaleNow))*maxBarH);
+      const bx=px(DLO+i*binw)+0.75;
+      const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y); g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);
+      if(h<1.6){ ctx.fillStyle=C.wood2; ctx.fillRect(bx,AX_Y-h,bwid,h); continue; }
+      wrectPath(ctx,bx,AX_Y-h,bwid,h,0.7); ctx.fillStyle=g; ctx.fill();
+      ctx.strokeStyle=C.woodEdge; ctx.lineWidth=1; ctx.stroke();
+    }
+    // as
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,AX_Y,R,AX_Y,1);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='center';
+    for(let d=-500;d<=1500.1;d+=500){ const xx=px(d); wline(ctx,xx,AX_Y,xx,AX_Y+4,0.5);
+      ctx.fillText((d<0?'−':'')+Math.abs(d), xx, AX_Y+16); }
+    // nul-lijn (het toeval-midden)
+    const x0=px(0); ctx.strokeStyle='rgba(122,111,87,.5)'; ctx.lineWidth=1; ctx.setLineDash([3,4]);
+    wline(ctx,x0,T-4,x0,AX_Y,0.5); ctx.setLineDash([]);
+    ctx.fillStyle=C.dim; ctx.font=fnt(11,'italic'); ctx.textAlign='center'; ctx.fillText('0 (geen verschil)', x0, T-8);
+    // echte-verschil lijn: rode wiebel, dik
+    const xr=px(D_REAL);
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
+    wline(ctx,xr,T,xr,AX_Y,1.0); ctx.setLineDash([]);
+    ctx.fillStyle=C.bordeaux; ctx.font=fnt(12.5,'italic','600'); ctx.textAlign='right';
+    ctx.fillText('echte verschil', xr-6, T+12);
+    ctx.font=fnt(11.5,'italic'); ctx.fillText(D_SHOW+' g', xr-6, T+27);
+
+    // as-label
+    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
+    ctx.fillText('geschud verschil in gemiddeld gewicht (gram)', (L+R)/2, H-6);
+
+    // vallend vonkje bij losse schud
+    if(lastD!=null && markerAge<1){
+      const barTop=AX_Y-Math.min(maxBarH,(drawn[binOf(lastD)]/Math.max(1,scaleNow))*maxBarH);
+      const mxp=px(lastD), myp=lerp(T+4,barTop,ease(markerAge));
+      ctx.save(); ctx.globalAlpha=1-markerAge*0.3; ctx.shadowColor='rgba(200,145,58,.7)'; ctx.shadowBlur=9;
+      ctx.fillStyle=C.amber; ctx.beginPath(); ctx.arc(mxp,myp,5,0,7); ctx.fill(); ctx.restore();
+    }
+    // teller rechtsboven op canvas
+    ctx.textAlign='right'; ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic');
+    ctx.fillText('geschud: '+total, R, T-6);
+  }
+
+  // ---- teller-tekst in DOM (toegankelijk) ----
+  const countEl=document.getElementById('count');
+  function updateCount(){
+    if(total===0){ countEl.innerHTML='De muur is nog leeg. Schud de soort-kaartjes door elkaar en kijk waar het verschil landt.'; return; }
+    countEl.innerHTML='<b>'+extreme+' van '+total+'</b> geschudde werelden kwamen zo ver of verder van nul (≥ '+
+      D_SHOW+' g) als het echte verschil tussen de soorten.';
+  }
+
+  // ---- narratie ----
+  const narr=document.getElementById('narr'); const narrBase=narr.innerHTML;
+  function say(html){ narr.innerHTML=html; }
+
+  // ---- batch-animatie: bouw de muur zichtbaar op ----
+  let anim=null;
+  function animateMany(K, durMs){
+    if(anim) cancelAnimationFrame(anim);
+    let done=0; const t0=performance.now();
+    (function step(now){
+      now=now||performance.now();
+      const target=Math.min(K, Math.floor(K*(now-t0)/durMs));
+      const k=target-done; if(k>0){ manyShuffle(k); done=target; updateCount(); }
+      if(done<K) anim=requestAnimationFrame(step); else updateCount();
+    })(performance.now());
+  }
+
+  // ---- knoppen ----
+  document.getElementById('schud1').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    oneShuffle(true); updateCount();
+    say('Eén geschudde wereld. Dit verschil hangt ergens rond <b>nul</b> — want de soort-kaartjes zijn nu willekeurig geplakt. Schud er honderd, duizend.'); };
+  document.getElementById('schud100').onclick=()=>{ animateMany(100,1400);
+    say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien rond nul — een paar honderd gram naar links of rechts, meer wordt het niet. De rode lijn staat er ver vandaan.'); };
+  document.getElementById('schud1000').onclick=()=>{ animateMany(1000,2400);
+    say('Duizend keer schudden. Het bergje van het toeval danst tussen pakweg −400 en +400 gram — en het raakt die rode lijn <b>vrijwel nooit</b>. Dát is een afstand die je ziet, geen p-waarde die je gelooft.'); };
+  document.getElementById('wis').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
+    bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; extreme=0; lastD=null; scaleT=1;
+    updateCount(); say(narrBase); };
+
+  // ---- render loops ----
+  function tick(){ drawHist(); requestAnimationFrame(tick); }
+  window.addEventListener('resize',()=>{ sResize(); hResize(); });
+  sResize(); hResize(); updateCount(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

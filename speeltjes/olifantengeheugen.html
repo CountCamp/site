@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Het olifantengeheugen — gok de correlatie</title>
+<style>
+  :root{ --ink:#2f2a21; --dim:#7a6c50; --paper:#faf6ea; --bordeaux:#8a3324; --amber-ink:#8a6212; }
+  *{box-sizing:border-box}
+  body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:190px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='10' viewBox='0 0 190 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 188 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:190px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:680px}
+  .panels{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
+  @media (max-width:820px){ .panels{grid-template-columns:1fr} }
+  .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
+    margin:0 0 8px;letter-spacing:.2px}
+  canvas{width:100%;display:block;border-radius:12px;background:var(--paper);
+    border:1.5px solid #d8c69b;box-shadow:0 8px 26px rgba(120,95,45,.18)}
+  .schuif{margin:16px 0 0}
+  .schuif input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;
+    background:transparent;cursor:pointer}
+  .schuif input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:5px 7px 5px 8px / 7px 5px 8px 5px;
+    background:#e8dcbb;border:1.5px solid #c9a866;box-shadow:inset 0 1px 2px rgba(120,95,45,.18)}
+  .schuif input[type=range]::-moz-range-track{height:8px;border-radius:6px;
+    background:#e8dcbb;border:1.5px solid #c9a866}
+  .schuif input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:24px;height:24px;margin-top:-9px;background:#dca94e;border:1.8px solid #a9762f;
+    border-radius:12px 10px 13px 11px / 11px 13px 10px 12px;
+    box-shadow:0 2px 0 rgba(120,95,45,.3)}
+  .schuif input[type=range]::-moz-range-thumb{width:24px;height:24px;background:#dca94e;
+    border:1.8px solid #a9762f;border-radius:50%;box-shadow:0 2px 0 rgba(120,95,45,.3)}
+  .schaal{display:flex;justify-content:space-between;color:var(--dim);font-size:13px;margin-top:2px;
+    font-variant-numeric:tabular-nums}
+  .gokwaarde{font-size:26px;color:var(--bordeaux);font-variant-numeric:tabular-nums;margin:6px 0 0}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 0}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 15px;cursor:pointer;min-height:42px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button.primary{background:#dca94e;border-color:#b3843c;color:#3a2e15;--rot:-.6deg;transform:rotate(var(--rot))}
+  button.primary:hover{background:#e6b85e}
+  button:disabled{opacity:.45;cursor:default}
+  .oordeel{margin:14px 0 0;color:#4a4030;font-size:16.5px;line-height:1.55;min-height:52px;max-width:640px}
+  .oordeel b{color:var(--bordeaux);font-weight:600}
+  .olifantvak{position:relative;display:flex;flex-direction:column;min-height:330px;
+    background:var(--paper);border:1.5px solid #d8c69b;
+    border-radius:12px 10px 13px 11px / 11px 13px 10px 12px;
+    box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 18px 8px;overflow:hidden}
+  .olifantzegt{color:#4a4030;font-size:16px;line-height:1.55;margin:0 0 14px}
+  .olifantzegt em{color:var(--amber-ink);font-style:italic}
+  .olifantgrond{position:relative;margin-top:auto;padding-top:10px}
+  .olifantgrond::after{content:"";position:absolute;left:4%;right:4%;bottom:8px;height:3px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='3' viewBox='0 0 240 3'><path d='M1 2 Q 30 1, 60 2 T 120 2 T 180 1.6 T 239 2' fill='none' stroke='%23cdbb92' stroke-width='1.6' stroke-linecap='round'/></svg>") repeat-x;
+    background-size:240px 3px}
+  .olifant{display:block;margin:0 auto;width:186px;position:relative;bottom:0;
+    transition:transform .6s ease}
+  .olifant.gedraaid{transform:scaleX(-1)}
+  .olifant.sprint{animation:rennen 3s cubic-bezier(.3,0,.6,1) 1}
+  @keyframes rennen{
+    0%{transform:scaleX(-1) translateX(0)}
+    45%{transform:scaleX(-1) translateX(180px) rotate(-3deg)}
+    55%{transform:scaleX(1) translateX(180px) rotate(3deg)}
+    100%{transform:scaleX(1) translateX(0)}}
+  .geheugen{width:100%;display:block;border-radius:10px;background:#f8f2e0;
+    border:1.5px dashed #cdb888;box-shadow:none;margin:0 0 10px}
+  .teller{margin:24px 0 0;color:#4a4030;font-size:15.5px;line-height:1.6;max-width:680px}
+  .teller b{color:var(--bordeaux);font-variant-numeric:tabular-nums}
+  .sier{margin:26px 0 0;padding:16px 20px;max-width:620px;background:var(--paper);color:#3a2e1a;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;border:1px solid #e3d3a8;
+    font-size:16px;line-height:1.6}
+  .kleine-lettertjes{margin:40px 0 0;color:#8b8069;font-size:12.5px;line-height:1.7;max-width:660px;
+    border-top:1px solid #ddcfa9;padding-top:12px}
+  .verstopt{display:none}
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a href="/speeltjes/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar de speelkist</a>
+  <h1>Het olifantengeheugen</h1>
+  <p class="lede">Een wolk punten. Schat hoe sterk ze samenhangen, schuif hem op je getal, en druk.
+    Verder is er niets te winnen. In de hoek staat een olifant. Die doet niets.</p>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>de wolk</h2>
+      <canvas id="wolk" height="380"></canvas>
+
+      <div class="schuif">
+        <input id="gok" type="range" min="-1" max="1" step="0.01" value="0">
+        <div class="schaal"><span>−1</span><span>−.5</span><span>0</span><span>.5</span><span>1</span></div>
+        <div class="gokwaarde">jouw gok: <span id="gokwaarde">.00</span></div>
+      </div>
+
+      <div class="controls">
+        <button id="druk" class="primary">Druk</button>
+        <button id="volgende" disabled>Volgende wolk</button>
+      </div>
+
+      <p class="oordeel" id="oordeel">Schuif en druk. Je krijgt te horen hoe ver je zat, meer niet.</p>
+    </div>
+
+    <div class="panel">
+      <h2>de hoek</h2>
+      <div class="olifantvak">
+        <div class="olifantzegt" id="olifantzegt"></div>
+        <canvas id="geheugen" class="geheugen verstopt" height="230"></canvas>
+        <div class="olifantgrond">
+          <svg class="olifant" id="olifant" viewBox="0 0 190 140" aria-label="een olifant die niets doet">
+          <!-- poten eerst: die verdwijnen straks half achter het lijf -->
+          <g fill="#b3ada1" stroke="#6f6a60" stroke-width="2.4" stroke-linejoin="round">
+            <path d="M132 84 l 0 44 q 0 5, 6 5 l 10 0 q 6 0, 6 -5 l 0 -44 z"/>
+            <path d="M74 84 l 0 44 q 0 5, 6 5 l 10 0 q 6 0, 6 -5 l 0 -44 z"/>
+          </g>
+          <g fill="#c9c3b7" stroke="#6f6a60" stroke-width="2.4" stroke-linejoin="round">
+            <path d="M108 86 l 0 42 q 0 5, 6 5 l 10 0 q 6 0, 6 -5 l 0 -42 z"/>
+            <path d="M52 86 l 0 42 q 0 5, 6 5 l 10 0 q 6 0, 6 -5 l 0 -42 z"/>
+          </g>
+          <!-- staart -->
+          <path d="M170 66 q 13 10, 10 26 q -1 7, -7 9" fill="none" stroke="#6f6a60" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M172 100 q -4 6, 1 10" fill="none" stroke="#6f6a60" stroke-width="2.4" stroke-linecap="round"/>
+          <!-- lijf -->
+          <path d="M62 56 q 8 -24, 44 -26 q 42 -2, 62 22 q 12 15, 8 34 q -3 12, -13 12 l -94 0 q -13 -4, -14 -22 q -1 -12, 7 -20 z"
+                fill="#c3bdb1" stroke="#6f6a60" stroke-width="2.6" stroke-linejoin="round"/>
+          <!-- kop: loopt door in de slurf, één vorm -->
+          <path d="M64 54
+                   q -26 4, -30 30
+                   q -2 16, 4 26
+                   q 3 6, 1 14
+                   q -3 12, 1 20
+                   q 2 6, 8 6
+                   q 6 0, 7 -6
+                   q 1 -6, -3 -9
+                   q -4 -4, -2 -12
+                   q 2 -9, 8 -14
+                   q 10 -8, 12 -22
+                   l 0 -33 z"
+                fill="#c3bdb1" stroke="#6f6a60" stroke-width="2.6" stroke-linejoin="round"/>
+          <!-- rimpels in de slurf -->
+          <path d="M36 104 l 9 2 M35 114 l 9 2 M36 124 l 8 1"
+                stroke="#6f6a60" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+          <!-- oor: kleiner, en achter het oog -->
+          <path d="M66 50 q -16 -2, -21 12 q -5 16, 4 26 q 8 7, 14 -2 q 5 -9, 4 -20 q -1 -10, -1 -16 z"
+                fill="#b3ada1" stroke="#6f6a60" stroke-width="2.4" stroke-linejoin="round"/>
+          <!-- oog, op de kop vóór het oor -->
+          <circle cx="45" cy="76" r="3.2" fill="#3b352b"/>
+          <circle cx="46.1" cy="74.9" r="1.05" fill="#f4ecd8"/>
+        </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="teller" id="teller"></p>
+
+  <div class="sier verstopt" id="sier"></div>
+
+  <p class="kleine-lettertjes" id="kleine">
+    Aan dit spel zijn geen prijzen verbonden. Aan dit spel zijn geen knopen verbonden.
+    Aan dit spel is een olifant verbonden.
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // ---------------------------------------------------------------
+  // Het olifantengeheugen. Je schat de correlatie van een wolk; de
+  // olifant onthoudt stilletjes jouw gok naast de waarheid. Na vijf
+  // rondes draait hij zich om -- en zegt dat vijf te weinig is. Pas
+  // rond tien velt hij een oordeel. Dat is geen grap maar de les.
+  // ---------------------------------------------------------------
+  var N = 48;                       // punten per wolk
+  var DOELEN = [-.9,-.78,-.62,-.5,-.35,-.2,0,.2,.35,.5,.62,.78,.9];
+  var ONTHULLING = 5;               // hier draait de olifant zich om
+  var OORDEEL = 10;                 // hier durft hij iets te zeggen
+  var MARGE = .05;                  // binnen dit verschil is het raak
+
+  var punten = [], waarheid = 0, gedrukt = false;
+  var geschiedenis = [];            // {gok, waar}
+  var raak = 0;
+
+  // --- kleine statistiek-keuken -----------------------------------
+  function normaal(){                       // Box-Muller
+    var u = 0, v = 0;
+    while(u === 0) u = Math.random();
+    while(v === 0) v = Math.random();
+    return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+  }
+  function correlatie(xs, ys){
+    var n = xs.length, mx = 0, my = 0, i;
+    for(i=0;i<n;i++){ mx += xs[i]; my += ys[i]; }
+    mx /= n; my /= n;
+    var sxy = 0, sxx = 0, syy = 0, dx, dy;
+    for(i=0;i<n;i++){ dx = xs[i]-mx; dy = ys[i]-my; sxy += dx*dy; sxx += dx*dx; syy += dy*dy; }
+    if(sxx === 0 || syy === 0) return 0;
+    return sxy / Math.sqrt(sxx*syy);
+  }
+  function toon(r){                          // .58 en −.58, geen voorloopnul
+    var s = Math.abs(r).toFixed(2).replace(/^0/,"");
+    return (r < 0 ? "−" : "") + s;
+  }
+
+  function nieuweWolk(){
+    var doel = DOELEN[Math.floor(Math.random()*DOELEN.length)];
+    var xs = [], ys = [], i, z1, z2;
+    for(i=0;i<N;i++){
+      z1 = normaal(); z2 = normaal();
+      xs.push(z1);
+      ys.push(doel*z1 + Math.sqrt(1-doel*doel)*z2);
+    }
+    // de wáárheid is de correlatie die in DEZE wolk zit -- dat is wat je ziet
+    waarheid = correlatie(xs, ys);
+    punten = xs.map(function(x,k){ return {x:x, y:ys[k]}; });
+    gedrukt = false;
+    tekenWolk();
+  }
+
+  // --- tekenen ----------------------------------------------------
+  var cv = document.getElementById("wolk"), cx = cv.getContext("2d");
+  // Let op: NIET de canvas-hoogte teruglezen die we zelf hebben gezet -- dan
+  // groeit het canvas bij elke tekenbeurt en verdwijnt de wolk uit beeld.
+  // De logische hoogte staat vast en komt als argument mee.
+  function pas(c, hoogte){
+    var dpr = window.devicePixelRatio || 1;
+    var b = c.getBoundingClientRect();
+    c.width  = Math.round(b.width * dpr);
+    c.height = Math.round(hoogte * dpr);
+    c.style.height = hoogte + "px";
+    c.getContext("2d").setTransform(dpr,0,0,dpr,0,0);
+    return {w:b.width, h:hoogte};
+  }
+  function tekenWolk(){
+    var m = pas(cv, 380), w = m.w, h = m.h, pad = 26;
+    cx.clearRect(0,0,w,h);
+    // ruitjes
+    cx.strokeStyle = "#e6dcc0"; cx.lineWidth = 1;
+    for(var g=pad; g<=w-pad; g+=28){ cx.beginPath(); cx.moveTo(g,pad); cx.lineTo(g,h-pad); cx.stroke(); }
+    for(var g2=pad; g2<=h-pad; g2+=28){ cx.beginPath(); cx.moveTo(pad,g2); cx.lineTo(w-pad,g2); cx.stroke(); }
+    // assen
+    cx.strokeStyle = "#b9a476"; cx.lineWidth = 1.6;
+    cx.beginPath(); cx.moveTo(pad,h-pad); cx.lineTo(w-pad,h-pad); cx.moveTo(pad,pad); cx.lineTo(pad,h-pad); cx.stroke();
+    // punten
+    var xs = punten.map(function(p){return p.x;}), ys = punten.map(function(p){return p.y;});
+    var xmin = Math.min.apply(null,xs), xmax = Math.max.apply(null,xs);
+    var ymin = Math.min.apply(null,ys), ymax = Math.max.apply(null,ys);
+    cx.fillStyle = "rgba(90,74,44,.72)";
+    punten.forEach(function(p){
+      var px = pad + (p.x-xmin)/(xmax-xmin) * (w-2*pad);
+      var py = (h-pad) - (p.y-ymin)/(ymax-ymin) * (h-2*pad);
+      cx.beginPath(); cx.arc(px,py,3.6,0,6.2832); cx.fill();
+    });
+  }
+
+  // het geheugen van de olifant: jouw gok tegen de waarheid
+  var gv = document.getElementById("geheugen"), gc = gv.getContext("2d");
+  function tekenGeheugen(){
+    var m = pas(gv, 230), w = m.w, h = m.h, pad = 26;
+    gc.clearRect(0,0,w,h);
+    gc.strokeStyle = "#c9b98c"; gc.lineWidth = 1.4;
+    gc.beginPath(); gc.moveTo(pad,h-pad); gc.lineTo(w-pad,h-pad); gc.moveTo(pad,pad); gc.lineTo(pad,h-pad); gc.stroke();
+    // diagonaal: waar je zou liggen als je perfect schatte
+    gc.setLineDash([4,4]); gc.strokeStyle = "#d8c69b";
+    gc.beginPath(); gc.moveTo(pad,h-pad); gc.lineTo(w-pad,pad); gc.stroke(); gc.setLineDash([]);
+    gc.fillStyle = "#8a3324";
+    geschiedenis.forEach(function(p){
+      var px = pad + (p.waar+1)/2 * (w-2*pad);
+      var py = (h-pad) - (p.gok+1)/2 * (h-2*pad);
+      gc.beginPath(); gc.arc(px,py,4,0,6.2832); gc.fill();
+    });
+    gc.fillStyle = "#7a6c50"; gc.font = "12px Georgia,serif";
+    gc.fillText("waarheid →", w-pad-70, h-pad+16);
+    gc.save(); gc.translate(12, pad+64); gc.rotate(-Math.PI/2);
+    gc.fillText("← jouw gok", 0, 0); gc.restore();
+  }
+
+  // --- het spel ---------------------------------------------------
+  var schuif = document.getElementById("gok"),
+      gokwaarde = document.getElementById("gokwaarde"),
+      oordeel = document.getElementById("oordeel"),
+      zegt = document.getElementById("olifantzegt"),
+      olifant = document.getElementById("olifant"),
+      teller = document.getElementById("teller"),
+      sier = document.getElementById("sier"),
+      kleine = document.getElementById("kleine"),
+      knopDruk = document.getElementById("druk"),
+      knopVolgende = document.getElementById("volgende");
+
+  schuif.oninput = function(){ gokwaarde.textContent = toon(parseFloat(schuif.value)); };
+
+  knopDruk.onclick = function(){
+    if(gedrukt) return;
+    gedrukt = true;
+    var gok = parseFloat(schuif.value), verschil = Math.abs(gok - waarheid);
+    geschiedenis.push({gok:gok, waar:waarheid});
+    if(verschil <= MARGE) raak++;
+
+    var zin;
+    if(verschil <= MARGE){
+      zin = "Raak. Het was <b>" + toon(waarheid) + "</b>.";
+    } else if(verschil <= .12){
+      zin = "Het was <b>" + toon(waarheid) + "</b>. Je zat " + verschil.toFixed(2).replace(/^0/,"") + " " +
+            (gok < waarheid ? "te laag" : "te hoog") + ".";
+    } else {
+      zin = "Het was <b>" + toon(waarheid) + "</b>. Je zat " + verschil.toFixed(2).replace(/^0/,"") + " " +
+            (gok < waarheid ? "te laag" : "te hoog") + ". Kijk nog even naar de wolk voor je doorgaat.";
+    }
+    oordeel.innerHTML = zin;
+    knopVolgende.disabled = false;
+    werkOlifantBij();
+    werkTellerBij();
+  };
+
+  knopVolgende.onclick = function(){ knopVolgende.disabled = true; nieuweWolk(); };
+
+  function werkOlifantBij(){
+    var n = geschiedenis.length;
+    if(n === ONTHULLING){
+      olifant.classList.add("gedraaid");
+      gv.classList.remove("verstopt");
+      zegt.innerHTML = "De olifant draait zich om. Hij heeft meegekeken: elk stipje hieronder is één ronde — " +
+                       "jouw gok tegen de waarheid.<br><br><em>“Vijf. Daar zeg ik niets over.”</em>";
+    }
+    if(n > ONTHULLING) tekenGeheugen();
+    if(n === ONTHULLING) tekenGeheugen();
+
+    if(n >= OORDEEL){
+      var gokken = geschiedenis.map(function(p){return p.gok;}),
+          waar   = geschiedenis.map(function(p){return p.waar;});
+      var rr = correlatie(gokken, waar);
+      var bias = 0;
+      geschiedenis.forEach(function(p){ bias += (p.gok - p.waar); });
+      bias /= n;
+      var biaszin = Math.abs(bias) < .03 ? "Je zit gemiddeld precies goed." :
+        (bias < 0 ? "Je schat gemiddeld <b>" + Math.abs(bias).toFixed(2).replace(/^0/,"") + " te laag</b> — dat doet bijna iedereen."
+                  : "Je schat gemiddeld <b>" + Math.abs(bias).toFixed(2).replace(/^0/,"") + " te hoog</b>.");
+      zegt.innerHTML = "<em>“Uw gokken correleren <b>" + toon(rr) + "</b> met de werkelijkheid. " +
+                       "Gok nu eens hoe goed u dát geschat had.”</em><br><br>" + biaszin;
+      if(rr > .90 && !olifant.dataset.gerend){
+        olifant.dataset.gerend = "1";
+        olifant.classList.remove("gedraaid");
+        olifant.classList.add("sprint");
+        setTimeout(function(){ olifant.classList.remove("sprint"); olifant.classList.add("gedraaid"); }, 3100);
+      }
+    }
+  }
+
+  function werkTellerBij(){
+    var n = geschiedenis.length;
+    teller.innerHTML = "Ronde <b>" + n + "</b>. Binnen de marge van .05: <b>" + raak + "</b>.";
+    if(n === 12 && !sier.dataset.aan){
+      sier.dataset.aan = "1";
+      sier.classList.remove("verstopt");
+      sier.innerHTML = "Wat je hier ziet is niet je geheugen maar je <em>ijking</em>: of je gokken meebewegen met " +
+        "de werkelijkheid, en of ze er structureel naast liggen. Twee verschillende dingen — precies zoals bij een " +
+        "meetinstrument.";
+    }
+    if(n === 30){
+      kleine.innerHTML = "U speelt dit al dertig rondes. Gokken kan verslavend zijn. " +
+        "De olifant oordeelt niet. De olifant noteert.<br><br>" + kleine.innerHTML;
+    }
+  }
+
+  window.addEventListener("resize", function(){ tekenWolk(); if(!gv.classList.contains("verstopt")) tekenGeheugen(); });
+  gokwaarde.textContent = toon(0);
+  nieuweWolk();
+  werkTellerBij();
+})();
+</script>
+</body>
+</html>
