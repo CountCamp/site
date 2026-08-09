@@ -1,0 +1,418 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casino de Kleine n — echt of toeval?</title>
+<meta name="description" content="Twee groepjes stipjes. Jij stempelt ECHT of TOEVAL. De meeuw verkoopt je meer data, en telt hoe vaak je je vergist.">
+<style>
+  :root{
+    --paper:#fbf6e9; --ink:#3a352c; --dim:#8b8069; --amber:#c8963e; --amber-ink:#8a6a24;
+    --bordeaux:#8c3a3a; --vilt:#6f8a72; --vilt-licht:#e6ece2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#fdfaf1 0%,#f6eeda 100%);
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
+  a{color:var(--amber-ink)}
+  .terug{font-size:14px;color:var(--dim);text-decoration:none}
+  .terug:hover{color:var(--amber-ink)}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:12px 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:210px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 16 2, 32 5.5 T 62 5 T 92 6 T 122 4.5 T 152 6 T 182 5 T 208 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:210px 10px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:700px}
+  .panels{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:start}
+  @media (max-width:860px){ .panels{grid-template-columns:1fr} }
+  .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
+    margin:0 0 8px;letter-spacing:.2px}
+  .tafel{background:var(--vilt-licht);border:1.5px solid #bcc9b8;
+    border-radius:14px 11px 15px 12px / 12px 15px 11px 14px;
+    box-shadow:0 8px 26px rgba(90,110,90,.18);padding:10px 12px 6px}
+  canvas#tafel{width:100%;display:block;background:transparent;border:0}
+  .inzet{margin:14px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
+    border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;
+    padding:9px 15px;cursor:pointer;min-height:42px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){background:#f5ecd3;border-color:#b3843c}
+  button:disabled{opacity:.4;cursor:default}
+  button.echt{background:#dca94e;border-color:#b3843c;color:#3a2e15;--rot:-.6deg;transform:rotate(var(--rot))}
+  button.echt:hover:not(:disabled){background:#e6b85e}
+  button.toeval{background:#e7ddc6;border-color:#c0a877;--rot:.5deg;transform:rotate(var(--rot))}
+  button.koop{background:#e3ecdd;border-color:#a8bfa4;color:#3d4a3c}
+  button.koop:hover:not(:disabled){background:#edf3e8}
+  .uitslag{margin:16px 0 0;color:#4a4030;font-size:16.5px;line-height:1.55;min-height:56px;max-width:660px}
+  .uitslag b{color:var(--bordeaux);font-weight:600}
+  .uitslag .goed{color:#5a7d5e;font-weight:600}
+  .meeuwvak{position:relative;display:flex;flex-direction:column;min-height:340px;
+    background:var(--paper);border:1.5px solid #d8c69b;
+    border-radius:12px 10px 13px 11px / 11px 13px 10px 12px;
+    box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 18px 8px;overflow:hidden}
+  .meeuwzegt{color:#4a4030;font-size:16px;line-height:1.55;margin:0 0 12px;min-height:66px}
+  .meeuwzegt em{color:var(--amber-ink);font-style:italic}
+  .beurs{font-size:15.5px;color:#4a4030;margin:0 0 6px;line-height:1.7}
+  .beurs b{color:var(--bordeaux);font-variant-numeric:tabular-nums}
+  .eikels{font-size:19px;letter-spacing:1px;line-height:1.5;color:#8a6a24;word-break:break-all}
+  .meeuwgrond{position:relative;margin-top:auto;padding-top:10px}
+  .meeuwgrond::after{content:"";position:absolute;left:6%;right:6%;bottom:8px;height:3px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='3' viewBox='0 0 240 3'><path d='M1 2 Q 30 1, 60 2 T 120 2 T 180 1.6 T 239 2' fill='none' stroke='%23cdbb92' stroke-width='1.6' stroke-linecap='round'/></svg>") repeat-x;
+    background-size:240px 3px}
+  .meeuw{display:block;margin:0 auto;width:150px;transition:transform .5s ease}
+  .meeuw.wijst{transform:translateX(-10px) rotate(-4deg)}
+  .boek{margin:26px 0 0;padding:16px 20px;background:var(--paper);
+    border:1px solid #e3d3a8;
+    border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
+    max-width:700px;font-size:16px;line-height:1.65;color:#3a2e1a}
+  .boek h3{margin:0 0 10px;font-size:15px;font-style:italic;font-weight:600;color:var(--dim)}
+  .boek .regel{margin:0 0 6px}
+  .boek b{color:var(--bordeaux);font-variant-numeric:tabular-nums}
+  .bekentenis{margin:14px 0 0;padding-top:12px;border-top:1px dashed #ddcfa9;
+    font-style:italic;color:var(--amber-ink)}
+  .kleine-lettertjes{margin:40px 0 0;color:#8b8069;font-size:12.5px;line-height:1.7;max-width:680px;
+    border-top:1px solid #ddcfa9;padding-top:12px}
+  .verstopt{display:none}
+</style>
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<div class="wrap">
+  <a class="terug" href="/speeltjes/">← Terug naar de speelkist</a>
+  <h1>Casino de Kleine n</h1>
+  <p class="lede">Twee groepjes stipjes. Eén vraag: is dat verschil echt, of heeft het toeval het nagedaan?
+    Je stempelt <b>ECHT</b> of <b>TOEVAL</b>. Achter de tafel staat een meeuw. Hij verkoopt je meer stipjes,
+    en hij houdt bij hoe vaak je je vergist.</p>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>de tafel</h2>
+      <div class="tafel"><canvas id="tafel" height="330"></canvas></div>
+      <div class="inzet">
+        <button id="echt" class="echt">ECHT</button>
+        <button id="toeval" class="toeval">TOEVAL</button>
+        <button id="koop" class="koop">Meer stipjes — 2 eikels</button>
+        <button id="volgende" disabled>Volgende ronde</button>
+      </div>
+      <p class="uitslag" id="uitslag">Kijk naar de tafel en stempel. Je mag ook eerst bijkopen.</p>
+    </div>
+
+    <div class="panel">
+      <h2>achter de tafel</h2>
+      <div class="meeuwvak">
+        <div class="meeuwzegt" id="meeuwzegt"></div>
+        <p class="beurs">In je hand: <b id="saldo">12</b> eikels</p>
+        <p class="eikels" id="eikelrij"></p>
+        <div class="meeuwgrond">
+          <svg class="meeuw" id="meeuw" viewBox="0 0 170 130" aria-label="een meeuw achter een speeltafel">
+            <!-- poten, eerst: ze staan achter het lijf -->
+            <path d="M78 96 L76 112 M76 112 L68 116 M76 112 L84 115" fill="none" stroke="#d09a44" stroke-width="3" stroke-linecap="round"/>
+            <path d="M94 96 L96 112 M96 112 L88 116 M96 112 L104 115" fill="none" stroke="#d09a44" stroke-width="3" stroke-linecap="round"/>
+            <!-- staart -->
+            <path d="M118 70 Q 140 68, 153 60 Q 142 78, 122 84 Z" fill="#efece2" stroke="#8d8878" stroke-width="2" stroke-linejoin="round"/>
+            <!-- lijf -->
+            <path d="M50 68 Q 52 48, 70 42 Q 96 34, 116 50 Q 130 62, 122 78 Q 110 96, 84 98 Q 58 98, 50 68 Z"
+                  fill="#f8f6ee" stroke="#8d8878" stroke-width="2.2" stroke-linejoin="round"/>
+            <!-- mantel / gevouwen vleugel -->
+            <path d="M66 54 Q 92 46, 116 58 Q 108 76, 86 82 Q 68 78, 66 54 Z"
+                  fill="#cfd3cd" stroke="#8d8878" stroke-width="2" stroke-linejoin="round"/>
+            <!-- zwarte vleugelpunt -->
+            <path d="M110 60 Q 126 62, 137 70 Q 121 73, 105 68 Z"
+                  fill="#4c4c46" stroke="#3d3d38" stroke-width="1.4" stroke-linejoin="round"/>
+            <!-- kop -->
+            <path d="M44 38 Q 42 21, 58 17 Q 75 14, 79 30 Q 81 43, 66 49 Q 50 51, 44 38 Z"
+                  fill="#f9f7f0" stroke="#8d8878" stroke-width="2.2" stroke-linejoin="round"/>
+            <!-- snavel, met het rode stipje dat elke meeuw heeft -->
+            <path d="M44 32 Q 26 31, 17 37 Q 27 43, 44 42 Z" fill="#e5a63f" stroke="#b57c25" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M22 37 L 42 37" stroke="#b57c25" stroke-width="1.1" stroke-linecap="round"/>
+            <circle cx="23" cy="40" r="2.1" fill="#b8452f"/>
+            <!-- oog -->
+            <circle cx="57" cy="30" r="3.4" fill="#3a352c"/>
+            <circle cx="58.2" cy="28.8" r="1.1" fill="#fff"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="boek" id="boek">
+    <h3>het boekje van de meeuw</h3>
+    <p class="regel" id="r_nul">Werelden waarin <b>niets</b> was: —</p>
+    <p class="regel" id="r_iets">Werelden waarin <b>wél iets</b> was: —</p>
+    <p class="bekentenis verstopt" id="bekentenis"></p>
+  </div>
+
+  <p class="kleine-lettertjes" id="kleine">
+    Elke ronde gooit de computer eerst een munt: in de helft van de werelden is er écht een verschil,
+    in de andere helft niets. Daarna trekt hij jouw stipjes uit die wereld. Daarom weet de meeuw het antwoord —
+    hij heeft de wereld zelf gemaakt. Bij echt onderzoek weet niemand het, en is dit boekje precies wat je
+    niet kunt bijhouden. Gokken kan verslavend zijn; eikels zijn dat niet.
+  </p>
+</div>
+
+<script>
+(function(){
+  // Casino de Kleine n. Elke ronde is een wereld: de helft nul, de helft
+  // met een echt verschil. Jij ziet een handvol stipjes en stempelt.
+  // Wat het boekje onderaan bijhoudt, is je persoonlijke alfa en je power.
+
+  var START_N = 6, KOOP_N = 7, MAX_KOPEN = 2, KOOP_PRIJS = 2,
+      WINST = 3, VERLIES = 2, START_EIKELS = 12;
+
+  var tafel = document.getElementById("tafel"), tc = tafel.getContext("2d"),
+      bEcht = document.getElementById("echt"), bToeval = document.getElementById("toeval"),
+      bKoop = document.getElementById("koop"), bVolgende = document.getElementById("volgende"),
+      uitslag = document.getElementById("uitslag"), zegt = document.getElementById("meeuwzegt"),
+      saldoEl = document.getElementById("saldo"), eikelrij = document.getElementById("eikelrij"),
+      meeuw = document.getElementById("meeuw"),
+      rNul = document.getElementById("r_nul"), rIets = document.getElementById("r_iets"),
+      bekentenis = document.getElementById("bekentenis"), kleine = document.getElementById("kleine");
+
+  var eikels = START_EIKELS, ronde = 0, gekocht = 0, beslist = false,
+      wereld = null, onthuld = false;
+  var boek = {nul:0, nulEcht:0, iets:0, ietsGemist:0};
+
+  // --- toeval ---------------------------------------------------------
+  function normaal(){
+    var u = 0, v = 0;
+    while(u === 0) u = Math.random();
+    while(v === 0) v = Math.random();
+    return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+  }
+  function trek(n, gem, sd){
+    var uit = [];
+    for(var i=0;i<n;i++) uit.push(gem + sd*normaal());
+    return uit;
+  }
+  function gemiddelde(a){ var s=0; for(var i=0;i<a.length;i++) s+=a[i]; return s/a.length; }
+
+  // --- de wereld ------------------------------------------------------
+  function nieuweWereld(){
+    var erIsIets = Math.random() < .5;
+    // effectgroottes die je in de praktijk tegenkomt; nooit zo groot dat het gratis is
+    var maten = [.45,.6,.8,1.0,1.25];
+    var d = erIsIets ? maten[Math.floor(Math.random()*maten.length)] : 0;
+    wereld = {
+      iets: erIsIets, d: d, sd: 10, gemA: 50, gemB: 50 + d*10,
+      A: [], B: [], nA: 0
+    };
+    // De wereld waaruit getrokken wordt. Hij bestaat vanaf het begin — je krijgt
+    // hem alleen pas te zien nadat je gestempeld hebt. De schaal komt hiervandaan,
+    // zodat de tafel niet verspringt als je bijkoopt.
+    wereld.schaduwA = trek(150, wereld.gemA, wereld.sd);
+    wereld.schaduwB = trek(150, wereld.gemB, wereld.sd);
+    // Vaste, theoretische schaal (vier standaardafwijkingen om de wereld heen):
+    // hij hangt niet van de trekking af, dus de tafel verspringt nooit — niet bij
+    // het bijkopen en niet bij de onthulling.
+    wereld.lo = wereld.gemA - 4*wereld.sd;
+    wereld.hi = wereld.gemB + 4*wereld.sd;
+    groei(START_N);
+  }
+  function groei(n){
+    wereld.A = wereld.A.concat(trek(n, wereld.gemA, wereld.sd));
+    wereld.B = wereld.B.concat(trek(n, wereld.gemB, wereld.sd));
+    wereld.nA = wereld.A.length;
+  }
+
+  // --- tekenen --------------------------------------------------------
+  function pas(c, hoogte){
+    // Niet de eerder gezette canvas-hoogte teruglezen: dan groeit hij elke beurt.
+    var dpr = window.devicePixelRatio || 1;
+    var b = c.getBoundingClientRect();
+    c.width  = Math.round(b.width * dpr);
+    c.height = Math.round(hoogte * dpr);
+    c.style.height = hoogte + "px";
+    c.getContext("2d").setTransform(dpr,0,0,dpr,0,0);
+    return {w:b.width, h:hoogte};
+  }
+
+  function tekenTafel(){
+    var m = pas(tafel, 330), w = m.w, h = m.h;
+    tc.clearRect(0,0,w,h);
+    if(!wereld) return;
+
+    var pad = 26, links = pad + 34, rechts = w - pad;
+    var lo = wereld.lo, hi = wereld.hi;
+    var x = function(v){
+      return Math.max(links, Math.min(rechts, links + (v - lo)/(hi - lo) * (rechts - links)));
+    };
+
+    var yA = h*0.33, yB = h*0.70;
+
+    // de wereld waaruit je trok — pas zichtbaar na het stempelen
+    if(onthuld){
+      [[wereld.schaduwA, yA, "rgba(120,132,118,.30)"],
+       [wereld.schaduwB, yB, "rgba(200,150,62,.32)"]].forEach(function(s){
+        for(var i=0;i<s[0].length;i++){
+          var jy = s[1] + (((i*7919)%1000)/1000 - .5) * 46;
+          tc.beginPath(); tc.arc(x(s[0][i]), jy, 2.6, 0, Math.PI*2);
+          tc.fillStyle = s[2]; tc.fill();
+        }
+      });
+    }
+
+    // de twee banen
+    [[yA,"A"],[yB,"B"]].forEach(function(rij){
+      tc.strokeStyle = "#c3d1c0"; tc.lineWidth = 1.2;
+      tc.beginPath(); tc.moveTo(links-8, rij[0]); tc.lineTo(rechts, rij[0]); tc.stroke();
+    });
+
+    // labels
+    tc.fillStyle = "#6f8a72"; tc.font = "italic 15px 'Iowan Old Style',Georgia,serif";
+    tc.textAlign = "right"; tc.textBaseline = "middle";
+    tc.fillText("groep A", links-14, yA);
+    tc.fillText("groep B", links-14, yB);
+
+    // stipjes
+    function stipjes(rij, y, kleur, rand){
+      for(var i=0;i<rij.length;i++){
+        var jx = x(rij[i]);
+        var jy = y + (((i*2654435761)%1000)/1000 - .5) * 34;  // vaste jitter per index
+        tc.beginPath(); tc.arc(jx, jy, 5, 0, Math.PI*2);
+        tc.fillStyle = kleur; tc.fill();
+        tc.strokeStyle = rand; tc.lineWidth = 1.2; tc.stroke();
+      }
+    }
+    stipjes(wereld.A, yA, "rgba(140,150,138,.75)", "#6f7a6d");
+    stipjes(wereld.B, yB, "rgba(220,169,78,.8)",  "#a9762f");
+
+    // bij de onthulling: wat jij mat (dicht) tegen wat er was (gestreept)
+    if(onthuld){
+      [[gemiddelde(wereld.A), yA, "#4f5a4d"],[gemiddelde(wereld.B), yB, "#8a6a24"]].forEach(function(g){
+        tc.setLineDash([]); tc.strokeStyle = g[2]; tc.lineWidth = 2.6;
+        tc.beginPath(); tc.moveTo(x(g[0]), g[1]-30); tc.lineTo(x(g[0]), g[1]+30); tc.stroke();
+      });
+      [[wereld.gemA, yA],[wereld.gemB, yB]].forEach(function(g){
+        tc.setLineDash([5,4]); tc.strokeStyle = "#7d7566"; tc.lineWidth = 1.8;
+        tc.beginPath(); tc.moveTo(x(g[0]), g[1]-34); tc.lineTo(x(g[0]), g[1]+34); tc.stroke();
+      });
+      tc.setLineDash([]);
+      // legenda rechtsboven
+      var lx = rechts - 132, ly = 18;
+      tc.strokeStyle = "#4f5a4d"; tc.lineWidth = 2.6;
+      tc.beginPath(); tc.moveTo(lx, ly-7); tc.lineTo(lx, ly+7); tc.stroke();
+      tc.setLineDash([4,3]); tc.strokeStyle = "#7d7566"; tc.lineWidth = 1.8;
+      tc.beginPath(); tc.moveTo(lx, ly+13); tc.lineTo(lx, ly+27); tc.stroke();
+      tc.setLineDash([]);
+      tc.fillStyle = "#6f7a6d"; tc.font = "13px 'Iowan Old Style',Georgia,serif";
+      tc.textAlign = "left"; tc.textBaseline = "middle";
+      tc.fillText("wat jij mat", lx+9, ly);
+      tc.fillText("wat er was", lx+9, ly+20);
+      tc.textAlign = "center"; tc.textBaseline = "top";
+    }
+
+    // hoeveel stipjes je hebt
+    tc.fillStyle = "#8b9a88"; tc.font = "13.5px 'Iowan Old Style',Georgia,serif";
+    tc.textAlign = "left"; tc.textBaseline = "bottom";
+    tc.fillText("n = " + wereld.nA + " per groep", links-34, h-6);
+    tc.textAlign = "right";
+    tc.fillText("ronde " + ronde, rechts, h-6);
+  }
+
+  // --- meeuw en beurs -------------------------------------------------
+  var praatjes = [
+    "“Twee groepjes. Eén is bewerkt, of geen van beide. Zeg het maar.”",
+    "“Kijk niet naar het midden. Kijk naar hoe breed ze uitwaaieren.”",
+    "“Zes stipjes is niets. Zes stipjes is bijna altijd niets.”",
+    "“U mag ook bijkopen. Ik verdien eraan, u ook. Meestal.”",
+    "“De helft van mijn werelden is leeg. Dat maakt raden precies vijftig procent waard.”",
+    "“Een groot verschil bij weinig stipjes ziet er hetzelfde uit als toeval bij weinig stipjes.”",
+    "“Niemand koopt bij. En iedereen klaagt over ruis.”"
+  ];
+  function zegtIets(t){ zegt.innerHTML = t; }
+  function toonBeurs(){
+    saldoEl.textContent = eikels;
+    var rij = "";
+    for(var i=0;i<Math.min(eikels,40);i++) rij += "•";
+    eikelrij.textContent = eikels === 0 ? "—" : rij + (eikels > 40 ? " …" : "");
+    bKoop.disabled = beslist || gekocht >= MAX_KOPEN || eikels < KOOP_PRIJS;
+    bKoop.textContent = gekocht >= MAX_KOPEN ? "Uitverkocht" : "Meer stipjes — " + KOOP_PRIJS + " eikels";
+  }
+
+  // --- het boekje -----------------------------------------------------
+  function pct(t, n){ return n === 0 ? "—" : Math.round(t/n*100) + "%"; }
+  function toonBoek(){
+    rNul.innerHTML = "Werelden waarin <b>niets</b> was: <b>" + boek.nul + "</b>. " +
+      "Daarvan stempelde je <b>" + boek.nulEcht + "</b> keer ECHT — dat is <b>" + pct(boek.nulEcht, boek.nul) + "</b>.";
+    rIets.innerHTML = "Werelden waarin <b>wél iets</b> was: <b>" + boek.iets + "</b>. " +
+      "Daarvan <b>" + boek.ietsGemist + "</b> gemist — je zag er <b>" + pct(boek.iets - boek.ietsGemist, boek.iets) + "</b> van.";
+    if(ronde >= 8 && !bekentenis.dataset.aan){
+      bekentenis.dataset.aan = "1";
+      bekentenis.classList.remove("verstopt");
+      bekentenis.innerHTML = "“Ik weet welke er echt waren. Ik heb ze zelf gemaakt. " +
+        "De bovenste regel is hoe vaak u iets zag dat er niet was — noem het uw alfa. " +
+        "De onderste is hoe vaak u iets miste dat er wél was. Bijkopen verandert alleen de onderste.”";
+    }
+  }
+
+  // --- ronde ----------------------------------------------------------
+  function startRonde(){
+    ronde++; gekocht = 0; beslist = false; onthuld = false;
+    nieuweWereld();
+    bEcht.disabled = false; bToeval.disabled = false; bVolgende.disabled = true;
+    uitslag.innerHTML = "Kijk naar de tafel en stempel. Je mag ook eerst bijkopen.";
+    zegtIets("<em>" + praatjes[(ronde-1) % praatjes.length] + "</em>");
+    meeuw.classList.remove("wijst");
+    toonBeurs(); tekenTafel();
+    if(ronde === 25 && !kleine.dataset.lang){
+      kleine.dataset.lang = "1";
+      kleine.innerHTML = "Vijfentwintig rondes. De meeuw vindt daar niets van. De meeuw noteert.<br><br>" + kleine.innerHTML;
+    }
+  }
+
+  function koop(){
+    if(beslist || gekocht >= MAX_KOPEN || eikels < KOOP_PRIJS) return;
+    eikels -= KOOP_PRIJS; gekocht++;
+    groei(KOOP_N);
+    meeuw.classList.add("wijst");
+    setTimeout(function(){ meeuw.classList.remove("wijst"); }, 500);
+    zegtIets("<em>“" + (gekocht === 1 ? "Alstublieft. Nu zijn het er dertien." :
+                                        "De laatste. Twintig per groep, meer heb ik niet.") + "”</em>");
+    toonBeurs(); tekenTafel();
+  }
+
+  function stempel(zegtEcht){
+    if(beslist) return;
+    beslist = true; onthuld = true;
+    bEcht.disabled = true; bToeval.disabled = true; bKoop.disabled = true; bVolgende.disabled = false;
+
+    var goed = (zegtEcht === wereld.iets);
+    eikels += goed ? WINST : -VERLIES;
+    if(eikels < 0) eikels = 0;
+
+    if(wereld.iets){ boek.iets++; if(!zegtEcht) boek.ietsGemist++; }
+    else { boek.nul++; if(zegtEcht) boek.nulEcht++; }
+
+    var verschil = gemiddelde(wereld.B) - gemiddelde(wereld.A);
+    var waarheid = wereld.iets
+      ? "Er wás een verschil: <b>d = " + wereld.d.toFixed(2).replace(/^0/,"") + "</b> in de wereld waaruit ik trok."
+      : "Er was <b>niets</b>. De twee groepen kwamen uit dezelfde hoop.";
+    // In een lege wereld bestaat "de andere kant" niet — daar is elke kant toeval.
+    var staart = wereld.iets ? (verschil < 0 ? " — de andere kant op." : ".")
+                             : ", puur uit de trekking.";
+    var gemeten = "In jouw " + wereld.nA + " stipjes per groep werd het verschil " +
+                  Math.abs(verschil).toFixed(1).replace(".", ",") + " punt" + staart;
+
+    uitslag.innerHTML = (goed ? "<span class='goed'>Goed gestempeld.</span> " : "<b>Mis.</b> ") +
+                        waarheid + " " + gemeten +
+                        " Je " + (goed ? "krijgt " + WINST : "verliest " + VERLIES) + " eikels.";
+
+    var praat = goed
+      ? (wereld.iets ? "“U zag het. Bij deze n mag u daar best trots op zijn.”"
+                     : "“Niets is ook een antwoord. De meeste mensen durven dat niet.”")
+      : (wereld.iets ? "“Er was iets, en u liet het lopen. Dat heet niet dom, dat heet weinig stipjes.”"
+                     : "“U zag een verschil in een lege wereld. Dat overkomt iedereen, ongeveer even vaak.”");
+    if(eikels === 0) praat = "“Uw hand is leeg. U mag doorspelen — ik verkoop u alleen niets meer. " +
+                             "Winnen kan nog; daar heb ik geen eikels voor nodig.”";
+    zegtIets("<em>" + praat + "</em>");
+
+    toonBeurs(); tekenTafel(); toonBoek();
+  }
+
+  bEcht.addEventListener("click", function(){ stempel(true); });
+  bToeval.addEventListener("click", function(){ stempel(false); });
+  bKoop.addEventListener("click", koop);
+  bVolgende.addEventListener("click", startRonde);
+  window.addEventListener("resize", tekenTafel);
+
+  toonBoek();
+  startRonde();
+})();
+</script>
