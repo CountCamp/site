@@ -241,6 +241,9 @@
   let hW=460, hH=380;
   const RLO=0.2, RHI=3.2, NB=48;                 // OR-as van 0.2 tot 3.2
   const binw=(RHI-RLO)/NB;
+  // De muur begint laag: pas vanaf zo'n twintig treffers in één bak gaat
+  // de schaal meegroeien. Anders lijkt één schud al een volle muur.
+  const BODEM=20;
   let bins=new Float64Array(NB), drawn=new Float64Array(NB);
   let total=0, extreme=0, lastR=null, markerAge=1, scaleT=1, scaleNow=1;
   function binOf(r){ return Math.max(0,Math.min(NB-1,Math.floor((r-RLO)/binw))); }
@@ -250,7 +253,7 @@
     bins[binOf(r)]++; total++;
     if(r>=OR_REAL) extreme++;                     // "zo ver of verder": OR >= echte OR (naar rechts)
     if(animate){ lastR=r; markerAge=0; }
-    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=Math.max(mx2,BODEM);
   }
   function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
 

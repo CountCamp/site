@@ -252,6 +252,9 @@
   let hW=460, hH=380;
   const XLO=0, XHI=25, NB=50;                     // bins over χ² in [0,25]
   const binw=(XHI-XLO)/NB;
+  // De muur begint laag: pas vanaf zo'n twintig treffers in één bak gaat
+  // de schaal meegroeien. Anders lijkt één schud al een volle muur.
+  const BODEM=20;
   let bins=new Float64Array(NB), drawn=new Float64Array(NB);
   let total=0, extreme=0, maxSeen=0, lastX=null, markerAge=1, scaleT=1, scaleNow=1;
   function binOf(x){ return Math.max(0,Math.min(NB-1,Math.floor((x-XLO)/binw))); }
@@ -264,7 +267,7 @@
     if(x>=CHI_REAL) extreme++;                     // zo ver of verder dan de echte tabel
     if(x>maxSeen) maxSeen=x;
     if(animate){ lastX=x; markerAge=0; }
-    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=Math.max(mx2,BODEM);
   }
   function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
 

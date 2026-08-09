@@ -116,7 +116,7 @@
   <div class="sier">
     <code>mean(gewicht[behandeling]) − mean(gewicht[<b>sample</b>(label)])</code>
     <p>Eén woord doet het werk: <code>sample()</code> hutselt de labels. Doe het duizend keer
-       en je hebt duizend werelden waarin het middel niets betekende. De p-waarde is geen
+       en je hebt duizend werelden waarin het middel niets betekende. De <i>p</i>-waarde is geen
        formule om te geloven — het is dit getelde getal.</p>
   </div>
 
@@ -270,6 +270,9 @@
   let hW=460, hH=380;
   const DLO=-1.30, DHI=1.30, NB=53;
   const binw=(DHI-DLO)/NB;
+  // De muur begint laag: pas vanaf zo'n twintig treffers in één bak gaat
+  // de schaal meegroeien. Anders lijkt één schud al een volle muur.
+  const BODEM=20;
   let bins=new Float64Array(NB), drawn=new Float64Array(NB);
   let total=0, extreme=0, lastD=null, markerAge=1, scaleT=1, scaleNow=1;
   const ABSOBS=Math.abs(DIFF_REAL)-1e-9;
@@ -280,7 +283,7 @@
     bins[binOf(d)]++; total++;
     if(Math.abs(d)>=ABSOBS) extreme++;              // "zo ver of verder" (beide kanten)
     if(animate){ lastD=d; markerAge=0; }
-    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=Math.max(mx2,BODEM);
   }
   function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
 

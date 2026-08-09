@@ -105,7 +105,7 @@
   </div>
 
   <p class="foot">
-    De regressieve ruggengraat · W6 — het schud-blok bij de onafhankelijke t-toets · speeltje bij de simulatie<br>
+    De regressieve ruggengraat · W6 — het schud-blok bij de onafhankelijke <i>t</i>-toets · speeltje bij de simulatie<br>
     Data: Palmer Penguins (Gorman, Williams &amp; Fraser 2014) · Palmer Station LTER · CC0 · Gentoo (<i>n</i> = 123) &amp; Adelie (<i>n</i> = 151).
   </p>
 </div>
@@ -289,6 +289,9 @@
   let hW=460, hH=380;
   const DLO=-650, DHI=1500, NB=43;               // bins over verschil in gram
   const binw=(DHI-DLO)/NB;
+  // De muur begint laag: pas vanaf zo'n twintig treffers in één bak gaat
+  // de schaal meegroeien. Anders lijkt één schud al een volle muur.
+  const BODEM=20;
   let bins=new Float64Array(NB), drawn=new Float64Array(NB);
   let total=0, extreme=0, lastD=null, markerAge=1, scaleT=1, scaleNow=1;
   function binOf(d){ return Math.max(0,Math.min(NB-1,Math.floor((d-DLO)/binw))); }
@@ -298,7 +301,7 @@
     bins[binOf(d)]++; total++;
     if(Math.abs(d)>=Math.abs(D_REAL)) extreme++;   // "zo ver of verder" van nul (twee kanten op)
     if(animate){ lastD=d; markerAge=0; }
-    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=mx2>0?mx2:1;
+    let mx2=0; for(let i=0;i<NB;i++) mx2=Math.max(mx2,bins[i]); scaleT=Math.max(mx2,BODEM);
   }
   function manyShuffle(k){ for(let j=0;j<k;j++) oneShuffle(false); }
 
