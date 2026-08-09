@@ -19,11 +19,13 @@ kopieën repareer je nooit ter plekke — je verandert de bron en kopieert opnie
 | **bron** | `countcamp_lab/boek/04_speeltjes/*.html` (twaalf stuks) |
 | **kopie 1** | `countcamp_site/speeltjes/*.html` — de speelkist, met een terugknop naar `/speeltjes/` |
 | **kopie 2–4** | `countcamp_site/oefenboeken/broertjes/{r,jasp,spss}/speeltjes/` — zeven per oefenboek, aangeroepen vanuit de hoofdstukken |
-| **handeling** | bron wijzigen → `python3 countcamp_site/_tools/bouw_speelkist.py` (doet kopie 1, controleert de teller) → de drie broertjes-mappen **met de hand** verversen → `rm -rf _site && quarto render --to html` → committen en pushen → `curl` op de live-URL |
+| **handeling** | bron wijzigen → `python3 countcamp_site/_tools/bouw_speelkist.py` → `rm -rf _site && quarto render --to html` → committen en pushen → `curl` op de live-URL |
 
-**Nog niet geautomatiseerd:** de drie broertjes-kopieën. Zolang dat zo is, staat
-hier het risico: een speeltje dat op de speelkist klopt en in het oefenboek nog
-de oude versie is. Wie hier langskomt met tijd: breid `bouw_speelkist.py` uit.
+Het script doet **alle vier de bestemmingen** in één keer, inclusief de losse
+adressen hieronder en de drie broertjes-mappen. Het controleert per bestand of de
+teller er nog in zit en meldt wat er in een doelmap staat zonder bron. Ververs je
+er één met de hand, dan lopen de andere drie stil uit de pas — dat is op 9-8-2026
+bijna gebeurd met de tabellen.
 
 ## 2. Tabellen aflezen — Nederlands en Engels
 
@@ -32,7 +34,7 @@ de oude versie is. Wie hier langskomt met tijd: breid `bouw_speelkist.py` uit.
 | **bron** | `countcamp_lab/boek/04_speeltjes/tabellen_aflezen.html` (NL) en `tabellen_aflezen_en.html` (EN) |
 | **live** | `/tabellen/index.html` en `/tables/index.html` |
 | **beschreven in** | de tegel op de homepage (`index.qmd`) én de kaart in de speelkist (`speeltjes/index.qmd`) |
-| **handeling** | een inhoudelijke wijziging in de NL-versie hoort **altijd** ook in de EN-versie; daarna beide kaartteksten nalopen |
+| **handeling** | `bouw_speelkist.py` kopieert beide; een inhoudelijke wijziging in de NL-versie hoort **altijd** ook in de EN-versie, en daarna loop je beide kaartteksten na |
 
 De adressen `/tabellen/` en `/tables/` zijn eerder gedeeld met studenten en
 verhuizen niet. De speelkist linkt ernaartoe in plaats van een eigen kopie te
