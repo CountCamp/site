@@ -109,6 +109,7 @@
       <div class="controls">
         <button id="druk" class="primary">Bevestig</button>
         <button id="volgende" disabled>Volgende wolk</button>
+        <button id="opnieuw" title="alles op nul: rondes, teller en het geheugen van de olifant">Opnieuw</button>
       </div>
 
       <p class="oordeel" id="oordeel">Schuif naar je schatting en druk op Bevestig. Je krijgt te horen hoe ver je zat, meer niet.</p>
@@ -320,9 +321,20 @@
     geschiedenis.forEach(function(p){
       gc.beginPath(); gc.arc(X(p.waar), Y(p.gok), 4, 0, 6.2832); gc.fill();
     });
-    gc.fillStyle = "#7a6c50"; gc.font = "12px Georgia,serif";
-    gc.textAlign = "right"; gc.textBaseline = "top";
-    gc.fillText("de werkelijke r →", px1, py1+16);
+    // canvas kent geen <i>: de r wordt apart en cursief getekend
+    gc.fillStyle = "#7a6c50"; gc.textBaseline = "top"; gc.textAlign = "left";
+    gc.font = "12px Georgia,serif";
+    var w1 = gc.measureText("de werkelijke ").width;
+    gc.font = "italic 12px Georgia,serif";
+    var w2 = gc.measureText("r").width;
+    gc.font = "12px Georgia,serif";
+    var w3 = gc.measureText(" →").width;
+    var x0 = px1 - (w1 + w2 + w3);
+    gc.fillText("de werkelijke ", x0, py1+16);
+    gc.font = "italic 12px Georgia,serif";
+    gc.fillText("r", x0 + w1, py1+16);
+    gc.font = "12px Georgia,serif";
+    gc.fillText(" →", x0 + w1 + w2, py1+16);
     gc.save(); gc.translate(11, (py0+py1)/2); gc.rotate(-Math.PI/2);
     gc.textAlign = "center"; gc.textBaseline = "middle";
     gc.fillText("jouw gok", 0, 0); gc.restore();
@@ -374,6 +386,10 @@
 
   knopVolgende.onclick = function(){ knopVolgende.disabled = true; nieuweWolk(); };
 
+  // Opnieuw beginnen is een herlaadbeurt. Dat is geen luiheid maar zekerheid:
+  // er is geen enkele stand die per ongeluk kan blijven hangen.
+  document.getElementById("opnieuw").onclick = function(){ location.reload(); };
+
   function werkOlifantBij(){
     var n = geschiedenis.length;
     if(n === ONTHULLING){
@@ -395,8 +411,8 @@
       var biaszin = Math.abs(bias) < .03 ? "Je zit gemiddeld precies goed." :
         (bias < 0 ? "Je schat gemiddeld <b>" + Math.abs(bias).toFixed(2).replace(/^0/,"") + " te laag</b> — dat doet bijna iedereen."
                   : "Je schat gemiddeld <b>" + Math.abs(bias).toFixed(2).replace(/^0/,"") + " te hoog</b>.");
-      zegt.innerHTML = "<em>“Uw gokken correleren <b>" + toon(rr) + "</b> met de werkelijkheid. " +
-                       "Gok nu eens hoe goed u dát geschat had.”</em><br><br>" + biaszin;
+      zegt.innerHTML = "<em>“Jouw gokken correleren <b>" + toon(rr) + "</b> met de werkelijkheid. " +
+                       "Gok nu eens hoe goed je dát geschat had.”</em><br><br>" + biaszin;
       // Tien rondes. Meer doet hij niet: de slurf gaat omhoog en blijft omhoog.
       if(n === OORDEEL) olifant.classList.add("slurfomhoog");
     }
@@ -415,7 +431,7 @@
         "verschillende gebreken, en je hebt ze allebei apart nodig.";
     }
     if(n === 30){
-      kleine.innerHTML = "U speelt dit al dertig rondes. Gokken kan verslavend zijn. " +
+      kleine.innerHTML = "Je speelt dit al dertig rondes. Gokken kan verslavend zijn. " +
         "De olifant oordeelt niet. De olifant noteert.<br><br>" + kleine.innerHTML;
     }
   }
