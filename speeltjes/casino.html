@@ -1,11 +1,13 @@
+<!doctype html>
+<html lang="nl">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Casino de Kleine n — echt of toeval?</title>
-<meta name="description" content="Twee groepjes stipjes. Jij stempelt ECHT of TOEVAL. De meeuw verkoopt je meer data, en telt hoe vaak je je vergist.">
 <style>
   :root{
     --paper:#fbf6e9; --ink:#3a352c; --dim:#8b8069; --amber:#c8963e; --amber-ink:#8a6a24;
-    --bordeaux:#8c3a3a; --vilt:#6f8a72; --vilt-licht:#e6ece2;
+    --bordeaux:#8c3a3a; --vilt-licht:#e6ece2;
   }
   *{box-sizing:border-box}
   body{margin:0;background:linear-gradient(180deg,#fdfaf1 0%,#f6eeda 100%);
@@ -14,9 +16,9 @@
     -webkit-font-smoothing:antialiased}
   .wrap{max-width:1000px;margin:0 auto;padding:36px 22px 64px}
   a{color:var(--amber-ink)}
-  .terug{font-size:14px;color:var(--dim);text-decoration:none}
-  .terug:hover{color:var(--amber-ink)}
-  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:12px 0 4px;color:#3b352b}
+  .terug{display:inline-block;margin-bottom:1.2rem;font-size:.95rem;text-decoration:none;
+    color:inherit;opacity:.7}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
   h1::after{content:"";display:block;width:210px;height:10px;margin-top:5px;
     background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 16 2, 32 5.5 T 62 5 T 92 6 T 122 4.5 T 152 6 T 182 5 T 208 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
     background-size:210px 10px}
@@ -29,6 +31,8 @@
     border-radius:14px 11px 15px 12px / 12px 15px 11px 14px;
     box-shadow:0 8px 26px rgba(90,110,90,.18);padding:10px 12px 6px}
   canvas#tafel{width:100%;display:block;background:transparent;border:0}
+  .onderzoek{margin:12px 0 0;color:#4a4030;font-size:16px;line-height:1.55;max-width:660px}
+  .onderzoek b{color:var(--amber-ink);font-weight:600}
   .inzet{margin:14px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;
     border:1.5px solid #c9a866;
@@ -45,27 +49,52 @@
   .uitslag{margin:16px 0 0;color:#4a4030;font-size:16.5px;line-height:1.55;min-height:56px;max-width:660px}
   .uitslag b{color:var(--bordeaux);font-weight:600}
   .uitslag .goed{color:#5a7d5e;font-weight:600}
-  .meeuwvak{position:relative;display:flex;flex-direction:column;min-height:340px;
+  .meeuwvak{position:relative;display:flex;flex-direction:column;min-height:430px;
     background:var(--paper);border:1.5px solid #d8c69b;
     border-radius:12px 10px 13px 11px / 11px 13px 10px 12px;
     box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 18px 8px;overflow:hidden}
-  .meeuwzegt{color:#4a4030;font-size:16px;line-height:1.55;margin:0 0 12px;min-height:66px}
+  .meeuwzegt{color:#4a4030;font-size:16px;line-height:1.55;margin:0 0 12px;min-height:112px}
   .meeuwzegt em{color:var(--amber-ink);font-style:italic}
   .beurs{font-size:15.5px;color:#4a4030;margin:0 0 6px;line-height:1.7}
   .beurs b{color:var(--bordeaux);font-variant-numeric:tabular-nums}
-  .eikels{font-size:19px;letter-spacing:1px;line-height:1.5;color:#8a6a24;word-break:break-all}
+  .eikels{font-size:19px;letter-spacing:1px;line-height:1.5;color:#8a6a24;word-break:break-all;margin:0}
   .meeuwgrond{position:relative;margin-top:auto;padding-top:10px}
   .meeuwgrond::after{content:"";position:absolute;left:6%;right:6%;bottom:8px;height:3px;
     background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='3' viewBox='0 0 240 3'><path d='M1 2 Q 30 1, 60 2 T 120 2 T 180 1.6 T 239 2' fill='none' stroke='%23cdbb92' stroke-width='1.6' stroke-linecap='round'/></svg>") repeat-x;
     background-size:240px 3px}
-  .meeuw{display:block;margin:0 auto;width:150px;transition:transform .5s ease}
-  .meeuw.wijst{transform:translateX(-10px) rotate(-4deg)}
+  .meeuw{display:block;margin:0 auto;width:150px}
+  .meeuw.deelt{animation:wipje .75s ease 1}
+  .meeuw.leunt{animation:leunen .9s ease 1}
+  .meeuw.schudt{animation:kopschud .6s ease 1}
+  @keyframes wipje{
+    0%{transform:translateY(0) rotate(0)}
+    30%{transform:translateY(-11px) rotate(-4deg)}
+    60%{transform:translateY(2px) rotate(2deg)}
+    100%{transform:translateY(0) rotate(0)}}
+  @keyframes leunen{
+    0%{transform:translateX(0) rotate(0)}
+    40%{transform:translateX(-16px) rotate(-9deg)}
+    100%{transform:translateX(0) rotate(0)}}
+  @keyframes kopschud{
+    0%,100%{transform:rotate(0)}
+    25%{transform:rotate(5deg)}
+    75%{transform:rotate(-5deg)}}
+  .oog{transform-box:fill-box;transform-origin:center;animation:knipper 7s infinite}
+  @keyframes knipper{0%,95%,100%{transform:scaleY(1)} 97%{transform:scaleY(.08)}}
+  .boekje{margin:14px 0 0;padding:12px 14px;background:#f6efdc;
+    border:1px solid #e3d3a8;border-radius:8px 6px 9px 7px / 7px 9px 6px 8px;
+    font-size:14.5px;line-height:1.5;color:#3a2e1a}
+  .boekje h3{margin:0 0 8px;font-size:13px;font-style:italic;font-weight:600;color:var(--dim)}
+  .boekje .regel{margin:0 0 5px}
+  .boekje .rondes{margin:0 0 8px;padding-bottom:7px;border-bottom:1px dashed #e0d2ab}
+  .boekje b{color:var(--bordeaux);font-variant-numeric:tabular-nums}
   .boek{margin:26px 0 0;padding:16px 20px;background:var(--paper);
     border:1px solid #e3d3a8;
     border-radius:6px 10px 7px 11px / 10px 7px 11px 6px;
     max-width:700px;font-size:16px;line-height:1.65;color:#3a2e1a}
   .boek h3{margin:0 0 10px;font-size:15px;font-style:italic;font-weight:600;color:var(--dim)}
   .boek .regel{margin:0 0 6px}
+  .boek .rondes{margin:0 0 10px;padding-bottom:8px;border-bottom:1px dashed #e0d2ab}
   .boek b{color:var(--bordeaux);font-variant-numeric:tabular-nums}
   .bekentenis{margin:14px 0 0;padding-top:12px;border-top:1px dashed #ddcfa9;
     font-style:italic;color:var(--amber-ink)}
@@ -73,25 +102,28 @@
     border-top:1px solid #ddcfa9;padding-top:12px}
   .verstopt{display:none}
 </style>
-<script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
 <div class="wrap">
   <a class="terug" href="/speeltjes/">← Terug naar de speelkist</a>
   <h1>Casino de Kleine n</h1>
-  <p class="lede">Twee groepjes stipjes. Eén vraag: is dat verschil echt, of heeft het toeval het nagedaan?
-    Je stempelt <b>ECHT</b> of <b>TOEVAL</b>. Achter de tafel staat een meeuw. Hij verkoopt je meer stipjes,
-    en hij houdt bij hoe vaak je je vergist.</p>
+  <p class="lede">De meeuw verzint een onderzoekje, meet twee groepen, en laat je de uitkomsten zien.
+    Jij zegt of het verschil tussen de gemiddelden <b>echt</b> is of <b>toeval</b>.
+    Meer stipjes kun je van hem kopen. Hij houdt bij hoe vaak je je vergist.</p>
 
   <div class="panels">
     <div class="panel">
       <h2>de tafel</h2>
-      <div class="tafel"><canvas id="tafel" height="330"></canvas></div>
+      <div class="tafel"><canvas id="tafel" height="440"></canvas></div>
+      <p class="onderzoek" id="onderzoek"></p>
       <div class="inzet">
         <button id="echt" class="echt">ECHT</button>
         <button id="toeval" class="toeval">TOEVAL</button>
         <button id="koop" class="koop">Meer stipjes — 2 eikels</button>
         <button id="volgende" disabled>Volgende ronde</button>
       </div>
-      <p class="uitslag" id="uitslag">Kijk naar de tafel en stempel. Je mag ook eerst bijkopen.</p>
+      <p class="uitslag" id="uitslag">Kijk naar de twee gemiddelden en stempel. Je mag ook eerst bijkopen.</p>
     </div>
 
     <div class="panel">
@@ -100,32 +132,34 @@
         <div class="meeuwzegt" id="meeuwzegt"></div>
         <p class="beurs">In je hand: <b id="saldo">12</b> eikels</p>
         <p class="eikels" id="eikelrij"></p>
+
+        <div class="boekje">
+          <h3>zijn boekje</h3>
+          <p class="rondes" id="r_rondes">Nog geen ronde gespeeld.</p>
+          <p class="regel" id="r_nul">Werelden waarin <b>niets</b> was: —</p>
+          <p class="regel" id="r_iets">Werelden waarin <b>wél iets</b> was: —</p>
+        </div>
+
         <div class="meeuwgrond">
           <svg class="meeuw" id="meeuw" viewBox="0 0 170 130" aria-label="een meeuw achter een speeltafel">
-            <!-- poten, eerst: ze staan achter het lijf -->
             <path d="M78 96 L76 112 M76 112 L68 116 M76 112 L84 115" fill="none" stroke="#d09a44" stroke-width="3" stroke-linecap="round"/>
             <path d="M94 96 L96 112 M96 112 L88 116 M96 112 L104 115" fill="none" stroke="#d09a44" stroke-width="3" stroke-linecap="round"/>
-            <!-- staart -->
             <path d="M118 70 Q 140 68, 153 60 Q 142 78, 122 84 Z" fill="#efece2" stroke="#8d8878" stroke-width="2" stroke-linejoin="round"/>
-            <!-- lijf -->
             <path d="M50 68 Q 52 48, 70 42 Q 96 34, 116 50 Q 130 62, 122 78 Q 110 96, 84 98 Q 58 98, 50 68 Z"
                   fill="#f8f6ee" stroke="#8d8878" stroke-width="2.2" stroke-linejoin="round"/>
-            <!-- mantel / gevouwen vleugel -->
             <path d="M66 54 Q 92 46, 116 58 Q 108 76, 86 82 Q 68 78, 66 54 Z"
                   fill="#cfd3cd" stroke="#8d8878" stroke-width="2" stroke-linejoin="round"/>
-            <!-- zwarte vleugelpunt -->
             <path d="M110 60 Q 126 62, 137 70 Q 121 73, 105 68 Z"
                   fill="#4c4c46" stroke="#3d3d38" stroke-width="1.4" stroke-linejoin="round"/>
-            <!-- kop -->
             <path d="M44 38 Q 42 21, 58 17 Q 75 14, 79 30 Q 81 43, 66 49 Q 50 51, 44 38 Z"
                   fill="#f9f7f0" stroke="#8d8878" stroke-width="2.2" stroke-linejoin="round"/>
-            <!-- snavel, met het rode stipje dat elke meeuw heeft -->
             <path d="M44 32 Q 26 31, 17 37 Q 27 43, 44 42 Z" fill="#e5a63f" stroke="#b57c25" stroke-width="1.8" stroke-linejoin="round"/>
             <path d="M22 37 L 42 37" stroke="#b57c25" stroke-width="1.1" stroke-linecap="round"/>
             <circle cx="23" cy="40" r="2.1" fill="#b8452f"/>
-            <!-- oog -->
-            <circle cx="57" cy="30" r="3.4" fill="#3a352c"/>
-            <circle cx="58.2" cy="28.8" r="1.1" fill="#fff"/>
+            <g class="oog">
+              <circle cx="57" cy="30" r="3.4" fill="#3a352c"/>
+              <circle cx="58.2" cy="28.8" r="1.1" fill="#fff"/>
+            </g>
           </svg>
         </div>
       </div>
@@ -133,41 +167,57 @@
   </div>
 
   <div class="boek" id="boek">
-    <h3>het boekje van de meeuw</h3>
-    <p class="regel" id="r_nul">Werelden waarin <b>niets</b> was: —</p>
-    <p class="regel" id="r_iets">Werelden waarin <b>wél iets</b> was: —</p>
+    <h3>wat de meeuw noteert</h3>
     <p class="bekentenis verstopt" id="bekentenis"></p>
   </div>
 
   <p class="kleine-lettertjes" id="kleine">
-    Elke ronde gooit de computer eerst een munt: in de helft van de werelden is er écht een verschil,
-    in de andere helft niets. Daarna trekt hij jouw stipjes uit die wereld. Daarom weet de meeuw het antwoord —
-    hij heeft de wereld zelf gemaakt. Bij echt onderzoek weet niemand het, en is dit boekje precies wat je
-    niet kunt bijhouden. Gokken kan verslavend zijn; eikels zijn dat niet.
+    De onderzoekjes zijn verzonnen, de getallen niet. Elke ronde gooit de computer eerst een munt:
+    in de helft van de werelden is er écht een verschil tussen de twee groepen, in de andere helft niets.
+    Daarna trekt hij jouw stipjes uit die wereld. Daarom weet de meeuw het antwoord — hij heeft de wereld
+    zelf gemaakt. Wat jij hier met het blote oog doet — kijken of het verschil groot is vergeleken met de
+    spreiding eromheen, en of je er genoeg stipjes voor hebt — is precies wat een <i>t</i>-toets met een formule
+    doet. Bij echt onderzoek weet niemand het, en is dit boekje precies wat je niet kunt bijhouden.
+    Gokken kan verslavend zijn; eikels zijn dat niet.
   </p>
 </div>
 
 <script>
 (function(){
-  // Casino de Kleine n. Elke ronde is een wereld: de helft nul, de helft
-  // met een echt verschil. Jij ziet een handvol stipjes en stempelt.
-  // Wat het boekje onderaan bijhoudt, is je persoonlijke alfa en je power.
+  // Casino de Kleine n. Elke ronde is een wereld: de helft nul, de helft met een
+  // echt verschil. Je ziet twee groepen met hun gemiddelden en stempelt. Wat het
+  // boekje onderaan bijhoudt, is je persoonlijke alfa en je power.
 
   var START_N = 6, KOOP_N = 7, MAX_KOPEN = 2, KOOP_PRIJS = 2,
-      WINST = 3, VERLIES = 2, START_EIKELS = 12;
+      WINST = 3, VERLIES = 2, START_EIKELS = 12, SD = 10;
 
   var tafel = document.getElementById("tafel"), tc = tafel.getContext("2d"),
       bEcht = document.getElementById("echt"), bToeval = document.getElementById("toeval"),
       bKoop = document.getElementById("koop"), bVolgende = document.getElementById("volgende"),
       uitslag = document.getElementById("uitslag"), zegt = document.getElementById("meeuwzegt"),
+      onderzoekEl = document.getElementById("onderzoek"),
       saldoEl = document.getElementById("saldo"), eikelrij = document.getElementById("eikelrij"),
       meeuw = document.getElementById("meeuw"),
+      rRondes = document.getElementById("r_rondes"),
       rNul = document.getElementById("r_nul"), rIets = document.getElementById("r_iets"),
       bekentenis = document.getElementById("bekentenis"), kleine = document.getElementById("kleine");
 
   var eikels = START_EIKELS, ronde = 0, gekocht = 0, beslist = false,
-      wereld = null, onthuld = false;
+      wereld = null, onthuld = false, goed = 0, mis = 0;
   var boek = {nul:0, nulEcht:0, iets:0, ietsGemist:0};
+
+  // De onderzoekjes die de meeuw verzint. De machinerie is elke keer dezelfde;
+  // dat is precies wat je hier moet gaan voelen.
+  var STUDIES = [
+    {a:"stilte",          b:"muziek op",        maat:"score op een concentratietaak", wie:"veertig studenten"},
+    {a:"placebo",         b:"het middel",       maat:"slaapkwaliteit",                wie:"twee groepen cliënten"},
+    {a:"gewone stoel",    b:"wiebelkruk",       maat:"score op een rekentoets",       wie:"twee klassen"},
+    {a:"'s ochtends",     b:"'s avonds",        maat:"stemming",              wie:"dezelfde mensen, andere dag"},
+    {a:"kort briefje",    b:"lange brief",      maat:"hoeveel iemand onthoudt",       wie:"twee groepen lezers"},
+    {a:"met uitzicht",    b:"zonder uitzicht",  maat:"piekeren",              wie:"twee wachtkamers"},
+    {a:"eerst uitleg",    b:"eerst zelf doen",  maat:"score op de eindtoets",         wie:"twee groepen leerlingen"},
+    {a:"één kop koffie",  b:"drie koppen",      maat:"trilling van de hand",          wie:"twee groepen vrijwilligers"}
+  ];
 
   // --- toeval ---------------------------------------------------------
   function normaal(){
@@ -182,25 +232,22 @@
     return uit;
   }
   function gemiddelde(a){ var s=0; for(var i=0;i<a.length;i++) s+=a[i]; return s/a.length; }
+  function komma(x, d){ return x.toFixed(d === undefined ? 1 : d).replace(".", ","); }
 
   // --- de wereld ------------------------------------------------------
   function nieuweWereld(){
     var erIsIets = Math.random() < .5;
-    // effectgroottes die je in de praktijk tegenkomt; nooit zo groot dat het gratis is
-    var maten = [.45,.6,.8,1.0,1.25];
+    var maten = [.45,.6,.8,1.0,1.25];      // niets is zó groot dat het gratis is
     var d = erIsIets ? maten[Math.floor(Math.random()*maten.length)] : 0;
+    var studie = STUDIES[Math.floor(Math.random()*STUDIES.length)];
     wereld = {
-      iets: erIsIets, d: d, sd: 10, gemA: 50, gemB: 50 + d*10,
-      A: [], B: [], nA: 0
+      iets: erIsIets, d: d, sd: SD, gemA: 50, gemB: 50 + d*SD,
+      A: [], B: [], nA: 0, studie: studie
     };
-    // De wereld waaruit getrokken wordt. Hij bestaat vanaf het begin — je krijgt
-    // hem alleen pas te zien nadat je gestempeld hebt. De schaal komt hiervandaan,
-    // zodat de tafel niet verspringt als je bijkoopt.
+    // De wereld bestaat vanaf het begin; je krijgt hem pas te zien na je stempel.
+    // De schaal komt hiervandaan, zodat de tafel niet verspringt bij het bijkopen.
     wereld.schaduwA = trek(150, wereld.gemA, wereld.sd);
     wereld.schaduwB = trek(150, wereld.gemB, wereld.sd);
-    // Vaste, theoretische schaal (vier standaardafwijkingen om de wereld heen):
-    // hij hangt niet van de trekking af, dus de tafel verspringt nooit — niet bij
-    // het bijkopen en niet bij de onthulling.
     wereld.lo = wereld.gemA - 4*wereld.sd;
     wereld.hi = wereld.gemB + 4*wereld.sd;
     groei(START_N);
@@ -224,98 +271,148 @@
   }
 
   function tekenTafel(){
-    var m = pas(tafel, 330), w = m.w, h = m.h;
+    var m = pas(tafel, 440), w = m.w, h = m.h;
     tc.clearRect(0,0,w,h);
     if(!wereld) return;
 
-    var pad = 26, links = pad + 34, rechts = w - pad;
+    var boven = 26, onder = h - 54, links = 66, rechts = w - 16;
     var lo = wereld.lo, hi = wereld.hi;
-    var x = function(v){
-      return Math.max(links, Math.min(rechts, links + (v - lo)/(hi - lo) * (rechts - links)));
+    var y = function(v){
+      return Math.max(boven, Math.min(onder, onder - (v - lo)/(hi - lo) * (onder - boven)));
     };
+    var cxA = links + (rechts - links) * .27,
+        cxB = links + (rechts - links) * .75,
+        halveKolom = Math.min(70, (rechts - links) * .165);
 
-    var yA = h*0.33, yB = h*0.70;
+    // --- as met ticks ---
+    tc.strokeStyle = "#a9b8a6"; tc.lineWidth = 1.6;
+    tc.beginPath(); tc.moveTo(links, boven-6); tc.lineTo(links, onder); tc.stroke();
+    tc.font = "13px 'Iowan Old Style',Georgia,serif"; tc.fillStyle = "#7d8c7a";
+    tc.textAlign = "right"; tc.textBaseline = "middle";
+    var stap = 10;
+    for(var v = Math.ceil(lo/stap)*stap; v <= hi; v += stap){
+      var yy = y(v);
+      tc.strokeStyle = "#a9b8a6"; tc.lineWidth = 1.4;
+      tc.beginPath(); tc.moveTo(links-6, yy); tc.lineTo(links, yy); tc.stroke();
+      tc.fillText(String(v), links-10, yy);
+      tc.strokeStyle = "rgba(169,184,166,.28)"; tc.lineWidth = 1;
+      tc.beginPath(); tc.moveTo(links, yy); tc.lineTo(rechts, yy); tc.stroke();
+    }
+    // as-titel: wat er gemeten is
+    tc.save();
+    tc.translate(16, (boven+onder)/2); tc.rotate(-Math.PI/2);
+    tc.textAlign = "center"; tc.textBaseline = "middle";
+    tc.fillStyle = "#6f8a72"; tc.font = "italic 14px 'Iowan Old Style',Georgia,serif";
+    tc.fillText(wereld.studie.maat, 0, 0);
+    tc.restore();
 
-    // de wereld waaruit je trok — pas zichtbaar na het stempelen
+    // --- de wereld waaruit je trok, pas na het stempelen ---
     if(onthuld){
-      [[wereld.schaduwA, yA, "rgba(120,132,118,.30)"],
-       [wereld.schaduwB, yB, "rgba(200,150,62,.32)"]].forEach(function(s){
+      [[wereld.schaduwA, cxA, "rgba(120,132,118,.28)"],
+       [wereld.schaduwB, cxB, "rgba(200,150,62,.30)"]].forEach(function(s){
         for(var i=0;i<s[0].length;i++){
-          var jy = s[1] + (((i*7919)%1000)/1000 - .5) * 46;
-          tc.beginPath(); tc.arc(x(s[0][i]), jy, 2.6, 0, Math.PI*2);
+          var jx = s[1] + (((i*7919)%1000)/1000 - .5) * (halveKolom*1.5);
+          tc.beginPath(); tc.arc(jx, y(s[0][i]), 2.6, 0, Math.PI*2);
           tc.fillStyle = s[2]; tc.fill();
         }
       });
     }
 
-    // de twee banen
-    [[yA,"A"],[yB,"B"]].forEach(function(rij){
-      tc.strokeStyle = "#c3d1c0"; tc.lineWidth = 1.2;
-      tc.beginPath(); tc.moveTo(links-8, rij[0]); tc.lineTo(rechts, rij[0]); tc.stroke();
-    });
-
-    // labels
-    tc.fillStyle = "#6f8a72"; tc.font = "italic 15px 'Iowan Old Style',Georgia,serif";
-    tc.textAlign = "right"; tc.textBaseline = "middle";
-    tc.fillText("groep A", links-14, yA);
-    tc.fillText("groep B", links-14, yB);
-
-    // stipjes
-    function stipjes(rij, y, kleur, rand){
+    // --- de stipjes die jij kocht ---
+    function stipjes(rij, cx, kleur, rand){
       for(var i=0;i<rij.length;i++){
-        var jx = x(rij[i]);
-        var jy = y + (((i*2654435761)%1000)/1000 - .5) * 34;  // vaste jitter per index
-        tc.beginPath(); tc.arc(jx, jy, 5, 0, Math.PI*2);
+        var jx = cx + (((i*2654435761)%1000)/1000 - .5) * (halveKolom*1.15);
+        tc.beginPath(); tc.arc(jx, y(rij[i]), 5, 0, Math.PI*2);
         tc.fillStyle = kleur; tc.fill();
         tc.strokeStyle = rand; tc.lineWidth = 1.2; tc.stroke();
       }
     }
-    stipjes(wereld.A, yA, "rgba(140,150,138,.75)", "#6f7a6d");
-    stipjes(wereld.B, yB, "rgba(220,169,78,.8)",  "#a9762f");
+    stipjes(wereld.A, cxA, "rgba(140,150,138,.78)", "#6f7a6d");
+    stipjes(wereld.B, cxB, "rgba(220,169,78,.82)",  "#a9762f");
 
-    // bij de onthulling: wat jij mat (dicht) tegen wat er was (gestreept)
+    // --- de twee steekproefgemiddelden, altijd zichtbaar ---
+    var gA = gemiddelde(wereld.A), gB = gemiddelde(wereld.B);
+    [[gA, cxA, "#4f5a4d"],[gB, cxB, "#8a6a24"]].forEach(function(g){
+      tc.setLineDash([]); tc.strokeStyle = g[2]; tc.lineWidth = 2.8;
+      tc.beginPath(); tc.moveTo(g[1]-halveKolom, y(g[0])); tc.lineTo(g[1]+halveKolom, y(g[0])); tc.stroke();
+    });
+
+    // --- het verschil tussen die twee, met haakje ---
+    var xh = (cxA + cxB)/2, yA = y(gA), yB = y(gB);
+    tc.strokeStyle = "#8c3a3a"; tc.lineWidth = 1.6; tc.setLineDash([]);
+    tc.beginPath();
+    tc.moveTo(xh, yA); tc.lineTo(xh, yB);
+    tc.moveTo(xh-7, yA); tc.lineTo(xh+7, yA);
+    tc.moveTo(xh-7, yB); tc.lineTo(xh+7, yB);
+    tc.stroke();
+    // Het label staat boven het haakje op een eigen vlakje: de gang tussen de
+    // kolommen is smal, dus zonder ondergrond valt het over de stipjes.
+    var tekst = "verschil " + komma(Math.abs(gB-gA));
+    tc.font = "13.5px 'Iowan Old Style',Georgia,serif";
+    var tb = tc.measureText(tekst).width, th = 19;
+    var ty = Math.min(yA, yB) - 13;
+    tc.fillStyle = "rgba(230,236,226,.94)";
+    tc.strokeStyle = "#c6b0ac"; tc.lineWidth = 1;
+    if(tc.roundRect){
+      tc.beginPath(); tc.roundRect(xh - tb/2 - 7, ty - th/2, tb + 14, th, 6);
+      tc.fill(); tc.stroke();
+    } else {
+      tc.fillRect(xh - tb/2 - 7, ty - th/2, tb + 14, th);
+      tc.strokeRect(xh - tb/2 - 7, ty - th/2, tb + 14, th);
+    }
+    tc.fillStyle = "#8c3a3a";
+    tc.textAlign = "center"; tc.textBaseline = "middle";
+    tc.fillText(tekst, xh, ty + .5);
+
+    // --- wat er wérkelijk was ---
     if(onthuld){
-      [[gemiddelde(wereld.A), yA, "#4f5a4d"],[gemiddelde(wereld.B), yB, "#8a6a24"]].forEach(function(g){
-        tc.setLineDash([]); tc.strokeStyle = g[2]; tc.lineWidth = 2.6;
-        tc.beginPath(); tc.moveTo(x(g[0]), g[1]-30); tc.lineTo(x(g[0]), g[1]+30); tc.stroke();
-      });
-      [[wereld.gemA, yA],[wereld.gemB, yB]].forEach(function(g){
-        tc.setLineDash([5,4]); tc.strokeStyle = "#7d7566"; tc.lineWidth = 1.8;
-        tc.beginPath(); tc.moveTo(x(g[0]), g[1]-34); tc.lineTo(x(g[0]), g[1]+34); tc.stroke();
-      });
+      tc.setLineDash([5,4]); tc.strokeStyle = "#7d7566"; tc.lineWidth = 1.8;
+      if(!wereld.iets){
+        // In een lege wereld liggen de twee wáre gemiddelden op elkaar. Twee
+        // streepjes op dezelfde hoogte leest als "er mist er een", dus tekenen
+        // we er één, over de hele breedte, met wat erover te zeggen valt.
+        tc.beginPath(); tc.moveTo(cxA-halveKolom-8, y(wereld.gemA));
+        tc.lineTo(cxB+halveKolom+8, y(wereld.gemA)); tc.stroke();
+        tc.setLineDash([]);
+        tc.fillStyle = "#7d7566"; tc.font = "italic 13px 'Iowan Old Style',Georgia,serif";
+        tc.textAlign = "center"; tc.textBaseline = "top";
+        tc.fillText("één lijn: beide groepen hoorden hier", (cxA+cxB)/2, y(wereld.gemA)+6);
+      } else {
+        [[wereld.gemA, cxA],[wereld.gemB, cxB]].forEach(function(g){
+          tc.beginPath(); tc.moveTo(g[1]-halveKolom-8, y(g[0])); tc.lineTo(g[1]+halveKolom+8, y(g[0])); tc.stroke();
+        });
+      }
       tc.setLineDash([]);
-      // legenda rechtsboven
-      var lx = rechts - 132, ly = 18;
-      tc.strokeStyle = "#4f5a4d"; tc.lineWidth = 2.6;
-      tc.beginPath(); tc.moveTo(lx, ly-7); tc.lineTo(lx, ly+7); tc.stroke();
+      var lx = links + 22, ly = boven - 10;
+      tc.strokeStyle = "#4f5a4d"; tc.lineWidth = 2.8;
+      tc.beginPath(); tc.moveTo(lx-14, ly); tc.lineTo(lx+6, ly); tc.stroke();
       tc.setLineDash([4,3]); tc.strokeStyle = "#7d7566"; tc.lineWidth = 1.8;
-      tc.beginPath(); tc.moveTo(lx, ly+13); tc.lineTo(lx, ly+27); tc.stroke();
+      tc.beginPath(); tc.moveTo(lx-14, ly+19); tc.lineTo(lx+6, ly+19); tc.stroke();
       tc.setLineDash([]);
-      tc.fillStyle = "#6f7a6d"; tc.font = "13px 'Iowan Old Style',Georgia,serif";
+      tc.fillStyle = "#5f6b5d"; tc.font = "13.5px 'Iowan Old Style',Georgia,serif";
       tc.textAlign = "left"; tc.textBaseline = "middle";
-      tc.fillText("wat jij mat", lx+9, ly);
-      tc.fillText("wat er was", lx+9, ly+20);
-      tc.textAlign = "center"; tc.textBaseline = "top";
+      tc.fillText("wat jij mat", lx+12, ly);
+      tc.fillText("wat er was", lx+12, ly+19);
     }
 
-    // hoeveel stipjes je hebt
-    tc.fillStyle = "#8b9a88"; tc.font = "13.5px 'Iowan Old Style',Georgia,serif";
-    tc.textAlign = "left"; tc.textBaseline = "bottom";
-    tc.fillText("n = " + wereld.nA + " per groep", links-34, h-6);
-    tc.textAlign = "right";
-    tc.fillText("ronde " + ronde, rechts, h-6);
+    // --- groepsnamen en aantallen onder de kolommen ---
+    tc.textAlign = "center"; tc.textBaseline = "top";
+    tc.fillStyle = "#4f5a4d"; tc.font = "15px 'Iowan Old Style',Georgia,serif";
+    tc.fillText(wereld.studie.a, cxA, onder+10);
+    tc.fillStyle = "#8a6a24";
+    tc.fillText(wereld.studie.b, cxB, onder+10);
+    tc.fillStyle = "#8b9a88"; tc.font = "13px 'Iowan Old Style',Georgia,serif";
+    tc.fillText("n = " + wereld.nA, cxA, onder+30);
+    tc.fillText("n = " + wereld.nA, cxB, onder+30);
   }
 
   // --- meeuw en beurs -------------------------------------------------
-  var praatjes = [
-    "“Twee groepjes. Eén is bewerkt, of geen van beide. Zeg het maar.”",
-    "“Kijk niet naar het midden. Kijk naar hoe breed ze uitwaaieren.”",
-    "“Zes stipjes is niets. Zes stipjes is bijna altijd niets.”",
-    "“U mag ook bijkopen. Ik verdien eraan, u ook. Meestal.”",
-    "“De helft van mijn werelden is leeg. Dat maakt raden precies vijftig procent waard.”",
-    "“Een groot verschil bij weinig stipjes ziet er hetzelfde uit als toeval bij weinig stipjes.”",
-    "“Niemand koopt bij. En iedereen klaagt over ruis.”"
-  ];
+  function beweeg(klasse, ms){
+    meeuw.classList.remove("deelt","leunt","schudt");
+    void meeuw.getBoundingClientRect();       // forceer een herstart van de animatie
+    meeuw.classList.add(klasse);
+    setTimeout(function(){ meeuw.classList.remove(klasse); }, ms);
+  }
   function zegtIets(t){ zegt.innerHTML = t; }
   function toonBeurs(){
     saldoEl.textContent = eikels;
@@ -329,28 +426,48 @@
   // --- het boekje -----------------------------------------------------
   function pct(t, n){ return n === 0 ? "—" : Math.round(t/n*100) + "%"; }
   function toonBoek(){
+    rRondes.innerHTML = ronde === 0 ? "Nog geen ronde gespeeld." :
+      "Ronde <b>" + ronde + "</b>. Goed gestempeld: <b>" + goed + "</b>, mis: <b>" + mis + "</b>.";
     rNul.innerHTML = "Werelden waarin <b>niets</b> was: <b>" + boek.nul + "</b>. " +
       "Daarvan stempelde je <b>" + boek.nulEcht + "</b> keer ECHT — dat is <b>" + pct(boek.nulEcht, boek.nul) + "</b>.";
     rIets.innerHTML = "Werelden waarin <b>wél iets</b> was: <b>" + boek.iets + "</b>. " +
-      "Daarvan <b>" + boek.ietsGemist + "</b> gemist — je zag er <b>" + pct(boek.iets - boek.ietsGemist, boek.iets) + "</b> van.";
+      "Daarvan zag je er <b>" + (boek.iets - boek.ietsGemist) + "</b> — dat is <b>" +
+      pct(boek.iets - boek.ietsGemist, boek.iets) + "</b>.";
     if(ronde >= 8 && !bekentenis.dataset.aan){
       bekentenis.dataset.aan = "1";
       bekentenis.classList.remove("verstopt");
       bekentenis.innerHTML = "“Ik weet welke er echt waren. Ik heb ze zelf gemaakt. " +
-        "De bovenste regel is hoe vaak u iets zag dat er niet was — noem het uw alfa. " +
-        "De onderste is hoe vaak u iets miste dat er wél was. Bijkopen verandert alleen de onderste.”";
+        "De bovenste regel is hoe vaak u iets zag dat er niet was. Dat is uw alfa — niet de .05 die u " +
+        "vooraf opschrijft, maar de .05 die u wérkelijk haalt. Die eerste kiest u; deze verdient u. " +
+        "De onderste regel is hoe vaak u iets miste dat er wél was. " +
+        "Meer stipjes kopen verandert alleen die onderste: hoe streng u stempelt bepaalt de bovenste, " +
+        "hoeveel u meet bepaalt de onderste.”";
     }
   }
 
   // --- ronde ----------------------------------------------------------
+  var praatjes = [
+    "“De helft van mijn werelden is leeg. In de andere helft zit echt een verschil. Munt of kruis, elke ronde.”",
+    "“Kijk niet alleen naar de streepjes. Kijk hoe ver de stipjes eromheen uitwaaieren.”",
+    "“Zes per groep is niets. Zes per groep is bijna altijd niets.”",
+    "“U mag bijkopen. Ik verdien eraan, u ook. Meestal.”",
+    "“Een groot verschil bij weinig stipjes ziet er hetzelfde uit als toeval bij weinig stipjes.”",
+    "“Niemand koopt bij. En iedereen klaagt over ruis.”"
+  ];
+
   function startRonde(){
     ronde++; gekocht = 0; beslist = false; onthuld = false;
     nieuweWereld();
     bEcht.disabled = false; bToeval.disabled = false; bVolgende.disabled = true;
-    uitslag.innerHTML = "Kijk naar de tafel en stempel. Je mag ook eerst bijkopen.";
-    zegtIets("<em>" + praatjes[(ronde-1) % praatjes.length] + "</em>");
-    meeuw.classList.remove("wijst");
-    toonBeurs(); tekenTafel();
+    uitslag.innerHTML = "Kijk naar de twee gemiddelden en stempel. Je mag ook eerst bijkopen.";
+    onderzoekEl.innerHTML = "<b>Ronde " + ronde + ".</b> " + wereld.studie.wie.charAt(0).toUpperCase() +
+      wereld.studie.wie.slice(1) + ": de ene groep <b>" + wereld.studie.a + "</b>, de andere <b>" +
+      wereld.studie.b + "</b>. Gemeten: " + wereld.studie.maat + ".";
+    zegtIets("<em>“Ronde " + ronde + ". " + wereld.studie.wie.charAt(0).toUpperCase() +
+             wereld.studie.wie.slice(1) + ", en ik heb gemeten.”</em><br><br><em>" +
+             praatjes[(ronde-1) % praatjes.length] + "</em>");
+    beweeg("deelt", 800);
+    toonBeurs(); tekenTafel(); toonBoek();
     if(ronde === 25 && !kleine.dataset.lang){
       kleine.dataset.lang = "1";
       kleine.innerHTML = "Vijfentwintig rondes. De meeuw vindt daar niets van. De meeuw noteert.<br><br>" + kleine.innerHTML;
@@ -361,10 +478,10 @@
     if(beslist || gekocht >= MAX_KOPEN || eikels < KOOP_PRIJS) return;
     eikels -= KOOP_PRIJS; gekocht++;
     groei(KOOP_N);
-    meeuw.classList.add("wijst");
-    setTimeout(function(){ meeuw.classList.remove("wijst"); }, 500);
-    zegtIets("<em>“" + (gekocht === 1 ? "Alstublieft. Nu zijn het er dertien." :
-                                        "De laatste. Twintig per groep, meer heb ik niet.") + "”</em>");
+    beweeg("leunt", 950);
+    zegtIets("<em>“" + (gekocht === 1 ? "Alstublieft. Nu zijn het er dertien per groep." :
+                                        "De laatste. Twintig per groep, meer heb ik niet.") +
+             "”</em><br><br><em>“Let op wat er met de streepjes gebeurt.”</em>");
     toonBeurs(); tekenTafel();
   }
 
@@ -373,35 +490,40 @@
     beslist = true; onthuld = true;
     bEcht.disabled = true; bToeval.disabled = true; bKoop.disabled = true; bVolgende.disabled = false;
 
-    var goed = (zegtEcht === wereld.iets);
-    eikels += goed ? WINST : -VERLIES;
+    var raak = (zegtEcht === wereld.iets);
+    eikels += raak ? WINST : -VERLIES;
     if(eikels < 0) eikels = 0;
+    if(raak) goed++; else mis++;
 
     if(wereld.iets){ boek.iets++; if(!zegtEcht) boek.ietsGemist++; }
     else { boek.nul++; if(zegtEcht) boek.nulEcht++; }
 
     var verschil = gemiddelde(wereld.B) - gemiddelde(wereld.A);
     var waarheid = wereld.iets
-      ? "Er wás een verschil: <b>d = " + wereld.d.toFixed(2).replace(/^0/,"") + "</b> in de wereld waaruit ik trok."
-      : "Er was <b>niets</b>. De twee groepen kwamen uit dezelfde hoop.";
-    // In een lege wereld bestaat "de andere kant" niet — daar is elke kant toeval.
-    var staart = wereld.iets ? (verschil < 0 ? " — de andere kant op." : ".")
+      ? "Er wás een verschil: in de wereld waaruit ik trok lagen de gemiddelden <b>" +
+        komma(wereld.d*SD) + "</b> punten uit elkaar. Eén spreiding is hier " + SD + " punten, dus dat " +
+        "verschil is <b>" + wereld.d.toFixed(2).replace(/^0/,"") + " spreiding</b> — wat een onderzoeker " +
+        "<i>d</i> = " + wereld.d.toFixed(2).replace(/^0/,"") + " noemt."
+      : "Er was <b>niets</b>. Beide groepen kwamen uit dezelfde hoop.";
+    var staart = wereld.iets ? (verschil < 0 ? " — en dan nog de andere kant op." : ".")
                              : ", puur uit de trekking.";
-    var gemeten = "In jouw " + wereld.nA + " stipjes per groep werd het verschil " +
-                  Math.abs(verschil).toFixed(1).replace(".", ",") + " punt" + staart;
+    var gemeten = "Jij mat bij " + wereld.nA + " per groep een verschil van " +
+                  komma(Math.abs(verschil)) + " punten" + staart;
 
-    uitslag.innerHTML = (goed ? "<span class='goed'>Goed gestempeld.</span> " : "<b>Mis.</b> ") +
+    uitslag.innerHTML = (raak ? "<span class='goed'>Goed gestempeld.</span> " : "<b>Mis.</b> ") +
                         waarheid + " " + gemeten +
-                        " Je " + (goed ? "krijgt " + WINST : "verliest " + VERLIES) + " eikels.";
+                        " Je " + (raak ? "krijgt " + WINST : "verliest " + VERLIES) + " eikels.";
 
-    var praat = goed
+    var praat = raak
       ? (wereld.iets ? "“U zag het. Bij deze n mag u daar best trots op zijn.”"
                      : "“Niets is ook een antwoord. De meeste mensen durven dat niet.”")
       : (wereld.iets ? "“Er was iets, en u liet het lopen. Dat heet niet dom, dat heet weinig stipjes.”"
                      : "“U zag een verschil in een lege wereld. Dat overkomt iedereen, ongeveer even vaak.”");
     if(eikels === 0) praat = "“Uw hand is leeg. U mag doorspelen — ik verkoop u alleen niets meer. " +
                              "Winnen kan nog; daar heb ik geen eikels voor nodig.”";
-    zegtIets("<em>" + praat + "</em>");
+    zegtIets("<em>" + praat + "</em><br><br><em>“De streepjes eromheen zijn de wereld zelf. " +
+             "Kijk hoe ver die over elkaar heen liggen.”</em>");
+    if(!raak) beweeg("schudt", 650);
 
     toonBeurs(); tekenTafel(); toonBoek();
   }
@@ -412,7 +534,8 @@
   bVolgende.addEventListener("click", startRonde);
   window.addEventListener("resize", tekenTafel);
 
-  toonBoek();
   startRonde();
 })();
 </script>
+</body>
+</html>

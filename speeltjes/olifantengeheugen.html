@@ -27,6 +27,8 @@
   canvas{width:100%;display:block;border-radius:12px;background:var(--paper);
     border:1.5px solid #d8c69b;box-shadow:0 8px 26px rgba(120,95,45,.18)}
   .schuif{margin:16px 0 0}
+  .schuiflabel{display:block;font-size:16px;color:#6b5f45;margin:0 0 6px}
+  .schuiflabel em{font-style:italic}
   .schuif input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;
     background:transparent;cursor:pointer}
   .schuif input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:5px 7px 5px 8px / 7px 5px 8px 5px;
@@ -67,12 +69,11 @@
   .olifant{display:block;margin:0 auto;width:186px;position:relative;bottom:0;
     transition:transform .6s ease}
   .olifant.gedraaid{transform:scaleX(-1)}
-  .olifant.sprint{animation:rennen 3s cubic-bezier(.3,0,.6,1) 1}
-  @keyframes rennen{
-    0%{transform:scaleX(-1) translateX(0)}
-    45%{transform:scaleX(-1) translateX(180px) rotate(-3deg)}
-    55%{transform:scaleX(1) translateX(180px) rotate(3deg)}
-    100%{transform:scaleX(1) translateX(0)}}
+  /* twee slurven over elkaar; er is er altijd precies één zichtbaar */
+  .slurf,.slurfop{transition:opacity .55s ease}
+  .slurfop{opacity:0}
+  .olifant.slurfomhoog .slurf{opacity:0}
+  .olifant.slurfomhoog .slurfop{opacity:1}
   .geheugen{width:100%;display:block;border-radius:10px;background:#f8f2e0;
     border:1.5px dashed #cdb888;box-shadow:none;margin:0 0 10px}
   .teller{margin:24px 0 0;color:#4a4030;font-size:15.5px;line-height:1.6;max-width:680px}
@@ -90,7 +91,7 @@
 <div class="wrap">
   <a href="/speeltjes/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar de speelkist</a>
   <h1>Het olifantengeheugen</h1>
-  <p class="lede">Een wolk punten. Schat hoe sterk ze samenhangen, schuif hem op je getal, en druk.
+  <p class="lede">Een wolk punten. Schat hoe sterk ze samenhangen, schuif hem op je getal, en bevestig.
     Verder is er niets te winnen. In de hoek staat een olifant. Die doet niets.</p>
 
   <div class="panels">
@@ -99,17 +100,18 @@
       <canvas id="wolk" height="380"></canvas>
 
       <div class="schuif">
+        <label class="schuiflabel" for="gok">Schat de correlatie (<em>r</em>)</label>
         <input id="gok" type="range" min="-1" max="1" step="0.01" value="0">
         <div class="schaal"><span>−1</span><span>−.5</span><span>0</span><span>.5</span><span>1</span></div>
         <div class="gokwaarde">jouw gok: <span id="gokwaarde">.00</span></div>
       </div>
 
       <div class="controls">
-        <button id="druk" class="primary">Druk</button>
+        <button id="druk" class="primary">Bevestig</button>
         <button id="volgende" disabled>Volgende wolk</button>
       </div>
 
-      <p class="oordeel" id="oordeel">Schuif en druk. Je krijgt te horen hoe ver je zat, meer niet.</p>
+      <p class="oordeel" id="oordeel">Schuif naar je schatting en druk op Bevestig. Je krijgt te horen hoe ver je zat, meer niet.</p>
     </div>
 
     <div class="panel">
@@ -134,23 +136,39 @@
           <!-- lijf -->
           <path d="M62 56 q 8 -24, 44 -26 q 42 -2, 62 22 q 12 15, 8 34 q -3 12, -13 12 l -94 0 q -13 -4, -14 -22 q -1 -12, 7 -20 z"
                 fill="#c3bdb1" stroke="#6f6a60" stroke-width="2.6" stroke-linejoin="round"/>
-          <!-- kop: loopt door in de slurf, één vorm -->
+          <!-- de slurf is een eigen vorm, zodat hij kan zwaaien; hij zit achter de
+               kop zodat de aanhechting niet te zien is -->
+          <g class="slurf">
+            <path d="M34 92
+                     q 4 12, 4 18
+                     q 3 6, 1 14
+                     q -3 12, 1 20
+                     q 2 6, 8 6
+                     q 6 0, 7 -6
+                     q 1 -6, -3 -9
+                     q -4 -4, -2 -12
+                     q 2 -9, 8 -14
+                     q 4 -8, 4 -17 z"
+                  fill="#c3bdb1" stroke="#6f6a60" stroke-width="2.6" stroke-linejoin="round"/>
+            <path d="M36 114 l 9 2 M37 126 l 8 1"
+                  stroke="#6f6a60" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+          </g>
+          <!-- dezelfde slurf, omhoog. Twee strepen over elkaar: de donkere is de
+               omtrek, de lichte de vulling — dat scheelt een tweede handgetekende vorm -->
+          <g class="slurfop">
+            <path d="M40 96 C 30 108, 21 106, 21 91 C 21 75, 30 63, 40 61 C 47 60, 49 66, 45 69"
+                  fill="none" stroke="#6f6a60" stroke-width="16.5" stroke-linecap="round"/>
+            <path d="M40 96 C 30 108, 21 106, 21 91 C 21 75, 30 63, 40 61 C 47 60, 49 66, 45 69"
+                  fill="none" stroke="#c3bdb1" stroke-width="11.5" stroke-linecap="round"/>
+          </g>
+          <!-- kop -->
           <path d="M64 54
                    q -26 4, -30 30
-                   q -2 16, 4 26
-                   q 3 6, 1 14
-                   q -3 12, 1 20
-                   q 2 6, 8 6
-                   q 6 0, 7 -6
-                   q 1 -6, -3 -9
-                   q -4 -4, -2 -12
-                   q 2 -9, 8 -14
-                   q 10 -8, 12 -22
+                   q -2 16, 6 24
+                   q 8 8, 18 4
+                   q 10 -6, 12 -22
                    l 0 -33 z"
                 fill="#c3bdb1" stroke="#6f6a60" stroke-width="2.6" stroke-linejoin="round"/>
-          <!-- rimpels in de slurf -->
-          <path d="M36 104 l 9 2 M35 114 l 9 2 M36 124 l 8 1"
-                stroke="#6f6a60" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
           <!-- oor: kleiner, en achter het oog -->
           <path d="M66 50 q -16 -2, -21 12 q -5 16, 4 26 q 8 7, 14 -2 q 5 -9, 4 -20 q -1 -10, -1 -16 z"
                 fill="#b3ada1" stroke="#6f6a60" stroke-width="2.4" stroke-linejoin="round"/>
@@ -186,7 +204,7 @@
   var DOELEN = [-.9,-.78,-.62,-.5,-.35,-.2,0,.2,.35,.5,.62,.78,.9];
   var ONTHULLING = 5;               // hier draait de olifant zich om
   var OORDEEL = 10;                 // hier durft hij iets te zeggen
-  var MARGE = .05;                  // binnen dit verschil is het raak
+  var MARGE = .10;                  // binnen dit verschil is het raak (.05 leest als een p-waarde)
 
   var punten = [], waarheid = 0, gedrukt = false;
   var geschiedenis = [];            // {gok, waar}
@@ -267,23 +285,47 @@
   // het geheugen van de olifant: jouw gok tegen de waarheid
   var gv = document.getElementById("geheugen"), gc = gv.getContext("2d");
   function tekenGeheugen(){
-    var m = pas(gv, 230), w = m.w, h = m.h, pad = 26;
+    var m = pas(gv, 250), w = m.w, h = m.h, pad = 34;
     gc.clearRect(0,0,w,h);
+    var px0 = pad, px1 = w - 14, py0 = 16, py1 = h - pad;
+    var X = function(v){ return px0 + (v+1)/2 * (px1-px0); };
+    var Y = function(v){ return py1 - (v+1)/2 * (py1-py0); };
+
+    // assen met de drie getallen die je nodig hebt om het plaatje te lezen
     gc.strokeStyle = "#c9b98c"; gc.lineWidth = 1.4;
-    gc.beginPath(); gc.moveTo(pad,h-pad); gc.lineTo(w-pad,h-pad); gc.moveTo(pad,pad); gc.lineTo(pad,h-pad); gc.stroke();
-    // diagonaal: waar je zou liggen als je perfect schatte
-    gc.setLineDash([4,4]); gc.strokeStyle = "#d8c69b";
-    gc.beginPath(); gc.moveTo(pad,h-pad); gc.lineTo(w-pad,pad); gc.stroke(); gc.setLineDash([]);
+    gc.beginPath(); gc.moveTo(px0,py1); gc.lineTo(px1,py1); gc.moveTo(px0,py0); gc.lineTo(px0,py1); gc.stroke();
+    gc.fillStyle = "#9c8c68"; gc.font = "11.5px Georgia,serif";
+    gc.textAlign = "center"; gc.textBaseline = "top";
+    [-1,0,1].forEach(function(v){
+      gc.beginPath(); gc.moveTo(X(v), py1); gc.lineTo(X(v), py1+4); gc.stroke();
+      gc.fillText(v === 0 ? "0" : (v < 0 ? "−1" : "1"), X(v), py1+6);
+    });
+    gc.textAlign = "right"; gc.textBaseline = "middle";
+    [-1,0,1].forEach(function(v){
+      gc.beginPath(); gc.moveTo(px0-4, Y(v)); gc.lineTo(px0, Y(v)); gc.stroke();
+      gc.fillText(v === 0 ? "0" : (v < 0 ? "−1" : "1"), px0-6, Y(v));
+    });
+    // de lijn waar je op zou liggen als je elke keer precies goed zat
+    gc.setLineDash([4,4]); gc.strokeStyle = "#c9ad72";
+    gc.beginPath(); gc.moveTo(X(-1),Y(-1)); gc.lineTo(X(1),Y(1)); gc.stroke(); gc.setLineDash([]);
+    gc.save();
+    gc.translate(X(.1), Y(.1));
+    gc.rotate(-Math.atan2(py1-py0, px1-px0));
+    gc.fillStyle = "#a58a4e"; gc.font = "italic 11.5px Georgia,serif";
+    gc.textAlign = "center"; gc.textBaseline = "bottom";
+    gc.fillText("hier lig je bij een perfecte gok", 0, -3);
+    gc.restore();
+
     gc.fillStyle = "#8a3324";
     geschiedenis.forEach(function(p){
-      var px = pad + (p.waar+1)/2 * (w-2*pad);
-      var py = (h-pad) - (p.gok+1)/2 * (h-2*pad);
-      gc.beginPath(); gc.arc(px,py,4,0,6.2832); gc.fill();
+      gc.beginPath(); gc.arc(X(p.waar), Y(p.gok), 4, 0, 6.2832); gc.fill();
     });
     gc.fillStyle = "#7a6c50"; gc.font = "12px Georgia,serif";
-    gc.fillText("waarheid →", w-pad-70, h-pad+16);
-    gc.save(); gc.translate(12, pad+64); gc.rotate(-Math.PI/2);
-    gc.fillText("← jouw gok", 0, 0); gc.restore();
+    gc.textAlign = "right"; gc.textBaseline = "top";
+    gc.fillText("de werkelijke r →", px1, py1+16);
+    gc.save(); gc.translate(11, (py0+py1)/2); gc.rotate(-Math.PI/2);
+    gc.textAlign = "center"; gc.textBaseline = "middle";
+    gc.fillText("jouw gok", 0, 0); gc.restore();
   }
 
   // --- het spel ---------------------------------------------------
@@ -307,15 +349,22 @@
     geschiedenis.push({gok:gok, waar:waarheid});
     if(verschil <= MARGE) raak++;
 
+    // "te hoog" en "te laag" slaan op de getallenlijn en zetten je bij een
+    // negatieve wolk op het verkeerde been: −.90 raden waar −.56 staat voelt als
+    // té sterk, niet als té laag. Daarom staat de sterkte er apart bij.
+    var ernaast = verschil.toFixed(2).replace(/^0/,"");
+    var richting = gok < waarheid ? "te laag" : "te hoog";
+    var sterkte = Math.abs(gok) > Math.abs(waarheid) + .03 ? " — je schatte de samenhang <b>sterker</b> dan hij is"
+                : Math.abs(gok) < Math.abs(waarheid) - .03 ? " — je schatte de samenhang <b>zwakker</b> dan hij is"
+                : "";
     var zin;
     if(verschil <= MARGE){
       zin = "Raak. Het was <b>" + toon(waarheid) + "</b>.";
-    } else if(verschil <= .12){
-      zin = "Het was <b>" + toon(waarheid) + "</b>. Je zat " + verschil.toFixed(2).replace(/^0/,"") + " " +
-            (gok < waarheid ? "te laag" : "te hoog") + ".";
+    } else if(verschil <= .15){
+      zin = "Het was <b>" + toon(waarheid) + "</b>. Je zat " + ernaast + " " + richting + sterkte + ".";
     } else {
-      zin = "Het was <b>" + toon(waarheid) + "</b>. Je zat " + verschil.toFixed(2).replace(/^0/,"") + " " +
-            (gok < waarheid ? "te laag" : "te hoog") + ". Kijk nog even naar de wolk voor je doorgaat.";
+      zin = "Het was <b>" + toon(waarheid) + "</b>. Je zat " + ernaast + " " + richting + sterkte +
+            ". Kijk nog even naar de wolk voor je doorgaat.";
     }
     oordeel.innerHTML = zin;
     knopVolgende.disabled = false;
@@ -331,7 +380,7 @@
       olifant.classList.add("gedraaid");
       gv.classList.remove("verstopt");
       zegt.innerHTML = "De olifant draait zich om. Hij heeft meegekeken: elk stipje hieronder is één ronde — " +
-                       "jouw gok tegen de waarheid.<br><br><em>“Vijf. Daar zeg ik niets over.”</em>";
+                       "jouw gok tegen de waarheid.<br><br><em>“Vijf. Daar zeg ik niets over. Bij tien zeg ik wat ik ervan vind.”</em>";
     }
     if(n > ONTHULLING) tekenGeheugen();
     if(n === ONTHULLING) tekenGeheugen();
@@ -348,24 +397,22 @@
                   : "Je schat gemiddeld <b>" + Math.abs(bias).toFixed(2).replace(/^0/,"") + " te hoog</b>.");
       zegt.innerHTML = "<em>“Uw gokken correleren <b>" + toon(rr) + "</b> met de werkelijkheid. " +
                        "Gok nu eens hoe goed u dát geschat had.”</em><br><br>" + biaszin;
-      if(rr > .90 && !olifant.dataset.gerend){
-        olifant.dataset.gerend = "1";
-        olifant.classList.remove("gedraaid");
-        olifant.classList.add("sprint");
-        setTimeout(function(){ olifant.classList.remove("sprint"); olifant.classList.add("gedraaid"); }, 3100);
-      }
+      // Tien rondes. Meer doet hij niet: de slurf gaat omhoog en blijft omhoog.
+      if(n === OORDEEL) olifant.classList.add("slurfomhoog");
     }
   }
 
   function werkTellerBij(){
     var n = geschiedenis.length;
-    teller.innerHTML = "Ronde <b>" + n + "</b>. Binnen de marge van .05: <b>" + raak + "</b>.";
-    if(n === 12 && !sier.dataset.aan){
+    teller.innerHTML = "Ronde <b>" + n + "</b>. Minder dan .10 ernaast: <b>" + raak + "</b> keer.";
+    if(n === OORDEEL && !sier.dataset.aan){
       sier.dataset.aan = "1";
       sier.classList.remove("verstopt");
-      sier.innerHTML = "Wat je hier ziet is niet je geheugen maar je <em>ijking</em>: of je gokken meebewegen met " +
-        "de werkelijkheid, en of ze er structureel naast liggen. Twee verschillende dingen — precies zoals bij een " +
-        "meetinstrument.";
+      sier.innerHTML = "Het plaatje in de hoek meet twee dingen die los van elkaar staan. Het eerste: " +
+        "<em>bewegen je gokken mee</em> met de werkelijkheid — liggen je stipjes netjes op een lijn. Het tweede: " +
+        "<em>lig je er structureel naast</em> — ligt die lijn ook op de gestreepte lijn, of er een stukje onder. " +
+        "Een weegschaal kan iedere kilo keurig volgen en toch altijd twee kilo te veel aanwijzen. Dat zijn twee " +
+        "verschillende gebreken, en je hebt ze allebei apart nodig.";
     }
     if(n === 30){
       kleine.innerHTML = "U speelt dit al dertig rondes. Gokken kan verslavend zijn. " +
