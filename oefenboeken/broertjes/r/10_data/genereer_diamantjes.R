@@ -29,7 +29,14 @@
 diamantjes <- data.frame(
   naam     = c("Anna","Bram","Cees","Dora","Else","Faas",
                "Geer","Hans","Ida","Joop","Kees","Leen"),
-  karaat   = c(0.4, 0.5, 0.5, 0.7, 1.0, 1.0, 1.1, 1.2, 1.3, 1.3, 1.5, 1.5),
+  # Karaat is op 9-8-2026 met 0,6 opgehoogd. Het gemiddelde was 1,00 en dat is
+  # didactisch onhandig: centreren wordt dan aftrekken van 1, wat je niet ziet
+  # gebeuren. Nu is M = 1,60 en wordt de ruwe intercept negatief -- een steen
+  # van nul karaat zou negatieve glans hebben. Dat is geen adres waar niemand
+  # woont, dat is een adres dat niet bestaat, en precies de reden om te
+  # centreren. Een verschuiving verandert alleen de intercept: helling, r, R2,
+  # p, SD en alle andere analyses blijven exact gelijk (nagerekend 9-8).
+  karaat   = c(1.0, 1.1, 1.1, 1.3, 1.6, 1.6, 1.7, 1.8, 1.9, 1.9, 2.1, 2.1),
   glans    = c( 20,  30,  30,  30,  50,  70,  80,  60,  70,  80,  30,  50),
   gladheid = c(  1,   2,   3,   4,   6,   6,   8,   7,   7,   7,   2,   7),
   merk     = c("golfje","sterretje","golfje","golfje","golfje","sterretje",
