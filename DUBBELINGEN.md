@@ -66,9 +66,27 @@ speeltje zonder die regel telt niet mee; `bouw_speelkist.py` klaagt erover.
 `uitrol.sh` kopieert hem naar de drie oefenboeken en `uitrol.sh --check` meldt
 drift (exit 1). Nooit een van de drie kopieën met de hand bijwerken.
 
-## 7. De diamantjes
+## 7. De diamantjes — de dataset staat op zeven plekken
 
-`countcamp_lab/boek/oefenboeken/broertjes/r/10_data/diamantjes.csv` wordt gemaakt
-door `genereer_diamantjes.R` in dezelfde map, en de getallen eruit staan in de
-uitleg van meerdere blokken én in Boekie. Verandert de dataset, dan verandert elk
-getal dat eruit is overgeschreven. Herrekenen, niet bijwerken op het oog.
+| | |
+|---|---|
+| **bron** | `countcamp_lab/boek/oefenboeken/broertjes/r/10_data/genereer_diamantjes.R` → `diamantjes.csv` |
+| **kopie 1** | `boek/01_schetsen/_waarheid_getallen.R` — het waarheidsscript van het boek, met een eigen `data.frame` |
+| **kopie 2–6** | `boek/02_figuren/_bouw_figuren.R`, `_bouw_decompositie.R`, `_bouw_h8_wegrekenen.R`, `_bouw_h11_muur.R`, `_bouw_h12.R` — elk met de karaatreeks hardgecodeerd |
+| **en verder** | elk getal dat eruit volgt staat overgeschreven in Boekie (H1, H4, H6, H8, H9, H11, H12) en in de drie broertjes |
+| **handeling** | bron wijzigen → alle kopieën na → `Rscript _waarheid_getallen.R` → de vijf figuur-scripts draaien → `python3 boek/_tools/getallen_kaart.py --oud <oud register>` tot hij leeg is → renderen en publiceren |
+
+**Hoe je weet dat je klaar bent.** `getallen_register.R` rekent elk gepubliceerd
+getal opnieuw uit; `getallen_kaart.py` zoekt ze op in de hele tekst en meldt met
+`--oud` welke regels nog naar de vorige werkelijkheid wijzen. Zolang die lijst
+niet leeg is, ben je niet klaar. Regels die terecht blijven staan — afwijkingen
+als 0,5 en −0,6 veranderen niet bij een verschuiving — staan met reden in
+`boek/_tools/getallen_uitzonderingen.tsv`, zodat het alarm niet blijft loeien.
+
+**Wat 9-8-2026 leerde.** De karaatwaarden gingen met 0,6 omhoog. De tekst was
+binnen een uur bij, maar de **figuren** logen nog: de centroïde stond op (1, 50)
+hardgecodeerd en de regressielijn kwam uit `_waarheid.rds`, dat niemand opnieuw
+had gedraaid. De grafiek zag er volkomen normaal uit — alleen lag de lijn er
+naast. Sindsdien rekenen de figuren hun eigen gemiddelden uit in plaats van ze te
+onthouden.
+
