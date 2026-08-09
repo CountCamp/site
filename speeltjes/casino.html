@@ -107,7 +107,7 @@
 <body>
 <div class="wrap">
   <a class="terug" href="/speeltjes/">← Terug naar de speelkist</a>
-  <h1>Casino de Kleine n</h1>
+  <h1>Casino de Kleine <i>n</i></h1>
   <p class="lede">De meeuw verzint een onderzoekje, meet twee groepen, en laat je de uitkomsten zien.
     Jij zegt of het verschil tussen de gemiddelden <b>echt</b> is of <b>toeval</b>.
     Meer stipjes kun je van hem kopen. Hij houdt bij hoe vaak je je vergist.</p>
@@ -122,6 +122,7 @@
         <button id="toeval" class="toeval">TOEVAL</button>
         <button id="koop" class="koop">Meer stipjes — 2 eikels</button>
         <button id="volgende" disabled>Volgende ronde</button>
+        <button id="opnieuw" title="alles op nul: eikels, rondes en het boekje van de meeuw">Opnieuw</button>
       </div>
       <p class="uitslag" id="uitslag">Kijk naar de twee gemiddelden en stempel. Je mag ook eerst bijkopen.</p>
     </div>
@@ -401,9 +402,25 @@
     tc.fillText(wereld.studie.a, cxA, onder+10);
     tc.fillStyle = "#8a6a24";
     tc.fillText(wereld.studie.b, cxB, onder+10);
-    tc.fillStyle = "#8b9a88"; tc.font = "13px 'Iowan Old Style',Georgia,serif";
-    tc.fillText("n = " + wereld.nA, cxA, onder+30);
-    tc.fillText("n = " + wereld.nA, cxB, onder+30);
+    // In canvas bestaat geen <i>: het symbool en de rest worden apart getekend,
+    // zodat de n cursief staat zoals APA wil.
+    function nMet(cx, aantal){
+      var rest = " = " + aantal;
+      tc.font = "italic 13px 'Iowan Old Style',Georgia,serif";
+      var wn = tc.measureText("n").width;
+      tc.font = "13px 'Iowan Old Style',Georgia,serif";
+      var wr = tc.measureText(rest).width;
+      var x0 = cx - (wn + wr)/2;
+      tc.textAlign = "left";
+      tc.font = "italic 13px 'Iowan Old Style',Georgia,serif";
+      tc.fillText("n", x0, onder+30);
+      tc.font = "13px 'Iowan Old Style',Georgia,serif";
+      tc.fillText(rest, x0 + wn, onder+30);
+      tc.textAlign = "center";
+    }
+    tc.fillStyle = "#8b9a88";
+    nMet(cxA, wereld.nA);
+    nMet(cxB, wereld.nA);
   }
 
   // --- meeuw en beurs -------------------------------------------------
@@ -437,11 +454,11 @@
       bekentenis.dataset.aan = "1";
       bekentenis.classList.remove("verstopt");
       bekentenis.innerHTML = "“Ik weet welke er echt waren. Ik heb ze zelf gemaakt. " +
-        "De bovenste regel is hoe vaak u iets zag dat er niet was. Dat is uw alfa — niet de .05 die u " +
-        "vooraf opschrijft, maar de .05 die u wérkelijk haalt. Die eerste kiest u; deze verdient u. " +
-        "De onderste regel is hoe vaak u iets miste dat er wél was. " +
-        "Meer stipjes kopen verandert alleen die onderste: hoe streng u stempelt bepaalt de bovenste, " +
-        "hoeveel u meet bepaalt de onderste.”";
+        "De bovenste regel is hoe vaak je iets zag dat er niet was. Dat is jouw alfa — niet de .05 die je " +
+        "vooraf opschrijft, maar de .05 die je wérkelijk haalt. Die eerste kies je; deze verdien je. " +
+        "De onderste regel is hoe vaak je iets miste dat er wél was. " +
+        "Meer stipjes kopen verandert alleen die onderste: hoe streng je stempelt bepaalt de bovenste, " +
+        "hoeveel je meet bepaalt de onderste.”";
     }
   }
 
@@ -450,7 +467,7 @@
     "“De helft van mijn werelden is leeg. In de andere helft zit echt een verschil. Munt of kruis, elke ronde.”",
     "“Kijk niet alleen naar de streepjes. Kijk hoe ver de stipjes eromheen uitwaaieren.”",
     "“Zes per groep is niets. Zes per groep is bijna altijd niets.”",
-    "“U mag bijkopen. Ik verdien eraan, u ook. Meestal.”",
+    "“Je mag bijkopen. Ik verdien eraan, jij ook. Meestal.”",
     "“Een groot verschil bij weinig stipjes ziet er hetzelfde uit als toeval bij weinig stipjes.”",
     "“Niemand koopt bij. En iedereen klaagt over ruis.”"
   ];
@@ -479,7 +496,7 @@
     eikels -= KOOP_PRIJS; gekocht++;
     groei(KOOP_N);
     beweeg("leunt", 950);
-    zegtIets("<em>“" + (gekocht === 1 ? "Alstublieft. Nu zijn het er dertien per groep." :
+    zegtIets("<em>“" + (gekocht === 1 ? "Alsjeblieft. Nu zijn het er dertien per groep." :
                                         "De laatste. Twintig per groep, meer heb ik niet.") +
              "”</em><br><br><em>“Let op wat er met de streepjes gebeurt.”</em>");
     toonBeurs(); tekenTafel();
@@ -515,11 +532,11 @@
                         " Je " + (raak ? "krijgt " + WINST : "verliest " + VERLIES) + " eikels.";
 
     var praat = raak
-      ? (wereld.iets ? "“U zag het. Bij deze n mag u daar best trots op zijn.”"
+      ? (wereld.iets ? "“Je zag het. Bij zo weinig stipjes mag je daar best trots op zijn.”"
                      : "“Niets is ook een antwoord. De meeste mensen durven dat niet.”")
-      : (wereld.iets ? "“Er was iets, en u liet het lopen. Dat heet niet dom, dat heet weinig stipjes.”"
-                     : "“U zag een verschil in een lege wereld. Dat overkomt iedereen, ongeveer even vaak.”");
-    if(eikels === 0) praat = "“Uw hand is leeg. U mag doorspelen — ik verkoop u alleen niets meer. " +
+      : (wereld.iets ? "“Er was iets, en je liet het lopen. Dat heet niet dom, dat heet weinig stipjes.”"
+                     : "“Je zag een verschil in een lege wereld. Dat overkomt iedereen, ongeveer even vaak.”");
+    if(eikels === 0) praat = "“Je hand is leeg. Je mag doorspelen — ik verkoop je alleen niets meer. " +
                              "Winnen kan nog; daar heb ik geen eikels voor nodig.”";
     zegtIets("<em>" + praat + "</em><br><br><em>“De streepjes eromheen zijn de wereld zelf. " +
              "Kijk hoe ver die over elkaar heen liggen.”</em>");
@@ -532,6 +549,8 @@
   bToeval.addEventListener("click", function(){ stempel(false); });
   bKoop.addEventListener("click", koop);
   bVolgende.addEventListener("click", startRonde);
+  // Opnieuw beginnen is een herlaadbeurt: geen stand die kan blijven hangen.
+  document.getElementById("opnieuw").addEventListener("click", function(){ location.reload(); });
   window.addEventListener("resize", tekenTafel);
 
   startRonde();
