@@ -703,8 +703,46 @@ window.Quarto = {
 <div class="werk">
 <p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage) — JASP-tweeling, master = het R-broertje met tool-swaps. “Speel het” = JASP-klikpad (SEM → Mediation Analysis); “trek het opnieuw” = JASP’s eigen bootstrap in dezelfde module — géén R-hop, géén speeltje nodig, want de mediatie-bootstrap is hier native. Bootstrap-tekst/CI behouden zoals in het oude JASP-blok. Titel ontkoppeld van hoofdstuknummer (loopt via OPDRACHT_MAP → Opdracht 11 / W11). Alle getallen identiek aan de master, onveranderd: totaal c=0.127, direct c’=0.057, indirect a·b=0.070 (55%), pad a≈0.031, pad b≈2.28, bootstrap-CI [0.023, 0.113] (1000 hertrekkingen). Eindopdracht (wind → temp → ozon) via dezelfde Mediation Analysis met <code>wind</code> als Predictor: totaal c=−5.73, direct c’=−3.29, indirect a·b=−2.43 (−3.29 + −2.43 = −5.73; ~42% via temperatuur). Rapportage = master (geen R-verwijzing, 2 decimalen). TODO (broertje): stem-pas nog te doen — verhaal-stem-opening (de zomer boven New York) kan stiller/trager. De R- en SPSS-tweeling delen deze tekst; alleen “Speel het” en “Trek het opnieuw” verschillen (R doet de bootstrap met <code>replicate</code>/<code>sample</code>, SPSS via PROCESS model 4).</p>
 </div>
+<section id="hayes-in-dit-blok" class="level3">
+<h3 class="anchored" data-anchor-id="hayes-in-dit-blok">Hayes in dit blok</h3>
+<p>Eén naam gaat hier een paar keer vallen: <strong>Andrew F. Hayes</strong>. Hij is de methodoloog achter PROCESS, het gereedschap waarmee zo ongeveer iedereen mediatie en moderatie draait, en hij is de man van de modelnummers: zeg waar dan ook “model 4” en een onderzoeker weet dat je mediatie bedoelt, zeg “model 1” en het is moderatie. Maar dat is niet waarom hij hier staat. Hayes is interessant omdat hij zijn eigen gereedschap durft af te danken. De Sobel-toets, jarenlang dé manier om een indirect effect te toetsen — en die jij straks gewoon met de hand uitrekent — heeft hij zelf ten grave gedragen toen er iets beters kwam. Zo hoort een methodoloog te werken: niet trouw aan zijn gereedschap, trouw aan de vraag.</p>
+</section>
+<section id="de-sobel-toets-op-een-kladje" class="level3">
+<h3 class="anchored" data-anchor-id="de-sobel-toets-op-een-kladje">De Sobel-toets op een kladje</h3>
+<p>Je hebt het indirecte pad: <em>a</em> × <em>b</em> = 31.16. Maar twaalf steentjes is een kleine wereld — kan zo’n omweg-getal ook uit toeval opborrelen? Dat is precies wat de Sobel-toets vraagt. Hij zet het product <em>ab</em> af tegen zijn eigen standaardfout: dat geeft een <em>z</em>, en die <em>z</em> geeft een <em>p</em>. Meer is het niet — één breuk. Je hebt er geen macro voor nodig en geen menu; een kladje en de getallen die je net zelf hebt uitgerekend zijn genoeg. Pak een pen.</p>
+<p><span class="math display">\[ z \;=\; \frac{a \times b}{\sqrt{\,b^2 \cdot SE_a^2 \;+\; a^2 \cdot SE_b^2\,}} \]</span></p>
+<p>Invullen met wat je hebt — <em>a</em> = 3.93 (<em>SE</em> = 1.54) en <em>b</em> = 7.93 (<em>SE</em> = 1.62):</p>
+<ul>
+<li>onder het wortelteken: 7.93² × 1.54² = 150.0, plus 3.93² × 1.62² = 40.4, samen 190.4</li>
+<li>de wortel daarvan: <em>SE</em> van <em>ab</em> = <strong>13.80</strong></li>
+<li>en dus <em>z</em> = 31.16 / 13.80 = <strong>2.26</strong>, met <em>p</em> = <strong>.024</strong></li>
+</ul>
+</section>
+<section id="van-kladje-naar-process" class="level3">
+<h3 class="anchored" data-anchor-id="van-kladje-naar-process">Van kladje naar PROCESS</h3>
+<p>Daar staat het: <em>z</em> = 2.26, <em>p</em> = .024. Significant, zegt Sobel. En toch is dit het moment waarop Hayes zelf zou ingrijpen. De toets leunt namelijk op een aanname: dat <em>ab</em> netjes normaal verdeeld is. Maar een product van twee geschatte getallen is dat niet — de verdeling trekt scheef, en bij twaalf steentjes al helemaal. Daarom geeft PROCESS voor het indirecte effect geen <em>z</em> en geen <em>p</em>, maar een <strong>bootstrap-betrouwbaarheidsinterval</strong>: duizenden keren opnieuw trekken en kijken waar <em>ab</em> landt. Waarom dan toch eerst dat kladje? Omdat je nu weet wát PROCESS voor je toetst. Een macro die je aanzet voordat je snapt wat hij doet, is een knop. Nu is het een verrekijker.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="Extra — hetzelfde in één analyse · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Extra — hetzelfde in één analyse · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>JASP heeft PROCESS niet, maar wel de analyse waar het om gaat, mét bootstrap:</p>
+<ol type="1">
+<li><strong>SEM → Mediation Analysis</strong>.</li>
+<li><code>glans</code> naar <strong>Dependent Variable</strong>, <code>gladheid</code> naar <strong>Mediators</strong>, <code>karaat</code> naar <strong>Predictors</strong>.</li>
+<li>Open <strong>Options</strong> en zet <strong>Bootstrap</strong> aan (5000 samples).</li>
+</ol>
+<p>Je krijgt pad <em>a</em>, pad <em>b</em>, het directe en het totale effect, en het indirecte effect met een <strong>bootstrap-interval</strong> in plaats van een Sobel-<em>z</em>.</p>
+</div>
+</div>
 
 
+</section>
 </section>
 
 

@@ -636,9 +636,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Drie soorten, drie hellingen: <strong>32.8</strong>, <strong>34.6</strong> en <strong>54.6</strong> gram per millimeter vin. Bij een Adélie of een Chinstrap levert een langere vin ongeveer een derde kilo per centimeter op; bij een Gentoo bijna een halve kilo méér dan dat. Eén getal — één helling voor alle pinguïns samen — zou hier gewoon liegen. Het effect van vinlengte <em>hangt af van</em> de soort. Dát is een interactie.</p>
+<section id="eerst-met-de-hand-de-hellingen-per-merk" class="level3">
+<h3 class="anchored" data-anchor-id="eerst-met-de-hand-de-hellingen-per-merk">Eerst met de hand: de hellingen per merk</h3>
+<p>De interactie zegt dát het verschilt, maar niet hoevéél. Dat reken je zelf uit, en het is optellen:</p>
+<ul>
+<li>de coëfficiënt van <code>gladheid</code> is de helling bij <strong>golfje</strong> (want daar is <em>D</em> = 0): <strong>6.14</strong> glanspunten per punt gladheid</li>
+<li>tel de interactie erbij op voor <strong>sterretje</strong>: 6.14 + 2.64 = <strong>8.77</strong></li>
+</ul>
+<p>Bij het ene merk levert een punt beter slijpen dus ruim tweeënhalf glanspunt meer op dan bij het andere. Dat zijn de <em>simple slopes</em>, en je hebt er niets voor nodig behalve de tabel die er al staat.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Extra — moderatie met PROCESS (model 1)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Extra — moderatie met PROCESS (model 1)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">process</span>(<span class="at">data =</span> d, <span class="at">y =</span> <span class="st">"glans"</span>, <span class="at">x =</span> <span class="st">"gladheid"</span>, <span class="at">w =</span> <span class="st">"D"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="dv">1</span>, <span class="at">center =</span> <span class="dv">1</span>, <span class="at">jn =</span> <span class="dv">1</span>, <span class="at">boot =</span> <span class="dv">5000</span>, <span class="at">seed =</span> <span class="dv">31216</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>center = 1</code> centreert de voorspellers zodat de hoofdeffecten leesbaar blijven, <code>jn = 1</code> geeft de Johnson-Neyman-grens. De hellingen per merk die eruit rollen zijn dezelfde 6.14 en 8.77 die je zelf uitrekende.</p>
+</div>
+</div>
 <div class="kicker">
 <p>schud het</p>
 </div>
+</section>
 </section>
 <section id="duizend-werelden-waarin-de-soort-niets-moduleert" class="level2">
 <h2 class="anchored" data-anchor-id="duizend-werelden-waarin-de-soort-niets-moduleert">Duizend werelden waarin de soort niets moduleert</h2>
@@ -655,23 +681,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de helling per soort, in één functietje</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>hellingen <span class="ot">&lt;-</span> <span class="cf">function</span>(d) <span class="fu">sapply</span>(<span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(s) <span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> <span class="fu">subset</span>(d, soort <span class="sc">==</span> s)))[<span class="dv">2</span>])</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">hellingen</span>(peng)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(echt) <span class="sc">-</span> <span class="fu">min</span>(echt)          <span class="co"># → 21.8: de kloof tussen steilste en flauwste</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer met geschudde soort-labels</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> peng</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  d<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">sample</span>(d<span class="sc">$</span>soort)   <span class="co"># soort-kaartjes lukraak rondgestrooid</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">hellingen</span>(d)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(h) <span class="sc">-</span> <span class="fu">min</span>(h)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">21.8</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de helling per soort, in één functietje</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hellingen <span class="ot">&lt;-</span> <span class="cf">function</span>(d) <span class="fu">sapply</span>(<span class="fu">c</span>(<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(s) <span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> <span class="fu">subset</span>(d, soort <span class="sc">==</span> s)))[<span class="dv">2</span>])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">hellingen</span>(peng)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(echt) <span class="sc">-</span> <span class="fu">min</span>(echt)          <span class="co"># → 21.8: de kloof tussen steilste en flauwste</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer met geschudde soort-labels</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> peng</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  d<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">sample</span>(d<span class="sc">$</span>soort)   <span class="co"># soort-kaartjes lukraak rondgestrooid</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">hellingen</span>(d)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(h) <span class="sc">-</span> <span class="fu">min</span>(h)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">21.8</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat plaatje. <strong>Duizend werelden waarin de soort de vin-gewicht-relatie niet moduleert</strong> — want in elke geschudde wereld is de soort losgeknipt van de helling. De kloof tussen de hellingen danst rond een paar gram: soms toevallig wat groter, meestal klein, zelden verder dan 9 gram van huis. En dan die rode streep op 21.8, ver buiten het hele bergje. In duizend keer schudden haalde <strong>geen enkele</strong> geschudde wereld de echte kloof. De echte pinguïns weten iets wat de geschudde niet weten: bij de Gentoo’s telt een langere vin écht zwaarder mee.</p>
@@ -705,12 +731,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Jouw beurt — nu jij een interactie op het spoor. Je zag dat de <strong>soort</strong> de vin-gewicht-relatie modereert: de lijnen waaieren uiteen. Maar er staat nóg een groeperende kolom in <code>penguins.csv</code>: <code>sekse</code> (<code>male</code> / <code>female</code>). De vraag: modereert óók de sekse het vin-gewicht-verband? Oftewel — levert een millimeter extra vin bij mannetjes méér gewicht op dan bij vrouwtjes (waaier), of loopt de lijn voor beide even steil (parallel)?</p>
 <ol type="1">
 <li><p><strong>Reken de helling per sekse los uit.</strong> (De handvol pinguïns zonder genoteerde sekse valt er vanzelf uit.)</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> <span class="fu">subset</span>(peng, sekse <span class="sc">==</span> <span class="st">"female"</span>)))  <span class="co"># → 47.15</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> <span class="fu">subset</span>(peng, sekse <span class="sc">==</span> <span class="st">"male"</span>)))    <span class="co"># → 46.86</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> <span class="fu">subset</span>(peng, sekse <span class="sc">==</span> <span class="st">"female"</span>)))  <span class="co"># → 47.15</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> <span class="fu">subset</span>(peng, sekse <span class="sc">==</span> <span class="st">"male"</span>)))    <span class="co"># → 46.86</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: kom je op ongeveer <strong>47.15</strong> (female) en <strong>46.86</strong> (male) gram per millimeter, dan zit je goed. Twee hellingen die vrijwel op elkaar liggen.</p></li>
 <li><p><strong>Toets de interactie</strong> — mag de helling per sekse verschillen?</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> sekse, <span class="at">data =</span> peng))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># kijk naar de regel vinlengte:seksemale</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> sekse, <span class="at">data =</span> peng))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># kijk naar de regel vinlengte:seksemale</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: de interactie is <strong>niet</strong> significant (<em>p</em> = .92). Anders dan bij de soort waaieren de lijnen hier dus níét uit — ze lopen zo goed als parallel.</p></li>
 <li><p>Denk-vraag: mannetjes zijn duidelijk <strong>zwaarder</strong> dan vrouwtjes — ruim 680 gram gemiddeld. Toch is er geen interactie. Leg met de val uit ‘Snap het’ uit waarom “mannetjes zijn zwaarder” géén interactie is. (Hint: hoogte versus steilheid. Twee wolken op verschillende hoogte, maar met dezelfde helling — hoe zien die lijnen eruit als je ze tekent?)</p></li>
 </ol>
