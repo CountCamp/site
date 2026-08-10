@@ -19,13 +19,23 @@ kopieën repareer je nooit ter plekke — je verandert de bron en kopieert opnie
 | **bron** | `countcamp_lab/boek/04_speeltjes/*.html` (twaalf stuks) |
 | **kopie 1** | `countcamp_site/speeltjes/*.html` — de speelkist, met een terugknop naar `/speeltjes/` |
 | **kopie 2–4** | `countcamp_site/oefenboeken/broertjes/{r,jasp,spss}/speeltjes/` — zeven per oefenboek, aangeroepen vanuit de hoofdstukken |
-| **handeling** | bron wijzigen → `python3 countcamp_site/_tools/bouw_speelkist.py` → `rm -rf _site && quarto render --to html` → committen en pushen → `curl` op de live-URL |
+| **kopie 5** | `countcamp_site/manuscript/h3_grabbel.html` — waar hoofdstuk 3 naartoe linkt |
+| **handeling** | bron wijzigen → `python3 countcamp_site/_tools/bouw_speelkist.py` → `python3 countcamp_lab/boek/04_speeltjes/_proef_kopieen.py` → `rm -rf _site && quarto render --to html` → committen en pushen → `curl` op de live-URL |
 
-Het script doet **alle vier de bestemmingen** in één keer, inclusief de losse
+Het script doet **alle vijf de bestemmingen** in één keer, inclusief de losse
 adressen hieronder en de drie broertjes-mappen. Het controleert per bestand of de
 teller er nog in zit en meldt wat er in een doelmap staat zonder bron. Ververs je
-er één met de hand, dan lopen de andere drie stil uit de pas — dat is op 9-8-2026
+er één met de hand, dan lopen de andere vier stil uit de pas — dat is op 9-8-2026
 bijna gebeurd met de tabellen.
+
+**Wat 10-8-2026 leerde: kopie 5 stond er niet in.** `manuscript/h3.html` linkt met
+`<a href="h3_grabbel.html">` naar zijn eigen kopie van de grabbelton, en die kopie
+kende het bouwscript niet. Hij liep dus stil achter — 25006 bytes tegen 25990 in
+de bron. Wie in het boek op *"Open de grabbelton"* klikte, kreeg een oudere
+grabbelton dan wie hem uit de speelkist pakte. Geen 404, geen klacht, geen alarm:
+precies de fout die een register moet vangen en die dit register miste omdat de
+bestemming er niet in stond. Nu wél, en `_proef_kopieen.py` leest alle
+vierendertig kopieën terug en vergelijkt ze teken voor teken met de bron.
 
 ## 2. Tabellen aflezen — Nederlands en Engels
 
@@ -47,6 +57,29 @@ maken.
 | **bron** | `countcamp_lab/boek/04_speeltjes/power_speeltje.html` |
 | **live** | `/power/index.html` |
 | **beschreven in** | de kaart in de speelkist |
+
+## 3b. De weg terug naar het hoofdstuk
+
+| | |
+|---|---|
+| **bron** | de voet van elk speeltje: `<p class="foot">De regressieve ruggengraat · <a>Hoofdstuk N — titel</a> · …` |
+| **gezet door** | `countcamp_lab/boek/04_speeltjes/_zet_hoofdstukvoeten.py` (kaart van speeltje → hoofdstuk staat bovenin dat script) |
+| **handeling** | hernummert of hertitelt het boek → script opnieuw draaien → `bouw_speelkist.py` → publiceren |
+
+Het script **tikt de hoofdstuktitels niet over**: het leest ze uit
+`manuscript/hN.html` (`<title>`). Een volgende rotatie hoeft hier dus niet nog
+een keer met de hand te landen — alleen het script opnieuw draaien.
+
+De link is **absoluut** (`https://countcamp.org/manuscript/hN.html`). Dat moet
+wel: hetzelfde bestand staat op vijf dieptes tegelijk, en één relatief pad kan
+daar niet op alle vijf kloppen.
+
+`s2_schud_tabel.html` krijgt bewust **geen** link: het hoort bij schil-eenheid S2
+(kruistabel en χ²) en die staat niet in het boek. Liever geen link dan een
+verzonnen link.
+
+De **W-nummers** in diezelfde voet zijn iets anders en roteren niet mee met het
+boek — zie `oefenboeken/broertjes/OPDRACHT_MAP.md`.
 
 ## 4. De tekst van een speeltje staat op drie plekken
 
