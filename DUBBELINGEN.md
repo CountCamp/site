@@ -90,3 +90,25 @@ had gedraaid. De grafiek zag er volkomen normaal uit — alleen lag de lijn er
 naast. Sindsdien rekenen de figuren hun eigen gemiddelden uit in plaats van ze te
 onthouden.
 
+
+## De oefenboek-tegels staan op twee bladzijden
+
+| | |
+|---|---|
+| **kopie 1** | `manuscript/index.qmd` — onderaan de boekpagina, vier tegels (R, JASP, SPSS, GGZ-VS) |
+| **kopie 2** | `oefenboeken/index.qmd` — dezelfde vier, plus OZP 1, MVDA en de JASP-handleiding |
+| **bewaakt door** | niets — met de hand |
+
+Ben, 10-8-2026: *"de broertjes kunnen gewoon blijven, dan is het overzichtelijk
+genoeg en wordt het niet te veel op een pagina."* Bewuste keuze: wie onderaan het
+boek is beland moet meteen zien wáár hij verder kan, zonder eerst een tussenpagina.
+
+**Waar het misgaat.** Op 10-8 waren de twee kopieën al uit elkaar gelopen — de
+boekpagina zei *"een oefenboek-schil"* waar de andere *"een oefenboek"* zei, en
+*"in drie regels"* tegen *"in een paar regels"*. Toen gelijkgetrokken. Dat is de
+enige waarschuwing die dit register kan geven: **verandert er iets aan een
+oefenboek-beschrijving, verander het op béíde bladzijden.**
+
+De uitweg als dit blijft schuiven: één bron maken en de tegels genereren, zoals
+de sectie-overzichten uit `genereer_secties.py` komen. Nu niet gedaan omdat vier
+tegels dat nog niet waard zijn.
