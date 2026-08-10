@@ -3619,8 +3619,8 @@ hyphens: none;
   top.appendChild(terug); top.appendChild(home); sb.appendChild(top);
 
   // huidige pagina-secties (voor onder het actieve hoofdstuk)
-  var secties = Array.prototype.slice.call(document.querySelectorAll('h2, h3'))
-    .filter(function (h) { return !h.closest('.werk, .werk-blok'); });
+  var secties = Array.prototype.slice.call(document.querySelectorAll('h2'))
+    .filter(function (h) { return !h.closest('.werk, .werk-blok') && h.id; });
 
   BEW.forEach(function (naam, bi) {
     var grp = el('div', 'sb-groep');
@@ -3636,7 +3636,23 @@ hyphens: none;
       if (c.s) a.appendChild(el('span', 'sb-sub', c.s));   // ondertitel fluistert het onderwerp
       li.appendChild(a);
       if (c.f === here) {
-        a.classList.add('hier');   // sectielijst bewust weg — rustiger (Fable/Ben 21-7)
+        a.classList.add('hier');
+        // De sectielijst stond hier vanaf 21-7 uit ("rustiger"). Ben, 9-8: hij
+        // mist de uitbreiding -- je moet kunnen zien welke onderwerpen er in een
+        // hoofdstuk zitten. Terug, maar alleen voor het hoofdstuk waar je IN zit:
+        // dat houdt de zijbalk rustig en voorkomt dat we de secties ergens
+        // moeten overtikken. Ze komen uit de bladzij zelf, dus ze kunnen niet
+        // uit de pas gaan lopen met de tekst.
+        if (secties.length) {
+          var sl = el('ul', 'sb-secties');
+          secties.forEach(function (h) {
+            var sli = el('li');
+            var sa = el('a'); sa.href = '#' + h.id;
+            sa.textContent = (h.textContent || '').replace(/\s+/g, ' ').trim();
+            sli.appendChild(sa); sl.appendChild(sli);
+          });
+          li.appendChild(sl);
+        }
       }
       lijst.appendChild(li);
     });

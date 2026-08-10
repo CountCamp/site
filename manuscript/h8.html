@@ -2925,6 +2925,9 @@ hyphens: none;
 <p>Bronnen: keuzes.md §1/§2/§6/§7 · INHOUDSOPGAVE H7-blok · CAST_EN_SIGNATUUR §B (Klaar-is-Kees = signatuur-kandidaat #2; Geer = de gestolene, canon 11-7) · Wilde-aantekening (dosering: één fortissimo in §2, één mezzoforte in §7, verder echo’s en piano). Getallen (werk-getallen 11-7 — <strong>waarheidsscript regenereert</strong>, keuzes §1: getallen zijn dienaren): gladheid gem. 5, SD 2.45; r(karaat, gladheid) = .63, r(gladheid, glans) = .91; hulp-lijnen glans ≈ 10 + 8 × gladheid en regressielijn karaat-op-gladheid exact 0.5 + 0.1 × gladheid; rechthoekjes-som op de rest-verschillen <strong>+1.0</strong> (was +54), partiële r = .03; MRA glans = 8.77 + 0.98 × karaat + 7.93 × gladheid, R² = .82, F(2, 9) = 20.3, t karaat = 0.10, t gladheid = 4.9; Kees-residu −36 → +3.3; Else-residu −7.9; Leen-residu −16.3 (grootste van het nieuwe model — bewust geadresseerd in §5).</p>
 </blockquote>
 </div>
+<div class="werk">
+<p><strong>Nieuwe sectie, besloten 9-8-2026 (keuzes 7i).</strong> Tussen <em>Twee vragen aan één model</em> en <em>DATA = FIT + RESIDU</em> komt <strong>“Waar woont de nul nu? — het adres met drie kamers”</strong>. Hier wordt centreren een handeling: met meerdere voorspellers betekent het intercept “alles nul”, en dat is bijna altijd onzin. Termenregel voor de index: <em>centreren · het interpreteerbare intercept</em>. H4 heeft de nul al geplant (daar is de ruwe intercept sinds de karaat-verschuiving negatief), H10 maakt er het ritueel van.</p>
+</div>
 <section id="de-specht-en-de-dennenappel" class="level2">
 <h2 class="anchored" data-anchor-id="de-specht-en-de-dennenappel">1. De specht en de dennenappel</h2>
 <div class="werk">
@@ -3695,8 +3698,8 @@ R^2 &amp;= \frac{4257}{5200} \\
   top.appendChild(terug); top.appendChild(home); sb.appendChild(top);
 
   // huidige pagina-secties (voor onder het actieve hoofdstuk)
-  var secties = Array.prototype.slice.call(document.querySelectorAll('h2, h3'))
-    .filter(function (h) { return !h.closest('.werk, .werk-blok'); });
+  var secties = Array.prototype.slice.call(document.querySelectorAll('h2'))
+    .filter(function (h) { return !h.closest('.werk, .werk-blok') && h.id; });
 
   BEW.forEach(function (naam, bi) {
     var grp = el('div', 'sb-groep');
@@ -3712,7 +3715,23 @@ R^2 &amp;= \frac{4257}{5200} \\
       if (c.s) a.appendChild(el('span', 'sb-sub', c.s));   // ondertitel fluistert het onderwerp
       li.appendChild(a);
       if (c.f === here) {
-        a.classList.add('hier');   // sectielijst bewust weg — rustiger (Fable/Ben 21-7)
+        a.classList.add('hier');
+        // De sectielijst stond hier vanaf 21-7 uit ("rustiger"). Ben, 9-8: hij
+        // mist de uitbreiding -- je moet kunnen zien welke onderwerpen er in een
+        // hoofdstuk zitten. Terug, maar alleen voor het hoofdstuk waar je IN zit:
+        // dat houdt de zijbalk rustig en voorkomt dat we de secties ergens
+        // moeten overtikken. Ze komen uit de bladzij zelf, dus ze kunnen niet
+        // uit de pas gaan lopen met de tekst.
+        if (secties.length) {
+          var sl = el('ul', 'sb-secties');
+          secties.forEach(function (h) {
+            var sli = el('li');
+            var sa = el('a'); sa.href = '#' + h.id;
+            sa.textContent = (h.textContent || '').replace(/\s+/g, ' ').trim();
+            sli.appendChild(sa); sl.appendChild(sli);
+          });
+          li.appendChild(sl);
+        }
       }
       lijst.appendChild(li);
     });
