@@ -67,6 +67,7 @@
   .sier code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:14.5px;color:#4d7a3a}
   .sier p{margin:10px 0 0;font-style:italic;color:#6b5f45;font-size:16px}
   .foot{margin-top:28px;color:#8a7d63;font-size:13.5px;font-style:italic}
+  .foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 </style>
   <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -92,7 +93,7 @@
   <div class="controls">
     <span class="slider">hoeveel pak je per greep?
       <input type="range" id="n" min="1" max="100" value="4">
-      <span class="nval" id="nval">n = 4</span>
+      <span class="nval" id="nval"><i>n</i> = 4</span>
     </span>
     <span class="slider" style="margin-left:auto">
       <label style="cursor:pointer"><input type="checkbox" id="band" checked> middelste 95% tonen</label>
@@ -106,7 +107,7 @@
     <p>Dat is de hele truc. Eén regel. De computer verveelt zich nooit.</p>
   </div>
 
-  <p class="foot">De regressieve ruggengraat · H3 — De grabbelton geschud · speeltje bij de simulatie</p>
+  <p class="foot">De regressieve ruggengraat &middot; <a href="https://countcamp.org/manuscript/h3.html">Hoofdstuk 3 — De grabbelton geschud</a> &middot; W3, het grabbel-blok bij de steekproevenverdeling</p>
 </div>
 
 <script>
@@ -141,7 +142,20 @@
   }
 
   // ---- state ----
-  const NB = 60, LO = 1, HI = 6;               // muur: gemiddelden 1..6
+  const LO = 1, HI = 6, NBMAX = 121;           // muur: gemiddelden 1..6
+  // Het gemiddelde van n dobbelstenen kan alleen op een rooster met stapjes 1/n
+  // landen. Vaste bakjes (er stonden er 60) passen daar zelden op: dan vangt het
+  // ene bakje twee mogelijke uitkomsten en zijn buurman er een, en krijg je een kam
+  // van hoge en lage balken die niets met de data te maken heeft. Daarom binnen we
+  // op het rooster zelf: K roosterpunten per bakje, met K net groot genoeg om onder
+  // NBMAX balken te blijven. Elk bakje dekt dan EVENVEEL mogelijke uitkomsten.
+  let K = 1, NB = 21;
+  function herbinKader(){
+    const J = 5 * n;                           // roosterpunten 0..J  (mean = LO + j/n)
+    K  = Math.max(1, Math.ceil((J + 1) / NBMAX));
+    NB = Math.floor(J / K) + 1;
+  }
+  function binVal(i){ return LO + (i * K) / n; }   // de waarde waar bakje i op staat
   let bins = new Float64Array(NB);             // targetcounts
   let drawn = new Float64Array(NB);            // geanimeerde hoogtes
   let total=0, sum=0;
@@ -155,8 +169,12 @@
   let meanPulse=null;                          // {t0} oplicht-animatie van het gemiddelde (fase 2)
   let witch=null;                              // {t0,dur,fromLeft} easter-egg heksje op de bezemsteel
 
-  function binOf(m){ let i=Math.floor((m-LO)/(HI-LO)*NB); return Math.max(0,Math.min(NB-1,i)); }
-  function reset(){ bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; sum=0;
+  function binOf(m){
+    const j = Math.round((m - LO) * n);        // roosterpunt: exact, geen afrondingsdrift
+    return Math.max(0, Math.min(NB - 1, Math.floor(j / K)));
+  }
+  function reset(){ herbinKader();
+    bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; sum=0;
     lastSample=[]; lastMean=null; markerX=null; scaleTarget=1; diceAnim=null;
     meanHidden=false; meanPulse=null; }
 
@@ -431,7 +449,8 @@
     wline(xmu,214,xmu,AX_Y,0.8); ctx.setLineDash([]);
 
     // bordjes: houten plankjes stapelen zich op tot de muur
-    const maxBarH=AX_Y-224, bw=(AX_R()-AX_L)/NB;
+    // balkbreedte = de afstand tussen twee roosterwaarden, in pixels
+    const maxBarH=AX_Y-224, bw=(AX_R()-AX_L)*(K/n)/(HI-LO);
     // vaste plank-hoogte: elk bordje is een échte plank. Torens groeien met een vaste
     // plank per greep; pas als de langste toren het plafond raakt gaan ze allemaal soepel krimpen.
     const TARGET_PLANK=8;                                  // gewenste plank-hoogte (px): klein maar zichtbaar
@@ -439,7 +458,7 @@
     const plankH = maxBarH / Math.max(PLAFOND, scaleNow);  // = min(VASTE_PLANK, muur/hoogste_toren); soepel via scaleNow-lerp
     for(let i=0;i<NB;i++){
       if(drawn[i]<=0.01) continue;
-      const h=Math.min(maxBarH, drawn[i]*plankH), bwid=bw-1.5, bx=AX_L+i*bw-bwid/2;  // balk gecentreerd op de tick (xPix van de bin-waarde), niet in de cel
+      const h=Math.min(maxBarH, drawn[i]*plankH), bwid=Math.max(2, bw-1.5), bx=xPix(binVal(i))-bwid/2;  // balk gecentreerd op de roosterwaarde zelf
       if(h<1.4){ ctx.fillStyle=C.wood2; ctx.fillRect(bx, AX_Y-h, bwid, h); continue; }
       const g=ctx.createLinearGradient(0,AX_Y-h,0,AX_Y);
       g.addColorStop(0,C.wood1); g.addColorStop(1,C.wood2);

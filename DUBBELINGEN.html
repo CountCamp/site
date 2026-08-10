@@ -156,6 +156,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#de-speeltjes" id="toc-de-speeltjes" class="nav-link" data-scroll-target="#de-speeltjes">1. De speeltjes</a></li>
   <li><a href="#tabellen-aflezen-nederlands-en-engels" id="toc-tabellen-aflezen-nederlands-en-engels" class="nav-link" data-scroll-target="#tabellen-aflezen-nederlands-en-engels">2. Tabellen aflezen — Nederlands en Engels</a></li>
   <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power">3. Power</a></li>
+  <li><a href="#b.-de-weg-terug-naar-het-hoofdstuk" id="toc-b.-de-weg-terug-naar-het-hoofdstuk" class="nav-link" data-scroll-target="#b.-de-weg-terug-naar-het-hoofdstuk">3b. De weg terug naar het hoofdstuk</a></li>
   <li><a href="#de-tekst-van-een-speeltje-staat-op-drie-plekken" id="toc-de-tekst-van-een-speeltje-staat-op-drie-plekken" class="nav-link" data-scroll-target="#de-tekst-van-een-speeltje-staat-op-drie-plekken">4. De tekst van een speeltje staat op drie plekken</a></li>
   <li><a href="#goatcounter" id="toc-goatcounter" class="nav-link" data-scroll-target="#goatcounter">5. GoatCounter</a></li>
   <li><a href="#huisstijl-van-de-broertjes" id="toc-huisstijl-van-de-broertjes" class="nav-link" data-scroll-target="#huisstijl-van-de-broertjes">6. Huisstijl van de broertjes</a></li>
@@ -198,12 +199,17 @@ ul.task-list li input[type="checkbox"] {
 <td><code>countcamp_site/oefenboeken/broertjes/{r,jasp,spss}/speeltjes/</code> — zeven per oefenboek, aangeroepen vanuit de hoofdstukken</td>
 </tr>
 <tr class="even">
+<td><strong>kopie 5</strong></td>
+<td><code>countcamp_site/manuscript/h3_grabbel.html</code> — waar hoofdstuk 3 naartoe linkt</td>
+</tr>
+<tr class="odd">
 <td><strong>handeling</strong></td>
-<td>bron wijzigen → <code>python3 countcamp_site/_tools/bouw_speelkist.py</code> → <code>rm -rf _site &amp;&amp; quarto render --to html</code> → committen en pushen → <code>curl</code> op de live-URL</td>
+<td>bron wijzigen → <code>python3 countcamp_site/_tools/bouw_speelkist.py</code> → <code>python3 countcamp_lab/boek/04_speeltjes/_proef_kopieen.py</code> → <code>rm -rf _site &amp;&amp; quarto render --to html</code> → committen en pushen → <code>curl</code> op de live-URL</td>
 </tr>
 </tbody>
 </table>
-<p>Het script doet <strong>alle vier de bestemmingen</strong> in één keer, inclusief de losse adressen hieronder en de drie broertjes-mappen. Het controleert per bestand of de teller er nog in zit en meldt wat er in een doelmap staat zonder bron. Ververs je er één met de hand, dan lopen de andere drie stil uit de pas — dat is op 9-8-2026 bijna gebeurd met de tabellen.</p>
+<p>Het script doet <strong>alle vijf de bestemmingen</strong> in één keer, inclusief de losse adressen hieronder en de drie broertjes-mappen. Het controleert per bestand of de teller er nog in zit en meldt wat er in een doelmap staat zonder bron. Ververs je er één met de hand, dan lopen de andere vier stil uit de pas — dat is op 9-8-2026 bijna gebeurd met de tabellen.</p>
+<p><strong>Wat 10-8-2026 leerde: kopie 5 stond er niet in.</strong> <code>manuscript/h3.html</code> linkt met <code>&lt;a href="h3_grabbel.html"&gt;</code> naar zijn eigen kopie van de grabbelton, en die kopie kende het bouwscript niet. Hij liep dus stil achter — 25006 bytes tegen 25990 in de bron. Wie in het boek op <em>“Open de grabbelton”</em> klikte, kreeg een oudere grabbelton dan wie hem uit de speelkist pakte. Geen 404, geen klacht, geen alarm: precies de fout die een register moet vangen en die dit register miste omdat de bestemming er niet in stond. Nu wél, en <code>_proef_kopieen.py</code> leest alle vierendertig kopieën terug en vergelijkt ze teken voor teken met de bron.</p>
 </section>
 <section id="tabellen-aflezen-nederlands-en-engels" class="level2">
 <h2 class="anchored" data-anchor-id="tabellen-aflezen-nederlands-en-engels">2. Tabellen aflezen — Nederlands en Engels</h2>
@@ -251,6 +257,33 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+</section>
+<section id="b.-de-weg-terug-naar-het-hoofdstuk" class="level2">
+<h2 class="anchored" data-anchor-id="b.-de-weg-terug-naar-het-hoofdstuk">3b. De weg terug naar het hoofdstuk</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>bron</strong></td>
+<td>de voet van elk speeltje: <code>&lt;p class="foot"&gt;De regressieve ruggengraat · &lt;a&gt;Hoofdstuk N — titel&lt;/a&gt; · …</code></td>
+</tr>
+<tr class="even">
+<td><strong>gezet door</strong></td>
+<td><code>countcamp_lab/boek/04_speeltjes/_zet_hoofdstukvoeten.py</code> (kaart van speeltje → hoofdstuk staat bovenin dat script)</td>
+</tr>
+<tr class="odd">
+<td><strong>handeling</strong></td>
+<td>hernummert of hertitelt het boek → script opnieuw draaien → <code>bouw_speelkist.py</code> → publiceren</td>
+</tr>
+</tbody>
+</table>
+<p>Het script <strong>tikt de hoofdstuktitels niet over</strong>: het leest ze uit <code>manuscript/hN.html</code> (<code>&lt;title&gt;</code>). Een volgende rotatie hoeft hier dus niet nog een keer met de hand te landen — alleen het script opnieuw draaien.</p>
+<p>De link is <strong>absoluut</strong> (<code>https://countcamp.org/manuscript/hN.html</code>). Dat moet wel: hetzelfde bestand staat op vijf dieptes tegelijk, en één relatief pad kan daar niet op alle vijf kloppen.</p>
+<p><code>s2_schud_tabel.html</code> krijgt bewust <strong>geen</strong> link: het hoort bij schil-eenheid S2 (kruistabel en χ²) en die staat niet in het boek. Liever geen link dan een verzonnen link.</p>
+<p>De <strong>W-nummers</strong> in diezelfde voet zijn iets anders en roteren niet mee met het boek — zie <code>oefenboeken/broertjes/OPDRACHT_MAP.md</code>.</p>
 </section>
 <section id="de-tekst-van-een-speeltje-staat-op-drie-plekken" class="level2">
 <h2 class="anchored" data-anchor-id="de-tekst-van-een-speeltje-staat-op-drie-plekken">4. De tekst van een speeltje staat op drie plekken</h2>
