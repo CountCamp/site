@@ -73,7 +73,7 @@ drift (exit 1). Nooit een van de drie kopieën met de hand bijwerken.
 | **bron** | `countcamp_lab/boek/oefenboeken/broertjes/r/10_data/genereer_diamantjes.R` → `diamantjes.csv` |
 | **kopie 1** | `boek/01_schetsen/_waarheid_getallen.R` — het waarheidsscript van het boek, met een eigen `data.frame` |
 | **kopie 2–6** | `boek/02_figuren/_bouw_figuren.R`, `_bouw_decompositie.R`, `_bouw_h8_wegrekenen.R`, `_bouw_h11_muur.R`, `_bouw_h12.R` — elk met de karaatreeks hardgecodeerd |
-| **en verder** | elk getal dat eruit volgt staat overgeschreven in Boekie (H1, H4, H6, H8, H9, H11, H12) en in de drie broertjes |
+| **en verder** | elk getal dat eruit volgt staat overgeschreven in Boekie (H1, H4, H5, H8, H9, H11, H12) en in de drie broertjes |
 | **handeling** | bron wijzigen → alle kopieën na → `Rscript _waarheid_getallen.R` → de vijf figuur-scripts draaien → `python3 boek/_tools/getallen_kaart.py --oud <oud register>` tot hij leeg is → renderen en publiceren |
 
 **Hoe je weet dat je klaar bent.** `getallen_register.R` rekent elk gepubliceerd
