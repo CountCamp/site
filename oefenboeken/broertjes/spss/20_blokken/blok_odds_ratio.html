@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -560,21 +589,21 @@ ul.task-list li input[type="checkbox"] {
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <ol type="1">
-<li><strong>Analyze → Regression → Binary Logistic</strong>, <code>mooi</code> naar <strong>Dependent</strong>, <code>gladheid</code> naar <strong>Covariates</strong>.</li>
+<li><strong>Analyze → Regression → Binary Logistic</strong>, <code>gepakt</code> naar <strong>Dependent</strong>, <code>glans</code> naar <strong>Covariates</strong>.</li>
 <li>In de tabel <strong>Variables in the Equation</strong> staat Exp(B) — dat is de odds ratio.</li>
 </ol>
-<p>Exp(B) = 5.24 per punt gladheid.</p>
+<p>B = 0.081 met Constant = −4.04; Exp(B) = <strong>1.085</strong> per glanspunt.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<pre><code>LOGISTIC REGRESSION VARIABLES mooi
-  /METHOD=ENTER gladheid
+<pre><code>LOGISTIC REGRESSION VARIABLES gepakt
+  /METHOD=ENTER glans
   /PRINT=CI(95).</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<p>Noem een steentje mooi als de glans boven de 50 komt — dat halen 5 van de 12 — en laat gladheid die uitkomst voorspellen: per punt gladheid worden de odds op mooi 5.24 keer zo groot. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft.</p>
+<p>De kraai pakte er zes van de twaalf op. Laat de glans die uitkomst voorspellen en er rolt een keer-getal uit: per glanspunt worden de odds op oppakken <strong>1.085</strong> keer zo groot. Dat klinkt als niks, tot je bedenkt dat keer-getallen stapelen als machten en niet als sommen — tien glanspunten erbij is <span class="math inline">\(1.085^{10}\)</span> en dus <strong>2.26</strong> keer zo grote odds. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft: bij glans 49.6 zegt het model munt-opgooien, en daar liggen Else en Leen, allebei op 50, allebei op kans .51 — en toch had de een een andere nacht dan de ander.</p>
 <p><strong>Nu jij</strong> — met nieuwe data: geboortegewichten, en een uitkomst die ja of nee is.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · trek eraan">
 <div class="callout-header d-flex align-content-center">
@@ -685,7 +714,8 @@ ul.task-list li input[type="checkbox"] {
 <p><em>Daar buigt de rechte lijn zich om een ja/nee-uitkomst heen, en blijkt de odds precies de taal te zijn waarin die gebogen lijn rekent.</em></p>
 </div>
 <div class="werk">
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage) — SPSS-tweeling, master = het R-broertje met tool-swaps. Speel het = SPSS-klikpad (Crosstabs → Statistics → Risk geeft OR + 95%-interval); de richting-waarschuwing behouden (0.49 = 1/2.02 als de rij/kolom andersom staat). Schud het: SPSS kan de shuffle niet zelf → <strong>speeltje + hop</strong>, link ingewired naar <code>../speeltjes/w12_schud_odds.html</code> (lokaal, <code>target="_blank"</code>); dansen-rond-1 + expliciet loskoppelen behouden. Eindopdracht: tabel omdraaien via Crosstabs (Rows/Columns wisselen); RR met de rekenmachine uit de vier vakjes. Getallen identiek aan master, ongewijzigd: kruistabel 30/44/29/86; odds 0.68/0.34; OR 2.02; kansen 0.405/0.252; RR 1.61; CI [1.08, 3.78]; schud mediaan 0.99, 95% ≈ 0.5–1.8, 23/1000 ≥ 2.02; eindopdracht OR andersom 2.02 (symmetrisch), RR andersom (30/59)/(44/130) = 1.50. TODO (broertje-botten): W12 (<em>En hij buigt</em>) nog niet geschreven — anker + slotzin checken zodra dat hoofdstuk staat. Stem-pas nog te doen.</p>
+<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage) — SPSS-tweeling, master = het R-broertje met tool-swaps. Speel het = SPSS-klikpad (Crosstabs → Statistics → Risk geeft OR + 95%-interval); de richting-waarschuwing behouden (0.49 = 1/2.02 als de rij/kolom andersom staat). Schud het: SPSS kan de shuffle niet zelf → <strong>speeltje + hop</strong>, link ingewired naar <code>../speeltjes/w12_schud_odds.html</code> (lokaal, <code>target="_blank"</code>); dansen-rond-1 + expliciet loskoppelen behouden. Eindopdracht: tabel omdraaien via Crosstabs (Rows/Columns wisselen); RR met de rekenmachine uit de vier vakjes. Getallen identiek aan master, ongewijzigd: kruistabel 30/44/29/86; odds 0.68/0.34; OR 2.02; kansen 0.405/0.252; RR 1.61; CI [1.08, 3.78]; schud mediaan 0.99, 95% ≈ 0.5–1.8, 23/1000 ≥ 2.02; eindopdracht OR andersom 2.02 (symmetrisch), RR andersom (30/59)/(44/130) = 1.50. <strong>Diamant-opwarmer omgezet 10-8 van <code>mooi ~ gladheid</code> naar <code>gepakt ~ glans</code></strong> (Bens besluit). Zie de master voor het volledige verhaal; kort: <code>mooi</code> was een noodgreep van 8-8 en is een functie van glans, dus glans gaf volledige scheiding en de opwarmer week uit naar gladheid — een ánder model dan H12 zelf draait. Nagerekend op de nieuwe csv, identiek aan H12_schets.qmd: Constant = −4.04, B = 0.0814 (<em>SE</em> = 0.0427, Wald <em>p</em> ≈ .057 — SPSS rapporteert Wald-chi² = 3.63 in plaats van <em>z</em>, zelfde toets, <em>z</em>² = χ²), Exp(B) = 1.085 per glanspunt en 2.26 per tien, omslagpunt bij glans 49.6. Convergeert in 4 iteraties. <code>mooi</code> blijft bestaan als kruistabel-kolom.</p>
+<p>TODO (broertje-botten): W12 (<em>En hij buigt</em>) nog niet geschreven — anker + slotzin checken zodra dat hoofdstuk staat. Stem-pas nog te doen.</p>
 </div>
 <p style="text-align:center; font-size:1.2em; color:#9a948a; margin-top:3rem;">
 🌾
