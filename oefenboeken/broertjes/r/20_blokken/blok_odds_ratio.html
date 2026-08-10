@@ -68,7 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../90_basishandelingen.html" rel="next">
+<link href="../20_blokken/blok_kruistabel_chikwadraat.html" rel="next">
 <link href="../20_blokken/blok_mediatie.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -108,6 +108,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -450,7 +479,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false">
- <span class="menu-text">Naslag</span></a>
+ <span class="menu-text">Naast het boek · Schil</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -458,8 +487,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-18" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Basishandelingen in R</span></a>
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schil · Kruistabel en χ²</span></a>
   </div>
 </li>
       </ul>
@@ -467,7 +496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false">
- <span class="menu-text">Naast het boek · Schil</span></a>
+ <span class="menu-text">Naslag</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -475,8 +504,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-19" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Schil · Kruistabel en χ²</span></a>
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basishandelingen in R</span></a>
   </div>
 </li>
       </ul>
@@ -612,33 +641,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># een ja/nee-uitkomst maken: mooi of niet</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>mooi <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(d<span class="sc">$</span>glans <span class="sc">&gt;</span> <span class="dv">50</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>mooi)                                    <span class="co"># → 5 van de 12</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># logistische regressie: family = binomial</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(mooi <span class="sc">~</span> gladheid, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># de uitkomst staat al in het bestand: pakte de kraai hem op, die nacht?</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>gepakt)                                  <span class="co"># → 6 van de 12</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># logistische regressie: family = binomial</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)                                        <span class="co"># → −4.04  en  0.0814</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># exp() maakt van de coëfficiënt een odds ratio</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 5.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 1.085 per glanspunt</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">10</span>)                           <span class="co"># → 2.26 per tien glanspunten</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mutate maakt de kolom en geeft de data terug</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mooi =</span> <span class="fu">as.integer</span>(glans <span class="sc">&gt;</span> <span class="dv">50</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">count</span>(mooi)                               <span class="co"># → 7 en 5</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">count</span>(gepakt)                             <span class="co"># → 6 nee, 6 ja</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 1.085 per glanspunt</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(mooi <span class="sc">~</span> gladheid, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 5.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># en de kans die het model aan elke steen hangt</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">kans =</span> <span class="fu">round</span>(<span class="fu">predict</span>(m, <span class="at">type =</span> <span class="st">"response"</span>), <span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(naam, glans, gepakt, kans)            <span class="co"># Else .51, Leen .51</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<p>Noem een steentje mooi als de glans boven de 50 komt — dat halen 5 van de 12 — en laat gladheid die uitkomst voorspellen: per punt gladheid worden de odds op mooi 5.24 keer zo groot. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft.</p>
+<p><span class="naslag"><code>gepakt</code> is hier géén hercodering: de kraai deed het, en het is opgeschreven. Dat scheelt een keuze die je anders zelf had moeten maken — en waar je die grens legt, verandert je hele uitkomst. Wil je toch van een getal een ja/nee-kolom maken (zoals <code>mooi</code>, glans boven de 50), dan staan de vormen (<code>ifelse</code>, <code>cut</code>, <code>case_when</code>, en het maken van dummies) bij <a href="../90_basishandelingen.html#hercoderen">nieuwe variabelen maken en hercoderen</a>.</span></p>
+<p>De kraai pakte er zes van de twaalf op. Laat de glans die uitkomst voorspellen en er rolt een keer-getal uit: per glanspunt worden de odds op oppakken <strong>1.085</strong> keer zo groot. Dat klinkt als niks, tot je bedenkt dat keer-getallen stapelen als machten en niet als sommen — tien glanspunten erbij is <span class="math inline">\(1.085^{10}\)</span> en dus <strong>2.26</strong> keer zo grote odds. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft: bij glans 49.6 zegt het model munt-opgooien, en daar liggen Else en Leen, allebei op 50, allebei op kans .51 — en toch had de een een andere nacht dan de ander.</p>
 <p><strong>Nu jij</strong> — met nieuwe data: geboortegewichten, en een uitkomst die ja of nee is.</p>
 <p>Eerst het telwerk. Haal de 189 baby’s binnen en zet de twee ja/nee-kolommen tegen elkaar af in een kruistabel.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -770,7 +802,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>Daar buigt de rechte lijn zich om een ja/nee-uitkomst heen, en blijkt de odds precies de taal te zijn waarin die gebogen lijn rekent.</em></p>
 </div>
 <div class="werk">
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage). Bestaande tekst en getallen ongewijzigd behouden, schud-trede incl.&nbsp;dansen-rond-1-signatuur en het expliciete loskoppelen behouden. Hoofdstuk-verwijzing ontkoppeld (“logistische regressie die verderop komt” i.p.v. “van W12”; loopt via OPDRACHT_MAP). Getallen nagerekend op <code>geboortegewicht.csv</code> = <code>MASS::birthwt</code> (2-8): bestaand kruistabel 30/44/29/86; odds 0.68/0.34; OR 2.021944→2.02; kansen 0.405/0.252; RR 1.61; CI 1.08–3.78 via log-OR ± 1.96·SE; schud met <code>set.seed(42)</code> mediaan 0.99, 95% ≈ 0.52–1.83, 23/1000 ≥ 2.02 — alles klopt. Nieuw (eindopdracht): OR andersom = 2.02 (symmetrisch, cross-product-invariant), RR andersom (30/59)/(44/130) = 1.50; P(roken|laag)=30/59=.51, P(roken|niet-laag)=44/130=.34. TODO (broertje-botten, Fable 24-7): W12 (<em>En hij buigt</em>) is nog niet geschreven — anker en slotzin checken zodra dat hoofdstuk staat. Stem-pas nog te doen. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt.</p>
+<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage). Bestaande tekst en getallen ongewijzigd behouden, schud-trede incl.&nbsp;dansen-rond-1-signatuur en het expliciete loskoppelen behouden. Hoofdstuk-verwijzing ontkoppeld (“logistische regressie die verderop komt” i.p.v. “van W12”; loopt via OPDRACHT_MAP). Getallen nagerekend op <code>geboortegewicht.csv</code> = <code>MASS::birthwt</code> (2-8): bestaand kruistabel 30/44/29/86; odds 0.68/0.34; OR 2.021944→2.02; kansen 0.405/0.252; RR 1.61; CI 1.08–3.78 via log-OR ± 1.96·SE; schud met <code>set.seed(42)</code> mediaan 0.99, 95% ≈ 0.52–1.83, 23/1000 ≥ 2.02 — alles klopt. Nieuw (eindopdracht): OR andersom = 2.02 (symmetrisch, cross-product-invariant), RR andersom (30/59)/(44/130) = 1.50; P(roken|laag)=30/59=.51, P(roken|niet-laag)=44/130=.34. <strong>Diamant-opwarmer omgezet 10-8 van <code>mooi ~ gladheid</code> naar <code>gepakt ~ glans</code></strong> (Bens besluit; hij keurde de twaalf waarden van <code>gepakt</code> die dag goed). De oude opwarmer was een noodgreep van 8-8: <code>gepakt</code> bestond toen niet in de csv, dus is <code>mooi</code> (glans &gt; 50) ter plekke bedacht — en omdat <code>mooi</code> een functie van glans ís, gaf glans als voorspeller volledige scheiding (b0 = −252, SE = 383294), wat werd omzeild door op gladheid te regresseren. Oefening 12.1 warmde dus op met een ánder model dan de lezer net in H12 gelezen had. <code>gepakt</code> staat sinds 10-8 in de canonieke generator (op naam gekoppeld, niet op rijpositie) en dus in alle drie de csv’s. Getallen op de nieuwe csv nagerekend, niet overgetikt, en ze vallen exact samen met wat H12_schets.qmd publiceert: b0 = −4.0377 (→ −4.04), b1 = 0.081425 (→ 0.0814), <em>SE</em> = 0.0427, <em>z</em> = 1.91, <em>p</em> = .057; OR = 1.0848 per glanspunt, 2.2575 per tien (en 1.085^10 = 2.2612, ook 2.26); omslagpunt −b0/b1 = 49.6; Else en Leen allebei kans .508 → .51. Convergeert in 4 iteraties, geen scheiding. <code>mooi</code> blijft staan als kruistabel-kolom (Oefening kruistabel/chi-kwadraat, merk × mooi 5/1 en 2/4).</p>
+<p>TODO (broertje-botten, Fable 24-7): W12 (<em>En hij buigt</em>) is nog niet geschreven — anker en slotzin checken zodra dat hoofdstuk staat. Stem-pas nog te doen. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt.</p>
 </div>
 <p style="text-align:center; font-size:1.2em; color:#9a948a; margin-top:3rem;">
 🌾
@@ -1193,8 +1226,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../90_basishandelingen.html" class="pagination-link" aria-label="Basishandelingen in R">
-        <span class="nav-page-text">Basishandelingen in R</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="pagination-link" aria-label="Schil · Kruistabel en χ²">
+        <span class="nav-page-text">Schil · Kruistabel en χ²</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
