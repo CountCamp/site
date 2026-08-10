@@ -3873,8 +3873,15 @@ R^2 &amp;= \frac{SS_{\text{regressie}}}{SS_{\text{totaal}}} \\
   top.appendChild(terug); top.appendChild(home); sb.appendChild(top);
 
   // huidige pagina-secties (voor onder het actieve hoofdstuk)
+  // Het anker staat NIET op de kop. Quarto hangt het id aan de omhullende
+  // <section> en geeft de kop een data-anchor-id; filteren op h.id gooide daardoor
+  // alle secties weg (gevonden 10-8-2026, nadat de lijst leeg bleef).
+  function ankerVan(h) {
+    return h.id || h.getAttribute('data-anchor-id') ||
+           (h.closest('section') ? h.closest('section').id : '');
+  }
   var secties = Array.prototype.slice.call(document.querySelectorAll('h2'))
-    .filter(function (h) { return !h.closest('.werk, .werk-blok') && h.id; });
+    .filter(function (h) { return !h.closest('.werk, .werk-blok') && ankerVan(h); });
 
   BEW.forEach(function (naam, bi) {
     var grp = el('div', 'sb-groep');
@@ -3901,7 +3908,7 @@ R^2 &amp;= \frac{SS_{\text{regressie}}}{SS_{\text{totaal}}} \\
           var sl = el('ul', 'sb-secties');
           secties.forEach(function (h) {
             var sli = el('li');
-            var sa = el('a'); sa.href = '#' + h.id;
+            var sa = el('a'); sa.href = '#' + ankerVan(h);
             sa.textContent = (h.textContent || '').replace(/\s+/g, ' ').trim();
             sli.appendChild(sa); sl.appendChild(sli);
           });
@@ -3927,7 +3934,7 @@ R^2 &amp;= \frac{SS_{\text{regressie}}}{SS_{\text{totaal}}} \\
       entries.forEach(function (en) {
         if (en.isIntersecting) {
           sb.querySelectorAll('.sb-secties a').forEach(function (x) { x.classList.remove('actief'); });
-          var link = sb.querySelector('.sb-secties a[href="#' + en.target.id + '"]');
+          var link = sb.querySelector('.sb-secties a[href="#' + ankerVan(en.target) + '"]');
           if (link) link.classList.add('actief');
         }
       });
