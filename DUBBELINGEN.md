@@ -124,24 +124,52 @@ naast. Sindsdien rekenen de figuren hun eigen gemiddelden uit in plaats van ze t
 onthouden.
 
 
-## De oefenboek-tegels staan op twee bladzijden
+## 8. De oefenboek-beschrijvingen staan op twee bladzijden
 
 | | |
 |---|---|
-| **kopie 1** | `manuscript/index.qmd` — onderaan de boekpagina, vier tegels (R, JASP, SPSS, GGZ-VS) |
-| **kopie 2** | `oefenboeken/index.qmd` — dezelfde vier, plus OZP 1, MVDA en de JASP-handleiding |
-| **bewaakt door** | niets — met de hand |
+| **bron** | `oefenboeken/index.qmd` — de volledige plank: R, JASP, SPSS, GGZ-VS, OZP 1, MVDA, JASP-handleiding |
+| **kopie 1** | `manuscript/index.qmd` — onderaan de boekpagina, **alleen de drie broertjes** (R, JASP, SPSS) |
+| **bewaakt door** | `python3 _tools/vergelijk_broertjes.py` (ná een render) — leest de drie alinea's uit beide gerenderde bladzijden; exit 1 bij verschil, exit 2 als hij ze niet kán vinden |
 
 Ben, 10-8-2026: *"de broertjes kunnen gewoon blijven, dan is het overzichtelijk
 genoeg en wordt het niet te veel op een pagina."* Bewuste keuze: wie onderaan het
 boek is beland moet meteen zien wáár hij verder kan, zonder eerst een tussenpagina.
 
+**Van vier naar drie (11-8-2026).** Het GGZ-VS/JASP-werkboek is van de boekpagina
+áf en staat voortaan op **één** plek: de oefenboeken-bladzij. Reden: de broertjes
+zijn de werkarm van dít boek — dezelfde hoofdstukken, dezelfde volgorde, dezelfde
+nummers. Het GGZ-VS-werkboek doet iets anders (je leest en beoordeelt andermans
+analyse; dat hoort bij een opleiding). Praktisch scheelt het ook het meeste: die
+beschrijving was de langste van de vier en dus de tekst die het makkelijkst uit de
+pas loopt. Er is nu **drie** in plaats van vier om synchroon te houden, en van de
+GGZ-VS-tekst bestaat maar één exemplaar — die kan dus niet meer uit de pas lopen.
+De boekpagina wijst voor de rest in één regel naar de oefenboeken-bladzij.
+
 **Waar het misgaat.** Op 10-8 waren de twee kopieën al uit elkaar gelopen — de
 boekpagina zei *"een oefenboek-schil"* waar de andere *"een oefenboek"* zei, en
-*"in drie regels"* tegen *"in een paar regels"*. Toen gelijkgetrokken. Dat is de
-enige waarschuwing die dit register kan geven: **verandert er iets aan een
+*"in drie regels"* tegen *"in een paar regels"*. Toen gelijkgetrokken, maar alleen
+per zinsnede: de R- en JASP-beschrijving op de boekpagina waren nog steeds
+kortere, eigen samenvattingen. Sinds 11-8 zijn het **letterlijk** dezelfde drie
+alinea's, en dat is nu ook te meten in plaats van te geloven — draai
+`_tools/vergelijk_broertjes.py` na een render. **Verandert er iets aan een
 oefenboek-beschrijving, verander het op béíde bladzijden.**
 
 De uitweg als dit blijft schuiven: één bron maken en de tegels genereren, zoals
-de sectie-overzichten uit `genereer_secties.py` komen. Nu niet gedaan omdat vier
-tegels dat nog niet waard zijn.
+de sectie-overzichten uit `genereer_secties.py` komen. Nu niet gedaan omdat drie
+tegels dat nog niet waard zijn — en omdat de vergelijker het stil houden nu
+onmogelijk maakt.
+
+## 9. De vorm van de boekenplank
+
+| | |
+|---|---|
+| **bron** | `oefenboeken/vorm.js` (`VORM_STANDAARD`) — één woord, `"rug"` of `"kaart"` |
+| **gebruikt door** | `oefenboeken/index.qmd`, `oefenboeken/broertjes/index.html`, en sinds 11-8 ook `manuscript/index.qmd` (voet van de boekpagina) |
+| **opmaak** | `styles.css`, blok "De boekenplank in twee vormen" (`.cc-plank` / `.cc-boek` / `.cc-chip`), plus de eigen `<style>` in `broertjes/index.html` |
+
+De drie bladzijden laden hetzelfde scriptje met een relatief pad
+(`vorm.js`, `../vorm.js`, `../oefenboeken/vorm.js`). Wie de vorm omzet, zet 'm
+dus voor alle drie tegelijk om. Bouw je een vierde lijst met boeken: gebruik
+`.cc-plank`/`.cc-boek` en laad `vorm.js` — geen eigen variant, anders spreekt de
+site weer twee talen. Zonder JavaScript geldt de rug-vorm.
