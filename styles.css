@@ -354,9 +354,21 @@ main#quarto-document-content h2 { margin-bottom: 1.1rem; }
   font-size: 1.12rem; margin: 0 0 0.35rem; padding: 0;
   display: flex; align-items: baseline; gap: 0.6rem;
 }
+/* Quarto plakt achter elke kop een anker-icoontje (a.anchorjs-link) om naar
+   die sectie te kunnen deeplinken. In een boekblok is de kop geen sectie maar
+   een link naar een ándere bladzij — daar valt niets te deeplinken, dus het
+   ankertje mag weg. Het moet ook weg: zie de regel eronder. */
+.cc-boek h3 a.anchorjs-link { display: none; }
+
 .cc-boek h3 a { color: var(--cc-blue-deep); text-wrap: balance; }
-/* de hele regel/kaart klikbaar: de titellink spant zich er onzichtbaar over */
-.cc-boek h3 a::after { content: ""; position: absolute; inset: 0; }
+/* de hele regel/kaart klikbaar: de titellink spant zich er onzichtbaar over.
+   :not() is geen franje maar het hart van de storing van 11-8: staat er een
+   twééde <a> in deze kop, dan kreeg díé ook zo'n laag over de hele rij, en
+   omdat hij later in de DOM staat lag hij bovenop. Quarto's ankertje is zo'n
+   tweede <a> — 7 bij 0 pixels groot, onzichtbaar, en toch ving het élke klik
+   op de rij. De rij bleef muisdood terwijl de link zelf gewoon werkte.
+   Alleen de titel mag de rij overspannen. */
+.cc-boek h3 a:not(.anchorjs-link)::after { content: ""; position: absolute; inset: 0; }
 .cc-boek:hover h3 a { color: var(--cc-blue); }
 .cc-boek p {
   font-family: Georgia, serif; font-size: 0.97rem; line-height: 1.65;
