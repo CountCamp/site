@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Enkelvoudige regressie – GGZ-VS/JASP-werkboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_effectgrootte_d.html" rel="next">
+<link href="../20_blokken/blok_correlatie_scatterplot.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_enkelvoudige_regressie.html">Enkelvoudige regressie</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">GGZ-VS/JASP-werkboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GGZ-VS/JASP-werkboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/00_parkeerkaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De parkeerkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/01_vijf_basisvragen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De vijf basisvragen</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/02_effectmaten_kaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectmatenkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meetniveaus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meetniveaus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gemiddelde en standaardafwijking</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_kwartielen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediaan, kwartielen en scheefheid</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_standaardfout.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Standaardfout en non-respons</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De correlatie <em>r</em> en de scatterplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Enkelvoudige regressie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectgrootte — Cohens <em>d</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cronbachs α</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">W6 · Bestaat het verschil echt?</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>p</em>-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets_gepaard_onafhankelijk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>t</em>-toets: gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power_significant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Significantie en power</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meervoudige regressie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ANOVA en η²</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactie en moderatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De odds ratio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_klinische_relevantie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Van significant naar relevant</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schil (naast het boek)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De kruistabel en χ²</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mann_whitney.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De Mann-Whitney-toets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/99_register.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het register</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Enkelvoudige regressie</h1>
+<p class="subtitle lead">Eén voorspeller, één lijn · <em>simple linear regression</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p><strong>Vooraf, in één zin:</strong> een regressie legt één rechte lijn door een puntenwolk en vat hem samen in twee getallen — waar de lijn begint (<em>a</em>) en hoe schuin hij loopt (<em>b</em>) — en het enige wat je met die lijn hoeft te kunnen, is hem in gewone zinnen navertellen; wat hij níét kan, is voorspellen hoe het met déze patiënt afloopt, en waarom staat onderaan bij <em>Wat het niet zegt</em>.</p>
+</blockquote>
+<section id="wat-je-ziet" class="level2">
+<h2 class="anchored" data-anchor-id="wat-je-ziet">Wat je ziet</h2>
+<p><strong>In het kort.</strong> Een <strong>vergelijking</strong> — <em>Y</em> = <em>a</em> + <em>b</em> × <em>X</em> — of, vaker, de tabelregel eronder: één voorspeller met een <em>b</em>, een standaardfout, een <em>t</em>, een <em>p</em> en een 95%-interval, plus een <em>R</em>² voor het model. Dit is een <strong>enkelvoudige regressie</strong> / <em>simple linear regression</em>: <strong>één</strong> uitkomst en <strong>één</strong> voorspeller. Je komt hem tegen zodra een onderzoek niet alleen wil zeggen <em>dát</em> twee dingen samenhangen, maar ook <em>hoeveel</em> de een opschuift per eenheid van de ander.</p>
+<p>Twee woorden die je meteen uit elkaar moet houden, want de rest van het blok hangt eraan:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>naam in het artikel</th>
+<th>ook wel</th>
+<th>wat het is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>uitkomst</strong>, <em>Y</em>, <em>dependent variable</em></td>
+<td>criterium, afhankelijke variabele</td>
+<td>wat je wilt voorspellen</td>
+</tr>
+<tr class="even">
+<td><strong>voorspeller</strong>, <em>X</em>, <em>predictor</em></td>
+<td>covariabele, onafhankelijke variabele</td>
+<td>waarmee je het voorspelt</td>
+</tr>
+</tbody>
+</table>
+<p>Zo ziet het eruit in het wild:</p>
+<blockquote class="blockquote">
+<p><em>Voorbeeldfragment, geschreven in de stijl van een resultatensectie — het artikel bestaat niet.</em></p>
+<p>In this cross-sectional sample of outpatients (<em>N</em> = 68), sleep quality predicted symptom severity: each additional point on the sleep quality scale corresponded to a 0.17-point lower severity score, <em>b</em> = −0.17, <em>SE</em> = 0.04, <em>t</em>(66) = −4.01, <em>p</em> &lt; .001, 95% CI [−0.26, −0.09], β = −.44. The model accounted for 20% of the variance in severity, <em>R</em>² = .20, <em>F</em>(1, 66) = 16.11, <em>p</em> &lt; .001.</p>
+</blockquote>
+</section>
+<section id="wat-er-staat" class="level2">
+<h2 class="anchored" data-anchor-id="wat-er-staat">Wat er staat</h2>
+<p><strong>In het kort.</strong> Achtenzestig patiënten, en één lijn er dwars doorheen:</p>
+<blockquote class="blockquote">
+<p><strong>klachtenernst = 27.56 − 0.17 × slaapkwaliteit</strong></p>
+</blockquote>
+<p>Wie tien punten beter slaapt, scoort gemiddeld ongeveer <strong>1.7 punt lager</strong> op klachtenernst. Dat verband is duidelijk aanwezig (het 95%-interval loopt van −0.26 tot −0.09 en de nul zit er níét in), en tegelijk klein genoeg om er geen enkele patiënt mee te kunnen voorspellen: van alle verschillen in ernst dekt deze lijn een vijfde, en de rest ligt er als spreiding omheen. De rest van dit blok is die twee zinnen, langzaam.</p>
+<p><strong>Eerst de lijn zelf.</strong> Van elke patiënt heb je twee metingen: hoe goed hij slaapt en hoe ernstig zijn klachten zijn. In het <a href="../20_blokken/blok_correlatie_scatterplot.html">correlatieblok</a> was dat een wolk van achtenzestig stippen en één getal, <em>r</em> = −.44. Hier komt er iets bij: door diezelfde wolk wordt een <strong>rechte lijn</strong> gelegd, en wel de lijn die er zo goed mogelijk doorheen past. “Zo goed mogelijk” heeft een precieze betekenis — de lijn ligt zó dat de afstandjes van de stippen tot de lijn samen zo klein mogelijk zijn — maar die rekenkunde is JASP’s werk. Jouw werk begint bij de twee getallen die eruit komen.</p>
+<p><strong>De <em>b</em> — de helling.</strong> <em>b</em> = −0.17 betekent: <strong>twee patiënten die één punt verschilden in slaapkwaliteit, verschilden gemiddeld 0.17 punt in klachtenernst — en de patiënt die beter sliep, was de patiënt met de lichtere klachten</strong> (vandaar het minteken).</p>
+<p>Nul komma zeventien is een onhandig getal om in je hoofd te houden, en dat komt door de meetlat: slaapkwaliteit loopt hier van 0 tot 100, dus één punt erop stelt niets voor. <strong>Vertaal een kleine <em>b</em> daarom naar een stap die wél bestaat.</strong> Tien punten slaapkwaliteit is 1.7 punt ernst; twintig punten is 3.5 punt. Dat is dezelfde bevinding, in een eenheid waarin je hem kunt navertellen. En het werkt ook andersom: zie je een <em>b</em> van 4.20, kijk dan eerst waar <em>X</em> op loopt, want vier punten per stap is iets heel anders als die stap “één jaar ouder” is dan wanneer hij “één diagnose erbij” is.</p>
+<p>Let ook hier op de vórm van de zin. Er staat <em>verschilden</em>, niet <em>daalden</em>. Er is niemand beter laten slapen om te kijken wat er gebeurt; er zijn mensen met elkaar vergeleken. Dat onderscheid is het enige wat een lezer tegenhoudt om er een oorzaak van te maken.</p>
+<p><strong>De <em>a</em> — de intercept.</strong> <em>a</em> = 27.56 is de voorspelde ernst voor iemand met slaapkwaliteit <strong>nul</strong>. Dat is precies wat het woord zegt (het <strong>snijpunt</strong> met de verticale as, <em>intercept</em>), en het is meestal het minst interessante getal in de tabel. In dit bestand staat één patiënt op nul, en daaronder gaapt een gat: de volgende zit op 21. De 27.56 rust dus op één persoon plus doorgetrokken lijn. Lees de intercept als <em>het beginpunt dat de lijn nodig heeft om ergens te kunnen beginnen</em> — niet als een bevinding. (In artikelen zie je hem daarom vaak verschoven, met het woord <em>centered</em> erbij: dan is de intercept de voorspelling bij een gemíddelde <em>X</em>, en dat is wél een plek waar mensen staan.)</p>
+<p><strong>Voorspellen met de lijn — en waarom dat een gok is.</strong> Vul een waarde in en je krijgt een voorspelling. Voor een patiënt met slaapkwaliteit 40: 27.56 − 0.17 × 40 = <strong>20.6</strong>. Voor een patiënt met slaapkwaliteit 70: 27.56 − 0.17 × 70 = <strong>15.4</strong>. Ruim vijf punten verschil, en dat klopt met de helling: dertig stappen van 0.17.</p>
+<p>Nu de eerlijkheid erbij. Neem patiënt p001 uit het bestand: slaapkwaliteit 55, en de lijn voorspelt voor hem <strong>18.0</strong>. Zijn werkelijke ernstscore is <strong>27</strong>. De lijn zat er negen punten naast — op een schaal van 0 tot 40. Dat verschil tussen gemeten en voorspeld heet het <strong>residu</strong> / <em>residual</em>, en het is precies hetzelfde afstandje dat je in het correlatieblok als spreiding rond de lijn zag. Er zijn achtenzestig van die residuen, en de lijn is niets anders dan de stand waarbij ze samen zo klein mogelijk zijn — wat nog altijd behoorlijk groot kan zijn.</p>
+<p>Hoe groot precies, is een getal dat je kunt voelen. Zou je de slaapkwaliteit niet kennen, dan is je beste gok voor elke patiënt het <strong>gemiddelde</strong>: ernst 18.0. Gemiddeld zit je er dan ongeveer <strong>7.0</strong> punt naast. Mét de lijn erbij zit je er gemiddeld <strong>6.3</strong> punt naast. Dát is de hele winst van deze regressie: van zeven naar zes komma drie. Zo ziet twintig procent verklaarde variantie er in de praktijk uit.</p>
+<p><strong>De <em>R</em>² — en meteen wat hij niet zegt.</strong> <em>R</em>² = .20 is het aandeel van de verschillen in ernst dat de lijn dekt: een vijfde. Het is hetzelfde getal als <em>r</em>² uit het correlatieblok — bij één voorspeller is <em>R</em>² gewoon de correlatie in het kwadraat (−0.443 × −0.443 = 0.196). Het woord dat erbij hoort, <strong>verklaarde variantie</strong> / <em>explained variance</em>, is een rekenterm en geen verklaring: er wordt niets uitgelegd, er wordt spreiding toegewezen. Je zult hem naast <em>R</em>² ook als percentage zien (“verklaart 20% van de variantie”), en in JASP staat er een <strong>gecorrigeerde <em>R</em>²</strong> naast (hier .18) die pas echt begint te tellen zodra er meer voorspellers bij komen — zie het <a href="../20_blokken/blok_meervoudige_regressie.html">blok over meervoudige regressie</a>.</p>
+<p><strong>Het 95%-interval om <em>b</em>, en de vraag die je eraan stelt.</strong> Achter de <em>b</em> staat [−0.26, −0.09]: de reeks hellingen die bij deze data passen. Eén vraag telt: <strong>ligt de nul erin?</strong> Een helling van nul is een vlakke lijn, oftewel <em>slaapkwaliteit zegt niets over ernst</em>. Hier ligt de nul er niet in — het interval blijft aan de negatieve kant — en daarom is de <em>p</em> kleiner dan .05. Dat is geen toeval maar dezelfde informatie twee keer: bij verschillen en hellingen is “nul in het interval” hetzelfde bericht als “<em>p</em> boven .05”. Zie het <a href="../20_blokken/blok_betrouwbaarheidsinterval.html">blok over het betrouwbaarheidsinterval</a>.</p>
+<p>Wat het interval erbóven doet: het vertelt je hoe <strong>precies</strong> de schatting is. Van −0.09 tot −0.26 is bijna een factor drie tussen de zuinigste en de royaalste lezing. “Tien punten beter slapen hoort bij ongeveer één tot ruim twee en een half punt minder ernst” is de eerlijke zin; “1.7 punt” alleen is de nette samenvatting waar de onzekerheid al af is.</p>
+<p><strong>En dan <em>b</em> tegenover β.</strong> In vrijwel elke regressietabel die je gaat lezen staan twee kolommen naast elkaar: een <strong>B</strong> of <em>b</em> en een <strong>β</strong> (bèta), soms met <em>ongestandaardiseerd</em> en <em>gestandaardiseerd</em> erboven. Het verschil is de meetlat.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>wat het is</th>
+<th>waarvoor je het gebruikt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><em>b</em></strong> (B), ongestandaardiseerd</td>
+<td>de helling in de eenheden van de wereld: hier 0.17 ernstpunt per punt slaapkwaliteit</td>
+<td>uitleggen aan een patiënt of een collega; iets uitrekenen</td>
+</tr>
+<tr class="even">
+<td><strong>β</strong>, gestandaardiseerd</td>
+<td>dezelfde helling in standaardafwijkingen: −.44</td>
+<td>voorspellers <strong>onderling</strong> vergelijken, en vergelijken tussen onderzoeken</td>
+</tr>
+</tbody>
+</table>
+<p>De β heeft de meetlatten weggedeeld, net zoals Cohens <em>d</em> en de correlatie <em>r</em> dat doen. Hij zegt: <em>per standaardafwijking slaapkwaliteit schuift ernst .44 standaardafwijking op.</em> Dat maakt hem vergelijkbaar en tegelijk abstract — je kunt er niets mee uitrekenen voor een echte patiënt.</p>
+<p>Eén gelukje voor dit blok: <strong>bij één voorspeller is β precies de correlatie <em>r</em></strong>. De β van −.44 hierboven is dezelfde −.44 die je in het correlatieblok al zag. Vanaf twee voorspellers gaan de twee uit elkaar lopen, en dan wordt β een eigen getal.</p>
+<p>Twee dingen om vast te houden. <strong>De <em>p</em> en het interval horen bij dezelfde toets</strong> — β verandert de eenheid, niet het verhaal, dus de <em>p</em> bij <em>b</em> en de <em>p</em> bij β zijn hetzelfde getal. En: <strong>β is geen percentage.</strong> β = .44 betekent niet 44% van wat dan ook. Dat is de vaakst gemaakte leesfout op deze kolom.</p>
+</section>
+<section id="waar-het-vandaan-komt" class="level2">
+<h2 class="anchored" data-anchor-id="waar-het-vandaan-komt">Waar het vandaan komt</h2>
+<p>Dit hoort bij de boek-eenheid <em>Hangen ze samen?</em> — waar de scatterplot, de correlatie en de lijn eronder in één beweging langskomen. Correlatie en regressie draaien op dezelfde motor (de covariantie: bewegen twee variabelen samen?), maar ze beantwoorden een andere vraag, en één verschil moet je paraat hebben:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>correlatie <em>r</em></th>
+<th>enkelvoudige regressie</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>vraag</td>
+<td>hoe <strong>strak</strong> hangen ze samen?</td>
+<td>hoeveel schuift de uitkomst op <strong>per eenheid</strong>?</td>
+</tr>
+<tr class="even">
+<td>eenheid</td>
+<td>geen — altijd tussen −1 en 1</td>
+<td>die van de uitkomst per die van de voorspeller</td>
+</tr>
+<tr class="odd">
+<td>richting</td>
+<td><strong>geen</strong>: <em>r</em> van A met B is <em>r</em> van B met A</td>
+<td><strong>wel</strong>: je kiest wie de uitkomst is</td>
+</tr>
+<tr class="even">
+<td>kun je ermee voorspellen?</td>
+<td>nee</td>
+<td>ja — één getal per persoon</td>
+</tr>
+</tbody>
+</table>
+<p>Die derde regel is de belangrijkste, en je kunt hem in dit bestand zelf zien. Regresseer je ernst op slaapkwaliteit, dan is <em>b</em> = −0.17. Draai je het om en voorspel je slaapkwaliteit uit ernst, dan is <em>b</em> = −1.13. <strong>Twee verschillende lijnen, en toch dezelfde ene <em>r</em> van −.44 en dezelfde <em>R</em>² van .20.</strong> De correlatie kent geen richting; de regressie dwingt je er een te kiezen. Die keuze is van de onderzoeker, niet van de statistiek — en hij volgt uit het verhaal en het design, nooit uit de output.</p>
+<p>De stap hierna staat in <em>Meer dan één verschil</em>: daar komt er een tweede voorspeller bij, en dan krijgt elke <em>b</em> er één woord bij — <em>terwijl de andere voorspellers gelijk blijven</em>. Dat is het <a href="../20_blokken/blok_meervoudige_regressie.html">blok over meervoudige regressie</a>.</p>
+</section>
+<section id="zelf-doen-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-doen-in-jasp">Zelf doen in JASP</h2>
+<p><a href="../10_data/slaap_ernst.csv" class="data-download" download="slaap_ernst.csv">⬇ Download de data — <code>slaap_ernst.csv</code></a></p>
+<p>Bij dit blok hoort hetzelfde databestand als bij het correlatieblok: <code>slaap_ernst.csv</code>, 68 rijen (de patiënten), drie kolommen — <code>id</code>, <code>ernst</code> (klachtenernst, 0–40, hoger is ernstiger) en <code>slaapkwaliteit</code> (0–100, hoger is beter geslapen). Dezelfde patiënten, dezelfde wolk, andere vraag. De rijen zijn gegenereerd — er zit geen echte patiënt in — en ze reproduceren precies de getallen uit het fragment.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open het bestand in JASP (menu linksboven → Open).</li>
+<li>Klik in de balk bovenin op <strong>Regression</strong> en kies <strong>Linear Regression</strong>.</li>
+<li>Sleep <code>ernst</code> naar <strong>Dependent Variable</strong> en <code>slaapkwaliteit</code> naar <strong>Covariates</strong>; <code>id</code> laat je staan.</li>
+<li>Vink onder <strong>Statistics</strong> aan: <strong>Estimates</strong>, <strong>Model fit</strong> en <strong>Confidence intervals</strong> (laat 95 staan). Zoek daar ook het vakje voor de gestandaardiseerde coëfficiënten (<strong>Standardized estimates</strong>, in sommige JASP-versies <strong>Standardized coefficients</strong>) — vind je het niet, geen zoektocht beginnen: bij één voorspeller is β precies de <em>r</em> uit het correlatieblok.</li>
+<li>Open het tabblad <strong>Plots</strong> en vink onder Residuals <strong>Residuals vs. Predicted</strong> en <strong>Q-Q plot standardized residuals</strong> aan. Die twee heb je straks nodig bij de assumpties.</li>
+</ol>
+</div>
+</div>
+<p><strong>De Coefficients-tabel — twee regels, en je leest de tweede.</strong> Bovenaan staat <code>(Intercept)</code> met 27.558; dat is de <em>a</em>. Daaronder staat <code>slaapkwaliteit</code>, en díé regel is de bevinding. Vijf getallen, in deze volgorde:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>kolom</th>
+<th>hier</th>
+<th>wat het is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Unstandardized</strong> (<em>b</em>, soms B)</td>
+<td>−0.174</td>
+<td>de helling, in ernstpunten per punt slaapkwaliteit</td>
+</tr>
+<tr class="even">
+<td><strong>Standard Error</strong> (<em>SE</em>)</td>
+<td>0.043</td>
+<td>hoe hard die schatting meewiebelt bij deze <em>N</em></td>
+</tr>
+<tr class="odd">
+<td><strong>Standardized</strong> (β)</td>
+<td>−0.443</td>
+<td>dezelfde helling in standaardafwijkingen</td>
+</tr>
+<tr class="even">
+<td><strong><em>t</em></strong></td>
+<td>−4.013</td>
+<td><em>b</em> gedeeld door <em>SE</em>: hoeveel standaardfouten ligt de schatting van nul vandaan</td>
+</tr>
+<tr class="odd">
+<td><strong><em>p</em></strong></td>
+<td>&lt; .001</td>
+<td>hoort bij die <em>t</em></td>
+</tr>
+<tr class="even">
+<td><strong>95% CI</strong></td>
+<td>[−0.261, −0.088]</td>
+<td>dezelfde informatie als de <em>p</em>, in de eenheid van de uitkomst</td>
+</tr>
+</tbody>
+</table>
+<p>Die <em>t</em> van −4.01 is echt niets anders dan −0.174 gedeeld door 0.043 — reken het na, het klopt op de afronding na. Zie je in een artikel de vorm <em>t</em>(66) = −4.01, dan is dat getal tussen haakjes het aantal <strong>vrijheidsgraden</strong>: hier 68 patiënten min 1 voorspeller min 1 voor de intercept. Eén regel, vijf getallen, één verhaal — en dit is exact de regel die je in je bijeenkomsten moet kunnen naschrijven.</p>
+<p><strong>De Model Summary erboven</strong> geeft <em>R</em> = 0.443, <em>R</em>² = 0.196 en gecorrigeerde <em>R</em>² = 0.184. En in de ANOVA-tabel eronder: <em>F</em>(1, 66) = 16.11, <em>p</em> &lt; .001. Bij één voorspeller vertelt die <em>F</em> niets nieuws — hij is precies de <em>t</em> in het kwadraat (−4.013 × −4.013 = 16.11) en dus dezelfde toets, twee keer opgeschreven. Vanaf twee voorspellers gaat de <em>F</em> een eigen vraag stellen (doet het model als geheel iets?); daar dient hij in het MRA-blok voor.</p>
+<div class="formule callout callout-style-default callout-note callout-titled" title="Narekenen — alleen als je zelf wilt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Narekenen — alleen als je zelf wilt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Dit hoef je niet te kunnen om een artikel te beoordelen, en in JASP hoef je het nooit te doen. Maar wil je zien dat de getallen niet uit de lucht komen: alles hieronder zit al in het correlatieblok.</p>
+<p><strong>Van <em>r</em> naar <em>b</em> — de meetlatten erin.</strong></p>
+<ul>
+<li><em>r</em> = −0.443, <em>SD</em> van ernst = 7.01, <em>SD</em> van slaapkwaliteit = 17.83</li>
+<li><em>b</em> = <em>r</em> × (<em>SD</em> uitkomst / <em>SD</em> voorspeller) = −0.443 × (7.01 / 17.83) = <strong>−0.174</strong></li>
+</ul>
+<p>Daar zit de hele <em>b</em>-versus-β in één regel: β is <em>r</em>, en <em>b</em> is diezelfde β teruggerekend naar de meetlatten van de wereld.</p>
+<p><strong>De intercept — de lijn moet door het midden.</strong></p>
+<ul>
+<li>gemiddelde slaapkwaliteit = 55.03, gemiddelde ernst = 17.97</li>
+<li>de lijn gaat áltijd door dat middelpunt, dus: <em>a</em> = 17.97 − (−0.174 × 55.03) = <strong>27.56</strong></li>
+</ul>
+<p>Vul het gemiddelde in en je krijgt het gemiddelde terug: 27.56 − 0.174 × 55.03 = 17.97. Dat is geen truc maar de definitie van de best passende lijn.</p>
+<p><strong>En <em>R</em>².</strong></p>
+<ul>
+<li><em>R</em>² = <em>r</em> × <em>r</em> = −0.443 × −0.443 = <strong>0.196</strong></li>
+</ul>
+</div>
+</div>
+</div>
+<p><strong>Een voorspeller met twee categorieën.</strong> Je hoort in de les dat een voorspeller ook <strong>categorisch</strong> mag zijn — wel of geen blended behandeling, man of vrouw. Dan doet de regressie iets wat je al kent: <em>b</em> is het <strong>verschil tussen de twee groepsgemiddelden</strong>. Probeer het op <code>angst_blended.csv</code> uit het <a href="../20_blokken/blok_t_toets_gepaard_onafhankelijk.html"><em>t</em>-toets-blok</a>: zet <code>angst_12w</code> bij <strong>Dependent Variable</strong> en <code>groep</code> bij <strong>Factors</strong>. Je krijgt <em>b</em> = 2.40 met 95% CI [0.67, 4.13] en <em>p</em> = .007 — tot achter de komma dezelfde uitkomst als de onafhankelijke <em>t</em>-toets op dezelfde data, want 2.40 is precies 10.50 min 8.10, het verschil in gemiddelden. De intercept (8.10) is dan het gemiddelde van de groep die JASP als <strong>referentiecategorie</strong> neemt, en de <em>b</em> zegt hoeveel de andere groep daarvan afwijkt. Eén model, twee namen: wat een <em>t</em>-toets doet, is een regressie met één categorische voorspeller.</p>
+<div class="formule callout callout-style-default callout-note callout-titled" title="De assumpties — waar je naar kijkt, en wat je ermee doet">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De assumpties — waar je naar kijkt, en wat je ermee doet
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Een regressie rekent altijd. Hij geeft ook een keurige lijn als de aanname eronder nergens op slaat — <strong>JASP controleert dat niet voor je, hij gaat er gewoon van uit dat het klopt.</strong> Je hoeft dit rijtje niet uit je hoofd te leren; je moet weten dát het bestaat, zodat je in een methodesectie kunt zien of de auteurs er iets over zeggen.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>aanname</th>
+<th>waar je naar kijkt</th>
+<th>waar het misgaat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>lineair verband</strong></td>
+<td>de scatterplot</td>
+<td>een kromme wolk waar een rechte lijn doorheen ligt</td>
+</tr>
+<tr class="even">
+<td><strong>onafhankelijke observaties</strong></td>
+<td>het design, niet de output</td>
+<td>dezelfde patiënt twee keer geteld; kinderen uit dezelfde klas of praktijk</td>
+</tr>
+<tr class="odd">
+<td><strong>gelijke spreiding</strong> (homoscedasticiteit)</td>
+<td>Residuals vs.&nbsp;Predicted: een gelijkmatige band, geen trechter</td>
+<td>de lijn zit er strak op bij lage scores en mist er alle kanten op bij hoge</td>
+</tr>
+<tr class="even">
+<td><strong>ongeveer normaal verdeelde residuen</strong></td>
+<td>de Q-Q plot: punten ongeveer op de diagonaal</td>
+<td>een scheve staart, meestal door een bodem- of plafondeffect</td>
+</tr>
+<tr class="odd">
+<td><strong>geen dominante uitschieters</strong></td>
+<td>de scatterplot, en de uiterste punten</td>
+<td>één patiënt die de lijn in zijn eentje kantelt</td>
+</tr>
+<tr class="even">
+<td><del>geen sterke multicollineariteit</del></td>
+<td>—</td>
+<td>geldt pas vanaf twee voorspellers; zie het MRA-blok</td>
+</tr>
+</tbody>
+</table>
+<p>Die laatste is doorgestreept en dat is geen slordigheid: multicollineariteit gaat over voorspellers die elkaar overlappen, en met één voorspeller is er niets om mee te overlappen. Kom je hem in een lijstje tegen bij een enkelvoudige regressie, dan is het lijstje overgeschreven.</p>
+<p><strong>Eén uitschieter, zichtbaar gemaakt.</strong> In dit bestand staat één patiënt op slaapkwaliteit 0; de eerstvolgende zit op 21. Haal die ene rij eruit en draai opnieuw: <em>b</em> gaat van −0.174 naar −0.161, en <em>R</em>² van .20 naar .15. De conclusie verandert niet — het verband blijft duidelijk, <em>p</em> = .001 — maar een vijfde van de verklaarde variantie hing wel aan één persoon. Dát is wat “dominante uitschieter” betekent, en het is meteen het antwoord op de vraag waarom je naar de scatterplot kijkt vóór je naar de tabel kijkt.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="zelf-opschrijven" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-opschrijven">Zelf opschrijven</h2>
+<div class="apa callout callout-style-default callout-note callout-titled" title="Schrijf het op — de enkelvoudige regressie">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Schrijf het op — de enkelvoudige regressie
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor je eigen Nederlandstalige literatuurstudie:</p>
+<blockquote class="blockquote">
+<p>Klachtenernst werd voorspeld uit slaapkwaliteit in een dwarsdoorsnede (<em>N</em> = 68). Patiënten die tien punten beter sliepen, scoorden gemiddeld 1.7 punt lager op klachtenernst, <em>b</em> = −0.17, 95% BI [−0.26, −0.09], <em>t</em>(66) = −4.01, <em>p</em> &lt; .001, β = −.44. Het model verklaarde 20% van de verschillen in klachtenernst, <em>R</em>² = .20.</p>
+</blockquote>
+<p>Vier werkafspraken daarbij:</p>
+<ul>
+<li><strong>Zet het in de eenheden van de wereld, en kies een stap die bestaat.</strong> “Tien punten beter slapen hoort bij 1.7 punt minder ernst” is te volgen; “<em>b</em> = −0.17” alleen is een getal zonder maat. Noem er altijd bij <em>waarvan</em> het de uitkomst is en <em>waaruit</em> hij voorspeld werd.</li>
+<li><strong>Rapporteer de vaste vier: <em>b</em>, het 95%-interval, <em>t</em> met vrijheidsgraden, en <em>p</em>.</strong> Dat is wat een lezer nodig heeft om je regel te wegen. Staat er in de tabel ook een β, neem hem mee — maar nooit in plaats van <em>b</em>.</li>
+<li><strong>Neem <em>R</em>² erbij, en houd het bij “verklaarde”.</strong> <em>R</em>² = .20 schrijf je zonder voorloopnul en met twee decimalen, net als <em>r</em> en <em>p</em>.</li>
+<li><strong>Verschil-taal, geen verandering-taal.</strong> “Patiënten die beter sliepen, scoorden lager” — niet “beter slapen verlaagt de klachten”. Er is niets gemanipuleerd; er zijn mensen met elkaar vergeleken. Lees hieronder waarom dat verschil hier extra zwaar weegt.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="wat-het-niet-zegt" class="level2">
+<h2 class="anchored" data-anchor-id="wat-het-niet-zegt">Wat het niet zegt</h2>
+<p>De verleidelijkste redenering die je over dit fragment kunt opschrijven is: <em>“slaapkwaliteit voorspelt klachtenernst (<em>p</em> &lt; .001), dus beter slapen verlicht de klachten — en met <em>R</em>² = .20 kunnen we voorspellen wie er zwaar aan toe is.”</em> Eén zin, vier haarscheurtjes.</p>
+<p><strong>“Voorspelt”, en dan “verlicht”.</strong> Het woord <em>voorspeller</em> is een rekenterm en geen belofte over de toekomst of over oorzaken. Deze data zijn op één moment verzameld: er is niets vooraf gemeten en niets gemanipuleerd. Dezelfde lijn is even goed te lezen als “ernstiger klachten verstoren de slaap”, of als “er is een derde ding — een angststoornis, middelengebruik, een recente crisis — dat allebei aandrijft”. Een regressie kan de richting van de pijl niet zien; de onderzoeker heeft die gekozen door te bepalen welke variabele hij tot uitkomst benoemde. Dat is dezelfde waarschuwing als bij de correlatie, en hij weegt hier zwaarder, omdat de woorden <em>voorspeller</em> en <em>uitkomst</em> al klinken alsof de pijl er staat.</p>
+<p><strong>“<em>R</em>² = .20, dus we kunnen voorspellen.”</strong> Een vijfde van de spreiding gedekt, betekent dat vier vijfde er niet door gedekt wordt. Concreet: zonder de lijn zit je er gemiddeld 7.0 punt naast, mét de lijn 6.3. Bij patiënt p001 zat de lijn er negen punten naast. Een regressie beschrijft een <strong>groepstendens</strong>; hij zegt niets over hoe het met déze ene patiënt zit. Dat is geen nuance maar het hele verschil tussen onderzoek lezen en een dossier lezen, en het is precies de plek waar een regressietabel het meest verleidt.</p>
+<p><strong>“27.56 bij slaapkwaliteit nul”, en alles buiten de wolk.</strong> De lijn loopt door tot in de oneindigheid, de data niet. Onder de 21 staat hier één patiënt, boven de 98 niemand. Elke voorspelling buiten het bereik van de gemeten waarden is <strong>extrapolatie</strong>: rekenkundig probleemloos, inhoudelijk verzonnen. Vul slaapkwaliteit 100 in en je krijgt ernst 10.1 — een getal dat nergens op steunt behalve op de aanname dat de lijn daar nog steeds recht is. Trek hem nog verder door en de rekenmachine belooft bij slaapkwaliteit 159 een ernst ónder nul, wat op een schaal van 0 tot 40 niet bestaat. De lijn weet niet waar de wereld ophoudt; jij wel.</p>
+<p><strong>“<em>b</em> = −0.17 is klein, dus het stelt niets voor” — of net andersom.</strong> Beide zijn te snel. De grootte van <em>b</em> zegt op zichzelf niets, want hij hangt aan de meetlatten: dezelfde bevinding wordt −0.17 of −17 al naar gelang de schalen. En de <em>p</em> zegt alleen dat de nul onwaarschijnlijk is, niet dat het verband belangrijk is — met een grote steekproef wordt ook een minieme helling significant. Wat een <em>b</em> betekent, beslis je door hem te vertalen naar een stap die in de praktijk bestaat, en dan te kijken of dat verschil er op een afdeling toe zou doen. Bij tien punten slaapkwaliteit — een flinke sprong — hoort hier 1.7 punt ernst op een schaal van 40. Dat is de vraag naar <strong>klinische relevantie</strong>, en die stel je apart van de statistiek.</p>
+</section>
+<section id="oefening" class="level2">
+<h2 class="anchored" data-anchor-id="oefening">Oefening</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Oefening">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Oefening
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Leesopgave.</strong> Hieronder een voorbeeldfragment (verzonnen, maar in precies de tabelvorm die je in je bijeenkomsten tegenkomt). Beantwoord vier vragen in gewone Nederlandse zinnen. (1) Vertel de regel voor <em>piekeren</em> na in eigen woorden, inclusief de eenheid. (2) Wat voegt de β toe aan wat <em>B</em> al zei? (3) Ligt de nul in het interval, en wat volgt daaruit? (4) De auteurs schrijven dat piekeren “een aangrijpingspunt voor preventie” is — wat klopt daar niet aan, en welke twee dingen uit het fragment gebruik je om dat te laten zien?</p>
+<blockquote class="blockquote">
+<p>Depressive symptoms at 1 month (PHQ-9) were regressed on daily repetitive negative thinking, measured with ecological momentary assessment (<em>N</em> = 941).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>predictor</th>
+<th><em>B</em></th>
+<th>95% CI</th>
+<th>β</th>
+<th><em>t</em>(939)</th>
+<th><em>p</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RNT (EMA)</td>
+<td>0.20</td>
+<td>[0.15, 0.25]</td>
+<td>.24</td>
+<td>7.58</td>
+<td>&lt; .001</td>
+</tr>
+</tbody>
+</table>
+<p><em>R</em>² = .06. The authors conclude that repetitive negative thinking is a promising target for prevention.</p>
+</blockquote>
+<p><strong>Doe-opgave.</strong> Draai de enkelvoudige regressie van hierboven op <code>slaap_ernst.csv</code> (<code>ernst</code> als Dependent, <code>slaapkwaliteit</code> als Covariate) en noteer <em>a</em>, <em>b</em>, het 95%-interval, β en <em>R</em>². Beantwoord dan drie vragen.</p>
+<ol type="1">
+<li>Reken de voorspelling uit voor een patiënt met slaapkwaliteit 30 en voor een met slaapkwaliteit 80. Hoeveel punten schelen ze, en zie je dat verschil terug in de <em>b</em>?</li>
+<li>Zoek <code>p001</code> op in het databestand (slaapkwaliteit 55, ernst 27). Wat voorspelt de lijn voor hem, hoe groot is zijn residu, en wat betekent dat voor de zin <em>“dit model voorspelt klachtenernst”</em>?</li>
+<li>Draai het model <strong>om</strong>: zet <code>slaapkwaliteit</code> als Dependent en <code>ernst</code> als Covariate. Wat verandert er aan <em>b</em>, en wat verandert er níét aan <em>R</em>² en <em>p</em>? Leg uit waarom die uitkomst logisch is als je bedenkt wat een correlatie wél en niet weet.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Uitwerkingen — klik open">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Uitwerkingen — klik open
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="uitwerking-leesopgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-leesopgave">Uitwerking leesopgave</h3>
+<p><strong>(1)</strong> Bij 941 adolescenten hangt piekeren in het dagelijks leven samen met depressieve klachten een maand later: jongeren die één punt hoger scoorden op de piekermaat, scoorden gemiddeld 0.20 punt hoger op de PHQ-9 — vijf punten hoger piekeren hoort dus bij ongeveer één PHQ-9-punt meer. Let op de eenheid: <em>B</em> = 0.20 zegt niets zonder te weten waarop de PHQ-9 en de piekermaat lopen, en die informatie staat in de methodesectie, niet in de tabel.</p>
+<p><strong>(2)</strong> De β van .24 is dezelfde helling, maar dan met de meetlatten weggedeeld: per standaardafwijking piekeren schuift PHQ-9 .24 standaardafwijking op. Voor déze ene regel voegt hij weinig toe. Hij gaat pas werken zodra er meer voorspellers in de tabel staan met verschillende schalen — dan kun je aan de β-kolom zien welke voorspeller relatief het zwaarst weegt, en aan de <em>B</em>-kolom wat het in de wereld betekent. En let op: .24 is géén 24 procent.</p>
+<p><strong>(3)</strong> Het interval loopt van 0.15 tot 0.25; de nul ligt daar ruim buiten, aan één kant. Een verband van nul past dus niet bij deze data, en daarom is de <em>p</em> kleiner dan .001. Wat het interval erbóven vertelt: de schatting is behoorlijk precies — tussen 0.15 en 0.25 zit weinig ruimte, wat je bij <em>N</em> = 941 ook mag verwachten.</p>
+<p><strong>(4)</strong> Er zitten twee problemen in “aangrijpingspunt voor preventie”. Ten eerste is dit een voorspellend verband en geen ingreep: niemand heeft jongeren minder laten piekeren om te kijken wat er gebeurt, dus het is even goed denkbaar dat beginnende klachten het piekeren aandrijven, of dat er iets achterliggends is dat allebei doet. Van <em>voorspelt</em> naar <em>werkt als je het aanpakt</em> zijn twee stappen, en er is er nul gezet. Ten tweede staat er <em>R</em>² = .06: vier-en-negentig procent van de verschillen in PHQ-9 na een maand gaat over iets anders. Een verband dat op groepsniveau glashelder is (<em>t</em> = 7.58 met bijna duizend deelnemers) kan tegelijk een heel kleine hap uit de spreiding nemen — grote <em>N</em> maakt kleine verbanden zichtbaar, niet groot. Wat je wél mag opschrijven: piekeren in het dagelijks leven hangt samen met depressieve klachten een maand later, en dat verband is klein maar duidelijk aanwezig.</p>
+</section>
+<section id="uitwerking-doe-opgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-doe-opgave">Uitwerking doe-opgave</h3>
+<p>De output: <em>a</em> = 27.558, <em>b</em> = −0.174 met <em>SE</em> = 0.043, <em>t</em>(66) = −4.013, <em>p</em> &lt; .001, 95% BI [−0.261, −0.088], β = −0.443, <em>R</em>² = .196 en gecorrigeerde <em>R</em>² = .184.</p>
+<p><strong>(1)</strong> Bij slaapkwaliteit 30: 27.558 − 0.174 × 30 = <strong>22.3</strong>. Bij slaapkwaliteit 80: 27.558 − 0.174 × 80 = <strong>13.6</strong>. Dat scheelt 8.7 punt ernst, en dat is precies vijftig stappen van 0.174 (50 × 0.174 = 8.7). De <em>b</em> ís dat verschil, per stap van één.</p>
+<p><strong>(2)</strong> De lijn voorspelt voor p001 een ernst van 27.558 − 0.174 × 55 = <strong>18.0</strong>, terwijl hij een 27 scoorde. Zijn residu is 27 − 18.0 = <strong>+9.0</strong>: negen punten hoger dan de lijn dacht, op een schaal van 40. De zin “dit model voorspelt klachtenernst” is dus alleen waar op groepsniveau — gemiddeld over alle achtenzestig klopt de lijn, maar voor een individuele patiënt is hij een ruwe gok. Aardig detail: p001 zit met zijn 55 vlak bij het gemiddelde (55.03), en daar geeft de lijn per definitie het gemiddelde terug (17.97).</p>
+<p><strong>(3)</strong> Omgekeerd wordt het <code>slaapkwaliteit = 75.26 − 1.13 × ernst</code>: de <em>b</em> verandert van −0.174 naar −1.126, want het is nu een heel andere vraag (hoeveel punten slaapkwaliteit per punt ernst, in plaats van andersom). Wat níét verandert: <em>R</em>² blijft .196, de <em>p</em> blijft dezelfde, en β blijft −.443. Dat is logisch, want die drie komen alle drie uit de correlatie, en een correlatie kent geen richting — <em>r</em> van ernst met slaap is <em>r</em> van slaap met ernst. Twee verschillende lijnen, dezelfde samenhang. De les: <strong>welke variabele je tot uitkomst bombardeert, is een keuze van de onderzoeker en volgt uit het verhaal, niet uit de data.</strong> Zie je in een artikel een regressie waarvan de richting niet uit het design volgt, dan heb je iets gevonden voor je kritische alinea.</p>
+</section>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W4">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: één lijn door een wolk, samengevat in een beginpunt en een helling — en de vraag hoeveel je aan die lijn hebt voor één patiënt.</p>
+<p>In het boek: <strong>W4 — Hangen ze samen?</strong></p>
+<p><em>Daar is de lijn geen formule maar een belofte die je narekent: het rechthoekje dat zegt hoeveel de een opschuift als de ander een stap zet.</em></p>
+</div>
+<div class="werk">
+<p>TODO: stem-pas — dit blok is nog niet langs Bens transcript-units gelegd (Bib-query op regressie / voorspellen / verklaarde variantie). Data zijn hergebruikt uit het correlatieblok (<code>slaap_ernst.csv</code>, synthetisch, generator <code>genereer_slaap_ernst.R</code>); alle getallen zijn op die rijen nagerekend, niet overgetikt.</p>
+<p>TODO screenshot-ronde, twee dingen die in R zijn nagerekend maar niet in JASP zelf zijn gezien: (1) de naam van het vakje voor de gestandaardiseerde coëfficiënten (<strong>Standardized estimates</strong>?) — daarom staat er nu een uitwijkzin bij; (2) welke categorie JASP als referentie neemt bij een <strong>Factor</strong> in Linear Regression. Bij dummycodering met <code>blended</code> als referentie klopt de <em>b</em> = 2.40 / intercept 8.10 in de sectie over de categorische voorspeller exact; codeert JASP daar anders (effectcodering), dan wordt de intercept het totaalgemiddelde en de <em>b</em> de helft. De <em>p</em> en het interval veranderen daar niet van.</p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_correlatie_scatterplot.html" class="pagination-link" aria-label="De correlatie *r* en de scatterplot">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">De correlatie <em>r</em> en de scatterplot</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_effectgrootte_d.html" class="pagination-link" aria-label="De effectgrootte — Cohens *d*">
+        <span class="nav-page-text">De effectgrootte — Cohens <em>d</em></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>
