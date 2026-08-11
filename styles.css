@@ -327,33 +327,35 @@ main#quarto-document-content h2 { margin-bottom: 1.1rem; }
 }
 
 /* ============================================================
-   De boekenplank (10-8-2026, avond) — oefenboeken/index.qmd
-   Was: zeven identieke callout-note-blokken onder elkaar; las als een
-   formulier. Nu: klikbare kaarten in de taal van de homepage-tegels,
-   met de accentrand LINKS als boekrug. Kleur codeert de sectie
-   (blauw = bij het boek, paars = op maat, groen = losse vakken); de
-   chip rechtsboven noemt het gereedschap (R / JASP / SPSS), zodat je
-   de plank scant zonder te lezen. Chip-tinten zijn de bestaande
-   callout-achtergronden. Herbruikbaar op manuscript/index.qmd, waar
-   dezelfde tegels staan (zie DUBBELINGEN.md).
+   De boekenplank in twee vormen (11-8-2026) — oefenboeken/index.qmd
+   Eén bladzij, twee gedaanten, om te zetten met ÉÉN instelling:
+
+     "rug"   — het ruggengraatje: geen kaders; de boeken hangen aan
+               een dunne lijn in de sectiekleur, en de hele regel
+               licht zacht op als je eroverheen gaat (de regel
+               gedraagt zich als knop zonder kader).
+     "kaart" — de boekenplank: witte kaarten in de taal van de
+               homepage-tegels, sectiekleur als boekrug links.
+
+   DE STANDAARD STAAT OP ÉÉN PLEK: oefenboeken/vorm.js
+   (VORM_STANDAARD, nu "rug"). Per bezoek omzetten kan met
+   ?vorm=rug of ?vorm=kaart achter de URL — twee links, twee vormen,
+   zelfde bladzij. De CSS hangt op html[data-vorm]; ontbreekt het
+   attribuut (geen JavaScript), dan geldt de rug-vorm.
+   Sectiekleur codeert in beide vormen hetzelfde: blauw = bij het
+   boek, paars = op maat, groen = losse vakken. De chip rechtsboven
+   noemt het gereedschap (R / JASP / SPSS).
    ============================================================ */
-.cc-plank { display: grid; gap: 0.9rem; margin: 1.8rem 0 2.4rem; }
-.cc-boek {
-  position: relative;
-  background: var(--cc-card);
-  border: 1px solid var(--cc-line);
-  border-left: 4px solid var(--cc-blue);
-  border-radius: 6px;
-  padding: 1.05rem 1.35rem 1.1rem;
-  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
-}
-.cc-boek:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26, 58, 92, 0.09); }
+
+/* ---- gedeeld door beide vormen ---- */
+.cc-plank { margin: 1.8rem 0 2.4rem; }
+.cc-boek { position: relative; }
 .cc-boek h3 {
   font-size: 1.12rem; margin: 0 0 0.35rem; padding: 0;
   display: flex; align-items: baseline; gap: 0.6rem;
 }
 .cc-boek h3 a { color: var(--cc-blue-deep); text-wrap: balance; }
-/* de hele kaart klikbaar: de titellink spant zich onzichtbaar over de kaart */
+/* de hele regel/kaart klikbaar: de titellink spant zich er onzichtbaar over */
 .cc-boek h3 a::after { content: ""; position: absolute; inset: 0; }
 .cc-boek:hover h3 a { color: var(--cc-blue); }
 .cc-boek p {
@@ -368,10 +370,58 @@ main#quarto-document-content h2 { margin-bottom: 1.1rem; }
   padding: 0.12rem 0.5rem; border-radius: 99px;
   flex: 0 0 auto; margin-left: auto;
 }
-.cc-boek-maat { border-left-color: var(--cc-purple); }
 .cc-boek-maat .cc-chip { color: #3b3e6e; background: #E9E9F3; }
-.cc-boek-vak { border-left-color: var(--cc-green); }
 .cc-boek-vak .cc-chip { color: #24402c; background: #E4EDE7; }
+/* zonder muis: zichtbare focusrand om de titel; de regel-oplichter
+   komt daar hieronder via :focus-within bovenop */
+.cc-boek h3 a:focus-visible { outline: 2px solid var(--cc-blue); outline-offset: 4px; border-radius: 2px; }
+
+/* ---- vorm "rug" (standaard; geldt ook als JavaScript uit staat) ---- */
+html:not([data-vorm="kaart"]) .cc-boek {
+  padding: 0.55rem 0.85rem 0.55rem 1.6em;
+  border-left: 2px solid var(--cc-blue);
+  border-radius: 0 6px 6px 0;
+  transition: background-color .15s ease;
+}
+html:not([data-vorm="kaart"]) .cc-boek h3 { font-size: 1.08rem; margin-bottom: 0.3rem; }
+html:not([data-vorm="kaart"]) .cc-boek p { font-size: 0.94rem; line-height: 1.6; margin-bottom: 0.5rem; }
+html:not([data-vorm="kaart"]) .cc-boek p:last-child { margin-bottom: 0; }
+html:not([data-vorm="kaart"]) .cc-boek-maat { border-left-color: var(--cc-purple); }
+html:not([data-vorm="kaart"]) .cc-boek-vak  { border-left-color: var(--cc-green); }
+/* de oplichter: zachte sectietint over de hele regel — geen schaduw,
+   geen beweging; de chip wisselt naar kaart-wit zodat hij niet in
+   dezelfde tint verdrinkt (de kleur verhuist van chip naar regel) */
+html:not([data-vorm="kaart"]) .cc-boek:hover,
+html:not([data-vorm="kaart"]) .cc-boek:focus-within { background: #DFEBF2; }
+html:not([data-vorm="kaart"]) .cc-boek-maat:hover,
+html:not([data-vorm="kaart"]) .cc-boek-maat:focus-within { background: #E9E9F3; }
+html:not([data-vorm="kaart"]) .cc-boek-vak:hover,
+html:not([data-vorm="kaart"]) .cc-boek-vak:focus-within  { background: #E4EDE7; }
+html:not([data-vorm="kaart"]) .cc-boek:hover .cc-chip,
+html:not([data-vorm="kaart"]) .cc-boek:focus-within .cc-chip { background: var(--cc-card); }
+html:not([data-vorm="kaart"]) .cc-boek:hover h3 a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---- vorm "kaart" (de plank van 10-8, ongewijzigd) ---- */
+html[data-vorm="kaart"] .cc-plank { display: grid; gap: 0.9rem; }
+html[data-vorm="kaart"] .cc-boek {
+  background: var(--cc-card);
+  border: 1px solid var(--cc-line);
+  border-left: 4px solid var(--cc-blue);
+  border-radius: 6px;
+  padding: 1.05rem 1.35rem 1.1rem;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+html[data-vorm="kaart"] .cc-boek:hover,
+html[data-vorm="kaart"] .cc-boek:focus-within { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26, 58, 92, 0.09); }
+html[data-vorm="kaart"] .cc-boek-maat { border-left-color: var(--cc-purple); }
+html[data-vorm="kaart"] .cc-boek-vak  { border-left-color: var(--cc-green); }
+
+/* wie liever geen beweging heeft, krijgt de oplichter zonder lift */
+@media (prefers-reduced-motion: reduce) {
+  .cc-boek { transition: none; }
+  html[data-vorm="kaart"] .cc-boek:hover,
+  html[data-vorm="kaart"] .cc-boek:focus-within { transform: none; }
+}
 
 /* ============================================================
    Steun-blok op de gebruik-pagina (9-8-2026)

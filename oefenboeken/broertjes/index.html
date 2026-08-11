@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>De oefenboeken bij De regressieve ruggengraat — CountCamp</title>
 <meta name="description" content="Drie oefenboeken bij het statistiekboek De regressieve ruggengraat: R, JASP en SPSS. Dezelfde stof, hetzelfde tempo, ander gereedschap.">
+<!-- De boekenlijst kent twee vormen (rug | kaart); de schakelaar en de
+     uitleg staan in ../vorm.js. Omzetten per bezoek: ?vorm=rug of ?vorm=kaart. -->
+<script src="../vorm.js"></script>
 <style>
   :root{
     --paper:#fdfcf9; --card:#ffffff; --ink:#1a1a1a; --ink-soft:#4a4a4a;
@@ -34,15 +37,11 @@
   }
   p{margin:0 0 1.2rem;color:var(--ink-soft)}
   p.lead{color:var(--ink)}
-  .kaarten{display:grid;gap:1rem;margin:2rem 0 2.5rem}
-  a.kaart{
-    display:block;background:var(--card);border:1px solid var(--rule);
-    border-left:4px solid var(--blue);border-radius:3px;
-    padding:1.15rem 1.35rem;text-decoration:none;color:inherit;
-    transition:border-color .15s ease, transform .15s ease;
-  }
-  a.kaart:hover{border-left-color:var(--blue-deep);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,58,92,.09)}
-  a.kaart:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  /* -- de boekenlijst, in twee vormen; de schakelaar staat in ../vorm.js --
+     "rug" (standaard, ook zonder JavaScript): dunne blauwe lijn, geen
+     kaders, de hele regel licht op. "kaart": witte kaarten met blauwe rug. */
+  .kaarten{margin:2rem 0 2.5rem}
+  a.kaart{display:block;position:relative;text-decoration:none;color:inherit}
   a.kaart .naam{
     display:flex;align-items:baseline;gap:.6rem;
     font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -55,6 +54,34 @@
     flex:0 0 auto;margin-left:auto;
   }
   a.kaart .uitleg{display:block;font-size:.97rem;color:var(--ink-soft);line-height:1.6}
+  a.kaart:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+  /* vorm "rug" */
+  html:not([data-vorm="kaart"]) a.kaart{
+    padding:.6rem .85rem .6rem 1.35rem;
+    border-left:2px solid var(--blue);
+    border-radius:0 6px 6px 0;
+    transition:background-color .15s ease;
+  }
+  /* de oplichter: zachte blauwtint over de hele regel, geen schaduw of
+     beweging; de chip wisselt naar wit zodat hij zichtbaar blijft */
+  html:not([data-vorm="kaart"]) a.kaart:hover,
+  html:not([data-vorm="kaart"]) a.kaart:focus-visible{background:#DFEBF2}
+  html:not([data-vorm="kaart"]) a.kaart:hover .chip,
+  html:not([data-vorm="kaart"]) a.kaart:focus-visible .chip{background:var(--card)}
+  html:not([data-vorm="kaart"]) a.kaart:hover .naam{color:var(--blue)}
+  /* vorm "kaart" */
+  html[data-vorm="kaart"] .kaarten{display:grid;gap:1rem}
+  html[data-vorm="kaart"] a.kaart{
+    background:var(--card);border:1px solid var(--rule);
+    border-left:4px solid var(--blue);border-radius:3px;
+    padding:1.15rem 1.35rem;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  html[data-vorm="kaart"] a.kaart:hover{border-left-color:var(--blue-deep);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,58,92,.09)}
+  @media (prefers-reduced-motion:reduce){
+    a.kaart{transition:none}
+    html[data-vorm="kaart"] a.kaart:hover{transform:none}
+  }
   .voet{
     border-top:1px solid var(--rule);padding-top:1.2rem;margin-top:2.5rem;
     font-size:.92rem;color:var(--dim);
