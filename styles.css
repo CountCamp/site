@@ -161,8 +161,29 @@ blockquote {
 .cc-card-power      { border-top-color: var(--cc-red); }
 
 /* ============================================================
-   Callouts: Tol-Vibrant-palet (klaar voor werkboek-inhoud)
-   appearance: default, icon: false
+   Callouts — alleen voor site- en manuscriptbladzijden
+
+   Dit bestand geldt NIET voor de werkboeken: die dragen hun eigen
+   werkboek.css (broertjes: _huisstijl/werkboek.css) en laden styles.css
+   nergens. Wat hier stond "alvast klaar voor werkboek-inhoud" is dus
+   nooit door een werkboek gelezen en is op 12-8-2026 opgeruimd.
+
+   Wat er in de hele site aan callouts staat, is twee stuks, allebei note:
+   diensten.qmd (default) en manuscript/index.qmd (appearance="simple").
+   tip / warning / important / caution en de modifiers .opgave en .tidy-alt
+   kwamen in geen enkele bladzij voor die dit bestand laadt -- gemeten over
+   alle 15 die dat doen, nul treffers. Komt er ooit zo'n callout bij, bouw
+   de regel dan opnieuw, mét de specificiteit die hieronder beschreven staat.
+
+   OVER DIE SPECIFICITEIT (12-8-2026, gemeten in de browser, niet geredeneerd):
+   Quarto's eigen regel is `div.callout-note.callout-style-default > .callout-header`
+   -- drie klassen plus een element. Een regel als `.callout-note > .callout-header`
+   heeft er twee en verliest dus altijd, hoe laat in het bestand hij ook staat.
+   Zo'n half-verliezende regel is gevaarlijker dan een dode: de achtergrond
+   verloor van Quarto, maar de `color: #fff` won (Quarto zet daar niets), en de
+   kop op diensten.html stond daardoor wit op bijna-wit. Onleesbaar, en het
+   brak niets, dus het viel niemand op. Wil je hier ooit écht kleuren, schrijf
+   dan mee op Quarto's niveau: `div.callout-note.callout-style-default > .callout-header`.
    ============================================================ */
 .callout {
   border: none;
@@ -170,28 +191,17 @@ blockquote {
   overflow: hidden;
   margin: 2.6rem 0 !important;
 }
+/* De kop: lettertype en ruimte landen hier wél — Quarto zet geen font-family
+   en zijn padding-regel is even zwaar als deze, dus de laatste (dit bestand)
+   wint. Er stond ook `font-weight: 700`; die verloor van Quarto's 600 en is
+   weggehaald, zodat niemand hem hier komt bijstellen zonder effect. */
 .callout.callout-style-default > .callout-header {
   padding: 0.5rem 1rem;
   font-family: "Helvetica Neue", sans-serif;
-  font-weight: 700;
 }
-
-.callout-note    > .callout-header { background: var(--cc-blue);   color: #fff; }
-.callout-note      { background: #DFEBF2; }
-.callout-tip     > .callout-header { background: var(--cc-mauve);  color: #3a2f40; }
-.callout-tip       { background: #F3EEF4; }
-.callout-warning > .callout-header { background: var(--cc-orange); color: #fff; }
-.callout-warning   { background: #FCECE3; }
-.callout-important > .callout-header { background: var(--cc-red);  color: #fff; }
-.callout-important { background: #FDE6E0; }
-.callout-caution > .callout-header { background: var(--cc-green);  color: #fff; }
-.callout-caution   { background: #E4EDE7; }
-
-/* Eigen modifiers uit de werkboeken (alvast klaar) */
-.callout-note.opgave   > .callout-header { background: var(--cc-purple); color: #fff; }
-.callout-note.opgave     { background: #E9E9F3; }
-.callout-note.tidy-alt > .callout-header { background: #9CC4A3; color: #24402c; }
-.callout-note.tidy-alt   { background: #F0F6F1; }
+/* de zachte tint van de note-bak zelf; Quarto zet hier geen achtergrond,
+   dus deze regel wint wel en is de tint die je op diensten.html ziet */
+.callout-note { background: #DFEBF2; }
 /* simple-appearance callouts: kleurloos, past bij de pagina — geen blauw/groen (Ben 21-7) */
 .callout.callout-style-simple { border-left-color: #d8d3c8 !important; background: #f7f5f0 !important; }
 .callout.callout-style-simple > .callout-header { background: transparent !important; }
