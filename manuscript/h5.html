@@ -2377,6 +2377,7 @@ margin-bottom: 1.4em;
 
 .slotregel {
 margin-top: 17.5em;
+margin-bottom: 6.68em;
 }
 
 pre.sourceCode, pre {
@@ -3555,8 +3556,51 @@ window.CC_SECTIES = {"h0.html":[{"i":"in-den-beginne","t":"1. In den beginne"},{
     'Vierde beweging · Verschil onthechten',
     'Slot · Verschil dat buigt'
   ];
-  var here = (location.pathname.split('/').pop() || 'index.html');
+  // ---- welke bladzij is dit? ------------------------------------------------
+  // Op de site heet deze bladzij h12.html. Lokaal heet precies hetzelfde
+  // bestand H12_schets.html -- en alles hieronder wat op de bestandsnaam
+  // draait (etymologie-voetregel, Dank-link, doorklik-knop, 'hier' in de
+  // zijbalk) viel daardoor stilzwijgend weg zodra je een schets zélf opende
+  // of mat. Stil, want een naam die nergens in de tabel voorkomt geeft geen
+  // fout: hij geeft niets.
+  //
+  // Twee zetters liepen erin en losten het allebei voor zichzelf op, in hun
+  // eigen script: stilte op 11-8 (maak_stilte_varianten.py) en phi op 12-8
+  // (slotregel_meet.py). Geen van beiden kon de ander zien. De val zat niet in
+  // hun scripts maar hier, dus is hij hier weggehaald: de bladzij vertaalt zijn
+  // eigen naam. Achtergrond: boek/_tools/LEESMIJ_lokaal_meten.md.
+  //
+  // De vertaling is dezelfde naamregel als pub_doelnaam in
+  // boek/_tools/publicatie/_gemeenschappelijk.sh (H4_schets -> h4, en een
+  // losse bladzij houdt zijn naam). Verandert die regel, dan verandert deze mee.
+  var bestand = (location.pathname.split('/').pop() || 'index.html');
+  var here = bestand.replace(/^H(\d+)_schets\.html$/i, function (_m, n) { return 'h' + n + '.html'; });
   var sb = document.getElementById('boek-sidebar');
+
+  // Blijft er toch een schets over die de tabel niet kent -- een nieuw
+  // hoofdstuk dat nog niet in CH staat, een hernoemde schets -- dan moet dat
+  // LUID misgaan en niet stil. Anders zit de volgende zetter weer te meten aan
+  // een bladzij die half leeg is zonder dat iets dat zegt. Alleen lokaal: op
+  // countcamp.org bestaat het geval niet en hoort er geen balk te staan.
+  (function () {
+    if (!/_schets\.html$/i.test(bestand)) return;      // geen lokale schets
+    for (var i = 0; i < CH.length; i++) { if (CH[i].f === here) return; }   // gewoon bekend
+    if (location.hostname === 'countcamp.org') return;
+    var melding = 'ONHERKENDE BLADZIJ: "' + bestand + '" staat niet in de hoofdstuktabel ' +
+      'van _atelier/_afterbody.html. Voetregel, Dank-link en doorklik-knop ontbreken ' +
+      'op deze bladzij -- meet er niets aan. Zie boek/_tools/LEESMIJ_lokaal_meten.md.';
+    if (window.console && console.error) console.error(melding);
+    function toon() {
+      var b = document.createElement('div');
+      b.setAttribute('data-cc-waarschuwing', '1');
+      b.textContent = melding;
+      b.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;' +
+        'background:#7a1f1f;color:#fff;font:13px/1.4 system-ui,sans-serif;' +
+        'padding:.6em .9em;text-align:left';
+      document.body.appendChild(b);
+    }
+    if (document.body) { toon(); } else { document.addEventListener('DOMContentLoaded', toon); }
+  })();
 
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
 
@@ -4311,3 +4355,4 @@ text-decoration: none; color: #a89f8e; font-size: .92em; letter-spacing: .02em; 
 
 
 </body></html>
+<!-- countcamp-publicatie H5 bron-hash=d7f292e9eec77244a10e0f616cafd862ff8a7b15fe2580a946de5b0100c74e75 geleverd=2026-08-12T10:43:49 -->
