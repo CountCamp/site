@@ -1,0 +1,56 @@
+# ============================================================
+# _quarto-spook.yml — het bouwprofiel van de SPOOKSITE (de proefdruk).
+# ------------------------------------------------------------
+# Wordt alleen meegenomen als je expliciet met dit profiel bouwt:
+#
+#     QUARTO_PROFILE=spook quarto render
+#
+# Zonder die variabele bestaat dit bestand voor Quarto niet. De echte site
+# komt dus nooit langs deze regels — dat is precies de bedoeling van
+# "previews mogen nooit hetzelfde codepad delen".
+#
+# Wat het profiel doet, en waarom elk stuk er staat:
+#
+# 1. NOINDEX ALS META-TAG. GitHub Pages kan geen eigen HTTP-koppen zetten
+#    (bevestigd, augustus 2026: github.com/orgs/community/discussions/84963).
+#    De X-Robots-Tag-kop die we eigenlijk willen, kán daar dus niet. De
+#    meta-tag doet hetzelfde werk op bladzij-niveau en heeft dezelfde
+#    eigenschap die ons om de kop deed vragen: de zoekmachine mag de bladzij
+#    ophalen en ziet dan pas "niet opnemen". Dat is het verschil met een
+#    robots.txt-verbod, want wat je niet mag ophalen, kun je ook niet lezen —
+#    en dan kan een verbod dat je niet mag zien je niet tegenhouden.
+#    Wil je de echte kop, dan is Cloudflare Pages de route; die zet
+#    `X-Robots-Tag: noindex` vanzelf op elke proefdruk. Zie
+#    _spooksite/VOORSTEL_spooksite.md.
+#
+# 2. GEEN BEZOEKERSTELLER — en die staat daarom níét meer in _quarto.yml.
+#    Gemeten op 12-8-2026: een profiel PLAKT zijn include-in-header ERBIJ, het
+#    vervangt de bestaande niet. Zolang de teller in het basisbestand stond,
+#    droeg elke proefdruk hem gewoon mee en telde hij mee in Bens cijfers. Hij
+#    is dus verhuisd naar _quarto-echt.yml, het profiel dat een proefdruk
+#    nooit gebruikt. Proef het na een Quarto-upgrade opnieuw:
+#        QUARTO_PROFILE=spook quarto render gebruik.qmd && grep -c goatcounter _site/gebruik.html
+#    Dat hoort 0 te zijn.
+#
+# 3. DE BALK. _spooksite/banner.html wordt door de bouw geschreven
+#    (_spooksite/maak_banner.sh), niet met de hand. Ontbreekt hij, dan faalt
+#    de render — een proefdruk zonder balk mag niet bestaan.
+#
+# 4. GEEN site-url. In _quarto.yml staat https://countcamp.org; die zou hier
+#    canonical- en open-graph-verwijzingen naar de echte site laten wijzen,
+#    en dan stuurt de proefdruk zijn eigen bezoekers en zoekmachines door
+#    naar productie. Leeg zetten maakt de verwijzingen relatief.
+# ============================================================
+
+website:
+  site-url: ""
+  open-graph: false
+  twitter-card: false
+
+format:
+  html:
+    include-in-header:
+      - text: |
+          <meta name="robots" content="noindex, nofollow, noarchive">
+    include-before-body:
+      - _spooksite/banner.html

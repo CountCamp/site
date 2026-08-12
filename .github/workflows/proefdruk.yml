@@ -1,0 +1,100 @@
+# ============================================================
+# proefdruk.yml — de spooksite: elke pull request krijgt zijn eigen proefdruk.
+# ------------------------------------------------------------
+# Zet de gebouwde site neer op
+#     https://countcamp.org/pr-preview/pr-<nummer>/
+# zet een link in de PR, en ruimt zichzelf op zodra de PR dicht gaat.
+#
+# WAT HET WEL EN NIET IS — lees dit voor je erop vertrouwt.
+#
+# WEL: een apart PAD, een eigen bouwprofiel (QUARTO_PROFILE=spook), een
+#      zichtbare balk op elke bladzij, en `noindex` in de kop van elke bladzij.
+#      Alle drie komen uit de bouw, niet uit een schakelaar die iemand
+#      handmatig omzet.
+#
+# NIET: een aparte HOSTNAAM, en geen echte X-Robots-Tag-KOP. Allebei omdat
+#      GitHub Pages het niet kan: je kunt daar geen eigen HTTP-koppen zetten
+#      (bevestigd augustus 2026, github.com/orgs/community/discussions/84963),
+#      en alles staat per definitie op countcamp.org. De meta-tag doet
+#      hetzelfde werk als de kop — en belangrijker: hij doet het op de goede
+#      manier, want de zoekmachine mag de bladzij ophalen en ziet dán pas
+#      "niet opnemen". Een robots.txt-verbod zou het omgekeerde doen: dan mag
+#      de zoekmachine niet kijken, en kan hij het verbod dus ook niet lezen.
+#      Wil Ben de echte kop én een eigen hostnaam, dan is dat de
+#      Cloudflare-route — de afweging staat in _spooksite/VOORSTEL_spooksite.md.
+#
+# WAT HIER HET GEVAARLIJKST IS. De proefdruk landt in dezelfde gh-pages-tak
+# als de echte site, in de map pr-preview/. Twee dingen mogen dus NOOIT
+# veranderen zonder dat iemand er goed over nadenkt: `umbrella-dir`
+# (pr-preview) en `source-dir` (_site). Zet umbrella-dir per ongeluk op "."
+# en de proefdruk overschrijft de site. Daarom staan ze hier met een reden
+# erbij en niet als kale waarden.
+# ============================================================
+name: Proefdruk bij een pull request
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+concurrency:
+  # Eén bouw per PR tegelijk. Twee tegelijk zouden om dezelfde map in de
+  # gh-pages-tak vechten.
+  group: proefdruk-${{ github.event.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  proefdruk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo ophalen
+        uses: actions/checkout@v4
+
+      - name: Quarto klaarzetten
+        # Alleen nodig als er iets te bouwen valt; bij een gesloten PR
+        # ruimt de laatste stap alleen maar op.
+        if: github.event.action != 'closed'
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: De balk schrijven — uit de bouw, niet uit een bestand
+        if: github.event.action != 'closed'
+        run: |
+          bash _spooksite/maak_banner.sh \
+            "proefdruk van PR #${{ github.event.number }}" \
+            "tak ${{ github.head_ref }} · ${{ github.event.pull_request.title }}"
+
+      - name: Bouwen met het spook-profiel
+        if: github.event.action != 'closed'
+        env:
+          QUARTO_PROFILE: spook
+        run: quarto render
+
+      - name: Controleren dat dit géén productiebouw is
+        # Een proefdruk zonder balk of zonder noindex is een proefdruk die
+        # zich voordoet als de echte site. Dan liever helemaal geen proefdruk.
+        if: github.event.action != 'closed'
+        run: |
+          set -e
+          bladzij=_site/index.html
+          test -f "$bladzij" || { echo "geen $bladzij gebouwd"; exit 1; }
+          grep -q 'name="robots" content="noindex' "$bladzij" || { echo "FOUT: geen noindex in $bladzij"; exit 1; }
+          grep -q 'spookbalk' "$bladzij"                      || { echo "FOUT: geen proefdruk-balk in $bladzij"; exit 1; }
+          if grep -q 'goatcounter' "$bladzij"; then echo "FOUT: de bezoekersteller zit in een proefdruk"; exit 1; fi
+          # De CNAME hoort NIET mee: die stuurt countcamp.org aan en is van de
+          # echte site. In een submap doet hij niets, maar meesturen is vragen
+          # om een ongeluk als iemand ooit source-dir verzet.
+          rm -f _site/CNAME
+          echo "proefdruk gecontroleerd: noindex ja, balk ja, teller nee"
+
+      - name: Neerzetten en de link in de PR
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./_site/
+          preview-branch: gh-pages
+          # NIET veranderen zonder na te denken: dit is de enige muur tussen
+          # de proefdruk en de echte site, die in dezelfde tak staan.
+          umbrella-dir: pr-preview
+          action: auto
