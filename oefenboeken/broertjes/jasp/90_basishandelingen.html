@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Oefening 3.1 · Steekproevenverdeling en standaardfout – JASP-oefenboek</title>
+<title>Basishandelingen in JASP – JASP-oefenboek</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,28 +23,63 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<link href="../20_blokken/blok_correlatie_scatterplot.html" rel="next">
-<link href="../20_blokken/blok_mediaan_scheefheid.html" rel="prev">
-<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./speeltjes/h3_grabbel.html" rel="next">
+<link href="./20_blokken/blok_kruistabel_chikwadraat.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -73,8 +108,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../werkboek.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="werkboek.css">
 </head>
 
 <body class="nav-sidebar docked quarto-light">
@@ -86,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Eerste beweging · Verschil onder de loep</li><li class="breadcrumb-item"><a href="../20_blokken/blok_steekproevenverdeling.html">H3 · De grabbelton geschud</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_steekproevenverdeling.html">Oefening 3.1 · Steekproevenverdeling en standaardfout</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./90_basishandelingen.html">Naslag</a></li><li class="breadcrumb-item"><a href="./90_basishandelingen.html">Basishandelingen in JASP</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -101,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">JASP-oefenboek</a> 
+      <a href="./">JASP-oefenboek</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -119,19 +183,19 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">JASP-oefenboek</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Eerste beweging · Verschil onder de loep</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
@@ -143,13 +207,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+  <a href="./installatie.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 0.0 · Installeren &amp; instellen</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 0.1 · Kijken naar de data</span></a>
   </div>
 </li>
@@ -166,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 1.1 · Het gemiddelde en de standaardafwijking</span></a>
   </div>
 </li>
@@ -183,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 2.1 · Mediaan, kwartielen en scheefheid</span></a>
   </div>
 </li>
@@ -191,16 +255,16 @@ ul.task-list li input[type="checkbox"] {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">H3 · De grabbelton geschud</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link active">
+  <a href="./20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 3.1 · Steekproevenverdeling en standaardfout</span></a>
   </div>
 </li>
@@ -228,7 +292,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
@@ -256,7 +320,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 5.1 · Het betrouwbaarheidsinterval</span></a>
   </div>
 </li>
@@ -273,13 +337,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 6.1 · De p-waarde</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_power.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_power.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 6.2 · Power, type I en II</span></a>
   </div>
 </li>
@@ -296,7 +360,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 7.1 · Betrouwbaarheid en Cronbachs α</span></a>
   </div>
 </li>
@@ -324,7 +388,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 8.1 · Meervoudige regressie en confounding</span></a>
   </div>
 </li>
@@ -341,19 +405,19 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_t_toets.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_t_toets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 9.1 · De t-toets</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 9.2 · Effectgrootte: Cohens d</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 9.3 · ANOVA en η²</span></a>
   </div>
 </li>
@@ -370,7 +434,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 10.1 · Interactie en moderatie</span></a>
   </div>
 </li>
@@ -387,7 +451,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 11.1 · Mediatie: direct en indirect</span></a>
   </div>
 </li>
@@ -415,7 +479,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-18" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 12.1 · Logistische regressie: odds en odds ratio</span></a>
   </div>
 </li>
@@ -434,7 +498,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-19" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+  <a href="./20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Schil · Kruistabel en χ²</span></a>
   </div>
 </li>
@@ -442,16 +506,16 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="true">
  <span class="menu-text">Naslag</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-20" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-20" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+  <a href="./90_basishandelingen.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Basishandelingen in JASP</span></a>
   </div>
 </li>
@@ -468,43 +532,43 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-21" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/h3_grabbel.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/h3_grabbel.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">De grabbelton (steekproef)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/w4_schud_correlatie.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/w4_schud_correlatie.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">Correlatie schudden</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/w6_schud_verschil.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/w6_schud_verschil.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">Het verschil schudden (t)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/w6_p_planten.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/w6_p_planten.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">De p geteld</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/s2_schud_tabel.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/s2_schud_tabel.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">De tabel schudden (χ²)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/w12_schud_odds.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/w12_schud_odds.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">De odds schudden</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../speeltjes/w6_trek_interval.html" class="sidebar-item-text sidebar-link" target="_blank">
+  <a href="./speeltjes/w6_trek_interval.html" class="sidebar-item-text sidebar-link" target="_blank">
  <span class="menu-text">Trek opnieuw (interval)</span></a>
   </div>
 </li>
@@ -519,12 +583,11 @@ ul.task-list li input[type="checkbox"] {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
-<p class="beweging">Eerste beweging · Verschil onder de loep</p>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Eerste beweging · Verschil onder de loep</li><li class="breadcrumb-item"><a href="../20_blokken/blok_steekproevenverdeling.html">H3 · De grabbelton geschud</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_steekproevenverdeling.html">Oefening 3.1 · Steekproevenverdeling en standaardfout</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./90_basishandelingen.html">Naslag</a></li><li class="breadcrumb-item"><a href="./90_basishandelingen.html">Basishandelingen in JASP</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Oefening 3.1 · Steekproevenverdeling en standaardfout</h1>
-<p class="subtitle lead">Steekproevenverdeling en standaardfout · <em>sampling distribution &amp; standard error</em></p>
+<h1 class="title">Basishandelingen in JASP</h1>
+<p class="subtitle lead"><em>de gereedschapskist — slepen en R naast elkaar</em></p>
 </div>
 
 
@@ -541,175 +604,410 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <nav id="TOC" role="doc-toc">
-    <h2 id="toc-title">In deze oefening</h2>
+    <h2 id="toc-title">De gereedschapskist</h2>
    
   <ul>
-  <li><a href="#eén-keer-kennen-we-de-hele-waarheid" id="toc-eén-keer-kennen-we-de-hele-waarheid">Eén keer kennen we de hele waarheid</a></li>
-  <li><a href="#reken-de-standaardfout-uit-in-jasp" id="toc-reken-de-standaardfout-uit-in-jasp">Reken de standaardfout uit in JASP</a></li>
-  <li><a href="#grabbel-duizend-keer-uit-de-ton" id="toc-grabbel-duizend-keer-uit-de-ton">Grabbel duizend keer uit de ton</a></li>
-  <li><a href="#wat-de-standaardfout-wél-en-niet-zegt" id="toc-wat-de-standaardfout-wél-en-niet-zegt">Wat de standaardfout wél en niet zegt</a></li>
-  <li><a href="#van-dertig-naar-zestig-pinguïns" id="toc-van-dertig-naar-zestig-pinguïns">Van dertig naar zestig pinguïns</a></li>
-  <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#twee-routes-één-handeling" id="toc-twee-routes-één-handeling">Twee routes, één handeling</a></li>
+  <li><a href="#hercoderen" id="toc-hercoderen">Nieuwe variabelen maken en hercoderen</a></li>
+  <li><a href="#centreren" id="toc-centreren">Centreren</a></li>
   </ul>
 </nav>
-<div class="datastrook">
-<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek</p>
-</div>
-<div class="kicker">
-<p>prikkel</p>
-</div>
-<section id="eén-keer-kennen-we-de-hele-waarheid" class="level2">
-<h2 class="anchored" data-anchor-id="eén-keer-kennen-we-de-hele-waarheid">Eén keer kennen we de hele waarheid</h2>
-<p><span class="begrippen">populatie · steekproef · echt gemiddelde en spreiding</span></p>
-<p>Zet alle 342 pinguïns bij elkaar in één reusachtige grabbelton. Vandaag doen we iets wat in het echt nooit kan: we spreken af dat dít de hele wereld is. Geen pinguïn daarbuiten. Deze 342 zijn samen onze <strong>populatie</strong>, en dus kennen we — voor één keer — de hele waarheid: het échte gemiddelde gewicht is <strong>4202 gram</strong>, de échte spreiding <strong>802 gram</strong>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>Normaal weet niemand dat. Een onderzoeker op een kale rots weegt er geen 342 maar, zeg, dertig — en moet het daarmee doen. En nu de vraag die jeukt: steek jij je arm in die ton en grabbel je er dertig pinguïns uit, komt jouw gemiddelde dan op 4202? Vast niet precies. Maar hoe ver zit je ernaast — tien gram, honderd gram, vijfhonderd? En, dit is de eigenlijke vraag van deze opdracht: kun je dat te weten komen <em>zonder</em> de ton leeg te tellen?</p>
-<div class="kicker">
-<p>speel het</p>
-</div>
-</section>
-<section id="reken-de-standaardfout-uit-in-jasp" class="level2">
-<h2 class="anchored" data-anchor-id="reken-de-standaardfout-uit-in-jasp">Reken de standaardfout uit in JASP</h2>
-<p><span class="begrippen">formule SD/√n · wiebel van het gemiddelde</span></p>
-<p>Eerst de waarheid vastzetten, dan grabbelen. Haal de ton binnen en kijk wat we hebben.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Descriptives</strong>, <code>glans</code> naar <strong>Variables</strong>.</li>
-<li>Vink onder <strong>Statistics</strong> aan: <strong>Std. deviation</strong> én <strong>Std. error of mean</strong>.</li>
-</ol>
-<p><em>SD</em> = 21.74, maar de standaardfout is 6.28 — de spreiding van het gemiddelde zelf, niet van de steentjes.</p>
-</div>
-</div>
-<p>De steentjes zelf spreiden met <em>SD</em> = 21.74, maar het gemiddelde van twaalf steentjes wiebelt veel minder: <em>SE</em> = 6.28. Dat onderscheid is de kern van dit hoofdstuk.</p>
-<p><strong>Nu jij</strong> — weer de pinguïns, dezelfde beesten als eerder. Kijk wat 342 in plaats van 12 met die standaardfout doet.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li>Open <code>penguins.csv</code> in JASP (menu linksboven → Open).</li>
-<li>Klik bovenin op <strong>Descriptives</strong>.</li>
-<li>Sleep <code>gewicht</code> naar het vak <strong>Variables</strong>.</li>
-<li>Open het kopje <strong>Statistics</strong> en vink naast Mean en Std. Deviation ook <strong>Std. Error of Mean</strong> aan.</li>
-</ol>
-</div>
-</div>
-<p>De eerste twee getallen ken je: het gemiddelde (Mean = 4202) en de standaardafwijking (Std. Deviation = 802) — hoeveel pinguïns onderling verschillen (en dat is nogal wat: de lichtste weegt 2700 gram, de zwaarste 6300). Maar daaronder staat een nieuwe: <strong>Std. Error of Mean</strong>, zo’n 43.</p>
-<p>Waarom 43? Omdat JASP niet weet dat wij vandaag god spelen. Het rekent altijd SD/√n met zíjn eigen n — hier alle 342 rijen — en 802/√342 ≈ 43. Maar onze vraag ging over een onderzoeker die er maar dertig weegt. Pak je rekenmachine: √30 ≈ 5.48, en 802 / 5.48 ≈ <strong>146</strong>. Dát is het getal om te onthouden, en het beweert iets brutaals: <em>trek je een steekproef van dertig, dan wiebelt jouw steekproefgemiddelde met zo’n 146 gram rond de waarheid.</em> Eén regeltje rekenwerk, en het dúrft te voorspellen hoe fout je gaat zitten — nog vóór je ook maar één keer gegrabbeld hebt.</p>
-<p>Dat vraagt om controle. Geloof jij het? Ik pas als ik het gezien heb.</p>
-<div class="kicker">
-<p>schud het</p>
-</div>
-</section>
-<section id="grabbel-duizend-keer-uit-de-ton" class="level2">
-<h2 class="anchored" data-anchor-id="grabbel-duizend-keer-uit-de-ton">Grabbel duizend keer uit de ton</h2>
-<p><span class="begrippen">simulatie · steekproevenverdeling · standaardfout</span></p>
-<p>Even opletten, want schudden betekent hier iets ánders dan je van de andere opdrachten gewend bent. Daar maken we de data expres kapot — kolommen van elkaar loskoppelen, zodat wat overblijft alleen toeval kan zijn: duizend werelden die dansen rond nul. Vandaag breken we niks en knippen we niks los. Er is geen nul-wereld nodig, want we hebben iets veel zeldzamers: de waarheid zelf, daar in de ton. Vandaag betekent schudden gewoon <strong>grabbelen — en nog eens, en nog eens</strong>: duizend keer doen wat een onderzoeker maar één keer mag. Dertig pinguïns trekken, wegen, het gemiddelde noteren, alles terug in de ton.</p>
-<p><strong>En hier moet ik eerlijk zijn: duizend keer grabbelen is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het herhaald trekken en opnieuw kijken is <em>speeltje</em>-werk. Dat is geen gemis van jou of van JASP — het boek doet het bewust zo: de simulatie-ervaring loopt via het <strong>grabbel-speeltje</strong> in de browser, of via het R-broertje, waar het twee regels code is.</p>
-<p><a href="../speeltjes/h3_grabbel.html" target="_blank">▶ Speel het schud-speeltje</a></p>
-<p>Wat je in het speeltje ziet: <strong>duizend steekproeven die dansen rond het echte gemiddelde</strong> — geen enkele grabbel landt er precies óp, maar ze zwermen er allemaal strak omheen: vrijwel alle duizend gemiddelden liggen tussen pakweg 3940 en 4460 gram, terwijl de lósse pinguïns van 2700 tot 6300 lopen. Het gemiddelde van dertig wiebelt dus, maar het wiebelt smal.</p>
-<p>Die verzameling heeft een naam: de <strong>steekproevenverdeling</strong> (<em>sampling distribution</em>) — een verdeling niet van pinguïns, maar van gemiddeldes. En haar spreiding, hoe breed de dans is, heet de <strong>standaardfout</strong> (<em>standard error</em>). Meet je ’m na in het speeltje, dan kom je uit rond de 140 gram — vlak bij de 146 die de formule beloofde.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> De formule wist het dus echt, zonder één keer te grabbelen.</p>
-<div class="kicker">
-<p>snap het</p>
-</div>
-</section>
-<section id="wat-de-standaardfout-wél-en-niet-zegt" class="level2">
-<h2 class="anchored" data-anchor-id="wat-de-standaardfout-wél-en-niet-zegt">Wat de standaardfout wél en niet zegt</h2>
-<p><span class="begrippen">SE versus SD · wortel n · precisie en vertekening</span></p>
-<p>Wat heb je nu gezien? Drie dingen, elk groter dan het lijkt.</p>
-<p><strong>Eén: jouw gemiddelde is één danser uit een dans.</strong> Een echte onderzoeker grabbelt één keer en krijgt één getal — ergens in dat bergje. Dat getal is niet “goed” of “fout”; het is één steekproefgemiddelde uit een hele verdeling van mogelijke steekproefgemiddelden. Had het net andere pinguïns getroffen, dan was het net een ander getal geweest. Dat is geen slordigheid, dat is hoe steekproeven wérken.</p>
-<p><strong>Twee: de wiebel heeft een maat — en je kunt die kennen zonder de waarheid te kennen.</strong> Dit is de eigenlijke magie. In het echt heb je geen ton en geen duizend grabbels; je hebt één steekproef. Maar in die ene steekproef zit een standaardafwijking, en sd/√n geeft je de standaardfout: een eerlijke schatting van hoe hard jóúw gemiddelde wiebelt. Je weet niet wáár de waarheid ligt, maar wél hoe ver je er ongeveer naast kunt zitten. (Op precies dat idee bouwt het betrouwbaarheidsinterval straks zijn huis.)</p>
-<p><strong>Drie: de wortel is een gierigaard.</strong> Kijk wat er met de standaardfout gebeurt als je de steekproef groter maakt: <em>n</em> = 10 geeft <strong>254 gram</strong>, <em>n</em> = 30 geeft <strong>146</strong>, <em>n</em> = 100 geeft <strong>80</strong>. Vier keer zoveel pinguïns wegen — van 10 naar 40, van 100 naar 400 — <em>halveert</em> de wiebel maar; de SE krimpt met √n, niet met n zelf. Meer meten helpt dus altijd, maar steeds een beetje minder. Wie van 80 naar 40 gram wiebel wil, moet driehonderd pinguïns éxtra vangen.</p>
-<p>En twee dingen die de standaardfout <em>níét</em> zegt — dat hoort net zo goed bij het snappen:</p>
-<ul>
-<li><strong>SE is geen SD.</strong> De 802 beschrijft de pinguïns: die blijven gewoon flink van elkaar verschillen, hoe groot je steekproef ook wordt. De 146 beschrijft jóúw onzekerheid over het gemiddelde. Een grote steekproef maakt niet de pinguïns eenvormiger — alleen jouw schatting rustiger.</li>
-<li><strong>Precies is niet hetzelfde als raak.</strong> De standaardfout meet alleen de wiebel van het toeval, niet de scheefheid van je grabbelende hand. Weeg je alleen de tamme, dikke pinguïns die vanzelf naar de weegschaal waggelen, dan krijg je met een enorme steekproef een prachtig smal dansje — strak rond het verkéérde getal. Precisie zegt niets over vertekening.</li>
-</ul>
-<div class="kicker">
-<p>eindopdracht</p>
-</div>
-</section>
-<section id="van-dertig-naar-zestig-pinguïns" class="level2">
-<h2 class="anchored" data-anchor-id="van-dertig-naar-zestig-pinguïns">Van dertig naar zestig pinguïns</h2>
-<p><span class="begrippen">standaardfout bij grotere n · halveren van de wiebel</span></p>
-<div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Eindopdracht
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Jouw beurt — grabbel dieper. Je hebt gezien wat <em>n</em> = 30 doet; nu wil ik weten wat er gebeurt als je arm twee keer zo diep gaat.</p>
-<ol type="1">
-<li>Laat de formule eerst voorspellen: bereken met je rekenmachine de standaardfout bij <strong><em>n</em> = 60</strong> — 802 / √60 (√60 ≈ 7.75). Ter controle: kom je uit rond de <strong>104 gram</strong> (preciezer: 103.5), dan zit je goed. Let op — twee keer zoveel pinguïns, maar niet half zoveel wiebel. De gierigaard uit “snap het”.</li>
-<li>Nu controleren, net als daarnet: zet het grabbel-speeltje op <em>n</em> = 60, grabbel duizend keer, en lees de standaardfout van de dans af. Je vindt ongeveer <strong>95 gram</strong> — in de buurt van de formule, en nét eronder om precies de reden uit de voetnoot: onze ton is niet bodemloos, en met zestig grabbel je al een flink stuk van de 342 leeg.</li>
-<li>Denk-vraag: in “snap het” beweerde ik dat wie van 80 naar 40 gram wiebel wil, driehonderd pinguïns éxtra moet vangen. Geloof me niet — reken het na. Bereken de SE bij <em>n</em> = 400 (802 / √400), en los daarna om: bij welke n geeft SD/√n precies 40? (Ter controle: <em>n</em> = 400 geeft SE ≈ <strong>40.1</strong>, en de vergelijking lost op rond <strong><em>n</em> = 402</strong>. Van 100 naar 402 is inderdaad zo’n driehonderd extra dieren voor één halvering. De wortel deelt niet uit, die beknibbelt.)</li>
-</ol>
-</div>
-</div>
-<div class="kicker">
-<p>rapportage</p>
-</div>
-</section>
-<section id="schrijf-het-op-als-een-onderzoeker" class="level2">
-<h2 class="anchored" data-anchor-id="schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</h2>
-<p><span class="begrippen">rapportage van M, SD en SE · cursieve symbolen</span></p>
-<div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Rapportage
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In Opdracht 1 was de rapportage een boodschappenlijstje: wat gemeten, waar het ligt, hoe verspreid. Vandaag komt er precies één artikel bij op dat lijstje — hoe zeker je bent van dat gemiddelde. En ook dat blijft gewoon één zin. Kijk maar, voor alle 342 pinguïns tegelijk:</p>
 <blockquote class="blockquote">
-<p>De 342 pinguïns in de steekproef wogen gemiddeld 4201.75 g (<em>SD</em> = 801.95, <em>SE</em> = 43.36).</p>
+<p><strong>Waarvoor deze pagina is:</strong> de handelingen die ónder elke analyse liggen. Een kolom bijmaken, een kolom anders indelen, een nulpunt verschuiven. Geen les — naslag. Je slaat hem open op het moment dat een oefening erom vraagt, en klapt hem daarna weer dicht.</p>
 </blockquote>
-<p>Dat is ’m — en de zin staat op eigen benen: wie er gewogen werden, wat ze gemiddeld wogen, en tussen haakjes de twee wiebel-getallen. De <em>SD</em> = 802 beschrijft nog steeds de pinguïns; de <em>SE</em> = 43 zegt hoe rustig het gemiddelde zelf staat (802/√342 — met 342 dieren in je steekproef wiebelt dat gemiddelde nog maar een gram of 43). Twee getallen die op elkaar lijken en iets totaal anders zeggen — wie ze allebei rapporteert, laat zien dat hij het verschil kent. En dezelfde kleine afspraken als altijd: alléén de symbolen <em>SD</em> en <em>SE</em> cursief, de gewone woorden rechtop, decimalen met een punt.</p>
-<p>Jouw beurt: schrijf zelf zo’n zelfstandige zin voor de snavellengte, met <em>M</em> = 43.92 en <em>SD</em> = 5.46 en de <em>SE</em> erbij (802/√342 voor het gewicht wees je de weg — voor de snavel deel je de <em>SD</em> van de snavel door √342; ter controle: <strong>0.30</strong> mm). En proef even hoe gek dat klinkt: snavels die onderling ruim vijf millimeter verschillen, maar een gemiddelde dat op een derde van een millimeter na vaststaat. Dát is wat 342 metingen voor je doen.</p>
+<p><strong>Deze kist is nog niet vol.</strong> Er staan nu twee handelingen in: <em>hercoderen</em> en <em>centreren</em>. Mis je iets — inlezen, filteren, samenvatten — kijk dan zolang in de <a href="../r/90_basishandelingen.md">gereedschapskist van het R-broertje</a>; de handeling is daar dezelfde, alleen de knoppen zijn anders.</p>
+<p>Alles hieronder draait op <strong>de diamantjes</strong>: de twaalf steentjes uit het boek. Twaalf rijen die je in één blik overziet, en genoeg kolommen om alles op te oefenen.</p>
+<p><a href="10_data/diamantjes.csv" class="data-download" download="diamantjes.csv">⬇ Download de data — <code>diamantjes.csv</code></a></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>kolom</th>
+<th>wat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>naam</code></td>
+<td>Anna, Bram, Cees … Leen</td>
+</tr>
+<tr class="even">
+<td><code>karaat</code></td>
+<td>gewicht van het steentje</td>
+</tr>
+<tr class="odd">
+<td><code>glans</code></td>
+<td>0–100</td>
+</tr>
+<tr class="even">
+<td><code>gladheid</code></td>
+<td>0–10, hoe goed geslepen</td>
+</tr>
+<tr class="odd">
+<td><code>merk</code></td>
+<td>golfje of sterretje</td>
+</tr>
+<tr class="even">
+<td><code>D</code></td>
+<td>1 als het een sterretje is, anders 0</td>
+</tr>
+<tr class="odd">
+<td><code>DxG</code></td>
+<td><code>D</code> × <code>gladheid</code> — het product, voor moderatie</td>
+</tr>
+<tr class="even">
+<td><code>gepakt</code></td>
+<td>1 als de kraai het steentje die nacht oppakte, anders 0</td>
+</tr>
+<tr class="odd">
+<td><code>mooi</code></td>
+<td>1 als de glans boven de 50 ligt, anders 0</td>
+</tr>
+</tbody>
+</table>
+<section id="twee-routes-één-handeling" class="level2">
+<h2 class="anchored" data-anchor-id="twee-routes-één-handeling">Twee routes, één handeling</h2>
+<p>JASP is een klikprogramma, maar er zit een achterdeur naar R in — en die staat gewoon open. Elke berekende kolom begint hetzelfde: klik op de <strong><code>+</code></strong> helemaal rechts van je gegevens, naast de laatste kolom. Je vult een naam in, kiest een gegevenstype, en kiest dan één van twee icoontjes:</p>
+<ul>
+<li>het <strong>handje</strong> — de sleep-route. Je bouwt de regel uit blokjes die je uit de lijsten aan de rand naar het midden trekt. Typefouten in kolomnamen kun je zo niet maken, want je typt ze niet.</li>
+<li>de <strong>R</strong> — het R-vak. Je schrijft de regel als één R-uitdrukking.</li>
+</ul>
+<p>Daarna klik je <strong>Create</strong>, en als de regel staat: <strong>Compute column</strong>. Wil je later iets veranderen aan een kolom die je al gemaakt hebt, klik dan op het <strong><code>fx</code></strong>-symbooltje in de kolomkop; dan ga je het venster weer in.</p>
+<p>Beide routes maken exact dezelfde kolom. Ze verschillen alleen in hoe je de regel opschrijft — en in hoe ver ze reiken: alles wat de sleep-route kan, kan het R-vak ook, andersom niet.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="De brug naar R — wat je in het R-vak juist níét schrijft">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De brug naar R — wat je in het R-vak juist níét schrijft
 </div>
 </div>
-<div class="boekvorm" data-w="W3">
-<p>◠ <strong>Zelfde vorm in het boek</strong></p>
-<p>Hier: duizend keer grabbelen uit een ton waarvan je de waarheid kent, en zien dat de wiebel van het gemiddelde een eigen maat heeft.</p>
-<p>In het boek: <strong>W3 — Van steekproef naar populatie</strong></p>
-<p><em>Daar krijgt de ton zijn verhaal — hier heb je hem zelf duizend keer geschud.</em></p>
+<div class="callout-body-container callout-body">
+<p>In het R-broertje typ je een nieuwe kolom zo:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>hoog <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>glans <span class="sc">&gt;=</span> <span class="dv">50</span>, <span class="st">"hoog"</span>, <span class="st">"laag"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In JASP’s R-vak schrijf je daar alleen het <strong>rechterdeel</strong> van:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(glans <span class="sc">&gt;=</span> <span class="dv">50</span>, <span class="st">"hoog"</span>, <span class="st">"laag"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twee dingen zijn weg, en allebei om dezelfde reden: het dialoogvenster heeft ze al.&nbsp;De naam <code>hoog</code> heb je bovenin ingevuld, dus de toewijzing <code>&lt;-</code> hoeft niet meer. En <code>d$</code> hoeft niet, want JASP heeft één tabel tegelijk open — je spreekt de kolommen kaal aan, als gewone rijtjes getallen.</p>
+<p>Dat maakt dit vak een prettige oversteekplaats. Wie later naar R gaat, moet vooral leren wat er <em>bij</em> komt, niet wat er anders is.</p>
 </div>
-<div class="werk">
-<p>JASP-versie afgeleid van R-master 2-8 (<code>r/20_blokken/blok_steekproevenverdeling.md</code>). Deelt de tekst met de R- en SPSS-tweeling; alleen “speel het” (JASP-klikpad Descriptives → Statistics → Std. Error of Mean, JASP 0.98.1) en “schud het” (duizend keer grabbelen is geen JASP-knop → grabbel-speeltje <code>../speeltjes/h3_grabbel.html</code>) verschillen. Getallen ongewijzigd t.o.v. de master: <em>n</em> = 342, <em>M</em> = 4201.75, <em>SD</em> = 801.95; SE volle data 802/√342 = 43.36→43; SE-formule 254/146/80 voor <em>n</em> = 10/30/100; simulatie seed 42, <em>n</em> = 30 → sd = 140.2 (eindige-ton-effect, zie voetnoot); 95% van de sim-gemiddelden 3937–4464. Eindopdracht: SE <em>n</em> = 60 formule 103.53→104; simulatie seed 42, <em>n</em> = 60 → sd = 94.7→95; SE <em>n</em> = 400 = 40.1; (801.95/40)² = 401.96→402; snavellengte SE <em>n</em> = 342 = 0.2952→0.30. JASP-klikpad live checken in 0.98.1. TODO (broertje, boek-boog H3): stem-pas door Ben. Sidebar-nummering/volgorde regelt C later.</p>
 </div>
+</section>
+<section id="hercoderen" class="level2">
+<h2 class="anchored" data-anchor-id="hercoderen">Nieuwe variabelen maken en hercoderen</h2>
+<p>Hercoderen is je gegevens opnieuw indelen zonder ze te veranderen. Je legt een grens en maakt er twee groepen van, je hakt een getal in klassen, of je zet een woordkolom om in een nul en een één. De oude kolom blijft gewoon staan; er komt er één naast. Dat is niet netjes-zijn maar zelfbescherming — een hercodering die niet klopt, kun je zo weggooien en overdoen.</p>
+<section id="een-grens-leggen-twee-groepen-uit-één-getal" class="level3">
+<h3 class="anchored" data-anchor-id="een-grens-leggen-twee-groepen-uit-één-getal">Een grens leggen: twee groepen uit één getal</h3>
+<p>We splitsen de glans op 50: alles daarboven heet <code>hoog</code>, de rest <code>laag</code>.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · een tweedeling op een grens · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · een tweedeling op een grens · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Via slepen</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Via R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ol type="1">
+<li>Klik op de <strong><code>+</code></strong> rechts van de laatste kolom. Naam: <code>hoog</code>, type <strong>Text</strong>, icoon: het <strong>handje</strong>. Klik <strong>Create</strong>.</li>
+<li>Rechts staat de lijst met functies. Sleep <strong><code>ifElse</code></strong> naar het vak in het midden. Hij komt binnen met drie lege plekken.</li>
+<li>Sleep <code>glans</code> uit de lijst links naar de eerste plek, kies uit de rij bovenin het teken <strong><code>≥</code></strong> en typ <code>50</code> erachter.</li>
+<li>Vul op de tweede plek <code>"hoog"</code> in en op de derde <code>"laag"</code>.</li>
+<li>Klik <strong>Compute column</strong>.</li>
+</ol>
+<p>Let op de hoofdletter: het sleepvak kent <strong><code>ifElse</code></strong>, R kent <code>ifelse</code>. Zelfde functie, andere schrijfwijze — het zijn dan ook twee verschillende talen.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ol type="1">
+<li>Klik op de <strong><code>+</code></strong>, naam <code>hoog</code>, type <strong>Text</strong>, icoon <strong>R</strong>, <strong>Create</strong>.</li>
+<li>Typ de regel en klik <strong>Compute column</strong>:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(glans <span class="sc">&gt;=</span> <span class="dv">50</span>, <span class="st">"hoog"</span>, <span class="st">"laag"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Tel na wat eruit komt.</strong> Ga naar <strong>Analyses → Descriptives</strong>, zet <code>hoog</code> in het vak en vink <strong>Frequency tables</strong> aan. Er horen <strong>7</strong> hoge en <strong>5</strong> lage steentjes te staan, samen 12. Doe dat elke keer: een hercodering die één kant op scheef staat, zie je hier meteen en verderop niet meer.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="Blijft je kolom leeg?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Blijft je kolom leeg?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Het overkomt je een keer: je typt de regel, klikt <strong>Compute column</strong>, en er gebeurt niets. De kolom blijft leeg, soms met een molentje dat blijft draaien. Dat ligt niet aan jou en niet aan je regel. Klik bovenin naar <strong>Analyses</strong> en dan weer terug naar <strong>Edit Data</strong> — dan rekent hij alsnog.</p>
+<p>Het is gemeld bij de makers en staat op dit moment nog open (<a href="https://github.com/jasp-stats/jasp-issues/issues/3441">jasp-issues #3441</a>). De melding gaat over versie 0.19.3; of hij in 0.98.1 nog bijt, weten we niet. Kom je hem niet tegen: mooi, dan is hij gerepareerd.</p>
+</div>
+</div>
+</section>
+<section id="een-getal-in-klassen-hakken" class="level3">
+<h3 class="anchored" data-anchor-id="een-getal-in-klassen-hakken">Een getal in klassen hakken</h3>
+<p>Drie vakjes deze keer: mat, middel en helder.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · drie klassen · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · drie klassen · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via slepen</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Nest twee <strong><code>ifElse</code></strong>-blokjes in elkaar: sleep er één in het middenvak, en sleep op de plek van het “anders”-antwoord een tweede <code>ifElse</code> naar binnen.</p>
+<ul>
+<li>eerste vraag: <code>glans &gt; 60</code> → <code>"helder"</code></li>
+<li>anders, tweede vraag: <code>glans &gt; 40</code> → <code>"middel"</code></li>
+<li>anders → <code>"mat"</code></li>
+</ul>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span>(glans, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">100</span>),</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"mat"</span>, <span class="st">"middel"</span>, <span class="st">"helder"</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Uitkomst: <strong>5</strong> mat, <strong>3</strong> middel, <strong>4</strong> helder. Samen 12 — en dát is de som die je moet natellen.</p>
+<p><strong>Waar hoort de grens zelf bij?</strong> Bij het vakje eronder. <code>cut</code> maakt de vakjes (0, 40], (40, 60] en (60, 100]: de bovengrens hoort er wél bij, de ondergrens niet. In deze twaalf steentjes is dat geen theorie — er ligt er precies één met een glans van <strong>60</strong>, en die belandt dus in <em>middel</em> en niet in <em>helder</em>. De geneste <code>ifElse</code> hierboven doet hetzelfde, want daar staat <code>&gt; 60</code> en niet <code>&gt;= 60</code>. Verzet die ene grens en je verschuift een steentje van vakje.</p>
+<p>Nog een reden om na te tellen: valt een waarde buiten je uiterste grenzen, dan maakt <code>cut</code> er stilletjes een lege plek van. Geen foutmelding, gewoon een gat.</p>
+</section>
+<section id="een-woordkolom-omzetten-in-een-nul-en-een-één" class="level3">
+<h3 class="anchored" data-anchor-id="een-woordkolom-omzetten-in-een-nul-en-een-één">Een woordkolom omzetten in een nul en een één</h3>
+<p>Regressie kan niet rekenen met het woord <em>sterretje</em>. Er moet een getal van komen, en het simpelste getal is: hoort dit steentje bij die groep, ja of nee.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · een dummy maken · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · een dummy maken · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via slepen</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Naam <code>D2</code>, type <strong>Nominal</strong>, handje. Sleep <strong><code>ifElse</code></strong> in het vak, daarin <code>merk</code>, het teken <strong><code>=</code></strong> en <code>"sterretje"</code>; als antwoorden <code>1</code> en <code>0</code>.</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(merk <span class="sc">==</span> <span class="st">"sterretje"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Zes enen en zes nullen — en je nieuwe <code>D2</code> is regel voor regel gelijk aan de kolom <code>D</code> die al in het bestand zat. Zo’n 0/1-kolom heet een <strong>dummy</strong>.</p>
+<p>Dat woord klinkt alsof er iets nep aan is, maar er is niets nep aan: het is de eerlijkste vertaling die er bestaat van een naam naar een getal. Wat je wel moet weten, is wie er nul werd.</p>
+</section>
+<section id="wie-krijgt-de-nul-de-referentiecategorie" class="level3">
+<h3 class="anchored" data-anchor-id="wie-krijgt-de-nul-de-referentiecategorie">Wie krijgt de nul — de referentiecategorie</h3>
+<p>De groep die de nul krijgt heet de <strong>referentiecategorie</strong>, en dat is geen bijrol. Alles wat je model daarna over de andere groep zegt, zegt het <em>ten opzichte van díé groep</em>.</p>
+<p>Kijk wat er gebeurt als je alleen <code>D</code> gebruikt om <code>glans</code> te voorspellen — <strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent</strong>, <code>D</code> als <strong>Covariate</strong>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>wat je in de tabel ziet</th>
+<th>wat het betekent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>intercept = 40.00</td>
+<td>de gemiddelde glans van de <strong>golfjes</strong>, de groep met de nul</td>
+</tr>
+<tr class="even">
+<td><em>b</em> voor <code>D</code> = 20.00</td>
+<td>zoveel glanzender zijn de <strong>sterretjes</strong> — bovenop die 40</td>
+</tr>
+</tbody>
+</table>
+<p>Reken het na en het klopt precies: de golfjes hebben gemiddeld 40 glans, de sterretjes 60. Het model vertelt je die 60 niet rechtstreeks; het geeft je het ijkpunt en de afstand, en jij telt op.</p>
+<p><strong>Laat je JASP de dummy’s maken, dan kiest JASP ook de referentie.</strong> Sleep je een tekstkolom als <code>merk</code> naar het vak <strong>Factors</strong>, dan maakt JASP er zelf 0/1-kolommen van en neemt daarbij de eerste categorie als ijkpunt. Bij <code>merk</code> is dat <code>golfje</code>. Dat merk je aan de uitvoer: er komt een rij voor <em>sterretje</em> en géén rij voor <em>golfje</em>. Die ontbrekende rij is niet vergeten — dat is de nullijn waar de rest vandaan gemeten wordt.</p>
+<p>Zie je in een tabel dus drie groepen genoemd en maar twee rijen staan, dan is er niets weggelaten. Je kijkt naar het ijkpunt zonder het te zien.</p>
+<p>Waar dit over gáát — waarom een groep een getal mag worden, en wat je daarmee wint — staat in het boek bij <strong>W9 · Groepen zijn ook getallen</strong>.</p>
+</section>
+</section>
+<section id="centreren" class="level2">
+<h2 class="anchored" data-anchor-id="centreren">Centreren</h2>
+<p>Centreren is één aftrekking: je haalt van elke waarde het gemiddelde af. Meer is het niet. Je gegevens blijven precies hetzelfde — dezelfde afstanden, dezelfde volgorde, dezelfde spreiding — en toch gaat je uitvoer er anders uitzien. Wat je verschuift is namelijk niet de data maar de <strong>nul</strong>, en de nul is de plek waar je model zijn verhaal begint.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · centreren · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · centreren · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via slepen</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via R</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>Naam <code>karaat_c</code>, type <strong>Scale</strong>, handje.</p>
+<ol type="1">
+<li>Sleep <code>karaat</code> naar het middenvak.</li>
+<li>Klik het teken <strong><code>−</code></strong>.</li>
+<li>Zoek in de functielijst rechts de knop <strong><code>mean(y)</code></strong> en klik hem aan.</li>
+<li>Sleep <code>karaat</code> op de lege plek binnen die <code>mean( )</code>.</li>
+<li><strong>Compute column</strong>.</li>
+</ol>
+<p>In het vak staat nu <code>karaat - mean(karaat)</code>.</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>karaat <span class="sc">-</span> <span class="fu">mean</span>(karaat)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Controleer het meteen.</strong> Zet <code>karaat_c</code> in <strong>Descriptives</strong>: het gemiddelde hoort <strong>0</strong> te zijn. Dat is geen toevalstreffer maar de definitie — je hebt er net het gemiddelde afgehaald. Staat er iets als <code>-1.1e-16</code>, dan is dat gewoon nul met wat rekenstof eromheen; een computer die met kommagetallen werkt komt zelden precies uit.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="Let op — `mean` betekent hier iets anders dan je denkt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Let op — <code>mean</code> betekent hier iets anders dan je denkt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In het sleepvak neemt <strong><code>mean(y)</code></strong> één kolom en geeft je het gemiddelde van díé kolom, over alle rijen heen. Dat is precies wat je hier nodig hebt.</p>
+<p>Maar het is niet wat je nodig hebt als je ooit een schaalscore wilt maken — het gemiddelde van tien vragen, <em>per persoon</em>. Dat is een gemiddelde dwars over kolommen, en daar kan het sleepvak niet bij. Daarvoor moet je het R-vak in:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowMeans</span>(<span class="fu">data.frame</span>(v1, v2, v3), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twee gemiddelden die niets met elkaar te maken hebben, met bijna dezelfde naam. Hier gaat het om het eerste: één kolom, één getal.</p>
+</div>
+</div>
+<section id="wat-er-verschuift-en-wat-niet" class="level3">
+<h3 class="anchored" data-anchor-id="wat-er-verschuift-en-wat-niet">Wat er verschuift, en wat niet</h3>
+<p>Draai twee keer dezelfde regressie — <strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent</strong> — eerst met <code>karaat</code> als <strong>Covariate</strong>, dan met <code>karaat_c</code>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>intercept</th>
+<th><em>b</em> voor karaat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ruw (<code>karaat</code>)</td>
+<td>−1.43</td>
+<td>32.14</td>
+</tr>
+<tr class="even">
+<td>gecentreerd (<code>karaat_c</code>)</td>
+<td>50.00</td>
+<td>32.14</td>
+</tr>
+</tbody>
+</table>
+<p><strong>De helling beweegt niet.</strong> 32.14 glanspunten per karaat, of je nu centreert of niet — en dat moet ook, want je hebt de steentjes niet aangeraakt.</p>
+<p>Het intercept verhuist wél, en dat is de hele winst. Ruw staat er −1.43: de voorspelde glans van een steentje van nul karaat. Zo’n steentje bestaat niet, en een negatieve glans bestaat al helemaal niet — het is een keurig uitgerekend antwoord op een vraag die niemand stelt. Gecentreerd staat er 50.00, en dat is de gemiddelde glans van een gemiddeld steentje. Van een onzin-getal naar een getal dat je hardop kunt voorlezen.</p>
+</section>
+<section id="en-bij-een-interactie-wordt-het-menens" class="level3">
+<h3 class="anchored" data-anchor-id="en-bij-een-interactie-wordt-het-menens">En bij een interactie wordt het menens</h3>
+<p>Zolang je één voorspeller hebt, is centreren gemak. Zodra er een interactie in je model zit, gaat het over goed of fout aflezen.</p>
+<p>Zet <code>gladheid</code>, <code>D</code> en <code>DxG</code> samen in <strong>Covariates</strong>. Maak daarna <code>gladheid_c</code> (hetzelfde recept als hierboven, mean = 5) en draai het model opnieuw.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><em>b</em> voor <code>D</code></th>
+<th>interactie</th>
+<th><em>R</em>²</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ruw</td>
+<td>1.84</td>
+<td>2.64</td>
+<td>.97</td>
+</tr>
+<tr class="even">
+<td>gecentreerd</td>
+<td>15.03</td>
+<td>2.64</td>
+<td>.97</td>
+</tr>
+</tbody>
+</table>
+<p>Dezelfde data, hetzelfde model, dezelfde verklaringskracht, dezelfde interactie — en het verschil in glans tussen de twee merken leest de ene keer 1.84 en de andere keer 15.03. Ruim acht keer zo groot.</p>
+<p>Ze zijn allebei waar. Ze beantwoorden alleen een andere vraag. In een model mét interactie is een hoofdeffect altijd <em>het effect bij nul van de ander</em>, en dat maakt het antwoord afhankelijk van waar de nul ligt:</p>
+<ul>
+<li><strong>ruw</strong> is het glansverschil tussen golfje en sterretje bij <code>gladheid</code> = 0 — een ongeslepen steen. De gladheid loopt in dit bestand van 1 tot 8. Zo’n steen ligt er dus niet, en 1.84 is een uitspraak over een plek waar je nooit gemeten hebt.</li>
+<li><strong>gecentreerd</strong> is datzelfde glansverschil bij een gemiddeld geslepen steen. Die kun je aanwijzen; er liggen er twaalf.</li>
+</ul>
+<p>De regel om te onthouden: <strong>centreer je voorspellers en die nul wordt het gemiddelde</strong> — pas dan is de tabel te lezen zonder er nog iets bij te rekenen. De interactie zelf verandert nooit, want die gaat niet over waar je meet maar over hoe de twee hellingen uit elkaar lopen.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="⚠ De val die stil misgaat — bouw `DxG` opnieuw">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>⚠ De val die stil misgaat — bouw <code>DxG</code> opnieuw
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>DxG</code> staat kant-en-klaar in het bestand, en dat is <code>D × gladheid</code> — het product van de <strong>ruwe</strong> gladheid. Centreer je <code>gladheid</code> en laat je die oude <code>DxG</code> in het model staan, dan krijg je dit:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th><em>b</em> voor <code>D</code></th>
+<th>interactie</th>
+<th><em>R</em>²</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gladheid_c</code> + <code>D</code> + <strong>oude</strong> <code>DxG</code></td>
+<td><strong>1.84</strong></td>
+<td>2.64</td>
+<td>.97</td>
+</tr>
+<tr class="even">
+<td><code>gladheid_c</code> + <code>D</code> + <strong>nieuwe</strong> <code>DxG_c</code></td>
+<td>15.03</td>
+<td>2.64</td>
+<td>.97</td>
+</tr>
+</tbody>
+</table>
+<p>Lees die eerste regel nog eens. Je hebt gecentreerd, JASP geeft geen kik, het model past precies even goed — en je krijgt exact het getal terug dat je met centreren wilde repareren. Niets ziet er verkeerd uit. Dat maakt dit de vervelendste fout op deze pagina.</p>
+<p>Maak dus een nieuwe kolom mee:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gladheid_c <span class="sc">*</span> D</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>En waarom het zo netjes misgaat, is het nakijken waard. De oude <code>DxG</code> is <code>(gladheid_c + 5) × D</code>, en die 5 lekt weg naar de <code>D</code>-rij. Precies daar duikt het oude getal weer op:</p>
+<p><span class="math display">\[1.84 + 5 \times 2.64 = 15.03\]</span></p>
+<p>Het gemiddelde dat je aan de ene kant afhaalde, zat aan de andere kant nog in het model.</p>
+</div>
+</div>
+<p>In het boek gaat <strong>W8 · Meer dan één verschil</strong> over wat het intercept nog betekent zodra er meerdere voorspellers naast elkaar staan, en <strong>W10 · Verschil in verschil</strong> over hellingen die niet parallel lopen. Deze pagina laat zien hóé je centreert; daar staat waaróm het uitmaakt.</p>
 
 
 </section>
+</section>
 
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
-
-<ol>
-<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0), kolom <code>gewicht</code> (lichaamsgewicht in grammen). Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Waarom nét iets onder de 146? De formule doet alsof de ton bodemloos is; onze ton telt maar 342 pinguïns, en wie er dertig uittrekt zonder teruggooien maakt de wiebel een tikje smaller. Bij echte populaties — duizenden, miljoenen — merk je daar niets meer van. Fijnproeverij; het verhaal blijft hetzelfde.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1112,13 +1410,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../20_blokken/blok_mediaan_scheefheid.html" class="pagination-link" aria-label="Oefening 2.1 · Mediaan, kwartielen en scheefheid">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 2.1 · Mediaan, kwartielen en scheefheid</span>
+      <a href="./20_blokken/blok_kruistabel_chikwadraat.html" class="pagination-link" aria-label="Schil · Kruistabel en χ²">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Schil · Kruistabel en χ²</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../20_blokken/blok_correlatie_scatterplot.html" class="pagination-link" aria-label="Oefening 4.1 · Correlatie en scatterplot">
-        <span class="nav-page-text">Oefening 4.1 · Correlatie en scatterplot</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./speeltjes/h3_grabbel.html" class="pagination-link" aria-label="De grabbelton (steekproef)">
+        <span class="nav-page-text">De grabbelton (steekproef)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
