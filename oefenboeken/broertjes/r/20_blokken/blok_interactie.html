@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -639,10 +645,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> soort, <span class="at">data =</span> peng))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> soort, <span class="at">data =</span> peng))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># en één getal voor de interactie als geheel: het model met één gezamenlijke</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># helling (+) naast het model waarin elke soort een eigen helling mag hebben (*)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> soort, <span class="at">data =</span> peng),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> soort, <span class="at">data =</span> peng))   <span class="co"># F(2, 336) = 5.53   p = .004</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>Onder in de uitvoer staat een regel <code>vinlengte:soortGentoo</code> met een sterretje erachter: <em>p</em> = .004 voor de interactie als geheel. Dat sterretje zegt dat de hellingen niet zomaar een beetje van elkaar verschillen — het verschil is te groot om aan toeval toe te schrijven. Wil je de hellingen los zien, reken ze dan per soort uit:</p>
+<p>Onder in de uitvoer staan twéé interactie-regels. R neemt de Adélie als ijkpunt — alfabetisch de eerste — en legt de andere twee soorten daarnáást; een regel <code>vinlengte:soortAdelie</code> bestaat daarom niet. <code>vinlengte:soortGentoo</code> heeft sterretjes achter zich staan (<em>p</em> = .002): bij de Gentoo’s loopt de lijn steiler dan bij de Adélies. De regel eronder, <code>vinlengte:soortChinstrap</code>, zegt met <em>p</em> = .82 dat de Chinstraps juist níét steiler lopen dan de Adélies.</p>
+<p>Wil je één getal voor de interactie als gehéél — verschilt de helling érgens tussen de soorten? — dan zet je die twee modellen naast elkaar, en dat is de laatste regel hierboven: <em>F</em>(2, 336) = 5.53, <em>p</em> = .004. Dezelfde trechter als bij de ANOVA: eerst overkoepelend of er íéts is, en pas daarna per regel waar het zit. Het verschil tussen de hellingen is te groot om aan toeval toe te schrijven.</p>
+<p>Wil je de hellingen los zien, reken ze dan per soort uit:</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · de helling per soort">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -677,7 +690,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)</span>
+<p>PROCESS bestaat óók voor R: één bestand van Hayes’ site, geen pakketten nodig. Staat het nog niet naast je script, dan haal je het op zoals bij <a href="../installatie.html">PROCESS installeren</a> beschreven staat.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)   <span class="co"># eenmalig per sessie inladen</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">process</span>(<span class="at">data =</span> d, <span class="at">y =</span> <span class="st">"glans"</span>, <span class="at">x =</span> <span class="st">"gladheid"</span>, <span class="at">w =</span> <span class="st">"D"</span>,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="dv">1</span>, <span class="at">center =</span> <span class="dv">1</span>, <span class="at">jn =</span> <span class="dv">1</span>, <span class="at">boot =</span> <span class="dv">5000</span>, <span class="at">seed =</span> <span class="dv">31216</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
@@ -796,9 +810,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Hier: één helling volstaat niet, want het vin-effect waaiert uiteen per soort.</p>
 <p>In het boek: <strong>W10 — Verschil in verschil</strong></p>
 <p><em>Daar draait het om de lijnen die niet parallel lopen — het moment waarop je merkt dat “het effect” een tweede vraag nodig heeft: bij wie?</em></p>
-</div>
-<div class="werk">
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers; Vierde beweging), schud-trede behouden. Hoofdstuk-verwijzingen ontkoppeld van nummers (loopt via OPDRACHT_MAP); alleen de body-getallen bleven exact: hellingen 32.8/34.6/54.6, kloof steilste−flauwste 21.8, interactie <em>p</em> = .004. Body-interactie nagerekend op <code>penguins.csv</code> (2-8, Rscript): <code>lm(gewicht ~ vinlengte * soort)</code> vs additief → <em>F</em>(2, 336) = 5.53, <em>p</em> = .004327; hellingen per soort Adelie 32.83, Chinstrap 34.57, Gentoo 54.62 (→ 32.8/34.6/54.6 in body). Eindopdracht + rapportage nagerekend (2-8, Rscript): sekse-interactie <code>lm(gewicht ~ vinlengte * sekse)</code> vs additief → <em>F</em>(1, 329) = 0.01, <em>p</em> = .92 (niet significant); helling female 47.15 (<em>n</em>=165), male 46.86 (<em>n</em>=168), <em>n</em>=333 gebruikt (9 zonder sekse vallen weg); mannetjes zwaarder (mean female 3862.27 g / male 4545.68 g; additief sekse-effect 347.85 g, <em>p</em>&lt;.001) — de didactische twist (verschil in hoogte, géén interactie) is echt in de data. TODO (broertje, boek-boog H10): stem-pas nog te doen — verhaal-stem-opening kan losser/stiller; anker/formulering W10 checken zodra dat hoofdstuk staat (nummering-later). Het schud-speeltje voor de interactie (geschudde hellingkloof, bergje laag, echte kloof ver rechts) bestaat nog niet — kan later bij <code>boek/04_speeltjes/</code>; tot dan draagt het R-broertje de schud-ervaring. De JASP- en SPSS-tweeling delen deze tekst; alleen “Speel het / Schud het” verschilt (JASP en SPSS kunnen de shuffle niet zelf → speeltje + hop).</p>
 </div>
 
 

@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -734,7 +740,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="wat-χ²-wél-en-niet-zegt">Wat χ² wél en niet zegt</h2>
 <p><span class="begrippen">Cramérs V · residuen · vrijheidsgraden</span></p>
 <p>Echt — maar wat wéét je daarmee precies? Minder dan je denkt, en dat is de kern van dit blok. χ² beantwoordt maar één vraag, met veel gezag en weinig woorden: <em>hangen deze twee samen, of is dit toeval-scheefheid?</em> Antwoord: ze hangen samen. Punt. Het is een kaal ja — het zegt niet hoe stérk, niet wáár in de tabel, en al helemaal niet waaróm. Voor die drie vragen heb je drie andere dingen nodig, en die heb je eigenlijk al in handen.</p>
-<p><strong>Hoe sterk?</strong> Daar is een apart getal voor: <strong>Cramérs V</strong>, dat χ² terugschaalt naar een bandbreedte van 0 (geen samenhang) tot 1 (perfect voorspelbaar). Hier: V = .29 — een stevige, duidelijk zichtbare samenhang, maar geen lotsbestemming; ook in de derde klasse overleefde één op de vier.</p>
+<p><strong>Hoe sterk?</strong> Daar is een apart getal voor: <strong>Cramérs V</strong>, dat χ² terugschaalt naar een bandbreedte van 0 (geen samenhang) tot 1 (perfect voorspelbaar). Hier: <em>V</em> = .29 — een stevige, duidelijk zichtbare samenhang, maar geen lotsbestemming; ook in de derde klasse overleefde één op de vier.</p>
 <p><strong>Wáár zit het?</strong> Vraag de tabel welke cellen het hardst afwijken van verwacht — de <strong>residuen</strong> (<em>residuals</em>):</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · waar zit de scheefheid?">
 <div class="callout-header d-flex align-content-center">
@@ -780,8 +786,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(tr, <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>)       <span class="co"># wie overleefde, per rol</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tr)                        <span class="co"># → X-squared = 46.5, df = 1</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: van de passagiers overleefde 38%, van de bemanning 24%, en χ²(1) = 46.54. Dat kleinere <em>df</em> = 1 klopt: een tabel van 2 rijen × 2 kolommen, dus (2−1)×(2−1) = 1.</p></li>
-<li><p>Reken de sterkte uit — Cramérs V, net als in het blok: <code>sqrt(chisq.test(tr)$statistic / sum(tr))</code>. Ter controle: V = .15.</p></li>
-<li><p>Denk-vraag: over de vier klassen heen was V = .29; plat je alles tot passagier-vs-bemanning, dan zakt V naar .15. Er is niet mínder gebeurd — je bent minder gaan kíjken. Wat heb je weggegooid door eerste, tweede en derde klasse op één hoop te vegen? Kijk terug naar de residuen: welk verschil — dat tussen +9.6 en −3.3 — verdwijnt zodra je die drie klassen samen “passagier” noemt?</p></li>
+<li><p>Reken de sterkte uit — Cramérs V, net als in het blok: <code>sqrt(chisq.test(tr)$statistic / sum(tr))</code>. Ter controle: <em>V</em> = .15.</p></li>
+<li><p>Denk-vraag: over de vier klassen heen was <em>V</em> = .29; plat je alles tot passagier-vs-bemanning, dan zakt <em>V</em> naar .15. Er is niet mínder gebeurd — je bent minder gaan kíjken. Wat heb je weggegooid door eerste, tweede en derde klasse op één hoop te vegen? Kijk terug naar de residuen: welk verschil — dat tussen +9.6 en −3.3 — verdwijnt zodra je die drie klassen samen “passagier” noemt?</p></li>
 </ol>
 </div>
 </div>
@@ -815,12 +821,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Hier: hangen twee categorische variabelen samen — tellen, verwachten, en zien hoe ver de echte telling van saai afligt.</p>
 <p>In het boek: nog niet — dit hoort bij de schil <strong>S2 · Tellen en kruistabellen</strong>.</p>
 <p><em>Als die schil er komt, begint ze waar dit blok begon: bij de tabel en de percentages, niet bij de toets.</em></p>
-</div>
-<div class="werk">
-<p><strong>Diamant-opwarmer omgezet 10-8 van <code>merk × mooi</code> naar <code>merk × gepakt</code></strong> (Bens besluit). Daarmee is de opwarmer <strong>Tabel 12.3 uit H12</strong> en klopt hij met de <em>OR</em> = 4 / <em>RR</em> = 2-passage daar. Zelf nagerekend op <code>diamantjes.csv</code>, niet overgetikt: sterretje 4 gepakt / 2 niet, golfje 2 / 4 — spiegelbeeld van hoe R het afdrukt (golfje en 0 eerst), daarom staat die spiegeling nu in de tekst, anders zoekt de lezer zich suf. <em>OR</em> = (4/2)/(2/4) = 4 exact, <em>RR</em> = (4/6)/(2/6) = 2 exact, Fisher <em>p</em> = .5671 → .567. Alle vier de waarden gelijk aan wat H12 publiceert.</p>
-<p><strong>Waarom dit blok er beter van wordt.</strong> De vier verwachte aantallen zijn álle vier 3 — niet één haalt de vuistregel van 5, en <code>chisq.test()</code> waarschuwt er zelf voor (<em>Chi-squared approximation may be incorrect</em>). Dezelfde vier hokjes geven daardoor drie antwoorden: kale Pearson χ²(1) = 1.3333, <em>p</em> = .2482; met Yates (Rs default voor een 2×2) χ²(1) = 0.3333, <em>p</em> = .5637; Fisher exact <em>p</em> = .5671. Ruim een factor twee in <em>p</em> puur door knopkeuze — en let op de vorm ervan: Yates landt bijna bovenop Fisher (.5637 tegen .5671), want daar is die correctie voor bedoeld; de ongecorrigeerde Pearson is de uitzonderlijke. Dat staat zo in de tekst, en het is precies waar het boek streng in is — dus staat het er nu in plaats van dat de opwarmer een χ² afdrukt die niets mag zeggen. De brug naar de Titanic is daarmee inhoudelijk geworden (“de toets heeft aantallen nodig”); bij de Titanic is de magerste verwachte cel 92.1 (2de klasse, ja), dus daar mag het wel — dat staat er nu bij. De definitie van <em>kruistabel</em> is naar vóór de opwarmer verhuisd (stond na de Titanic-brug, en daar was het woord al vijf keer gevallen); dat brengt de R-master meteen in dezelfde volgorde als de JASP- en SPSS-broertjes.</p>
-<p><strong><code>mooi</code> heeft hiermee geen taak meer.</strong> Niet weggehaald — dat is een voorstel voor Ben, op het bord gelegd, niet uitgevoerd. Zie <code>10_data/LEESMIJ_GETALLEN.md</code> (10-8, tweede noot) voor waar hij dan overal nog staat.</p>
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage). Schil-blok: hoort bij de schil (S2), niet bij een boek-beweging — daarom <code>include-before-body: _beweging_schil.html</code> en géén <code>.beweging</code>-div in de body. Bestaande tekst en getallen ongewijzigd behouden; schud-trede incl.&nbsp;duizend-werelden-signatuur behouden (nulpunt expliciet: het schudden koppelt klasse en afloop los). Getallen nagerekend op <code>titanic.csv</code> (2-8): bestaand <em>n</em>=2201, χ²(3)=190.40→190.4, Cramérs V=0.294→.29, residuen 1st-ja +9.6 / Crew-ja −4.4 / 3rd-ja −3.3, rijpct 62/41/25/24, 203 van 325 eersteklassers, 212 van 885 bemanning, schud-bergje seed 42 (max 22.3, min 0.02) — alles klopt. Nieuw (eindopdracht) passagier-vs-bemanning: χ²(1)=46.54 (Yates, R-default 2×2), Cramérs V=0.15, passagier 38% / bemanning 24%. Rapportage op 2 decimalen (vijf vormregels): alleen <em>N</em>/<em>p</em>/<em>V</em> cursief, χ² rechtop (Grieks, zoals in de lopende tekst); verleden tijd; staat op zichzelf; gezellig + onderzoeks-framing. TODO (broertje, 24-7): S2-anker is de schil-variant — er is (nog) geen boek-hoofdstuk voor tellen/kruistabellen; anker updaten als dat verandert. Eind+rapportage bij de schil stond in OPDRACHT_MAP als “n.t.b.” — nu ingevuld (2-8; map bijwerken). De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (JASP kan de shuffle niet zelf — speeltje + hop, zie het JASP-blok).</p>
 </div>
 
 

@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -750,8 +756,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>d[, <span class="fu">c</span>(<span class="st">"naam"</span>, <span class="st">"glans"</span>)]                   <span class="co"># twee kolommen houden</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>d[, <span class="sc">!</span>(<span class="fu">names</span>(d) <span class="sc">%in%</span> <span class="st">"DxG"</span>)]               <span class="co"># één kolom weggooien</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(d)[<span class="fu">names</span>(d) <span class="sc">==</span> <span class="st">"glans"</span>] <span class="ot">&lt;-</span> <span class="st">"schittering"</span>   <span class="co"># hernoemen</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>per_karaat <span class="ot">&lt;-</span> d<span class="sc">$</span>glans <span class="sc">/</span> d<span class="sc">$</span>karaat        <span class="co"># nieuwe kolom → Anna: 20</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>anders <span class="ot">&lt;-</span> d                                        <span class="co"># hernoemen op een kópie,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(anders)[<span class="fu">names</span>(anders) <span class="sc">==</span> <span class="st">"glans"</span>] <span class="ot">&lt;-</span> <span class="st">"schittering"</span>   <span class="co"># zie de waarschuwing hieronder</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>per_karaat <span class="ot">&lt;-</span> d<span class="sc">$</span>glans <span class="sc">/</span> d<span class="sc">$</span>karaat        <span class="co"># nieuwe kolom → Anna: 20</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">pull</span>(glans)</span>
@@ -766,6 +774,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><strong>Let op het verschil.</strong> Base R verándert <code>d</code> als je <code>d$per_karaat &lt;- ...</code> schrijft. Een dplyr-regel geeft alleen een nieuw resultaat terug; wil je dat bewaren, dan <code>d &lt;- d |&gt; mutate(...)</code>. Dat is de meestgemaakte fout van week één: je draait de regel, je ziet het goede resultaat op je scherm, en even later is het weg.</p>
+<p><strong>En hernoemen verandert <code>d</code> wél.</strong> <code>names(d)[...] &lt;- "schittering"</code> schrijft in <code>d</code> zelf, en daarna bestáát de kolom <code>glans</code> niet meer. Vraag je er verderop toch om, dan zegt base R daar niets van: <code>d$glans</code> is dan <code>NULL</code>, <code>NULL &gt; 50</code> selecteert niets, en <code>d[d$glans &gt; 50, ]</code> geeft je <strong>nul</strong> steentjes waar er vijf hoorden te staan. <code>rename()</code> uit dplyr laat <code>d</code> juist met rust — vandaar de kopie hierboven. Ben je <code>glans</code> toch kwijt: lees <code>d</code> gewoon opnieuw in.</p>
 </section>
 <section id="filteren" class="level2">
 <h2 class="anchored" data-anchor-id="filteren">Rijen — filteren en sorteren</h2>
@@ -1143,21 +1152,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false" href="">tidyr</a></li></ul>
 <div class="tab-content">
 <div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape wil precies weten wat er kantelt en hoe de nieuwe kolommen heten</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>lang <span class="ot">&lt;-</span> <span class="fu">reshape</span>(</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  d[, <span class="fu">c</span>(<span class="st">"naam"</span>, <span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>)],</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">"long"</span>,</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">varying   =</span> <span class="fu">c</span>(<span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>),</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">v.names   =</span> <span class="st">"waarde"</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">timevar   =</span> <span class="st">"eigenschap"</span>,</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">times     =</span> <span class="fu">c</span>(<span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>),</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">idvar     =</span> <span class="st">"naam"</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(lang)    <span class="co"># → 36  (12 steentjes × 3 eigenschappen)</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>breed <span class="ot">&lt;-</span> <span class="fu">reshape</span>(lang, <span class="at">direction =</span> <span class="st">"wide"</span>,</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">idvar =</span> <span class="st">"naam"</span>, <span class="at">timevar =</span> <span class="st">"eigenschap"</span>)</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(breed)   <span class="co"># → 12  weer terug</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reshape wil precies weten wat er kantelt en hoe de nieuwe kolommen heten.</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># as.data.frame() omdat reshape base R is en een data.frame wil: heb je</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># hierboven het dplyr-tabblad gedraaid, dan is `d` een tibble en geeft dit</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># blok er stil drie in plaats van zesendertig terug.</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>lang <span class="ot">&lt;-</span> <span class="fu">reshape</span>(</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>(d)[, <span class="fu">c</span>(<span class="st">"naam"</span>, <span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>)],</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">"long"</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">varying   =</span> <span class="fu">c</span>(<span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">v.names   =</span> <span class="st">"waarde"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">timevar   =</span> <span class="st">"eigenschap"</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">times     =</span> <span class="fu">c</span>(<span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>),</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">idvar     =</span> <span class="st">"naam"</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(lang)    <span class="co"># → 36  (12 steentjes × 3 eigenschappen)</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>breed <span class="ot">&lt;-</span> <span class="fu">reshape</span>(lang, <span class="at">direction =</span> <span class="st">"wide"</span>,</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">idvar =</span> <span class="st">"naam"</span>, <span class="at">timevar =</span> <span class="st">"eigenschap"</span>)</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(breed)   <span class="co"># → 12  weer terug</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-11-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
@@ -1474,10 +1486,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Die vijfde regel is het hele hoofdstuk over confounding in één opdracht: los gezien voorspelt karaat de glans (<em>b</em> = 32.14), maar zodra gladheid meedoet, zakt karaat naar bijna nul (<em>b</em> = 0.98) en verklaart het model ineens 82% in plaats van 33%. Niet het gewicht maakte ze mooi — de slijper deed dat.</p>
-<div class="werk">
-<p>Uitgebreid 10-8-2026 op Bens vraag van 9-8 (<em>“ook echt basale transformaties, wide-long leuk voor plotten, extra plot opties ggplot, filteren en al die basis handelingen, liefst achteraan en verwijzen daar naar waar nodig”</em>). Nieuw t.o.v. de versie van 8-8: hercoderen (<code>ifelse</code> / <code>cut</code> / <code>case_when</code> / <code>factor</code>), een eigen sectie <strong>centreren</strong> met het waaróm (intercept + hoofdeffecten bij interactie), <code>NA</code>-behandeling, het plot-motief onder wide↔︎long, en de ggplot-opties uitgesplitst naar vormen / assen / kleuren / facetten / opslaan. Verwijzingen vanuit de blokken toegevoegd (<code>.naslag</code>-regel).</p>
-<p><strong>Gecorrigeerd:</strong> de vorige versie schreef <code>lm(glans ~ karaat)</code> → <em>17.9</em> + 32.1 · karaat. Het intercept is <strong>−1.43</strong> (zoals Oefening 4.1 het al had); 17.9 stond nergens op. Alle getallen op deze pagina worden nu nagerekend door <code>_controle_basishandelingen.R</code> in de map hierboven — dat script draait élk codefragment van deze pagina in beide dialecten en faalt als er één regel struikelt. Draaien vóór je iets aan deze pagina verandert.</p>
-</div>
 
 
 </section>

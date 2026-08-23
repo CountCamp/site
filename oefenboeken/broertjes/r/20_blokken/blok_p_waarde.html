@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -642,10 +648,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># vergelijk controle vs behandeling2</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>tweetal <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling2"</span>), ]</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> tweetal)     <span class="co"># t = -2.13, p = 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> groep, <span class="at">data =</span> tweetal)     <span class="co"># t = 2.13, p = 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>Daar staat het: het verschil is 0.50 gram, <em>t</em> = −2.13, en <strong><em>p</em> = .048</strong>. Het 95%- betrouwbaarheidsinterval loopt van −0.98 tot −0.01 — het schampt de nul, maar gaat er nét niet overheen. Volgens de gewoonte-grens van .05 is dit “significant” — nét. Maar wat <em>ís</em> die .048 eigenlijk? Voor je die vraag beantwoordt uit een tabel, gaan we hem zelf maken.</p>
+<p>Daar staat het: het verschil is 0.49 gram, <em>t</em> = 2.13, en <strong><em>p</em> = .048</strong>. Het 95%- betrouwbaarheidsinterval loopt van 0.01 tot 0.98 — het schampt de nul, maar gaat er nét niet overheen. Volgens de gewoonte-grens van .05 is dit “significant” — nét. Maar wat <em>ís</em> die .048 eigenlijk? Voor je die vraag beantwoordt uit een tabel, gaan we hem zelf maken.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -654,7 +660,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="duizend-werelden-waarin-het-voer-niks-doet">Duizend werelden waarin het voer niks doet</h2>
 <p><span class="begrippen">labels husselen · p als getelde fractie</span></p>
 <p>Hier is de truc, en het is de mooiste van het hele boek. Stel: het voer doet niks. Helemaal niks. Dan is het etiket “controle” of “behandeling2” op een plant volstrekt willekeurig — je had de labels net zo goed door elkaar kunnen gooien, het gewicht zou hetzelfde blijven. Dus dat doen we. Duizend keer.</p>
-<p>Elke keer husselen we de twintig groepslabels lukraak over de twintig planten, en meten we het verschil tussen de twee nep-groepen. Zo bouwen we <strong>duizend werelden waarin het voer bewijsbaar niks doet</strong> — en kijken hoe vaak het blinde toeval alléén al een verschil oplevert dat even groot is als (of groter dan) onze echte 0.50.</p>
+<p>Elke keer husselen we de twintig groepslabels lukraak over de twintig planten, en meten we het verschil tussen de twee nep-groepen. Zo bouwen we <strong>duizend werelden waarin het voer bewijsbaar niks doet</strong> — en kijken hoe vaak het blinde toeval alléén al een verschil oplevert dat even groot is als (of groter dan) onze echte 0.49.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · schud de labels door elkaar">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -667,29 +673,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tweetal <span class="ot">&lt;-</span> pg[pg<span class="sc">$</span>groep <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"controle"</span>, <span class="st">"behandeling2"</span>), ]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, tweetal<span class="sc">$</span>groep, mean))   <span class="co"># het echte verschil, 0.50</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># één toeval-wereld: plak de labels lukraak op de gewichten</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>schud <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  nep <span class="ot">&lt;-</span> <span class="fu">sample</span>(tweetal<span class="sc">$</span>groep)                     <span class="co"># labels door elkaar</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(<span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, nep, mean)))    <span class="co"># verschil in die wereld</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>werelden <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">schud</span>())</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(werelden)                                     <span class="co"># een bergje rond nul</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">abs</span>(echt), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)        <span class="co"># daar staat de echte 0.50</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># tel: hoe vaak komt het toeval even ver of verder?</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(werelden <span class="sc">&gt;=</span> <span class="fu">abs</span>(echt))                        <span class="co"># → ongeveer 0.048</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># het echte verschil; tapply zet de groepen op alfabet, dus controle mín behandeling2</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, tweetal<span class="sc">$</span>groep, mean))   <span class="co"># → -0.49</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># één toeval-wereld: plak de labels lukraak op de gewichten</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>schud <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  nep <span class="ot">&lt;-</span> <span class="fu">sample</span>(tweetal<span class="sc">$</span>groep)                     <span class="co"># labels door elkaar</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abs</span>(<span class="fu">diff</span>(<span class="fu">tapply</span>(tweetal<span class="sc">$</span>gewicht, nep, mean)))    <span class="co"># verschil in die wereld</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>werelden <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">schud</span>())</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(werelden)                                     <span class="co"># een bergje rond nul</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">abs</span>(echt), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)        <span class="co"># daar staat de echte 0.49</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># tel: hoe vaak komt het toeval even ver of verder?</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(werelden <span class="sc">&gt;=</span> <span class="fu">abs</span>(echt))                        <span class="co"># → 0.043</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/w6_p_planten.html" target="_blank">▶ Zie het geteld: het schud-speeltje</a></p>
-<p>Kijk naar dat plaatje. De duizend toeval-verschillen kruipen dicht om nul — de meeste werelden komen niet in de buurt van een half grammetje. En dan tel je hoe vaak het toeval tóch even ver reikt als jouw echte planten: <strong>zo’n 48 van de 1000</strong>. Dat aandeel — .048 — <em>ís</em> de <em>p</em>-waarde. Geen formule die je uit een tabel moet geloven, maar een fractie die je hebt geteld:</p>
+<p>Kijk naar dat plaatje. De duizend toeval-verschillen kruipen dicht om nul — de meeste werelden komen niet in de buurt van een half grammetje. En dan tel je hoe vaak het toeval tóch even ver reikt als jouw echte planten: <strong>43 van de 1000</strong>. Dat aandeel — .043 — <em>ís</em> de <em>p</em>-waarde. Geen formule die je uit een tabel moet geloven, maar een fractie die je hebt geteld:</p>
 <blockquote class="blockquote">
 <p><strong>De <em>p</em> is de fractie toeval-werelden die net zo ver komen als de jouwe.</strong></p>
 </blockquote>
-<p>Zeldzaam is het, die 48 op 1000 — maar niet onmogelijk. En het staat op het randje. Dat randje is de hele les.</p>
+<p>Zeldzaam is het, die 43 op 1000 — maar niet onmogelijk. Schud met een andere seed en er staat .04 of .05: duizend werelden is zélf ook maar een greep, dus het getal wiebelt een beetje. De toets hierboven gaf .048 — dezelfde boodschap, langs een andere weg. En hoe je het ook telt, het staat op het randje. Dat randje is de hele les.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
@@ -701,7 +708,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Wat het zegt.</strong> Onze <em>p</em> = .048 betekent: als het voer niks deed, zou zó’n groot verschil in maar ongeveer 5 van de 100 toeval-werelden opduiken. De data passen dus slécht bij het idee “er is niks”. Dat is precies wat een <em>p</em>-waarde meet — <strong>hoe slecht de data bij ‘er is niks’ passen</strong>, en niets meer.</p>
 <p><strong>Wat het níét zegt.</strong> Let op, want hier struikelt bijna iedereen:</p>
 <ul>
-<li><em>p</em> is <strong>niet</strong> hoe groot het effect is. Ons effect is een half grammetje — dat lees je af aan het verschil (0.50) en het interval [−0.98, −0.01], niet aan de <em>p</em>. Een piepklein effect kan een piepkleine <em>p</em> krijgen als je maar genoeg planten weegt.</li>
+<li><em>p</em> is <strong>niet</strong> hoe groot het effect is. Ons effect is een half grammetje — dat lees je af aan het verschil (0.49) en het interval [0.01, 0.98], niet aan de <em>p</em>. Een piepklein effect kan een piepkleine <em>p</em> krijgen als je maar genoeg planten weegt.</li>
 <li><em>p</em> is <strong>niet</strong> de kans dat er niks aan de hand is. Hij rekent de andere kant op: hij vertrekt vanuit “er is niks” en vraagt hoe raar jouw data dan zijn — niet vanuit jouw data hoe waarschijnlijk “er is niks” is. P(data | er is niks) is iets heel anders dan P(er is niks | data).</li>
 </ul>
 <p><strong>En dat randje.</strong> Onze .048 haalt de gewoonte-grens van .05 — nét. Maar bedenk: was er één zware controle-plant net iets lichter geweest, dan stond er misschien .052, en dan zou dezelfde uitkomst ineens “niet significant” heten. Dat kan niet kloppen. <strong>.05 is een afspraak, geen natuurgrens.</strong> Een <em>p</em> van .048 en een <em>p</em> van .052 vertellen hetzelfde verhaal: een zwak, wankel signaaltje dat om nuance vraagt, niet om een ja/nee-stempel.</p>
@@ -726,9 +733,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Hier: het toeval duizend keer laten dansen om nul, en tellen hoe vaak het even ver komt als jij — dat aandeel is de <em>p</em>.</p>
 <p>In het boek: <strong>W6 — Bestaat het verschil echt?</strong></p>
 <p><em>Daar wordt de toets een omkering: stel dat er niks is — hoe raar zijn onze data dán? De p is het antwoord op die omgekeerde vraag, nooit op de vraag zelf.</em></p>
-</div>
-<div class="werk">
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers). Géén eigen eindopdracht/rapportage: 7.2 (Power) draagt de gezamenlijke voor hoofdstuk 6 — zie OPDRACHT_MAP. Anker blijft W6 (plant-plek) bij opdracht 6.1 (train-plek); de W6→W7-kwestie staat getrackt in OPDRACHT_MAP. TODO (broertje-proof, geschreven naar het charter 24-7): W6 (<em>Bestaat het verschil echt?</em>) is nog een grove boek-schets — anker en formulering checken zodra dat hoofdstuk staat. De schud-zet is hier de kern van het blok, niet “default aan / natuurlijk uit”: bij de <em>p</em>-waarde ís de simulatie de definitie. Getallen (<em>n</em>=30, M 5.03 / 5.53, verschil 0.50, <em>t</em>=−2.13, <em>p</em>=.048, CI [−0.98,−0.01], contrast <em>p</em>=.25) op de echte PlantGrowth-data nagerekend. De ~48/1000 volgt direct uit <em>p</em>=.048; de exacte simulatie-telling wiebelt met de seed rond .048. Verhaal-stem-opening = eerste stem-pas; kan nog stiller. De JASP-tweeling deelt deze tekst; alleen “Speel het / Schud het” verschilt (JASP kan de shuffle niet zelf — zie het JASP-blok voor de gekozen oplossing).</p>
 </div>
 
 
