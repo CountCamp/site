@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -626,7 +632,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
 <p><span class="naslag">En dat klaarzetten is waar het echte werk zit. Alle handelingen die eraan voorafgaan — filteren, kolommen maken, groepen samenvatten, koppelen — staan bij elkaar in de <a href="../90_basishandelingen.html">gereedschapskist achterin</a>. Voor dit blok in het bijzonder: <a href="../90_basishandelingen.html#centreren">centreren</a>, want zodra je twee voorspellers naast elkaar zet, gaat het intercept iets betekenen dat je wilt kunnen voorlezen.</span></p>
-<p>Los voorspelt karaat de glans met <em>b</em> = 32.1, maar zet gladheid ernaast en er blijft <em>b</em> = 0.98 van over — terwijl <em>R</em>² van .33 naar .82 springt. Niet het gewicht maakte de steentjes mooi; de slijper deed dat, en karaat liftte mee.</p>
+<p>Los voorspelt karaat de glans met <em>b</em> = 32.14, maar zet gladheid ernaast en er blijft <em>b</em> = 0.98 van over — terwijl <em>R</em>² van .33 naar .82 springt. Niet het gewicht maakte de steentjes mooi; de slijper deed dat, en karaat liftte mee.</p>
 <p><strong>Nu jij</strong> — bij de pinguïns, die je goed kent inmiddels. Vinlengte voorspelt gewicht keurig — tot je de soort ernaast zet.</p>
 <p>Haal de pinguïns binnen en trek eerst die ene simpele lijn: gewicht voorspeld uit vinlengte, meer niet. Kijk dan wat er gebeurt als je de soort erbij zet.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -650,7 +656,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   vinlengte:  40.71      → de helling zakt!   R² = .78</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>Kijk naar dat ene getal bij <code>vinlengte</code>. In het eerste model staat er <strong>49.7</strong>. Zet je de soort ernaast, dan zakt diezelfde helling naar <strong>40.7</strong> — de vin is ineens ruim 9 gram per millimeter minder waard. De <em>R</em>² schuift nauwelijks (van .76 naar .78), dus het model is niet plots veel beter gaan voorspellen. Er is iets anders gebeurd: de vinlengte is een deel van zijn krediet kwijtgeraakt aan de soort. De vraag is: aan wie hoorde die 9 gram eigenlijk?</p>
+<p>Kijk naar dat ene getal bij <code>vinlengte</code>. In het eerste model staat er <strong>49.7</strong>. Zet je de soort ernaast, dan zakt diezelfde helling naar <strong>40.7</strong> — de vin is ineens bijna 9 gram per millimeter minder waard. De <em>R</em>² schuift nauwelijks (van .76 naar .78), dus het model is niet plots veel beter gaan voorspellen. Er is iets anders gebeurd: de vinlengte is een deel van zijn krediet kwijtgeraakt aan de soort. De vraag is: aan wie hoorde die 9 gram eigenlijk?</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -671,14 +677,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer: vinlengte door elkaar husselen, soort houden we vast</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> <span class="fu">sample</span>(vinlengte) <span class="sc">+</span> soort, <span class="at">data =</span> peng))[<span class="st">"vinlengte"</span>]  <span class="co"># ~ rond 0</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar de vin-helling dan landt</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> <span class="fu">sample</span>(vinlengte) <span class="sc">+</span> soort, <span class="at">data =</span> peng))[<span class="st">"vinlengte"</span>])</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)                                 <span class="co"># een bergje rond nul</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">40.71</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>geschud <span class="ot">&lt;-</span> <span class="fu">transform</span>(peng, <span class="at">vinlengte =</span> <span class="fu">sample</span>(vinlengte))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> soort, <span class="at">data =</span> geschud))[<span class="st">"vinlengte"</span>]   <span class="co"># ~ rond 0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar de vin-helling dan landt</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  geschud <span class="ot">&lt;-</span> <span class="fu">transform</span>(peng, <span class="at">vinlengte =</span> <span class="fu">sample</span>(vinlengte))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> soort, <span class="at">data =</span> geschud))[<span class="st">"vinlengte"</span>]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep)                                 <span class="co"># een bergje rond nul</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">40.71</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat plaatje. <strong>Duizend werelden die dansen rond nul</strong> — want in elke geschudde wereld is de band tussen vin en gewicht doorgeknipt, maar toeval laat de helling nooit precies op nul landen. Ze wiebelen allemaal dicht om nul, van zo’n −5 tot +5 gram per millimeter, niet verder. En dan die rode streep op 40.7, mijlenver buiten het hele bergje. In duizend keer schudden kwam <strong>geen enkele</strong> wereld ook maar in de buurt. Dát is wat “geen toeval” betekent — geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>. De 40.7 is echt van de vin.</p>
@@ -696,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>De dubbele les van dit blok:</p>
 <ul>
 <li>De <strong>schud-toets</strong> zei: die 40.7 is echt, de vin draagt bij.</li>
-<li>Het <strong>tweede model</strong> zei: maar niet zoveel als de simpele lijn beweerde — een kwart van de “50 gram per millimeter” was eigenlijk soort.</li>
+<li>Het <strong>tweede model</strong> zei: maar niet zoveel als de simpele lijn beweerde — bijna een vijfde van de “50 gram per millimeter” was eigenlijk soort.</li>
 </ul>
 <p><em>Echt</em> en <em>hoe groot</em> zijn dus twee verschillende vragen. Een helling kan kraakhelder niet-toeval zijn en tóch overdreven, zolang je een medespeler buiten de deur houdt. Daarom vraag je bij elke regressie: wie zit er nog meer in dit verhaal, en wat gebeurt er met mijn getal als ik hem binnenlaat? Zou je het in één eerlijke zin opschrijven, dan niet “elke millimeter vin is 50 gram”, maar: <em>binnen dezelfde soort is elke millimeter vin zo’n 41 gram — de andere 9 gram was het verschil tússen de soorten.</em></p>
 <div class="kicker">
@@ -731,7 +740,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="schrijf-het-op-als-een-onderzoeker" class="level2">
 <h2 class="anchored" data-anchor-id="schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</h2>
-<p><span class="begrippen">rapportagezin · b en <em>R</em>² · twee decimalen</span></p>
+<p><span class="begrippen">rapportagezin · <em>b</em> en <em>R</em>² · twee decimalen</span></p>
 <div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -755,9 +764,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Hier: één helling die zakt zodra je een tweede voorspeller binnenlaat, en de confounder die daarachter zat.</p>
 <p>In het boek: <strong>W8 — Meer dan één verschil</strong></p>
 <p><em>Daar draait het niet om méér knoppen, maar om dezelfde vraag als bij die correlatie-wolk: wat blijft er van een verband over als je vasthoudt wie er nog meer meepraat?</em></p>
-</div>
-<div class="werk">
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers, eindopdracht + rapportage). Schud-trede behouden. Bestaande tekst/getallen exact ongewijzigd (vinlengte 49.69→49.7 simpel <em>R</em>²=.76; +soort 40.71→40.7 <em>R</em>²=.78; schud rond nul, echte op 40.71). Hoofdstuk- verwijzingen ontkoppeld van nummers (Simpson-paradox nu “de correlatie-wolk” i.p.v. “Hoofdstuk 4”; loopt via OPDRACHT_MAP). NIEUW nagerekend op <code>penguins.csv</code> (2-8, <em>n</em>=342): eindopdracht snaveldiepte simpel <em>b</em>=−191.64 (<em>R</em>²=.22→.22), +soort <em>b</em>=256.61 (<em>R</em>²=.80) — helling klapt van teken (Simpson, scherper dan de vin). Rapportage-modelzin: vinlengte+soort <em>b</em>=40.71, <em>R</em>²=.78 (2 decimalen, symbolen cursief, verleden tijd, staat op zichzelf). TODO (broertje, boek-boog H8): stem-pas door Ben — verhaal-stem-opening kan losser/stiller. Sidebar-nummering/volgorde regelt C later. De JASP- en SPSS-tweeling delen deze tekst; alleen “Speel het / Schud het” verschilt (JASP/SPSS kunnen de shuffle niet zelf — zie die blokken).</p>
 </div>
 
 

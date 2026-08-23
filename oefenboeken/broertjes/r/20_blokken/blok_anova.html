@@ -267,6 +267,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
+  </div>
+</li>
       </ul>
   </li>
       </ul>
@@ -649,7 +655,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals   Df 339</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>Daar staat-ie: <strong>F(2, 339) = 343.6, <em>p</em> &lt; .001</strong>. Die <em>F</em> is één getal voor “hoeveel groter is het verschil <em>tussen</em> de groepen dan de rommel <em>binnen</em> de groepen?”. Ligt F rond 1, dan is het verschil tussen de groepen niet groter dan de spreiding die je toch al binnen elke groep hebt — niks bijzonders. Hoe hoger F, hoe sterker de groepen uit elkaar liggen ten opzichte van hun eigen ruis. En 343.6 is geen hoge F, dat is een absurde F. Hier zit overduidelijk ergens verschil.</p>
+<p>Daar staat-ie: <strong><em>F</em>(2, 339) = 343.6, <em>p</em> &lt; .001</strong>. Die <em>F</em> is één getal voor “hoeveel groter is het verschil <em>tussen</em> de groepen dan de rommel <em>binnen</em> de groepen?”. Ligt F rond 1, dan is het verschil tussen de groepen niet groter dan de spreiding die je toch al binnen elke groep hebt — niks bijzonders. Hoe hoger F, hoe sterker de groepen uit elkaar liggen ten opzichte van hun eigen ruis. En 343.6 is geen hoge F, dat is een absurde F. Hier zit overduidelijk ergens verschil.</p>
 <p>Maar let op wat de ANOVA je <em>niet</em> vertelt: alleen dát er ergens een verschil zit, niet wélke soorten van elkaar afwijken. Daarvoor bestaat een <strong>post-hoc</strong>-toets (letterlijk “achteraf”) die alle paren nagaat:</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · wélke soorten verschillen? (post-hoc, Tukey)">
 <div class="callout-header d-flex align-content-center">
@@ -667,7 +673,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo-Chinstrap     diff  1343   p adj &lt;.001   &lt;- fors</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>En kijk, nu wordt het interessant. Adélie en Chinstrap verschillen <strong>niet</strong> (32 gram, <em>p</em> = 0.88 — dat is toeval). Het is de Gentoo die het hele feest maakt: ruim 1300 gram zwaarder dan de andere twee. De ANOVA riep “ergens is verschil!”, de post-hoc wijst aan wáár.</p>
+<p>En kijk, nu wordt het interessant. Adélie en Chinstrap verschillen <strong>niet</strong> (32 gram, <em>p</em> = .88 — dat is toeval). Het is de Gentoo die het hele feest maakt: ruim 1300 gram zwaarder dan de andere twee. De ANOVA riep “ergens is verschil!”, de post-hoc wijst aan wáár.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -725,14 +731,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># library(effectsize); eta_squared(a)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p><strong>η² = 0.67.</strong> Van al het verschil in gewicht tussen deze 342 pinguïns wordt <strong>67% verklaard door welke soort het is</strong>. Dat is enorm — weet je de soort, dan weet je het gewicht al bijna. Dáár zit het verhaal, niet in de F. En η² sluit naadloos aan op de <em>r²</em> uit het correlatieblok en op Cohens <em>d</em> uit het <em>t</em>-toets-blok: allemaal manieren om te zeggen <em>hoe groot</em> iets is, los van <em>of</em> het er is.</p>
+<p><strong>η² = .67.</strong> Van al het verschil in gewicht tussen deze 342 pinguïns wordt <strong>67% verklaard door welke soort het is</strong>. Dat is enorm — weet je de soort, dan weet je het gewicht al bijna. Dáár zit het verhaal, niet in de F. En η² sluit naadloos aan op de <em>r²</em> uit het correlatieblok en op Cohens <em>d</em> uit het <em>d</em>-blok: allemaal manieren om te zeggen <em>hoe groot</em> iets is, los van <em>of</em> het er is.</p>
 <p>De les van dit blok, in drie zinnen:</p>
 <ul>
 <li><strong>Drie of meer groepen tegelijk → ANOVA.</strong> Eén toets in plaats van een stapel losse <em>t</em>-toetsen. Hij vraagt: zit er <em>ergens</em> een verschil tussen de groepen?</li>
 <li><strong>De ANOVA zegt “ergens”, de post-hoc zegt “waar”.</strong> Hier: niet Adélie tegen Chinstrap (die zijn even zwaar), maar de Gentoo die er bovenuit steekt.</li>
 <li><strong>Significant zegt “waarschijnlijk niet nul”, niet “groot”.</strong> Bij een F van 343 is de p geen nieuws; η² wél. Rapporteer de effectgrootte naast de toets.</li>
 </ul>
-<p>Zou je het in één eerlijke zin opschrijven, dan niet “de soorten verschillen significant in gewicht (<em>p</em> &lt; .001)”, maar: <em>de drie soorten verschillen sterk in gewicht (η² = 0.67); dat verschil zit vrijwel helemaal in de Gentoo, die ruim 1300 gram zwaarder is dan de andere twee, die onderling niet verschillen.</em> Het getal met een maat eromheen, en meteen wélke groep het doet.</p>
+<p>Zou je het in één eerlijke zin opschrijven, dan niet “de soorten verschillen significant in gewicht (<em>p</em> &lt; .001)”, maar: “de drie soorten verschillen sterk in gewicht (η² = .67); dat verschil zit vrijwel helemaal in de Gentoo, die ruim 1300 gram zwaarder is dan de andere twee, die onderling niet verschillen.” Het getal met een maat eromheen, en meteen wélke groep het doet.</p>
 <div class="kicker">
 <p>eindopdracht</p>
 </div>
@@ -751,7 +757,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <p>De afsluiter van het hele hoofdstuk: de <strong>t-toets</strong>, <strong>Cohens <em>d</em></strong> én de <strong>ANOVA</strong> komen samen in één taak. En let op de verrassing die eraan zit te komen.</p>
-<p>Het hele hoofdstuk keken we naar <strong>gewicht</strong>. Daar bleken Adélie en Chinstrap niet van elkaar te onderscheiden — vrijwel even zwaar (32 gram verschil, <em>p</em> = 0.88). Maar <code>penguins.csv</code> heeft nog een kolom: <code>vinlengte</code> (de lengte van de vin, in mm). We doen het hoofdstuk over — nu op de vin.</p>
+<p>Het hele hoofdstuk keken we naar <strong>gewicht</strong>. Daar bleken Adélie en Chinstrap niet van elkaar te onderscheiden — vrijwel even zwaar (32 gram verschil, <em>p</em> = .88). Maar <code>penguins.csv</code> heeft nog een kolom: <code>vinlengte</code> (de lengte van de vin, in mm). We doen het hoofdstuk over — nu op de vin.</p>
 <ol type="1">
 <li><strong>ANOVA (dit blok).</strong> Verschillen de drie soorten in vinlengte? Draai <code>a &lt;- aov(vinlengte ~ soort, data = peng); summary(a)</code> en reken de effectgrootte uit met <code>s &lt;- summary(a)[[1]]; s[1,"Sum Sq"] / sum(s[,"Sum Sq"])</code>. Ter controle: kom je uit op <em>F</em>(2, 339) ≈ 595 en η² ≈ .78, dan zit je goed. Nog groter dan bij gewicht: de soort verklaart bijna 80% van alle verschil in vinlengte.</li>
 <li><strong>t-toets (het <em>t</em>-toets-blok).</strong> De ANOVA zegt weer “ergens is verschil”. Maar de spannende paar-vraag is nu: <strong>verschillen Adélie en Chinstrap in vinlengte?</strong> Bij gewicht waren ze een tweeling. Hou de twee soorten over en toets ze: <code>ac &lt;- peng[peng$soort %in% c("Adelie","Chinstrap"), ]</code>, dan <code>t.test(vinlengte ~ soort, data = ac)</code>. Ter controle: <em>t</em> ≈ −5.78, <em>p</em> &lt; .001. Kijk goed — dezelfde twee soorten die je op gewicht níét uit elkaar kon houden, verschillen op vinlengte wél overtuigend (Adélie ≈ 190 mm, Chinstrap ≈ 196 mm).</li>
@@ -789,9 +795,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
 <p>Hier: drie of meer groepen, één toets die vraagt of er érgens verschil zit, en de effectgrootte die zegt hoe groot dat verschil is.</p>
 <p>In het boek: <strong>W9 — Groepen zijn ook getallen</strong></p>
-</div>
-<div class="werk">
-<p>Geherstructureerd 2-8 naar de herziene blok-vorm (onderwerp-koppen + trede-kickers; Vierde beweging), schud-trede behouden. Dit blok draagt de <strong>gezamenlijke eindopdracht + rapportage van het hele hoofdstuk 9</strong> (<em>t</em>-toets + Cohens <em>d</em> + ANOVA samen; zie OPDRACHT_MAP: 9.1 en 9.2 hebben er zelf geen). Hoofdstuk-verwijzingen ontkoppeld van nummers (loopt via OPDRACHT_MAP); alleen de body-getallen bleven exact (<em>F</em>(2,339)=343.6, η²=.67, Gentoo enz.). Eindopdracht/rapportage-getallen nagerekend op <code>penguins.csv</code> (2-8, Rscript): vinlengte per soort Adelie <em>M</em>=189.95 (SD 6.54, <em>n</em>=151), Chinstrap <em>M</em>=195.82 (SD 7.13, <em>n</em>=68), Gentoo <em>M</em>=217.19 (SD 6.48, <em>n</em>=123); ANOVA vinlengte~soort <em>F</em>(2,339)=594.80, η²=.7782→.78; Adelie vs Chinstrap <em>t</em>-toets (Welch) <em>t</em>=−5.78, df=119.7, <em>p</em>=6.05e-8 (&lt;.001), CI [−7.88, −3.86], gepoolde <em>SD</em>=6.73, Cohens <em>d</em>=0.87. Gewicht-ANOVA voor de jouw-beurt: <em>F</em>(2,339)=343.63, η²=.67 (uit de body). De didactische twist — Adelie/Chinstrap zijn een tweeling op gewicht maar onderscheidbaar op vinlengte — is echt in de data. TODO (broertje, boek-boog H9): stem-pas door Ben — verhaal-stem-opening en de “vorige blok”-verwijzing kunnen nog scherper zodra de H9-volgorde vaststaat. Het schud-speeltje voor ANOVA (geschudde F’en, bergje laag bij nul, echte F ver rechts) bestaat nog niet — kan later bij <code>boek/04_speeltjes/</code>; tot dan draagt het R-broertje de schud-ervaring. De JASP- en SPSS-tweeling delen deze tekst; alleen “Speel het / Schud het” verschilt (die kunnen het husselen niet zelf → speeltje + hop).</p>
 </div>
 
 
