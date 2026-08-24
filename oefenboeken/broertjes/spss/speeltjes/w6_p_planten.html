@@ -73,7 +73,7 @@
   <a href="https://countcamp.org/manuscript/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar CountCamp</a>
   <h1>Schud de labels</h1>
   <p class="lede">Tien planten kregen niets, tien kregen het middel. De behandelde groep werd
-     gemiddeld <em>0,50 gram</em> zwaarder. Mooi — maar had puur toeval dat óók gekund?
+     gemiddeld <em><span class="dshow">0,49</span> gram</em> zwaarder. Mooi — maar had puur toeval dat óók gekund?
      Links de twee groepjes. Rechts: duizend werelden die dansen rond nul.</p>
 
   <div class="panels">
@@ -108,7 +108,7 @@
     <b>Schudden</b> koppelt het etiket los van de plant: elke plant houdt zijn eigen gewicht,
     maar krijgt willekeurig het label <em>controle</em> of <em>behandeling</em> opgeplakt. Zo bouw je
     werelden waarin het middel niets deed — waarin het verschil <em>puur</em> uit de loting komt.
-    De vraag is: haalt dat toeval de echte <b>0,50 gram</b> nog? Kijk hoe het bergje rond nul
+    De vraag is: haalt dat toeval de echte <b><span class="dshow">0,49</span> gram</b> nog? Kijk hoe het bergje rond nul
     hangt, en waar die rode lijn staat.
   </p>
 
@@ -140,6 +140,10 @@
   const mBeh2=BEH2.reduce((a,b)=>a+b,0)/n2;            // 5.526
   const DIFF_REAL=mBeh2-mControle;                     // 0.494
   const D_SHOW=(Math.round(DIFF_REAL*100)/100).toFixed(2).replace('.',',');  // "0,49"
+  // De twee plekken in de lopende tekst halen het getal hier op. Stond het
+  // met de hand, dan liep het uit de pas met de bladzij -- en dat deed het
+  // ook: op 24-8-2026 zeven keer 0,50 naast een DIFF_REAL van 0,494.
+  for (const el of document.querySelectorAll('.dshow')) el.textContent = D_SHOW;
 
   // ---- schud-machinerie: hutsel de labels, herbereken het verschil ----
   // diff = mean(laatste n2) − mean(eerste n1); sumEerste bepaalt alles.
@@ -254,7 +258,7 @@
     wline(ctx,hx,yC,hx,yB,0.6);
     wline(ctx,hx-6,yC,hx,yC,0.5); wline(ctx,hx-6,yB,hx,yB,0.5);
     ctx.fillStyle=C.bordeaux; ctx.font=fnt(13,'italic','600'); ctx.textAlign='right';
-    ctx.fillText('+0,50 g', hx-9, (yC+yB)/2+4);
+    ctx.fillText('+'+D_SHOW+' g', hx-9, (yC+yB)/2+4);
 
     // groepsnamen
     ctx.fillStyle=C.dim; ctx.font=fnt(13); ctx.textAlign='center';
@@ -327,7 +331,7 @@
     ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
     wline(ctx,xr,T,xr,AX_Y,1.0); ctx.setLineDash([]);
     ctx.fillStyle=C.bordeaux; ctx.font=fnt(12.5,'italic','600'); ctx.textAlign='left';
-    ctx.fillText('echte 0,50', xr+6, T+12);
+    ctx.fillText('echte '+D_SHOW, xr+6, T+12);
     // as-label
     ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
     ctx.fillText('geschud verschil (g)', (L+R)/2, H-6);
@@ -353,7 +357,7 @@
       tellerP.innerHTML=''; return;
     }
     tellerBig.innerHTML='<b>'+extreme+' van '+total+'</b> geschudde werelden kwamen '+
-      'zo ver of verder ('+String.fromCharCode(8805)+' 0,50 g, beide kanten op).';
+      'zo ver of verder ('+String.fromCharCode(8805)+' '+D_SHOW+' g, beide kanten op).';
     const p=extreme/total;
     const pStr='.'+String(Math.round(p*1000)).padStart(3,'0');
     tellerP.innerHTML='Dat aandeel &Iacute;S de p-waarde: <span class="pv">'+pStr+'</span>'+
@@ -384,10 +388,10 @@
         'ergens rond <b>nul</b> — want het middel deed hier niets. Schud er honderd, duizend.'); };
   document.getElementById('schud100').onclick=()=>{ animateMany(100,1400);
     say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien rond nul — en de rode '+
-        'lijn op 0,50 staat aan de buitenrand.'); };
+        'lijn op '+D_SHOW+' staat aan de buitenrand.'); };
   document.getElementById('schud1000').onclick=()=>{ animateMany(1000,2400);
     say('Duizend werelden die dansen rond nul. Het toeval-bergje is nu duidelijk, en het reikt '+
-        '<b>maar zelden</b> tot 0,50. Ongeveer <b>48 op de 1000</b> halen het — dát getelde aandeel is de p-waarde. '+
+        '<b>maar zelden</b> tot '+D_SHOW+'. Ongeveer <b>48 op de 1000</b> halen het — dát getelde aandeel is de p-waarde. '+
         'Geen formule om te geloven: een afstand die je telt.'); };
   document.getElementById('wis').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
     bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; extreme=0; lastD=null; scaleT=1;

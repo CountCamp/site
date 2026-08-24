@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Oefening 8.1 · Meervoudige regressie en confounding – JASP-oefenboek</title>
+<title>Oefening 4.2 · De residuen bekijken – SPSS-oefenboek</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,8 +33,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../20_blokken/blok_t_toets.html" rel="next">
-<link href="../20_blokken/blok_cronbach_alpha.html" rel="prev">
+<link href="../20_blokken/blok_betrouwbaarheidsinterval.html" rel="next">
+<link href="../20_blokken/blok_correlatie_scatterplot.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -86,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_meervoudige_regressie.html">H8 · Meer dan één verschil</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_meervoudige_regressie.html">Oefening 8.1 · Meervoudige regressie en confounding</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Tweede beweging · Verschillen koppelen</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">H4 · Het rechthoekje</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_residuen.html">Oefening 4.2 · De residuen bekijken</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -101,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">JASP-oefenboek</a> 
+      <a href="../">SPSS-oefenboek</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -120,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">JASP-oefenboek</span></a>
+ <span class="menu-text">SPSS-oefenboek</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -210,22 +239,22 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
  <span class="menu-text">Tweede beweging · Verschillen koppelen</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
  <span class="menu-text">H4 · Het rechthoekje</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
@@ -234,7 +263,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Oefening 4.2 · De residuen bekijken</span></a>
   </div>
 </li>
@@ -312,25 +341,25 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
  <span class="menu-text">Vierde beweging · Verschil onthechten</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
  <span class="menu-text">H8 · Meer dan één verschil</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link active">
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 8.1 · Meervoudige regressie en confounding</span></a>
   </div>
 </li>
@@ -458,7 +487,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Basishandelingen in JASP</span></a>
+ <span class="menu-text">Basishandelingen in SPSS</span></a>
   </div>
 </li>
       </ul>
@@ -525,12 +554,12 @@ ul.task-list li input[type="checkbox"] {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
-<p class="beweging">Vierde beweging · Verschil onthechten</p>
+<p class="beweging">Tweede beweging · Verschillen koppelen</p>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_meervoudige_regressie.html">H8 · Meer dan één verschil</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_meervoudige_regressie.html">Oefening 8.1 · Meervoudige regressie en confounding</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Tweede beweging · Verschillen koppelen</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">H4 · Het rechthoekje</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_residuen.html">Oefening 4.2 · De residuen bekijken</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Oefening 8.1 · Meervoudige regressie en confounding</h1>
-<p class="subtitle lead">Meervoudige regressie en confounding · <em>multiple regression</em></p>
+<h1 class="title">Oefening 4.2 · De residuen bekijken</h1>
+<p class="subtitle lead">Onafhankelijk, gelijke spreiding, normaal verdeeld · <em>residual diagnostics</em></p>
 </div>
 
 
@@ -550,108 +579,268 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">In deze oefening</h2>
    
   <ul>
-  <li><a href="#vijftig-gram-per-millimeter-vin" id="toc-vijftig-gram-per-millimeter-vin">Vijftig gram per millimeter vin</a></li>
-  <li><a href="#trek-de-regressielijn-in-jasp-eerst-zonder-dan-met-soort" id="toc-trek-de-regressielijn-in-jasp-eerst-zonder-dan-met-soort">Trek de regressielijn in JASP — eerst zonder, dan met soort</a></li>
-  <li><a href="#schud-de-vinlengte-los-van-het-gewicht" id="toc-schud-de-vinlengte-los-van-het-gewicht">Schud de vinlengte los van het gewicht</a></li>
-  <li><a href="#waarom-de-helling-zakt-de-verborgen-soort" id="toc-waarom-de-helling-zakt-de-verborgen-soort">Waarom de helling zakt: de verborgen soort</a></li>
-  <li><a href="#van-vin-naar-snavel" id="toc-van-vin-naar-snavel">Van vin naar snavel</a></li>
-  <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#tien-dagen-van-precies-81-graden" id="toc-tien-dagen-van-precies-81-graden">Tien dagen van precies 81 graden</a></li>
+  <li><a href="#vraag-de-residuenplots-op-in-spss" id="toc-vraag-de-residuenplots-op-in-spss">Vraag de residuenplots op in SPSS</a></li>
+  <li><a href="#is-die-1.65-raar" id="toc-is-die-1.65-raar">Is die 1.65 raar?</a></li>
+  <li><a href="#drie-aannames-drie-plaatjes" id="toc-drie-aannames-drie-plaatjes">Drie aannames, drie plaatjes</a></li>
+  <li><a href="#twee-lijnen-keuren" id="toc-twee-lijnen-keuren">Twee lijnen keuren</a></li>
+  <li><a href="#schrijf-op-wat-je-gecontroleerd-hebt" id="toc-schrijf-op-wat-je-gecontroleerd-hebt">Schrijf op wat je gecontroleerd hebt</a></li>
   </ul>
 </nav>
 <div class="datastrook">
-<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek</p>
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/luchtkwaliteit.csv" download="luchtkwaliteit.csv">luchtkwaliteit.csv</a> 116 zomerdagen in New York · <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../10_data/bigfive.csv" download="bigfive.csv">bigfive.csv</a> 2634 ingevulde vragenlijsten</p>
 </div>
 <div class="kicker">
 <p>prikkel</p>
 </div>
-<section id="vijftig-gram-per-millimeter-vin" class="level2">
-<h2 class="anchored" data-anchor-id="vijftig-gram-per-millimeter-vin">Vijftig gram per millimeter vin</h2>
-<p><span class="begrippen">regressielijn · helling · <em>R</em>²</span></p>
-<p>We keren terug naar de pinguïns, maar nu met een simpele vraag: word je zwaarder naarmate je vinnen langer zijn?<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Klinkt logisch — grotere vin, groter beest. En de data lijkt het meteen te bevestigen. Trek één rechte lijn door de wolk van vinlengte tegen gewicht, en er komt een helling uit van bijna <strong>50</strong>. In gewone taal: <em>elke millimeter langere vin gaat samen met zo’n 50 gram meer gewicht.</em> De lijn ligt strak; hij verklaart driekwart van alle verschil in gewicht (<em>R</em>² = .76). Een mooi, netjes getal om mee thuis te komen.</p>
-<p>Maar 50 gram per millimeter — klopt dat, of praat er iemand mee die we nog niet in beeld hebben? In deze pinguïns zit namelijk óók soort verstopt, en de ene soort is nu eenmaal groter dan de andere. Trek even mee: we gaan die 50 gram op de proef stellen, en onderweg blijkt hij een deel geleend te hebben.</p>
+<section id="tien-dagen-van-precies-81-graden" class="level2">
+<h2 class="anchored" data-anchor-id="tien-dagen-van-precies-81-graden">Tien dagen van precies 81 graden</h2>
+<p><span class="begrippen">voorspelling · misser · spreiding rond de lijn</span></p>
+<p>Het meetkastje op Roosevelt Island ken je al — dat is het kastje uit de oefening over de mediaan, dat de zomer van 1973 lang elke dag de ozon in de New Yorkse lucht opsnoof.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Zelfde kastje, nieuwe vraag: naast de ozon noteerde het ook de temperatuur, en warme lucht en smog horen bij elkaar. Leg er dus een lijn in. Hoe warmer de dag, hoe meer ozon.</p>
+<p>Die lijn komt er, hij loopt netjes omhoog, en hij dekt bijna de helft van alle verschil tussen de dagen: <em>R</em>² = .49. Voor buitenlucht is dat veel.</p>
+<p>En nu iets raars. In die 116 dagen zitten <strong>tien</strong> dagen van precies 81 graden Fahrenheit. Tien keer dezelfde temperatuur, dus tien keer dezelfde voorspelling: de lijn zegt voor alle tien <strong>49.7</strong> ppb ozon. Wat het kastje op die tien dagen werkelijk mat:</p>
+<blockquote class="blockquote">
+<p>9 · 27 · 32 · 36 · 39 · 44 · 45 · 48 · 59 · <strong>168</strong></p>
+</blockquote>
+<p>Van 9 tot 168, bij één en dezelfde temperatuur. De lijn kan daar niets aan doen — hij weet alleen de temperatuur, en die was tien keer gelijk. Maar het zet wel een vraag op scherp die we tot nu toe hebben laten liggen: <strong>hoe ver zit de lijn er eigenlijk naast, en zit hij er overal even ver naast?</strong></p>
+<p>Reken je het na, dan is het antwoord op die tweede vraag <em>nee</em>. Op de koelere helft van de zomer (tot en met 79 graden) zit de lijn er gemiddeld <strong>13.7</strong> ppb naast; op de warmere helft <strong>20.9</strong>. Eén lijn, en toch op de ene helft van de zomer duidelijk scherper dan op de andere.</p>
+<p>Trek even mee. We gaan die missers zélf opvragen — en het blijkt dat er drie verschillende dingen in te zien zijn, waarvan er twee niets met de lijn zelf te maken hebben.</p>
 <div class="kicker">
 <p>speel het</p>
 </div>
 </section>
-<section id="trek-de-regressielijn-in-jasp-eerst-zonder-dan-met-soort" class="level2">
-<h2 class="anchored" data-anchor-id="trek-de-regressielijn-in-jasp-eerst-zonder-dan-met-soort">Trek de regressielijn in JASP — eerst zonder, dan met soort</h2>
-<p><span class="begrippen">tweede voorspeller · zakkende helling · <em>R</em>²</span></p>
-<p>Trek eerst die ene simpele lijn in JASP: gewicht voorspeld uit vinlengte, meer niet. Kijk dan wat er gebeurt als je de soort erbij zet.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
+<section id="vraag-de-residuenplots-op-in-spss" class="level2">
+<h2 class="anchored" data-anchor-id="vraag-de-residuenplots-op-in-spss">Vraag de residuenplots op in SPSS</h2>
+<p><span class="begrippen">residu · gestandaardiseerd residu · ZPRED en ZRESID</span></p>
+<p>Zo’n misser heeft een naam, en je hebt hem in het boek al zien staan: <strong>DATA = FIT + RESIDU</strong>. De <em>fit</em> is wat de lijn gokt, het <strong>residu</strong> is wat er overblijft — de gokfout, nu niet meer ten opzichte van het gemiddelde maar ten opzichte van de lijn.</p>
+<p>SPSS geeft je die residuen in een eigen vorm, en dat is meteen het eerste dat je hier moet begrijpen. Hij biedt ze <strong>gestandaardiseerd</strong> aan, onder de naam <strong>ZRESID</strong>: het residu gedeeld door de gemiddelde misser van het hele model. Ben zegt dat in de les korter: <em>ruw is ruk</em>. Een misser van 20 ppb — is dat veel? Dat weet je niet, tot je hem afzet tegen hoe ver deze lijn er gemiddeld naast zit. Bij dit model is dat 23.71 ppb, dus een misser van 20 is nog geen hele. Zodra de misser gestandaardiseerd is, staat er wél iets: onder de 2 is gewoon, boven de 3 is een dag om aan te kijken.</p>
+<p>Dezelfde behandeling krijgt de voorspelling. <strong>ZPRED</strong> is de voorspelde waarde, ook gestandaardiseerd. En die twee tegen elkaar — ZPRED op de x-as, ZRESID op de y-as — is precies het plaatje waar dit blok om draait.</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <ol type="1">
-<li><strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent</strong>.</li>
-<li>Zet eerst alléén <code>karaat</code> in <strong>Covariates</strong> — kijk naar <em>b</em> en <em>R</em>².</li>
-<li>Sleep dan <code>gladheid</code> erbij, of gebruik onder <strong>Model</strong> een tweede <strong>Block</strong> om de twee modellen naast elkaar te zien.</li>
+<li><strong>Analyze → Regression → Linear</strong>, <code>glans</code> als <strong>Dependent</strong>, <code>karaat</code> als <strong>Independent(s)</strong>.</li>
+<li>Klik op <strong>Plots</strong>. Sleep <code>*ZPRED</code> naar het vak <strong>X</strong> en <code>*ZRESID</code> naar het vak <strong>Y</strong>. <strong>Continue</strong>, dan <strong>OK</strong>.</li>
 </ol>
-<p>Karaat zakt van <em>b</em> = 32.14 naar <em>b</em> = 0.98; <em>R</em>² springt van .33 naar .82.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<pre><code>REGRESSION
+  /STATISTICS COEFF R ANOVA
+  /DEPENDENT glans
+  /METHOD=ENTER karaat
+  /SCATTERPLOT=(*ZRESID ,*ZPRED).</code></pre>
 </div>
 </div>
-<p>Los voorspelt karaat de glans met <em>b</em> = 32.14, maar zet gladheid ernaast en er blijft <em>b</em> = 0.98 van over — terwijl <em>R</em>² van .33 naar .82 springt. Niet het gewicht maakte de steentjes mooi; de slijper deed dat, en karaat liftte mee.</p>
-<p><strong>Nu jij</strong> — bij de pinguïns, die je goed kent inmiddels. Vinlengte voorspelt gewicht keurig — tot je de soort ernaast zet.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
+</div>
+<p>Je krijgt twaalf stipjes rond een horizontale nullijn. De verste ligt onderaan: dat is Kees, met een ruw residu van −36.1 — de steen die je in het boek al niet kon vergeten. Else ligt exact op nul; de lijn gaat dwars door haar heen.</p>
+</div>
+</div>
+<p>Kijk goed wat dat plaatje doet. De regressielijn is <strong>plat geworden</strong>: alles wat de lijn al wist is eruit gerekend, dus wat overblijft hoort rond de nullijn te zweven zonder patroon. Een residuenplot is een schoongeveegde scatterplot — je kijkt niet meer naar het verband, je kijkt naar wat het verband liet liggen.</p>
+<p>Met twaalf punten zie je er weinig aan, en dat is geen tegenvaller maar het eerste wat je leert: hierover zo meer.</p>
+<p><strong>Nu jij</strong> — bij het meetkastje, dat je van de mediaan-oefening al kent. Bekende data, nieuwe vraag: wat laat die ozon-lijn liggen?</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · trek eraan">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · trek eraan · JASP 0.98.1
+<span class="screen-reader-only">Opmerking</span>In SPSS · trek eraan
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <ol type="1">
-<li>Open <code>penguins.csv</code> in JASP (menu linksboven → Open).</li>
-<li>Klik bovenin op <strong>Regression</strong> en kies <strong>Linear Regression</strong>.</li>
-<li>Sleep <code>gewicht</code> naar het vak <strong>Dependent Variable</strong>.</li>
-<li>Sleep <code>vinlengte</code> naar het vak <strong>Covariates</strong>. Draai zo eerst het model met alleen de vin.</li>
-<li>Voeg nu de soort toe: sleep <code>soort</code> naar het vak <strong>Factors</strong> (JASP maakt er zelf dummy’s van). Wil je beide modellen naast elkaar zien, gebruik dan de <strong>Model</strong>-blokken: laat blok 1 alleen <code>vinlengte</code>, en zet in blok 2 ook <code>soort</code>.</li>
+<li>Open <code>luchtkwaliteit.csv</code>: <strong>File → Open → Data</strong>, bestandstype op <strong>CSV</strong>.</li>
+<li><strong>Analyze → Regression → Linear</strong>, <code>ozon</code> als <strong>Dependent</strong>, <code>temp_F</code> als <strong>Independent(s)</strong>.</li>
+<li>Klik op <strong>Plots</strong> en zet er drie dingen tegelijk aan — dit blok gaat om precies deze drie:
+<ul>
+<li><code>*ZPRED</code> in het vak <strong>X</strong>, <code>*ZRESID</code> in het vak <strong>Y</strong>.</li>
+<li>het vinkje <strong>Histogram</strong> onder <em>Standardized Residual Plots</em>.</li>
+<li>het vinkje <strong>Normal probability plot</strong> ernaast.</li>
+</ul></li>
+<li>Klik op <strong>Save</strong> en vink onder <em>Residuals</em> de <strong>Standardized</strong> aan, en onder <em>Predicted Values</em> ook de <strong>Standardized</strong>. Die heb je zo nodig; SPSS zet ze als nieuwe kolommen <code>ZRE_1</code> en <code>ZPR_1</code> achter je data.</li>
 </ol>
 </div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>REGRESSION
+  /STATISTICS COEFF R ANOVA
+  /DEPENDENT ozon
+  /METHOD=ENTER temp_F
+  /SCATTERPLOT=(*ZRESID ,*ZPRED)
+  /RESIDUALS HISTOGRAM(ZRESID) NORMPROB(ZRESID)
+  /SAVE ZRESID ZPRED.</code></pre>
 </div>
-<p>Kijk naar de coëfficiënt bij <code>vinlengte</code>. In het eerste model staat er <strong>49.7</strong> — zo’n 50 gram per millimeter, <em>R</em>² = .76. Zet je de soort ernaast, dan zakt diezelfde helling naar <strong>40.7</strong> — de vin is ineens ruim 9 gram per millimeter minder waard. De <em>R</em>² schuift nauwelijks (van .76 naar .78), dus het model is niet plots veel beter gaan voorspellen. Er is iets anders gebeurd: de vinlengte is een deel van zijn krediet kwijtgeraakt aan de soort. De vraag is: aan wie hoorde die 9 gram eigenlijk?</p>
+</div>
+</div>
+</div>
+</div>
+<p>Drie plaatjes, en in alle drie staat iets.</p>
+<p><strong>De residuenplot</strong> begint smal en loopt open. Links, bij de laagste voorspellingen, liggen de punten in een dun bandje om de nullijn; vanaf het midden is dat bandje ruim twee keer zo breed. Aan de uiterste rechterkant lijkt hij weer te versmallen, maar daar staan nog maar dertien dagen — te weinig om iets van te vinden. Eén punt springt eruit, hoog boven de rest: ZRESID = 4.99. Dat is de dag van 168 ppb, bijna vijf keer de gemiddelde misser van het model.</p>
+<p><strong>Het histogram en de normal probability plot</strong> wijzen naar iets anders. De missers liggen niet symmetrisch om nul: er is een lange staart naar rechts en niets vergelijkbaars naar links. In de normal probability plot buigen de punten rechtsboven weg van de diagonaal.</p>
+<p>Die scheefheid is dezelfde scheefheid die je in de mediaan-oefening al zag — alleen zat hij toen in de ozon zelf, en zit hij nu in wat er van de ozon overblijft nadat de temperatuur zijn deel heeft gehad.</p>
+<p><strong>En nu het getal erbij</strong>, want een indruk is nog geen bevinding. Hier heb je iets in handen wat de andere twee broertjes niet zomaar hebben: die kolom <code>ZRE_1</code> staat gewoon in je databestand, dus je kunt hem doorsnijden. Knip de zomer bij 79 graden doormidden — dat is de mediane dag — en laat SPSS de spreiding links en rechts naast elkaar zetten:</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · knip de zomer doormidden">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In SPSS · knip de zomer doormidden
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<ol type="1">
+<li><strong>Transform → Compute Variable</strong>. Doelvariabele <code>warm</code>, uitdrukking <code>temp_F &gt; 79</code>. <strong>OK</strong> — je krijgt een kolom met nullen en enen.</li>
+<li><strong>Analyze → Compare Means → Means</strong>. Zet <code>ZRE_1</code> in <strong>Dependent List</strong> en <code>warm</code> in <strong>Independent List</strong>. Vraag onder <strong>Options</strong> om <em>Number of Cases</em>, <em>Mean</em> en <em>Std. Deviation</em>.</li>
+</ol>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<pre><code>COMPUTE warm = (temp_F &gt; 79).
+EXECUTE.
+MEANS ZRE_1 BY warm
+  /CELLS=COUNT MEAN STDDEV.</code></pre>
+</div>
+</div>
+</div>
+<p>Twee rijen: 59 koelere dagen met <em>SD</em> = 0.74 en 57 warmere met <em>SD</em> = 1.21. Deel de breedste door de smalste — dus <strong>de warme helft door de koele</strong>:</p>
+<p><span class="math display">\[\frac{1.21}{0.74} = 1.64\]</span></p>
+<p>Verderop in dit blok staat <strong>1.65</strong>, en dat is geen slordigheid van een van ons tweeën: SPSS toont je afgeronde <em>SD</em>’s, maar hij rekent met 0.7371 en 1.2124. Reken je met die twee, dan komt er 1.645 uit. Jouw 1.64 is dus goed. Zo’n honderdste verschil tussen “narekenen op het scherm” en “narekenen op de achterliggende getallen” ga je vaker zien; het is nooit een reden om te denken dat je het fout deed.</p>
+</div>
+</div>
+<p>Let op waarom dat gestandaardiseerde gedoe hier niets kapotmaakt: standaardiseren deelt élk residu door hetzelfde getal (die 23.71), dus de verhouding tussen de twee helften verandert er niet van. Op de ruwe residuen zou je 28.74 gedeeld door 17.47 krijgen — dezelfde 1.65. <em>Ruw is ruk</em> voor het oordeel over één dag; voor een verhouding tussen twee groepen maakt het niets uit.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
 </section>
-<section id="schud-de-vinlengte-los-van-het-gewicht" class="level2">
-<h2 class="anchored" data-anchor-id="schud-de-vinlengte-los-van-het-gewicht">Schud de vinlengte los van het gewicht</h2>
-<p><span class="begrippen">schud-toets · husselen · helling uit puur toeval</span></p>
-<p>Voordat we dat uitzoeken, eerst de eerlijkheidscheck: is die overgebleven 40.7 écht, of kan zo’n helling ook uit het niets ontstaan? Je zou dat willen uitproberen door vals te spelen — de soort netjes op z’n plek houden, maar elke vinlengte loskoppelen van z’n eigen pinguïn en op een willekeurige andere plakken.</p>
-<p>Dat loskoppelen is de hele truc, en het is het waard er even bij stil te staan: door de vinlengtes te husselen <strong>haal je met eigen handen weg dat een bepaalde vin bij een bepaald gewicht hoort</strong>. In zo’n losgekoppelde wereld kán de vin niks meer bijdragen — elk beetje helling dat je er dan nóg in meet, is per definitie puur toeval. Doe het duizend keer en kijk waar de vin-helling belandt.</p>
-<p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar husselen en duizend keer opnieuw kijken is <em>code</em>-werk. Dat is geen gemis van jou of van JASP — het boek doet het bewust zo. Voor deze meervoudige regressie is er geen los schud-speeltje; wil je de duizend werelden echt zien dansen, draai dan het <strong>R-broertje</strong>, waar het drie regels code is.</p>
-<p>Wat je in dat R-broertje ziet: <strong>duizend werelden die dansen rond nul</strong> — want in elke geschudde wereld is de band tussen vin en gewicht doorgeknipt, maar toeval laat de helling nooit precies op nul landen. Ze wiebelen allemaal dicht om nul, van zo’n −5 tot +5 gram per millimeter, niet verder. En dan die rode streep op 40.7, mijlenver buiten het hele bergje. In duizend keer schudden kwam <strong>geen enkele</strong> wereld ook maar in de buurt. Dát is wat “geen toeval” betekent — geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>. De 40.7 is echt van de vin.</p>
-<p>Dus de vin draagt echt bij, óók naast de soort. Maar waarom zakte hij dan van 49.7 naar 40.7? Daar zit de les — en dat kun je wél gewoon in JASP nalezen.</p>
+<section id="is-die-1.65-raar" class="level2">
+<h2 class="anchored" data-anchor-id="is-die-1.65-raar">Is die 1.65 raar?</h2>
+<p><span class="begrippen">schudden · loskoppelen · duizend werelden rond één</span></p>
+<p>1.65 keer zo breed. Dat <em>klinkt</em> als veel, maar de vorige alinea’s zijn een verhaal en geen bewijs: twee groepjes van pakweg 58 dagen hebben nooit precies dezelfde spreiding, ook niet als er niks aan de hand is. De vraag is dus niet of 1.65 groter is dan 1, maar <strong>hoeveel groter dan 1 een gewone wiebel al is</strong>.</p>
+<p>Daar hebben we een zet voor. Je laat de voorspellingen staan waar ze staan, en je hutselt de residuen erlangs — de misser van een hete dag verhuist naar een koele en omgekeerd.</p>
+<p>Dat husselen is de hele truc, en het loont om er even bij stil te staan: je <strong>koppelt het residu los van zijn eigen voorspelling</strong>. Je haalt met eigen handen weg dat een bepaalde misser bij een bepaalde temperatuur hoorde. In zo’n losgekoppelde wereld kán de spreiding niet meer meelopen met de voorspelling — en dus is elk verschil tussen de twee helften dat je er dan nóg in meet, per definitie puur toeval.</p>
+<p><strong>En hier moet ik eerlijk zijn: dat duizend keer hutselen is geen knop in SPSS.</strong> Je kunt het er met een omweg in bouwen, maar dan ben je een uur bezig met iets wat het verhaal niet dient. SPSS rekent één keurige uitkomst uit; het duizend keer opnieuw kijken is <em>code</em>-werk. Dat is geen gemis van jou of van SPSS — het boek doet het bewust zo. Voor deze zet is er geen los schud-speeltje; wil je de duizend werelden echt zien dansen, sla dan het <strong>R-broertje</strong> open bij deze oefening, waar het vijf regels code is.</p>
+<p>Wat je daar ziet: <strong>duizend werelden die dansen rond één</strong>. Rond één, niet rond nul, want dit is een verhouding: twee even brede helften geven 1.0. En kijk waar ze landen — tussen 0.66 en 1.53 ligt negentig procent van de gehusselde zomers. Dat is een brede dans. Twee helften kunnen dus zomaar anderhalf keer schelen zonder dat er iets aan de hand is.</p>
+<p>En dan die rode streep op 1.65, er net buiten: <strong>achttien</strong> van de duizend gehusselde zomers halen dat. Niet onmogelijk, wel ongewoon. Geen <em>p</em>-waarde die je moet geloven — een <strong>afstand die je zíet</strong>, en hier is die afstand krap.</p>
+<p>Bij de pinguïns, waar je in de vorige oefening het gewicht uit de vinlengte voorspelde, ligt dat heel anders: daar is de verhouding 0.92 en loopt de gewone-wiebel-band van 0.88 tot 1.14. Het echte getal ligt er gewoon <strong>in</strong>. Bij de pinguïns is er niets te zien, en dat is precies zoals het hoort: 342 dieren geven een smalle band, dus daar zou een trechter meteen opvallen. Bij 116 dagen is de band breder. Bij twaalf diamantjes — daar komen we zo op — is hij zo breed dat er bijna niets meer buiten valt.</p>
+<p>Wil je dat zelf zien in SPSS: draai hetzelfde rondje op de pinguïns, met <code>gewicht</code> als <strong>Dependent</strong> en <code>vinlengte</code> als <strong>Independent</strong>. Het plaatje is een egale wolk zonder trechter, en van de 342 dieren steekt er precies één boven de |ZRESID| = 3 uit. Zo ziet “niks aan de hand” eruit, en je moet het één keer gezien hebben om het te herkennen — bij de ozon waren dat er twee op 116 dagen, en dat is per dag bijna zes keer zo vaak.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
 </section>
-<section id="waarom-de-helling-zakt-de-verborgen-soort" class="level2">
-<h2 class="anchored" data-anchor-id="waarom-de-helling-zakt-de-verborgen-soort">Waarom de helling zakt: de verborgen soort</h2>
-<p><span class="begrippen">confounder · constant houden · Simpson-paradox</span></p>
-<p>De simpele lijn schreef álle 49.7 gram per millimeter toe aan de vinlengte. Maar er speelde iemand mee die niet in het model zat: de <strong>soort</strong>. De Gentoo’s hebben zowel de langste vinnen áls de meeste kilo’s; de andere twee soorten zijn korter van vin én lichter. Gooi je alle pinguïns op één hoop en trek je één lijn, dan telt een deel van “grote soort weegt meer” mee als “lange vin weegt meer”. De vinlengte kreeg krediet dat eigenlijk aan de soort toebehoorde.</p>
-<p>Reken je de soort mee — houd ’m constant, vergelijk pinguïns <em>binnen</em> dezelfde soort — dan valt dat geleende stuk weg, en blijft er een eerlijker, kleiner vin-effect over: <strong>40.7</strong>. Dat is precies wat meervoudige regressie doet. Ze vraagt niet “hangt gewicht samen met vinlengte?”, maar: <em>wat draagt elke voorspeller bij als de andere gelijk blijven?</em> Elke helling in het model is een helling <strong>met de rest vastgehouden</strong>.</p>
-<p>De soort was hier een <strong>confounder</strong>: een derde speler die zich vermomde als een stuk van het vin-effect. En dit is dezelfde les als de Simpson-paradox die je bij de correlatie-wolk al tegenkwam — daar zag je het gebeuren in de kleuren van een wolk, hier zie je het gebeuren in een getal dat zakt zodra je de derde speler een stoel geeft.</p>
-<p>De dubbele les van dit blok:</p>
-<ul>
-<li>De <strong>schud-toets</strong> zei: die 40.7 is echt, de vin draagt bij.</li>
-<li>Het <strong>tweede model</strong> zei: maar niet zoveel als de simpele lijn beweerde — een kwart van de “50 gram per millimeter” was eigenlijk soort.</li>
-</ul>
-<p><em>Echt</em> en <em>hoe groot</em> zijn dus twee verschillende vragen. Een helling kan kraakhelder niet-toeval zijn en tóch overdreven, zolang je een medespeler buiten de deur houdt. Daarom vraag je bij elke regressie: wie zit er nog meer in dit verhaal, en wat gebeurt er met mijn getal als ik hem binnenlaat? Zou je het in één eerlijke zin opschrijven, dan niet “elke millimeter vin is 50 gram”, maar: <em>binnen dezelfde soort is elke millimeter vin zo’n 41 gram — de andere 9 gram was het verschil tússen de soorten.</em></p>
+<section id="drie-aannames-drie-plaatjes" class="level2">
+<h2 class="anchored" data-anchor-id="drie-aannames-drie-plaatjes">Drie aannames, drie plaatjes</h2>
+<p><span class="begrippen">onafhankelijkheid · gelijke spreiding · normaliteit</span></p>
+<p>Het boek noemt bij de regressielijn drie veronderstellingen, en ze gaan geen van drieën over de lijn zelf. De lijn eist maar één ding, en dat is dat het verband recht is. De drie hieronder gaan over het gedrag van de <strong>fouten</strong> — en je hebt ze net alle drie in beeld gehad.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>aanname</th>
+<th>wat je in het Plots-venster aanzet</th>
+<th>waaraan je ziet dat het misgaat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>onafhankelijk</strong></td>
+<td>niets — je studieopzet</td>
+<td>dezelfde persoon of plek staat meerdere keren in de tabel</td>
+</tr>
+<tr class="even">
+<td><strong>gelijke spreiding</strong></td>
+<td><code>*ZPRED</code> op X, <code>*ZRESID</code> op Y</td>
+<td>een trechter: smal aan de ene kant, breed aan de andere</td>
+</tr>
+<tr class="odd">
+<td><strong>normaal verdeeld</strong></td>
+<td>Histogram of Normal probability plot</td>
+<td>een scheve staart; in de normal probability plot buigen de punten weg van de diagonaal</td>
+</tr>
+</tbody>
+</table>
+<p>Dat rijtje is niet van mij, het is van Ben. In de les zegt hij het zo: <em>“voor de lineariteit en de homoscedasticiteit zet ik ZPRED, de gestandaardiseerde voorspelde waarde, op de x-as, en de gestandaardiseerde residuen op de y-as. En het histogram of een normal probability plot is voor de normaliteit van de residuen.”</em> Twee vakjes en twee vinkjes; meer is het niet.</p>
+<p>Loop ze langs op de ozon.</p>
+<p><strong>Onafhankelijk</strong> — dat is de enige van de drie waar geen vinkje voor bestaat, en dat is geen tekortkoming van SPSS. Ben vat hem samen in één vraag: <em>“geeft elke rij in mijn dataset informatie die niet al ergens anders in de tabel zit?”</em> Het antwoord zit in je opzet, niet in je data. Bij het meetkastje is het antwoord twijfelachtig: dit zijn 116 opeenvolgende dagen op één plek. Een smoggerige dinsdag maakt een smoggerige woensdag waarschijnlijker, want de lucht is ’s nachts niet weg. Elke rij is dus deels een herhaling van de vorige.</p>
+<p>En let op wat er gebeurt als je dat tóch in de data probeert te zien. Meet de samenhang tussen het residu van de ene meetdag en dat van de volgende, en er komt .08 uit — een getal dat in 175 van de 1000 gehusselde zomers óók gehaald wordt. Het plaatje zegt dus: niets aan de hand. Het <strong>ontwerp</strong> zegt: dagen na elkaar op één plek. Die twee spreken elkaar niet tegen; ze meten iets anders. Daarom hoort deze aanname bij je opzet en niet bij je vinkjes — een steekproef kan er onafhankelijk <em>uitzien</em> en het niet zijn.</p>
+<p>(SPSS heeft hier één knop die je op het verkeerde been kan zetten: <strong>Durbin-Watson</strong>, onder <em>Statistics</em>. Die toetst of opeenvolgende residuen op elkaar lijken, en is alleen zinnig als je rijen een echte volgorde hebben — zoals hier, dagen achter elkaar. Bij een gewone steekproef van losse mensen zegt hij niets, want dan is de volgorde van je bestand willekeurig. Een getal dat afhangt van hoe je bestand gesorteerd is, is geen eigenschap van je onderzoek.)</p>
+<p><strong>Gelijke spreiding</strong> — het deftige woord is <em>homoscedasticiteit</em>, en dat mag je hardop oefenen. Hier gaat het mis, zij het krap: 1.65 tegen een gewone-wiebel-band die tot 1.53 loopt. Het gevolg zit niet in de lijn maar in de <em>onzekerheid</em> om de lijn: SPSS rekent één standaardfout uit voor het hele bereik — die 23.71 die bovenin je Model Summary staat, onder <em>Std. Error of the Estimate</em> — en die is te ruim voor de koele dagen en te krap voor de hete. Je helling blijft bruikbaar; je betrouwbaarheidsinterval wordt onbetrouwbaar, en precies daar waar de metingen het wildst zijn.</p>
+<p><strong>Normaal verdeeld</strong> — hier zit de duidelijkste schending. En één zin van Ben voorkomt dat je hem te streng leest: <em>“een steekproef kan niet normaal verdeeld zijn, alleen bíj benadering normaal verdeeld”</em> — voor een perfecte normale verdeling heb je oneindig veel scores nodig. Je zoekt dus geen perfecte klok maar een hoop zonder duidelijke scheefheid. Deze is dat niet: er is een lange staart naar rechts en niets vergelijkbaars naar links. Waar die vandaan komt, staat een paar alinea’s verderop — hij heeft dezelfde oorzaak als de trechter.</p>
+<p><strong>En dan de vraag die niemand stelt: hoeveel data heb je nodig om dit te zien?</strong> Op de twaalf diamantjes is de verhouding 2.09 — hoger dan bij de ozon. En toch kun je er niets van zeggen, want op twaalf steentjes loopt de gewone-wiebel-band van 0.48 tot <strong>2.08</strong>. De helft van je metingen mag dus zomaar twee keer zo breed zijn als de andere helft, puur door toeval. Zet de drie naast elkaar en de les is één regel breed:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>data</th>
+<th style="text-align: right;"><em>N</em></th>
+<th style="text-align: right;">verhouding</th>
+<th style="text-align: right;">gewone-wiebel-band</th>
+<th>oordeel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>diamantjes</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">2.09</td>
+<td style="text-align: right;">0.48 – 2.08</td>
+<td>de band is zo breed dat je niets kunt zeggen</td>
+</tr>
+<tr class="even">
+<td>luchtkwaliteit</td>
+<td style="text-align: right;">116</td>
+<td style="text-align: right;">1.65</td>
+<td style="text-align: right;">0.66 – 1.53</td>
+<td>er net buiten: een trechter, krap</td>
+</tr>
+<tr class="odd">
+<td>pinguïns</td>
+<td style="text-align: right;">342</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.88 – 1.14</td>
+<td>er ruim binnen: gewone wiebel</td>
+</tr>
+</tbody>
+</table>
+<p>Hoe minder data, hoe wilder de gewone wiebel — en dus hoe minder een residuenplot je vertelt. Dat maakt een klein bestand niet verdacht; het maakt je oordeel erover ongegrond. Wie bij een handjevol punten roept dat hij een trechter ziet, ziet ruis. En let op: dit is precies waarom SPSS je die twaalf stipjes tóch netjes tekent. Het programma weet niet hoeveel punten genoeg zijn — jij wel.</p>
+<p><strong>En wat doe je er dan aan?</strong> Er is nog een aanwijzing die dezelfde kant op wijst, en die zie je zonder enig plaatje. Lees in de <strong>Coefficients</strong>-tabel de constante af (−147.00) en de helling (2.43), en vul de koudste dag uit het bestand in: 57 graden. Je rekenmachine zegt −147.00 + 2.43 × 57 = <strong>−8.5</strong>; SPSS, die met de onafgeronde −146.9955 en 2.4287 rekent, zegt −8.6. Allebei goed, en het hele verschil is die ene afronding.</p>
+<p>Wat er hoe dan ook staat is een min. Op de vier koelste dagen belooft deze lijn een negatieve hoeveelheid ozon, en minder dan niets bestaat niet. De lijn loopt door tot in de oneindigheid; de ozon heeft een bodem.</p>
+<p>Precies díé bodem maakt ook de trechter en de scheve staart. Een lijn die 20 voorspelt kan er maar 20 naast zitten aan de onderkant en onbeperkt aan de bovenkant. Drie waarnemingen, één oorzaak — en dat wijst meteen de gewone zet aan: reken op een andere schaal. Maak met <strong>Transform → Compute Variable</strong> een kolom <code>log_ozon</code> met de uitdrukking <code>LN(ozon)</code> en draai dezelfde regressie daarop. De trechter zakt van 1.65 naar 0.82 en de <em>R</em>² gaat van .49 naar .55: het model is er ook nog beter van gaan passen.</p>
+<p>Dat is geen trucje om een controle te laten slagen. Het is de erkenning dat ozon zich in verhoudingen gedraagt en niet in optellingen — twintig ppb erbij op een smoggerige dag betekent iets anders dan twintig ppb erbij op een schone. De prijs is dat je uitkomst nu in logaritmen staat en dus vertaald moet worden voor je hem opschrijft, en dát is werk voor later in het boek.</p>
 <div class="kicker">
 <p>eindopdracht</p>
 </div>
 </section>
-<section id="van-vin-naar-snavel" class="level2">
-<h2 class="anchored" data-anchor-id="van-vin-naar-snavel">Van vin naar snavel</h2>
-<p><span class="begrippen">helling die van teken klapt · Simpson-paradox</span></p>
+<section id="twee-lijnen-keuren" class="level2">
+<h2 class="anchored" data-anchor-id="twee-lijnen-keuren">Twee lijnen keuren</h2>
+<p><span class="begrippen">residuenplot · normal probability plot · schud-band · oordelen</span></p>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -662,12 +851,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Bij de vinlengte zág je de helling zakken toen de soort erbij kwam — van 49.7 naar 40.7. Nu jij, met een andere maat: de <strong>snaveldiepte</strong> (<code>snaveldiepte</code>, in mm). Diepe snavel, zwaar beest? Kijk maar wat er gebeurt.</p>
+<p>Jouw beurt. Twee regressielijnen, allebei op data die je kent, en aan jou de vraag of je de residuen vertrouwt. Doe voor allebei hetzelfde rondje: draai de regressie met <code>*ZPRED</code> en <code>*ZRESID</code> in het Plots-venster en de twee normaliteits-vinkjes aan, sla <code>ZRE_1</code> op, en schrijf op wat je ziet.</p>
 <ol type="1">
-<li>Trek eerst de simpele lijn: draai in <strong>Regression → Linear Regression</strong> een model met <code>gewicht</code> als <strong>Dependent Variable</strong> en <code>snaveldiepte</code> als <strong>Covariate</strong>. Let goed op het teken van de helling.</li>
-<li>Gooi nu de soort erbij: sleep <code>soort</code> naar het vak <strong>Factors</strong> (of zet ’m in blok 2 van de <strong>Model</strong>-blokken). Kijk opnieuw naar diezelfde helling — en naar z’n teken.</li>
-<li>Hier zakt de helling niet zomaar, hij <strong>klapt om</strong>. Ter controle: het simpele model geeft een helling van rond de −191.64 (jazeker, negatief — over alle pinguïns heen lijkt een diepere snavel bij een <em>lichter</em> beest te horen), en met de soort erbij springt diezelfde helling naar +256.61. De <em>R</em>² schiet mee omhoog, van .22 naar .80.</li>
-<li>Leg in je eigen woorden uit hoe één helling zowel negatief als positief kan zijn. Denk aan de schouders van de soorten: de Gentoo’s zijn zwaar én hebben juist óndiepe snavels. Wat doet die ene soort met de lijn zolang je hem op één hoop gooit — en wat verandert er zodra je <em>binnen</em> de soort kijkt? (Dit is de Simpson-paradox nog een tandje scherper dan bij de vin: daar kromp een getal, hier draait het van richting.)</li>
+<li><p><strong>Zelfde kastje, andere voorspeller.</strong> Voorspel de ozon uit de <strong>wind</strong> in plaats van uit de temperatuur: <code>ozon</code> als <strong>Dependent</strong>, <code>wind</code> als <strong>Independent</strong>. Let op: de helling is nu <em>negatief</em> — meer wind, minder smog — en dus loopt de trechter de andere kant op in je plaatje. De hóóg voorspelde dagen zijn hier de dagen met <strong>weinig</strong> wind. Knip bij de mediane wind — dat is 9.7 mijl per uur, net zoals 79 graden de mediane dag was — met <code>COMPUTE zacht = (wind &lt;= 9.7).</code>, en vergelijk de twee <em>SD</em>’s met <strong>Means</strong>. Ter controle: <em>R</em>² = .36, 62 dagen met weinig wind tegen 54 met veel, en de verhouding komt op 1.56 tegen een gewone-wiebel-band van 0.80 tot 1.26 — geen enkele van de duizend gehusselde zomers haalt dat. Wat is je oordeel, en is het strenger of milder dan bij de temperatuur-lijn?</p></li>
+<li><p><strong>Nieuwe data: 2634 ingevulde vragenlijsten.</strong> In <code>bigfive.csv</code> staan tien items: vijf voor neuroticisme (<code>N1</code>–<code>N5</code>) en vijf voor openheid (<code>O1</code>–<code>O5</code>). Maak met <strong>Transform → Compute Variable</strong> de schalen <code>N = N1+N2+N3+N4+N5</code> en <code>O = O1+O2+O3+O4+O5</code>, en voorspel <code>N</code> uit <code>O</code>. Ter controle: de verhouding komt op 1.06 en de residuen zijn nauwelijks scheef. Alle drie de aannames zien er hier prima uit.</p></li>
+<li><p><strong>De denk-vraag, en hij is de belangrijkste van dit blok.</strong> Kijk bij die tweede lijn ook even naar de <em>R</em>² in de Model Summary: <strong>.03</strong> — nog geen drie procent. De aannames zijn in orde en het model voorspelt vrijwel niets. Wat betekent dat voor de vraag waar een residuenplot eigenlijk antwoord op geeft — en waar niet?</p></li>
 </ol>
 </div>
 </div>
@@ -675,9 +863,9 @@ ul.task-list li input[type="checkbox"] {
 <p>rapportage</p>
 </div>
 </section>
-<section id="schrijf-het-op-als-een-onderzoeker" class="level2">
-<h2 class="anchored" data-anchor-id="schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</h2>
-<p><span class="begrippen">rapportagezin · b en <em>R</em>² · twee decimalen</span></p>
+<section id="schrijf-op-wat-je-gecontroleerd-hebt" class="level2">
+<h2 class="anchored" data-anchor-id="schrijf-op-wat-je-gecontroleerd-hebt">Schrijf op wat je gecontroleerd hebt</h2>
+<p><span class="begrippen">rapportage van een controle · APA-notatie</span></p>
 <div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -688,19 +876,27 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Bij een regressie groeit het boodschappenlijstje een beetje mee: je noemt niet alleen een gemiddelde, maar wát je uit wát voorspelde, hoe groot de helling was, en hoeveel het model verklaarde. Nog steeds één zelfstandige zin. Zo:</p>
+<p>Een assumptie-controle hoort in je verslag, en het is de kortste rapportage die je dit hele boek schrijft: één zin als er niks is, twee als er wél iets is. Wat je niet doet, is ’m weglaten — een lezer die niets leest, weet niet of je niets vond of niet gekeken hebt.</p>
+<p>Zo ziet ‘wél iets’ eruit:</p>
 <blockquote class="blockquote">
-<p>Om te onderzoeken hoe zwaar de vinlengte meetelt voor het gewicht, werd het gewicht van de 342 pinguïns voorspeld uit hun vinlengte met de soort constant gehouden; binnen dezelfde soort ging elke millimeter langere vin samen met ruim veertig gram meer gewicht (<em>b</em> = 40.71), en het model verklaarde het grootste deel van de verschillen in gewicht (<em>R</em>² = .78).</p>
+<p>We voorspelden de dagelijkse ozonconcentratie uit de maximumtemperatuur (<em>N</em> = 116). De residuen werden visueel geïnspecteerd. De spreiding nam toe met de voorspelde waarde: op de koelere helft van de dagen was <em>SD</em> = 17.47 ppb (<em>n</em> = 59), op de warmere <em>SD</em> = 28.74 ppb (<em>n</em> = 57). De residuen waren rechtsscheef.</p>
 </blockquote>
-<p>Kijk wat er cursief staat en wat niet: alléén de symbolen <em>b</em> en <em>R</em>² leunen schuin, de gewone woorden blijven rechtop. De zin staat op eigen benen — wie er gewogen werd, wat er voorspeld werd, met welke medespeler vastgehouden, en tussen haakjes de twee getallen — en de getallen zijn op twee decimalen. Let ook op de tijd: het is gebeurd, dus “werd voorspeld”, “ging samen met”, “verklaarde”.</p>
-<p>Jouw beurt: schrijf zelf zo’n zelfstandige zin voor je eindopdracht — de snaveldiepte mét de soort erbij (<em>b</em> = 256.61, <em>R</em>² = .80). Durf het teken en de omslag erin te zetten. Hardop voorlezen mag.</p>
+<p>En zo ‘niks aan de hand’:</p>
+<blockquote class="blockquote">
+<p>We voorspelden het gewicht van de pinguïns uit hun vinlengte (<em>N</em> = 342). De residuen werden visueel geïnspecteerd; de spreiding was gelijkmatig over het bereik van de voorspelde waarden en de verdeling week niet zichtbaar af van normaal.</p>
+</blockquote>
+<p>Let op de kleine lettertjes. Alleen de symbolen <em>N</em>, <em>n</em> en <em>SD</em> staan cursief, de gewone woorden rechtop. En let op dat er twee n’en zijn: de <strong>hoofdletter</strong> <em>N</em> is je hele bestand, de <strong>kleine</strong> <em>n</em> een groep daarbinnen — hier dus <em>N</em> = 116 dagen, verdeeld over <em>n</em> = 59 koele en <em>n</em> = 57 warme. De zinnen staan in de verleden tijd, want je vertelt wat je gedáán en gevónden hebt. En ze noemen allebei de steekproef, de uitkomst én de voorspeller, zodat ze op eigen benen staan.</p>
+<p>En let op wélke twee getallen daar staan: 17.47 en 28.74, in ppb. Dat zijn de <strong>ruwe</strong> residuen, niet de 0.74 en 1.21 die SPSS je gaf. Voor je oordeel was gestandaardiseerd handiger — <em>ruw is ruk</em> — maar in je verslag zet je de spreiding in de eenheid van de wereld, want een lezer die “<em>SD</em> = 0.74” leest, weet niet 0.74 wát.</p>
+<p>Je krijgt ze door met de <em>Std. Error of the Estimate</em> (23.71) te vermenigvuldigen — maar haal ze liever gewoon opnieuw op. Vraag met <strong>Save → Residuals → Unstandardized</strong> de ruwe residuen op als kolom <code>RES_1</code> en draai dezelfde <strong>Means</strong> nog een keer; dan staat er 17.47 en 28.74 en hoef je niets te rekenen. Doe je het tóch met de hand, dan kom je op 0.74 × 23.71 = 17.55 in plaats van 17.47, en dat verschil zit niet in jouw rekenwerk maar in die 0.74, die eigenlijk 0.7371 is. Een getal dat al is afgerond, wordt niet nauwkeuriger als je het vermenigvuldigt.</p>
+<p>Eén woord dat je hier bewust <em>niet</em> schrijft: <strong>“aan de assumpties werd voldaan”</strong>. Dat klinkt als een toets die geslaagd is, en zo werkt het niet — je hebt gekeken, en je zag niets bijzonders. Schrijf op wat je zag.</p>
+<p>Jouw beurt: schrijf zo’n zin voor de wind-lijn uit de eindopdracht. Kies zelf welke van de twee vormen erbij past, en verdedig die keuze in één zin.</p>
 </div>
 </div>
-<div class="boekvorm" data-w="W8">
+<div class="boekvorm" data-w="W4">
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
-<p>Hier: één helling die zakt zodra je een tweede voorspeller binnenlaat, en de confounder die daarachter zat.</p>
-<p>In het boek: <strong>W8 — Meer dan één verschil</strong></p>
-<p><em>Daar draait het niet om méér knoppen, maar om dezelfde vraag als bij die correlatie-wolk: wat blijft er van een verband over als je vasthoudt wie er nog meer meepraat?</em></p>
+<p>Hier: de drie aannames aan de residuen afgelezen — welk plaatje je opvraagt, en waaraan je ziet dat het misgaat.</p>
+<p>In het boek: <strong>W4 — Hangen ze samen?</strong></p>
+<p><em>Daar krijgen de drie alleen hun naam, en staat erbij dat de lijn zélf niets meer eist dan rechtheid. Hier zie je wat de fouten ervan bakken.</em></p>
 </div>
 
 
@@ -710,7 +906,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
 
 <ol>
-<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0). Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Dagelijkse ozonmetingen (delen per miljard, <em>parts per billion</em>) op Roosevelt Island, New York, mei–september 1973; New York State Department of Conservation / National Weather Service. Beschikbaar als de klassieke R-dataset <code>airquality</code>; dit zijn de 116 dagen waarop de ozonmeting gelukt is. Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1115,13 +1311,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../20_blokken/blok_cronbach_alpha.html" class="pagination-link" aria-label="Oefening 7.1 · Betrouwbaarheid en Cronbachs α">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 7.1 · Betrouwbaarheid en Cronbachs α</span>
+      <a href="../20_blokken/blok_correlatie_scatterplot.html" class="pagination-link" aria-label="Oefening 4.1 · Correlatie en scatterplot">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 4.1 · Correlatie en scatterplot</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../20_blokken/blok_t_toets.html" class="pagination-link" aria-label="Oefening 9.1 · De t-toets">
-        <span class="nav-page-text">Oefening 9.1 · De t-toets</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="pagination-link" aria-label="Oefening 5.1 · Het betrouwbaarheidsinterval">
+        <span class="nav-page-text">Oefening 5.1 · Het betrouwbaarheidsinterval</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
