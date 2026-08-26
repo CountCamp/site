@@ -612,10 +612,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#een-voorspeller-waar-woorden-in-staan" id="toc-een-voorspeller-waar-woorden-in-staan">Een voorspeller waar woorden in staan</a></li>
   <li><a href="#maak-de-dummys-zelf-en-laat-r-het-daarna-nog-eens-overdoen" id="toc-maak-de-dummys-zelf-en-laat-r-het-daarna-nog-eens-overdoen">Maak de dummy’s zelf, en laat R het daarna nog eens overdoen</a></li>
   <li><a href="#wie-je-weglaat-bepaalt-wat-alle-andere-getallen-betekenen" id="toc-wie-je-weglaat-bepaalt-wat-alle-andere-getallen-betekenen">Wie je weglaat, bepaalt wat alle andere getallen betekenen</a></li>
+  <li><a href="#van-gewicht-naar-snaveldiepte" id="toc-van-gewicht-naar-snaveldiepte">Van gewicht naar snaveldiepte</a></li>
   </ul>
 </nav>
 <div class="datastrook">
-<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek</p>
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
 </div>
 <div class="kicker">
 <p>prikkel</p>
@@ -865,6 +866,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Om te onderzoeken hoe het gewicht van pinguïns samenhangt met hun soort, voorspelden we hun gewicht uit twee dummyvariabelen (<em>N</em> = 342), met de Adélies als referentiecategorie. Gentoo’s wogen gemiddeld meer dan Adélies (<em>b</em> = 1375.35 gram, <em>SE</em> = 56.15, <em>t</em>(339) = 24.50, <em>p</em> &lt; .001); Chinstraps verschilden nauwelijks van Adélies (<em>b</em> = 32.43 gram, <em>SE</em> = 67.51, <em>t</em>(339) = 0.48, <em>p</em> = .63). Samen verklaarden de twee dummy’s 67% van het verschil in gewicht tussen deze pinguïns (<em>R</em>² = .67).</p>
 </blockquote>
 <p>Alleen de symbolen zijn cursief (<em>N</em>, <em>b</em>, <em>SE</em>, <em>t</em>, <em>p</em>, <em>R</em>²), de gewone woorden staan rechtop, en de getallen staan op twee decimalen. Alles staat in de verleden tijd, want je vertelt wat je gevónden hebt. En de zin staat op eigen benen: wie hem uit dit blok tilt, weet nog steeds wie er gewogen zijn, hoeveel het er waren, en vanaf wie er geteld is.</p>
+<div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="van-gewicht-naar-snaveldiepte" class="level2">
+<h2 class="anchored" data-anchor-id="van-gewicht-naar-snaveldiepte">Van gewicht naar snaveldiepte</h2>
+<p><span class="begrippen">referentie zelf zetten · even checken · dummy’s met de hand</span></p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Jouw beurt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jouw beurt — dezelfde drie soorten, bekende data, een andere maat: <code>snaveldiepte</code>. Die kolom ken je uit de scatterplot-oefening, waar de soort de derde speler achter het min-teken bleek. Nu mag hij zelf de voorspeller zijn.</p>
+<ol type="1">
+<li><p><strong>Zet eerst het vertrekpunt goed.</strong> Hierboven heb je de referentiecategorie van <code>soort</code> net op de Gentoo’s gezet, en R onthoudt dat. Zet hem met opzet terug — en kijk het na vóór je één getal leest:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># het vertrekpunt terug naar de Adélies</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">ref =</span> <span class="st">"Adelie"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># even checken: de referentie hoort vooraan te staan</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(peng<span class="sc">$</span>soort)               <span class="co"># → "Adelie" eerst</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dezelfde soorten, nu in millimeters</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m), <span class="dv">2</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>coefficients[, <span class="dv">4</span>], <span class="dv">3</span>)   <span class="co"># en de p's erbij</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: intercept 18.35, <code>soortGentoo</code> −3.36 en <code>soortChinstrap</code> 0.07, met <em>p</em> &lt; .001 voor de Gentoo en <em>p</em> = .65 voor de Chinstrap. Vraag daarna <code>round(tapply(peng$snaveldiepte, peng$soort, mean), 2)</code> op en wijs aan waar 18.42 in de coëfficiënten verstopt zit. (18.35 + 0.07, en daar is-ie.)</p></li>
+<li><p><strong>Laat de Gentoo’s weg, met de hand.</strong> Je dummy’s <code>adelie</code> en <code>chinstrap</code> staan er nog: draai <code>lm(snaveldiepte ~ adelie + chinstrap, data = peng)</code>. Ter controle: intercept 14.98, en daarbovenop 3.36 en 3.44. Alle drie de gemiddelden komen weer terug, alleen vanaf een ander vertrekpunt.</p>
+<p>Tel de eerste twee op en er staat 14.98 + 3.36 = 18.34, terwijl de Adélies 18.35 wegen. Dat is geen fout van jou: R rekent met alle decimalen en rondt pas aan het eind af. Dezelfde honderdste als bij de −1375.36 van daarnet.</p></li>
+<li><p><strong>De denk-vraag: is “bijzonder” een eigenschap van de soort?</strong> Twee keer nu was het de Gentoo die eruit sprong — op gewicht 1375 gram bóven de rest, op snaveldiepte 3.36 millimeter eronder. Alleen de kant verschilt. Maar kijk nog één keer, met een andere maat:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(snavellengte <span class="sc">~</span> soort, <span class="at">data =</span> peng)), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: Chinstrap 10.04 en Gentoo 8.71 — allebei fors, en dus ligt hier niet de Gentoo apart maar de <strong>Adélie</strong>.</p>
+<p>De vuistregel hierboven zegt: nooit de meest bijzondere groep. Wie is dat hier dan? En let op wie wij in dit hoofdstuk als vertrekpunt gekozen hebben.</p></li>
+</ol>
+</div>
+</div>
 <div class="boekvorm" data-w="W9">
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
 <p>Hier: een groepslabel dat een getal wordt, zodat de regressie die je al kent er zonder morren mee rekent — en de keuze wie het vertrekpunt is.</p>

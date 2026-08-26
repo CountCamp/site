@@ -613,6 +613,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#draai-allebei-de-t-toetsen" id="toc-draai-allebei-de-t-toetsen">Draai allebei de <em>t</em>-toetsen</a></li>
   <li><a href="#duizend-werelden-waarin-de-waarheid-nul-is" id="toc-duizend-werelden-waarin-de-waarheid-nul-is">Duizend werelden waarin de waarheid nul is</a></li>
   <li><a href="#echt-is-niet-hetzelfde-als-belangrijk" id="toc-echt-is-niet-hetzelfde-als-belangrijk">Echt is niet hetzelfde als belangrijk</a></li>
+  <li><a href="#dezelfde-tien-slapers-van-twee-kanten-bekeken" id="toc-dezelfde-tien-slapers-van-twee-kanten-bekeken">Dezelfde tien slapers, van twee kanten bekeken</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -796,6 +797,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>De grootte is de vraag die overblijft.</strong> Rapporteer altijd een effectgrootte naast de toets — <em>d</em>, een interval, of gewoon het verschil in gewone eenheden (uren, grammen). Dát is wat een mens wil weten.</li>
 </ul>
 <p>Zou je het in één eerlijke zin opschrijven: niet “het verschil is significant (<em>p</em> &lt; .001)”, maar: Gentoo’s zijn gemiddeld 1375 gram zwaarder dan Adélies (95% CI [1260, 1491]), een zeer groot effect (<em>d</em> = 2.87). Het getal met een maat eromheen, niet een sterretje.</p>
+<div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="dezelfde-tien-slapers-van-twee-kanten-bekeken" class="level2">
+<h2 class="anchored" data-anchor-id="dezelfde-tien-slapers-van-twee-kanten-bekeken">Dezelfde tien slapers, van twee kanten bekeken</h2>
+<p><span class="begrippen">gepaard versus onafhankelijk · persoonsverschillen · samenhang tussen twee metingen</span></p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Jouw beurt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jouw beurt — bekende data, en een toets die je van een andere kant benadert. De les hierboven was: het design kiest de toets. Nu ga je zien wat die keuze waard is.</p>
+<ol type="1">
+<li><p><strong>Draai hem onafhankelijk.</strong> Zelfde aanroep als eerst, alleen <code>paired = TRUE</code> weggelaten: <code>t.test(slaap$slaap_middelA, slaap$slaap_middelB)</code>. Ter controle: <em>t</em> = −1.86 en <em>p</em> = .079, dan zit je goed. Het verschil tussen A en B is nog precies −1.58 uur, maar het interval — 95% CI [−3.37, 0.21] — bevat nu de nul. Gepaard was het <em>p</em> = .003. Zelfde data, zelfde verschil, ander oordeel.</p></li>
+<li><p><strong>Kijk waar dat verschil zit.</strong> Wie makkelijk slaapt, sliep op állebei de middelen veel; wie ligt te woelen, op allebei weinig. Die twee metingen horen per rij bij dezelfde persoon — ze zijn gepaard, en dus misschien wel gecorreleerd. Reken het na:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de tien persoonsverschillen had je al</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>verschil                        <span class="co"># → -1.2 -2.4 -1.3 -1.3  0.0 -1.0 -1.8 -0.8 -4.6 -1.4</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># drie spreidingen naast elkaar</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(slaap<span class="sc">$</span>slaap_middelA)         <span class="co"># → 1.79</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(slaap<span class="sc">$</span>slaap_middelB)         <span class="co"># → 2.00</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(verschil)                    <span class="co"># → 1.23</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># en de samenhang tussen de twee metingen</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(slaap<span class="sc">$</span>slaap_middelA, slaap<span class="sc">$</span>slaap_middelB)   <span class="co"># → 0.80</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Negen van de tien sliepen beter op B, één precies gelijk, niemand beter op A. En die tien verschillen spreiden minder dan de twee kolommen zelf: 1.23 tegen 1.79 en 2.00.</p>
+<p>Daar zit het hele verschil tussen de twee toetsen in. Een <em>t</em> is een verschil gedeeld door een spreiding, en de gepaarde toets deelt door die kleine 1.23 terwijl de onafhankelijke door de twee grote deelt. Deel hetzelfde getal door iets kleiners en er komt een grotere <em>t</em> uit — vandaar −4.06 tegen −1.86. Wat de onafhankelijke toets weggooit, is dat de twee kolommen per persoon samenhangen (<em>r</em> = .80).</p></li>
+<li><p><strong>De denk-vraag.</strong> Welke van de twee toetsen liegt hier? En stel dat die samenhang géén .80 was maar ongeveer nul — dat de ene meting je niets vertelt over de andere. Wat zou er dan met <code>sd(verschil)</code> gebeuren, en dus met het verschil tussen die twee <em>p</em>’s?</p></li>
+</ol>
+</div>
+</div>
 <div class="boekvorm" data-w="W6">
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
 <p>Hier: twee groepen (of twee metingen), één verschil, en de vraag of dat verschil het toeval overleeft — plus hoe groot het eigenlijk is.</p>

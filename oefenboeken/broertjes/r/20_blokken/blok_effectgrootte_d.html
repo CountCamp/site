@@ -613,10 +613,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#reken-cohens-d-uit-in-r" id="toc-reken-cohens-d-uit-in-r">Reken Cohens <em>d</em> uit in R</a></li>
   <li><a href="#twee-bergjes-die-elkaar-amper-raken" id="toc-twee-bergjes-die-elkaar-amper-raken">Twee bergjes die elkaar amper raken</a></li>
   <li><a href="#wat-d-2.87-wél-en-niet-zegt" id="toc-wat-d-2.87-wél-en-niet-zegt">Wat <em>d</em> = 2.87 wél en niet zegt</a></li>
+  <li><a href="#een-d-voor-het-halve-grammetje" id="toc-een-d-voor-het-halve-grammetje">Een <em>d</em> voor het halve grammetje</a></li>
   </ul>
 </nav>
 <div class="datastrook">
-<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/plantgroei.csv" download="plantgroei.csv">plantgroei.csv</a> plantgroei onder drie condities · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
 </div>
 <div class="kicker">
 <p>prikkel</p>
@@ -744,6 +745,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong><em>d</em> gaat over de groepsgemiddelden, niet over individuen.</strong> Zelfs bij deze enorme <em>d</em> = 2.87 zegt het iets over de bergjes als geheel, niet over elke pinguïn. In de kleine overlap die er wél is, kan een zware Adélie best boven een lichte Gentoo uitkomen. De soorten verschillen gemiddeld enorm; dat sluit een individuele uitzondering niet uit.</li>
 </ul>
 <p>Zou je het in één eerlijke zin opschrijven, dan niet “de soorten verschillen 1375 gram”, maar: de Gentoo’s zijn gemiddeld bijna drie standaardafwijkingen zwaarder dan de Adélies (<em>d</em> = 2.87) — de twee soorten overlappen in gewicht nauwelijks.</p>
+<div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="een-d-voor-het-halve-grammetje" class="level2">
+<h2 class="anchored" data-anchor-id="een-d-voor-het-halve-grammetje">Een <em>d</em> voor het halve grammetje</h2>
+<p><span class="begrippen">gepoolde <em>SD</em> · overlap tussen twee bergjes · twee losse knoppen</span></p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Jouw beurt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jouw beurt — bekende data, maar uit een ander hoofdstuk: de plantjes uit <code>plantgroei.csv</code>, waar controle tegen voer twee nét de streep haalde met <em>p</em> = .048 (de oefening over de <em>p</em>-waarde). Dat verschil in gewicht kreeg daar een oordeel; een maat kreeg het nooit.</p>
+<ol type="1">
+<li><p><strong>Reken de gepoolde <em>SD</em> en <em>d</em> met de hand.</strong> Precies het recept van dit blok:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"plantgroei.csv"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> pg<span class="sc">$</span>gewicht[pg<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> pg<span class="sc">$</span>gewicht[pg<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"behandeling2"</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># de twee spreidingen samengevoegd tot één lineaaltje</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((<span class="fu">length</span>(ct) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(ct) <span class="sc">+</span> (<span class="fu">length</span>(v2) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(v2)) <span class="sc">/</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           (<span class="fu">length</span>(ct) <span class="sc">+</span> <span class="fu">length</span>(v2) <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>sp                           <span class="co"># → 0.52</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># het verschil, gemeten in dat lineaaltje</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mean</span>(v2) <span class="sc">-</span> <span class="fu">mean</span>(ct)) <span class="sc">/</span> sp   <span class="co"># → 0.95</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: 0.52 en 0.95, dan zit je goed. Bijna één heel lineaaltje — al is de pinguïn-<em>d</em> van hierboven er nog eens drie keer zó groot (2.87).</p>
+<p>Pak je de rekenmachine erbij, dan krijg je 0.49 / 0.52 = 0.94 en niet 0.95. Dat is geen fout van jou: R deelt 0.494 door 0.5176 en rondt pas aan het eind af. Rond af aan het eind, nooit onderweg.</p></li>
+<li><p><strong>Teken de twee bergjes.</strong> Controle rond 5.03 met een spreiding van 0.58, voer twee rond 5.53 met 0.44:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">3.5</span>, <span class="dv">7</span>, <span class="at">length =</span> <span class="dv">400</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, <span class="fu">dnorm</span>(x, <span class="fl">5.03</span>, <span class="fl">0.58</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,        <span class="co"># controle</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"gewicht (g)"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x, <span class="fu">dnorm</span>(x, <span class="fl">5.53</span>, <span class="fl">0.44</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)       <span class="co"># voer twee</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># leg elke behandelde plant naast elke controleplant: 10 x 10 = 100 paren,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># en tel in hoeveel daarvan de behandelde wint</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">outer</span>(v2, ct, <span class="st">"&gt;"</span>))                                   <span class="co"># → 0.75</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Twee bergjes die elkaar wél flink raken. Die <code>outer()</code> hoef je niet te doorgronden — hij legt gewoon alle honderd paren naast elkaar. Wat eruit komt is de kans dat een willekeurige behandelde plant zwaarder is dan een willekeurige controleplant. Ter controle: .75, oftewel 75 van de 100 paren. Bij de pinguïns is diezelfde kans .98, en een muntje zou op .50 uitkomen.</p></li>
+<li><p><strong>De denk-vraag: wat schrijf je op?</strong> <em>“Het werkt nauwelijks”, “het werkt flink”, of geen van beide?</em> Eén eerlijke zin, en dit is het gereedschap. <em>p</em> = .048 zegt hooguit dat we er vrij zeker van zijn dát het voer iets met het gewicht doet — en hier maar nét. Hoe véél het doet zegt de <em>p</em> niet; dat zegt de <em>d</em>, en die is groot. Bij de pinguïns wezen die twee knoppen dezelfde kant op, hier wijzen ze elk een andere. (En een <em>d</em> uit tien plantjes per groep wiebelt zelf ook — daar gaat de power-oefening over.)</p></li>
+</ol>
+</div>
+</div>
 <div class="boekvorm" data-w="W4">
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
 <p>Hier: een verschil in grammen dat pas iets zegt als je het door de spreiding deelt.</p>
