@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Oefening 10.1 · Als de moderator een groep is – JASP-oefenboek</title>
+<title>Oefening 9.5 · ANCOVA: een groep én een getal – R-oefenboek</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -33,8 +68,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../20_blokken/blok_interactie_continu.html" rel="next">
-<link href="../20_blokken/blok_ancova.html" rel="prev">
+<link href="../20_blokken/blok_interactie.html" rel="next">
+<link href="../20_blokken/blok_anova.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -86,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_interactie.html">H10 · Verschil in verschil</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_interactie.html">Oefening 10.1 · Als de moderator een groep is</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_ancova.html">Oefening 9.5 · ANCOVA: een groep én een getal</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -101,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">JASP-oefenboek</a> 
+      <a href="../">R-oefenboek</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -120,7 +155,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">JASP-oefenboek</span></a>
+ <span class="menu-text">R-oefenboek</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -344,13 +379,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="true">
  <span class="menu-text">H9 · Groepen zijn ook getallen</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../20_blokken/blok_dummy_regressie.html" class="sidebar-item-text sidebar-link">
@@ -377,7 +412,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_ancova.html" class="sidebar-item-text sidebar-link">
+  <a href="../20_blokken/blok_ancova.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Oefening 9.5 · ANCOVA: een groep én een getal</span></a>
   </div>
 </li>
@@ -385,16 +420,16 @@ ul.task-list li input[type="checkbox"] {
   </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
  <span class="menu-text">H10 · Verschil in verschil</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 show">  
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link active">
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Oefening 10.1 · Als de moderator een groep is</span></a>
   </div>
 </li>
@@ -482,7 +517,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Basishandelingen in JASP</span></a>
+ <span class="menu-text">Basishandelingen in R</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -557,10 +592,10 @@ ul.task-list li input[type="checkbox"] {
 <main class="content" id="quarto-document-content">
 <p class="beweging">Vierde beweging · Verschil onthechten</p>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_interactie.html">H10 · Verschil in verschil</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_interactie.html">Oefening 10.1 · Als de moderator een groep is</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_ancova.html">Oefening 9.5 · ANCOVA: een groep én een getal</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Oefening 10.1 · Als de moderator een groep is</h1>
-<p class="subtitle lead">Interactie met een groep als moderator · <em>categorical moderation</em></p>
+<h1 class="title">Oefening 9.5 · ANCOVA: een groep én een getal</h1>
+<p class="subtitle lead">Een covariaat naast een nominale voorspeller · <em>analysis of covariance</em></p>
 </div>
 
 
@@ -580,15 +615,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">In deze oefening</h2>
    
   <ul>
-  <li><a href="#eén-getal-dat-uit-twee-getallen-bleek-te-bestaan" id="toc-eén-getal-dat-uit-twee-getallen-bleek-te-bestaan">Eén getal dat uit twee getallen bleek te bestaan</a></li>
-  <li><a href="#twee-lijnen-één-groep-tegenover-de-rest" id="toc-twee-lijnen-één-groep-tegenover-de-rest">Twee lijnen: één groep tegenover de rest</a></li>
-  <li><a href="#nog-twee-lijnen-maar-dan-parallel-de-sekse" id="toc-nog-twee-lijnen-maar-dan-parallel-de-sekse">Nog twee lijnen, maar dan parallel: de sekse</a></li>
-  <li><a href="#drie-lijnen-de-hele-soort-erbij" id="toc-drie-lijnen-de-hele-soort-erbij">Drie lijnen: de hele soort erbij</a></li>
-  <li><a href="#zes-hokjes-twee-groeperingen-tegelijk" id="toc-zes-hokjes-twee-groeperingen-tegelijk">Zes hokjes: twee groeperingen tegelijk</a></li>
-  <li><a href="#wie-krijgt-het-overlapstuk-type-i-en-type-iii" id="toc-wie-krijgt-het-overlapstuk-type-i-en-type-iii">Wie krijgt het overlapstuk? Type I en type III</a></li>
-  <li><a href="#duizend-werelden-waarin-de-soort-niets-modereert" id="toc-duizend-werelden-waarin-de-soort-niets-modereert">Duizend werelden waarin de soort niets modereert</a></li>
-  <li><a href="#onder-welke-conditie-doet-iets-ertoe" id="toc-onder-welke-conditie-doet-iets-ertoe">Onder welke conditie doet iets ertoe</a></li>
-  <li><a href="#dezelfde-zes-hokjes-een-andere-meetlat" id="toc-dezelfde-zes-hokjes-een-andere-meetlat">Dezelfde zes hokjes, een andere meetlat</a></li>
+  <li><a href="#een-verschil-dat-van-teken-wisselt" id="toc-een-verschil-dat-van-teken-wisselt">Een verschil dat van teken wisselt</a></li>
+  <li><a href="#zet-een-getal-naast-een-groep" id="toc-zet-een-getal-naast-een-groep">Zet een getal naast een groep</a></li>
+  <li><a href="#waar-die-duizend-gram-gebleven-is" id="toc-waar-die-duizend-gram-gebleven-is">Waar die duizend gram gebleven is</a></li>
+  <li><a href="#de-aanname-die-zakte-en-wat-je-dan-doet" id="toc-de-aanname-die-zakte-en-wat-je-dan-doet">De aanname die zakte, en wat je dan doet</a></li>
+  <li><a href="#van-soort-naar-sekse-nu-met-een-aanname-die-houdt" id="toc-van-soort-naar-sekse-nu-met-een-aanname-die-houdt">Van soort naar sekse — nu met een aanname die houdt</a></li>
+  <li><a href="#de-afsluiter-van-het-hele-hoofdstuk" id="toc-de-afsluiter-van-het-hele-hoofdstuk">De afsluiter van het hele hoofdstuk</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
   </ul>
 </nav>
@@ -598,361 +630,273 @@ ul.task-list li input[type="checkbox"] {
 <div class="kicker">
 <p>prikkel</p>
 </div>
-<section id="eén-getal-dat-uit-twee-getallen-bleek-te-bestaan" class="level2">
-<h2 class="anchored" data-anchor-id="eén-getal-dat-uit-twee-getallen-bleek-te-bestaan">Eén getal dat uit twee getallen bleek te bestaan</h2>
-<p><span class="begrippen">helling per groep</span></p>
-<p>Bij de enkelvoudige regressie trok je een lijn door 342 pinguïns en las je er één getal van af: <strong>49.69 gram per millimeter</strong>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Elke millimeter vin erbij, bijna vijftig gram pinguïn erbij. Eén getal, netjes uitgerekend, en er was geen enkele reden om het te wantrouwen.</p>
-<p>Splits diezelfde 342 beesten nu eens in tweeën — de Gentoo’s aan de ene kant, de Adélies en Chinstraps aan de andere — en trek de lijn twee keer. In deze steekproef komt er bij de niet-Gentoo’s <strong>29.49</strong> uit, en bij de Gentoo’s <strong>54.62</strong>.</p>
-<p>Kijk daar even naar. 49.69 ligt tussen die twee in, en het is geen van beide.</p>
-<p>En het is ook niet netjes hun gemiddelde — dat zou te makkelijk zijn. Weeg de twee hellingen naar groepsgrootte (219 niet-Gentoo’s tegen 123 Gentoo’s) en je komt uit op 38.53. Je eerste getal ligt daar ruim elf gram bóven.</p>
-<p>Dat komt doordat één lijn door alle pinguïns twee dingen tegelijk moet doen: het verband bínnen elke groep volgen, én de afstand tússen de groepen overbruggen. En die tweede taak duwt hem omhoog, want de Gentoo’s zijn niet alleen zwaarder maar hebben óók langere vinnen. Trek je een lijn door niets anders dan de twee groepsgemiddelden, dan is die zelfs 53.73.</p>
-<p>Je eerste getal was dus niet fout gerekend. Het was een <strong>menging</strong> — en niet eens een eerlijke.</p>
-<p>En dat roept meteen de vraag op waar deze oefening over gaat. Is die kloof echt, of kan het toeval van 342 beesten hem namaken? En als hij echt is — hoe schrijf je dan een model op dat niet één helling wil, maar twee?</p>
+<section id="een-verschil-dat-van-teken-wisselt" class="level2">
+<h2 class="anchored" data-anchor-id="een-verschil-dat-van-teken-wisselt">Een verschil dat van teken wisselt</h2>
+<p><span class="begrippen">groepsverschil · derde variabele · correctie</span></p>
+<p>Je kent deze drie stapeltjes inmiddels goed.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> In deze pinguïns wegen de Chinstraps gemiddeld 32.43 gram méér dan de Adélies — bijna niks — en de Gentoo’s 1375.35 gram méér, ruim een kilo voorsprong. Die verschillen heb je in de vorige oefening getoetst, klaar.</p>
+<p>Nu doen we iets kleins. We zetten vinlengte in het model, naast soort. Eén kolom erbij, meer niet — er wordt geen pinguïn opnieuw gewogen. En kijk wat er met precies dezelfde twee getallen gebeurt: de voorsprong van de Gentoo’s zakt van 1375.35 naar 266.81 gram, en de Chinstraps wegen in dit model opeens 206.51 gram mínder dan de Adélies. Van ietsje zwaarder naar duidelijk lichter. Het verschil klapt om van plus naar min, en niemand heeft de data aangeraakt.</p>
+<p>Een getal dat van teken wisselt zodra er een tweede kolom mag meekijken — dat wil je verklaard hebben. Wat weet die vin dat de weegschaal alleen niet ziet? Trek even mee.</p>
 <div class="kicker">
 <p>speel het</p>
 </div>
 </section>
-<section id="twee-lijnen-één-groep-tegenover-de-rest" class="level2">
-<h2 class="anchored" data-anchor-id="twee-lijnen-één-groep-tegenover-de-rest">Twee lijnen: één groep tegenover de rest</h2>
-<p><span class="begrippen">dummy · interactieterm · simple slope</span></p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
+<section id="zet-een-getal-naast-een-groep" class="level2">
+<h2 class="anchored" data-anchor-id="zet-een-getal-naast-een-groep">Zet een getal naast een groep</h2>
+<p><span class="begrippen">covariaat · factor · ANCOVA</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent</strong>.</li>
-<li>Zet <code>gladheid</code>, <code>D</code> én <code>DxG</code> in <strong>Covariates</strong> — <code>DxG</code> is het product van de twee, dat staat al klaar als kolom.</li>
-<li>Kijk naar de rijen <code>gladheid</code> (<em>b</em> = 6.14) en <code>DxG</code> (<em>b</em> = 2.64, <em>p</em> = .054).</li>
-</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># eerst alleen het merk: verschillen golfje en sterretje in glans?</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d))       <span class="co"># → sterretje +20.00, p = .114</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu met gladheid ernaast</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> gladheid <span class="sc">+</span> merk, <span class="at">data =</span> d))   <span class="co"># → sterretje +14.95, p = .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p><code>D</code> is een kolom met nullen en enen: nul voor golfje, één voor sterretje. Zo’n nul-of-één-kolom heet een <strong>dummy</strong>, en hij is het eenvoudigste soort moderator die er bestaat — twee groepen, meer niet. De interactie gladheid × merk komt uit op <em>b</em> = 2.64 met <em>p</em> = .054: bij het ene merk telt een punt gladheid harder mee voor de glans dan bij het andere. Eén helling is dan niet meer genoeg.</p>
-<p><strong>Nu jij</strong> — dezelfde beesten als in oefening 4.2, nieuwe vraag. Is die 49.69 één helling, of zijn het er twee?</p>
-<p>De pinguïns hebben geen kant-en-klare dummy in het bestand, dus die maak je zelf. En het product er meteen bij, want dat is wat de interactieterm ís: de twee voorspellers met elkaar vermenigvuldigd.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · twee kolommen erbij rekenen · JASP 0.98.1">
+<p>Kijk daar even naar, want het gaat de andere kant op dan je misschien verwacht. Op de twaalf steentjes lijken de twee merken twintig punten glans te schelen, maar met zoveel ruis eromheen haalt dat verschil de drempel niet: <em>p</em> = .11. Zet je gladheid ernaast, dan wordt het verschil <strong>kleiner</strong> (14.95) en tegelijk <strong>significant</strong> (<em>p</em> = .001). De <em>R</em>² springt van .231 naar .945.</p>
+<p>Dat is geen goochelarij. Gladheid verklaart een enorm deel van de glans-verschillen, en zolang die verschillen als ruis in het model blijven zitten, verdrinkt het merk-effect erin. Reken gladheid weg en de ruis krimpt — waardoor je het merkverschil ineens wél kunt zien.</p>
+<p><strong>Nu jij</strong> — bij de pinguïns, waar de covariaat het omgekeerde doet. Bij de steentjes haalde gladheid ruis wég en maakte het merkverschil daarmee <em>zichtbaar</em>. Bij de pinguïns gaat de vinlengte het soortverschil juist grotendeels <em>opeten</em>. Allebei zijn het redenen om een covariaat te gebruiken — de eerste heet ruis wegnemen, de tweede vertekening wegnemen.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · eerst de soort alleen, dan de vin erbij">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · twee kolommen erbij rekenen · JASP 0.98.1
+<span class="screen-reader-only">Opmerking</span>In R · eerst de soort alleen, dan de vin erbij
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li><p>Open <code>penguins.csv</code> in JASP (menu linksboven → <strong>Open</strong>).</p></li>
-<li><p>Scroll in het databad helemaal naar rechts en klik op de <strong>+</strong> boven de lege kolom. Noem hem <code>gentoo</code> en kies de <strong>R</strong>-knop om een formule te typen:</p>
-<pre><code>ifelse(soort == "Gentoo", 1, 0)</code></pre>
-<p>Klik <strong>Compute column</strong>. Je hebt nu een kolom met 219 nullen en 123 enen.</p></li>
-<li><p>Maak op dezelfde manier nog een kolom, <code>vinXgentoo</code>:</p>
-<pre><code>vinlengte * gentoo</code></pre>
-<p>Zet beide nieuwe kolommen op <strong>Scale</strong> (het liniaaltje), anders wil JASP ze niet als covariaat aannemen.</p></li>
-</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model 1 — alleen de soort. Dit is de eenweg-ANOVA uit de vorige oefening,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nu als regressie geschreven</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m1), <span class="dv">2</span>)      <span class="co"># → 3700.66   32.43   1375.35</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>r.squared   <span class="co"># → .6697</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># model 2 — de vinlengte erbij</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m2), <span class="dv">2</span>)      <span class="co"># → -4031.48   40.71   -206.51   266.81</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared   <span class="co"># → .7826</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># en het model met alleen de vin, dat je zo nodig hebt</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>mv <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>Nu het model. De drie kolommen samen — <code>vinlengte</code>, <code>gentoo</code> en hun product — zijn de toestemming: reken het verband tussen vinlengte en gewicht uit, maar laat de Gentoo’s er een eigen helling op na houden.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · trek eraan · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Regression → Linear Regression</strong>.</li>
-<li><code>gewicht</code> naar <strong>Dependent Variable</strong>.</li>
-<li><code>vinlengte</code>, <code>gentoo</code> én <code>vinXgentoo</code> naar <strong>Covariates</strong>.</li>
-<li>Vink onder <strong>Statistics</strong> de optie <strong>Estimates</strong> aan als die nog uit staat.</li>
-<li>Lees in de tabel <em>Coefficients</em> de drie rijen af.</li>
-</ol>
-<pre><code>vinlengte      b =    29.49        &lt;- de helling bij gentoo = 0
-gentoo         b = -4841.81
-vinXgentoo     b =    25.13   p &lt; .001
-R²             = 0.785</code></pre>
-</div>
-</div>
-<p>Vier getallen, en ze doen alle vier iets anders. Het loont om er even bij stil te staan, want dit is de tabel die je de rest van de oefening blijft lezen:</p>
-<ul>
-<li><code>vinlengte</code> is de helling <strong>bij <code>gentoo</code> = 0</strong>, dus bij de niet-Gentoo’s: <strong>29.49</strong> gram per millimeter.</li>
-<li><code>gentoo</code> is het hoogteverschil bij vinlengte = 0 — een vin van nul millimeter, dus dat getal woont op een adres dat niet bestaat. Laat het staan; in oefening 10.2 gaan we er iets aan doen.</li>
-<li><code>vinXgentoo</code> is waar het om gaat: <strong>25.13</strong> gram per millimeter <strong>extra</strong> voor de Gentoo’s. Niet hun helling — het verschil tussen hun helling en die van de rest.</li>
-<li>En die <em>p</em> &lt; .001 zegt: zo’n kloof tussen twee hellingen zie je bijna nooit als er in werkelijkheid geen kloof is.</li>
-</ul>
-<p>De helling van de Gentoo’s zelf staat er dus niet; die tel je op:</p>
-<blockquote class="blockquote">
-<p>29.49 + 25.13 = <strong>54.62</strong> gram per millimeter bij de Gentoo’s</p>
-</blockquote>
-<p>Twee hellingen, allebei uit één tabel: <strong>29.49</strong> en <strong>54.62</strong>. Zulke hellingen binnen één groep heten <em>simple slopes</em>, en je hebt er niets voor nodig behalve optellen. Geloof je het niet, reken ze dan los na — het moet op de komma hetzelfde geven:</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · ter controle, de twee lijnen los · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · ter controle, de twee lijnen los · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li>Klik op het <strong>trechtertje</strong> boven de eerste kolom van het databad.</li>
-<li>Typ als filter <code>gentoo == 0</code> en klik <strong>Apply</strong>.</li>
-<li>Draai een gewone <strong>Regression → Linear Regression</strong> van <code>gewicht</code> op <code>vinlengte</code>. Je vindt <strong>29.49</strong>.</li>
-<li>Zet het filter op <code>gentoo == 1</code> en draai hem opnieuw: <strong>54.62</strong>.</li>
-<li>Zet het filter daarna weer uit — anders rekent alles hierna op één soort.</li>
-</ol>
-</div>
-</div>
-<p>En daar ligt je 49.69 uit oefening 4.2 uit elkaar. Eén lijn door twee groepen die elk hun eigen lijn hebben, geeft een getal dat bij geen van beide groepen hoort — te steil voor de Adélies en Chinstraps, te flauw voor de Gentoo’s. Het is een gemiddelde waar niemand woont.</p>
-<p>Teken het maar, dan zie je het in één keer:</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de twee lijnen tekenen · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · de twee lijnen tekenen · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Ga naar <strong>Regression → Correlation</strong>, zet <code>vinlengte</code> en <code>gewicht</code> in het vak, en vink onder <strong>Plots</strong> de <strong>Scatter plots</strong> aan. Sleep <code>gentoo</code> naar het vakje onder de plot-opties dat om een groeperende variabele vraagt; JASP tekent dan een eigen puntenwolk én een eigen lijn per groep.</p>
-<p>Zie je twee lijnen die uit elkaar lopen — dan klopt het. De ene lijn uit oefening 4.2 zou er dwars tussendoor gaan.</p>
-</div>
-</div>
-</section>
-<section id="nog-twee-lijnen-maar-dan-parallel-de-sekse" class="level2">
-<h2 class="anchored" data-anchor-id="nog-twee-lijnen-maar-dan-parallel-de-sekse">Nog twee lijnen, maar dan parallel: de sekse</h2>
-<p><span class="begrippen">niet-significante interactie · hoogte tegenover steilheid</span></p>
-<p>Voordat je dit doortrekt naar meer groepen, eerst een tegenvoorbeeld — want anders ga je overal waaiers zien. In <code>penguins.csv</code> staat nóg een kolom met twee groepen: <code>sekse</code>. Mannetjes zijn duidelijk zwaarder dan vrouwtjes; in deze steekproef wegen ze gemiddeld 4545.68 gram tegen 3862.27 — een verschil van 683.41 gram. Dan zal een millimeter vin bij mannetjes ook wel zwaarder tellen?</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · dezelfde zet, andere groep · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · dezelfde zet, andere groep · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>ANOVA → ANCOVA</strong>: <code>gewicht</code> als <strong>Dependent Variable</strong>, <code>sekse</code> als <strong>Fixed Factor</strong>, <code>vinlengte</code> als <strong>Covariate</strong>.</li>
-<li>Open <strong>Model</strong>, selecteer <code>vinlengte</code> én <code>sekse</code> samen en voeg de interactieterm <code>vinlengte✻sekse</code> toe.</li>
-<li>Kijk in de <em>ANCOVA</em>-tabel naar die rij: <em>F</em>(1, 329) = 0.01, <em>p</em> = .92.</li>
-</ol>
-<p>De negen pinguïns zonder genoteerde sekse vallen er vanzelf uit.</p>
-<p>Wil je de twee hellingen los zien: filter op <code>sekse == "female"</code> respectievelijk <code>sekse == "male"</code> en draai per groep een <strong>Linear Regression</strong> van <code>gewicht</code> op <code>vinlengte</code>. Je vindt <strong>47.15</strong> en <strong>46.86</strong>.</p>
-</div>
-</div>
-<p><strong>47.15</strong> tegen <strong>46.86</strong>. Die liggen zo goed als op elkaar, en de interactie is dan ook nergens: <em>p</em> = .92. De mannetjes zijn zwaarder, maar een millimeter vin weegt bij hen niet zwaarder.</p>
-<p>Dat is het onderscheid dat de rest van deze oefening draagt. “Mannetjes zijn zwaarder” is een verschil in <strong>hoogte</strong> — twee wolken, de ene boven de andere, met lijnen die keurig parallel lopen. Een interactie is een verschil in <strong>steilheid</strong> — lijnen die uit elkaar waaieren. Twee groepen kunnen ver uit elkaar liggen en tóch precies dezelfde helling hebben, en dan is er geen interactie te bekennen.</p>
-</section>
-<section id="drie-lijnen-de-hele-soort-erbij" class="level2">
-<h2 class="anchored" data-anchor-id="drie-lijnen-de-hele-soort-erbij">Drie lijnen: de hele soort erbij</h2>
-<p><span class="begrippen">nominale moderator · overkoepelende toets</span></p>
-<p>Een dummy kon maar twee groepen aan. Maar <code>soort</code> heeft er drie — Adélie, Chinstrap, Gentoo — en dat verandert meer dan je zou denken.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · drie soorten in één model · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · drie soorten in één model · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>ANOVA → ANCOVA</strong>: <code>gewicht</code> naar <strong>Dependent Variable</strong>, <code>soort</code> naar <strong>Fixed Factors</strong>, <code>vinlengte</code> naar <strong>Covariates</strong>.</li>
-<li>Open <strong>Model</strong>. Selecteer in de linkerlijst <code>vinlengte</code> én <code>soort</code> tegelijk en voeg de <strong>interactieterm</strong> <code>vinlengte✻soort</code> toe. Er staan nu drie termen in het model.</li>
-<li>Kijk in de uitvoertabel <em>ANCOVA</em> naar de rij <code>vinlengte✻soort</code>: <em>F</em>(2, 336) = 5.53, <em>p</em> = .004.</li>
-<li>Open <strong>Descriptives Plots</strong>: <code>vinlengte</code> op de horizontale as, <code>soort</code> bij <strong>Separate Lines</strong>. JASP tekent één lijn per soort.</li>
-</ol>
-</div>
-</div>
-<p>Merk op wat JASP hier voor je doet — en wat het je daarmee ontneemt. In het R-broertje zie je bij drie soorten <strong>twee</strong> losse interactieregels, die je apart moet lezen en die elk maar de helft van het verhaal vertellen. JASP legt daar meteen één <em>F</em> overheen: <em>F</em>(2, 336) = 5.53, met <strong>twee</strong> vrijheidsgraden, want er kwamen twee regels bij. Dat ene getal is het antwoord op de vraag <em>“verschilt de helling érgens tussen de soorten?”</em> — en dat is precies de vraag waar één coëfficiënt geen antwoord meer op geeft.</p>
-<p>Dezelfde trechter als bij de ANOVA — daar toetste je eerst met één <em>F</em> of de drie soortgemiddelden überhaupt van elkaar verschilden, en pas daarna welk paar het deed. Eerst overkoepelend of er íéts is, dan pas waar het zit. Hier zit het bij de Gentoo’s.</p>
-<p>De drie hellingen los:</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de helling per soort · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · de helling per soort · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Filter per soort (het <strong>trechtertje</strong> boven de data, bijvoorbeeld <code>soort == "Gentoo"</code>) en draai per soort een <strong>Regression → Linear Regression</strong> van <code>gewicht</code> op <code>vinlengte</code>. Zet het filter daarna weer uit.</p>
-<ul>
-<li><strong>32.83</strong> gram per millimeter bij de Adélie’s</li>
-<li><strong>34.57</strong> bij de Chinstraps</li>
-<li><strong>54.62</strong> bij de Gentoo’s</li>
-</ul>
-</div>
-</div>
-<p><strong>32.83</strong>, <strong>34.57</strong> en <strong>54.62</strong> gram per millimeter vin. Twee soorten die vrijwel samenvallen, en één die er ver bovenuit steekt. Trek de flauwste van de steilste af — 54.62 − 32.83 — en je krijgt 21.79. Dat is exact de coëfficiënt <code>vinlengte:soortGentoo</code> uit de tabel hierboven, en dat is geen toeval: de Adélie is het ijkpunt én toevallig ook de flauwste, dus “hoeveel steiler dan de Adélie” en “hoeveel tussen de steilste en de flauwste” zijn hier hetzelfde getal. Onthoud het, want in de volgende trede komt het terug. Merk op dat de Gentoo’s op precies dezelfde 54.62 uitkomen als in de eerste trede — logisch, het is dezelfde groep pinguïns met dezelfde lijn. Wat veranderde is waarmee je ze vergelijkt: eerst met alle andere pinguïns op één hoop, nu met elke soort apart.</p>
-</section>
-<section id="zes-hokjes-twee-groeperingen-tegelijk" class="level2">
-<h2 class="anchored" data-anchor-id="zes-hokjes-twee-groeperingen-tegelijk">Zes hokjes: twee groeperingen tegelijk</h2>
-<p><span class="begrippen">tweeweg-ANOVA · celgemiddelde · type III</span></p>
-<p>Tot nu toe modereerde een groep het effect van een <em>getal</em> op het gewicht. Maar twee groeperingen kunnen elkaar ook onderling moduleren, en dan blijft er van de lijnen niets over — je houdt hokjes over.</p>
-<p>Zet <code>sekse</code> (twee groepen) naast <code>soort</code> (drie groepen) en je krijgt zes hokjes. Dat heet een <strong>tweeweg-ANOVA</strong>, of een factoriële ANOVA; dat is hetzelfde. De vraag is dan niet meer hoe steil een lijn loopt, maar of het gemiddelde per hokje zich netjes gedraagt.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · eerst de zes hokjes zelf · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · eerst de zes hokjes zelf · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li>Zet eerst een filter dat de negen pinguïns zonder sekse weglaat: <code>sekse == "male" or sekse == "female"</code>.</li>
-<li><strong>Descriptives</strong>: <code>gewicht</code> bij <strong>Variables</strong>, en zet <code>sekse</code> én <code>soort</code> allebei bij <strong>Split</strong>. Je krijgt het gemiddelde en de <em>n</em> per hokje.</li>
-</ol>
-</div>
-</div>
+<p>Schrik niet van dat eerste getal, −4031.48: dat is het intercept, en het voorspelt het gewicht van een pinguïn met een vin van nul millimeter. Die bestaat niet, dus het getal betekent niets — precies zoals in oefening 8.1. Laat hem staan en kijk naar de rest.</p>
+<p>Zet de twee soort-regels onder elkaar en je ziet waar de prikkel over ging:</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th></th>
-<th>Adélie</th>
-<th>Chinstrap</th>
-<th>Gentoo</th>
+<th>model 1 (alleen soort)</th>
+<th>model 2 (vin erbij)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>vrouwtje</strong></td>
-<td>3368.8 g (<em>n</em> = 73)</td>
-<td>3527.2 g (<em>n</em> = 34)</td>
-<td>4679.7 g (<em>n</em> = 58)</td>
+<td>Chinstrap t.o.v. Adélie</td>
+<td><strong>+32.43</strong></td>
+<td><strong>−206.51</strong></td>
 </tr>
 <tr class="even">
-<td><strong>mannetje</strong></td>
-<td>4043.5 g (<em>n</em> = 73)</td>
-<td>3939.0 g (<em>n</em> = 34)</td>
-<td>5484.8 g (<em>n</em> = 61)</td>
+<td>Gentoo t.o.v. Adélie</td>
+<td><strong>+1375.35</strong></td>
+<td><strong>+266.81</strong></td>
 </tr>
 </tbody>
 </table>
-<p>Lees die tabel eens per kolom. Bij de Adélies zijn de mannetjes 674.7 gram zwaarder dan de vrouwtjes, bij de Chinstraps 411.8, bij de Gentoo’s 805.1. Het sekseverschil is er bij alle drie — maar het is niet overal even groot. Dát is de interactie: het <strong>verschil in verschil</strong>. Niet of sekse uitmaakt, maar of het bij elke soort evenveel uitmaakt.</p>
-<p>En let op wat je nog steeds kunt: je kunt dit tekenen. Zes punten, twee lijntjes die elkaar volgen of niet. Dat is wat de hele 10.1 bij elkaar houdt — of de moderator nu twee, drie of zes hokjes maakt, je kunt het plaatje voor je zien.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de tweeweg-ANOVA · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · de tweeweg-ANOVA · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>ANOVA → ANOVA</strong> (níét ANCOVA — er is geen covariaat meer, allebei de voorspellers zijn groeperingen).</li>
-<li><code>gewicht</code> naar <strong>Dependent Variable</strong>; <code>sekse</code> én <code>soort</code> naar <strong>Fixed Factors</strong>. JASP zet de interactie er zelf al in; kijk het na onder <strong>Model</strong>, daar hoort <code>sekse✻soort</code> te staan.</li>
-<li>Vink onder <strong>Additional Options</strong> de effectgrootte <strong>η²</strong> aan.</li>
-<li>Open <strong>Descriptives Plots</strong>: <code>soort</code> op de horizontale as, <code>sekse</code> bij <strong>Separate Lines</strong> — lijnen boven staafjes, want alleen bij lijnen zie je of ze parallel lopen.</li>
-</ol>
-<pre><code>sekse         F(1, 327) = 311.84   p &lt; .001   η² = .139
-soort         F(2, 327) = 746.92   p &lt; .001   η² = .664
-sekse ✻ soort F(2, 327) =   8.76   p &lt; .001   η² = .008</code></pre>
-</div>
-</div>
-</section>
-<section id="wie-krijgt-het-overlapstuk-type-i-en-type-iii" class="level2">
-<h2 class="anchored" data-anchor-id="wie-krijgt-het-overlapstuk-type-i-en-type-iii">Wie krijgt het overlapstuk? Type I en type III</h2>
-<p><span class="begrippen">kwadratensommen · type III</span></p>
-<p>Eén ding verdient uitleg, ook al hoef je er in JASP niets voor te doen — juist daarom.</p>
-<p>Teken twee cirkels die elkaar deels overlappen. De ene is alles wat <code>sekse</code> van het gewicht kan verklaren, de andere alles wat <code>soort</code> kan verklaren. In het overlapstuk zit variantie waar ze allebei aanspraak op maken — en iemand moet beslissen wie hem krijgt.</p>
-<p><strong>Type I geeft hem aan wie het eerst genoemd wordt.</strong> Zet je sekse vooraan, dan pakt sekse het overlapstuk en houdt soort alleen wat overblijft; zet je soort vooraan, dan is het andersom. De uitkomst hangt dus af van de volgorde.</p>
-<p><strong>Type III geeft hem aan niemand.</strong> Elke factor krijgt alleen wat híj als enige kan verklaren. Dat is onafhankelijk van de volgorde, en het is wat je bij de meeste opleidingen en in de meeste tijdschriften tegenkomt.</p>
-<p><strong>JASP kiest type III voor je</strong>, en biedt je die keuze niet eens aan. Dat is prettig en het is ook een beetje verraderlijk, want je kunt hier je hele studie doorlopen zonder te weten dat de keuze bestaat. Draai je ooit hetzelfde model in R, dan moet je het er zelf bij zeggen — en vergeet je dat, dan rekent R gewoon door en geeft andere getallen, zonder een kik.</p>
-<p>Kijk maar wat er met de <em>F</em> voor sekse gebeurt onder vier varianten van dezelfde data:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>hoe het uitgerekend wordt</th>
-<th><em>F</em> voor sekse</th>
-<th><em>F</em> voor de interactie</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>type I, <code>sekse</code> eerst opgeschreven</td>
-<td>406.15</td>
-<td>8.76</td>
-</tr>
-<tr class="even">
-<td>type I, <code>soort</code> eerst opgeschreven</td>
-<td>387.46</td>
-<td>8.76</td>
-</tr>
-<tr class="odd">
-<td>type III (wat JASP doet)</td>
-<td>311.84</td>
-<td>8.76</td>
-</tr>
-<tr class="even">
-<td>type III, verkeerd opgezet</td>
-<td>173.55</td>
-<td>8.76</td>
-</tr>
-</tbody>
-</table>
-<p>Vier verschillende antwoorden op “heeft sekse effect op gewicht”, en één ervan is minder dan de helft van een andere. Maar kijk naar de rechterkolom: <strong>de interactie is in alle vier precies 8.76.</strong> Dat is geen toeval — de interactie is de term die als laatste komt, wat je ook doet, dus er valt voor hem niets te verdelen.</p>
-<p>Dat is meteen een handige controle. Vergelijk je jouw uitkomst ooit met die van een medestudent die het in ander gereedschap deed, kijk dan éérst naar de interactie. Komt die overeen terwijl de hoofdeffecten verschillen, dan heeft niemand zich verrekend — dan heeft een van jullie tweeën een andere kwadratensom gebruikt. Wélke van de twee, zegt die vergelijking je niet; daarvoor moeten jullie allebei opschrijven wat je gedaan hebt. Vandaar dat het in de rapportage hoort.</p>
-<div class="kicker">
-<p>schud het</p>
-</div>
-</section>
-<section id="duizend-werelden-waarin-de-soort-niets-modereert" class="level2">
-<h2 class="anchored" data-anchor-id="duizend-werelden-waarin-de-soort-niets-modereert">Duizend werelden waarin de soort niets modereert</h2>
-<p><span class="begrippen">soort-labels husselen · kloof tussen hellingen</span></p>
-<p>Terug naar de drie lijnen. Is die kloof tussen 32.83 en 54.62 echt, of kan het toeval hem namaken? Je zou dat willen uitproberen door vals te spelen. Deze keer husselen we de <strong>soort-labels</strong> los van de pinguïns: elke pinguïn houdt z’n eigen vinlengte en gewicht, maar krijgt een willekeurig soort-kaartje opgeplakt. Adélie, Gentoo, Chinstrap — lukraak rondgestrooid.</p>
-<p>Dat husselen <strong>koppelt de soort los van het vin-gewicht-verband</strong>. Je haalt met eigen handen weg dat een bepaalde soort bij een bepaalde helling hoort. In zo’n losgekoppelde wereld kán de ene soort geen steilere lijn meer hebben dan de andere — als de hellingen dan tóch verschillen, is dat puur toeval van de verdeling.</p>
-<p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar husselen en duizend keer opnieuw kijken is <em>code</em>-werk. Voor deze interactie is er (nog) geen browser-speeltje — dus voor de schud-ervaring <strong>draai je het R-broertje</strong>, waar het husselen een paar regels code is. Dat is geen gemis van jou of van JASP: het boek doet het bewust zo, de simulatie leeft in de code en in de speeltjes.</p>
-<p>Wat je daar ziet: <strong>duizend werelden waarin de soort de vin-gewicht-relatie niet modereert</strong> — want in elke geschudde wereld is de soort losgeknipt van de helling. De kloof tussen de hellingen danst rond een paar gram: soms toevallig wat groter, meestal klein. En dan de echte kloof — <strong>21.79</strong> gram per millimeter tussen de steilste (Gentoo) en de flauwste (Adélie) — valt ver buiten dat hele bergje. In duizend keer schudden haalde <strong>geen enkele</strong> geschudde wereld de echte kloof. De echte pinguïns weten iets wat de geschudde niet weten: bij de Gentoo’s telt een langere vin écht zwaarder mee.</p>
+<p>Dit model — een <strong>nominale voorspeller</strong> (de soort) naast een <strong>getalsmatige</strong> voorspeller (de vinlengte) — heeft een eigen naam: <strong>ANCOVA</strong>, <em>analysis of covariance</em>. De getalsmatige voorspeller die je erbij zet heet de <strong>covariaat</strong>, en de groepsvariabele heet de <strong>factor</strong>.</p>
+<p>Laat die naam je niet imponeren. Kijk nog eens naar de <code>lm()</code>-regel hierboven: het is gewoon een regressie met twee voorspellers, precies zoals in de vorige oefeningen. Wat er anders is, is niet de som maar de <strong>vraag</strong> — je wilt de groepen vergelijken, en de covariaat zit erin om die vergelijking eerlijker te maken.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
 </section>
-<section id="onder-welke-conditie-doet-iets-ertoe" class="level2">
-<h2 class="anchored" data-anchor-id="onder-welke-conditie-doet-iets-ertoe">Onder welke conditie doet iets ertoe</h2>
-<p><span class="begrippen">interactie · moderatie · verschil in verschil</span></p>
-<p>Wat je hier drie keer zag, heeft één naam: een <strong>interactie</strong>, in de wandelgangen ook <em>moderatie</em>. En de nette formulering is de moeite waard om precies over te nemen, want de slordige versie kost je later punten: <strong>het effect van vinlengte op gewicht verandert in grootte en/of richting met het niveau van de soort.</strong> Niet “vinlengte interacteert met soort” — dat zegt niet wát er met wát gebeurt.</p>
-<p>Ben legt het in de les zo uit, en het is de kortste weg naar waar het echt over gaat:</p>
+<section id="waar-die-duizend-gram-gebleven-is" class="level2">
+<h2 class="anchored" data-anchor-id="waar-die-duizend-gram-gebleven-is">Waar die duizend gram gebleven is</h2>
+<p><span class="begrippen">gecorrigeerde gemiddelden · vergelijkbaar maken</span></p>
+<p>De Gentoo’s verloren ruim duizend gram voorsprong. Waar ging die heen?</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · hoe lang zijn die vinnen eigenlijk?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · hoe lang zijn die vinnen eigenlijk?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>soort, mean), <span class="dv">2</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    Adelie Chinstrap    Gentoo</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    189.95    195.82    217.19</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Daar staat het. De Gentoo’s hebben vinnen van gemiddeld 217 millimeter, tegen 190 bij de Adélies — ruim zevenentwintig millimeter langer. En je weet uit oefening 8.1 wat een millimeter vin waard is: zo’n veertig gram. Een flink deel van “de Gentoo is zwaarder” was dus eigenlijk “de Gentoo heeft langere vinnen”.</p>
+<p>Model 2 vraagt daarom iets anders dan model 1. Niet: <em>hoeveel schelen deze soorten in gewicht?</em> Maar: <strong>hoeveel zouden ze schelen als ze allemaal dezelfde vinlengte hadden?</strong> Je maakt de groepen op papier vergelijkbaar op de covariaat, en kijkt wat er van het verschil overblijft.</p>
+<p>Dat kun je ook echt uitrekenen. Vraag het model wat het voorspelt voor elke soort bij één en dezelfde vinlengte — bijvoorbeeld de gemiddelde:</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · de gecorrigeerde gemiddelden">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · de gecorrigeerde gemiddelden
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gem.vin <span class="ot">&lt;-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>vinlengte)          <span class="co"># → 200.92</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m2, <span class="fu">data.frame</span>(<span class="at">vinlengte =</span> gem.vin, <span class="at">soort =</span> <span class="fu">levels</span>(peng<span class="sc">$</span>soort)))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    Adelie Chinstrap    Gentoo</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   4146.86   3940.35   4413.67</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ter vergelijking: de ruwe gemiddelden</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean), <span class="dv">2</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    Adelie Chinstrap    Gentoo</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   3700.66   3733.09   5076.02</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Deze heten de <strong>gecorrigeerde gemiddelden</strong> (<em>adjusted means</em>): wat elke soort naar verwachting zou wegen bij een vin van 200.92 millimeter. Ruw liggen ze op 3700, 3733 en 5076 — een kloof van bijna veertienhonderd gram. Gecorrigeerd liggen ze op 4147, 3940 en 4414: nog steeds verschillend, maar veel dichter bij elkaar, en de Chinstrap is nu de <strong>lichtste</strong> in plaats van de middelste.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Vragen bij dit model">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vragen bij dit model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Hoeveel van het verschil in gewicht verklaart model 1, en hoeveel model 2? <em>(rapporteer beide R²)</em></p>
+<p><strong>b)</strong> Toets model 2 als geheel. Schrijf de nulhypothese eerst voluit op. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
+<p><strong>c)</strong> Wat voegt de vinlengte toe bovenop de soort? Gebruik <code>anova(m1, m2)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
+<p><strong>d)</strong> En andersom — wat voegt de soort toe bovenop de vinlengte? Gebruik <code>anova(mv, m2)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
+<p><strong>e)</strong> Zijn de twee soort-verschillen in model 2 significant? <em>(rapporteer per soort b, SE, t en p)</em></p>
+<p><strong>f)</strong> Welke soort is de referentiecategorie, en waaraan zie je dat?</p>
+<p><strong>g)</strong> Waarom is de Chinstrap ruw ietsje zwáárder dan de Adélie, maar gecorrigeerd ruim tweehonderd gram lichter? Kijk naar de gemiddelde vinlengtes.</p>
+<p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Een ANCOVA heeft één aanname die de gewone regressie niet heeft: de covariaat moet in élke groep <strong>dezelfde helling</strong> hebben. Toets dat door een model mét interactie ernaast te leggen — <code>anova(m2, lm(gewicht ~ vinlengte * soort, data = peng))</code> — en kijk ook naar de drie hellingen apart.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Model 1: <em>R</em>² = .670. Model 2: <em>R</em>² = .783.</p>
+<p><strong>b)</strong> De nulhypothese: dit model — vinlengte en soort samen — verklaart níéts van de verschillen in gewicht; de <em>R</em>² is in de populatie nul. Uitkomst: <em>R</em>² = .783, <em>F</em>(3, 338) = 405.69, <em>p</em> &lt; .001.</p>
+<p><strong>c)</strong> <em>F</em>(1, 338) = 175.69, <em>p</em> &lt; .001, Δ<em>R</em>² = .113. Fors: de vin brengt echt iets nieuws mee.</p>
+<p><strong>d)</strong> <em>F</em>(2, 338) = 18.39, <em>p</em> &lt; .001, Δ<em>R</em>² = .024. Twee vrijheidsgraden, want de soort bracht twee dummy’s mee. Ook significant, maar veel kleiner — en dat is het punt van dit blok: het meeste van wat “soortverschil” leek, was vinlengte.</p>
+<p><strong>e)</strong> Ja, allebei. Chinstrap tegenover Adélie: <em>b</em> = −206.51, <em>SE</em> = 57.73, <em>t</em>(338) = −3.58, <em>p</em> &lt; .001. Gentoo tegenover Adélie: <em>b</em> = 266.81, <em>SE</em> = 95.26, <em>t</em>(338) = 2.80, <em>p</em> = .005.</p>
+<p><strong>f)</strong> Adélie. Die komt in geen enkele coëfficiëntnaam voor — R neemt de alfabetisch eerste groep als vergelijkpunt, precies zoals bij de dummy-oefening.</p>
+<p><strong>g)</strong> Omdat de Chinstraps langere vinnen hebben dan de Adélies (195.82 tegen 189.95 mm). Ruw compenseert die extra vinlengte hun gewicht net tot iets boven de Adélies. Houd je de vinlengte gelijk, dan valt die compensatie weg, en dan blijkt een Chinstrap bij dezelfde vinlengte gewoon een lichter beest.</p>
+<p><strong>Z) Nee — en dat is geen formaliteit.</strong> Draai de toets:</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · de parallelliteitsaanname">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · de parallelliteitsaanname
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m2, m3)          <span class="co"># → F = 5.53   op 2 en 336   p = .004</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># en kijk naar de hellingen apart</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(peng<span class="sc">$</span>soort)) {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">subset</span>(peng, soort <span class="sc">==</span> s)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(s, <span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> d))[[<span class="dv">2</span>]], <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie 32.83 | Chinstrap 34.57 | Gentoo 54.62</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><em>F</em>(2, 336) = 5.53, <em>p</em> = .004 — significant, dus de aanname zákt. En je ziet het ook zonder toets: bij de Gentoo’s is elke millimeter vin ruim 54 gram waard, bij de Adélies nog geen 33. Dat is geen klein verschil.</p>
+<p>Wat dat betekent lees je in de volgende sectie, want dit is te belangrijk voor een antwoordkader.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>snap het</p>
+</div>
+</section>
+<section id="de-aanname-die-zakte-en-wat-je-dan-doet" class="level2">
+<h2 class="anchored" data-anchor-id="de-aanname-die-zakte-en-wat-je-dan-doet">De aanname die zakte, en wat je dan doet</h2>
+<p><span class="begrippen">parallelliteit · interactie · wat je niet mag beweren</span></p>
+<p>Een ANCOVA leunt op iets wat de gewone meervoudige regressie niet nodig heeft. Model 2 geeft <strong>één</strong> helling voor de vinlengte, en gebruikt die voor alle drie de soorten. Dat mag alleen als die ene helling in elke groep ongeveer klopt. Die eis heet de <strong>parallelliteitsaanname</strong> (<em>parallelism</em>, of voluit: <em>homogeneity of regression slopes</em> — je komt allebei de namen tegen).</p>
+<p>Waarom hij ertoe doet, is met één beeld te zien. Drie evenwijdige lijnen liggen overal even ver uit elkaar, dus “het verschil tussen de soorten” is één getal, waar je ook kijkt. Lopen de lijnen niet evenwijdig, dan <strong>waaieren</strong> ze — en dan hangt het verschil ervan af bij welke vinlengte je meet. Bij korte vinnen is het verschil anders dan bij lange. Dan bestaat <em>het</em> gecorrigeerde gemiddelde helemaal niet meer.</p>
+<p>En dat is precies de situatie hier: 32.83, 34.57 en 54.62. De Gentoo-lijn loopt veel steiler dan de andere twee.</p>
+<div class="apa callout callout-style-default callout-note callout-titled" title="De regel, en waar hij vandaan komt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De regel, en waar hij vandaan komt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Het MVDA-werkboek van Peter de Heus — het oefenboek waarmee tweedejaars psychologie in Leiden multivariate data-analyse leren — is hier kort over (p.&nbsp;78):</p>
 <blockquote class="blockquote">
-<p>Zou wel of geen therapie uitmaken voor het welzijn van mensen? Ja, hè. Maar ga nu eens naar een moeilijk land waar geen eten is, waar mensen verhongeren. Geef die hongerende mensen sommige therapie en sommige geen therapie — zou dat verschil maken? Nee: als je geen eten hebt, heeft therapie ook geen zin.</p>
-<p>Dus therapie geeft soms een verschil, maar alleen in bepaalde situaties. Bij interactie-effecten is het de vraag: wanneer, onder welke conditie, heeft een bepaalde variabele een effect.</p>
+<p><em>“Since there is no reason for social reality to obey the parallelism assumption, in addition to an ordinary ANCOVA, we must also always perform an ANCOVA with the addition of the <code>covariate * treatment</code> interaction. If the F test of this interaction is not significant, you can forget the analysis with interaction and interpret the results with the ordinary ANCOVA model. <strong>If the interaction is significant, however, the variable should not be used as a covariate.</strong>”</em></p>
 </blockquote>
-<p>Dáár gaat het om. Een interactie is geen ingewikkeldere versie van een effect — het is de erkenning dat de vraag <em>“hoeveel effect heeft X op Y?”</em> soms geen antwoord heeft zonder de vervolgvraag <em>“bij wie, en wanneer?”</em> Bij de pinguïns: “hoeveel extra gewicht per millimeter vin?” heeft geen antwoord zonder “bij welke soort?”</p>
-<p>En daarom loog die 49.69 uit de prikkel niet, maar antwoordde hij op een vraag die niet goed gesteld was.</p>
-<p>Drie dingen om vast te houden, want ze komen alle drie terug.</p>
-<p><strong>Eén: hoogte is geen steilheid.</strong> De sekse maakte de pinguïns 683.41 gram zwaarder en veranderde niets aan de helling. Dat is een hoofdeffect, geen interactie. Twee wolken op verschillende hoogte met parallelle lijnen — verschil, maar geen verschil in verschil.</p>
-<p><strong>Twee: bij meer dan twee groepen stopt de coëfficiënt met antwoorden.</strong> Twee groepen geven één interactieregel die je gewoon kunt aflezen. Drie groepen geven er twee, en dan heb je één overkoepelende toets nodig om te weten of er überhaupt iets is. Dat is geen extra formaliteit; het is dezelfde reden waarom je bij drie gemiddelden een ANOVA doet en niet drie <em>t</em>-toetsen.</p>
-<p><strong>Drie: een hoofdeffect lees je aan de randen af.</strong> Bij de zes hokjes vroeg je niet naar één cel maar naar het gemiddelde van een hele rij of kolom — de <em>marginalen</em>. Ben doet dat in de les met lengtes: in Nederland zijn de mannen 1.80 en de vrouwen 1.70, in Japan 1.70 en 1.65. Vraag je “er komt een man binnen, hoe lang is die?”, dan gebruik je het marginaal van de mannen — (1.80 + 1.70) / 2 = 1.75 — en bij een vrouw (1.70 + 1.65) / 2 = 1.675. Die twee getallen gaan enkel en alleen over het hoofdeffect van geslacht op lengte, niet over land, en het verschil ertussen is 7.5 centimeter. Zo lees je ook de pinguïn-tabel: de rijen voor sekse, de kolommen voor soort, en de manier waarop de hokjes van hun eigen randen afwijken is de interactie.</p>
+<p>En over waaróm (p.&nbsp;77): <em>“Violation of the parallelism assumption is deadly for the validity and interpretability of ANCOVA.”</em> De gecorrigeerde gemiddelden kloppen dan niet meer, en de <em>F</em>-toetsen evenmin.</p>
+<p><strong>Dus:</strong> de mooie tabel uit de vorige sectie — 4147, 3940, 4414 — mag je zó niet rapporteren. Je hebt hem berekend, je hebt gezien wat een covariaat dóet, en dat was de les. Maar als resultaat houdt hij geen stand.</p>
+</div>
+</div>
+<p><strong>En dan de vraag die je nu hoort te stellen: wat van mijn eigen antwoorden hierboven is nog geldig?</strong> Eerlijk antwoord: <strong>alles wat uit <code>m2</code> komt, valt om.</strong> Dat is niet alleen die tabel — het zijn ook de twee soort-verschillen uit vraag e) (de −206.51 en de 266.81), de <em>F</em>-toets van het hele model uit vraag b), en de modelvergelijkingen uit c) en d). Als de hellingen niet parallel lopen, kloppen de gecorrigeerde gemiddelden niet, en dan kloppen de toetsen die erop rusten net zo min.</p>
+<p>Wat wél blijft staan: het model met <strong>alleen de soort</strong> (vraag a, model 1) — dat is de gewone eenweg-ANOVA uit de vorige oefening en die heeft met dit alles niets te maken. En de gemiddelde vinlengtes per soort uit vraag g, want dat zijn gewoon gemiddelden.</p>
+<p>Zeg dat verschil één keer hardop, want het is de hele kunst van dit blok: <strong>berekenen mocht, rapporteren mag niet.</strong> Je hebt die getallen nodig gehad om te zíen wat een covariaat doet. Ze in een verslag zetten is iets anders.</p>
+<p>Voordat je denkt dat je iets fout hebt gedaan: dat heb je niet. Je hebt de keuring gedraaid en die heeft gewerkt. <strong>Zo hoort het te gaan</strong> — een aanname die nooit zakt, is geen aanname maar een formaliteit.</p>
+<p>En je kent dit eigenlijk al.&nbsp;Een covariaat-maal-factor-interactie is exact wat je in de volgende oefening onder een andere naam tegenkomt: een helling die per groep verschilt. Bij een ANCOVA is dat een probleem, want die wíl één helling delen. In de volgende oefening is het juist het onderwerp.</p>
+<p>Wat je nu doet, is drie dingen kunnen kiezen — en de eerste is bijna altijd de goede:</p>
+<ol type="1">
+<li><strong>De covariaat niet gebruiken</strong> en gewoon de eenweg-ANOVA rapporteren. Dat is De Heus’ voorschrift.</li>
+<li><strong>De interactie tot onderwerp maken</strong> en per groep een eigen helling rapporteren. Dan doe je geen ANCOVA meer, maar precies wat de volgende oefening doet.</li>
+<li><strong>Een andere factor kiezen</strong> waar de aanname wél houdt — en dat gaan we nu doen, want de pinguïns hebben er een.</li>
+</ol>
 <div class="kicker">
 <p>jouw beurt</p>
 </div>
 </section>
-<section id="dezelfde-zes-hokjes-een-andere-meetlat" class="level2">
-<h2 class="anchored" data-anchor-id="dezelfde-zes-hokjes-een-andere-meetlat">Dezelfde zes hokjes, een andere meetlat</h2>
-<p><span class="begrippen">tweeweg-ANOVA · type III · parallel</span></p>
+<section id="van-soort-naar-sekse-nu-met-een-aanname-die-houdt" class="level2">
+<h2 class="anchored" data-anchor-id="van-soort-naar-sekse-nu-met-een-aanname-die-houdt">Van soort naar sekse — nu met een aanname die houdt</h2>
+<p><span class="begrippen">covariaat · gecorrigeerd gemiddelde · parallelliteit</span></p>
+<p>In de vorige oefening toetste je het gewichtsverschil tussen de seksen met een eenweg-ANOVA: <em>F</em>(1, 331) = 72.96, <em>p</em> &lt; .001. Mannetjes zijn zwaarder. Maar mannetjes hebben ook langere vinnen — en daarmee is dit precies dezelfde vraag als hierboven, op een factor met twee groepen.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · zet het klaar">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · zet het klaar
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> <span class="fu">subset</span>(peng, <span class="sc">!</span><span class="fu">is.na</span>(sekse) <span class="sc">&amp;</span> sekse <span class="sc">!=</span> <span class="st">""</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ps<span class="sc">$</span>sekse <span class="ot">&lt;-</span> <span class="fu">factor</span>(ps<span class="sc">$</span>sekse)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(ps)                     <span class="co"># → 333   negen pinguïns missen hun sekse</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> sekse, <span class="at">data =</span> ps)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> sekse, <span class="at">data =</span> ps)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -963,39 +907,118 @@ sekse ✻ soort F(2, 327) =   8.76   p &lt; .001   η² = .008</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Jouw beurt. Je hebt net gezien dat sekse en soort samen iets doen met het <strong>gewicht</strong> van een pinguïn: het sekseverschil is groter bij de Gentoo’s dan bij de Chinstraps. Nu dezelfde twee groeperingen, dezelfde zes hokjes — maar je meet iets anders: de <strong>snavellengte</strong>.</p>
-<p>De vraag: is het sekseverschil in snavellengte ook niet overal even groot?</p>
-<ol type="1">
-<li><p><strong>Maak eerst de tabel, vóór je toetst.</strong> Gebruik <strong>Descriptives</strong> met <code>snavellengte</code> bij <strong>Variables</strong> en <code>sekse</code> én <code>soort</code> bij <strong>Split</strong>. Laat het filter dat de negen pinguïns zonder sekse weglaat aan staan. Ter controle:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th></th>
-<th>Adélie</th>
-<th>Chinstrap</th>
-<th>Gentoo</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>vrouwtje</strong></td>
-<td>37.26</td>
-<td>46.57</td>
-<td>45.56</td>
-</tr>
-<tr class="even">
-<td><strong>mannetje</strong></td>
-<td>40.39</td>
-<td>51.09</td>
-<td>49.47</td>
-</tr>
-</tbody>
-</table></li>
-<li><p><strong>Reken de sekse-kloof per soort uit</strong> — trek per kolom de bovenste rij van de onderste af. Zijn die drie kloven ongeveer even groot, of niet?</p></li>
-<li><p><strong>Toets het</strong> met <strong>ANOVA → ANOVA</strong>: <code>snavellengte</code> als Dependent Variable, <code>sekse</code> en <code>soort</code> als Fixed Factors, en η² aangevinkt. Ter controle: de interactie komt uit op <em>F</em>(2, 327) = 2.28, <em>p</em> = .10. Niet significant, dus deze keer lopen de lijnen zo goed als parallel.</p></li>
-<li><p><strong>Teken het</strong> via <strong>Descriptives Plots</strong> (<code>soort</code> op de as, <code>sekse</code> bij Separate Lines) en leg je twee plaatjes naast elkaar — dit met de snavellengte, en het eerdere met het gewicht.</p></li>
-<li><p>Denk-vraag: bij het gewicht was er wél een interactie tussen sekse en soort, bij de snavellengte niet — en dat op precies dezelfde 333 pinguïns, met precies dezelfde twee groeperingen. Wat zegt dat over waar een interactie eigenlijk over gáát? (Hint: de interactie zit niet in de twee factoren, maar in wat je meet.)</p></li>
-</ol>
+<p><strong>a)</strong> Hoeveel gram schelen de seksen ruw? <em>(rapporteer b en R² van <code>s1</code>)</em></p>
+<p><strong>b)</strong> Waarom staan er 333 pinguïns in <code>ps</code> en geen 342? Wat betekent dat voor je rapportage?</p>
+<p><strong>c)</strong> Toets <code>s2</code> als geheel. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
+<p><strong>d)</strong> Wat gebeurt er met het sekseverschil zodra de vinlengte erbij komt? <em>(rapporteer b, SE, t, p en het 95%-interval)</em></p>
+<p><strong>e)</strong> Reken de gemiddelde vinlengte per sekse uit. Verklaart dat de verandering uit vraag d?</p>
+<p><strong>f)</strong> Reken de twee gecorrigeerde gemiddelden uit met <code>predict()</code>, bij de gemiddelde vinlengte. Let op: reken die gemiddelde vinlengte <strong>opnieuw uit op <code>ps</code></strong> — <code>mean(ps$vinlengte)</code>, niet de <code>gem.vin</code> van eerder in dit blok. Zet ze daarna naast de ruwe gemiddelden.</p>
+<p><strong>g)</strong> Wat voegt de vinlengte toe bovenop de sekse? <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
+<p><strong>h)</strong> Vergelijk deze uitkomst met de soort-ANCOVA hierboven. Bij de soort verdween het meeste van het groepsverschil; hier niet. Wat is het verschil?</p>
+<p><strong>Z)</strong> Toets de parallelliteitsaanname, net als hierboven. Kijk ook naar de twee hellingen apart. Mag je dit model gebruiken?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <em>b</em> = 683.41 gram (mannetjes zwaarder dan vrouwtjes), <em>R</em>² = .181.</p>
+<p><strong>b)</strong> Van negen pinguïns is de sekse niet vastgesteld; <code>subset()</code> laat die vallen. In je rapportage noem je die <em>n</em> = 333 dus expliciet, en niet de 342 van het hele bestand. Een steekproefgrootte die stilletjes verandert tussen twee analyses is precies het soort ding waar een lezer over struikelt.</p>
+<p><strong>c)</strong> <em>R</em>² = .806, <em>F</em>(2, 330) = 684.80, <em>p</em> &lt; .001.</p>
+<p><strong>d)</strong> Het halveert ruimschoots: van 683.41 naar <em>b</em> = 347.85, <em>SE</em> = 40.34, <em>t</em>(330) = 8.62, <em>p</em> &lt; .001, 95% CI [268.49, 427.21]. Nog steeds fors en nog steeds significant — maar de helft van het “sekseverschil” was vinlengte.</p>
+<p><strong>e)</strong> Ja. Mannetjes 204.51 mm, vrouwtjes 197.36 mm — ruim zeven millimeter langer. En wat een millimeter waard is, staat gewoon in je eigen model:</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · de vin-helling van dit model">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · de vin-helling van dit model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(s2)[[<span class="st">"vinlengte"</span>]], <span class="dv">2</span>)     <span class="co"># → 46.98</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Ruim zeven millimeter maal bijna 47 gram is ongeveer 336 gram — en dat is vrijwel precies het stuk dat uit het sekseverschil verdween (683.41 − 347.85 = 335.56).</p>
+<p><strong>f)</strong> Bij de gemiddelde vinlengte van <strong>200.97</strong> mm: vrouwtjes 4031.57 gram, mannetjes 4379.42 gram. Ruw waren dat 3862.27 en 4545.68.</p>
+<p>Kwam je op iets net anders uit? Kijk dan welk gemiddelde je gebruikte. Eerder in dit blok was <code>gem.vin</code> <strong>200.92</strong>, gerekend over alle 342 pinguïns; hier is het 200.97, over de 333 met een bekende sekse. Die negen weggevallen pinguïns verschuiven het gemiddelde met vijf honderdsten millimeter, en dus je gecorrigeerde gemiddelden met een paar gram. Dat is geen rekenfout van jou — het is dezelfde <em>n</em> = 333 uit vraag b, die nu ook je covariaat raakt. <strong>Reken het gemiddelde altijd uit op precies de gegevens waar je model op draait.</strong> De twee schuiven dus naar elkaar toe, maar de volgorde blijft dezelfde — anders dan bij de Chinstrap.</p>
+<p><strong>g)</strong> <em>F</em>(1, 330) = 1062.63, <em>p</em> &lt; .001. Enorm, zoals te verwachten: de vinlengte is verreweg de beste voorspeller van het gewicht die deze data heeft.</p>
+<p><strong>h)</strong> Bij de soort ging het grootste deel van het groepsverschil naar de covariaat toe, en één verschil klapte zelfs om van teken. Hier blijft ruim de helft staan. Dat komt doordat de seksen véél minder in vinlengte verschillen (7 mm) dan de soorten onderling (27 mm tussen Adélie en Gentoo). Hoe sterker de groepen op de covariaat verschillen, hoe meer er van het groepsverschil verdwijnt zodra je ervoor corrigeert.</p>
+<p><strong>Z) Ja, deze keer wél.</strong> De toets:</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · de parallelliteitsaanname, nog een keer">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · de parallelliteitsaanname, nog een keer
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(s2, <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> sekse, <span class="at">data =</span> ps))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → F = 0.01   op 1 en 329   p = .920</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(ps<span class="sc">$</span>sekse)) {</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">subset</span>(ps, sekse <span class="sc">==</span> s)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(s, <span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> d))[[<span class="dv">2</span>]], <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># female 47.15 | male 46.86</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><em>F</em>(1, 329) = 0.01, <em>p</em> = .92 — bij lange na niet significant. En de twee hellingen zijn 47.15 en 46.86: die schelen nog geen drie tienden van een gram per millimeter. Zó parallel worden ze zelden. Hier mag je de gecorrigeerde gemiddelden dus gewoon rapporteren.</p>
+<p>Eén slag om de arm, en die is van De Heus (p.&nbsp;83): een niet-significante interactie <strong>bewijst</strong> de aanname niet. Een toets die niets vindt, kan ook gewoon te weinig power hebben gehad — “niets gevonden” is nooit hetzelfde als “er is niets”. Daarom kijk je er altijd de hellingen zelf bij. Hier zeggen die twee hetzelfde als de toets, en dán ben je zo dicht bij zekerheid als je komt.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>eindopdracht</p>
+</div>
+</section>
+<section id="de-afsluiter-van-het-hele-hoofdstuk" class="level2">
+<h2 class="anchored" data-anchor-id="de-afsluiter-van-het-hele-hoofdstuk">De afsluiter van het hele hoofdstuk</h2>
+<p>Dit hoofdstuk ging over één idee in vijf gedaanten: <strong>een groep is ook een getal.</strong> Je codeerde groepen als dummy’s, toetste twee groepen met een <em>t</em>-toets, gaf dat verschil een maat met Cohens <em>d</em>, toetste drie groepen in één keer met een ANOVA, en zette er zojuist een covariaat naast. Vijf namen, één model.</p>
+<p>Nu breng je het samen — en deze keer niet als losse vragen, maar als het stuk dat je in een verslag zou zetten. Twee secties, zoals in een artikel.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eindopdracht
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>De vraag.</strong> Verschillen de drie pinguïnsoorten in <strong>snaveldiepte</strong>, en blijft dat verschil overeind als je corrigeert voor de vinlengte?</p>
+<section id="methode-en-data-analyse" class="level3">
+<h3 class="anchored" data-anchor-id="methode-en-data-analyse">Methode en data-analyse</h3>
+<p>Schrijf op wat je gaat doen, vóór je de uitkomsten kent. Deze sectie bevat geen resultaten.</p>
+<ul>
+<li>Welke variabelen gebruik je, en welke rol heeft elk (afhankelijke, factor, covariaat)? Noem het meetniveau erbij.</li>
+<li>Hoeveel pinguïns doen er mee, en vallen er waarnemingen af?</li>
+<li>Welke toetsen ga je draaien, in welke volgorde, en waarom die volgorde?</li>
+<li><strong>Welke aannames ga je controleren, en hoe?</strong> Noem ze bij naam en zeg per aanname wat je opvraagt. Vergeet de parallelliteit niet — en schrijf ook op wat je gaat doen als hij zakt. Dat besluit neem je nú, niet straks als je de uitkomst ziet.</li>
+</ul>
+</section>
+<section id="resultaten" class="level3">
+<h3 class="anchored" data-anchor-id="resultaten">Resultaten</h3>
+<p>Draai het, en schrijf het op als een resultatensectie — lopende zinnen, geen lijstje.</p>
+<ul>
+<li>De eenweg-ANOVA op soort, met effectgrootte.</li>
+<li>De uitkomst van je aannamecontroles, inclusief de parallelliteit. Als een aanname zakt, zeg dat en voer uit wat je in je methodesectie beloofde.</li>
+<li>Het model dat je uiteindelijk mag interpreteren, met de bijbehorende getallen.</li>
+<li>Eén slotalinea in gewone taal: wat betekent dit voor de vraag waarmee je begon?</li>
+</ul>
+<p><em>Ter controle van je opzet, niet van je uitkomst:</em> de vinlengte en de snaveldiepte hangen negatief samen (<em>r</em> = −.584), dus verwacht hier iets anders dan bij het gewicht. En loop de parallelliteit écht na voordat je gecorrigeerde gemiddelden opschrijft — dit blok liet net zien waarom.</p>
+</section>
 </div>
 </div>
 <div class="kicker">
@@ -1004,7 +1027,7 @@ sekse ✻ soort F(2, 327) =   8.76   p &lt; .001   η² = .008</code></pre>
 </section>
 <section id="schrijf-het-op-als-een-onderzoeker" class="level2">
 <h2 class="anchored" data-anchor-id="schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</h2>
-<p><span class="begrippen">rapportagezin · F en p · nul-vondst</span></p>
+<p><span class="begrippen">rapportagezin · gecorrigeerde gemiddelden · aanname vermelden</span></p>
 <div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1015,25 +1038,24 @@ sekse ✻ soort F(2, 327) =   8.76   p &lt; .001   η² = .008</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Een interactie opschrijven klinkt als iets voor de gevorderden, maar het blijft een boodschappenlijstje in zinsvorm: wat vergeleek je, verschilde het, en waar zat het. Twee modelzinnen, één voor elke vorm die je vandaag zag.</p>
-<p><strong>Een helling die per groep verschilt:</strong></p>
+<p>Bij een ANCOVA komt er één laag bij die je bij de gewone regressie niet had: je <strong>meldt dat je de aanname gecontroleerd hebt</strong>, en met welke uitkomst. Niet in een voetnoot — gewoon in de zin, want een lezer kan je gecorrigeerde gemiddelden anders niet op waarde schatten. Zo voor het sekse-model:</p>
 <blockquote class="blockquote">
-<p>Om te onderzoeken of het effect van vinlengte op gewicht afhangt van de soort, voerden we bij 342 pinguïns een covariantieanalyse uit met soort als factor, vinlengte als covariaat en hun interactieterm in het model. De hellingen verschilden significant tussen de soorten, <em>F</em>(2, 336) = 5.53, <em>p</em> = .004: bij de Gentoo’s ging een millimeter extra vin samen met meer extra gewicht (54.62 g/mm) dan bij de Adélies (32.83) en de Chinstraps (34.57). Het effect van vinlengte op gewicht werd dus gemodereerd door de soort.</p>
+<p>Om te onderzoeken of het gewichtsverschil tussen mannetjes- en vrouwtjespinguïns standhoudt na correctie voor lichaamsgrootte, voerden we een covariantieanalyse uit met sekse als factor en vinlengte als covariaat (<em>n</em> = 333; van negen pinguïns was de sekse niet vastgesteld). De parallelliteitsaanname werd niet geschonden, <em>F</em>(1, 329) = 0.01, <em>p</em> = .92. Het model als geheel verklaarde het grootste deel van de verschillen in gewicht, <em>R</em>² = .81, <em>F</em>(2, 330) = 684.80, <em>p</em> &lt; .001. Bij gelijke vinlengte wogen mannetjes gemiddeld 347.85 gram meer dan vrouwtjes, <em>b</em> = 347.85, <em>SE</em> = 40.34, <em>t</em>(330) = 8.62, <em>p</em> &lt; .001, 95% CI [268.49, 427.21]. De gecorrigeerde gemiddelden bedroegen 4031.57 gram voor vrouwtjes en 4379.42 gram voor mannetjes, tegen ruwe gemiddelden van 3862.27 en 4545.68 gram.</p>
 </blockquote>
-<p><strong>Twee groeperingen tegelijk:</strong></p>
+<p>Vier dingen om op te letten. <strong>De <em>n</em> staat erbij, mét de reden</strong> dat het er 333 zijn en geen 342 — een steekproef die tussen twee analyses krimpt zonder uitleg is een lezer kwijt. <strong>De aannametoets staat vóór de uitkomsten</strong>, want hij bepaalt of die uitkomsten iets betekenen. <strong>De gecorrigeerde gemiddelden staan náást de ruwe</strong>, zodat je lezer ziet hoevéél de correctie deed. En <strong>“bij gelijke vinlengte”</strong> staat er met zoveel woorden: zonder die woorden leest iemand het getal als het gewone sekseverschil, en dat is het niet.</p>
+<p>De typografie is als altijd: symbolen die een waarde dragen cursief — <em>R</em>², <em>F</em>, <em>p</em>, <em>SE</em>, <em>t</em>, <em>n</em> — de gewone woorden rechtop, CI rechtop met een spatie vóór de haak, twee decimalen, en een <em>p</em> onder .001 schrijf je als <em>p</em> &lt; .001 zonder nul voor de punt.</p>
+<p><strong>En schrijf een gezakte aanname net zo op.</strong> Voor het soort-model zou de zin beginnen met:</p>
 <blockquote class="blockquote">
-<p>Om te onderzoeken of het effect van sekse op gewicht afhangt van de soort, voerden we bij 333 pinguïns een tweeweg-variantieanalyse uit met sekse en soort als factoren (type III-kwadratensommen). De interactie was significant, <em>F</em>(2, 327) = 8.76, <em>p</em> &lt; .001, η² = .01: het sekseverschil was groter bij de Gentoo’s (805.09 g) dan bij de Chinstraps (411.76 g). Beide hoofdeffecten waren eveneens significant, voor sekse <em>F</em>(1, 327) = 311.84, <em>p</em> &lt; .001, η² = .14, en voor soort <em>F</em>(2, 327) = 746.92, <em>p</em> &lt; .001, η² = .66.</p>
+<p>De parallelliteitsaanname werd geschonden, <em>F</em>(2, 336) = 5.53, <em>p</em> = .004; de vinlengte is daarom niet als covariaat gebruikt en de soortverschillen worden ongecorrigeerd gerapporteerd.</p>
 </blockquote>
-<p>Kijk wat er cursief staat en wat niet. Alléén de symbolen <em>F</em> en <em>p</em> hellen; η² is een Griekse letter en blijft rechtop, en de gewone woorden en de gewichtsgetallen ook. De statistieken krijgen <strong>twee decimalen</strong>, APA-precies, terwijl de lopende tekst hierboven gerust rondde (“ruim zeshonderd gram”) voor de intuïtie. Een <em>p</em> die kleiner is dan .001 schrijf je niet uit maar als <em>p</em> &lt; .001, en zonder nul ervoor. Alles staat in de verleden tijd, want je vertelt wat er gevónden werd, en beide zinnen staan op eigen benen: wie er één uit dit blok tilt, weet nog steeds wie er gemeten werd, wat er gemeten werd, en waar de interactie zat.</p>
-<p>Merk ook op dat de tweede zin zégt dat het type III-kwadratensommen zijn. JASP koos dat voor je, dus je hoefde er niets voor te doen — maar je moet het wél vermelden. Je zag hierboven dat dezelfde data vier verschillende <em>F</em>-waarden kan opleveren, dus zonder die vermelding kan niemand jouw getal narekenen.</p>
-<p>Jouw beurt: schrijf zelf de rapportage-zin voor de taak hierboven — de snavellengte. Die interactie was juist níét significant (<em>F</em>(2, 327) = 2.28, <em>p</em> = .10), en ook een nul-vondst rapporteer je netjes op: dat het sekseverschil in snavellengte bij alle drie de soorten ongeveer even groot was, is een echt resultaat. De modelzinnen hierboven mag je lenen; hardop voorlezen mag ook.</p>
+<p>Dat is geen bekentenis van falen maar gewoon wat er gebeurd is. Wie de gezakte toets weglaat en de gecorrigeerde gemiddelden tóch opschrijft, rapporteert wat goed uitkwam.</p>
 </div>
 </div>
-<div class="boekvorm" data-w="W10">
-<p>◠ <strong>In het boek</strong></p>
-<p>Hier: als de moderator een groep is, kun je het tekenen — twee lijnen, drie lijnen, of zes hokjes.</p>
-<p>In het boek: <strong>W10 — Verschil in verschil</strong></p>
-<p><em>Daar draait het om de lijnen die niet parallel lopen — het moment waarop je merkt dat “het effect” een tweede vraag nodig heeft: bij wie?</em></p>
+<div class="boekvorm" data-w="W9">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: een groepsverschil dat verschuift — en soms van teken wisselt — zodra je een getalsmatige medespeler naast de groep zet, plus de aanname die bepaalt of je dat mag.</p>
+<p>In het boek: <strong>W9 — Groepen zijn ook getallen</strong></p>
+<p><em>Daar is de soort geen etiket maar een kolom getallen zoals elke andere. Zodra dat gelukt is, mag er van alles naast — ook iets wat wél gewoon een getal was.</em></p>
 </div>
 
 
@@ -1448,13 +1470,13 @@ sekse ✻ soort F(2, 327) =   8.76   p &lt; .001   η² = .008</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../20_blokken/blok_ancova.html" class="pagination-link" aria-label="Oefening 9.5 · ANCOVA: een groep én een getal">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 9.5 · ANCOVA: een groep én een getal</span>
+      <a href="../20_blokken/blok_anova.html" class="pagination-link" aria-label="Oefening 9.4 · ANOVA en η²">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 9.4 · ANOVA en η²</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../20_blokken/blok_interactie_continu.html" class="pagination-link" aria-label="Oefening 10.2 · Als de moderator een getal is">
-        <span class="nav-page-text">Oefening 10.2 · Als de moderator een getal is</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../20_blokken/blok_interactie.html" class="pagination-link" aria-label="Oefening 10.1 · Als de moderator een groep is">
+        <span class="nav-page-text">Oefening 10.1 · Als de moderator een groep is</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
