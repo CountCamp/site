@@ -949,23 +949,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Lees die twee naast elkaar, want dat is het hele blok in vier getallen.</p>
 <p>De vin voegt, bovenop de snavel, <em>F</em>(1, 339) = 573.09, <em>p</em> &lt; .001 toe, en tilt de <em>R</em>² met .406 omhoog. De snavel voegt, bovenop de vin, <em>F</em>(1, 339) = 1.36, <em>p</em> = .24 toe: één duizendste <em>R</em>².</p>
-<p>En herken die twee getallen — .406 en .001 stonden hierboven al in de tabel bij de partiële correlatie, in de kolom <em>uniek in R²</em>. Dat is geen toeval maar dezelfde som: de unieke bijdrage van een voorspeller aan de <em>R</em>², langs twee wegen uitgerekend. Merk ook op dat die <em>p</em> van .244 exact de <em>p</em> uit de coëfficiëntentabel is. Voor één voorspeller erbij zijn de modelvergelijking en de <em>t</em>-toets van die helling hetzelfde ding.</p>
+<p>En herken die twee getallen — .406 en .001 stonden hierboven al in de tabel bij de partiële correlatie, in de kolom uniek in <em>R</em>². Dat is geen toeval maar dezelfde som: de unieke bijdrage van een voorspeller aan de <em>R</em>², langs twee wegen uitgerekend. Merk ook op dat die <em>p</em> van .244 exact de <em>p</em> uit de coëfficiëntentabel is. Voor één voorspeller erbij zijn de modelvergelijking en de <em>t</em>-toets van die helling hetzelfde ding.</p>
 <p>Nog één regel uit de uitvoer, want die is verraderlijker dan hij eruitziet:</p>
-<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · en wat doet de adjusted R²?">
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · en wat doet de adjusted *R*²?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In R · en wat doet de adjusted R²?
+<span class="screen-reader-only">Opmerking</span>In R · en wat doet de adjusted <em>R</em>²?
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl)<span class="sc">$</span>adj.r.squared      <span class="co"># → .75828   alleen de vin</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared   <span class="co"># → .75854   snavel erbij</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared   <span class="co"># → .75854   snavel erbij</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu een kolom pure ruis in plaats van de snavel</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)                          <span class="co"># zodat jij dezelfde ruis trekt als wij</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>ruis <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(peng))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> ruis, <span class="at">data =</span> peng))<span class="sc">$</span>adj.r.squared   <span class="co"># → .75762</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>De gewone <em>R</em>² moest omhoog — die kan niet anders. De adjusted <em>R</em>² hoefde niet mee, en ging tóch een piepklein beetje omhoog: van .75828 naar .75854, twee tienduizendsten. Zet er een kolom pure ruis in plaats van de snavel in, dan zakt hij wél (nagemeten: van .75828 naar .75762). De adjusted <em>R</em>² doet dus zijn werk — maar zijn lat ligt véél lager dan die van de significantie. <strong>Een voorspeller die de adjusted <em>R</em>² niet laat zakken, heeft daarmee nog niets bewezen.</strong> De snavel haalde die lat, en is alsnog niet van nul te onderscheiden.</p>
+<p>De gewone <em>R</em>² moest omhoog — die kan niet anders. De adjusted <em>R</em>² hoefde niet mee, en ging tóch een piepklein beetje omhoog: van .75828 naar .75854, twee tienduizendsten. Zet er een kolom pure ruis in plaats van de snavel in, dan zakt hij meestal wél: onze ruiskolom bracht hem van .75828 naar .75762.</p>
+<p><em>Meestal</em>, en dat woord staat er met opzet. Haal die <code>set.seed(7)</code> weg, draai het opnieuw, en in ongeveer één op de drie keer <strong>stijgt</strong> de adjusted <em>R</em>² juist — van een kolom die per ongeluk niets weet. Hij is dan ook geen slot op de deur maar een voorzichtiger gok naar wat je model in de populatie waard zou zijn, en zo’n gok gaat soms mis. <strong>Een voorspeller die de adjusted <em>R</em>² niet laat zakken, heeft daarmee dus nog niets bewezen</strong> — zijn lat ligt véél lager dan die van de significantie. De snavel haalde die lat, en is alsnog niet van nul te onderscheiden.</p>
+<div class="verderwil">
+<p><strong>Voor wie verder wil — wanneer stijgt hij dan wél?</strong></p>
+<p>De oefening is compleet zonder dit kader; sla het gerust over.</p>
+<p>Dat “ongeveer één op de drie” is geen vuistregel maar volgt uit een scherpe grens, en die grens heb je hierboven al zien werken. De adjusted <em>R</em>² gaat omhoog precies wanneer de <em>F</em> van de nieuwe voorspeller <strong>boven de 1</strong> uitkomt, en omlaag zodra hij eronder blijft. Kijk maar terug: de snavel bracht <em>F</em> = 1.36 mee, net boven de 1 — en inderdaad kroop de adjusted <em>R</em>² van .75828 naar .75854. De ruiskolom van <code>set.seed(7)</code> bracht <em>F</em> = 0.07 mee, ver eronder, en daar zakte hij. Bij één voorspeller erbij komt dat op hetzelfde neer als <em>t</em> onder de −1 of boven de 1.</p>
+<p>Daarmee is die “ongeveer één op de drie” ook precies te maken, zonder ook maar één keer te schudden. Een kolom pure ruis levert een <em>t</em> op die rond de nul zwabbert, en zo’n <em>t</em> komt in <strong>.318</strong> van de trekkingen voorbij de −1 of de 1. Dat getal komt uit de <em>t</em>-verdeling; je hoeft het niet zelf te kunnen halen, wel te weten dat het er ligt.</p>
+<p>Zie je hier meteen waarom de <em>F</em> de nullijn op 1 heeft liggen? Een <em>F</em> is een verhouding: wat de voorspeller oplevert, gedeeld door wat toeval zou opleveren. Bij <em>F</em> = 1 doet hij het dus even goed als ruis, en dat is precies het punt waar de adjusted <em>R</em>² zijn schouders ophaalt.</p>
+</div>
 <p>De les van dit blok, in drie regels:</p>
 <ul>
 <li>De <strong>schud-toets</strong> en de toetsen in de tabel zeiden, elk met hun eigen meetlat: die 48.14 is echt, de vin draagt bij aan het gewicht — óók naast de snavel.</li>
