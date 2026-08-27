@@ -613,6 +613,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#vraag-de-power-op-in-r" id="toc-vraag-de-power-op-in-r">Vraag de power op in R</a></li>
   <li><a href="#duizend-werelden-waarin-het-effect-écht-bestaat" id="toc-duizend-werelden-waarin-het-effect-écht-bestaat">Duizend werelden waarin het effect écht bestaat</a></li>
   <li><a href="#het-valse-alarm-en-het-missen" id="toc-het-valse-alarm-en-het-missen">Het valse alarm en het missen</a></li>
+  <li><a href="#hoe-klein-mocht-het-verschil-zijn" id="toc-hoe-klein-mocht-het-verschil-zijn">Hoe klein mocht het verschil zijn?</a></li>
   <li><a href="#met-de-power-bril-terug-naar-de-planten" id="toc-met-de-power-bril-terug-naar-de-planten">Met de power-bril terug naar de planten</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
   </ul>
@@ -702,6 +703,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><em>Achteraf</em>, als je andermans “niet significant” leest: kijk éérst naar de <em>n</em>. Klein? Dan is de eerlijke lezing niet “werkt niet” maar “dit onderzoek kon het niet zien”. Dat is geen detail — het is het verschil tussen een aanpak afschrijven en een vraag open houden.</li>
 </ul>
 <div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="hoe-klein-mocht-het-verschil-zijn" class="level2">
+<h2 class="anchored" data-anchor-id="hoe-klein-mocht-het-verschil-zijn">Hoe klein mocht het verschil zijn?</h2>
+<p><span class="begrippen">de derde knop · kleinste nog zichtbare verschil · effect in grammen</span></p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Jouw beurt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jouw beurt — bekende planten, en de knop die nog niet gedraaid is. Een power-berekening heeft er drie, en je hebt er twee gebruikt: van het aantal naar de power (15 per groep gaf .26), en van het gewenste effect naar het aantal (64 per groep voor de norm van .80). De derde stand: vul het aantal en de power in, en vraag welk effect daar nog bij past. Dat is de vraag <em>hoe klein mocht een verschil zijn om deze opzet het nog te laten zien?</em> — een vraag over de opzet zelf, niet over de <em>p</em> die eruit kwam. Je stelt hem aan de studie die je al getoetst hebt: controle tegen behandeling 2, tien planten per groep.</p>
+<ol type="1">
+<li><p><strong>Draai de derde knop.</strong> Laat <code>delta</code> weg — wat je niet invult, rekent R uit:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tien per groep, power .80 — welk effect hoort daar nog bij?</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d80 <span class="ot">&lt;-</span> <span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">power =</span> .<span class="dv">80</span>)<span class="sc">$</span>delta</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d80        <span class="co"># → 1.32</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: <em>d</em> = 1.32. Dat is het kleinste effect op het drooggewicht dat een opzet met tien planten per groep met power .80 nog te zien krijgt — ruim tweeënhalf keer het middelgrote effect van <em>d</em> = 0.5 waar dit hele blok mee rekende.</p></li>
+<li><p><strong>Eerst terugdraaien, dan naar grammen.</strong> Een knop vertrouw je pas als hij beide kanten op draait. Dit blok gaf je al: voor een effect van <em>d</em> = 0.5 heb je 64 per groep nodig. Vul die 64 dus in en kijk wat eruit komt:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de knop terug: 64 per groep, power .80 — welk effect hoorde daar bij?</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">64</span>, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">power =</span> .<span class="dv">80</span>)<span class="sc">$</span>delta   <span class="co"># → 0.50</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: 0.50 — het middelgrote effect waar dit blok mee begon; de knop draait echt beide kanten op. (Op je scherm staat 0.499 en geen gladde 0.5: die 64 was zelf al naar boven afgerond, want een studie met 63.77 planten per groep bestaat niet.) Onze plantenstudie had geen 64 per groep maar tien, en dáár hoort de 1.32 uit stap 1 bij.</p>
+<p>Dan de vertaling naar grammen, want die 1.32 praat in standaardafwijkingen en planten wegen grammen. De spreiding van de twee groepen samen krijg je hier kado: <strong>0.5176 gram</strong>. Waar dat getal vandaan komt — en waarom je twee groepen zo tot één spreiding mag samenvoegen — reken je zelf uit in de oefening over Cohens <em>d</em>; hier is het even een gegeven. Probeer ’m niet na te rekenen met <code>sd()</code> over alle twintig planten op één hoop: dan krijg je 0.56 en denk je dat je iets fout doet. Dat is een ándere spreiding — die telt het verschil tússen de twee groepen mee, en juist dat wil je hier niet.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># het kleinste verschil dat deze opzet met power .80 nog ziet</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>d80 <span class="sc">*</span> <span class="fl">0.5176</span>      <span class="co"># → 0.69</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: 0.69 gram. Pas vanaf een verschil van 0.69 gram in drooggewicht stond deze opzet er sterk voor; bij alles daaronder zakt de kans om het te zien onder de .80.</p></li>
+<li><p><strong>Leg het naast wat er lag.</strong> Het echte verschil ken je uit de oefening over de <em>p</em>-waarde: de planten op behandeling 2 wogen gemiddeld 5.53 gram, de controleplanten 5.03. Haal ze erbij en reken alleen dat verschil uit — de spreiding blijft de gegeven 0.5176:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"plantgroei.csv"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> pg<span class="sc">$</span>gewicht[pg<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> pg<span class="sc">$</span>gewicht[pg<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"behandeling2"</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># wat er werkelijk lag: behandeling 2 min controle</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>verschil <span class="ot">&lt;-</span> <span class="fu">mean</span>(v2) <span class="sc">-</span> <span class="fu">mean</span>(ct)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>verschil                                    <span class="co"># → 0.49</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># hoe sterk stond deze opzet voor een verschil van díé grootte?</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">delta =</span> verschil, <span class="at">sd =</span> <span class="fl">0.5176</span>)<span class="sc">$</span>power   <span class="co"># → 0.52</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Ter controle: 0.49 gram en power .52. Let op wat er in die laatste regel veranderde: <code>delta</code> staat nu in grammen, dus <code>sd</code> moet ook in grammen — het is de verhouding tussen die twee waar de power op draait. En kijk wat er staat: het gevonden verschil is kleiner dan de 0.69 uit stap 2 — en tóch werd het significant, <em>t</em>(16.79) = 2.13, <em>p</em> = .048, met de hakken over de sloot. Die .52 is het muntje uit het begin van dit blok, maar nu echt: zo’n opzet vindt een verschil van deze grootte ongeveer even vaak wél als niet, en deze keer vond hij het. En merk op wat je níét gedaan hebt: een Cohens <em>d</em> uit de data rekenen. Alles bleef in grammen; de knop deed het werk.</p></li>
+<li><p><strong>De denk-vraag.</strong> Stel je honderd van zulke opzetten voor, elk met een écht effect van het voer op het drooggewicht erin, precies zo groot als hier. Ongeveer de helft komt thuis met “significant”, de andere helft niet. Kijk nu alleen naar de verschillen die die eerste helft rapporteert — de studies die het effect vónden. Vallen die gemiddeld groter of kleiner uit dan het echte effect, en waarom?</p>
+<p>En dan het lastigste stukje van deze hele oefening, dus lees het langzaam. Wat je net bedacht hebt geldt over de <strong>hele stapel</strong>: gemiddeld genomen rapporteren de studies die de streep halen een groter verschil dan er werkelijk is. Over <strong>deze ene</strong> studie zegt het niets — welke van de honderd je in handen hebt, kun je aan die ene niet zien. Je weet dus iets over de stapel en niets over de losse trekking, en dat is precies waarom je hier niet mag opschrijven dat onze 0.49 gram wel nep zal zijn.</p>
+<p>Houd je eigen antwoord daar tegenaan: er horen twee dingen in te staan die allebei waar zijn en die tegen elkaar in lijken te gaan — dát er een verschil gevonden is, en dat de <strong>grootte</strong> ervan bij deze opzet wankel staat. Een zin die maar één van die twee noemt, is de helft. Staan ze er allebei in?</p></li>
+</ol>
+</div>
+</div>
+<div class="kicker">
 <p>eindopdracht</p>
 </div>
 </section>
@@ -718,13 +769,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># hoeveel steentjes hebben we eigenlijk</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(d)                                                    <span class="co"># → 12</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en op hoe weinig rust die p dus</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d))<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">4</span>]   <span class="co"># → .049</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># hoeveel steentjes hebben we eigenlijk</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(d)                                                    <span class="co"># → 12</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en op hoe weinig rust die p dus</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d))<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">4</span>]   <span class="co"># → .049</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Die <em>p</em> = .049 van net hangt aan een zijden draad: met <em>n</em> = 12 had één ander steentje de uitkomst zo terug over de streep geduwd. Dat draadje heet power.</p>
