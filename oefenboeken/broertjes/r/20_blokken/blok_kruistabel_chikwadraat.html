@@ -741,16 +741,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer schudden: 'overleefd' lukraak herverdelen over de opvarenden</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse, <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd)))<span class="sc">$</span>statistic   <span class="co"># → iets kleins</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar χ² dan landt</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse, <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd)))<span class="sc">$</span>statistic)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>))              <span class="co"># het toeval-bergje, links in beeld</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(nep)                                  <span class="co"># → 22.3: verder komt puur geluk niet</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">190.4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd, <span class="at">replace =</span> <span class="cn">FALSE</span>)))<span class="sc">$</span>statistic   <span class="co"># → iets kleins</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar χ² dan landt</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chisq.test</span>(<span class="fu">table</span>(tit<span class="sc">$</span>klasse,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">sample</span>(tit<span class="sc">$</span>overleefd, <span class="at">replace =</span> <span class="cn">FALSE</span>)))<span class="sc">$</span>statistic)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">200</span>))              <span class="co"># het toeval-bergje, links in beeld</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(nep)                                  <span class="co"># → 22.3: verder komt puur geluk niet</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">190.4</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/s2_schud_tabel.html" target="_blank">▶ Zie het dansen: het schud-speeltje</a></p>
@@ -808,7 +810,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tr <span class="ot">&lt;-</span> <span class="fu">table</span>(tit<span class="sc">$</span>rol, tit<span class="sc">$</span>overleefd)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tr</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(tr, <span class="dv">1</span>) <span class="sc">*</span> <span class="dv">100</span>)       <span class="co"># wie overleefde, per rol</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tr)                        <span class="co"># → X-squared = 46.5, df = 1</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># correct = TRUE is de standaard, en op een 2×2 bijt hij: Yates</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tr, <span class="at">correct =</span> <span class="cn">TRUE</span>)        <span class="co"># → X-squared = 46.5, df = 1</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: van de passagiers overleefde 38%, van de bemanning 24%, en χ²(1) = 46.54. Dat kleinere <em>df</em> = 1 klopt: een tabel van 2 rijen × 2 kolommen, dus (2−1)×(2−1) = 1.</p></li>
 <li><p>Reken de sterkte uit — Cramérs V, net als in het blok: <code>sqrt(chisq.test(tr)$statistic / sum(tr))</code>. Ter controle: <em>V</em> = .15.</p></li>
 <li><p>Denk-vraag: over de vier klassen heen was <em>V</em> = .29; plat je alles tot passagier-vs-bemanning, dan zakt <em>V</em> naar .15. Er is niet mínder gebeurd — je bent minder gaan kíjken. Wat heb je weggegooid door eerste, tweede en derde klasse op één hoop te vegen? Kijk terug naar de residuen: welk verschil — dat tussen +9.6 en −3.3 — verdwijnt zodra je die drie klassen samen “passagier” noemt?</p></li>

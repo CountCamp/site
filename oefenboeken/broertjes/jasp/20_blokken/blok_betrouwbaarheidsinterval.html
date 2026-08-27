@@ -654,9 +654,53 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>En hier moet ik eerlijk zijn: dat trekken is geen knop in JASP.</strong> JASP geeft je het keurige eindresultaat; het duizend keer opnieuw trekken is <em>code</em>- of <em>speeltje</em>-werk. Geen gemis — het boek doet het bewust zo: de ervaring loopt via een <strong>bootstrap-speeltje</strong> in de browser (of via het R-broertje, waar het een handvol regels is).</p>
 <p><a href="../speeltjes/w6_trek_interval.html" target="_blank">▶ Speel het trek-speeltje</a></p>
 <p>Wat je daar ziet: <strong>duizend werelden die dansen rond je schatting</strong> — niet rond nul, zoals bij het schudden, maar rond −0.87, want elke wereld is uit jóúw data getrokken en draagt het verschil in zich mee. De middelste 95% van die dans loopt van −1.39 tot −0.29 — op wat afronding na hetzelfde bandje dat JASP je net gaf. Het betrouwbaarheidsinterval ís de dans; de formule achter JASP’s kolommen is alleen de snelweg ernaartoe. En de nul staat er búíten: 999 van de 1000 werelden landen onder nul, één verdwaalde er net overheen. Zit nul buiten de dans, dan is het verschil er echt.</p>
+<section id="drie-keer-duizend-werelden-drie-verschillende-vragen" class="level3">
+<h3 class="anchored" data-anchor-id="drie-keer-duizend-werelden-drie-verschillende-vragen">Drie keer duizend werelden, drie verschillende vragen</h3>
+<p>Dit is de derde keer dat je duizend werelden ziet dansen, en de speeltjes lijken verdacht veel op elkaar. Toch beantwoorden ze verschillende vragen — en het verschil zit niet in de handeling.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>wat je met de data doet</th>
+<th>de werelden dansen rond</th>
+<th>de vraag die je stelt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>grabbelen</strong> (Oefening 3.1)</td>
+<td>grijpen uit de <strong>populatie</strong>, mét terugleggen</td>
+<td>de waarheid (4202 gram)</td>
+<td>hoe hard wiebelt een gemiddelde van steekproef tot steekproef?</td>
+</tr>
+<tr class="even">
+<td><strong>schudden</strong> (Oefening 4.1 en verder)</td>
+<td>de twee kolommen <strong>van elkaar losknippen</strong></td>
+<td>de nul</td>
+<td>kan toeval dit namaken?</td>
+</tr>
+<tr class="odd">
+<td><strong>bootstrappen</strong> (hier)</td>
+<td>grijpen uit <strong>je eigen steekproef</strong>, mét terugleggen</td>
+<td>jouw schatting (−0.87)</td>
+<td>hoe zeker is dit ene getal?</td>
+</tr>
+</tbody>
+</table>
+<p>Grabbelen en bootstrappen zijn dezelfde handeling: grijpen, noteren, terugleggen. Het verschil is waar je je arm in steekt: in 3.1 in een ton waarvan we de waarheid kennen, een luxe die alleen in een oefening bestaat; hier in de tien potten die de kweker écht heeft, juist omdát de kas onbereikbaar is.</p>
+<p><strong>Geeft die dans ook een <em>p</em>?</strong> Nee. Jouw werelden dansen rond −0.87, jouw eigen antwoord — dat zag je net in het speeltje. Een <em>p</em> vraagt iets anders — <em>hoe ver zou het toeval komen als er niks was?</em> — en dat is een dans rond nul. Die heb je hier niet gebouwd. De bootstrap levert je dus een interval, geen toets; de <em>p</em> die in je JASP-tabel staat komt uit de <em>t</em>-toets ernaast, niet uit de dans. Geen gemis: de nul-vraag heb je al beantwoord, want het interval loopt van −1.39 tot −0.29 en de nul valt erbuiten.</p>
+<p>Let wel goed op wát je met die werelden telt, want twee dingen lijken op elkaar en zijn het niet. <strong>Kijken of de nul buiten de middelste 95% valt: dat mag</strong> — dat deed je hierboven, en dat is het interval aflezen. <strong>De staartfractie een <em>p</em> noemen: dat mag niet.</strong> Want dat is de verleiding: tel hoeveel werelden aan de andere kant van nul landen, en noem dat getal je <em>p</em>. Dat is er ongeveer één op de duizend, dus dat leest als <em>p</em> = .001 — terwijl de toets op dezelfde data <em>p</em> = .009 gaf. Bijna tien keer zo veel, en dat is geen toeval: die telling meet hoe ver jóúw dans over de nul heen reikt, niet hoe vaak het toeval jouw uitkomst zou halen. Was er géén enkele wereld overheen gegaan, dan had de telling “kleiner dan .001” geroepen — een getal dat alleen verklapt hoeveel werelden je hebt gebouwd.</p>
+<p>In Oefening 6.1 tel je wél werelden om een <em>p</em> te krijgen. Dat zijn geschudde werelden, en die dansen rond nul. Dat is het hele verschil.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
+</section>
 </section>
 <section id="wat-het-interval-wél-en-niet-belooft" class="level2">
 <h2 class="anchored" data-anchor-id="wat-het-interval-wél-en-niet-belooft">Wat het interval wél en niet belooft</h2>
@@ -685,7 +729,7 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Zet het <strong>Filter</strong> deze keer op <code>groep != "behandeling1"</code> — nu doen de controle-potten en voer twee mee, en voer één niet. Lees eerst de twee gemiddelden af bij <strong>Descriptives</strong>. Ter controle: gewoon water <em>M</em> = 5.03 gram, voer twee <em>M</em> = 5.53 — een verschil van 0.49 gram.</li>
 <li>Draai dezelfde <strong>Independent Samples T-Test</strong> (weer <strong>Welch</strong>, met <strong>Location parameter</strong> + <strong>Confidence interval</strong> aan) en lees de <em>95% CI for Mean Difference</em> af. Ter controle: het interval loopt van 0.01 tot 0.98. (Hé, geen min-teken dit keer — JASP rekent alfabetisch <code>behandeling2</code> mín <code>controle</code>, en die volgorde valt nu net goed. Rekenvolgorde, weet je nog.) Eerste kijkvraag: zit de 0 erin? Kijk goed naar die ondergrens.</li>
-<li>Maak de dans zelf in het <a href="../speeltjes/w6_trek_interval.html" target="_blank">trek-speeltje</a> (of in het R-broertje): laad deze twee groepen en trek duizend keer opnieuw, elke wereld als voer twee mín controle. Ter controle: de middelste 95% loopt van 0.06 tot 0.90, en 985 van de 1000 werelden landen boven nul.</li>
+<li>Maak de dans zelf in het <a href="../speeltjes/w6_trek_interval.html" target="_blank">trek-speeltje</a> (of in het R-broertje): laad deze twee groepen en trek duizend keer opnieuw, elke wereld als voer twee mín controle. Ter controle: de middelste 95% loopt van 0.06 tot 0.90, en 985 van de 1000 werelden landen boven nul. Die telling is een controlegetal om te zien of je goed zit — geen <em>p</em>, je weet inmiddels waarom.</li>
 <li>Denk-vraag: dit interval schampt de nul — de ondergrens is 0.01 gram, minder dan een haartje. Leg het naast het voer-één-tegen-voer-twee-interval van hierboven en vergelijk ligging én breedte. Wat zeg je nu eerlijk tegen de kweker: “voer twee werkt beter dan water”, of “kweek eerst nog een rij potten”? En wat zou een <em>p</em>-waarde-liefhebber hier roepen — voelt dat als het hele verhaal?</li>
 </ol>
 </div>
