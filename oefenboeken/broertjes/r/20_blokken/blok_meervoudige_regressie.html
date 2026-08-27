@@ -681,16 +681,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># eerst: gewicht uit alleen snavellengte</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m1)[[<span class="st">"snavellengte"</span>]]   <span class="co"># → 87.42   ruim 87 gram per millimeter snavel</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>r.squared        <span class="co"># → .354</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model.sn <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.sn)[[<span class="st">"snavellengte"</span>]]   <span class="co"># → 87.42   ruim 87 gram per millimeter snavel</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn)<span class="sc">$</span>r.squared        <span class="co"># → .354</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nu: gooi de vinlengte erbij</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> peng)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m2)[[<span class="st">"snavellengte"</span>]]   <span class="co"># → 6.05    de helling zakt door de bodem</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared        <span class="co"># → .760</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>model.sn.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> peng)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.sn.vl)[[<span class="st">"snavellengte"</span>]]   <span class="co"># → 6.05    de helling zakt door de bodem</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared        <span class="co"># → .760</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat ene getal bij <code>snavellengte</code>. In het eerste model staat er <strong>87.42</strong>: ruim 87 gram per millimeter, en een derde van alle verschil in gewicht verklaard. Zet je de vinlengte ernaast, dan zakt diezelfde helling naar <strong>6.05</strong> — nog geen veertiende van wat hij was. En de <em>R</em>² doet precies het omgekeerde van de helling: die springt van .35 naar .76.</p>
@@ -712,12 +712,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R zet dit onderaan zijn uitvoer, en je begint er juist</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>fstatistic       <span class="co"># → 536.63  2  339</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared        <span class="co"># → .7600</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>adj.r.squared    <span class="co"># → .7585</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>fstatistic       <span class="co"># → 536.63  2  339</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared        <span class="co"># → .7600</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared    <span class="co"># → .7585</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en de p die bij die F hoort</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">summary</span>(m2)<span class="sc">$</span>fstatistic</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>fstatistic</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(f[<span class="dv">1</span>], f[<span class="dv">2</span>], f[<span class="dv">3</span>], <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)     <span class="co"># ruim kleiner dan .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -735,13 +735,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(m2))                       <span class="co"># de vier kolommen, voor elke voorspeller</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"vinlengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]     <span class="co"># → 48.14  2.01  23.94  0.0000</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(m2))[<span class="st">"snavellengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]  <span class="co"># →  6.05  5.18   1.17  0.2438</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(m2)[<span class="st">"vinlengte"</span>, ]              <span class="co"># → 44.19  52.10</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(m2)[<span class="st">"snavellengte"</span>, ]           <span class="co"># → -4.14  16.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tabel <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(model.sn.vl))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tabel                            <span class="co"># de vier kolommen, voor elke voorspeller</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tabel[<span class="st">"vinlengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]          <span class="co"># → 48.14  2.01  23.94  0.0000</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tabel[<span class="st">"snavellengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]       <span class="co"># →  6.05  5.18   1.17  0.2438</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model.sn.vl)[<span class="st">"vinlengte"</span>, ]       <span class="co"># → 44.19  52.10</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model.sn.vl)[<span class="st">"snavellengte"</span>, ]    <span class="co"># → -4.14  16.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ul>
@@ -937,13 +938,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># wat voegt de VIN toe, bovenop de snavel?</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1, m2)                <span class="co"># → F = 573.09  op 1 en 339   p &lt; .001</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(m1)<span class="sc">$</span>r.squared      <span class="co"># → .406</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.sn, model.sn.vl)                                 <span class="co"># → F = 573.09  op 1 en 339   p &lt; .001</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(model.sn)<span class="sc">$</span>r.squared <span class="co"># → .406</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu andersom: wat voegt de SNAVEL toe, bovenop de vin?</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mv <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mv, m2)                <span class="co"># → F =   1.36  op 1 en 339   p = .244</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(mv)<span class="sc">$</span>r.squared      <span class="co"># → .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>model.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.vl, model.sn.vl)                                 <span class="co"># → F =   1.36  op 1 en 339   p = .244</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(model.vl)<span class="sc">$</span>r.squared <span class="co"># → .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Lees die twee naast elkaar, want dat is het hele blok in vier getallen.</p>
@@ -960,8 +961,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mv)<span class="sc">$</span>adj.r.squared      <span class="co"># → .75828   alleen de vin</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>adj.r.squared      <span class="co"># → .75854   snavel erbij</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl)<span class="sc">$</span>adj.r.squared      <span class="co"># → .75828   alleen de vin</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared   <span class="co"># → .75854   snavel erbij</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>De gewone <em>R</em>² moest omhoog — die kan niet anders. De adjusted <em>R</em>² hoefde niet mee, en ging tóch een piepklein beetje omhoog: van .75828 naar .75854, twee tienduizendsten. Zet er een kolom pure ruis in plaats van de snavel in, dan zakt hij wél (nagemeten: van .75828 naar .75762). De adjusted <em>R</em>² doet dus zijn werk — maar zijn lat ligt véél lager dan die van de significantie. <strong>Een voorspeller die de adjusted <em>R</em>² niet laat zakken, heeft daarmee nog niets bewezen.</strong> De snavel haalde die lat, en is alsnog niet van nul te onderscheiden.</p>
@@ -990,9 +991,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mA <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mB <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snaveldiepte, <span class="at">data =</span> peng)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>mC <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> snaveldiepte, <span class="at">data =</span> peng)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model.sn <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>model.dp <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snaveldiepte, <span class="at">data =</span> peng)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>model.sn.dp <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> snaveldiepte, <span class="at">data =</span> peng)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
@@ -1005,16 +1006,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> Hoeveel gram per millimeter voorspelt <code>mA</code>, en hoeveel van het verschil in gewicht verklaart hij? <em>(rapporteer b en R²)</em></p>
-<p><strong>b)</strong> Doe hetzelfde voor <code>mB</code>. Let op het teken — klopt dat met wat je zou verwachten? <em>(rapporteer b en R²)</em></p>
-<p><strong>c)</strong> Toets nu <code>mC</code> als geheel. Schrijf de nulhypothese eerst voluit op. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
+<p><strong>a)</strong> Hoeveel gram per millimeter voorspelt <code>model.sn</code>, en hoeveel van het verschil in gewicht verklaart hij? <em>(rapporteer b en R²)</em></p>
+<p><strong>b)</strong> Doe hetzelfde voor <code>model.dp</code>. Let op het teken — klopt dat met wat je zou verwachten? <em>(rapporteer b en R²)</em></p>
+<p><strong>c)</strong> Toets nu <code>model.sn.dp</code> als geheel. Schrijf de nulhypothese eerst voluit op. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
 <p><strong>d)</strong> Wat gebeurt er met de helling van de snavellengte als de snaveldiepte ernaast komt te staan — en hoe verhoudt dat zich tot wat er in dit blok met diezelfde snavellengte naast de vinlengte gebeurde?</p>
-<p><strong>e)</strong> Blijven ze allebei significant in <code>mC</code>? <em>(rapporteer per voorspeller b, SE, t, p en het 95%-interval)</em></p>
+<p><strong>e)</strong> Blijven ze allebei significant in <code>model.sn.dp</code>? <em>(rapporteer per voorspeller b, SE, t, p en het 95%-interval)</em></p>
 <p><strong>f)</strong> Reken de overlap uit: <code>cor(peng$snavellengte, peng$snaveldiepte)</code>. Vergelijk met de .656 van vin en snavel. Wat voorspelt dat ene getal over de uitkomst van vraag d?</p>
 <p><strong>g)</strong> Reken de twee partiële correlaties uit, met het residuen-recept uit dit blok. <em>(rapporteer beide)</em></p>
-<p><strong>h)</strong> Hoeveel voegt de <strong>snavellengte</strong> uniek toe aan de <em>R</em>²? Gebruik <code>anova(mB, mC)</code>. <em>(rapporteer ΔR² en de F-toets)</em> — voor de snaveldiepte krijg je hem kado: Δ<em>R</em>² = .117, <em>F</em>(1, 339) = 74.76.</p>
-<p><strong>i)</strong> Tel die twee unieke bijdragen bij elkaar op en vergelijk met de <em>R</em>² van <code>mC</code>. Ze tellen niet op. Waar is het verschil gebleven?</p>
-<p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Loop de aannames na: kijk naar de residuen (<code>plot(mC, which = 1)</code> voor gelijke spreiding, <code>which = 2</code> voor de verdeling), en of elke pinguïn maar één keer meetelt.</p>
+<p><strong>h)</strong> Hoeveel voegt de <strong>snavellengte</strong> uniek toe aan de <em>R</em>²? Gebruik <code>anova(model.dp, model.sn.dp)</code>. <em>(rapporteer ΔR² en de F-toets)</em> — voor de snaveldiepte krijg je hem kado: Δ<em>R</em>² = .117, <em>F</em>(1, 339) = 74.76.</p>
+<p><strong>i)</strong> Tel die twee unieke bijdragen bij elkaar op en vergelijk met de <em>R</em>² van <code>model.sn.dp</code>. Ze tellen niet op. Waar is het verschil gebleven?</p>
+<p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Loop de aannames na: kijk naar de residuen (<code>plot(model.sn.dp, which = 1)</code> voor gelijke spreiding, <code>which = 2</code> voor de verdeling), en of elke pinguïn maar één keer meetelt.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
@@ -1036,8 +1037,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>e)</strong> Ja, allebei ruimschoots. Snavellengte: <em>b</em> = 75.28, <em>SE</em> = 5.97, <em>t</em>(339) = 12.61, <em>p</em> &lt; .001, 95% CI [63.54, 87.03]. Snaveldiepte: <em>b</em> = −142.72, <em>SE</em> = 16.51, <em>t</em>(339) = −8.65, <em>p</em> &lt; .001, 95% CI [−175.19, −110.25]. Geen van beide intervallen bevat nul.</p>
 <p><strong>f)</strong> <em>r</em> = −.235, tegen .656 voor vin en snavel. Dát is het antwoord op vraag d. Twee voorspellers die elkaar nauwelijks overlappen kunnen allebei hun eigen verhaal vertellen; twee die sterk samenhangen vertellen elkaars verhaal, en dan houdt de zwakste niets eigens over.</p>
 <p><strong>g)</strong> <em>r</em>(gewicht, snavellengte | snaveldiepte) = <strong>.565</strong> — nauwelijks lager dan de gewone .595. En <em>r</em>(gewicht, snaveldiepte | snavellengte) = <strong>−.425</strong>, tegen een gewone −.472. Vergelijk met de snavel naast de vin: dáár zakte .595 naar .063.</p>
-<p><strong>h)</strong> Snavellengte uniek (uit <code>anova(mB, mC)</code>): Δ<em>R</em>² = .248, <em>F</em>(1, 339) = 158.97, <em>p</em> &lt; .001. Snaveldiepte uniek (uit <code>anova(mA, mC)</code>): Δ<em>R</em>² = .117, <em>F</em>(1, 339) = 74.76, <em>p</em> &lt; .001. Allebei substantieel — en vergelijk dat nog één keer met de .001 van de snavel naast de vin.</p>
-<p><strong>i)</strong> .248 + .117 = .365, terwijl <em>R</em>²(mC) = .471. Er ontbreekt .106. Dat is het <strong>gedeelde</strong> stuk: verschil in gewicht dat de twee samen verklaren, maar dat je aan geen van beide alleen kunt toeschrijven. Precies daarom telt zo’n opsplitsing niet netjes op, en precies daarom is “hoe belangrijk is deze voorspeller?” een lastigere vraag dan hij lijkt.</p>
+<p><strong>h)</strong> Snavellengte uniek (uit <code>anova(model.dp, model.sn.dp)</code>): Δ<em>R</em>² = .248, <em>F</em>(1, 339) = 158.97, <em>p</em> &lt; .001. Snaveldiepte uniek (uit <code>anova(model.sn, model.sn.dp)</code>): Δ<em>R</em>² = .117, <em>F</em>(1, 339) = 74.76, <em>p</em> &lt; .001. Allebei substantieel — en vergelijk dat nog één keer met de .001 van de snavel naast de vin.</p>
+<p><strong>i)</strong> .248 + .117 = .365, terwijl <em>R</em>²(model.sn.dp) = .471. Er ontbreekt .106. Dat is het <strong>gedeelde</strong> stuk: verschil in gewicht dat de twee samen verklaren, maar dat je aan geen van beide alleen kunt toeschrijven. Precies daarom telt zo’n opsplitsing niet netjes op, en precies daarom is “hoe belangrijk is deze voorspeller?” een lastigere vraag dan hij lijkt.</p>
 <p><strong>Z)</strong> Ja, met de gebruikelijke slag om de arm. De residuen liggen in een vrijwel egale band om nul (geen trechter, dus gelijke spreiding is hier geen probleem) en volgen de rechte lijn in de QQ-plot redelijk. Elke pinguïn is één keer gewogen, dus de waarnemingen zijn onafhankelijk. En de twee voorspellers overlappen maar weinig (<em>r</em> = −.235), dus ze zitten elkaar niet in de weg bij het schatten.</p>
 </div>
 </div>

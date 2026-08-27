@@ -682,18 +682,23 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 1: voorspelt karaat de gladheid?</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gladheid <span class="sc">~</span> karaat, <span class="at">data =</span> d))[<span class="dv">2</span>]              <span class="co"># a  = 3.93</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 2: en wat doet gladheid met glans, naast karaat?</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d))[<span class="dv">3</span>]      <span class="co"># b  = 7.93</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># het pad langs gladheid is a maal b</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fl">3.93</span> <span class="sc">*</span> <span class="fl">7.93</span>                                           <span class="co"># ab = 31.16  indirect</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># leg dat naast het totale effect en wat er direct overblijft</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d))[<span class="dv">2</span>]                 <span class="co"># c  = 32.14  totaal</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d))[<span class="dv">2</span>]      <span class="co"># c' = 0.98   direct</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># drie modellen, en let op de derde: die levert er twee paden tegelijk</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model.a      <span class="ot">&lt;-</span> <span class="fu">lm</span>(gladheid <span class="sc">~</span> karaat, <span class="at">data =</span> d)             <span class="co"># karaat → gladheid</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>model.c      <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)                <span class="co"># karaat → glans, kaal</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>model.beide  <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d)     <span class="co"># hierin zitten b én c'</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 1: voorspelt karaat de gladheid?</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.a)[<span class="dv">2</span>]          <span class="co"># a  = 3.93</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 2: en wat doet gladheid met glans, naast karaat?</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)[<span class="dv">3</span>]      <span class="co"># b  = 7.93</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># het pad langs gladheid is a maal b</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fl">3.93</span> <span class="sc">*</span> <span class="fl">7.93</span>               <span class="co"># ab = 31.16  indirect</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># leg dat naast het totale effect en wat er direct overblijft</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.c)[<span class="dv">2</span>]          <span class="co"># c  = 32.14  totaal</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)[<span class="dv">2</span>]      <span class="co"># c' = 0.98   direct</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Het pad karaat → gladheid → glans draagt <em>a</em> × <em>b</em> = 31.16 van het totale effect van 32.14: 97% loopt via de slijper, en wat rechtstreeks overblijft is die 0.98 uit het blok over meervoudige regressie.</p>
@@ -712,16 +717,20 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"luchtkwaliteit.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> lucht[<span class="fu">complete.cases</span>(lucht[<span class="fu">c</span>(<span class="st">"ozon"</span>,<span class="st">"zon"</span>,<span class="st">"temp_F"</span>)]), ]  <span class="co"># n = 111</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># het totale effect (c): zon → ozon, kaal</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(ozon <span class="sc">~</span> zon, <span class="at">data =</span> lucht))[<span class="st">"zon"</span>]            <span class="co"># 0.127</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># pad a: zon → temperatuur</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(temp_F <span class="sc">~</span> zon, <span class="at">data =</span> lucht))[<span class="st">"zon"</span>]          <span class="co"># 0.0307</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># het model met beide: hierin zitten pad b én het directe effect c'</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(ozon <span class="sc">~</span> zon <span class="sc">+</span> temp_F, <span class="at">data =</span> lucht))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   zon      0.057   ← direct effect (c')</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   temp_F   2.278   ← pad b</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model.c     <span class="ot">&lt;-</span> <span class="fu">lm</span>(ozon <span class="sc">~</span> zon, <span class="at">data =</span> lucht)             <span class="co"># het totale effect</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>model.a     <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp_F <span class="sc">~</span> zon, <span class="at">data =</span> lucht)           <span class="co"># zon → temperatuur</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>model.beide <span class="ot">&lt;-</span> <span class="fu">lm</span>(ozon <span class="sc">~</span> zon <span class="sc">+</span> temp_F, <span class="at">data =</span> lucht)    <span class="co"># hierin zitten b én c'</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># het totale effect (c): zon → ozon, kaal</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.c)[<span class="st">"zon"</span>]      <span class="co"># 0.127</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># pad a: zon → temperatuur</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.a)[<span class="st">"zon"</span>]      <span class="co"># 0.0307</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># het model met beide: hierin zitten pad b én het directe effect c'</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   zon      0.057   ← direct effect (c')</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   temp_F   2.278   ← pad b</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Vier getallen, en ze passen op elkaar als puzzelstukjes. Het <strong>totale</strong> effect van zon op ozon is <strong>0.127</strong>. Zet je de temperatuur ernaast, dan zakt de zon-helling naar <strong>0.057</strong> — dát stuk loopt rechtstreeks, buiten de warmte om. Wat ertussenuit viel, ging via de omweg: zon warmt de lucht op met <strong>0.0307</strong> graad per streepje (pad a), en elke graad warmer levert <strong>2.278</strong> ppb meer ozon op bij gelijke zon (pad b). Vermenigvuldig die twee — 0.0307 × 2.278 — en je krijgt <strong>0.070</strong>: het stuk zon-effect dat door de temperatuur is doorgegeven. En kijk: 0.057 + 0.070 = 0.127. Direct plus indirect is precies het totaal.</p>
@@ -791,8 +800,8 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p>Jouw beurt — dezelfde ontleding, maar nu met de <strong>wind</strong> als startpunt. In <code>luchtkwaliteit.csv</code> zit ook de kolom <code>wind</code> (windsnelheid in mijl/uur). Meer wind gaat samen met mínder ozon; de vraag is weer: loopt dat effect rechtstreeks, of deels via de temperatuur? (Wind koelt de lucht af, koelere lucht maakt minder ozon — dat is de omweg die je gaat opmeten.)</p>
 <ol type="1">
-<li>Bereken eerst het <strong>totale</strong> effect van wind op ozon: <code>coef(lm(ozon ~ wind, data = lucht))["wind"]</code>. Ter controle kom je uit op ongeveer <strong>−5.73</strong>: elke mijl/uur meer wind gaat samen met bijna zes ppb minder ozon.</li>
-<li>Draai nu de twee andere modellen — <code>lm(temp_F ~ wind)</code> voor pad a, en <code>lm(ozon ~ wind + temp_F)</code> voor het directe effect (c’) én pad b. Reken het indirecte pad a·b uit. Ter controle: het <strong>directe</strong> effect is ongeveer <strong>−3.29</strong> en het <strong>indirecte</strong> pad ongeveer <strong>−2.43</strong> — samen precies de −5.73 van stap 1 (op afronding na). Ruim veertig procent van het wind-effect loopt dus via de temperatuur.</li>
+<li>Bereken eerst het <strong>totale</strong> effect van wind op ozon: bouw <code>model.c &lt;- lm(ozon ~ wind, data = lucht)</code> en lees <code>coef(model.c)["wind"]</code> af. Ter controle kom je uit op ongeveer <strong>−5.73</strong>: elke mijl/uur meer wind gaat samen met bijna zes ppb minder ozon.</li>
+<li>Draai nu de twee andere modellen — <code>model.a &lt;- lm(temp_F ~ wind, data = lucht)</code> voor pad a, en <code>model.beide &lt;- lm(ozon ~ wind + temp_F, data = lucht)</code> voor het directe effect (c’) én pad b. Reken het indirecte pad a·b uit. Ter controle: het <strong>directe</strong> effect is ongeveer <strong>−3.29</strong> en het <strong>indirecte</strong> pad ongeveer <strong>−2.43</strong> — samen precies de −5.73 van stap 1 (op afronding na). Ruim veertig procent van het wind-effect loopt dus via de temperatuur.</li>
 <li>Denk-vraag: alle getallen zijn hier negatíef, en tóch klopt de optelsom direct + indirect = totaal net zo netjes als bij de zon. Waaróm mag een indirect pad negatief zijn — en wat betekent een negatief a·b eigenlijk voor de omweg die de wind neemt? (Hint: kijk naar het teken van pad a — wat doet wind mét de temperatuur? — en het teken van pad b.)</li>
 </ol>
 </div>

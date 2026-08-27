@@ -656,10 +656,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># eerst alleen het merk: verschillen golfje en sterretje in glans?</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d))       <span class="co"># → sterretje +20.00, p = .114</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu met gladheid ernaast</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> gladheid <span class="sc">+</span> merk, <span class="at">data =</span> d))   <span class="co"># → sterretje +14.95, p = .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model.merk <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.merk)             <span class="co"># → sterretje +20.00, p = .114</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu met gladheid ernaast</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>model.glad.merk <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> gladheid <span class="sc">+</span> merk, <span class="at">data =</span> d)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.glad.merk)        <span class="co"># → sterretje +14.95, p = .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk daar even naar, want het gaat de andere kant op dan je misschien verwacht. Op de twaalf steentjes lijken de twee merken twintig punten glans te schelen, maar met zoveel ruis eromheen haalt dat verschil de drempel niet: <em>p</em> = .11. Zet je gladheid ernaast, dan wordt het verschil <strong>kleiner</strong> (14.95) en tegelijk <strong>significant</strong> (<em>p</em> = .001). De <em>R</em>² springt van .231 naar .945.</p>
@@ -680,17 +682,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model 1 — alleen de soort. Dit is de eenweg-ANOVA uit de vorige oefening,</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nu als regressie geschreven</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m1), <span class="dv">2</span>)      <span class="co"># → 3700.66   32.43   1375.35</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>r.squared   <span class="co"># → .6697</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>model.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.soort), <span class="dv">2</span>)      <span class="co"># → 3700.66   32.43   1375.35</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>r.squared   <span class="co"># → .6697</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># model 2 — de vinlengte erbij</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m2), <span class="dv">2</span>)      <span class="co"># → -4031.48   40.71   -206.51   266.81</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared   <span class="co"># → .7826</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>model.vl.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.vl.soort), <span class="dv">2</span>)      <span class="co"># → -4031.48   40.71   -206.51   266.81</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl.soort)<span class="sc">$</span>r.squared   <span class="co"># → .7826</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># en het model met alleen de vin, dat je zo nodig hebt</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>mv <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>model.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Schrik niet van dat eerste getal, −4031.48: dat is het intercept, en het voorspelt het gewicht van een pinguïn met een vin van nul millimeter. Die bestaat niet, dus het getal betekent niets — precies zoals in oefening 8.1. Laat hem staan en kijk naar de rest.</p>
@@ -755,7 +757,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gem.vin <span class="ot">&lt;-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>vinlengte)          <span class="co"># → 200.92</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m2, <span class="fu">data.frame</span>(<span class="at">vinlengte =</span> gem.vin, <span class="at">soort =</span> <span class="fu">levels</span>(peng<span class="sc">$</span>soort)))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(model.vl.soort, <span class="fu">data.frame</span>(<span class="at">vinlengte =</span> gem.vin, <span class="at">soort =</span> <span class="fu">levels</span>(peng<span class="sc">$</span>soort)))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    Adelie Chinstrap    Gentoo</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   4146.86   3940.35   4413.67</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
@@ -778,12 +780,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Hoeveel van het verschil in gewicht verklaart model 1, en hoeveel model 2? <em>(rapporteer beide R²)</em></p>
 <p><strong>b)</strong> Toets model 2 als geheel. Schrijf de nulhypothese eerst voluit op. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
-<p><strong>c)</strong> Wat voegt de vinlengte toe bovenop de soort? Gebruik <code>anova(m1, m2)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
-<p><strong>d)</strong> En andersom — wat voegt de soort toe bovenop de vinlengte? Gebruik <code>anova(mv, m2)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
+<p><strong>c)</strong> Wat voegt de vinlengte toe bovenop de soort? Gebruik <code>anova(model.soort, model.vl.soort)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
+<p><strong>d)</strong> En andersom — wat voegt de soort toe bovenop de vinlengte? Gebruik <code>anova(model.vl, model.vl.soort)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
 <p><strong>e)</strong> Zijn de twee soort-verschillen in model 2 significant? <em>(rapporteer per soort b, SE, t en p)</em></p>
 <p><strong>f)</strong> Welke soort is de referentiecategorie, en waaraan zie je dat?</p>
 <p><strong>g)</strong> Waarom is de Chinstrap ruw ietsje zwáárder dan de Adélie, maar gecorrigeerd ruim tweehonderd gram lichter? Kijk naar de gemiddelde vinlengtes.</p>
-<p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Een ANCOVA heeft één aanname die de gewone regressie niet heeft: de covariaat moet in élke groep <strong>dezelfde helling</strong> hebben. Toets dat door een model mét interactie ernaast te leggen — <code>anova(m2, lm(gewicht ~ vinlengte * soort, data = peng))</code> — en kijk ook naar de drie hellingen apart.</p>
+<p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Een ANCOVA heeft één aanname die de gewone regressie niet heeft: de covariaat moet in élke groep <strong>dezelfde helling</strong> hebben. Toets dat door een model mét interactie ernaast te leggen — bouw <code>model.vl.x.soort &lt;- lm(gewicht ~ vinlengte * soort, data = peng)</code> en draai <code>anova(model.vl.soort, model.vl.x.soort)</code> — en kijk ook naar de drie hellingen apart.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
@@ -816,8 +818,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m2, m3)          <span class="co"># → F = 5.53   op 2 en 336   p = .004</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model.vl.x.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.vl.soort, model.vl.x.soort)          <span class="co"># → F = 5.53   op 2 en 336   p = .004</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># en kijk naar de hellingen apart</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(peng<span class="sc">$</span>soort)) {</span>
@@ -860,7 +862,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Dus:</strong> de mooie tabel uit de vorige sectie — 4147, 3940, 4414 — mag je zó niet rapporteren. Je hebt hem berekend, je hebt gezien wat een covariaat dóet, en dat was de les. Maar als resultaat houdt hij geen stand.</p>
 </div>
 </div>
-<p><strong>En dan de vraag die je nu hoort te stellen: wat van mijn eigen antwoorden hierboven is nog geldig?</strong> Eerlijk antwoord: <strong>alles wat uit <code>m2</code> komt, valt om.</strong> Dat is niet alleen die tabel — het zijn ook de twee soort-verschillen uit vraag e) (de −206.51 en de 266.81), de <em>F</em>-toets van het hele model uit vraag b), en de modelvergelijkingen uit c) en d). Als de hellingen niet parallel lopen, kloppen de gecorrigeerde gemiddelden niet, en dan kloppen de toetsen die erop rusten net zo min.</p>
+<p><strong>En dan de vraag die je nu hoort te stellen: wat van mijn eigen antwoorden hierboven is nog geldig?</strong> Eerlijk antwoord: <strong>alles wat uit <code>model.vl.soort</code> komt, valt om.</strong> Dat is niet alleen die tabel — het zijn ook de twee soort-verschillen uit vraag e) (de −206.51 en de 266.81), de <em>F</em>-toets van het hele model uit vraag b), en de modelvergelijkingen uit c) en d). Als de hellingen niet parallel lopen, kloppen de gecorrigeerde gemiddelden niet, en dan kloppen de toetsen die erop rusten net zo min.</p>
 <p>Wat wél blijft staan: het model met <strong>alleen de soort</strong> (vraag a, model 1) — dat is de gewone eenweg-ANOVA uit de vorige oefening en die heeft met dit alles niets te maken. En de gemiddelde vinlengtes per soort uit vraag g, want dat zijn gewoon gemiddelden.</p>
 <p>Zeg dat verschil één keer hardop, want het is de hele kunst van dit blok: <strong>berekenen mocht, rapporteren mag niet.</strong> Je hebt die getallen nodig gehad om te zíen wat een covariaat doet. Ze in een verslag zetten is iets anders.</p>
 <p>Voordat je denkt dat je iets fout hebt gedaan: dat heb je niet. Je hebt de keuring gedraaid en die heeft gewerkt. <strong>Zo hoort het te gaan</strong> — een aanname die nooit zakt, is geen aanname maar een formaliteit.</p>
@@ -893,8 +895,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ps<span class="sc">$</span>sekse <span class="ot">&lt;-</span> <span class="fu">factor</span>(ps<span class="sc">$</span>sekse)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(ps)                     <span class="co"># → 333   negen pinguïns missen hun sekse</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> sekse, <span class="at">data =</span> ps)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> sekse, <span class="at">data =</span> ps)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>model.sekse <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> sekse, <span class="at">data =</span> ps)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>model.vl.sekse <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> sekse, <span class="at">data =</span> ps)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
@@ -907,9 +909,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> Hoeveel gram schelen de seksen ruw? <em>(rapporteer b en R² van <code>s1</code>)</em></p>
+<p><strong>a)</strong> Hoeveel gram schelen de seksen ruw? <em>(rapporteer b en R² van <code>model.sekse</code>)</em></p>
 <p><strong>b)</strong> Waarom staan er 333 pinguïns in <code>ps</code> en geen 342? Wat betekent dat voor je rapportage?</p>
-<p><strong>c)</strong> Toets <code>s2</code> als geheel. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
+<p><strong>c)</strong> Toets <code>model.vl.sekse</code> als geheel. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
 <p><strong>d)</strong> Wat gebeurt er met het sekseverschil zodra de vinlengte erbij komt? <em>(rapporteer b, SE, t, p en het 95%-interval)</em></p>
 <p><strong>e)</strong> Reken de gemiddelde vinlengte per sekse uit. Verklaart dat de verandering uit vraag d?</p>
 <p><strong>f)</strong> Reken de twee gecorrigeerde gemiddelden uit met <code>predict()</code>, bij de gemiddelde vinlengte. Let op: reken die gemiddelde vinlengte <strong>opnieuw uit op <code>ps</code></strong> — <code>mean(ps$vinlengte)</code>, niet de <code>gem.vin</code> van eerder in dit blok. Zet ze daarna naast de ruwe gemiddelden.</p>
@@ -945,7 +947,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(s2)[[<span class="st">"vinlengte"</span>]], <span class="dv">2</span>)     <span class="co"># → 46.98</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.vl.sekse)[[<span class="st">"vinlengte"</span>]], <span class="dv">2</span>)     <span class="co"># → 46.98</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Ruim zeven millimeter maal bijna 47 gram is ongeveer 336 gram — en dat is vrijwel precies het stuk dat uit het sekseverschil verdween (683.41 − 347.85 = 335.56).</p>
@@ -964,14 +966,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(s2, <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> sekse, <span class="at">data =</span> ps))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → F = 0.01   op 1 en 329   p = .920</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(ps<span class="sc">$</span>sekse)) {</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">subset</span>(ps, sekse <span class="sc">==</span> s)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(s, <span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> d))[[<span class="dv">2</span>]], <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># female 47.15 | male 46.86</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model.vl.x.sekse <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">*</span> sekse, <span class="at">data =</span> ps)   <span class="co"># de ster: eigen helling per sekse</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.vl.sekse, model.vl.x.sekse)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># → F = 0.01   op 1 en 329   p = .920</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="fu">levels</span>(ps<span class="sc">$</span>sekse)) {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">subset</span>(ps, sekse <span class="sc">==</span> s)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(s, <span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> d))[[<span class="dv">2</span>]], <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># female 47.15 | male 46.86</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><em>F</em>(1, 329) = 0.01, <em>p</em> = .92 — bij lange na niet significant. En de twee hellingen zijn 47.15 en 46.86: die schelen nog geen drie tienden van een gram per millimeter. Zó parallel worden ze zelden. Hier mag je de gecorrigeerde gemiddelden dus gewoon rapporteren.</p>

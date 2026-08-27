@@ -699,8 +699,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># kijk of ze staan waar je denkt dat ze staan</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(peng<span class="sc">$</span>adelie, peng<span class="sc">$</span>soort)     <span class="co"># → 151 Adelies op 1, alle andere op 0</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> adelie <span class="sc">+</span> chinstrap, <span class="at">data =</span> peng)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m1), <span class="dv">2</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>model.dummy <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> adelie <span class="sc">+</span> chinstrap, <span class="at">data =</span> peng)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.dummy), <span class="dv">2</span>)</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept)      adelie   chinstrap</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     5076.02    -1375.35    -1342.93</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -754,9 +754,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>De nulhypothese: in de populatie pinguïns waar deze 342 een steekproef uit zijn, hangt de soort niet samen met het gewicht — beide regressiegewichten zijn daar nul.</p>
 <p>De alternatieve hypothese: minstens één van die twee is niet nul, dus érgens hangt de soort wél met het gewicht samen.</p>
 <p><strong>c)</strong> Ja: <em>F</em>(2, 339) = 343.63, <em>p</em> &lt; .001. Wat je verwerpt is de nulhypothese dat de soort in de populatie niets met het gewicht te maken heeft. Wat je er níét mee weet, is wélke soorten van elkaar verschillen — daarvoor moet je naar de losse gewichten kijken, bij f) en j).</p>
-<p><strong>d)</strong> <em>R</em>² = .67, dus 67%. De andere 33% is verschil in gewicht dat de soort níét verklaart; dat zit bínnen de soorten, tussen pinguïns van dezelfde soort. Je leest hem af onderaan <code>summary(m1)</code>, bij <em>Multiple R-squared</em>.</p>
+<p><strong>d)</strong> <em>R</em>² = .67, dus 67%. De andere 33% is verschil in gewicht dat de soort níét verklaart; dat zit bínnen de soorten, tussen pinguïns van dezelfde soort. Je leest hem af onderaan <code>summary(model.dummy)</code>, bij <em>Multiple R-squared</em>.</p>
 <p><strong>e)</strong> Bij b) ging het over de twee gewichten samen, hier gaat het per gewicht apart. De nulhypothese voor de Adélie-dummy: in de populatie is het verschil in gewicht tussen Adélies en Gentoo’s nul; de alternatieve: dat verschil is niet nul. En hetzelfde nog eens voor de Chinstrap-dummy. Twee verschillen met b) dus: b) toetst ze in één keer en zegt alleen <em>of er ergens</em> iets zit, deze twee toetsen elk één verschil en zeggen ook <em>welk</em>.</p>
-<p><strong>f)</strong> Ja, allebei. Adélies tegenover Gentoo’s: <em>b</em> = −1375.35 g, <em>t</em>(339) = −24.50, <em>p</em> &lt; .001. Chinstraps tegenover Gentoo’s: <em>b</em> = −1342.93 g, <em>t</em>(339) = −19.22, <em>p</em> &lt; .001. Je vindt ze met <code>round(summary(m1)$coefficients, 2)</code>.</p>
+<p><strong>f)</strong> Ja, allebei. Adélies tegenover Gentoo’s: <em>b</em> = −1375.35 g, <em>t</em>(339) = −24.50, <em>p</em> &lt; .001. Chinstraps tegenover Gentoo’s: <em>b</em> = −1342.93 g, <em>t</em>(339) = −19.22, <em>p</em> &lt; .001. Je vindt ze met <code>round(summary(model.dummy)$coefficients, 2)</code>.</p>
 <p><strong>g)</strong> <strong>gewicht = 5076.02 − 1375.35 × adelie − 1342.93 × chinstrap.</strong> De twee minnen zitten in de gewichten zelf, dus je mag ze ook als plus opschrijven met een negatief getal erachter — als de uitkomst maar hetzelfde is.</p>
 <p><strong>h)</strong> 5076.02, en de schatter die je daarvoor gebruikt is het <strong>intercept</strong>. Vul in de vergelijking bij <code>adelie</code> en <code>chinstrap</code> allebei een 0 in en er blijft niets over dan dat intercept — en een pinguïn die op allebei de dummy’s nul scoort ís een Gentoo.</p>
 <p><strong>i)</strong> Adélie = 5076.02 − 1375.35 = 3700.67; Chinstrap = 5076.02 − 1342.93 = 3733.09. Kijk ze na:</p>
@@ -802,8 +802,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m2), <span class="dv">2</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.soort), <span class="dv">2</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept) soortChinstrap    soortGentoo</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     3700.66          32.43        1375.35</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -849,13 +849,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Twee modellen, dezelfde drie gemiddelden. Het zijn er dus geen twee — het is hetzelfde model, met een ander vertrekpunt.</p>
 <p>Je hebt net zelf uitgerekend dat je handgebouwde model en dat van R op dezelfde drie gemiddelden landen. Je kunt het R ook rechtstreeks vragen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">fitted</span>(m1), <span class="fu">fitted</span>(m2))   <span class="co"># → TRUE</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">fitted</span>(model.dummy), <span class="fu">fitted</span>(model.soort))   <span class="co"># → TRUE</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(m1)                        <span class="co"># → 72443483</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(m2)                        <span class="co"># → 72443483</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(model.dummy)                        <span class="co"># → 72443483</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(model.soort)                        <span class="co"># → 72443483</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>r.squared               <span class="co"># → 0.669672</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>r.squared               <span class="co"># → 0.669672</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.dummy)<span class="sc">$</span>r.squared               <span class="co"># → 0.669672</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>r.squared               <span class="co"># → 0.669672</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Drie vragen, en ze geven alle drie hetzelfde antwoord. <code>fitted()</code> haalt op wat een model voor elke pinguïn voorspelt, en <code>all.equal()</code> legt die twee rijen naast elkaar: <strong>TRUE</strong>. Elke pinguïn krijgt in allebei de modellen exact hetzelfde voorspelde gewicht. <code>deviance()</code> geeft de restsom — al het verschil in gewicht dat het model níét weet te voorspellen, bij elkaar opgeteld — en die staat allebei de keren op 72443483, tot op de gram gelijk. En het deel van de verschillen in gewicht dat het model wél te pakken krijgt, de <em>R</em>², is in allebei .67.</p>
 <p>Twee modellen die elke pinguïn hetzelfde voorspellen, evenveel laten liggen en even veel van de verschillen in gewicht verklaren, zijn niet twee modellen.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Waarom hier geen `anova()` staat">
@@ -870,7 +870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <p>Bij de oefening over meervoudige regressie liet je <code>anova()</code> twee modellen tegen elkaar afwegen, en daar deed hij echt werk: het tweede model was het eerste <strong>plus de soort</strong>. Zulke modellen heten <strong>genest</strong> — het kleine zit helemaal in het grote, en wat de toets je vertelt is precies wat het grote model erbij kreeg.</p>
 <p>Deze twee hier zijn niet genest. Geen van beide zit in de ander, want het is één model dat twee keer is opgeschreven. Doe je het tóch — en de kans is groot dat je het een keer per ongeluk doet, want je hébt die aanroep net geleerd — dan krijg je dit te zien:</p>
-<pre><code>&gt; anova(m1, m2)
+<pre><code>&gt; anova(model.dummy, model.soort)
   Res.Df      RSS Df  Sum of Sq F Pr(&gt;F)
 1    339 72443483
 2    339 72443483  0 2.9802e-08</code></pre>
@@ -889,16 +889,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># soort       Df  2   F value 343.6   Pr(&gt;F) &lt;2e-16</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>fstatistic      <span class="co"># jouw eigen dummy's</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    value    numdf    dendf</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 343.6263   2.0000 339.0000</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)<span class="sc">$</span>fstatistic      <span class="co"># die van R</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    value    numdf    dendf</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 343.6263   2.0000 339.0000</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model.anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.anova)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># soort       Df  2   F value 343.6   Pr(&gt;F) &lt;2e-16</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.dummy)<span class="sc">$</span>fstatistic      <span class="co"># jouw eigen dummy's</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#    value    numdf    dendf</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 343.6263   2.0000 339.0000</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>fstatistic      <span class="co"># die van R</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#    value    numdf    dendf</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 343.6263   2.0000 339.0000</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Drie keer hetzelfde getal. De ANOVA-tabel drukt het afgerond af als 343.6, <code>$fstatistic</code> geeft het voluit als 343.6263, en netjes op twee decimalen is dat <em>F</em>(2, 339) = 343.63 — één getal, drie schrijfwijzen. Wat die <em>F</em> precies méét, daar gaat de ANOVA-oefening straks over; kijk er nu alleen naar dat je hem drie keer tegenkomt terwijl je drie verschillende dingen leek te doen.</p>
@@ -966,9 +967,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">ref =</span> <span class="st">"Gentoo"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)), <span class="dv">2</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept)  soortAdelie  soortChinstrap</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     5076.02     -1375.35        -1342.93</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model.gentoo.ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.gentoo.ref), <span class="dv">2</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept)  soortAdelie  soortChinstrap</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     5076.02     -1375.35        -1342.93</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Precies je handwerk van daarnet, in één regel. Wat je met de hand deed en wat <code>relevel()</code> doet is dezelfde ingreep: iemand moet het vertrekpunt zijn, en jij zegt wie.</p>
@@ -993,7 +996,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Het intercept is het gemiddelde van de referentiegroep, elk gewicht is een verschil daarmee.</strong> Ruil je de referentie om, dan kantelen alle getallen mee zonder dat er één feit verandert.</li>
 <li><strong>Groepen vergelijken is regressie.</strong> De <em>t</em>-toets en de eenweg ANOVA zijn geen aparte machines; het is dezelfde som, anders opgeschreven.</li>
 </ul>
-<p>Zou je dit model in één eerlijke zin opschrijven, dan hóórt de referentiecategorie erin — laat je ’m weg, dan weet je lezer niet waar de getallen vandaan geteld zijn. De standaardfouten (<em>SE</em>) staan in dezelfde tabel als de <em>t</em>’s, die je bij vraag f) al opvroeg met <code>round(summary(m2)$coefficients, 2)</code>:</p>
+<p>Zou je dit model in één eerlijke zin opschrijven, dan hóórt de referentiecategorie erin — laat je ’m weg, dan weet je lezer niet waar de getallen vandaan geteld zijn. De standaardfouten (<em>SE</em>) staan in dezelfde tabel als de <em>t</em>’s, die je bij vraag f) al opvroeg met <code>round(summary(model.soort)$coefficients, 2)</code>:</p>
 <blockquote class="blockquote">
 <p>Om te onderzoeken hoe het gewicht van pinguïns samenhangt met hun soort, voorspelden we hun gewicht uit twee dummyvariabelen (<em>N</em> = 342), met de Adélies als referentiecategorie. Samen verklaarden de twee dummy’s 67% van het verschil in gewicht tussen deze pinguïns, <em>R</em>² = .67, <em>F</em>(2, 339) = 343.63, <em>p</em> &lt; .001. Gentoo’s wogen gemiddeld meer dan Adélies (<em>b</em> = 1375.35 g, 95% CI [1264.91, 1485.80], <em>SE</em> = 56.15, <em>t</em>(339) = 24.50, <em>p</em> &lt; .001). Tussen Chinstraps en Adélies vonden we geen aanwijzing voor een verschil (<em>b</em> = 32.43 g, 95% CI [−100.37, 165.22], <em>SE</em> = 67.51, <em>t</em>(339) = 0.48, <em>p</em> = .63).</p>
 </blockquote>
@@ -1034,14 +1037,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(peng<span class="sc">$</span>soort)               <span class="co"># → "Adelie" eerst</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dezelfde soorten, nu in millimeters</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m), <span class="dv">2</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m)<span class="sc">$</span>coefficients[, <span class="dv">4</span>], <span class="dv">3</span>)   <span class="co"># en de p's erbij</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>model.diepte <span class="ot">&lt;-</span> <span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.diepte), <span class="dv">2</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(model.diepte)<span class="sc">$</span>coefficients[, <span class="dv">4</span>], <span class="dv">3</span>)   <span class="co"># en de p's erbij</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: intercept 18.35, <code>soortGentoo</code> −3.36 en <code>soortChinstrap</code> 0.07, met <em>p</em> &lt; .001 voor de Gentoo en <em>p</em> = .65 voor de Chinstrap. Vraag daarna <code>round(tapply(peng$snaveldiepte, peng$soort, mean), 2)</code> op en wijs aan waar 18.42 in de coëfficiënten verstopt zit. (18.35 + 0.07, en daar is-ie.)</p></li>
 <li><p><strong>Laat de Gentoo’s weg, met de hand.</strong> Je dummy’s <code>adelie</code> en <code>chinstrap</code> staan er nog: draai <code>lm(snaveldiepte ~ adelie + chinstrap, data = peng)</code>. Ter controle: intercept 14.98, en daarbovenop 3.36 en 3.44. Alle drie de gemiddelden komen weer terug, alleen vanaf een ander vertrekpunt.</p>
 <p>Tel de eerste twee op en er staat 14.98 + 3.36 = 18.34, terwijl de Adélies een snaveldiepte van 18.35 millimeter hebben. Dat is geen fout van jou: R rekent met alle decimalen en rondt pas aan het eind af. Dezelfde honderdste als bij de Adélie-som van vraag i) hierboven, die op 3700.67 landde terwijl het echte gemiddelde 3700.66 is.</p></li>
 <li><p><strong>De denk-vraag: is “bijzonder” een eigenschap van de soort?</strong> Twee keer nu was het de Gentoo die eruit sprong — op gewicht 1375 gram bóven de rest, op snaveldiepte 3.36 millimeter eronder. Alleen de kant verschilt. Maar kijk nog één keer, met een andere maat:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(snavellengte <span class="sc">~</span> soort, <span class="at">data =</span> peng)), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model.lengte <span class="ot">&lt;-</span> <span class="fu">lm</span>(snavellengte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.lengte), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: Chinstrap 10.04 en Gentoo 8.71 — allebei fors, en dus ligt hier niet de Gentoo apart maar de <strong>Adélie</strong>.</p>
 <p>De vuistregel hierboven zegt: nooit de meest bijzondere groep. Wie is dat hier dan? En let op wie wij in dit hoofdstuk als vertrekpunt gekozen hebben.</p></li>
 </ol>
