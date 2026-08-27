@@ -692,12 +692,12 @@ window.Quarto = {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>gepakt)                                  <span class="co"># → 6 van de 12</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># logistische regressie: family = binomial</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)                                        <span class="co"># → −4.04  en  0.0814</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>model.glans <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.glans)                              <span class="co"># → −4.04  en  0.0814</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># exp() maakt van de coëfficiënt een odds ratio</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 1.085 per glanspunt</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">10</span>)                           <span class="co"># → 2.26 per tien glanspunten</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans))[<span class="dv">2</span>]                      <span class="co"># → 1.085 per glanspunt</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">10</span>)                 <span class="co"># → 2.26 per tien glanspunten</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -705,11 +705,11 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">count</span>(gepakt)                             <span class="co"># → 6 nee, 6 ja</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(m))[<span class="dv">2</span>]                                <span class="co"># → 1.085 per glanspunt</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>model.glans <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans))[<span class="dv">2</span>]                      <span class="co"># → 1.085 per glanspunt</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># en de kans die het model aan elke steen hangt</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">kans =</span> <span class="fu">round</span>(<span class="fu">predict</span>(m, <span class="at">type =</span> <span class="st">"response"</span>), <span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">kans =</span> <span class="fu">round</span>(<span class="fu">predict</span>(model.glans, <span class="at">type =</span> <span class="st">"response"</span>), <span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(naam, glans, gepakt, kans)            <span class="co"># Else .51, Leen .51</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
