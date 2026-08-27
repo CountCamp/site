@@ -717,7 +717,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><span class="naslag">Die kruistabel is geen versiering. Een dummy die per ongeluk overal 0 is geeft geen foutmelding — hij geeft een model dat rustig doorrekent en nergens meer over gaat. Zet er dus altijd de kruistabel naast. Meer over berekende kolommen en over de volgorde van je categorieën staat bij <a href="../90_basishandelingen.html#hercoderen">nieuwe variabelen maken en hercoderen</a>.</span></p>
-<p>Zet de drie groepsgemiddelden er nu naast:</p>
+<p>Nu de vragen. Ze staan er los onder elkaar zodat je ze later kunt terugvinden; probeer ze eerst zelf, en klap daarna het antwoord open. De laatste heet met opzet <strong>x)</strong> en niet f): de aannames komen altijd achteraan, en die vraag stel je bij élk model dat je draait.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Vragen bij model 1 · je eigen dummy's">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vragen bij model 1 · je eigen dummy’s
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Hoeveel dummy’s heb je nodig voor drie soorten, en welke soort heb je weggelaten?</p>
+<p><strong>b)</strong> Welk getal in de tabel is het gemiddelde gewicht van de Gentoo’s?</p>
+<p><strong>c)</strong> Bereken de drie groepsgemiddelden uit de vergelijking — rekenmachine erbij, het zijn twee sommen.</p>
+<p><strong>d)</strong> Hoeveel procent van het verschil in gewicht verklaart de soort?</p>
+<p><strong>e)</strong> Zijn de twee regressiegewichten, −1375.35 en −1342.93, significant?</p>
+<p><strong>x)</strong> Mag je dit model eigenlijk wel gebruiken? Loop de aannames na: kijk hoe ver de spreiding per soort uiteenloopt, en of elke pinguïn maar één keer meetelt.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Twee: altijd eentje minder dan het aantal groepen, <em>k</em> − 1. De Gentoo’s heb je weggelaten, dus Gentoo is de referentiecategorie.</p>
+<p><strong>b)</strong> 5076.02 — het intercept. Dat is het gemiddelde gewicht van de Gentoo’s, in grammen.</p>
+<p><strong>c)</strong> Gentoo = 5076.02; Adélie = 5076.02 − 1375.35 = 3700.67; Chinstrap = 5076.02 − 1342.93 = 3733.09. Kijk ze na:</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de drie gemiddelden">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -731,8 +764,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Descriptives</strong>, <code>gewicht</code> in <strong>Variables</strong> en <code>soort</code> bij <strong>Split</strong>: Adelie 3700.66, Chinstrap 3733.09, Gentoo 5076.02.</p>
 </div>
 </div>
-<p>Daar staat je intercept: <strong>5076.02</strong>, het gemiddelde gewicht van de Gentoo’s — de soort die je juist wegliet. En de −1375.35 bij <code>adelie</code>? Dat is het gemiddelde van de Adélies min dat van de Gentoo’s: 3700.66 − 5076.02. De −1342.93 bij <code>chinstrap</code> is 3733.09 − 5076.02. Alle drie de gemiddelden zitten in die ene tabel, alleen niet zoals je ze zou opschrijven.</p>
-<p>Tik je die eerste som in je rekenmachine, dan krijg je −1375.36 en niet −1375.35. Dat is geen fout van jou: de echte gemiddelden zijn 3700.662 en 5076.016, en R rekent met álle decimalen en rondt pas aan het eind af. Eén honderdste, en het is altijd dezelfde les: rond af aan het eind, nooit onderweg.</p>
+<p>Jouw Adélie-som landt dus één honderdste te hoog. Dat is geen rekenfout van jou: de exacte waarden zijn 5076.016 en 1375.354, en JASP rekent met álle decimalen door. Rond af aan het eind, nooit onderweg.</p>
+<p><strong>d)</strong> <em>R</em>² = .67, dus 67%. Een derde van het verschil in gewicht is iets wat de soort níét verklaart. Je leest hem af in de tabel <em>Model Summary</em>, waar JASP <strong>0.670</strong> afdrukt.</p>
+<p><strong>e)</strong> Ja, allebei. Adélie tegenover Gentoo: <em>t</em>(339) = −24.50, <em>p</em> &lt; .001; Chinstrap tegenover Gentoo: <em>t</em>(339) = −19.22, <em>p</em> &lt; .001. Ze staan in de tabel <em>Coefficients</em>, in de kolommen <strong>t</strong> en <strong>p</strong>.</p>
+<p><strong>x)</strong> Ja. Vraag <strong>Descriptives</strong> met <code>soort</code> bij <strong>Split</strong> ook om de <strong>Std. deviation</strong>: de drie soorten hebben spreidingen van 458.57, 384.34 en 504.12 gram. Grootste gedeeld door kleinste is 1.31, ruim onder de 2, dus gelijke spreiding is hier geen probleem. Elke pinguïn is één keer gewogen, dus de waarnemingen zijn onafhankelijk, en de residuen zijn vrijwel symmetrisch (scheefheid 0.18; dat begrip kwam langs in de oefening over de mediaan en de scheefheid).</p>
+<p>Vuistregel voor die spreidingen: pas als de grootste meer dan twee keer de kleinste is, gaat gelijke spreiding echt knellen.</p>
+</div>
+</div>
+</div>
 <p>Laat JASP het nu nog eens overdoen, met de woordkolom:</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · en nu JASP zelf">
 <div class="callout-header d-flex align-content-center">
@@ -748,24 +787,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Kijk goed naar de tabel die eruit komt: er staan maar <strong>twee</strong> soorten in, geen drie. Welke soort ontbreekt, is de referentiecategorie die JASP zelf gekozen heeft — en dát is het getal dat je zoekt. Liet hij de Gentoo’s weg, dan zie je je eigen −1375.35 en −1342.93 terug. Liet hij de Adélies weg, dan staat er <strong>32.43</strong> en <strong>1375.35</strong>, met <strong>3700.66</strong> als intercept.</p>
 </div>
 </div>
-<p>Andere getallen — en niet zomaar andere. Het intercept is nu 3700.66, en dat is het gemiddelde van de Adélies. Van de twee gewichten herken je er één: die 1375.35 stond ook in je eigen model, daar met een min ervoor. Maar de −1342.93 is weg, en er staat 32.43 voor in de plaats. Kijk waar dat vandaan komt: 3733.09 − 3700.66 = 32.43, het verschil tussen Chinstraps en Adélies. Eerst stond daar het verschil tussen Chinstraps en Gentoo’s. Andere maat, ander getal, dezelfde pinguïns.</p>
-<p>En tóch is het hetzelfde model. Niet “vergelijkbaar”, niet “bijna” — hetzelfde. Dat kun je zien: het getal <strong>R²</strong> onder <em>Model Summary</em> is in beide modellen <strong>0.670</strong>, en in de <em>ANOVA</em>-tabel eronder staat allebei de keren <strong>F = 343.626</strong> met 2 en 339 vrijheidsgraden. Twee modellen die tot op drie decimalen even goed passen, zijn niet twee modellen.</p>
-<p>En dan de derde gedaante. Draai dezelfde vraag als variantieanalyse:</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · en nog een keer, nu als ANOVA">
+<p>Andere getallen — en niet zomaar andere. Vier nieuwe vragen, nu op dit model:</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Vragen bij model 2 · de dummy's van JASP">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · en nog een keer, nu als ANOVA
+<span class="screen-reader-only">Opmerking</span>Vragen bij model 2 · de dummy’s van JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Welke soort is nu de referentiecategorie, en waaraan zie je dat?</p>
+<p><strong>b)</strong> Bereken de drie gemiddelden opnieuw uit deze vergelijking — kom je op dezelfde drie uit?</p>
+<p><strong>c)</strong> Hoeveel procent van het verschil in gewicht verklaart de soort nu?</p>
+<p><strong>d)</strong> Eén getal staat in allebei de modellen en één is verdwenen — welk getal is dat, en waar is het gebleven?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Adélie. Het intercept is 3700.66 en dat is precies het Adélie-gemiddelde; bovendien komt Adélie in geen enkele rij van de tabel voor.</p>
+<p><strong>b)</strong> Adélie = 3700.66; Chinstrap = 3700.66 + 32.43 = 3733.09; Gentoo = 3700.66 + 1375.35 = 5076.01 — terwijl het echte Gentoo-gemiddelde 5076.02 is. Dezelfde drie gemiddelden als in model 1, dezelfde afrondingskruimel, andere rij.</p>
+<p><strong>c)</strong> <em>R</em>² = .67 — precies hetzelfde. In <em>Model Summary</em> staat allebei de keren <strong>0.670</strong>.</p>
+<p><strong>d)</strong> De 1375.35 staat in allebei, daar met een min ervoor en hier zonder. De −1342.93 is weg en er staat 32.43 voor in de plaats, want dat verschil wordt nu afgemeten aan de Adélies in plaats van aan de Gentoo’s: 3733.09 − 3700.66 = 32.43.</p>
+</div>
+</div>
+</div>
+<p>Twee modellen, dezelfde drie gemiddelden. Het zijn er dus geen twee — het is hetzelfde model, met een ander vertrekpunt. Vandaar ook geen eigen <strong>x)</strong> bij dit tweede rijtje: hetzelfde model draagt dezelfde aannames. En je ziet het ook aan de tabellen: <em>R</em>² onder <em>Model Summary</em> staat in beide modellen op <strong>0.670</strong>, en in de <em>ANOVA</em>-tabel eronder staat allebei de keren dezelfde <em>F</em>(2, 339) = 343.63.</p>
+<p>En dan de derde gedaante. Draai dezelfde vraag als eenweg ANOVA:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · en nog een keer, nu als eenweg ANOVA">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · en nog een keer, nu als eenweg ANOVA
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>ANOVA → ANOVA</strong>, <code>gewicht</code> naar <strong>Dependent Variable</strong> en <code>soort</code> naar <strong>Fixed Factors</strong>. Vink onder <strong>Display</strong> de <strong>estimates of effect size (η²)</strong> aan.</p>
-<p>Weer <strong>F(2, 339) = 343.626</strong> — en <strong>η² = 0.670</strong>, hetzelfde getal als de <em>R</em>² van hierboven.</p>
+<p>Weer <strong><em>F</em>(2, 339) = 343.626</strong> — en <strong>η² = 0.670</strong>, hetzelfde getal als de <em>R</em>² van hierboven.</p>
 </div>
 </div>
 <p>Drie keer hetzelfde getal: op het scherm 343.626, en netjes op twee decimalen <em>F</em>(2, 339) = 343.63. Wat die <em>F</em> precies méét, daar gaat de ANOVA-oefening straks over; kijk er nu alleen naar dat je hem drie keer tegenkomt terwijl je drie verschillende dingen leek te doen.</p>
+<p>En let op wat er in de kop van dat kader staat: <strong>eenweg</strong> ANOVA, en niet alleen “ANOVA”. Ben zegt het zo:</p>
+<blockquote class="blockquote">
+<p><em>“Soort op gewicht doe je niet met ANOVA, maar met eenweg ANOVA. Ik zeg altijd: alles is regressie, en alles is ook analysis of variance — we doen niet anders. Dus noem het oneway of two way anova.”</em></p>
+</blockquote>
+<p>Dat is geen muggenzifterij. Als álles variantieanalyse is, zegt het woord “ANOVA” niets meer over wát je gedaan hebt; het aantal factoren is dan het enige dat je lezer nog iets vertelt. Hier heb je er één — <code>soort</code> — en dus is het een eenweg ANOVA. Bij twee factoren wordt het een tweeweg ANOVA, en dat is een ander gesprek.</p>
+<p>Dat JASP zelf gewoon <strong>ANOVA → ANOVA</strong> op zijn knop zet, verandert daar niets aan. De knop is de knop; wat jij opschrijft is jouw analyse.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
@@ -840,18 +920,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Nooit de meest bijzondere groep</strong>, want dan meet je alles af aan de uitzondering.</li>
 </ul>
 <p>Bij deze pinguïns is er geen controlegroep. De Gentoo is de uitschieter en de Adélie de gewone maat, en de Adélies zijn er bovendien de meeste: 151 van de 342. Vandaar dat wij in de rest van dit hoofdstuk de Adélies als referentie aanhouden.</p>
-<p>En dan de aansluiting, want daar is dit hoofdstuk om begonnen. Kijk terug naar wat je gedaan hebt: je hebt drie groepen vergeleken en er is geen nieuwe toets aan te pas gekomen. Je hebt de regressie gebruikt die je al kende, met nullen en enen in plaats van karaat. Dat is niet een handigheidje dat toevallig ook werkt — de lineaire regressie, de ANOVA en straks de <em>t</em>-toets zijn één model met drie deuren. Die 1375.35 gram tussen Gentoo’s en Adélies komt in de volgende oefening terug als het verschil dat de <em>t</em>-toets onderzoekt, en die <em>F</em> van 343.63 kom je in de ANOVA-oefening weer tegen. Dezelfde getallen, andere jas.</p>
+<p>En dan de aansluiting, want daar is dit hoofdstuk om begonnen. Kijk terug naar wat je gedaan hebt: je hebt drie groepen vergeleken, en er is geen nieuwe toets aan te pas gekomen. Je gebruikte de regressie die je al kende, met nullen en enen in plaats van karaat.</p>
+<p>Dat is geen handigheidje dat toevallig ook werkt. De lineaire regressie, de eenweg ANOVA en straks de <em>t</em>-toets zijn één model met drie deuren, en twee van je getallen komen zo weer terug:</p>
+<ul>
+<li><strong>1375.35 gram</strong> tussen Gentoo’s en Adélies — dat is het verschil dat de <em>t</em>-toets in de volgende oefening onderzoekt.</li>
+<li><strong><em>F</em>(2, 339) = 343.63</strong> — die kom je in de ANOVA-oefening weer tegen.</li>
+</ul>
+<p>Dezelfde getallen, andere jas.</p>
 <p>De les van dit blok, in drie zinnen:</p>
 <ul>
 <li><strong>Een groep wordt een getal door hem in nullen en enen te hakken.</strong> Voor <em>k</em> groepen heb je <em>k</em> − 1 dummy’s nodig; de groep die je weglaat is de referentiecategorie.</li>
 <li><strong>Het intercept is het gemiddelde van de referentiegroep, elk gewicht is een verschil daarmee.</strong> Ruil je de referentie om, dan kantelen alle getallen mee zonder dat er één feit verandert.</li>
-<li><strong>Groepen vergelijken is regressie.</strong> De <em>t</em>-toets en de ANOVA zijn geen aparte machines; het is dezelfde som, anders opgeschreven.</li>
+<li><strong>Groepen vergelijken is regressie.</strong> De <em>t</em>-toets en de eenweg ANOVA zijn geen aparte machines; het is dezelfde som, anders opgeschreven.</li>
 </ul>
-<p>Zou je dit model in één eerlijke zin opschrijven, dan hóórt de referentiecategorie erin — laat je ’m weg, dan weet je lezer niet waar de getallen vandaan geteld zijn:</p>
+<p>Zou je dit model in één eerlijke zin opschrijven, dan hóórt de referentiecategorie erin — laat je ’m weg, dan weet je lezer niet waar de getallen vandaan geteld zijn. De standaardfouten (<em>SE</em>) staan in de tabel <em>Coefficients</em>, in de kolom <strong>Standard Error</strong>, naast de <em>t</em>’s die je bij vraag e) al opzocht:</p>
 <blockquote class="blockquote">
-<p>Om te onderzoeken hoe het gewicht van pinguïns samenhangt met hun soort, voorspelden we hun gewicht uit twee dummyvariabelen (<em>N</em> = 342), met de Adélies als referentiecategorie. Gentoo’s wogen gemiddeld meer dan Adélies (<em>b</em> = 1375.35 gram, <em>SE</em> = 56.15, <em>t</em>(339) = 24.50, <em>p</em> &lt; .001); Chinstraps verschilden nauwelijks van Adélies (<em>b</em> = 32.43 gram, <em>SE</em> = 67.51, <em>t</em>(339) = 0.48, <em>p</em> = .63). Samen verklaarden de twee dummy’s 67% van het verschil in gewicht tussen deze pinguïns (<em>R</em>² = .67).</p>
+<p>Om te onderzoeken hoe het gewicht van pinguïns samenhangt met hun soort, voorspelden we hun gewicht uit twee dummyvariabelen (<em>N</em> = 342), met de Adélies als referentiecategorie. Samen verklaarden de twee dummy’s 67% van het verschil in gewicht tussen deze pinguïns, <em>R</em>² = .67, <em>F</em>(2, 339) = 343.63, <em>p</em> &lt; .001. Gentoo’s wogen gemiddeld meer dan Adélies (<em>b</em> = 1375.35 g, 95% CI [1264.91, 1485.80], <em>SE</em> = 56.15, <em>t</em>(339) = 24.50, <em>p</em> &lt; .001). Tussen Chinstraps en Adélies vonden we geen aanwijzing voor een verschil (<em>b</em> = 32.43 g, 95% CI [−100.37, 165.22], <em>SE</em> = 67.51, <em>t</em>(339) = 0.48, <em>p</em> = .63).</p>
 </blockquote>
-<p>Alleen de symbolen zijn cursief (<em>N</em>, <em>b</em>, <em>SE</em>, <em>t</em>, <em>p</em>, <em>R</em>²), de gewone woorden staan rechtop, en de getallen staan op twee decimalen. Alles staat in de verleden tijd, want je vertelt wat je gevónden hebt. En de zin staat op eigen benen: wie hem uit dit blok tilt, weet nog steeds wie er gewogen zijn, hoeveel het er waren, en vanaf wie er geteld is.</p>
+<p>Zo streng is de zin met opzet. Alleen de symbolen zijn cursief (<em>N</em>, <em>b</em>, <em>SE</em>, <em>t</em>, <em>p</em>, <em>R</em>², <em>F</em>), de gewone woorden staan rechtop, en de getallen staan op twee decimalen. Alles staat in de verleden tijd, want je vertelt wat je gevónden hebt. En de zin staat op eigen benen: wie hem uit dit blok tilt, weet nog steeds wie er gewogen zijn, hoeveel het er waren, en vanaf wie er geteld is. Elk getal dat een lezer nodig heeft om je na te rekenen, staat erin — dat is de lat.</p>
+<p><strong>Waarom er staat wat er staat.</strong> Dit stuk hoort bij de les en niet bij de zin: wie de zin overschrijft, laat dit hier liggen. Maar je moet het één keer gezien hebben, want anders schrijf je die zin over zonder te weten waarom hij zo lang is.</p>
+<ul>
+<li><strong>De referentiecategorie staat erin</strong> omdat je lezer anders niet weet vanaf waar de 1375.35 geteld is. Met een andere soort als vertrekpunt was precies hetzelfde getal −1375.35 geweest.</li>
+<li><strong><em>N</em> = 342 staat erin</strong> omdat <em>p</em> &lt; .001 zonder steekproefgrootte niets zegt over hoeveel bewijs er ligt.</li>
+<li><strong>De <em>F</em> staat erin naast de <em>R</em>²</strong> omdat die twee een paar zijn: <em>R</em>² zegt hoevéél de soort verklaart, de <em>F</em> zegt of dat meer is dan toeval zou opleveren. Een percentage zonder toets is een getal zonder maat.</li>
+<li><strong><em>R</em>² staat naast de significantie</strong> omdat significant “vrij zeker” betekent, en niet “groot” of “belangrijk”. De <em>p</em> zegt hoe zeker je bent dát de soort met het gewicht samenhangt; <em>R</em>² zegt hoeveel van het verschil in gewicht hij verklaart.</li>
+<li><strong>En de Chinstrap blijft erin, juist omdat hij niet significant is.</strong> Laat je hem weg, dan rapporteer je alleen wat goed uitkwam — en ziet je lezer niet dat de soort het gewicht goed voorspelt voor de één en nauwelijks voor de ander.</li>
+</ul>
+<p>En let op wat er níét staat. Er staat niet dat Chinstraps en Adélies <em>nauwelijks verschillen</em>, want dat weten we niet. Kijk naar het interval: 95% CI [−100.37, 165.22]. Daar past een verschil van 165 gram in, en dat is bijna 4% van wat een pinguïn gemiddeld weegt. Niet-significant betekent hier “we hebben geen verschil kunnen aantonen”, niet “er is er geen”. Dat verschil tussen die twee zinnen is het interval, en daarom staat het erbij.</p>
 <div class="kicker">
 <p>jouw beurt</p>
 </div>
@@ -873,7 +968,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li><p><strong>Laat JASP het doen, en kijk wie er ontbreekt.</strong> Ga naar <strong>Regression → Linear Regression</strong>, zet <code>snaveldiepte</code> bij <strong>Dependent Variable</strong> en <code>soort</code> bij <strong>Factors</strong>. Tel dan de rijen: er staan er <strong>twee</strong>, en de soort die ontbreekt is de referentiecategorie die JASP zelf koos. Liet hij de Adélies weg, dan lees je intercept 18.35 met <strong>0.07</strong> bij Chinstrap en <strong>−3.36</strong> bij Gentoo. Liet hij de Gentoo’s weg, dan staat er intercept 14.98 met <strong>3.36</strong> en <strong>3.44</strong>. Ter controle: één van die twee stel je vast, dan zit je goed — en schrijf op wélke, want zonder dat weet niemand waarvandaan geteld is. Kijk in dezelfde tabel ook even naar de <em>p</em>’s: de Gentoo-rij zit onder .001, de Chinstrap-rij op .65.</p></li>
 <li><p><strong>Doe het daarna met de hand, met de Gentoo’s weggelaten.</strong> Je kolommen <code>adelie</code> en <code>chinstrap</code> staan er nog. Haal <code>soort</code> uit <strong>Factors</strong>, zet ze allebei bij <strong>Covariates</strong> en draai het opnieuw met <code>snaveldiepte</code> als <strong>Dependent Variable</strong>. Ter controle: intercept 14.98, en daarbovenop 3.36 en 3.44. Alle drie de gemiddelden komen weer terug, alleen vanaf een ander vertrekpunt.</p>
-<p>Tel de eerste twee op en er staat 14.98 + 3.36 = 18.34, terwijl de Adélies 18.35 wegen. Dat is geen fout van jou: het programma rekent met alle decimalen en rondt pas aan het eind af. Dezelfde honderdste als bij de −1375.36 van daarnet.</p></li>
+<p>Tel de eerste twee op en er staat 14.98 + 3.36 = 18.34, terwijl de Adélies 18.35 wegen. Dat is geen fout van jou: het programma rekent met alle decimalen en rondt pas aan het eind af. Dezelfde honderdste als bij de Adélie-som van vraag c) hierboven, die op 3700.67 landde terwijl het echte gemiddelde 3700.66 is.</p></li>
 <li><p><strong>De denk-vraag: is “bijzonder” een eigenschap van de soort?</strong> Twee keer nu was het de Gentoo die eruit sprong — op gewicht 1375 gram bóven de rest, op snaveldiepte 3.36 millimeter eronder. Alleen de kant verschilt. Maar draai het nog één keer met <strong><code>snavellengte</code></strong> als <strong>Dependent Variable</strong>. Ter controle: Chinstrap 10.04 en Gentoo 8.71 (met de Adélies weggelaten) — allebei fors, en dus ligt hier niet de Gentoo apart maar de <strong>Adélie</strong>.</p>
 <p>De vuistregel hierboven zegt: nooit de meest bijzondere groep. Wie is dat hier dan? En let op wie wij in dit hoofdstuk als vertrekpunt gekozen hebben.</p></li>
 </ol>
