@@ -108,6 +108,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -784,11 +813,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> Hoeveel van het verschil in gewicht verklaart model 1, en hoeveel model 2? <em>(rapporteer beide R²)</em></p>
-<p><strong>b)</strong> Toets model 2 als geheel. Schrijf de nulhypothese eerst voluit op. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
-<p><strong>c)</strong> Wat voegt de vinlengte toe bovenop de soort? Gebruik <code>anova(model.soort, model.vl.soort)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
-<p><strong>d)</strong> En andersom — wat voegt de soort toe bovenop de vinlengte? Gebruik <code>anova(model.vl, model.vl.soort)</code>. <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>), p en ΔR²)</em></p>
-<p><strong>e)</strong> Zijn de twee soort-verschillen in model 2 significant? <em>(rapporteer per soort b, SE, t en p)</em></p>
+<p><strong>a)</strong> Hoeveel van het verschil in gewicht verklaart model 1, en hoeveel model 2? (rapporteer beide <em>R</em>²)</p>
+<p><strong>b)</strong> Toets model 2 als geheel. Schrijf de nulhypothese eerst voluit op, in woorden én in symbolen. (rapporteer <em>R</em>², <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>, en de hypothesen in symbolen)</p>
+<p><strong>c)</strong> Wat voegt de vinlengte toe bovenop de soort? Gebruik <code>anova(model.soort, model.vl.soort)</code>. (rapporteer <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>), <em>p</em> en Δ<em>R</em>²)</p>
+<p><strong>d)</strong> En andersom — wat voegt de soort toe bovenop de vinlengte? Gebruik <code>anova(model.vl, model.vl.soort)</code>. (rapporteer <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>), <em>p</em> en Δ<em>R</em>²)</p>
+<p><strong>e)</strong> Zijn de twee soort-verschillen in model 2 significant? (rapporteer per soort <em>b</em>, <em>SE</em>, <em>t</em> en <em>p</em>)</p>
 <p><strong>f)</strong> Welke soort is de referentiecategorie, en waaraan zie je dat?</p>
 <p><strong>g)</strong> Waarom is de Chinstrap ruw ietsje zwáárder dan de Adélie, maar gecorrigeerd ruim tweehonderd gram lichter? Kijk naar de gemiddelde vinlengtes.</p>
 <p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Een ANCOVA heeft één aanname die de gewone regressie niet heeft: de covariaat moet in élke groep <strong>dezelfde helling</strong> hebben. Toets dat door een model mét interactie ernaast te leggen — bouw <code>model.vl.x.soort &lt;- lm(gewicht ~ vinlengte * soort, data = peng)</code> en draai <code>anova(model.vl.soort, model.vl.x.soort)</code> — en kijk ook naar de drie hellingen apart.</p>
@@ -807,7 +836,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Model 1: <em>R</em>² = .670. Model 2: <em>R</em>² = .783.</p>
-<p><strong>b)</strong> De nulhypothese: dit model — vinlengte en soort samen — verklaart níéts van de verschillen in gewicht; de <em>R</em>² is in de populatie nul. Uitkomst: <em>R</em>² = .783, <em>F</em>(3, 338) = 405.69, <em>p</em> &lt; .001.</p>
+<p><strong>b)</strong> De nulhypothese: dit model — vinlengte en soort samen — verklaart níéts van de verschillen in gewicht. In symbolen — en let op het aantal, want de soort bracht twee dummy’s mee naast de vinlengte:</p>
+<p><span class="math display">\[H_0:\ \beta_1 = \beta_2 = \beta_3 = 0 \qquad H_1:\ \text{minstens één } \beta_j \neq 0\]</span></p>
+<p>of over de verklaarde variantie: <span class="math inline">\(H_0:\ \rho^2 = 0\)</span> tegen <span class="math inline">\(H_1:\ \rho^2 &gt; 0\)</span>; één van de twee is genoeg.</p>
+<p>Uitkomst: <em>R</em>² = .783, <em>F</em>(3, 338) = 405.69, <em>p</em> &lt; .001.</p>
 <p><strong>c)</strong> <em>F</em>(1, 338) = 175.69, <em>p</em> &lt; .001, Δ<em>R</em>² = .113. Fors: de vin brengt echt iets nieuws mee.</p>
 <p><strong>d)</strong> <em>F</em>(2, 338) = 18.39, <em>p</em> &lt; .001, Δ<em>R</em>² = .024. Twee vrijheidsgraden, want de soort bracht twee dummy’s mee. Ook significant, maar veel kleiner — en dat is het punt van dit blok: het meeste van wat “soortverschil” leek, was vinlengte.</p>
 <p><strong>e)</strong> Ja, allebei. Chinstrap tegenover Adélie: <em>b</em> = −206.51, <em>SE</em> = 57.73, <em>t</em>(338) = −3.58, <em>p</em> &lt; .001. Gentoo tegenover Adélie: <em>b</em> = 266.81, <em>SE</em> = 95.26, <em>t</em>(338) = 2.80, <em>p</em> = .005.</p>
@@ -915,13 +947,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> Hoeveel gram schelen de seksen ruw? <em>(rapporteer b en R² van <code>model.sekse</code>)</em></p>
+<p><strong>a)</strong> Hoeveel gram schelen de seksen ruw? (rapporteer <em>b</em> en <em>R</em>² van <code>model.sekse</code>)</p>
 <p><strong>b)</strong> Waarom staan er 333 pinguïns in <code>ps</code> en geen 342? Wat betekent dat voor je rapportage?</p>
-<p><strong>c)</strong> Toets <code>model.vl.sekse</code> als geheel. <em>(rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
-<p><strong>d)</strong> Wat gebeurt er met het sekseverschil zodra de vinlengte erbij komt? <em>(rapporteer b, SE, t, p en het 95%-interval)</em></p>
+<p><strong>c)</strong> Toets <code>model.vl.sekse</code> als geheel. (rapporteer <em>R</em>², <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>)</p>
+<p><strong>d)</strong> Wat gebeurt er met het sekseverschil zodra de vinlengte erbij komt? (rapporteer <em>b</em>, <em>SE</em>, <em>t</em>, <em>p</em> en het 95%-interval)</p>
 <p><strong>e)</strong> Reken de gemiddelde vinlengte per sekse uit. Verklaart dat de verandering uit vraag d?</p>
 <p><strong>f)</strong> Reken de twee gecorrigeerde gemiddelden uit met <code>predict()</code>, bij de gemiddelde vinlengte. Let op: reken die gemiddelde vinlengte <strong>opnieuw uit op <code>ps</code></strong> — <code>mean(ps$vinlengte)</code>, niet de <code>gem.vin</code> van eerder in dit blok. Zet ze daarna naast de ruwe gemiddelden.</p>
-<p><strong>g)</strong> Wat voegt de vinlengte toe bovenop de sekse? <em>(rapporteer F(df<sub>1</sub>, df<sub>2</sub>) en p)</em></p>
+<p><strong>g)</strong> Wat voegt de vinlengte toe bovenop de sekse? (rapporteer <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>)</p>
 <p><strong>h)</strong> Vergelijk deze uitkomst met de soort-ANCOVA hierboven. Bij de soort verdween het meeste van het groepsverschil; hier niet. Wat is het verschil?</p>
 <p><strong>Z)</strong> Toets de parallelliteitsaanname, net als hierboven. Kijk ook naar de twee hellingen apart. Mag je dit model gebruiken?</p>
 </div>
