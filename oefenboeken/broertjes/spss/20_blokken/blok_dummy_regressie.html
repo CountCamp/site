@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -724,10 +753,10 @@ REGRESSION
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Hoeveel dummy’s heb je nodig voor drie soorten, welke soort heb je weggelaten, en hoe heet die groep? (het aantal, de soort, en de term)</p>
-<p><strong>b)</strong> Wat zijn de nulhypothese en de alternatieve hypothese voor het model als geheel — en gaat je uitspraak over deze 342 pinguïns, of over alle pinguïns waar zij een steekproef uit zijn? (twee hele zinnen, met het woord <em>populatie</em> of <em>steekproef</em> erin)</p>
+<p><strong>b)</strong> Wat zijn de nulhypothese en de alternatieve hypothese voor het model als geheel, in woorden én in symbolen — en gaat je uitspraak over deze 342 pinguïns, of over alle pinguïns waar zij een steekproef uit zijn? (twee hele zinnen met <em>populatie</em> of <em>steekproef</em> erin, en die twee ook in symbolen)</p>
 <p><strong>c)</strong> Kan die nulhypothese verworpen worden? (rapporteer <em>F</em>, <em>df</em> en <em>p</em>, en zeg wát je verwerpt)</p>
 <p><strong>d)</strong> Hoeveel procent van het verschil in gewicht tussen deze pinguïns verklaart de soort? (rapporteer <em>R</em>², en zeg wat de rest is)</p>
-<p><strong>e)</strong> Wat zijn de nulhypothese en de alternatieve hypothese voor de twee losse regressiegewichten — en waarin verschillen die van b)? (twee verschillen)</p>
+<p><strong>e)</strong> Wat zijn de nulhypothese en de alternatieve hypothese voor de twee losse regressiegewichten, weer in woorden én in symbolen — en waarin verschillen die van b)? (twee verschillen, en de hypothesen in symbolen)</p>
 <p><strong>f)</strong> Zijn de twee regressiegewichten, −1375.35 en −1342.93, significant? (rapporteer per gewicht <em>b</em>, <em>t</em>, <em>df</em> en <em>p</em>)</p>
 <p><strong>g)</strong> Schrijf de geschatte regressievergelijking op. (met de namen van je eigen dummy’s erin)</p>
 <p><strong>h)</strong> Welk getal in de tabel is het gemiddelde gewicht van de Gentoo’s — en welke schatter gebruik je daarvoor? (het getal, en hoe die schatter heet)</p>
@@ -759,9 +788,15 @@ REGRESSION
 <p><strong>b)</strong> Over de <strong>populatie</strong>, niet over deze 342. Die heb je gewogen; hun gemiddelden kun je gewoon aflezen, dus daar valt niets aan te toetsen.</p>
 <p>De nulhypothese: in de populatie pinguïns waar deze 342 een steekproef uit zijn, hangt de soort niet samen met het gewicht — beide regressiegewichten zijn daar nul.</p>
 <p>De alternatieve hypothese: minstens één van die twee is niet nul, dus érgens hangt de soort wél met het gewicht samen.</p>
+<p>Diezelfde twee zinnen in symbolen:</p>
+<p><span class="math display">\[H_0:\ \beta_1 = \beta_2 = 0 \qquad H_1:\ \text{minstens één } \beta_j \neq 0\]</span></p>
+<p>Grieks (β), want het gaat over de populatie; de <em>b</em>’s in je uitvoer zijn de schattingen daarvan uit déze 342. Je mag hem ook over de verklaarde variantie schrijven — <span class="math inline">\(H_0:\ \rho^2 = 0\)</span> tegen <span class="math inline">\(H_1:\ \rho^2 &gt; 0\)</span> — want dat zegt hetzelfde. Eén van de twee is genoeg.</p>
 <p><strong>c)</strong> Ja: <em>F</em>(2, 339) = 343.63, <em>p</em> &lt; .001. Je vindt hem in de <em>ANOVA</em>-tabel onder je regressie. Wat je verwerpt is de nulhypothese dat de soort in de populatie niets met het gewicht te maken heeft. Wat je er níét mee weet, is wélke soorten van elkaar verschillen — daarvoor moet je naar de losse gewichten kijken, bij f) en j).</p>
 <p><strong>d)</strong> <em>R</em>² = .67, dus 67%. De andere 33% is verschil in gewicht dat de soort níét verklaart; dat zit bínnen de soorten, tussen pinguïns van dezelfde soort. Je leest hem af bij <strong>R Square</strong> in de tabel <em>Model Summary</em>, waar SPSS <strong>.670</strong> afdrukt.</p>
 <p><strong>e)</strong> Bij b) ging het over de twee gewichten samen, hier gaat het per gewicht apart. De nulhypothese voor de Adélie-dummy: in de populatie is het verschil in gewicht tussen Adélies en Gentoo’s nul; de alternatieve: dat verschil is niet nul. En hetzelfde nog eens voor de Chinstrap-dummy. Twee verschillen met b) dus: b) toetst ze in één keer en zegt alleen <em>of er ergens</em> iets zit, deze twee toetsen elk één verschil en zeggen ook <em>welk</em>.</p>
+<p>In symbolen, nu per gewicht apart:</p>
+<p><span class="math display">\[H_0:\ \beta_j = 0 \qquad H_1:\ \beta_j \neq 0\]</span></p>
+<p>En een derde verschil krijg je er cadeau, want je ziet het aan de notatie: deze staat twee kanten op. Een los verschil kan ook de andere kant uit vallen, terwijl de <em>F</em> van b) alleen maar groter dan nul kan uitpakken.</p>
 <p><strong>f)</strong> Ja, allebei. Adélies tegenover Gentoo’s: <em>b</em> = −1375.35 g, <em>t</em>(339) = −24.50, <em>p</em> &lt; .001. Chinstraps tegenover Gentoo’s: <em>b</em> = −1342.93 g, <em>t</em>(339) = −19.22, <em>p</em> &lt; .001. Ze staan in de tabel <em>Coefficients</em>: de gewichten in de kolom <strong>B</strong>, de rest in <strong>t</strong> en <strong>Sig.</strong></p>
 <p><strong>g)</strong> <strong>gewicht = 5076.02 − 1375.35 × adelie − 1342.93 × chinstrap.</strong> De twee minnen zitten in de gewichten zelf, dus je mag ze ook als plus opschrijven met een negatief getal erachter — als de uitkomst maar hetzelfde is.</p>
 <p><strong>h)</strong> 5076.02, de rij <strong>(Constant)</strong>, en de schatter die je daarvoor gebruikt is het <strong>intercept</strong>. Vul in de vergelijking bij <code>adelie</code> en <code>chinstrap</code> allebei een 0 in en er blijft niets over dan dat intercept — en een pinguïn die op allebei de dummy’s nul scoort ís een Gentoo.</p>

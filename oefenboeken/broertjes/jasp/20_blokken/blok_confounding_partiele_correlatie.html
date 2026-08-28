@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -772,14 +801,14 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> Hoeveel gram per millimeter voorspelt het lengte-model, en hoeveel van het verschil in gewicht verklaart hij? (rapporteer b en R²)</p>
-<p><strong>b)</strong> Doe hetzelfde voor het diepte-model. Let op het teken — klopt dat met wat je zou verwachten? (rapporteer b en R²)</p>
-<p><strong>c)</strong> Toets nu het model met allebei als geheel. Schrijf de nulhypothese eerst voluit op. (rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p)</p>
+<p><strong>a)</strong> Hoeveel gram per millimeter voorspelt het lengte-model, en hoeveel van het verschil in gewicht verklaart hij? (rapporteer <em>b</em> en <em>R</em>²)</p>
+<p><strong>b)</strong> Doe hetzelfde voor het diepte-model. Let op het teken — klopt dat met wat je zou verwachten? (rapporteer <em>b</em> en <em>R</em>²)</p>
+<p><strong>c)</strong> Toets nu het model met allebei als geheel. Schrijf de nulhypothese eerst voluit op, in woorden én in symbolen. (rapporteer <em>R</em>², <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>, en de hypothesen in symbolen)</p>
 <p><strong>d)</strong> Wat gebeurt er met de helling van de snavellengte als de snaveldiepte ernaast komt te staan — en hoe verhoudt dat zich tot wat er in dit blok met diezelfde snavellengte naast de vinlengte gebeurde?</p>
-<p><strong>e)</strong> Blijven ze allebei significant in het model met allebei? (rapporteer per voorspeller b, SE, t, p en het 95%-interval)</p>
+<p><strong>e)</strong> Blijven ze allebei significant in het model met allebei? (rapporteer per voorspeller <em>b</em>, <em>SE</em>, <em>t</em>, <em>p</em> en het 95%-interval)</p>
 <p><strong>f)</strong> Reken de overlap uit: de correlatie tussen <code>snavellengte</code> en <code>snaveldiepte</code>. Vergelijk met de .656 van vin en snavel. Wat voorspelt dat ene getal over de uitkomst van vraag d?</p>
 <p><strong>g)</strong> Reken de twee partiële correlaties uit, met het vak <strong>Partial out</strong> uit dit blok. (rapporteer beide)</p>
-<p><strong>h)</strong> Hoeveel voegt de <strong>snavellengte</strong> uniek toe aan de <em>R</em>²? Zet <code>snaveldiepte</code> in blok 1 en <code>snavellengte</code> erbij in blok 2, en lees de regel van blok 2. (rapporteer ΔR² en de F-toets) — voor de snaveldiepte krijg je hem kado: Δ<em>R</em>² = .117, <em>F</em>(1, 339) = 74.76.</p>
+<p><strong>h)</strong> Hoeveel voegt de <strong>snavellengte</strong> uniek toe aan de <em>R</em>²? Zet <code>snaveldiepte</code> in blok 1 en <code>snavellengte</code> erbij in blok 2, en lees de regel van blok 2. (rapporteer Δ<em>R</em>² en de <em>F</em>-toets) — voor de snaveldiepte krijg je hem kado: Δ<em>R</em>² = .117, <em>F</em>(1, 339) = 74.76.</p>
 <p><strong>i)</strong> Tel die twee unieke bijdragen bij elkaar op en vergelijk met de <em>R</em>² van het model met allebei. Ze tellen niet op. Waar is het verschil gebleven?</p>
 <p><strong>Z)</strong> Mag je dit model eigenlijk wel gebruiken? Loop de aannames na: kijk naar de residuen (onder <strong>Plots</strong> het spreidingsdiagram <em>Residuals vs.&nbsp;predicted</em> voor gelijke spreiding, en de <em>Q-Q plot standardized residuals</em> voor de verdeling), en of elke pinguïn maar één keer meetelt.</p>
 </div>
@@ -798,7 +827,10 @@ ul.task-list li input[type="checkbox"] {
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> <em>b</em> = 87.42 gram per millimeter, <em>R</em>² = .354.</p>
 <p><strong>b)</strong> <em>b</em> = −191.64, <em>R</em>² = .223. Negatief, en dat wringt: over alle pinguïns heen lijkt een <em>diepere</em> snavel bij een <em>lichter</em> beest te horen. Onthoud dat, het komt bij de dummy-oefening en de ANCOVA terug.</p>
-<p><strong>c)</strong> De nulhypothese: dit model — snavellengte en snaveldiepte samen — verklaart níéts van de verschillen in gewicht; de <em>R</em>² is in de populatie nul. Uitkomst: <em>R</em>² = .471, <em>F</em>(2, 339) = 150.82, <em>p</em> &lt; .001. Die mag dus de deur uit.</p>
+<p><strong>c)</strong> De nulhypothese: dit model — snavellengte en snaveldiepte samen — verklaart níéts van de verschillen in gewicht. In symbolen:</p>
+<p><span class="math display">\[H_0:\ \beta_1 = \beta_2 = 0 \qquad H_1:\ \text{minstens één } \beta_j \neq 0\]</span></p>
+<p>of over de verklaarde variantie: <span class="math inline">\(H_0:\ \rho^2 = 0\)</span> tegen <span class="math inline">\(H_1:\ \rho^2 &gt; 0\)</span> — Grieks (β en ρ²), want het gaat over de populatie en niet over deze 342. Eén van de twee is genoeg.</p>
+<p>Uitkomst: <em>R</em>² = .471, <em>F</em>(2, 339) = 150.82, <em>p</em> &lt; .001. Die mag dus de deur uit.</p>
 <p><strong>d)</strong> Hij zakt, maar hij stort niet in: van 87.42 naar <strong>75.28</strong>. Vergelijk dat met wat de vin deed — dáár ging dezelfde helling van 87.42 naar 6.05. Naast de vin hield de snavellengte niets over; naast de snaveldiepte houdt hij ruim zesentachtig procent van zijn helling.</p>
 <p><strong>e)</strong> Ja, allebei ruimschoots. Snavellengte: <em>b</em> = 75.28, <em>SE</em> = 5.97, <em>t</em>(339) = 12.61, <em>p</em> &lt; .001, 95% CI [63.54, 87.03]. Snaveldiepte: <em>b</em> = −142.72, <em>SE</em> = 16.51, <em>t</em>(339) = −8.65, <em>p</em> &lt; .001, 95% CI [−175.19, −110.25]. Geen van beide intervallen bevat nul.</p>
 <p><strong>f)</strong> <em>r</em> = −.235, tegen .656 voor vin en snavel. Dát is het antwoord op vraag d. Twee voorspellers die elkaar nauwelijks overlappen kunnen allebei hun eigen verhaal vertellen; twee die sterk samenhangen vertellen elkaars verhaal, en dan houdt de zwakste niets eigens over.</p>
@@ -837,7 +869,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="resultaten" class="level3">
 <h3 class="anchored" data-anchor-id="resultaten">Resultaten</h3>
-<p><strong>d)</strong> Toets het model als geheel. (rapporteer R², F(df<sub>1</sub>, df<sub>2</sub>) en p, en zeg wát je verwerpt)</p>
+<p><strong>d)</strong> Toets het model als geheel. (rapporteer <em>R</em>², <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>, en zeg wát je verwerpt)</p>
 <p><strong>e)</strong> Rapporteer allebei de voorspellers apart. (per voorspeller b, SE, t, p en het 95%-interval)</p>
 <p><strong>f)</strong> Hoeveel voegt elk van de twee <strong>uniek</strong> toe? (twee ΔR²’s met hun F-toets)</p>
 <p><strong>g)</strong> Tel de twee losse <em>R</em>²’s bij elkaar op en vergelijk met de <em>R</em>² van het volle model. En tel daarna de twee unieke bijdragen op en vergelijk óók. Wat valt je op aan de twee verschillen? (twee sommen en één getal dat je twee keer tegenkomt)</p>
