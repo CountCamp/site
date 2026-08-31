@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Oefening 9.4 · ANOVA en η² – R-oefenboek</title>
+<title>Oefening 9.4 · Eenweg ANOVA en η² – R-oefenboek</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -108,6 +108,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../werkboek.css">
 </head>
@@ -121,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_anova.html">Oefening 9.4 · ANOVA en η²</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_anova.html">Oefening 9.4 · Eenweg ANOVA en η²</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -224,59 +253,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
-          <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
- <span class="menu-text">H3 · De grabbelton geschud</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Oefening 3.1 · Steekproevenverdeling en standaardfout</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">Tweede beweging · Verschillen koppelen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">H3 · Het rechthoekje</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
- <span class="menu-text">H4 · Het rechthoekje</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth2 ">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Oefening 4.1 · Correlatie en scatterplot</span></a>
+ <span class="menu-text">Oefening 3.1 · Correlatie en scatterplot</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Oefening 4.2 · Enkelvoudige regressie</span></a>
+ <span class="menu-text">Oefening 3.2 · Enkelvoudige regressie</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Oefening 4.3 · De residuen bekijken</span></a>
+ <span class="menu-text">Oefening 3.3 · De residuen bekijken</span></a>
   </div>
 </li>
       </ul>
@@ -285,13 +297,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
  <span class="menu-text">Derde beweging · Verschil op de proef</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">H4 · De grabbelton geschud</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.1 · Steekproevenverdeling en standaardfout</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
@@ -413,7 +442,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Oefening 9.4 · ANOVA en η²</span></a>
+ <span class="menu-text">Oefening 9.4 · Eenweg ANOVA en η²</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -598,10 +627,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 <p class="beweging">Vierde beweging · Verschil onthechten</p>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_anova.html">Oefening 9.4 · ANOVA en η²</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_anova.html">Oefening 9.4 · Eenweg ANOVA en η²</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Oefening 9.4 · ANOVA en η²</h1>
-<p class="subtitle lead">Variantieanalyse (ANOVA) · <em>analysis of variance</em></p>
+<h1 class="title">Oefening 9.4 · Eenweg ANOVA en η²</h1>
+<p class="subtitle lead">Eenweg variantieanalyse en η² · <em>one-way analysis of variance</em></p>
 </div>
 
 
@@ -648,7 +677,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="toets-alle-drie-de-soorten-in-één-keer" class="level2">
 <h2 class="anchored" data-anchor-id="toets-alle-drie-de-soorten-in-één-keer">Toets alle drie de soorten in één keer</h2>
-<p><span class="begrippen">variantieanalyse (ANOVA) · F · post-hoc-toets (Tukey)</span></p>
+<p><span class="begrippen">eenweg variantieanalyse · F · post-hoc-toets (Tukey)</span></p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -672,9 +701,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
-<p>Dezelfde vergelijking nog één keer, nu als ANOVA: <em>F</em> = 3.00, en dat is de <em>t</em> van net in het kwadraat. Niet ongeveer maar precies — al moet je die <em>t</em> dan wel met al zijn decimalen pakken. Kwadrateer je de afgeronde −1.73, dan staat er 2.99 en lijkt het nét mis te gaan. Bij twee groepen zijn de <em>t</em>-toets en de ANOVA dezelfde toets in een andere jas. Pas bij drie of meer groepen wordt de ANOVA zichzelf.</p>
+<p>Dezelfde vergelijking nog één keer, nu als eenweg variantieanalyse: <em>F</em> = 3.00, en dat is de <em>t</em> van net in het kwadraat. Niet ongeveer maar precies — al moet je die <em>t</em> dan wel met al zijn decimalen pakken. Kwadrateer je de afgeronde −1.73, dan staat er 2.99 en lijkt het nét mis te gaan. Bij twee groepen zijn de <em>t</em>-toets en de eenweg ANOVA dezelfde toets in een andere jas. Pas bij drie of meer groepen wordt hij zichzelf.</p>
 <p><strong>Nu jij</strong> — en daar heb je de pinguïns weer, maar nu met alle drie de soorten tegelijk op de weegschaal.</p>
-<p>Eén toets, drie groepen. Hij heet <strong>variantieanalyse</strong> — <em>analysis of variance</em>, kortweg <strong>ANOVA</strong>. De naam klinkt als iets anders dan de <em>t</em>-toets, maar de vraag is dezelfde familie: <em>verschillen de gemiddelden van de groepen meer dan je door toeval zou verwachten?</em> Alleen kijkt ANOVA naar alle groepen in één beweging.</p>
+<p>Eén toets, drie groepen. Hij heet <strong>eenweg variantieanalyse</strong> — <em>one-way analysis of variance</em>, kortweg <strong>eenweg ANOVA</strong>. <em>Eenweg</em>, omdat je op één ding groepeert: de soort. Die eerste helft van de naam laat je nooit weg; waaróm niet staat in de dummy-oefening, in Bens eigen woorden. De naam klinkt als iets anders dan de <em>t</em>-toets, maar de vraag is dezelfde familie: <em>verschillen de gemiddelden van de groepen meer dan je door toeval zou verwachten?</em> Alleen kijkt hij naar alle groepen in één beweging.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek aan de drie soorten">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -696,8 +725,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Daar staat-ie: <strong><em>F</em>(2, 339) = 343.6, <em>p</em> &lt; .001</strong>. Die <em>F</em> is één getal voor “hoeveel groter is het verschil <em>tussen</em> de groepen dan de rommel <em>binnen</em> de groepen?”. Ligt F rond 1, dan is het verschil tussen de groepen niet groter dan de spreiding die je toch al binnen elke groep hebt — niks bijzonders. Hoe hoger F, hoe sterker de groepen uit elkaar liggen ten opzichte van hun eigen ruis. En 343.63 is geen hoge F, dat is een absurde F. Hier zit overduidelijk ergens verschil.</p>
-<p>Je ziet nu twee vormen van hetzelfde getal op één bladzij, en dat hoort zo. <code>summary()</code> kort de <em>F</em> af tot 343.6; voluit is hij 343.6263, en die haal je op met <code>summary(model.soort)[[1]][["F value"]][1]</code>. In een rapportagezin gaat hij op twee decimalen: 343.63. En η² raakt straks ook zijn nul vóór de punt kwijt — net als <em>r</em> kan die maat niet voorbij de 1, en dat is precies wat in 4.1 langskwam. <strong>Aflezen doe je van je scherm, rapporteren doe je volgens APA.</strong></p>
-<p>Maar let op wat de ANOVA je <em>niet</em> vertelt: alleen dát er ergens een verschil zit, niet wélke soorten van elkaar afwijken. Daarvoor bestaat een <strong>post-hoc</strong>-toets (letterlijk “achteraf”) die alle paren nagaat:</p>
+<p>Je ziet nu twee vormen van hetzelfde getal op één bladzij, en dat hoort zo. <code>summary()</code> kort de <em>F</em> af tot 343.6; voluit is hij 343.6263, en die haal je op met <code>summary(model.soort)[[1]][["F value"]][1]</code>. In een rapportagezin gaat hij op twee decimalen: 343.63. En η² raakt straks ook zijn nul vóór de punt kwijt — net als <em>r</em> kan die maat niet voorbij de 1, en dat is precies wat in 3.1 langskwam. <strong>Aflezen doe je van je scherm, rapporteren doe je volgens APA.</strong></p>
+<p>Maar let op wat die ene toets je <em>niet</em> vertelt: alleen dát er ergens een verschil zit, niet wélke soorten van elkaar afwijken. Daarvoor bestaat een <strong>post-hoc</strong>-toets (letterlijk “achteraf”) die alle paren nagaat:</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · wélke soorten verschillen? (post-hoc, Tukey)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -714,7 +743,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo-Chinstrap     diff  1343   p adj &lt;.001   &lt;- fors</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>En kijk, nu wordt het interessant. Adélie en Chinstrap verschillen <strong>niet</strong> (32 gram, <em>p</em> = .88 — dat is toeval). Het is de Gentoo die het hele feest maakt: ruim 1300 gram zwaarder dan de andere twee. De ANOVA riep “ergens is verschil!”, de post-hoc wijst aan wáár.</p>
+<p>En kijk, nu wordt het interessant. Adélie en Chinstrap verschillen <strong>niet</strong> (32 gram, <em>p</em> = .88 — dat is toeval). Het is de Gentoo die het hele feest maakt: ruim 1300 gram zwaarder dan de andere twee. De eenweg ANOVA riep “ergens is verschil!”, de post-hoc wijst aan wáár.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -756,9 +785,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="wat-een-f-van-343.63-wél-en-niet-vertelt" class="level2">
 <h2 class="anchored" data-anchor-id="wat-een-f-van-343.63-wél-en-niet-vertelt">Wat een F van 343.63 wél en niet vertelt</h2>
 <p><span class="begrippen">effectgrootte η² · verklaard aandeel · significant versus groot</span></p>
-<p>De ANOVA is dus overduidelijk: ergens tussen de soorten zit echt verschil. Maar net als bij de <em>t</em>-toets in het vorige blok is “echt” niet hetzelfde als “groot” — en die astronomische F van 343.63 kan je op het verkeerde been zetten.</p>
+<p>De eenweg ANOVA is dus overduidelijk: ergens tussen de soorten zit echt verschil. Maar net als bij de <em>t</em>-toets in het vorige blok is “echt” niet hetzelfde als “groot” — en die astronomische F van 343.63 kan je op het verkeerde been zetten.</p>
 <p>Zo’n duizelingwekkende F betekent niet dat dit het belangrijkste verschil op aarde is. Hij is zo hoog om twee saaie redenen: het verschil ís bruut (de Gentoo torent er ruim een kilo bovenuit) én we hebben veel dieren (342 stuks). Bij een groot, duidelijk verschil met een royale N is significantie <strong>triviaal</strong> — de toets bevestigt alleen wat je met het blote oog al zag. De p is dan niet het nieuws. De grootte is het nieuws.</p>
-<p>Voor die grootte bestaat bij ANOVA de effectgrootte η² (eta-kwadraat, <em>eta squared</em>). Die vertelt je welk <strong>aandeel van alle verschil in gewicht</strong> verklaard wordt door de soort:</p>
+<p>Voor die grootte bestaat bij een eenweg ANOVA de effectgrootte η² (eta-kwadraat, <em>eta squared</em>). Die vertelt je welk <strong>aandeel van alle verschil in gewicht</strong> verklaard wordt door de soort:</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · hoe groot is groot? (η²)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -777,11 +806,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><strong>η² = .67.</strong> Van al het verschil in gewicht tussen deze 342 pinguïns wordt <strong>67% verklaard door welke soort het is</strong>. Dat is enorm — weet je de soort, dan weet je het gewicht al bijna. Dáár zit het verhaal, niet in de F. En η² sluit naadloos aan op de <em>r</em>² uit het correlatieblok en op Cohens <em>d</em> uit het <em>d</em>-blok: allemaal manieren om te zeggen <em>hoe groot</em> iets is, los van <em>of</em> het er is.</p>
-<p>En dan de aansluiting die dit hoofdstuk rondmaakt. Die <em>F</em> van 343.63 zag je in de eerste oefening van dit hoofdstuk al staan, drie keer achter elkaar: onder de regressie met je zelfgebouwde dummy’s, onder de regressie waarin het programma ze zelf maakte, en onder de ANOVA. En η² is geen neefje van de <em>R</em>² uit die regressie — het is hetzelfde getal, .6697, tot op de laatste decimaal. Dat is geen toeval en geen benadering: de ANOVA en de dummy-regressie zíjn één model. De ANOVA vraagt “zit er ergens verschil?” en de regressie vraagt “hoeveel, en tussen wie?”, maar ze rekenen aan precies dezelfde som.</p>
+<p>En dan de aansluiting die dit hoofdstuk rondmaakt. Die <em>F</em> van 343.63 zag je in de eerste oefening van dit hoofdstuk al staan, drie keer achter elkaar: onder de regressie met je zelfgebouwde dummy’s, onder de regressie waarin het programma ze zelf maakte, en onder de eenweg ANOVA. En η² is geen neefje van de <em>R</em>² uit die regressie — het is hetzelfde getal, .6697, tot op de laatste decimaal. Dat is geen toeval en geen benadering: de eenweg ANOVA en de dummy-regressie zíjn één model. De toets vraagt “zit er ergens verschil?” en de regressie vraagt “hoeveel, en tussen wie?”, maar ze rekenen aan precies dezelfde som.</p>
 <p>De les van dit blok, in drie zinnen:</p>
 <ul>
-<li><strong>Drie of meer groepen tegelijk → ANOVA.</strong> Eén toets in plaats van een stapel losse <em>t</em>-toetsen. Hij vraagt: zit er <em>ergens</em> een verschil tussen de groepen?</li>
-<li><strong>De ANOVA zegt “ergens”, de post-hoc zegt “waar”.</strong> Hier: niet Adélie tegen Chinstrap (die zijn even zwaar), maar de Gentoo die er bovenuit steekt.</li>
+<li><strong>Drie of meer groepen op één groepering → eenweg ANOVA.</strong> Eén toets in plaats van een stapel losse <em>t</em>-toetsen. Hij vraagt: zit er <em>ergens</em> een verschil tussen de groepen? Groepeer je op twee dingen tegelijk, dan heet het een tweeweg ANOVA, en dat is de volgende oefening over interactie.</li>
+<li><strong>Hij zegt “ergens”, de post-hoc zegt “waar”.</strong> Hier: niet Adélie tegen Chinstrap (die zijn even zwaar), maar de Gentoo die er bovenuit steekt.</li>
 <li><strong>Significant zegt “waarschijnlijk niet nul”, niet “groot”.</strong> Bij een F van 343 is de p geen nieuws; η² wél. Rapporteer de effectgrootte naast de toets.</li>
 </ul>
 <p>Zou je het in één eerlijke zin opschrijven, dan niet “de soorten verschillen significant in gewicht (<em>p</em> &lt; .001)”, maar: “de drie soorten verschillen sterk in gewicht (η² = .67); dat verschil zit vrijwel helemaal in de Gentoo, die ruim 1300 gram zwaarder is dan de andere twee, die onderling niet verschillen.” Het getal met een maat eromheen, en meteen wélke groep het doet.</p>
@@ -792,6 +821,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="van-soort-naar-sekse" class="level2">
 <h2 class="anchored" data-anchor-id="van-soort-naar-sekse">Van soort naar sekse</h2>
 <p><span class="begrippen">een tweede groepering · ontbrekende waarden · <em>F</em> = <em>t</em>²</span></p>
+<p>Jouw beurt — bekende beesten, nieuwe knip. Het hele hoofdstuk sneed de pinguïns op <code>soort</code>, maar het bestand heeft nog een tweede groepskolom: <code>sekse</code>. Twee groepen maar — en juist daarom kun je hier iets sluiten wat dit blok tot nu toe alleen op de twaalf steentjes liet zien: bij twee groepen is <em>F</em> precies <em>t</em> in het kwadraat.</p>
+<p>Draai eerst de vier regels hieronder, en beantwoord daarna de vragen. De laatste heet met opzet <strong>Z)</strong> en niet l): de aannames staan altijd achteraan, en die vreemde letter zegt <em>“en ook, elke keer, deze”</em>.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · zet klaar">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · zet klaar
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>model.sekse <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> sekse, <span class="at">data =</span> peng)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sekse)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>sekse, mean)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -802,39 +851,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Jouw beurt — bekende beesten, nieuwe knip. Het hele hoofdstuk sneed de pinguïns op <code>soort</code>, maar het bestand heeft nog een tweede groepskolom: <code>sekse</code>. Twee groepen maar — en juist daarom kun je hier iets sluiten wat dit blok tot nu toe alleen op de twaalf steentjes liet zien: bij twee groepen is <em>F</em> precies <em>t</em> in het kwadraat.</p>
-<ol type="1">
-<li><p><strong>Tel eerst wie er meedoet.</strong> Een kolom die je nog nooit gebruikt hebt, bekijk je vóór je er een toets op loslaat:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># hoeveel lege velden zitten er in de sekse-kolom?</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(peng<span class="sc">$</span>sekse))    <span class="co"># → 9</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(peng<span class="sc">$</span>sekse)         <span class="co"># → female 165   male 168</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Ter controle: 9 lege velden, en 165 + 168 = 333 dieren met een vastgestelde sekse — geen 342. Bij negen pinguïns is de sekse in het veld nooit vastgesteld; de bladzij over de datasets vertelt het al.&nbsp;Onthoud die negen — ze duiken zo op waar je ze niet verwacht.</p></li>
-<li><p><strong>Draai de ANOVA, en lees de <em>df</em>.</strong> Dezelfde toets als in dit blok, andere knip:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model.sekse <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> sekse, <span class="at">data =</span> peng)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sekse)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sekse       Df   1   F value 72.96   Pr(&gt;F) 4.9e-16</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals   Df 331</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># de twee gemiddelden erbij</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>sekse, mean)   <span class="co"># → female 3862   male 4546</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># en de effectgrootte, precies zoals eerder in dit blok</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(model.sekse)[[<span class="dv">1</span>]]</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>s[<span class="dv">1</span>, <span class="st">"Sum Sq"</span>] <span class="sc">/</span> <span class="fu">sum</span>(s[, <span class="st">"Sum Sq"</span>])      <span class="co"># → 0.18</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Ter controle: <em>F</em>(1, 331) = 72.96, <em>p</em> &lt; .001, η² = .18. De mannetjes wegen gemiddeld 683 gram meer dan de vrouwtjes, en de sekse verklaart 18% van alle verschil in gewicht tussen deze dieren. En kijk nu naar die 331: dat is 333 − 2, niet 342 − 2. <code>aov()</code> heeft de negen rijen zonder sekse stilzwijgend weggegooid — geen melding, geen waarschuwing. De <em>df</em> is de plek waar dat zichtbaar wordt, en jij zag het aankomen, want je had geteld.</p></li>
-<li><p><strong>Sluit de belofte.</strong> Bij twee groepen zijn de <em>t</em>-toets en de ANOVA dezelfde toets in een andere jas — dat stond eerder in dit blok, met twaalf steentjes als bewijs. Nu met 333 pinguïns:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dezelfde vergelijking als t-toets — gepoold, want zo rekent aov()</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> sekse, <span class="at">data =</span> peng, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t(331) = -8.54</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># en het kwadraat — neem de t met al zijn decimalen van je scherm,</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># niet de afgeronde -8.54</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>(<span class="sc">-</span><span class="fl">8.5417</span>)<span class="sc">^</span><span class="dv">2</span>    <span class="co"># → 72.96</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Ter controle: <em>t</em>(331) = −8.54, en het kwadraat daarvan is exact de <em>F</em> uit stap 2. Kwadrateer je de afgeronde −8.54, dan staat er 72.93 en klopt het nét niet — dezelfde valkuil, een cijfer verderop. Dat <code>var.equal = TRUE</code> is geen versiering maar de valkuil van deze stap. Laat je het weg, dan draait R zijn eigen standaard: een <em>t</em>-toets die elke groep zijn eigen spreiding gunt (de Welch-toets). Die geeft <em>t</em>(323.90) = −8.55, en (−8.5545)² = 73.18 — nét niet de <em>F</em>. Dat is geen gat in de belofte: <code>aov()</code> voegt de spreidingen van de twee groepen samen tot één, en alleen de <em>t</em>-toets die hetzelfde doet, maakt de som rond. Wie dat niet weet, rekent het na, ziet 73.18 staan en denkt dat de belofte niet klopt.</p></li>
-<li><p><strong>De denk-vraag.</strong> Zet de twee ANOVA’s van dit blok naast elkaar. De soort verklaart 67% van alle verschil in gewicht (η² = .67), de sekse 18% (η² = .18) — bijna vier keer zo weinig. En significant zijn ze allebei, ruimschoots: aan de twee <em>p</em>’s zie je dat verschil niet af. Stel nu dat iemand één pinguïn achter een gordijn zet en jij mag één vraag stellen voor je het gewicht raadt: <em>welke soort?</em> of <em>welke sekse?</em> Welke kies je, welk getal uit deze oefening heeft je dat verteld — en waarom kon de <em>p</em> dat niet zijn?</p></li>
-</ol>
+<p><strong>a)</strong> Hoeveel pinguïns hebben een vastgestelde sekse, en hoeveel staan er in het bestand? Tel het vóór je toetst, met <code>sum(is.na(peng$sekse))</code> en <code>table(peng$sekse)</code>. (drie getallen: per sekse, samen, en hoeveel er leeg zijn)</p>
+<p><strong>b)</strong> Schrijf de nulhypothese voor het model als geheel voluit op, in woorden én in symbolen. (één zin, en die ook in symbolen)</p>
+<p><strong>c)</strong> Toets het model als geheel. (rapporteer <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>)</p>
+<p><strong>d)</strong> Kijk naar de tweede <em>df</em>. Die is 331, en niet 340. Waar zijn de negen gebleven, en waar op je scherm stond dat?</p>
+<p><strong>e)</strong> Hoeveel wegen de twee seksen gemiddeld, en hoeveel scheelt dat? (rapporteer <em>M</em> per sekse en het verschil, in grammen)</p>
+<p><strong>f)</strong> Hoeveel procent van alle verschil in gewicht verklaart de sekse? Reken η² uit met <code>s &lt;- summary(model.sekse)[[1]]</code> en <code>s[1,"Sum Sq"] / sum(s[,"Sum Sq"])</code>. (rapporteer η²)</p>
+<p><strong>g)</strong> Draai dezelfde vergelijking nu als <em>t</em>-toets, met de spreidingen gepoold: <code>t.test(gewicht ~ sekse, data = peng, var.equal = TRUE)</code>. (rapporteer <em>t</em>(<em>df</em>) en <em>p</em>)</p>
+<p><strong>h)</strong> Kwadrateer die <em>t</em> — met al zijn decimalen van je scherm, niet met de afgeronde −8.54 — en leg het naast je <em>F</em> uit c). (twee getallen die gelijk horen te zijn)</p>
+<p><strong>i)</strong> Laat <code>var.equal = TRUE</code> nu eens weg. Je krijgt een andere <em>t</em>, een andere <em>df</em> en een kwadraat dat de <em>F</em> nét niet haalt. Welke drie getallen, en waarom is dat géén gat in de belofte van h)? (drie getallen en één zin)</p>
+<p><strong>j)</strong> Leg η² van de sekse naast die van de soort uit dit blok. Hoeveel keer verklaart de soort er meer? (twee η²’s en één verhouding)</p>
+<p><strong>k)</strong> Iemand zet één pinguïn achter een gordijn en je mag één vraag stellen voor je het gewicht raadt: <em>welke soort?</em> of <em>welke sekse?</em> Welke kies je, welk getal uit deze oefening zei je dat — en waarom kon de <em>p</em> dat niet zeggen?</p>
+<p><strong>Z) Mag je alles hierboven geloven?</strong> Loop de aannames van een eenweg ANOVA na: is de spreiding in gewicht ongeveer gelijk in de twee seksen (<code>tapply(peng$gewicht, peng$sekse, sd)</code>), liggen de residuen ongeveer symmetrisch, en telt elke pinguïn maar één keer mee? (drie uitspraken, elk met het getal waar je hem op baseert)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> 165 vrouwtjes en 168 mannetjes, samen <strong>333</strong> — geen 342. Bij <strong>9</strong> pinguïns is de sekse in het veld nooit vastgesteld; de bladzij over de datasets vertelt het al.&nbsp;Onthoud die negen, ze duiken zo op waar je ze niet verwacht.</p>
+<p><strong>b)</strong> De nulhypothese: de sekse verklaart níéts van de verschillen in gewicht. In symbolen: <span class="math inline">\(H_0:\ \rho^2 = 0\)</span> tegen <span class="math inline">\(H_1:\ \rho^2 &gt; 0\)</span> — Grieks, want het gaat over de populatie en niet over deze 333. Je mag het ook over de twee populatiegemiddelden zeggen, <span class="math inline">\(H_0: \mu_{\text{vrouw}} = \mu_{\text{man}}\)</span>; één van de twee is genoeg.</p>
+<p><strong>c)</strong> <em>F</em>(1, 331) = 72.96, <em>p</em> &lt; .001. Die mag dus de deur uit.</p>
+<p><strong>d)</strong> <code>aov()</code> heeft de negen rijen zonder sekse stilzwijgend weggegooid — geen melding, geen waarschuwing. 331 is 333 − 2, niet 342 − 2. De <em>df</em> is de plek waar dat zichtbaar wordt, en jij zag het aankomen, want je had bij a) geteld.</p>
+<p><strong>e)</strong> Vrouwtjes <em>M</em> = 3862.27 g, mannetjes <em>M</em> = 4545.68 g. De mannetjes wegen gemiddeld <strong>683.41 gram</strong> meer.</p>
+<p><strong>f)</strong> η² = <strong>.18</strong>. De sekse verklaart 18% van alle verschil in gewicht tussen deze dieren.</p>
+<p><strong>g)</strong> <em>t</em>(331) = −8.54, <em>p</em> &lt; .001. Hetzelfde aantal vrijheidsgraden als de noemer-<em>df</em> bij c), en dat is geen toeval.</p>
+<p><strong>h)</strong> (−8.5417)² = <strong>72.96</strong>, precies de <em>F</em> uit c). Kwadrateer je de afgeronde −8.54, dan staat er 72.93 en klopt het nét niet — dezelfde valkuil als bij de diamantjes, een cijfer verderop.</p>
+<p><strong>i)</strong> Zonder <code>var.equal = TRUE</code> draait R zijn eigen standaard: een <em>t</em>-toets die elke groep zijn eigen spreiding gunt, de Welch-toets. Die geeft <em>t</em>(323.90) = −8.55, en (−8.5545)² = <strong>73.18</strong> — nét niet de 72.96. Geen gat in de belofte: <code>aov()</code> voegt de spreidingen van de twee groepen samen tot één, en alleen de <em>t</em>-toets die hetzelfde doet, maakt de som rond. Wie dat niet weet, rekent het na, ziet 73.18 staan en denkt dat de belofte niet klopt.</p>
+<p><strong>j)</strong> Soort η² = .67, sekse η² = .18 — de soort verklaart er <strong>3.7 keer</strong> zoveel. En allebei zijn ze kraakhelder significant.</p>
+<p><strong>k)</strong> Vraag <em>welke soort?</em> Dat zei η²: .67 tegen .18. De <em>p</em> kon het niet zeggen, want die beantwoordt een andere vraag — <em>is er verschil?</em> — en bij 333 dieren is het antwoord daarop bij allebei even overtuigend “ja”. Hoe groot dat verschil is, staat alleen in de effectgrootte.</p>
+<p><strong>Z)</strong> Ja, met de gebruikelijke slag om de arm. De spreiding in gewicht is 666.17 g bij de vrouwtjes en 787.63 g bij de mannetjes — de grootste is 1.18 keer de kleinste, ruim onder de 2, dus gelijke spreiding is hier geen probleem. De residuen liggen bijna symmetrisch (scheefheid 0.40). En elke pinguïn is één keer gewogen, dus de waarnemingen zijn onafhankelijk.</p>
+<p>En de weg terug, voor als een van die drie wél was gezakt:</p>
+<ul>
+<li><strong>Blijft staan:</strong> de twee gemiddelden bij e) en het verschil van 683.41 gram. Dat zijn beschrijvingen van deze 333 dieren, en daar verandert geen aanname iets aan.</li>
+<li><strong>Doe je over:</strong> de <em>F</em> en de <em>p</em> bij c), de <em>t</em> bij g), en daarmee je conclusie. Die rusten alle drie op één gedeelde spreiding, en die is er dan niet.</li>
+</ul>
+<p>η² zit tussen die twee in: hij is een verhouding van kwadratensommen en blijft dus gewoon staan als beschrijving, maar je mag hem niet meer als schatting voor de populatie lezen.</p>
+</div>
 </div>
 </div>
 <div class="kicker">
@@ -843,7 +904,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="van-gewicht-naar-vin-de-drie-technieken-samen" class="level2">
 <h2 class="anchored" data-anchor-id="van-gewicht-naar-vin-de-drie-technieken-samen">Van gewicht naar vin — de drie technieken samen</h2>
-<p><span class="begrippen"><em>t</em>-toets · Cohens <em>d</em> · ANOVA · η²</span></p>
+<p><span class="begrippen"><em>t</em>-toets · Cohens <em>d</em> · eenweg ANOVA · η²</span></p>
+<p>De afsluiter van het hele hoofdstuk: de <strong><em>t</em>-toets</strong>, <strong>Cohens <em>d</em></strong> én de <strong>eenweg ANOVA</strong> komen samen in één taak. En let op de verrassing die eraan zit te komen.</p>
+<p>Het hele hoofdstuk keken we naar <strong>gewicht</strong>. Daar bleken Adélie en Chinstrap niet van elkaar te onderscheiden — vrijwel even zwaar (32 gram verschil, <em>p</em> = .88). Maar <code>penguins.csv</code> heeft nog een kolom: <code>vinlengte</code> (de lengte van de vin, in mm). We doen het hoofdstuk over — nu op de vin.</p>
+<p>En let op de vorm: een artikel valt in <strong>twee gelabelde stukken</strong>, en die volgorde is niet dezelfde als de volgorde waarin je het leerde. Toen mocht de aannamecontrole achteraf, want je moest eerst zien wát je nou eigenlijk controleerde. Nu je het opschrijft voor een lezer gaat hij vóórop, want die wil weten of hij je getallen mag geloven vóórdat hij ze leest.</p>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -854,22 +918,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>De afsluiter van het hele hoofdstuk: de <strong>t-toets</strong>, <strong>Cohens <em>d</em></strong> én de <strong>ANOVA</strong> komen samen in één taak. En let op de verrassing die eraan zit te komen.</p>
-<p>Het hele hoofdstuk keken we naar <strong>gewicht</strong>. Daar bleken Adélie en Chinstrap niet van elkaar te onderscheiden — vrijwel even zwaar (32 gram verschil, <em>p</em> = .88). Maar <code>penguins.csv</code> heeft nog een kolom: <code>vinlengte</code> (de lengte van de vin, in mm). We doen het hoofdstuk over — nu op de vin.</p>
-<p>En deze keer schrijf je het op zoals het in een artikel staat, dus in twee stukken: eerst <strong>methode en data-analyse</strong> — wat je onderzocht, waarop, en of je het mócht — en dan <strong>resultaten</strong>, wat eruit kwam.</p>
-<p><strong>Let op dat de volgorde omdraait.</strong> Bij de oefeningen staat de aannamevraag achteraan, als <strong>x)</strong> onder aan het rijtje; hier staat hij vooraan. Dat spreekt elkaar niet tegen: toen je het leerde mocht het achteraf, want je moest eerst zien wát je nou eigenlijk controleerde. Nu je het opschrijft voor een lezer gaat het eerst, want die wil weten of hij je getallen mag geloven vóórdat hij ze leest.</p>
-<p><strong>Methode en data-analyse</strong></p>
-<ol type="1">
-<li><strong>Zeg wat je onderzoekt en waarop.</strong> Eén zin: welke drie groepen, welke maat, hoeveel pinguïns, en welke drie analyses je gaat draaien. (<code>nrow(peng)</code> en <code>sum(!is.na(peng$vinlengte))</code> — alle 342 pinguïns hebben een vinlengte, dus je hoeft niemand weg te laten.)</li>
-<li><strong>Kijk of je het mag, vóór je iets rapporteert.</strong> Vraag de spreiding per soort op met <code>round(tapply(peng$vinlengte, peng$soort, sd), 2)</code>. Ter controle: 6.54, 7.13 en 6.48 mm — grootste gedeeld door kleinste is 1.10, ruim onder de 2, dus gelijke spreiding is geen probleem. Elke pinguïn is één keer gemeten, dus de waarnemingen zijn onafhankelijk. En de residuen liggen vrijwel symmetrisch (scheefheid 0.16), zoals je ze in de oefening over de residuen hebt leren bekijken. Voor de <em>t</em>-toets hoef je hier niets te kiezen: Welch neemt gelijke spreiding sowieso niet aan.</li>
-</ol>
-<p><strong>Resultaten</strong></p>
-<ol start="3" type="1">
-<li><strong>ANOVA (dit blok).</strong> Verschillen de drie soorten in vinlengte? Draai <code>model.vinlengte &lt;- aov(vinlengte ~ soort, data = peng); summary(model.vinlengte)</code> en reken de effectgrootte uit met <code>s &lt;- summary(model.vinlengte)[[1]]; s[1,"Sum Sq"] / sum(s[,"Sum Sq"])</code>. (rapporteer <em>F</em>, <em>df</em>, <em>p</em> en η²) Ter controle: kom je uit op <em>F</em>(2, 339) ≈ 595 en η² ≈ .78, dan zit je goed. Nog groter dan bij gewicht: de soort verklaart bijna 80% van alle verschil in vinlengte.</li>
-<li><strong>t-toets (het <em>t</em>-toets-blok).</strong> De ANOVA zegt weer “ergens is verschil”. Maar de spannende paar-vraag is nu: <strong>verschillen Adélie en Chinstrap in vinlengte?</strong> Bij gewicht waren ze een tweeling. Hou de twee soorten over en toets ze: <code>ac &lt;- peng[peng$soort %in% c("Adelie","Chinstrap"), ]</code>, dan <code>t.test(vinlengte ~ soort, data = ac)</code>. (rapporteer per soort <em>M</em> en <em>SD</em>, en dan <em>t</em>, <em>df</em> en <em>p</em>) Ter controle: <em>t</em> ≈ −5.78, <em>p</em> &lt; .001. Kijk goed — dezelfde twee soorten die je op gewicht níét uit elkaar kon houden, verschillen op vinlengte wél overtuigend (Adélie ≈ 190 mm, Chinstrap ≈ 196 mm).</li>
-<li><strong>Cohens <em>d</em> (het <em>d</em>-blok).</strong> Echt is niet groot — dus hoe groot ís dat vin-verschil tussen Adélie en Chinstrap? Reken de gepoolde SD en <em>d</em> met de hand uit, net als in het <em>d</em>-blok: <code>g &lt;- ac$vinlengte[ac$soort=="Chinstrap"]; a2 &lt;- ac$vinlengte[ac$soort=="Adelie"]</code>, <code>sp &lt;- sqrt(((length(g)-1)*var(g) + (length(a2)-1)*var(a2)) / (length(g)+length(a2)-2))</code>, <code>(mean(g) - mean(a2)) / sp</code>. (rapporteer <em>d</em>) Ter controle: <em>d</em> ≈ 0.87 — een groot effect.</li>
-</ol>
-<p><strong>En dan de denk-vraag</strong>, die in geen van beide stukken past en juist daarom de moeite waard is: op gewicht waren Adélie en Chinstrap een tweeling, op vinlengte twee duidelijk verschillende soorten. Wat leert dat je over de zin “de soorten verschillen”? (Hint: verschillen <em>waarin</em>?) En waarom is het, ook al is die <em>t</em> van −5.78 kraakhelder significant, nog steeds de moeite waard om die <em>d</em> van 0.87 erbij te zetten?</p>
+<section id="methode-en-data-analyse" class="level3">
+<h3 class="anchored" data-anchor-id="methode-en-data-analyse">Methode en data-analyse</h3>
+<p><strong>a)</strong> Wat onderzoek je, waarop, en met welke analyses? Schrijf het op zonder één uitkomst te noemen. (twee of drie zinnen; wie of wat er gemeten is, hoeveel, en welke drie analyses)</p>
+<p><strong>b)</strong> Hoeveel pinguïns hebben een gemeten vinlengte, en hoeveel staan er in het bestand? Gebruik <code>nrow(peng)</code> en <code>sum(!is.na(peng$vinlengte))</code>. (twee getallen, en waarom dat er hier toe doet)</p>
+<p><strong>c)</strong> Loop de aannames na en schrijf ze op als data-analyse-alinea: is de spreiding in vinlengte ongeveer gelijk over de drie soorten (<code>round(tapply(peng$vinlengte, peng$soort, sd), 2)</code>), liggen de residuen symmetrisch, en telt elke pinguïn maar één keer mee? (drie korte uitspraken, elk met het getal waar je hem op baseert)</p>
+</section>
+<section id="resultaten" class="level3">
+<h3 class="anchored" data-anchor-id="resultaten">Resultaten</h3>
+<p><strong>d)</strong> Verschillen de drie soorten in vinlengte? Draai <code>model.vinlengte &lt;- aov(vinlengte ~ soort, data = peng)</code> en <code>summary(model.vinlengte)</code>, en reken de effectgrootte uit met <code>s &lt;- summary(model.vinlengte)[[1]]; s[1,"Sum Sq"] / sum(s[,"Sum Sq"])</code>. (rapporteer <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>), <em>p</em> en η², en zeg wát je verwerpt)</p>
+<p><strong>e)</strong> Die ene toets zegt weer “ergens is verschil”. Maar de spannende paar-vraag is: verschillen Adélie en Chinstrap in vinlengte? Hou de twee soorten over met <code>ac &lt;- peng[peng$soort %in% c("Adelie","Chinstrap"), ]</code> en toets ze met <code>t.test(vinlengte ~ soort, data = ac)</code>. (rapporteer per soort <em>M</em>, <em>SD</em> en <em>n</em>, en dan <em>t</em>(<em>df</em>), <em>p</em> en het 95%-interval)</p>
+<p><strong>f)</strong> Echt is niet groot — dus hoe groot ís dat vin-verschil? Reken de gepoolde <em>SD</em> en <em>d</em> met de hand uit, net als in het <em>d</em>-blok. (rapporteer de gepoolde <em>SD</em> en <em>d</em>)</p>
+<p><strong>g)</strong> Leg dat naast het gewicht. Diezelfde twee soorten scheelden in gewicht 32 gram, en de post-hoc gaf daar <em>p</em> = .88. Wat leert dat je over de zin <em>“de soorten verschillen”</em>? (één zin, en de vraag die je eraan moet toevoegen)</p>
+<p><strong>h)</strong> Waarom is het, ook al is die <em>t</em> kraakhelder significant, nog steeds de moeite waard om de <em>d</em> erbij te zetten? (twee zinnen)</p>
+<p><strong>i)</strong> Schrijf de resultaten-alinea uit, in rapportagevorm, met allebei de analyses erin. (hele zinnen, verleden tijd, symbolen cursief)</p>
+<p><strong>Z) Mag je alles hierboven geloven?</strong> Je hebt de aannames bij c) al nagelopen — dus nu de vraag die erachteraan hoort: stel dat de drie spreidingen wél ver uiteen hadden gelopen, welke van je antwoorden hierboven doe je dan over, en welke mogen blijven staan?</p>
+</section>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="methode-en-data-analyse-1" class="level3">
+<h3 class="anchored" data-anchor-id="methode-en-data-analyse-1">Methode en data-analyse</h3>
+<p><strong>a)</strong> Bijvoorbeeld: <em>“Bij 342 pinguïns van drie soorten onderzochten we of de vinlengte verschilt tussen de soorten. We vergeleken de drie soorten met een eenweg variantieanalyse en bepaalden η² als effectgrootte, en vergeleken de Adélies en Chinstraps aanvullend met een</em> t<em>-toets voor onafhankelijke steekproeven, met Cohens</em> d <em>als effectgrootte.”</em> Geen enkel getal uit de uitkomsten — dat is de toets waaraan je ziet of de scheiding echt is.</p>
+<p><strong>b)</strong> Van alle <strong>342</strong> rijen in het bestand heeft er <strong>342</strong> een gemeten vinlengte; er valt er geen weg. Dat doet ertoe omdat je hier drie groepen vergelijkt: valt er in één groep iets weg, dan verschuift het gemiddelde van díé groep en gaat de vergelijking mank. En het is niet vanzelfsprekend — in de taak hierboven ontbrak de sekse bij negen dieren.</p>
+<p><strong>c)</strong> De spreiding loopt tussen de soorten weinig uiteen: <em>SD</em> = 6.54, 7.13 en 6.48 mm, de grootste gedeeld door de kleinste is 1.10, ruim onder de 2. De residuen liggen vrijwel symmetrisch (scheefheid 0.16). En elke pinguïn is één keer gemeten, dus de waarnemingen zijn onafhankelijk. Voor de <em>t</em>-toets bij e) hoef je hier niets te kiezen: Welch neemt gelijke spreiding sowieso niet aan.</p>
+</section>
+<section id="resultaten-1" class="level3">
+<h3 class="anchored" data-anchor-id="resultaten-1">Resultaten</h3>
+<p><strong>d)</strong> <em>F</em>(2, 339) = 594.80, <em>p</em> &lt; .001, η² = .78. Wat je verwerpt is de nulhypothese dat de soort niets van de verschillen in vinlengte verklaart. Nog groter dan bij gewicht: de soort verklaart bijna 80% van alle verschil in vinlengte, tegen 67% van het gewicht.</p>
+<p><strong>e)</strong> Adélies <em>M</em> = 189.95, <em>SD</em> = 6.54, <em>n</em> = 151; Chinstraps <em>M</em> = 195.82, <em>SD</em> = 7.13, <em>n</em> = 68. De toets: <em>t</em>(119.7) = −5.78, <em>p</em> &lt; .001, 95% CI [−7.88, −3.86]. Het interval bevat de nul niet, en het ligt er ruim vanaf.</p>
+<p><strong>f)</strong> Gepoolde <em>SD</em> = 6.73, en <em>d</em> = <strong>0.87</strong> — een groot effect.</p>
+<p><strong>g)</strong> Dat de zin <em>“de soorten verschillen”</em> niet af is. Dezelfde twee soorten zijn op de ene maat niet uit elkaar te houden en op de andere overtuigend verschillend, op precies dezelfde 219 dieren. De vraag die er dus altijd bij hoort is: <strong>verschillen waarin?</strong></p>
+<p><strong>h)</strong> Omdat de <em>t</em> en de <em>d</em> twee verschillende vragen beantwoorden. De <em>t</em> zegt hoe zeker je bent dát er verschil is, en die zekerheid groeit vanzelf mee met je aantal dieren; de <em>d</em> zegt hoe groot het verschil is, en die verandert niet als je er meer meet. Bij 219 pinguïns is het eerste bijna gratis, dus het nieuws zit in het tweede.</p>
+<p><strong>i)</strong> Bijvoorbeeld:</p>
+<blockquote class="blockquote">
+<p>De soorten verschilden sterk in vinlengte, <em>F</em>(2, 339) = 594.80, <em>p</em> &lt; .001, η² = .78: welke soort een pinguïn is, verklaarde zo’n 78% van alle verschil in vinlengte. Adélies (<em>M</em> = 189.95, <em>SD</em> = 6.54, <em>n</em> = 151) en Chinstraps (<em>M</em> = 195.82, <em>SD</em> = 7.13, <em>n</em> = 68) — twee soorten die in gewicht niet te onderscheiden waren — verschilden in vinlengte wél duidelijk, met een groot effect, <em>t</em>(119.7) = −5.78, <em>p</em> &lt; .001, 95% CI [−7.88, −3.86], <em>d</em> = 0.87.</p>
+</blockquote>
+<p><strong>Z)</strong> Waren de drie spreidingen ver uiteen gelopen, dan <strong>blijven staan</strong>: de drie gemiddelden en standaarddeviaties bij e), en het ruwe verschil van bijna zes millimeter. Dat zijn beschrijvingen van deze 342 dieren. <strong>Doe je over</strong>: de <em>F</em> en de <em>p</em> bij d), want die leunen op één gedeelde restspreiding die er dan niet is. De <em>t</em>-toets bij e) mag blijven staan, en dat is het aardige — die draait al op Welch, en Welch gunt elke groep zijn eigen spreiding. En <em>d</em> bij f) niet: die deelt door een gepoolde <em>SD</em>, en dat is precies het lineaaltje dat dan niet meer bestaat. Je zou dan per groep de spreiding apart rapporteren.</p>
+</section>
+</div>
 </div>
 </div>
 <div class="kicker">
@@ -900,7 +998,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </blockquote>
 <p><strong>Waarom die twee stukken uit elkaar staan.</strong> Dit hoort bij de les en niet bij de zin: wie de zinnen overschrijft, laat dit hier liggen. In het eerste stuk staat geen enkele uitkomst <em>van je onderzoeksvraag</em>, en dat is met opzet — wat er wél staat zijn de controles die je mócht doen voordat je begon. Je lezer moet kunnen beoordelen óf hij je getallen mag geloven vóórdat hij ze ziet — waren die drie spreidingen wél ver uiteen gelopen, dan had hij dat hier gelezen en met die kennis naar je <em>F</em> gekeken. Zet je die mededeling achteraan, dan heeft hij je conclusie al binnen en leest hij de aannames als een naschrift.</p>
 <p>Kijk nu wat er staat, en wat niet. Alléén de symbolen zijn cursief (<em>F</em>, <em>M</em>, <em>SD</em>, <em>t</em>, <em>p</em>, <em>d</em>) — de Griekse η² blijft rechtop, zoals APA het wil — en de gewone woorden staan gewoon rechtop. De getallen krijgen <strong>twee decimalen</strong> (594.80, 0.87), netjes APA-precies, terwijl de lopende tekst hierboven gerust rondde (“bijna 80%”) voor de intuïtie. Alles staat in de verleden tijd, want je vertelt wat er gevónden werd, en de zinnen staan op eigen benen: wie ze uit dit blok tilt, weet nog steeds wie er gemeten werd, wat er gemeten werd, en hoe groot het verschil was.</p>
-<p>Jouw beurt: schrijf zelf de rapportage voor het <strong>gewicht</strong> uit dit blok — de eenweg ANOVA over de drie soorten (<em>F</em>(2, 339) = 343.63, <em>p</em> &lt; .001, η² = .67), eventueel met de Gentoo die er als enige bovenuit steekt. Doe het in dezelfde twee stukken, dus met een methode-stukje waarin je aanname-controle staat: de spreidingen in gewicht waren 458.57, 384.34 en 504.12 gram, en die heb je in de dummy-oefening al bij <strong>x)</strong> nagekeken. De zinnen hierboven mag je lenen; hardop voorlezen mag ook.</p>
+<p>Jouw beurt: schrijf zelf de rapportage voor het <strong>gewicht</strong> uit dit blok — de eenweg ANOVA over de drie soorten (<em>F</em>(2, 339) = 343.63, <em>p</em> &lt; .001, η² = .67), eventueel met de Gentoo die er als enige bovenuit steekt. Doe het in dezelfde twee stukken, dus met een methode-stukje waarin je aanname-controle staat: de spreidingen in gewicht waren 458.57, 384.34 en 504.12 gram, en die heb je in de dummy-oefening al bij <strong>Z)</strong> nagekeken. De zinnen hierboven mag je lenen; hardop voorlezen mag ook.</p>
 <p>En dan nog één, want dit hoofdstuk begon met twee dummy’s. Schrijf hetzelfde resultaat nóg een keer op, maar nu als regressie: met de Adélies als referentiecategorie, en met de twee regressiegewichten in plaats van de <em>F</em>. Vergelijk je twee zinnen daarna naast elkaar. Ze gaan over dezelfde 342 pinguïns, ze rusten op hetzelfde model, en ze vertellen een net iets ander verhaal — de ANOVA-zin zegt <em>dat</em> de soorten verschillen, de regressie-zin zegt <em>wie</em> van <em>wie</em> en <em>hoeveel</em>. Alleen die tweede zin moet je erbij vertellen vanaf wie er geteld is; de eerste hoeft dat niet.</p>
 </div>
 </div>
