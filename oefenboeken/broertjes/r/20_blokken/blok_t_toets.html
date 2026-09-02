@@ -696,6 +696,50 @@ window.Quarto = {
 </div>
 <p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
 <p>Golfje tegen sterretje: <em>t</em>(10) = −1.73, <em>p</em> = .11. Het verschil is met het blote oog te zien, maar de toets zegt: bij twaalf steentjes kan dit ook toeval zijn. Onthoud die −1.73 — hij komt in de volgende twee oefeningen nog terug. In de vórige oefening stond hij er trouwens ook al, met een plus ervoor: daar was het golfje het vertrekpunt, dus rekende de dummy sterretje mín golfje. Zelfde toets, andere richting.</p>
+<p>Blijf nog even bij die schakelaar <code>var.equal = TRUE</code> hangen, want daar zit meer onder dan een instelling. Stel dezelfde vraag twee keer — één keer als toets, één keer als regressie:</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · dezelfde som, twee keer opgeschreven">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · dezelfde som, twee keer opgeschreven
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   Two Sample t-test</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t = -1.7321, df = 10, p-value = 0.1139</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                 Estimate Std. Error t value Pr(&gt;|t|)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   merksterretje   20.000     11.547   1.732 0.113937</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>Niet ongeveer hetzelfde — <strong>dezelfde <em>t</em>, dezelfde tien vrijheidsgraden, dezelfde <em>p</em>.</strong> Alleen het teken draait om: <code>t.test</code> rekent hier golfje mín sterretje, en de dummy rekent sterretje mín golfje. Dat is dezelfde spiegeling als in de vorige oefening, en verder verandert er niets.</p>
+<p>Een <em>t</em>-toets op twee groepen lijkt dus niet op een regressie: het ís er een. Je voorspelt de glans uit één voorspeller, het merk, en dan houd je <em>n</em> − 2 = 10 vrijheidsgraden over — precies waar de toets mét <code>var.equal = TRUE</code> zelf ook op uitkomt, want <em>n</em><sub>1</sub> + <em>n</em><sub>2</sub> − 2 = 6 + 6 − 2 = 10. Twee routes, dezelfde som.</p>
+<p>Haal die schakelaar nu eens weg, dan draait R zijn eigen standaard. Vraag er meteen de twee spreidingen bij:</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · en dan zonder die schakelaar">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · en dan zonder die schakelaar
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   Welch Two Sample t-test</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t = -1.7321, df = 8.6207, p-value = 0.1188</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(d<span class="sc">$</span>glans, d<span class="sc">$</span>merk, sd)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#    golfje sterretje </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  15.49193  23.66432</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>R noemt in zijn eerste regel zelf welke toets hij draaide: bij de vorige stond er <code>Two Sample t-test</code>, hier staat <strong><code>Welch Two Sample t-test</code></strong>. De <em>t</em> blijft staan, maar de vrijheidsgraden zakken van 10 naar 8.62 en de <em>p</em> schuift van .11 naar .12. Welch neemt namelijk niet aan dat de twee merken even veel spreiden — en kijk maar, dat doen ze ook niet: 23.66 tegen 15.49, ruim anderhalf keer zo breed. Die voorzichtigheid betaal je in vrijheidsgraden, en aan die gebroken 8.62 zie je dat je betaald hebt.</p>
+<p>Overal in deze boekjes lezen we Welch, want hij is voorzichtiger en je hoeft er niets voor te kiezen. Bij deze twaalf steentjes niet, en dat is met opzet: van Welch bestaat geen gewone regressie-versie, en dit is de plek waar we die twee juist gelijk willen zien vallen. Bij de pinguïns hieronder staat Welch dus gewoon weer aan. Doe je zo’n toets ooit in JASP of SPSS, dan begint het programma daar op de rij die wél gelijke spreiding aanneemt, en vraagt je eigen vak je misschien om eerst Levene’s toets te lezen en dán een rij te kiezen — dat hoeft van ons niet, want wij lezen altijd Welch.</p>
 <p><strong>Nu jij</strong> — twee keer, want er zijn twee soorten <em>t</em>-toets. De pinguïns ken je; de slaapmiddelen van 1905 zijn nieuw, en die zijn juist bedoeld om het verschil tussen de twee toetsen te laten voelen.</p>
 <p>Twee raadsels, twee toetsen — en het verschil zit in het <em>design</em>. Bij de slaapmiddelen meten we <strong>dezelfde tien mensen twee keer</strong>; die twee kolommen horen per rij bij elkaar. Dat vraagt een <strong>gepaarde <em>t</em>-toets</strong> (<em>paired</em>). Bij de pinguïns hebben we <strong>twee losse groepen</strong> dieren, geen koppels — dat vraagt een <strong>onafhankelijke <em>t</em>-toets</strong> (<em>independent</em>). Doe ze allebei.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek aan de slaapmiddelen (gepaard)">
@@ -708,14 +752,14 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>slaap <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"slaap_middelen.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaap<span class="sc">$</span>slaap_middelA)                                  <span class="co"># → 0.75 uur</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaap<span class="sc">$</span>slaap_middelB)                                  <span class="co"># → 2.33 uur</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(slaap<span class="sc">$</span>slaap_middelA, slaap<span class="sc">$</span>slaap_middelB, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># verschil A - B = -1.58 u,  t(9) = -4.06,  p = .003</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 95%-CI [-2.46, -0.70]</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>slaap <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"slaap_middelen.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaap<span class="sc">$</span>slaap_middelA)                                  <span class="co"># → 0.75 uur</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaap<span class="sc">$</span>slaap_middelB)                                  <span class="co"># → 2.33 uur</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(slaap<span class="sc">$</span>slaap_middelA, slaap<span class="sc">$</span>slaap_middelB, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># verschil A - B = -1.58 u,  t(9) = -4.06,  p = .003</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 95%-CI [-2.46, -0.70]</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Het min-teken zegt alleen dat A mínder oplevert dan B; de grootte is 1.58 uur. De <em>p</em> van .003 zegt: als de twee middelen in werkelijkheid even goed waren, zou je zó’n verschil bij tien mensen zelden per ongeluk tegenkomen. En dat interval [−2.46, −0.70] is eerlijker dan de <em>p</em>: het beste dat je over het echte verschil durft te zeggen is “ergens tussen 0.70 en 2.46 uur in B’s voordeel”. Klein onderzoek, breed interval — het interval is meteen zijn eigen slag om de arm.</p>
@@ -729,15 +773,15 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ga   <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Gentoo"</span>, <span class="st">"Adelie"</span>), ]   <span class="co"># twee soorten</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(ga<span class="sc">$</span>gewicht, ga<span class="sc">$</span>soort, mean)                       <span class="co"># Adelie 3701, Gentoo 5076</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># var.equal = FALSE is de standaard, en dat is de Welch-toets</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> ga, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># verschil ~ 1375 g,  t = -23.39,  p &lt; .001</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 95%-CI van het verschil ~ [1260, 1491] g</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ga   <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Gentoo"</span>, <span class="st">"Adelie"</span>), ]   <span class="co"># twee soorten</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(ga<span class="sc">$</span>gewicht, ga<span class="sc">$</span>soort, mean)                       <span class="co"># Adelie 3701, Gentoo 5076</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># var.equal = FALSE is de standaard, en dat is de Welch-toets</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> ga, <span class="at">var.equal =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># verschil ~ 1375 g,  t = -23.39,  p &lt; .001</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 95%-CI van het verschil ~ [1260, 1491] g</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><span class="naslag">Kijk nog eens naar de twee stukjes code hierboven, want ze verschillen op iets wat je makkelijk mist. Bij de slaapmiddelen geef je <em>twee kolommen</em> mee (<code>slaap$slaap_middelA, slaap$slaap_middelB</code>) — die tabel staat <strong>wide</strong>, één rij per persoon. Bij de pinguïns geef je een <em>formule</em> mee (<code>gewicht ~ soort</code>) — die staat <strong>long</strong>, één rij per dier met een kolom die de groep noemt. Wil je de tien slaapkoppels als lijntjes plotten, dan moet die tabel eerst kantelen; hoe dat gaat, staat bij <a href="../90_basishandelingen.html#widelong">wide en long</a>.</span></p>
@@ -761,19 +805,19 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>]) <span class="sc">-</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>])            <span class="co"># 1375 g</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>nul <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  door_elkaar <span class="ot">&lt;-</span> <span class="fu">sample</span>(ga<span class="sc">$</span>soort, <span class="at">replace =</span> <span class="cn">FALSE</span>)         <span class="co"># labels husselen</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[door_elkaar <span class="sc">==</span> <span class="st">"Gentoo"</span>]) <span class="sc">-</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[door_elkaar <span class="sc">==</span> <span class="st">"Adelie"</span>])</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nul, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">500</span>, <span class="dv">1500</span>))                            <span class="co"># het toeval-bergje rond 0</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> echt, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)                     <span class="co"># en dáár staat 1375</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(nul)                                                 <span class="co"># → ongeveer -386 tot 367</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>echt <span class="ot">&lt;-</span> <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>]) <span class="sc">-</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[ga<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>])            <span class="co"># 1375 g</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>nul <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  door_elkaar <span class="ot">&lt;-</span> <span class="fu">sample</span>(ga<span class="sc">$</span>soort, <span class="at">replace =</span> <span class="cn">FALSE</span>)         <span class="co"># labels husselen</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[door_elkaar <span class="sc">==</span> <span class="st">"Gentoo"</span>]) <span class="sc">-</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(ga<span class="sc">$</span>gewicht[door_elkaar <span class="sc">==</span> <span class="st">"Adelie"</span>])</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nul, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">500</span>, <span class="dv">1500</span>))                            <span class="co"># het toeval-bergje rond 0</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> echt, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)                     <span class="co"># en dáár staat 1375</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(nul)                                                 <span class="co"># → ongeveer -386 tot 367</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat bergje. Duizend werelden waarin soort er niet toe doet, en het toeval komt niet verder dan zo’n 386 gram van nul — een klein beetje geschommel. En dan die rode streep op 1375, kilometers rechts van het hele bergje. <strong>Geen enkele</strong> van de duizend nul-werelden haalt jouw verschil, of komt zelfs maar in de buurt. Dát is “geen toeval”: geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>.</p>
@@ -788,17 +832,17 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>verschil <span class="ot">&lt;-</span> slaap<span class="sc">$</span>slaap_middelA <span class="sc">-</span> slaap<span class="sc">$</span>slaap_middelB      <span class="co"># 10 verschillen</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>echt_gem <span class="ot">&lt;-</span> <span class="fu">mean</span>(verschil)                                 <span class="co"># -1.58 u</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>nul <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  munt <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">length</span>(verschil), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(verschil <span class="sc">*</span> munt)                                    <span class="co"># teken lukraak omgooien</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nul, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>))                                 <span class="co"># bergje rond 0</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> echt_gem, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)                 <span class="co"># -1.58 aan de rand</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>verschil <span class="ot">&lt;-</span> slaap<span class="sc">$</span>slaap_middelA <span class="sc">-</span> slaap<span class="sc">$</span>slaap_middelB      <span class="co"># 10 verschillen</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>echt_gem <span class="ot">&lt;-</span> <span class="fu">mean</span>(verschil)                                 <span class="co"># -1.58 u</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>nul <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  munt <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="fu">length</span>(verschil), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(verschil <span class="sc">*</span> munt)                                    <span class="co"># teken lukraak omgooien</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nul, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>))                                 <span class="co"># bergje rond 0</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> echt_gem, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)                 <span class="co"># -1.58 aan de rand</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><a href="../speeltjes/w6_schud_verschil.html" target="_blank">▶ Zie het dansen: het schud-speeltje</a></p>
@@ -823,10 +867,10 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cohens d: verschil in gewicht, gedeeld door de gepoolde spreiding</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("effectsize")   # eenmalig, als je 'm nog niet hebt</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effectsize)                <span class="co"># of reken 'm met de hand uit de SD's</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cohens_d</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> ga)      <span class="co"># → d = -2.87  (Adelie min Gentoo)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cohens d: verschil in gewicht, gedeeld door de gepoolde spreiding</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("effectsize")   # eenmalig, als je 'm nog niet hebt</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effectsize)                <span class="co"># of reken 'm met de hand uit de SD's</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cohens_d</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> ga)      <span class="co"># → d = -2.87  (Adelie min Gentoo)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><em>d</em> = 2.87. Dat is enorm — de twee soorten liggen bijna drie standaarddeviaties uit elkaar; wijs een willekeurige Gentoo en een willekeurige Adélie aan en de Gentoo is vrijwel altijd zwaarder. Dáár zit het echte verhaal, niet in de <em>t</em>.</p>
@@ -858,8 +902,8 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>slaap    <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"slaap_middelen.csv"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>verschil <span class="ot">&lt;-</span> slaap<span class="sc">$</span>slaap_middelA <span class="sc">-</span> slaap<span class="sc">$</span>slaap_middelB</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>slaap    <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"slaap_middelen.csv"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>verschil <span class="ot">&lt;-</span> slaap<span class="sc">$</span>slaap_middelA <span class="sc">-</span> slaap<span class="sc">$</span>slaap_middelB</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
@@ -887,7 +931,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -896,7 +940,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> <strong>10</strong> mensen, elk <strong>2</strong> keer gemeten. Je ziet het aan de vorm van de tabel: er staat één rij per persoon met twee kolommen ernaast. Die twee getallen op één rij horen bij hetzelfde mens — dát is wat “gepaard” betekent.</p>
 <p><strong>b)</strong> Middel A gaf <em>M</em> = 0.75 uur extra slaap, middel B <em>M</em> = 2.33 uur. B wint met <strong>1.58 uur</strong>.</p>
