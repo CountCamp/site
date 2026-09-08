@@ -12,10 +12,39 @@
      ccAlt       #9CC4A3  reserve (.tidy-alt)          licht groen (donkere titel)
      ccSpss      #4A5D7E  SPSS-syntax (.spss-syntax)   slate-blue
      ccConv      #D3D182  conventie (.conventie / .rotterdam-conventie)  olijf (donkere titel)
+     ccForm      #2F7E78  formule-blok (.formule)      teal
+     ccRap       #33322E  rapportage (.rapportage)     grafiet — bewust géén palet-kleur
+     ccWarmDonker #3A1A0A  titelinkt op alarm + don't   warm donker, geen balk
 
-   Stijl: gevulde gekleurde title-balk + lichte body. Header-tekst wit,
-   behalve op de lichtere kleuren (tip / tidy-alt / conventie) waar wit
-   onleesbaar is — daar donkere tekst.
+   Titelinkt van de twee warme kaders: ccWarmDonker #3A1A0A, dieper dan de
+   grafiet #33322E van de andere lichte balken. Besluit Ben 16-8-2026: de
+   balken blijven, alleen de inkt gaat dieper. Gemeten contrast 16-8-2026:
+
+     alarm #EC8346   PDF 5,93   scherm 4,38    (was 4,83 / 3,48)
+     don't #F05633   PDF 4,57   scherm 3,41    (was 3,72 / 2,71)
+
+   De PDF haalde daarmee voor allebei de 4,5 van WCAG voor gewone tekst; het
+   scherm niet, want Quarto zet `opacity` op elke callout-kop en dat verwatert
+   balk en letters samen. Besluit Ben 23-8-2026: die dekking gaat eruit --
+   `opacity: 1` staat hieronder bij `.callout > .callout-header`. Don't heeft
+   weinig lucht: gaat dat oranje ooit een tint lichter, dan zakt ook de PDF
+   onder de 4,5.
+
+   Tel de koppen hier niet over. Wat elke kop werkelijk haalt rekent
+   _tools/proef_kaders/koppen_contrast.py uit, uit deze CSS; een tabel op deze
+   plek gaat bij de volgende paletwissel stilletjes liegen, precies zoals het
+   lijstje dat hierboven al eens is weggehaald. Twee koppen halen de 4,5 ook
+   zonder dekking niet -- dat is een paletvraag en die ligt bij Ben.
+
+   Stijl: gevulde gekleurde title-balk + lichte body. De inkt op de balk is
+   wit waar dat leesbaar is en donker (#33322E; op alarm en don't #3A1A0A) waar dat niet zo is. Wélke
+   balk welke inkt krijgt staat hier bewust niet opgesomd: dat rekent
+   _tools/palet_gelijktrekken.py uit (WCAG-contrast) en schrijft het in
+   countcamp.tex. Een lijstje hier gaat bij de volgende paletwissel stilletjes
+   liegen — en dat gebeurde ook: tot 16-8-2026 stond hier "tip /
+   tidy-alt", terwijl alarm en don't in de tex allang donkere inkt hadden.
+   De aantekening "(donkere titel)" hierboven is wél sturend: die overrulet
+   de som, en het script meldt het zodra de twee uiteenlopen.
    ---------------------------------------------------------------------- */
 
 body {
@@ -53,6 +82,18 @@ pre {
   padding: 0.6rem 1rem !important;
   font-weight: 700 !important;
   border-bottom: none !important;
+  /* Quarto zet zelf een dekking op de kop: 85 % gewoon, 75 % bij
+     appearance="simple". Nagemeten 23-8-2026 in de CSS die Quarto 1.9.38
+     uitspuugt, niet uit de documentatie overgenomen. Die dekking geldt voor de
+     balk EN de letters, dus allebei schuiven naar het wit van de bladzijde en
+     het contrast zakt mee -- op papier speelt dat niet, en daardoor zeiden de
+     twee formaten iets anders over dezelfde hex.
+     Besluit Ben 23-8-2026: de dekking eruit. Kost een iets verzadigder balk;
+     levert op dat het scherm toont wat er staat, zonder dat er ook maar een
+     palet-waarde verzet hoeft te worden. Het rapportage-blok merkt er niets
+     van: dat is met opzet een kale div en kende deze dekking nooit.
+     `!important` moet, want Quarto's eigen selector weegt zwaarder dan deze. */
+  opacity: 1 !important;
 }
 
 .callout > .callout-header .callout-title-container {
@@ -141,7 +182,7 @@ ul, ol { margin-bottom: 1.4rem; }
 .callout-warning > .callout-header,
 .callout-warning > .callout-header .callout-title-container {
   background-color: #EC8346 !important;
-  color: #ffffff !important;
+  color: #3A1A0A !important;
 }
 .callout-warning > .callout-body-container,
 .callout-warning > div.callout-collapse {
@@ -156,7 +197,7 @@ ul, ol { margin-bottom: 1.4rem; }
 .callout-important > .callout-header,
 .callout-important > .callout-header .callout-title-container {
   background-color: #F05633 !important;
-  color: #ffffff !important;
+  color: #3A1A0A !important;
 }
 .callout-important > .callout-body-container,
 .callout-important > div.callout-collapse {
@@ -279,6 +320,61 @@ ul, ol { margin-bottom: 1.4rem; }
 }
 .callout-note.formule .callout-body-container ul {
   margin-bottom: 0.4rem;
+}
+
+/* ---------- 11. Rapportage-blok (.rapportage, #33322E grafiet) ------
+   De zin die de student letterlijk overneemt in haar eigen verslag. Dat is
+   geen uitleg maar rapportage, en daar geldt APA onverkort — TAALGIDS §2,
+   "Drie registers". Ben, 14-8-2026: "zolang rapportage secties maar echt APA
+   zijn en dat het ook duidelijk is wanneer een rapportage rapportage is en
+   dus geen uitleg."
+
+   Bewust géén nieuwe kleur uit het palet. Die negen hexen coderen
+   lés-functies (concept, opgave, alarm, antwoord); dit blok is geen
+   lesonderdeel maar een stukje eindproduct. Warm grafiet leest daarom als
+   drukwerk in plaats van als weer een categorie, en botst met niets in de
+   kleurenblindheids-controle van het palet.
+
+   GEEN merkje in de kop, en dat is een besluit (Ben, 15-8-2026: "haal 'm
+   overal weg"). Er stond eerst een openend aanhalingsteken, als knipoog naar
+   Bens eerste ingeving dat zo'n zin "toch tussen quotes" hoort te staan. In de
+   render bleek het niets te betekenen: de ƒ van .formule zegt "dit is een
+   formule", maar dit teken zei alleen dat er ooit iemand aan quotes dacht — en
+   het las als een zetfout. De kop zegt zelf al wat het blok is. Zet er dus
+   niets terug zonder reden.
+
+   In het boek is ditzelfde blok juist stil (alleen inspringing) — zie
+   boek/01_schetsen/boek.css. Eén merkteken, twee gedaanten.
+
+   Het is bewust GEEN callout maar een kale div. Gemeten op 15-8-2026: Quarto
+   zet `::: {.callout-note .x}` om in een Callout-knoop vóór callouts.lua
+   draait, dus zo'n blok bereikt de filter nooit en zou in de PDF terugvallen
+   op een standaard-callout. Een kale div komt er wel doorheen. Bijvangst:
+   dezelfde markup werkt in het boek, waar alleen de CSS hem stil maakt. */
+.rapportage {
+  margin: 2rem 0;
+  border-radius: 4px;
+  overflow: hidden;          /* houdt de balk binnen de afgeronde hoeken */
+}
+.rapportage-kop {
+  background-color: #33322E;
+  color: #ffffff;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+}
+.rapportage-lijf {
+  background-color: #F2F1ED;
+  padding: 0.9rem 1rem 0.4rem;
+}
+/* De modelzin zelf rechtop laten. Cursief mag hier NIET generiek: dan ziet de
+   student niet meer wélke tekens cursief horen — Ben, 8-6-2026, zie
+   feedback_didactisch_apa_typografie_voorbeeld. */
+.rapportage-lijf p {
+  font-style: normal;
+  line-height: 1.7;
+  margin-bottom: 0.9rem;
 }
 
 /* ---------- SPSS-output-PNGs --------------------------------------- */
