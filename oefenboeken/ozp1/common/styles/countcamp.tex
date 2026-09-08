@@ -1,18 +1,22 @@
 % =====================================================================
-% CountCamp Lab — LaTeX-preamble voor STAT 3 SPSS-werkboek (PDF-output)
+% CountCamp Lab — LaTeX-preamble voor het OZP 1-werkboek (PDF-output)
 % Synchroon met _common/styles/countcamp.css.
 % =====================================================================
 
 \usepackage{xcolor}
-\definecolor{ccConcept}{HTML}{0077BB}
-\definecolor{ccOpg}{HTML}{CCBB44}
-\definecolor{ccTip}{HTML}{009988}
-\definecolor{ccAlarm}{HTML}{EE7733}
-\definecolor{ccDont}{HTML}{CC3311}
-\definecolor{ccAns}{HTML}{EE3377}
-\definecolor{ccAlt}{HTML}{7570B3}
+\definecolor{ccDonkereTitel}{HTML}{33322E}  % titeltekst op lichte balken
+\definecolor{ccWarmDonker}{HTML}{3A1A0A}  % titelinkt alarm + don't; contrast PDF alarm 5,93 don't 4,57, gemeten 16-8-2026
+\definecolor{ccConcept}{HTML}{2A79A7}
+\definecolor{ccOpg}{HTML}{6A6EAF}
+\definecolor{ccTip}{HTML}{AD8EB4}
+\definecolor{ccAlarm}{HTML}{EC8346}
+\definecolor{ccDont}{HTML}{F05633}
+\definecolor{ccAns}{HTML}{4D8962}
+\definecolor{ccAlt}{HTML}{9CC4A3}
 \definecolor{ccSpss}{HTML}{4A5D7E}
-\definecolor{ccRot}{HTML}{332288}
+\definecolor{ccRot}{HTML}{D3D182}
+\definecolor{ccForm}{HTML}{2F7E78}
+\definecolor{ccRap}{HTML}{33322E}
 \definecolor{ccGreyText}{HTML}{6C7A89}
 \definecolor{ccGetal}{HTML}{B56028}
 \definecolor{ccEng}{HTML}{7D8A93}
@@ -37,7 +41,7 @@
 \newtcolorbox{ccOpgave}[1][]{%
   enhanced, breakable,
   colback=ccOpg!12, colframe=ccOpg,
-  colbacktitle=ccOpg, coltitle=ccOpgTitleText,
+  colbacktitle=ccOpg, coltitle=white,
   leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
   arc=2pt, outer arc=2pt,
   boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
@@ -45,13 +49,31 @@
   attach boxed title to top left={xshift=0pt, yshift=0pt},
   boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
   title filled,
-  title=#1
+  title={#1}
+}
+
+% Rapportage-blok: de zin die de student letterlijk overneemt in haar verslag.
+% Geen palet-kleur maar warm grafiet — de negen hexen coderen lesfuncties, en
+% dit is geen lesonderdeel maar een stukje eindproduct. Zie countcamp.css §11
+% en TAALGIDS.md §2 ("Drie registers").
+\newtcolorbox{ccRapportage}[1][]{%
+  enhanced, breakable,
+  colback=ccRap!8, colframe=ccRap,
+  colbacktitle=ccRap, coltitle=white,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
 }
 
 \newtcolorbox{ccTidyAlt}[1][]{%
   enhanced, breakable,
   colback=ccAlt!18, colframe=ccAlt!90!black,
-  colbacktitle=ccAlt, coltitle=white,
+  colbacktitle=ccAlt, coltitle=ccDonkereTitel,
   leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
   arc=2pt, outer arc=2pt,
   boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
@@ -59,7 +81,7 @@
   attach boxed title to top left={xshift=0pt, yshift=0pt},
   boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
   title filled,
-  title=#1
+  title={#1}
 }
 
 \newtcolorbox{ccSpssSyntax}[1][]{%
@@ -73,13 +95,19 @@
   attach boxed title to top left={xshift=0pt, yshift=0pt},
   boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
   title filled,
-  title=#1
+  title={#1}
 }
 
-\newtcolorbox{ccRotterdam}[1][]{%
+% Formule-blok: een naslag-anker, geen uitleg. In countcamp.css §10 draagt de
+% kop een cursieve ƒ in plaats van Quarto's ℹ-icoon; die zetten we hier ook,
+% anders zegt de PDF iets anders dan het scherm. Bewust `\textit{f}` en niet
+% U+0192: welk font een werkboek meekrijgt staat in de qmd (`mainfont`), en een
+% glyph die daar toevallig ontbreekt wordt een tofu-blokje -- precies wat we
+% 16-8 in de Rotterdam-kop hebben opgeruimd.
+\newtcolorbox{ccFormule}[1][]{%
   enhanced, breakable,
-  colback=ccRot!12, colframe=ccRot,
-  colbacktitle=ccRot, coltitle=white,
+  colback=ccForm!12, colframe=ccForm,
+  colbacktitle=ccForm, coltitle=white,
   leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
   arc=2pt, outer arc=2pt,
   boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
@@ -87,7 +115,99 @@
   attach boxed title to top left={xshift=0pt, yshift=0pt},
   boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
   title filled,
-  title=#1
+  title={\textit{f}\hspace{0.55em}#1}
+}
+
+\newtcolorbox{ccRotterdam}[1][]{%
+  enhanced, breakable,
+  colback=ccRot!12, colframe=ccRot,
+  colbacktitle=ccRot, coltitle=ccDonkereTitel,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
+}
+
+% ---- Quarto's eigen vijf kaders, in hetzelfde huiskader ------------
+% De \colorlet-regels hieronder zetten wel de kleur maar niet de vorm:
+% note/tip/warning/important/caution hielden daardoor een flauw tintje
+% terwijl ze in de HTML dezelfde gevulde balk hebben als onze eigen
+% kaders. Ben, 16-8-2026: PDF en HTML horen hetzelfde te ogen.
+% Opgeroepen vanuit filters/callouts.lua; coltitle is gerekend
+% (WCAG-contrast), niet gekozen.
+
+\newtcolorbox{ccConceptKader}[1][]{%
+  enhanced, breakable,
+  colback=ccConcept!12, colframe=ccConcept,
+  colbacktitle=ccConcept, coltitle=white,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
+}
+
+\newtcolorbox{ccVuistregelKader}[1][]{%
+  enhanced, breakable,
+  colback=ccTip!12, colframe=ccTip,
+  colbacktitle=ccTip, coltitle=ccDonkereTitel,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
+}
+
+\newtcolorbox{ccAlarmKader}[1][]{%
+  enhanced, breakable,
+  colback=ccAlarm!12, colframe=ccAlarm,
+  colbacktitle=ccAlarm, coltitle=ccWarmDonker,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
+}
+
+\newtcolorbox{ccDontKader}[1][]{%
+  enhanced, breakable,
+  colback=ccDont!12, colframe=ccDont,
+  colbacktitle=ccDont, coltitle=ccWarmDonker,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
+}
+
+\newtcolorbox{ccAntwoordKader}[1][]{%
+  enhanced, breakable,
+  colback=ccAns!12, colframe=ccAns,
+  colbacktitle=ccAns, coltitle=white,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
 }
 
 \newcommand{\getal}[1]{\textcolor{ccGetal}{#1}}
