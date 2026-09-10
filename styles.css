@@ -352,9 +352,15 @@ main#quarto-document-content h2 { margin-bottom: 1.1rem; }
    ?vorm=rug of ?vorm=kaart achter de URL — twee links, twee vormen,
    zelfde bladzij. De CSS hangt op html[data-vorm]; ontbreekt het
    attribuut (geen JavaScript), dan geldt de rug-vorm.
-   Sectiekleur codeert in beide vormen hetzelfde: blauw = bij het
-   boek, paars = op maat, groen = losse vakken. De chip rechtsboven
-   noemt het gereedschap (R / JASP / SPSS).
+   Sectiekleur codeert in beide vormen hetzelfde: blauw = het boek en
+   zijn voorloper, paars = op maat, groen = losse vakken. De chip
+   rechtsboven noemt het gereedschap (R / JASP / SPSS).
+
+   LET OP — kleur mag hier nooit de énige drager zijn. Ben ziet rood en
+   groen niet uit elkaar, en een lezer die de bladzij afdrukt ziet ze
+   allebei als grijs. Elke sectie draagt zijn betekenis daarom óók in
+   zijn kop, en elk merkteken in een woord plus een vorm (zie de twee
+   merktekens verderop: "nieuw" is omgekeerd, "in opbouw" is gestreept).
    ============================================================ */
 
 /* ---- gedeeld door beide vormen ---- */
@@ -437,6 +443,115 @@ html[data-vorm="kaart"] .cc-boek:hover,
 html[data-vorm="kaart"] .cc-boek:focus-within { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26, 58, 92, 0.09); }
 html[data-vorm="kaart"] .cc-boek-maat { border-left-color: var(--cc-purple); }
 html[data-vorm="kaart"] .cc-boek-vak  { border-left-color: var(--cc-green); }
+
+/* ---- de plank geordend naar instelling en opleiding (10-9-2026) ----
+   "Voor losse vakken" was een platte rij van drie; sinds vandaag staat
+   er boven elk groepje wáár dat vak wordt gegeven — instelling, en
+   daaronder de opleiding.
+
+   DE LABELS ZIJN GEEN KOPPEN, EN DAT IS MET OPZET. De eerste versie
+   maakte er een h4 en een h5 van, want een kop lijkt netter voor een
+   schermlezer. Nagemeten in de gebouwde HTML deed hij het tegendeel:
+   de boektitels zijn h3, dus zodra Quarto er één tegenkomt sluit hij
+   de h4- én de h5-sectie weer. De plank met Psychometrie en MVDA
+   belandde daardoor buiten "Psychologie", buiten "Universiteit Leiden"
+   én buiten "Voor losse vakken", en wat overbleef was een sectie met
+   alleen een kop erin. Een lege sectie luidt "Psychologie bevat niets",
+   en dat is erger dan geen kop. Bovendien kreeg de ene plank zijn
+   krappe marge wel en de andere niet, want het ene label was nog wel
+   een buurman van zijn plank en het andere niet meer.
+   Het alternatief was de vier boektitels naar h6 brengen; dat raakt
+   zes regels css die de hele boekie-familie deelt, en die kant van de
+   bladzij mocht ik niet aanraken. Dus: labels als gewone blokken, en
+   de plank zelf draagt zijn naam in een aria-label, zodat een
+   schermlezer alsnog "Universiteit Leiden, Psychologie" te horen
+   krijgt bij het groepje waar het over gaat.
+
+   De instelling is de sterkere van de twee — donker, met een haarlijn
+   eronder, als een bordje boven de kast — en de opleiding het zachte
+   tussenlabel: serif cursief, in de kleur van de lopende tekst. Geen
+   van beide gebruikt kleur om iets te zeggen; het staat er in woorden. */
+.cc-instelling {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1.06rem;
+  color: var(--cc-blue-deep);
+  margin: 2.6rem 0 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--cc-line);
+}
+.cc-opleiding {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--cc-ink-soft);
+  margin: 1.5rem 0 0;
+}
+/* het label is een blok met één alinea erin; die alinea mag de 1.4rem
+   staartmarge van een gewone alinea niet meenemen, anders staat het
+   bordje los van zijn kast */
+.cc-instelling p,
+.cc-opleiding p { margin: 0; }
+/* Een plank die bij een label hoort staat er dichter tegenaan dan een
+   losse plank midden op de bladzij. Dit hangt bewust aan een eigen
+   klasse en niet aan buurschap (`.cc-opleiding + .cc-plank`): dat werkte
+   wél bij Pedagogiek en níét bij Psychologie, omdat Quarto de sectie
+   "Voor losse vakken" sluit zodra de eerste boektitel langskomt — het
+   eerste label staat dan nog binnen die sectie en zijn plank er al
+   buiten, dus ze zijn geen buren meer. Gemeten in de gebouwde HTML:
+   0,55rem lucht onder "Pedagogiek" tegen 1,8rem onder "Psychologie",
+   bij twee groepjes die er hetzelfde uit hoorden te zien. */
+.cc-plank-groep { margin-top: 0.55rem; margin-bottom: 1.7rem; }
+.cc-instelling + .cc-opleiding { margin-top: 0.85rem; }
+
+/* ---- twee merktekens die het zonder kleur redden -------------------
+   Een chip die "nieuw" of "in opbouw" zegt, mag dat niet in zijn tint
+   leggen: rood tegen groen valt voor Ben samen, en op papier vallen
+   alle tinten samen. Deze twee dragen hun betekenis in de vorm — en
+   het woord staat er sowieso voluit bij.
+     "nieuw"     — omgekeerd: donker vlak, lichte letter
+     "in opbouw" — open: geen vlak, een rand van streepjes
+   De selectors beginnen met .cc-boek omdat .cc-boek-vak .cc-chip
+   hierboven al een kleur zet; met één klasse erbij verliezen ze. */
+.cc-boek .cc-chip-nieuw {
+  color: var(--cc-paper);
+  background: var(--cc-blue-deep);
+}
+.cc-boek .cc-chip-straks {
+  color: var(--cc-ink-soft);
+  background: transparent;
+  border: 1px dashed #b8b2a8;
+  padding: 0.02rem 0.44rem;
+}
+/* de rug-vorm zet elke chip op kaart-wit zodra je over de regel gaat,
+   zodat hij niet in de oplichter verdrinkt. Voor deze twee is dat juist
+   verkeerd: de omgekeerde chip zou wit-op-wit worden, de open chip zou
+   zijn vlakloosheid kwijtraken. */
+html:not([data-vorm="kaart"]) .cc-boek:hover .cc-chip-nieuw,
+html:not([data-vorm="kaart"]) .cc-boek:focus-within .cc-chip-nieuw { background: var(--cc-blue-deep); }
+html:not([data-vorm="kaart"]) .cc-boek:hover .cc-chip-straks,
+html:not([data-vorm="kaart"]) .cc-boek:focus-within .cc-chip-straks { background: transparent; }
+
+/* ---- een boek dat er nog niet is (.cc-boek-straks) ------------------
+   OZP 2 en STAT 3 staan op de plank zonder link: wie een opleiding doet
+   moet in één blik zien dat het vak er is en het werkboek nog niet.
+   Die twee zijn hetzelfde geval en zien er daarom hetzelfde uit — één
+   manier om "dit komt nog" te tonen, niet twee.
+   Het verschil zit in de vorm — de rug is gestreept in plaats van heel
+   — en verder in het woord "in opbouw".
+   En de regel licht niet op als je eroverheen gaat. Dat is geen detail:
+   in de rug-vorm gedraagt een oplichtende regel zich als een knop, dus
+   een regel die reageert belóóft een klik die er niet is. */
+.cc-boek-straks h3 { color: var(--cc-ink-soft); }
+html:not([data-vorm="kaart"]) .cc-boek-vak.cc-boek-straks { border-left-style: dashed; }
+html:not([data-vorm="kaart"]) .cc-boek-vak.cc-boek-straks:hover,
+html:not([data-vorm="kaart"]) .cc-boek-vak.cc-boek-straks:focus-within { background: transparent; }
+html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks {
+  background: var(--cc-paper);
+  border-style: dashed;
+}
+html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks:hover,
+html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks:focus-within { transform: none; box-shadow: none; }
 
 /* wie liever geen beweging heeft, krijgt de oplichter zonder lift */
 @media (prefers-reduced-motion: reduce) {
