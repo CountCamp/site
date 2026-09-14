@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Oefening 3.1 · Correlatie en scatterplot – R-oefenboek</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../20_blokken/blok_mediaan_scheefheid.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1007e3a0f241d11521c77c6e6c50d118.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -133,8 +135,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -697,19 +700,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># de ruwe samenhangsmaat: nog op de schaal van karaat en glans</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)     <span class="co"># → 4.91</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># deel door de twee standaardafwijkingen — de eenheid valt weg</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans) <span class="sc">/</span> (<span class="fu">sd</span>(d<span class="sc">$</span>karaat) <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>glans))     <span class="co"># → 0.5777</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># en dat is precies wat cor() in één keer doet</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans, <span class="at">method =</span> <span class="st">"pearson"</span>)   <span class="co"># → 0.5777  ("pearson" is de standaard)</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># en welke lijn hoort daarbij</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>model.karaat <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)   <span class="co"># → -1.43 + 32.14 · karaat</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model.karaat)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 4.91</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># deel door de twee standaardafwijkingen — de eenheid valt weg</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.5777</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans) <span class="sc">/</span> (<span class="fu">sd</span>(d<span class="sc">$</span>karaat) <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>glans))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># en dat is precies wat cor() in één keer doet</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># "pearson" is de standaard</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → 0.5777</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans, <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># en welke lijn hoort daarbij</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># lm() → -1.43  32.14</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>model.karaat <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model.karaat)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr); <span class="fu">library</span>(ggplot2)</span>
@@ -758,9 +766,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> 981.82 milligram-glanzen — tweehonderd keer de covariantie van daarnet. (Reken je 200 × 4.91 met de hand, dan krijg je 982.00; R vermenigvuldigt de onafgeronde 4.9091. Zelfde soort scheefte als overal waar je met een gedrukt getal verder rekent.) En er is niets aan de steentjes veranderd: geen enkel gewicht, geen enkele glans, geen enkel punt in de wolk. Alleen de maatstok waarmee je het gewicht opschrijft is anders. <strong>Een getal dat tweehonderd keer zo groot wordt zodra je een andere maat kiest, kan niet zeggen hoe sterk een verband is.</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat <span class="sc">*</span> <span class="dv">200</span>, d<span class="sc">$</span>glans)   <span class="co"># → 981.82</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 981.82</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat <span class="sc">*</span> <span class="dv">200</span>, d<span class="sc">$</span>glans)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> <strong>.58</strong> — hetzelfde getal als daarnet. Delen door de standaardafwijkingen haalt de maatstok eruit, en dat is precies waarom de correlatie bestaat.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat <span class="sc">*</span> <span class="dv">200</span>, d<span class="sc">$</span>glans) <span class="sc">/</span> (<span class="fu">sd</span>(d<span class="sc">$</span>karaat <span class="sc">*</span> <span class="dv">200</span>) <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>glans))   <span class="co"># → 0.5777</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.5777</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat <span class="sc">*</span> <span class="dv">200</span>, d<span class="sc">$</span>glans) <span class="sc">/</span> (<span class="fu">sd</span>(d<span class="sc">$</span>karaat <span class="sc">*</span> <span class="dv">200</span>) <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>glans))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -778,8 +788,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte)      <span class="co"># 342 stippen, een wolk</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte, <span class="at">method =</span> <span class="st">"pearson"</span>)   <span class="co"># → -0.235</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 342 stippen, een wolk</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → -0.235</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>snavellengte, peng<span class="sc">$</span>snaveldiepte, <span class="at">method =</span> <span class="st">"pearson"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Daar is-ie: een wolk die van linksboven naar rechtsonder hangt, en het getal −0.235 is één cijfer voor “hoe strak kantelt die wolk omláág?”. De schaal loopt van −1 (een perfecte dalende lijn) via 0 (geen rechtlijnig verband) naar +1 (een perfecte stijgende lijn). −.24 is een flauwe daling met veel rommel eromheen — zwak, maar het staat er. Langere snavel, ondiepere snavel. Zegt het getal.</p>
@@ -805,7 +818,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># en reken r nu apart uit binnen één soort</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>gentoo <span class="ot">&lt;-</span> peng[peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Gentoo"</span>, ]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(gentoo<span class="sc">$</span>snavellengte, gentoo<span class="sc">$</span>snaveldiepte, <span class="at">method =</span> <span class="st">"pearson"</span>)  <span class="co"># → +0.643</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → +0.643</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(gentoo<span class="sc">$</span>snavellengte, gentoo<span class="sc">$</span>snaveldiepte, <span class="at">method =</span> <span class="st">"pearson"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><span class="naslag">Twee handelingen in vier regels: één soort uit de tabel snijden, en de wolk per soort kleuren. Het uitsnijden staat bij <a href="../90_basishandelingen.html#filteren">rijen — filteren en sorteren</a>, het kleuren bij <a href="../90_basishandelingen.html#plot-kleuren">kleuren en vormen</a> — met daar ook de vraag die hier onder tafel blijft: wanneer geef je de soorten kleuren, en wanneer <a href="../90_basishandelingen.html#plot-facetten">elk hun eigen vakje</a>?</span></p>
@@ -878,13 +893,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> <em>S<sub>xy</sub></em> = 9824.42 <strong>millimeter-grammen</strong>. Zes cijfers voor de komma, en een eenheid die je nergens anders tegenkomt.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht)   <span class="co"># → 9824.42</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 9824.42</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> In kilo’s is het 9.8244 millimeter-kilogrammen. Precies duizend keer kleiner, want je hebt duizend keer kleinere getallen in de ene kolom gezet — en verder niets. Geen enkele pinguïn is van gewicht veranderd, geen enkel punt is in de wolk verschoven, en toch staat er nu een ander getal. <strong>Een maat die van je weegschaal afhangt, kan niet zeggen hóé sterk een verband is.</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht <span class="sc">/</span> <span class="dv">1000</span>)   <span class="co"># → 9.8244</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 9.8244</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht <span class="sc">/</span> <span class="dv">1000</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>c)</strong> Allebei <strong>.87</strong>. De standaardafwijking van de vinlengte is 14.0617 mm, die van het gewicht 801.9545 g, en die van het gewicht in kilo’s 0.8020 kg. Deel de covariantie door het product van de twee die erbij horen en je krijgt twee keer hetzelfde kale getal.</p>
 <p>En dat kómt doordat de eenheid weg is. In de teller stonden millimeter-grammen; in de noemer staat millimeter maal gram. Die vallen tegen elkaar weg, en wat overblijft kan niet meer weten in welke maat je gewogen hebt.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht) <span class="sc">/</span> (<span class="fu">sd</span>(peng<span class="sc">$</span>vinlengte) <span class="sc">*</span> <span class="fu">sd</span>(peng<span class="sc">$</span>gewicht))    <span class="co"># → 0.8712</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">/</span> (<span class="fu">sd</span>(peng<span class="sc">$</span>vinlengte) <span class="sc">*</span> <span class="fu">sd</span>(peng<span class="sc">$</span>gewicht <span class="sc">/</span> <span class="dv">1000</span>))   <span class="co"># → 0.8712</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.8712</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht) <span class="sc">/</span> (<span class="fu">sd</span>(peng<span class="sc">$</span>vinlengte) <span class="sc">*</span> <span class="fu">sd</span>(peng<span class="sc">$</span>gewicht))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.8712</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht <span class="sc">/</span> <span class="dv">1000</span>) <span class="sc">/</span> (<span class="fu">sd</span>(peng<span class="sc">$</span>vinlengte) <span class="sc">*</span> <span class="fu">sd</span>(peng<span class="sc">$</span>gewicht <span class="sc">/</span> <span class="dv">1000</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>d)</strong> Een strak stijgende wolk, van linksonder naar rechtsboven, en veel minder rommel eromheen dan bij de snavels.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>e)</strong> Pinguïns met langere vinnen zijn zwaarder. Meer niet — er staat niet dat de vin het gewicht <em>maakt</em>.</p>
@@ -893,13 +913,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht, <span class="at">col =</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">pch =</span> <span class="dv">16</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">by</span>(peng, peng<span class="sc">$</span>soort, <span class="cf">function</span>(s) <span class="fu">cor</span>(s<span class="sc">$</span>vinlengte, s<span class="sc">$</span>gewicht))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>h)</strong> Houd je gekleurde plaatje uit g) erbij — dáár staat het antwoord in, en de zes getallen hieronder zeggen alleen wat je erop ziet. Vraag ze op:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean)     <span class="co"># → 3700.7  3733.1  5076.0</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>soort, mean)   <span class="co"># → 190.0  195.8  217.2</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply() → 3700.7  3733.1  5076.0</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply() → 190.0  195.8  217.2</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>soort, mean)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Kijk nu naar wat de Gentoo’s zijn: veruit de zwaarste dieren (5076 gram tegen 3701 en 3733) én de langste vinnen (217.2 mm tegen 190.0 en 195.8). Zwaar én lange vin — dat is <strong>dezelfde richting</strong> als het verband binnen elke soort. Het soortverschil duwt de wolk dus mee langs die diagonaal in plaats van er dwars op te staan.</p>
 <p>En dan tel je over alle 342 heen twéé dingen bij elkaar op: het verband binnen elke soort, én de sprong van de ene soort naar de andere. Twee kluitjes die al schuin liggen én bovendien lángs diezelfde diagonaal van elkaar af liggen, vormen samen één lange strakke wolk — strakker dan elk kluitje afzonderlijk.</p>
 <p>Wil je zien hoe groot die sprong is, zet hem dan naast de rommel bínnen een soort — maar dat is een verdieping bovenop je antwoord, niet iets wat je uit de zes getallen had moeten halen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean))          <span class="co"># → 785   sprong tussen de soorten</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, var)))   <span class="co"># → 452   rommel binnen een soort</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sprong tussen de soorten</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 785</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># rommel binnen een soort</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># sqrt(mean()) → 452</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">mean</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, var)))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>De sprong tussen de soorten is dus ruim anderhalf keer zo groot als de rommel binnen één soort (785 gedeeld door 452 is 1.74), en dat hele stuk telt in die .87 volledig mee.</p>
 <p><strong>i)</strong> Bij de snavels lag het soortverschil <strong>dwars</strong> op het verband binnen de soorten: de Gentoo’s hebben lange én ondiepe snavels, terwijl binnen elke soort een langere snavel juist een diepere is. Daar duwde de soort de wolk de andere kant op, en klapte het teken om. Hier ligt het soortverschil <strong>mee</strong>, en dan versterkt het wat er binnen de soorten al gebeurt. Zelfde derde speler, twee tegengestelde uitkomsten — en dat is precies waarom je aan het teken alleen niet genoeg hebt.</p>
 <p><strong>j)</strong> Bijvoorbeeld:</p>
@@ -910,14 +938,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Z)</strong> Ja — allebei komen ze hier goed uit. Maar het loont om te weten wát eraan zou hangen als dat anders was.</p>
 <p><em>De wolk is recht.</em> Je ziet in het plaatje geen bocht, en je kunt het narekenen. Trek er een lijn doorheen en kijk hoeveel die dekt: dat is <em>R</em>², en met één voorspeller is dat exact hetzelfde getal als de <em>r</em>² uit f). Op vier decimalen .7590. Sta de lijn nu een knik toe — een extra term met de vinlengte in het kwadraat — en er staat .7753.</p>
 <p>Ruim anderhalve procent erbij dus, en toch is dat géén bewijs van een bocht. Een extra term kan de <em>R</em>² namelijk alleen maar omhoog duwen en nooit omlaag — ook een term die niets te melden heeft. (Dat is geen bevinding maar rekenkunde, en je komt het bij de meervoudige regressie nog eens tegen, waar een kolom willekeurige getallen precies datzelfde doet.) Wat je hier ziet is dus de gewone winst van een parameter erbij, niet een kromming die om aandacht vraagt.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng))<span class="sc">$</span>r.squared                     <span class="co"># → 0.759</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> <span class="fu">I</span>(vinlengte<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> peng))<span class="sc">$</span>r.squared    <span class="co"># → 0.7753</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → 0.759</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng))<span class="sc">$</span>r.squared</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → 0.7753</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> <span class="fu">I</span>(vinlengte<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> peng))<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><em>En geen punt trekt in zijn eentje aan het getal.</em> Laat de zwaarste pinguïn weg en de correlatie beweegt pas in de vierde decimaal:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>zwaarste <span class="ot">&lt;-</span> <span class="fu">which.max</span>(peng<span class="sc">$</span>gewicht)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte[<span class="sc">-</span>zwaarste], peng<span class="sc">$</span>gewicht[<span class="sc">-</span>zwaarste])   <span class="co"># → 0.8716  (was 0.8712)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (was 0.8712)</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → 0.8716</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte[<span class="sc">-</span>zwaarste], peng<span class="sc">$</span>gewicht[<span class="sc">-</span>zwaarste])</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Doe je dat om de beurt voor alle 342, dan is de grootste verschuiving die één enkel dier veroorzaakt nog altijd maar .004. Dat is de derde decimaal, en die haalt geen enkele conclusie onderuit.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>r_zonder <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(peng), <span class="cf">function</span>(i) <span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte[<span class="sc">-</span>i], peng<span class="sc">$</span>gewicht[<span class="sc">-</span>i]))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(r_zonder <span class="sc">-</span> <span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht)))   <span class="co"># → 0.0042</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># max() → 0.0042</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(r_zonder <span class="sc">-</span> <span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>gewicht)))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Wat eraan hángt, als het wél mis was gegaan:</p>
 <ul>
 <li><strong>Blijft staan:</strong> de drie correlaties binnen de soorten bij g), de zes soortgemiddelden bij h), en de redenering bij i). Die beschrijven wat er in de tabel staat, en daar verandert geen kromme wolk iets aan.</li>
@@ -990,24 +1026,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Neuroticisme: <em>M</em> = 3.16, <em>SD</em> = 1.19 schaalpunten. Openheid: <em>M</em> = 3.87, <em>SD</em> = 0.55 schaalpunten. Allebei op de schaal van 1 tot 6 waarop de vragen beantwoord zijn — dus de gemiddelde deelnemer zit bij neuroticisme net onder het midden en bij openheid er duidelijk boven.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(b<span class="sc">$</span>neuroticisme)   <span class="co"># → 3.16</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(b<span class="sc">$</span>neuroticisme)     <span class="co"># → 1.1946</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(b<span class="sc">$</span>openheid)       <span class="co"># → 3.87</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(b<span class="sc">$</span>openheid)         <span class="co"># → 0.5455</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mean() → 3.16</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(b<span class="sc">$</span>neuroticisme)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 1.1946</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(b<span class="sc">$</span>neuroticisme)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># mean() → 3.87</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(b<span class="sc">$</span>openheid)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 0.5455</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(b<span class="sc">$</span>openheid)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> Met de rijgemiddelden is de covariantie <strong>0.1050</strong>, met de rijsommen <strong>2.6253</strong>. Dat scheelt precies een factor 25, en niet toevallig: een som is vijf keer een gemiddelde, en in een covariantie zitten twee variabelen, dus vijf maal vijf. Weer hetzelfde als bij de kilo’s van de pinguïns — je hebt de maat veranderd en niet de mensen.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(b<span class="sc">$</span>neuroticisme, b<span class="sc">$</span>openheid)                              <span class="co"># → 0.105</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>N_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"N1"</span>, <span class="st">"N2"</span>, <span class="st">"N3"</span>, <span class="st">"N4"</span>, <span class="st">"N5"</span>)])</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>O_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"O1"</span>, <span class="st">"O2"</span>, <span class="st">"O3"</span>, <span class="st">"O4"</span>, <span class="st">"O5"</span>)])</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(N_som, O_som)                                            <span class="co"># → 2.6253</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 0.105</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(b<span class="sc">$</span>neuroticisme, b<span class="sc">$</span>openheid)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>N_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"N1"</span>, <span class="st">"N2"</span>, <span class="st">"N3"</span>, <span class="st">"N4"</span>, <span class="st">"N5"</span>)])</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>O_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"O1"</span>, <span class="st">"O2"</span>, <span class="st">"O3"</span>, <span class="st">"O4"</span>, <span class="st">"O5"</span>)])</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 2.6253</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(N_som, O_som)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>c)</strong> Allebei <strong>.16</strong>. Dat is wat je bij de pinguïns ook zag: zodra je door de twee standaardafwijkingen deelt, vallen de eenheden weg en maakt het niet meer uit of je in gemiddelden of in sommen rekende.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(b<span class="sc">$</span>neuroticisme, b<span class="sc">$</span>openheid) <span class="sc">/</span> (<span class="fu">sd</span>(b<span class="sc">$</span>neuroticisme) <span class="sc">*</span> <span class="fu">sd</span>(b<span class="sc">$</span>openheid))   <span class="co"># → 0.1612</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>N_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"N1"</span>, <span class="st">"N2"</span>, <span class="st">"N3"</span>, <span class="st">"N4"</span>, <span class="st">"N5"</span>)])</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>O_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"O1"</span>, <span class="st">"O2"</span>, <span class="st">"O3"</span>, <span class="st">"O4"</span>, <span class="st">"O5"</span>)])</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(N_som, O_som) <span class="sc">/</span> (<span class="fu">sd</span>(N_som) <span class="sc">*</span> <span class="fu">sd</span>(O_som))                               <span class="co"># → 0.1612</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.1612</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(b<span class="sc">$</span>neuroticisme, b<span class="sc">$</span>openheid) <span class="sc">/</span> (<span class="fu">sd</span>(b<span class="sc">$</span>neuroticisme) <span class="sc">*</span> <span class="fu">sd</span>(b<span class="sc">$</span>openheid))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>N_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"N1"</span>, <span class="st">"N2"</span>, <span class="st">"N3"</span>, <span class="st">"N4"</span>, <span class="st">"N5"</span>)])</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>O_som <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(b[, <span class="fu">c</span>(<span class="st">"O1"</span>, <span class="st">"O2"</span>, <span class="st">"O3"</span>, <span class="st">"O4"</span>, <span class="st">"O5"</span>)])</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.1612</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(N_som, O_som) <span class="sc">/</span> (<span class="fu">sd</span>(N_som) <span class="sc">*</span> <span class="fu">sd</span>(O_som))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>d)</strong> <em>r</em>² = .03. En de wolk zíet er ook zo uit: een dikke, ronde vlek zonder duidelijke richting, waar je met moeite een flauwe helling in ontdekt. Zet dat naast de vin-en-gewicht-wolk van hiervoor — daar lagen de punten in een strakke sliert. Hier delen de twee maten nog geen drie procent van hun verschillen.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(b<span class="sc">$</span>openheid, b<span class="sc">$</span>neuroticisme)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(b<span class="sc">$</span>openheid, b<span class="sc">$</span>neuroticisme)<span class="sc">^</span><span class="dv">2</span>   <span class="co"># → 0.026</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># cor()^2 → 0.026</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(b<span class="sc">$</span>openheid, b<span class="sc">$</span>neuroticisme)<span class="sc">^</span><span class="dv">2</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Dat de punten in blokjes lijken te vallen is geen fout: een gemiddelde van vijf hele getallen kan maar een beperkt aantal waarden aannemen, dus veel mensen landen op precies hetzelfde plekje.</p>
 <p><strong>e)</strong> Bijvoorbeeld:</p>
 <blockquote class="blockquote">

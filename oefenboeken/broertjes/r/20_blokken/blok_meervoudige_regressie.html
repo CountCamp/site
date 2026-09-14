@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Oefening 8.1 · Meervoudige regressie – R-oefenboek</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../20_blokken/blok_cronbach_alpha.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1007e3a0f241d11521c77c6e6c50d118.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -107,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -162,8 +164,9 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -688,10 +691,12 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># eerst karaat alleen</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)               <span class="co"># → b = 32.14</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu met gladheid erbij — let op wat er met karaat gebeurt</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d)    <span class="co"># → b = 0.98</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># lm() → b = 32.14</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu met gladheid erbij — let op wat er met karaat gebeurt</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># lm() → b = 0.98</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
@@ -714,14 +719,24 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># eerst: gewicht uit alleen snavellengte</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model.sn <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.sn)[[<span class="st">"snavellengte"</span>]]   <span class="co"># → 87.42   ruim 87 gram per millimeter snavel</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn)<span class="sc">$</span>r.squared        <span class="co"># → .354</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nu: gooi de vinlengte erbij</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>model.sn.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> peng)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.sn.vl)[[<span class="st">"snavellengte"</span>]]   <span class="co"># → 6.05    de helling zakt door de bodem</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared        <span class="co"># → .760</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ruim 87 gram per millimeter snavel</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># coef() → 87.42</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.sn)[[<span class="st">"snavellengte"</span>]]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .354</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn)<span class="sc">$</span>r.squared</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># nu: gooi de vinlengte erbij</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>model.sn.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> peng)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># de helling zakt door de bodem</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># coef() → 6.05</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.sn.vl)[[<span class="st">"snavellengte"</span>]]</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .760</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat ene getal bij <code>snavellengte</code>. In het eerste model staat er <strong>87.42</strong>: ruim 87 gram per millimeter, en een derde van alle verschil in gewicht verklaard. Zet je de vinlengte ernaast, dan zakt diezelfde helling naar <strong>6.05</strong> — nog geen veertiende van wat hij was. En de <em>R</em>² doet precies het omgekeerde van de helling: die springt van .35 naar .76.</p>
@@ -751,13 +766,20 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R zet dit onderaan zijn uitvoer, en je begint er juist</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>fstatistic       <span class="co"># → 536.63  2  339</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared        <span class="co"># → .7600</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared    <span class="co"># → .7585</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># en de p die bij die F hoort</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>fstatistic</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(f[<span class="dv">1</span>], f[<span class="dv">2</span>], f[<span class="dv">3</span>], <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)     <span class="co"># ruim kleiner dan .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → 536.63  2  339</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>fstatistic</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .7600</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .7585</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># en de p die bij die F hoort</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>fstatistic</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ruim kleiner dan .001</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(f[<span class="dv">1</span>], f[<span class="dv">2</span>], f[<span class="dv">3</span>], <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>R zet die <em>F</em> op de állerlaatste regel van de uitvoer, maar je begint er dus: <em>F</em>(2, 339) = 536.63, <em>p</em> &lt; .001. De 2 telt de hellingen in het model — één voor de snavel, één voor de vin — en de 339 is de rest: 342 pinguïns min de drie getallen die het model schat, die twee hellingen plus het intercept. Die <em>p</em> ken je uit de oefening over de <em>p</em>-waarde: in werelden waarin het model werkelijk niets verklaart, maakt toeval zó’n <em>F</em> vrijwel nooit na. De nulhypothese dat dit model niets van de verschillen in gewicht verklaart, mag dus de deur uit. En pas als dát vaststaat, heeft de rest van de tabel zin — is er niks, dan valt er ook niks te verdelen.</p>
@@ -775,13 +797,21 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tabel <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(model.sn.vl))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tabel                            <span class="co"># de vier kolommen, voor elke voorspeller</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tabel[<span class="st">"vinlengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]          <span class="co"># → 48.14  2.01  23.94  0.0000</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tabel[<span class="st">"snavellengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]       <span class="co"># →  6.05  5.18   1.17  0.2438</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model.sn.vl)[<span class="st">"vinlengte"</span>, ]       <span class="co"># → 44.19  52.10</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model.sn.vl)[<span class="st">"snavellengte"</span>, ]    <span class="co"># → -4.14  16.24</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># de vier kolommen, voor elke voorspeller</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tabel</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># vinlengte → 48.14  2.01  23.94  0.0000</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>tabel[<span class="st">"vinlengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># snavellengte → 6.05  5.18   1.17  0.2438</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>tabel[<span class="st">"snavellengte"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># confint() → 44.19  52.10</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model.sn.vl)[<span class="st">"vinlengte"</span>, ]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># confint() → -4.14  16.24</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(model.sn.vl)[<span class="st">"snavellengte"</span>, ]</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <ul>
@@ -814,20 +844,32 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># één keer: vinlengte door elkaar husselen, snavellengte houden we vast</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>geschud <span class="ot">&lt;-</span> <span class="fu">transform</span>(peng, <span class="at">vinlengte =</span> <span class="fu">sample</span>(vinlengte, <span class="at">replace =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> geschud))[<span class="st">"vinlengte"</span>]  <span class="co"># ~ rond 0</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar de vin-helling dan landt</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  geschud <span class="ot">&lt;-</span> <span class="fu">transform</span>(peng, <span class="at">vinlengte =</span> <span class="fu">sample</span>(vinlengte, <span class="at">replace =</span> <span class="cn">FALSE</span>))</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> geschud))[[<span class="st">"vinlengte"</span>]]</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))              <span class="co"># een bergje rond nul</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">48.14</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)   <span class="co"># en dáár staat de echte</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ rond 0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> geschud))[<span class="st">"vinlengte"</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># doe het 1000 keer en kijk waar de vin-helling dan landt</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>nep <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  geschud <span class="ot">&lt;-</span> <span class="fu">transform</span>(peng, <span class="at">vinlengte =</span> <span class="fu">sample</span>(vinlengte, <span class="at">replace =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte <span class="sc">+</span> vinlengte, <span class="at">data =</span> geschud))[[<span class="st">"vinlengte"</span>]]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(nep)                                   <span class="co"># → 2.52   zo breed wiebelt het bergje</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(nep)                                <span class="co"># → -7.77  7.74</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(nep <span class="sc">&gt;=</span> <span class="fl">48.14</span>)                         <span class="co"># → 0      van de duizend</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># een bergje rond nul</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nep, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">50</span>))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># en dáár staat de echte</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">48.14</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># zo breed wiebelt het bergje</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 2.52</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(nep)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># range() → -7.77  7.74</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(nep)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># van de duizend: sum() → 0</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(nep <span class="sc">&gt;=</span> <span class="fl">48.14</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk naar dat plaatje. <strong>Duizend werelden die dansen rond nul</strong> — want in elke geschudde wereld is de band tussen vin en gewicht doorgeknipt, maar toeval laat de helling nooit precies op nul landen. Ze wiebelen allemaal dicht om nul, van zo’n −8 tot +8 gram per millimeter, niet verder. En dan die rode streep op 48.14, mijlenver buiten het hele bergje. In duizend keer schudden haalde <strong>geen enkele</strong> wereld het. Dát is wat “geen toeval” betekent — geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>. De 48.14 is echt van de vin.</p>
@@ -854,13 +896,20 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># wat voegt de VIN toe, bovenop de snavel?</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.sn, model.sn.vl)                                 <span class="co"># → F = 573.09  op 1 en 339   p &lt; .001</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(model.sn)<span class="sc">$</span>r.squared <span class="co"># → .406</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># anova() → F = 573.09  1  339  p &lt; .001</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.sn, model.sn.vl)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu andersom: wat voegt de SNAVEL toe, bovenop de vin?</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>model.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.vl, model.sn.vl)                                 <span class="co"># → F =   1.36  op 1 en 339   p = .244</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(model.vl)<span class="sc">$</span>r.squared <span class="co"># → .001</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ΔR² → .406</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(model.sn)<span class="sc">$</span>r.squared</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu andersom: wat voegt de SNAVEL toe, bovenop de vin?</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>model.vl <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># anova() → F = 1.36  1  339  p = .244</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(model.vl, model.sn.vl)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ΔR² → .001</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>r.squared <span class="sc">-</span> <span class="fu">summary</span>(model.vl)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Lees die twee naast elkaar, want dat is het hele blok in vier getallen.</p>
@@ -877,13 +926,21 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl)<span class="sc">$</span>adj.r.squared      <span class="co"># → .75828   alleen de vin</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared   <span class="co"># → .75854   snavel erbij</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu een kolom pure ruis in plaats van de snavel</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)                          <span class="co"># zodat jij dezelfde ruis trekt als wij</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>ruis <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(peng))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> ruis, <span class="at">data =</span> peng))<span class="sc">$</span>adj.r.squared   <span class="co"># → .75762</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alleen de vin</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .75828</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># snavel erbij</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .75854</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.sn.vl)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># en nu een kolom pure ruis in plaats van de snavel</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># zodat jij dezelfde ruis trekt als wij</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>ruis <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(peng))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → .75762</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> vinlengte <span class="sc">+</span> ruis, <span class="at">data =</span> peng))<span class="sc">$</span>adj.r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>De gewone <em>R</em>² moest omhoog — die kan niet anders. De adjusted <em>R</em>² hoefde niet mee, en ging tóch een piepklein beetje omhoog: van .75828 naar .75854, twee tienduizendsten. Zet er een kolom pure ruis in plaats van de snavel in, dan zakt hij meestal wél: onze ruiskolom bracht hem van .75828 naar .75762.</p>
@@ -976,8 +1033,9 @@ window.Quarto = {
 <p><strong>c)</strong> De 2 telt de hellingen in het model: één voor karaat, één voor gladheid. De 9 is wat er van de twaalf steentjes overblijft nadat het model zijn drie getallen geschat heeft — die twee hellingen plus het intercept. Dus 12 − 3 = 9.</p>
 <p><strong>d)</strong> De steentjes: <em>R</em>² = .819 tegen adjusted <em>R</em>² = .778. De pinguïns: <em>R</em>² = .760 tegen .759. Bij de pinguïns kost een tweede helling bijna niets, want er zijn 342 dieren om hem op te schatten; bij twaalf steentjes eet diezelfde helling een merkbaar deel van je vrijheidsgraden op, en dát is wat de adjusted <em>R</em>² eraf haalt.</p>
 <p><strong>e)</strong> Karaat: <em>b</em> = 0.98, <em>SE</em> = 10.14, <em>t</em>(9) = 0.10, <em>p</em> = .93. Gladheid: <em>b</em> = 7.93, <em>SE</em> = 1.62, <em>t</em>(9) = 4.91, <em>p</em> &lt; .001.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(model.ka.gl))       <span class="co"># → karaat 0.98  10.14  0.10  0.9251</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="co"># → gladheid 7.93  1.62  4.91  0.0008</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># karaat: coef() → 0.98  10.14  0.10  0.9251</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gladheid: coef() → 7.93  1.62  4.91  0.0008</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(model.ka.gl))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Kijk wat er met karaat gebeurd is. Los haalde hij <em>p</em> = .049; naast de gladheid staat hij op .93. Dat is niet “iets minder significant” — dat is de drempel niet eens meer in zicht.</p>
 <p><strong>f)</strong> Karaat: 95% CI [−21.95, 23.91] — nul zit er ruim tussen, en een flink negatieve helling is niet eens uitgesloten. Gladheid: 95% CI [4.27, 11.59] — nul valt er ruim buiten. Voor karaat heb je dus níét vastgesteld dat hij niets bijdraagt aan de glans; je hebt vastgesteld dat je het met twaalf steentjes niet van nul kunt onderscheiden.</p>
 <p><strong>g)</strong> Karaat zakt van 32.14 naar 0.98; de snavellengte zakte van 87.42 naar 6.05. Twee keer dezelfde beweging: een voorspeller die er in zijn eentje toe lijkt te doen, houdt naast een sterkere buurman vrijwel niets van zichzelf over.</p>
@@ -988,16 +1046,27 @@ window.Quarto = {
 <p>Let op dat dit een uitspraak over déze twaalf steentjes is, en geen uitspraak dat karaat er niet toe doet: bij f) zag je hoe breed het interval nog openstaat.</p>
 <p><strong>Z)</strong> Hier past geen kale “ja”. Twee van de drie checks geven een hard antwoord; de derde is precies degene waar twaalf steentjes te weinig voor zijn, en dát is het antwoord.</p>
 <p>Draai de drie checks. <code>resid()</code> en <code>fitted()</code> ken je uit de oefening over de residuen; de rest is optellen en delen.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">complete.cases</span>(d[, <span class="fu">c</span>(<span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>)]))   <span class="co"># → 12   van de 12</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">resid</span>(model.ka.gl)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model.ka.gl)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mean</span>(e) <span class="sc">-</span> <span class="fu">median</span>(e)) <span class="sc">/</span> <span class="fu">sd</span>(e)         <span class="co"># → -0.30   scheefheid</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>laag <span class="ot">&lt;-</span> f <span class="sc">&lt;=</span> <span class="fu">median</span>(f)                <span class="co"># de laagst VOORSPELDE helft</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(e[<span class="sc">!</span>laag]) <span class="sc">/</span> <span class="fu">sd</span>(e[laag])            <span class="co"># → 1.44   hoog gedeeld door laag</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>gladheid)             <span class="co"># → .63</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>gladheid)<span class="sc">^</span><span class="dv">2</span>))   <span class="co"># → 1.28</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># van de 12: sum() → 12</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">complete.cases</span>(d[, <span class="fu">c</span>(<span class="st">"karaat"</span>, <span class="st">"glans"</span>, <span class="st">"gladheid"</span>)]))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">resid</span>(model.ka.gl)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model.ka.gl)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># scheefheid → -0.30</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mean</span>(e) <span class="sc">-</span> <span class="fu">median</span>(e)) <span class="sc">/</span> <span class="fu">sd</span>(e)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># de laagst VOORSPELDE helft</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>laag <span class="ot">&lt;-</span> f <span class="sc">&lt;=</span> <span class="fu">median</span>(f)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># hoog gedeeld door laag</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() / sd() → 1.44</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(e[<span class="sc">!</span>laag]) <span class="sc">/</span> <span class="fu">sd</span>(e[laag])</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → .63</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>gladheid)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># sqrt() → 1.28</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>gladheid)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><span class="even-checken">De knip gaat over de <strong>voorspelling</strong>, niet over de spreiding. Dat de hoog voorspelde helft hier ook de bréédste is, is de uitkomst en niet de definitie — bij een trechter die andersom loopt komt er een getal onder de 1 uit.</span></p>
 <ul>
 <li><strong>Geen rij valt weg:</strong> alle <strong>12</strong> steentjes hebben een karaat, een glans én een gladheid, dus de drie modellen draaien op dezelfde steentjes. Dat is hier extra belangrijk, want twee modellen op verschillende steekproeven mag je niet van elkaar aftrekken. <strong>Dit is een telling, dus hier valt niets te twijfelen.</strong></li>
