@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Oefening 8.2 · Confounding en partiële correlatie – R-oefenboek</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../20_blokken/blok_meervoudige_regressie.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1007e3a0f241d11521c77c6e6c50d118.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -107,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -162,8 +164,9 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -708,10 +711,12 @@ window.Quarto = {
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>rest.snavel  <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">lm</span>(snavellengte <span class="sc">~</span> vinlengte, <span class="at">data =</span> peng))</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># en kijk of de restjes nog iets met elkaar hebben</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rest.gewicht, rest.snavel)     <span class="co"># → .063</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ter vergelijking, zonder wegrekenen</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>snavellengte)   <span class="co"># → .595</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → .063</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rest.gewicht, rest.snavel)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># ter vergelijking, zonder wegrekenen</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → .595</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>snavellengte)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Van <strong>.595 naar .063</strong>. Dit getal heet de <strong>partiële correlatie</strong> (<em>partial correlation</em>): de samenhang tussen gewicht en snavellengte <em>bij gelijk gehouden vinlengte</em>. Onderzoekers zeggen daar iets deftigs bij — <em>“gecontroleerd voor vinlengte”</em> — maar je hebt nu met je eigen handen gevoeld wat het is: wegrekenen, en kijken wat overblijft.</p>
@@ -730,9 +735,12 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rest.gewicht2 <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">lm</span>(gewicht <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rest.vin      <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">lm</span>(vinlengte <span class="sc">~</span> snavellengte, <span class="at">data =</span> peng))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rest.gewicht2, rest.vin)       <span class="co"># → .793</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>vinlengte)  <span class="co"># → .871   zonder wegrekenen</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → .793</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(rest.gewicht2, rest.vin)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># zonder wegrekenen</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → .871</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>vinlengte)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>De vin houdt bijna alles over: van .871 naar <strong>.793</strong>. De snavel houdt vrijwel niets over: van .595 naar <strong>.063</strong>. Dáár staat, in twee getallen naast elkaar, wat de tabel je met een <em>p</em> van .244 al probeerde te vertellen.</p>
@@ -753,12 +761,16 @@ window.Quarto = {
 </ul>
 <p>Het is dus hetzelfde stukje verklaarde ruimte, afgezet tegen iets anders. Bij de semi-partiële zet je het af tegen <strong>alle</strong> gewichtsverschillen; bij de partiële alleen tegen wat er ná de vin nog te verklaren óverblijft. Zelfde stukje, andere maatstok — en omdat die tweede maatstok kleiner is, is de partiële correlatie altijd de grootste van de twee.</p>
 <p>Reken allebei uit, dan zie je het:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sr.vin    <span class="ot">&lt;-</span> <span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, rest.vin)      <span class="co"># gewicht ONgecorrigeerd</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sr.snavel <span class="ot">&lt;-</span> <span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, rest.snavel)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>sr.vin                                  <span class="co"># → .637   semi-partieel</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>sr.snavel                               <span class="co"># → .031   semi-partieel</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="co">#   .793 en .063 waren de partiële</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gewicht ONgecorrigeerd</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sr.vin    <span class="ot">&lt;-</span> <span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, rest.vin)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sr.snavel <span class="ot">&lt;-</span> <span class="fu">cor</span>(peng<span class="sc">$</span>gewicht, rest.snavel)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># semi-partieel; .793 en .063 waren de partiële</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># sr.vin → .637</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>sr.vin</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># sr.snavel → .031</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>sr.snavel</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Waarom dit ertoe doet: <strong>de semi-partiële correlatie in het kwadraat is de unieke bijdrage aan <em>R</em>².</strong> Niet de partiële. Reken maar na: .637² = .406, en de <em>R</em>² van het model gaat inderdaad van .354 (snavel alleen) naar .760 als de vin binnenkomt — een sprong van .406. Had je .793 gekwadrateerd, dan was je op .628 uitgekomen, en dat getal staat nergens in de uitvoer.</p>
 </div>
 </div>
@@ -812,7 +824,8 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>snavellengte)   <span class="co"># → .656</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → .656</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(peng<span class="sc">$</span>vinlengte, peng<span class="sc">$</span>snavellengte)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><strong>Dat ene getal beslist alles in dit blok.</strong> Twee voorspellers die sterk samenhangen vertellen elkaars verhaal; de zwakste van de twee houdt dan niets eigens over. Hangen ze nauwelijks samen, dan kunnen ze allebei hun eigen bijdrage leveren — en dat ga je zo bij <em>Jouw beurt</em> zelf zien gebeuren.</p>

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Oefening 3.3 · De residuen bekijken – R-oefenboek</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../20_blokken/blok_enkelvoudige_regressie.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1007e3a0f241d11521c77c6e6c50d118.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -133,8 +135,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -664,17 +667,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model.karaat <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># wat de lijn gokt, en wat er overblijft</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">fitted</span>(model.karaat), <span class="dv">1</span>)     <span class="co"># → 30.7 33.9 33.9 40.4 50.0 50.0 53.2 56.4 59.6 59.6 66.1 66.1</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">resid</span>(model.karaat),  <span class="dv">1</span>)     <span class="co"># → -10.7 -3.9 -3.9 -10.4 0.0 20.0 26.8 3.6 10.4 20.4 -36.1 -16.1</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fitted() → 30.7 33.9 33.9 40.4 50.0 50.0 53.2 56.4 59.6 59.6 66.1 66.1</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">fitted</span>(model.karaat), <span class="dv">1</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># de kolom die je in het boek al hebt zien optellen tot nul</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.karaat))           <span class="co"># → 0 (op afrondingsgruis na)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># resid() → -10.7 -3.9 -3.9 -10.4 0.0 20.0 26.8 3.6 10.4 20.4 -36.1 -16.1</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">resid</span>(model.karaat),  <span class="dv">1</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># de kolom die je in het boek al hebt zien optellen tot nul</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># op afrondingsgruis na</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 0</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.karaat))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><span class="even-checken">Kijk of die som ook bij jou nul is. Doet hij dat niet, dan heb je onderweg iets anders in handen gekregen dan de residuen van dit model.</span></p>
 </div>
 </div>
 <p>Dat zijn precies de twee kolommen uit de tabel in het boek: Else valt op nul (de lijn gaat dwars door haar heen), Kees zit er met −36.1 het verst naast. Nieuw is alleen de <strong>derde regel</strong> hieronder — je zet die twee kolommen tegen elkaar in een plaatje in plaats van ze te lezen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(model.karaat), <span class="fu">resid</span>(model.karaat))    <span class="co"># de gok op de x-as, de misser op de y-as</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)                <span class="co"># de lijn zelf ligt hier plat op nul</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de gok op de x-as, de misser op de y-as</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(model.karaat), <span class="fu">resid</span>(model.karaat))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># de lijn zelf ligt hier plat op nul</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Kijk goed wat dat plaatje doet. De regressielijn is <strong>plat geworden</strong>: alles wat de lijn al wist is eruit gerekend, dus wat overblijft hoort rond de nullijn te zweven. Een residuenplot is een schoongeveegde puntenwolk — je kijkt niet meer naar het verband, je kijkt naar wat het verband liet liggen.</p>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Eerst de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
@@ -704,11 +715,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> De glans zelf spreidt met <em>SD</em> = 21.74 glanspunten, de residuen met <em>SD</em> = 17.75. Zonder lijn is je beste gok voor elk steentje het gemiddelde, en dan zit je er typisch bijna 22 punten naast; met de lijn nog bijna 18. De lijn scheelt je dus wel iets, maar niet veel — bij deze twaalf steentjes is het karaat lang niet alles.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(d<span class="sc">$</span>glans)                    <span class="co"># → 21.74</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.karaat))        <span class="co"># → 17.75</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 21.74</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(d<span class="sc">$</span>glans)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 17.75</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.karaat))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> De glans om zijn eigen gemiddelde geeft <strong>5200.0</strong>; de glans om de lijn geeft <strong>3464.3</strong>. Van alle verschil in glans blijft er dus tweederde over nadat de lijn zijn deel heeft gehad — en dat ene derde dat hij wél pakt, is precies de <em>R</em>² = .33 die je in de vorige oefeningen zag.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((d<span class="sc">$</span>glans <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>glans))<span class="sc">^</span><span class="dv">2</span>)    <span class="co"># → 5200</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.karaat)<span class="sc">^</span><span class="dv">2</span>)          <span class="co"># → 3464.3</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 5200</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((d<span class="sc">$</span>glans <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>glans))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 3464.3</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.karaat)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Waaróm dat zo is, staat hieronder.</p>
 </div>
 </div>
@@ -742,11 +759,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># je gokfout zónder lijn, en wat er mét lijn van overblijft</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(peng<span class="sc">$</span>gewicht)                                 <span class="co"># → 801.95</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.vl))                              <span class="co"># → 393.70</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 801.95</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(peng<span class="sc">$</span>gewicht)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># kwadrateer eerst, deel dan</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(model.vl)) <span class="sc">/</span> <span class="fu">var</span>(peng<span class="sc">$</span>gewicht)     <span class="co"># → 0.759</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 393.70</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.vl))</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># kwadrateer eerst, deel dan</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 - var() / var() → 0.759</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(model.vl)) <span class="sc">/</span> <span class="fu">var</span>(peng<span class="sc">$</span>gewicht)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Zonder lijn was je beste gok voor elk gewicht het gemiddelde — dat spel ken je — en dan was je typische misser 801.95 gram, de standaardafwijking van het gewicht. Mét de lijn blijft er 393.70 gram over: de standaardafwijking van de missers. De lijn scheelt je dus 408.25 gram, <strong>ruim de helft</strong> van je gokfout.</p>
@@ -812,34 +833,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> De zes voorspellingen zijn 3212.3 · 3460.7 · 3907.9 · 3808.5 · 3659.4 · 3212.3 gram, en de zes residuen 537.7 · 339.3 · −657.9 · −358.5 · −9.4 · 412.7. Tel ze per dier op en je hebt het gewicht terug: de eerste pinguïn weegt 3212.3 + 537.7 = 3750 gram, en dat staat ook in het bestand. <strong>DATA = FIT + RESIDU</strong>, letterlijk.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(<span class="fu">fitted</span>(model.vl), <span class="dv">6</span>), <span class="dv">1</span>)   <span class="co"># → 3212.3 3460.7 3907.9 3808.5 3659.4 3212.3</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(<span class="fu">resid</span>(model.vl), <span class="dv">6</span>), <span class="dv">1</span>)    <span class="co"># → 537.7 339.3 -657.9 -358.5 -9.4 412.7</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(peng<span class="sc">$</span>gewicht, <span class="dv">6</span>)                 <span class="co"># → 3750 3800 3250 3450 3650 3625</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fitted() → 3212.3 3460.7 3907.9 3808.5 3659.4 3212.3</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(<span class="fu">fitted</span>(model.vl), <span class="dv">6</span>), <span class="dv">1</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># resid() → 537.7 339.3 -657.9 -358.5 -9.4 412.7</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">head</span>(<span class="fu">resid</span>(model.vl), <span class="dv">6</span>), <span class="dv">1</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># head() → 3750 3800 3250 3450 3650 3625</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(peng<span class="sc">$</span>gewicht, <span class="dv">6</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> Nul, op afrondingsgruis na. En dat is geen compliment: het is de manier waarop de lijn gelegd is. Elke misser in de plus heeft een misser in de min tegenover zich staan, en dat geldt voor élke best passende lijn — ook voor een die er compleet naast zit. Een getal dat altijd hetzelfde is, kan je niets vertellen over hoe goed het gaat.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.vl))   <span class="co"># → 0 (op afrondingsgruis na)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># op afrondingsgruis na</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 0</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.vl))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>c)</strong> Er hoort een vormeloze wolk te staan rond de nullijn: alles wat de lijn al wist is eruit gerekend, dus wat overblijft mag geen patroon meer dragen. En dat is ook wat je ziet — een band van punten die van links naar rechts ongeveer even breed blijft en nergens duidelijk omhoog of omlaag loopt. Je ziet de verticale strepen wél: pinguïns zijn op hele millimeters opgemeten, dus de gokken vallen op een beperkt aantal plekken.</p>
 <p><strong>d)</strong> Naar boven zit de lijn er 1288.69 gram naast (een Adélie, rij 39) en naar onder 1058.80 gram (een Chinstrap, rij 313). Ruim een kilo, allebei — bij dieren die gemiddeld ruim vier kilo wegen.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">resid</span>(model.vl))              <span class="co"># → 1288.69</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(<span class="fu">resid</span>(model.vl))              <span class="co"># → -1058.80</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort[<span class="fu">which.max</span>(<span class="fu">resid</span>(model.vl))]   <span class="co"># → "Adelie"</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># max() → 1288.69</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">resid</span>(model.vl))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># min() → -1058.80</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(<span class="fu">resid</span>(model.vl))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># which.max() → "Adelie"</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort[<span class="fu">which.max</span>(<span class="fu">resid</span>(model.vl))]</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>e)</strong> Van −609 tot +941 gram. In de residuenplot staat boven die ene gok van 3659.4 dus één verticale streep van tweeëntwintig punten, ruim anderhalve kilo lang. Dat is de prikkel, nu als plaatje: dezelfde voorspelling, tweeëntwintig verschillende missers.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">range</span>(<span class="fu">resid</span>(model.vl)[peng<span class="sc">$</span>vinlengte <span class="sc">==</span> <span class="dv">190</span>]))   <span class="co"># → -609  941</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># range() → -609  941</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">range</span>(<span class="fu">resid</span>(model.vl)[peng<span class="sc">$</span>vinlengte <span class="sc">==</span> <span class="dv">190</span>]))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>f)</strong> De totaal-som is <strong>219 307 697</strong>, de residu-som <strong>52 854 796</strong> en de fit-som <strong>166 452 902</strong>. Tel die laatste twee op en je krijgt de eerste terug, tot op de eenheid. Dat is <code>DATA = FIT + RESIDU</code>, maar dan in gekwadrateerde afwijkingen — en dát is de vorm waarin de boekhouding klopt.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((peng<span class="sc">$</span>gewicht <span class="sc">-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>gewicht))<span class="sc">^</span><span class="dv">2</span>)        <span class="co"># → 219307697</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.vl)<span class="sc">^</span><span class="dv">2</span>)                            <span class="co"># → 52854796</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((<span class="fu">fitted</span>(model.vl) <span class="sc">-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>gewicht))<span class="sc">^</span><span class="dv">2</span>)    <span class="co"># → 166452902</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 219307697</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((peng<span class="sc">$</span>gewicht <span class="sc">-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>gewicht))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 52854796</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.vl)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 166452902</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((<span class="fu">fitted</span>(model.vl) <span class="sc">-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>gewicht))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>g)</strong> <strong>.76</strong>, allebei.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(model.vl)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>((peng<span class="sc">$</span>gewicht <span class="sc">-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>gewicht))<span class="sc">^</span><span class="dv">2</span>)   <span class="co"># → 0.759</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl)<span class="sc">$</span>r.squared                                               <span class="co"># → 0.759</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 - sum() / sum() → 0.759</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(model.vl)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>((peng<span class="sc">$</span>gewicht <span class="sc">-</span> <span class="fu">mean</span>(peng<span class="sc">$</span>gewicht))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → 0.759</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.vl)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>En dat is de pointe van deze oefening. <em>R</em>² is geen aparte maat die R ergens vandaan tovert: het is de tuin die de lijn pakt, gedeeld door de hele tuin. Je hebt hem net zelf uit de missers gerekend.</p>
 <p><strong>h)</strong> De standaardafwijking van het gewicht is 801.95 gram, die van de residuen 393.70. De lijn scheelt je dus 408.25 gram, en dat is <strong>51 procent</strong> van je gokfout — ruim de helft, niet driekwart.</p>
 <p>Twee zinnen waarom die twee getallen allebei kloppen: de 51 procent telt in grammen, langs de rand van de tuin, en de .76 telt in oppervlakte. Kwadrateren maakt van ruim de helft driekwart — reken maar na, 393.70 gedeeld door 801.95 is .49, en .49 in het kwadraat is .24, en één min .24 is .76.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(peng<span class="sc">$</span>gewicht)          <span class="co"># → 801.95</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.vl))       <span class="co"># → 393.70</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 801.95</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(peng<span class="sc">$</span>gewicht)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 393.70</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.vl))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>i)</strong> Adélie <strong>+43.5</strong>, Chinstrap <strong>−215.7</strong>, Gentoo <strong>+65.8</strong> gram.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(model.vl), <span class="fu">resid</span>(model.vl), <span class="at">col =</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">pch =</span> <span class="dv">16</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="fu">resid</span>(model.vl), peng<span class="sc">$</span>soort, mean)    <span class="co"># → 43.5  -215.7  65.8</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply() → 43.5  -215.7  65.8</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="fu">resid</span>(model.vl), peng<span class="sc">$</span>soort, mean)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Twee zinnen: over alle 342 heen is het gemiddelde residu nul, maar per soort is het dat niet — de lijn zit voor de Chinstraps stelselmatig ruim twee ons te hoog en voor de andere twee een beetje te laag. Dat wil zeggen dat er ook hier nog een derde speler in de wolk zit, precies zoals in de eerste oefening van dit hoofdstuk; alleen is hij deze keer klein genoeg om de lijn niet om te gooien.</p>
 <p><strong>j)</strong> Bijvoorbeeld:</p>
 <blockquote class="blockquote">
@@ -848,7 +895,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Z)</strong> Ja — allebei komen ze goed uit.</p>
 <p><em>Er ligt geen boog in.</em> De residuen lopen niet stelselmatig omhoog of omlaag met de voorspelling; sterker nog, de samenhang tussen de gok en de misser is exact nul, en dat is geen bevinding maar de bouw — dat is precies wat “de lijn is plat geworden” betekent. Wat je wél kunt nakijken is of er een <em>kromme</em> in zit, en dat doe je door de lijn een knik toe te staan. De <em>R</em>² was .76, op vier decimalen .7590; met de knik erbij wordt het .7753. Ruim anderhalve procent erbij — maar dat is geen bocht, dat is een parameter erbij, en die kan de <em>R</em>² alleen maar omhoog duwen.</p>
 <p><em>En geen pinguïn trekt in zijn eentje aan de lijn.</em> De grootste misser is 1288.69 gram, en dat is ruim drie keer de standaardafwijking van de residuen — een dier dat opvalt, maar niet een dier dat de lijn kantelt. Laat je hem weg, dan beweegt de helling nauwelijks.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="fu">fitted</span>(model.vl), <span class="fu">resid</span>(model.vl))   <span class="co"># → 0 (op machineruis na)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># op machineruis na</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → 0</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="fu">fitted</span>(model.vl), <span class="fu">resid</span>(model.vl))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Wat eraan hángt, als het wél mis was gegaan: de hele boekhouding blijft staan — de sommen bij f), de <em>R</em>² bij g), de standaardafwijkingen bij h) en de soortgemiddelden bij i) zijn optellingen op deze 342 dieren, en die kloppen wat er ook krom is. Wat je overdoet is elke zin waarin je de lijn <em>aanbeveelt</em>: bij j) staat dat hij driekwart dekt, en als het verband krom loopt is dat geen leugen maar wel een lijn die je op de verkeerde plek in de steek laat.</p>
 </div>
 </div>
@@ -902,17 +951,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Nul, op afrondingsgruis na — en dat had je kunnen voorspellen, want dat geldt voor élke best passende lijn, hoe goed of slecht hij ook past. Bij de diamantjes was het zo, bij de pinguïns was het zo, en hier dus ook.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.mens))   <span class="co"># → 0 (op afrondingsgruis na)</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># op afrondingsgruis na</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 0</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.mens))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> Het neuroticisme spreidt met <em>SD</em> = 1.1946 schaalpunten, de residuen met <em>SD</em> = 1.1789. De lijn scheelt je dus 0.0156 schaalpunt op een schaal van 1 tot 6 — oftewel: bijna niets. (Vier decimalen hier met opzet: op twee zie je het verschil niet eens meer.) Wie de openheid van iemand kent, weet daarmee nauwelijks meer over zijn neuroticisme dan wie alleen het gemiddelde kent.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(b<span class="sc">$</span>neuroticisme)          <span class="co"># → 1.1946</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.mens))       <span class="co"># → 1.1789</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 1.1946</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(b<span class="sc">$</span>neuroticisme)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 1.1789</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.mens))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>c)</strong> <strong>.03</strong>, allebei. Van de hele tuin pakt deze lijn nog geen drie procent.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(model.mens)) <span class="sc">/</span> <span class="fu">var</span>(b<span class="sc">$</span>neuroticisme)   <span class="co"># → 0.026</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.mens)<span class="sc">$</span>r.squared                      <span class="co"># → 0.026</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 - var() / var() → 0.026</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">var</span>(<span class="fu">resid</span>(model.mens)) <span class="sc">/</span> <span class="fu">var</span>(b<span class="sc">$</span>neuroticisme)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># summary() → 0.026</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.mens)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>d)</strong> <strong>470</strong> mensen scoren precies 4.0 op openheid. Die krijgen alle 470 dezelfde voorspelling: <strong>3.21</strong> schaalpunten neuroticisme. En hun échte neuroticisme loopt van <strong>1.0 tot 6.0</strong> — van de laagste score die op deze schaal bestaat tot de hoogste, allemaal binnen die ene gok.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(b<span class="sc">$</span>openheid <span class="sc">==</span> <span class="dv">4</span>)                                  <span class="co"># → 470</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">predict</span>(model.mens, <span class="fu">data.frame</span>(<span class="at">openheid =</span> <span class="dv">4</span>)), <span class="dv">2</span>)   <span class="co"># → 3.21</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(b<span class="sc">$</span>neuroticisme[b<span class="sc">$</span>openheid <span class="sc">==</span> <span class="dv">4</span>])                <span class="co"># → 1  6</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 470</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(b<span class="sc">$</span>openheid <span class="sc">==</span> <span class="dv">4</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># predict() → 3.21</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">predict</span>(model.mens, <span class="fu">data.frame</span>(<span class="at">openheid =</span> <span class="dv">4</span>)), <span class="dv">2</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># range() → 1  6</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(b<span class="sc">$</span>neuroticisme[b<span class="sc">$</span>openheid <span class="sc">==</span> <span class="dv">4</span>])</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Dat is dezelfde figuur als de tweeëntwintig pinguïns waar dit blok mee opende, maar dan harder: daar liep het echte gewicht over anderhalve kilo uiteen bij één gok, hier loopt het echte neuroticisme over de <strong>hele schaal</strong> uiteen bij één gok. Bij mensen is dat de regel en niet de uitzondering.</p>
 <p><strong>e)</strong> Bijvoorbeeld:</p>
 <blockquote class="blockquote">

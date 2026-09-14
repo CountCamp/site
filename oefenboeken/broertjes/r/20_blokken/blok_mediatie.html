@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Oefening 11.1 · Mediatie: direct en indirect – R-oefenboek</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../20_blokken/blok_interactie_continu.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1007e3a0f241d11521c77c6e6c50d118.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -107,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -162,8 +164,9 @@ window.Quarto = {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
@@ -686,22 +689,33 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># drie modellen, en let op de derde: die levert er twee paden tegelijk</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model.a      <span class="ot">&lt;-</span> <span class="fu">lm</span>(gladheid <span class="sc">~</span> karaat, <span class="at">data =</span> d)             <span class="co"># karaat → gladheid</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>model.c      <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)                <span class="co"># karaat → glans, kaal</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>model.beide  <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d)     <span class="co"># hierin zitten b én c'</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 1: voorspelt karaat de gladheid?</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.a)[<span class="dv">2</span>]          <span class="co"># a  = 3.93</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 2: en wat doet gladheid met glans, naast karaat?</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)[<span class="dv">3</span>]      <span class="co"># b  = 7.93</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># het pad langs gladheid is a maal b</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fl">3.93</span> <span class="sc">*</span> <span class="fl">7.93</span>               <span class="co"># ab = 31.16  indirect</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># karaat → gladheid</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>model.a      <span class="ot">&lt;-</span> <span class="fu">lm</span>(gladheid <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># karaat → glans, kaal</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>model.c      <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># hierin zitten b én c'</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>model.beide  <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 1: voorspelt karaat de gladheid?</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># a: coef() → 3.93</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.a)[<span class="dv">2</span>]</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># leg dat naast het totale effect en wat er direct overblijft</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.c)[<span class="dv">2</span>]          <span class="co"># c  = 32.14  totaal</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)[<span class="dv">2</span>]      <span class="co"># c' = 0.98   direct</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># stap 2: en wat doet gladheid met glans, naast karaat?</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># b: coef() → 7.93</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)[<span class="dv">3</span>]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># het pad langs gladheid is a maal b</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ab, indirect: 3.93 * 7.93 → 31.16</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fl">3.93</span> <span class="sc">*</span> <span class="fl">7.93</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># leg dat naast het totale effect en wat er direct overblijft</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># c, totaal: coef() → 32.14</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.c)[<span class="dv">2</span>]</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># c', direct: coef() → 0.98</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)[<span class="dv">2</span>]</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Het pad karaat → gladheid → glans draagt <em>a</em> × <em>b</em> = 31.16 van het totale effect van 32.14: 97% loopt via de slijper, en wat rechtstreeks overblijft is die 0.98 uit het blok over meervoudige regressie.</p>
@@ -718,22 +732,30 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"luchtkwaliteit.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> lucht[<span class="fu">complete.cases</span>(lucht[<span class="fu">c</span>(<span class="st">"ozon"</span>,<span class="st">"zon"</span>,<span class="st">"temp_F"</span>)]), ]  <span class="co"># n = 111</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model.c     <span class="ot">&lt;-</span> <span class="fu">lm</span>(ozon <span class="sc">~</span> zon, <span class="at">data =</span> lucht)             <span class="co"># het totale effect</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>model.a     <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp_F <span class="sc">~</span> zon, <span class="at">data =</span> lucht)           <span class="co"># zon → temperatuur</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>model.beide <span class="ot">&lt;-</span> <span class="fu">lm</span>(ozon <span class="sc">~</span> zon <span class="sc">+</span> temp_F, <span class="at">data =</span> lucht)    <span class="co"># hierin zitten b én c'</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># het totale effect (c): zon → ozon, kaal</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.c)[<span class="st">"zon"</span>]      <span class="co"># 0.127</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># pad a: zon → temperatuur</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.a)[<span class="st">"zon"</span>]      <span class="co"># 0.0307</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># het model met beide: hierin zitten pad b én het directe effect c'</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   zon      0.057   ← direct effect (c')</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   temp_F   2.278   ← pad b</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># n = 111</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>lucht <span class="ot">&lt;-</span> lucht[<span class="fu">complete.cases</span>(lucht[<span class="fu">c</span>(<span class="st">"ozon"</span>,<span class="st">"zon"</span>,<span class="st">"temp_F"</span>)]), ]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># het totale effect</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>model.c     <span class="ot">&lt;-</span> <span class="fu">lm</span>(ozon <span class="sc">~</span> zon, <span class="at">data =</span> lucht)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># zon → temperatuur</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>model.a     <span class="ot">&lt;-</span> <span class="fu">lm</span>(temp_F <span class="sc">~</span> zon, <span class="at">data =</span> lucht)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># hierin zitten b én c'</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>model.beide <span class="ot">&lt;-</span> <span class="fu">lm</span>(ozon <span class="sc">~</span> zon <span class="sc">+</span> temp_F, <span class="at">data =</span> lucht)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># het totale effect (c): zon → ozon, kaal</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># coef() → 0.127</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.c)[<span class="st">"zon"</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># pad a: zon → temperatuur</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># coef() → 0.0307</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.a)[<span class="st">"zon"</span>]</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># het model met beide: hierin zitten pad b én het directe effect c'</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># zon is het directe effect c', temp_F is pad b: coef() → 0.05710959  2.27846684</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.beide)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Vier getallen, en ze passen op elkaar als puzzelstukjes. Het <strong>totale</strong> effect van zon op ozon is <strong>0.127</strong>. Zet je de temperatuur ernaast, dan zakt de zon-helling naar <strong>0.057</strong> — dát stuk loopt rechtstreeks, buiten de warmte om. Wat ertussenuit viel, ging via de omweg: zon warmt de lucht op met <strong>0.0307</strong> graad per streepje (pad a), en elke graad warmer levert <strong>2.278</strong> ppb meer ozon op bij gelijke zon (pad b). Vermenigvuldig die twee — 0.0307 × 2.278 — en je krijgt <strong>0.070</strong>: het stuk zon-effect dat door de temperatuur is doorgegeven. En kijk: 0.057 + 0.070 = 0.127. Direct plus indirect is precies het totaal.</p>
@@ -758,13 +780,19 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>indirect <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  s  <span class="ot">&lt;-</span> lucht[<span class="fu">sample</span>(<span class="fu">nrow</span>(lucht), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]   <span class="co"># nieuwe steekproef</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  a  <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(temp_F <span class="sc">~</span> zon, <span class="at">data =</span> s))[<span class="st">"zon"</span>]</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  b  <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(ozon <span class="sc">~</span> zon <span class="sc">+</span> temp_F, <span class="at">data =</span> s))[<span class="st">"temp_F"</span>]</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">*</span> b                                                 <span class="co"># herbereken a·b</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(indirect)                          <span class="co"># een scheef bergje, rechts uitlopend</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(indirect, <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>))       <span class="co"># 0.023  tot  0.113</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># nieuwe steekproef</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  s  <span class="ot">&lt;-</span> lucht[<span class="fu">sample</span>(<span class="fu">nrow</span>(lucht), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  a  <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(temp_F <span class="sc">~</span> zon, <span class="at">data =</span> s))[<span class="st">"zon"</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  b  <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(ozon <span class="sc">~</span> zon <span class="sc">+</span> temp_F, <span class="at">data =</span> s))[<span class="st">"temp_F"</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># herbereken a·b</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  a <span class="sc">*</span> b</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># een scheef bergje, rechts uitlopend</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(indirect)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># quantile() → 0.023  0.113</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(indirect, <span class="fu">c</span>(.<span class="dv">025</span>, .<span class="dv">975</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Kijk waar dat bergje ligt: het 95%-interval loopt van <strong>0.023 tot 0.113</strong> — en het komt met geen enkele voet aan de nul. Duizend hertrekkingen, en het indirecte pad blijft staan. De omweg via de temperatuur is niet toeval; hij is echt.</p>
@@ -869,10 +897,11 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p>PROCESS bestaat óók voor R: één bestand van Hayes’ site, geen pakketten nodig. Staat het nog niet naast je script, dan haal je het op zoals bij <a href="../installatie.html">PROCESS installeren</a> beschreven staat. Inlezen met <code>source()</code> en dan is het één regel.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)   <span class="co"># eenmalig per sessie inladen</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">process</span>(<span class="at">data =</span> d, <span class="at">y =</span> <span class="st">"glans"</span>, <span class="at">x =</span> <span class="st">"karaat"</span>, <span class="at">m =</span> <span class="st">"gladheid"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="dv">4</span>, <span class="at">boot =</span> <span class="dv">5000</span>, <span class="at">seed =</span> <span class="dv">31216</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eenmalig per sessie inladen</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">process</span>(<span class="at">data =</span> d, <span class="at">y =</span> <span class="st">"glans"</span>, <span class="at">x =</span> <span class="st">"karaat"</span>, <span class="at">m =</span> <span class="st">"gladheid"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="dv">4</span>, <span class="at">boot =</span> <span class="dv">5000</span>, <span class="at">seed =</span> <span class="dv">31216</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Je krijgt terug wat je net met de hand deed — pad <em>a</em>, pad <em>b</em>, het totale en het directe effect — plus het indirecte effect met een <strong>bootstrap-interval</strong> in plaats van een Sobel-<em>z</em>.</p>
 </div>
 </div>
