@@ -442,7 +442,7 @@ window.Quarto = {
 <section id="waarom-dit-helpt" class="level2">
 <h2 class="anchored" data-anchor-id="waarom-dit-helpt">Waarom dit helpt</h2>
 <p>Neem de twee formules die het vaakst door elkaar gaan:</p>
-<p><span class="math display">\[z = \frac{x - \mu}{\sigma} \qquad\text{en}\qquad z = \frac{\bar{x} - \mu}{\sigma/\sqrt{n}}\]</span></p>
+<p><span class="math display">\[z = \dfrac{x - \mu}{\sigma} \qquad\text{en}\qquad z = \dfrac{\bar{x} - \mu}{\dfrac{\sigma}{\sqrt{n}}}\]</span></p>
 <p>Ze lijken op elkaar, ze gebruiken dezelfde tabel, en ze zitten <strong>allebei in de verwachtingslaag</strong>. Het is niet twee machines. Het is één machine, en het enige verschil is waar je hem op richt: op <strong>één waarneming</strong> (links) of op <strong>een gemiddelde</strong> (rechts).</p>
 <p>Dat een gemiddelde minder ver uitwaaiert dan een losse waarneming — daar gaat die <span class="math inline">\(\sqrt{n}\)</span> over, en verder niets. Er komt geen hypothese aan te pas en er wordt niets geconcludeerd. Het is nog steeds gewoon een kans.</p>
 <p>Pas als je die kans gebruikt om te zéggen dat het gemiddelde afwijkt, stap je naar de beslislaag. Dan heet dezelfde breuk ineens een <em>z</em>-toets. Zelfde rekenwerk, andere bedoeling.</p>
@@ -491,21 +491,30 @@ window.Quarto = {
 <p>Kijk eerst naar de <strong>vorm van je data</strong> — hoeveel variabelen, welk meetniveau, zit er een richting in. Dat is wat je in de vraag kunt zien. Welke laag je in zit, volgt daaruit.</p>
 <section id="eén-variabele" class="level2">
 <h2 class="anchored" data-anchor-id="eén-variabele">Eén variabele</h2>
-<pre><code>één numerieke variabele
-│
-├─ BESCHRIJVEN ......... x̄ · s² · s · midrange · modus · mediaan
-│                        let op hoe de data binnenkomt:
-│                        losse scores · frequentietabel · kansen
-│
-├─ VERWACHTEN
-│   ├─ kans op één waarneming ..... z = (x − μ) / σ            → tabel
-│   └─ kans op een gemiddelde ..... z = (x̄ − μ) / (σ/√n)      → tabel
-│                                    nog steeds geen toets
-│
-└─ BESLISSEN
-    ├─ σ bekend ..... x̄ ± z*·σ/√n        of   z = (x̄ − μ)/(σ/√n)
-    └─ σ onbekend ... x̄ ± t*·s/√n        of   t = (x̄ − μ)/(s/√n), df = n − 1</code></pre>
-<p>De onderste twee takken gebruiken exact dezelfde breuk als de tak erboven. Het enige nieuwe is dat er een <span class="math inline">\(H_0\)</span> bij komt, of een marge omheen.</p>
+<p><strong>Eén numerieke variabele</strong> — drie takken.</p>
+<ul>
+<li><p><strong>Beschrijven</strong> — <span class="math inline">\(\bar{x}\)</span>, <span class="math inline">\(s^2\)</span>, <span class="math inline">\(s\)</span>, midrange, modus, mediaan. Let op hoe de data binnenkomt: als losse scores, als frequentietabel of als kansen.</p></li>
+<li><p><strong>Verwachten</strong> — twee kansen, en allebei nog geen toets.</p>
+<ul>
+<li><p>Kans op <strong>één waarneming</strong>, daarna de <em>z</em>-tabel:</p>
+<p><span class="math display">\[z = \dfrac{x - \mu}{\sigma}\]</span></p></li>
+<li><p>Kans op <strong>een gemiddelde</strong>, daarna de <em>z</em>-tabel:</p>
+<p><span class="math display">\[z = \dfrac{\bar{x} - \mu}{\dfrac{\sigma}{\sqrt{n}}}\]</span></p></li>
+</ul></li>
+<li><p><strong>Beslissen</strong></p>
+<ul>
+<li><p><span class="math inline">\(\sigma\)</span> <strong>bekend</strong> — als interval:</p>
+<p><span class="math display">\[\bar{x} \pm z^{*}\,\dfrac{\sigma}{\sqrt{n}}\]</span></p>
+<p>of als toets:</p>
+<p><span class="math display">\[z = \dfrac{\bar{x} - \mu}{\dfrac{\sigma}{\sqrt{n}}}\]</span></p></li>
+<li><p><span class="math inline">\(\sigma\)</span> <strong>onbekend</strong> — als interval:</p>
+<p><span class="math display">\[\bar{x} \pm t^{*}\,\dfrac{s}{\sqrt{n}}\]</span></p>
+<p>of als toets:</p>
+<p><span class="math display">\[t = \dfrac{\bar{x} - \mu}{\dfrac{s}{\sqrt{n}}}\]</span></p>
+<p>met <span class="math inline">\(df = n - 1\)</span>.</p></li>
+</ul></li>
+</ul>
+<p>De twee takken onder <strong>Beslissen</strong> gebruiken dezelfde breuk als de kans op een gemiddelde erboven — bij <span class="math inline">\(\sigma\)</span> onbekend staat er alleen <span class="math inline">\(s\)</span> waar <span class="math inline">\(\sigma\)</span> stond, en <span class="math inline">\(t\)</span> waar <span class="math inline">\(z\)</span> stond. Het enige nieuwe is dat er een <span class="math inline">\(H_0\)</span> bij komt, of een marge omheen.</p>
 <p>Eén variabele die <strong>discreet</strong> is — een dobbelsteen, een aantal keer raak — heeft zijn eigen kansverdeling: daar reken je <span class="math inline">\(E(X)\)</span> en <span class="math inline">\(\text{Var}(X)\)</span> uit. Verwachtingslaag.</p>
 </section>
 <section id="twee-variabelen" class="level2">
@@ -626,7 +635,7 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>voorspellen uit een verband</td>
-<td><span class="math inline">\(\hat{y}=b_0+b_1x\)</span>, met <span class="math inline">\(b_1 = r\frac{s_y}{s_x}\)</span> en <span class="math inline">\(b_0 = \bar{y}-b_1\bar{x}\)</span>; verklaarde variantie <span class="math inline">\(r^2\)</span>; residu <span class="math inline">\(e = y - \hat{y}\)</span></td>
+<td><span class="math inline">\(\hat{y}=b_0+b_1x\)</span>, met <span class="math inline">\(b_1 = r\,\dfrac{s_y}{s_x}\)</span> en <span class="math inline">\(b_0 = \bar{y}-b_1\bar{x}\)</span>; verklaarde variantie <span class="math inline">\(r^2\)</span>; residu <span class="math inline">\(e = y - \hat{y}\)</span></td>
 <td>6</td>
 </tr>
 </tbody>
@@ -650,7 +659,7 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td>kans op één waarneming, normaal verdeeld</td>
-<td><span class="math inline">\(z = \frac{x-\mu}{\sigma}\)</span>, dan de <em>z</em>-tabel</td>
+<td><span class="math inline">\(z = \dfrac{x-\mu}{\sigma}\)</span>, dan de <em>z</em>-tabel</td>
 <td>3</td>
 </tr>
 <tr class="even">
@@ -660,7 +669,7 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td>kans op een <strong>gemiddelde</strong> van <span class="math inline">\(n\)</span> waarnemingen</td>
-<td>steekproevenverdeling: <span class="math inline">\(z = \frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\)</span></td>
+<td>steekproevenverdeling: <span class="math inline">\(z = \dfrac{\bar{x}-\mu}{\dfrac{\sigma}{\sqrt{n}}}\)</span></td>
 <td>7</td>
 </tr>
 <tr class="even">
@@ -689,37 +698,37 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td>schatten van <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span> bekend</td>
-<td><span class="math inline">\(\bar{x} \pm z^{*}\frac{\sigma}{\sqrt{n}}\)</span></td>
+<td><span class="math inline">\(\bar{x} \pm z^{*}\,\dfrac{\sigma}{\sqrt{n}}\)</span></td>
 <td>7</td>
 </tr>
 <tr class="even">
 <td>schatten van <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span> onbekend</td>
-<td><span class="math inline">\(\bar{x} \pm t^{*}\frac{s}{\sqrt{n}}\)</span></td>
+<td><span class="math inline">\(\bar{x} \pm t^{*}\,\dfrac{s}{\sqrt{n}}\)</span></td>
 <td>9</td>
 </tr>
 <tr class="odd">
 <td>hoe groot moet mijn steekproef zijn?</td>
-<td><span class="math inline">\(n = \left(\frac{z^{*}\sigma_x}{m}\right)^2\)</span> — met <span class="math inline">\(m\)</span> de foutenmarge die je nog accepteert</td>
+<td><span class="math inline">\(n = \left(\dfrac{z^{*}\sigma_x}{m}\right)^2\)</span> — met <span class="math inline">\(m\)</span> de foutenmarge die je nog accepteert</td>
 <td>7</td>
 </tr>
 <tr class="even">
 <td>toetsen van <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span> bekend</td>
-<td><span class="math inline">\(z = \frac{\bar{x}-\mu}{\sigma/\sqrt{n}}\)</span></td>
+<td><span class="math inline">\(z = \dfrac{\bar{x}-\mu}{\dfrac{\sigma}{\sqrt{n}}}\)</span></td>
 <td>8</td>
 </tr>
 <tr class="odd">
 <td>toetsen van <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span> onbekend</td>
-<td><span class="math inline">\(t = \frac{\bar{x}-\mu}{s/\sqrt{n}}\)</span>, <span class="math inline">\(df = n-1\)</span></td>
+<td><span class="math inline">\(t = \dfrac{\bar{x}-\mu}{\dfrac{s}{\sqrt{n}}}\)</span>, <span class="math inline">\(df = n-1\)</span></td>
 <td>9</td>
 </tr>
 <tr class="even">
 <td>twee groepen vergelijken</td>
-<td><span class="math inline">\(t(n_{\min}-1\ df) = \frac{\bar{x}_1-\bar{x}_2}{\sqrt{s_1^2/n_1 + s_2^2/n_2}}\)</span></td>
+<td><span class="math inline">\(t(n_{\min}-1\ df) = \dfrac{\bar{x}_1-\bar{x}_2}{\sqrt{\dfrac{s_1^2}{n_1} + \dfrac{s_2^2}{n_2}}}\)</span>, met <span class="math inline">\(n_{\min}\)</span> de kleinste van de twee groepen</td>
 <td>9</td>
 </tr>
 <tr class="odd">
 <td>samenhang tussen twee categorische variabelen</td>
-<td><span class="math inline">\(\chi^2 = \sum\frac{(O-E)^2}{E}\)</span>, <span class="math inline">\(df=(r-1)(c-1)\)</span>, plus gestandaardiseerde celresiduen</td>
+<td><span class="math inline">\(\chi^2 = \sum\dfrac{(O-E)^2}{E}\)</span>, <span class="math inline">\(df=(r-1)(c-1)\)</span>, plus gestandaardiseerde celresiduen</td>
 <td>11</td>
 </tr>
 <tr class="even">
