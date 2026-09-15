@@ -566,7 +566,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Tweede beweging · Verschillen koppelen</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">H3 · Het rechthoekje</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_residuen.html">Oefening 3.3 · De residuen bekijken</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Oefening 3.3 · De residuen bekijken</h1>
-<p class="subtitle lead">Onafhankelijk, gelijke spreiding, normaal verdeeld · <em>residual diagnostics</em></p>
+<p class="subtitle lead">Wat de lijn liet liggen, en waar <em>R</em>² vandaan komt · <em>residuals</em></p>
 </div>
 
 
@@ -586,42 +586,39 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">In deze oefening</h2>
    
   <ul>
-  <li><a href="#tien-dagen-van-precies-81-graden" id="toc-tien-dagen-van-precies-81-graden">Tien dagen van precies 81 graden</a></li>
-  <li><a href="#vraag-de-residuenplots-op-in-jasp" id="toc-vraag-de-residuenplots-op-in-jasp">Vraag de residuenplots op in JASP</a></li>
-  <li><a href="#is-die-1.65-raar" id="toc-is-die-1.65-raar">Is die 1.65 raar?</a></li>
-  <li><a href="#drie-aannames-drie-plaatjes" id="toc-drie-aannames-drie-plaatjes">Drie aannames, drie plaatjes</a></li>
-  <li><a href="#twee-lijnen-keuren" id="toc-twee-lijnen-keuren">Twee lijnen keuren</a></li>
-  <li><a href="#diepe-snavel-lichte-pinguïn-het-hele-hoofdstuk-in-één-wolk" id="toc-diepe-snavel-lichte-pinguïn-het-hele-hoofdstuk-in-één-wolk">Diepe snavel, lichte pinguïn? — het hele hoofdstuk in één wolk</a></li>
-  <li><a href="#schrijf-op-wat-je-gecontroleerd-hebt" id="toc-schrijf-op-wat-je-gecontroleerd-hebt">Schrijf op wat je gecontroleerd hebt</a></li>
+  <li><a href="#tweeëntwintig-pinguïns-van-precies-190-millimeter" id="toc-tweeëntwintig-pinguïns-van-precies-190-millimeter">Tweeëntwintig pinguïns van precies 190 millimeter</a></li>
+  <li><a href="#reken-de-gokfouten-uit-op-de-twaalf-steentjes" id="toc-reken-de-gokfouten-uit-op-de-twaalf-steentjes">Reken de gokfouten uit op de twaalf steentjes</a></li>
+  <li><a href="#het-residu-en-waar-r²-vandaan-komt" id="toc-het-residu-en-waar-r²-vandaan-komt">Het residu, en waar <em>R</em>² vandaan komt</a></li>
+  <li><a href="#de-boekhouding-van-de-pinguïnlijn" id="toc-de-boekhouding-van-de-pinguïnlijn">De boekhouding van de pinguïnlijn</a></li>
+  <li><a href="#dezelfde-boekhouding-op-2634-vragenlijsten" id="toc-dezelfde-boekhouding-op-2634-vragenlijsten">Dezelfde boekhouding op 2634 vragenlijsten</a></li>
   </ul>
 </nav>
 <div class="datastrook">
-<p><strong>Data bij deze oefening</strong> — <a href="../10_data/luchtkwaliteit.csv" download="luchtkwaliteit.csv">luchtkwaliteit.csv</a> 116 zomerdagen in New York · <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../10_data/bigfive.csv" download="bigfive.csv">bigfive.csv</a> 2634 ingevulde vragenlijsten · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/bigfive.csv" download="bigfive.csv">bigfive.csv</a> 2634 ingevulde vragenlijsten · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
 </div>
 <div class="kicker">
 <p>prikkel</p>
 </div>
-<section id="tien-dagen-van-precies-81-graden" class="level2">
-<h2 class="anchored" data-anchor-id="tien-dagen-van-precies-81-graden">Tien dagen van precies 81 graden</h2>
-<p><span class="begrippen">voorspelling · misser · spreiding rond de lijn</span></p>
-<p>Het meetkastje op Roosevelt Island ken je al — dat is het kastje uit de oefening over de mediaan, dat de zomer van 1973 lang elke dag de ozon in de New Yorkse lucht opsnoof.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Zelfde kastje, nieuwe vraag: naast de ozon noteerde het ook de temperatuur, en warme lucht en smog horen bij elkaar. Leg er dus een lijn in. Hoe warmer de dag, hoe meer ozon.</p>
-<p>Die lijn komt er, hij loopt netjes omhoog, en hij dekt bijna de helft van alle verschil tussen de dagen: <em>R</em>² = .49. Voor buitenlucht is dat veel.</p>
-<p>En nu iets raars. In die 116 dagen zitten <strong>tien</strong> dagen van precies 81 graden Fahrenheit. Tien keer dezelfde temperatuur, dus tien keer dezelfde voorspelling: de lijn zegt voor alle tien <strong>49.7</strong> ppb ozon. Wat het kastje op die tien dagen werkelijk mat:</p>
+<section id="tweeëntwintig-pinguïns-van-precies-190-millimeter" class="level2">
+<h2 class="anchored" data-anchor-id="tweeëntwintig-pinguïns-van-precies-190-millimeter">Tweeëntwintig pinguïns van precies 190 millimeter</h2>
+<p><span class="begrippen">voorspelling · gokfout</span></p>
+<p>De pinguïns zijn oude bekenden — in <a href="../20_blokken/blok_enkelvoudige_regressie.html">Oefening 3.2</a> trok je er zelf een lijn door: het gewicht voorspeld uit de vinlengte, bijna vijftig gram pinguïn per millimeter vin, en <em>R</em>² = .76.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Driekwart van alle verschil in gewicht loopt langs de vin mee. Dat is veel, voor levende dieren, en het klinkt alsof de lijn het gewicht daarmee wel zo ongeveer wéét.</p>
+<p>En nu iets raars. In het bestand zitten <strong>tweeëntwintig</strong> pinguïns met een vin van precies 190 millimeter. De lijn kent alleen de vinlengte, dus die tweeëntwintig krijgen alle tweeëntwintig dezelfde voorspelling: 3659.4 gram. Wat de weegschaal werkelijk zei, in grammen:</p>
 <blockquote class="blockquote">
-<p>9 · 27 · 32 · 36 · 39 · 44 · 45 · 48 · 59 · <strong>168</strong></p>
+<p><strong>3050</strong> · 3325 · 3400 · 3450 · 3450 · 3450 · 3575 · 3600 · 3600 · 3650 · 3700 · 3700 · 3725 · 3800 · 3900 · 3900 · 3900 · 3950 · 4250 · 4250 · 4250 · <strong>4600</strong></p>
 </blockquote>
-<p>Van 9 tot 168, bij één en dezelfde temperatuur. De lijn kan daar niets aan doen — hij weet alleen de temperatuur, en die was tien keer gelijk. Maar het zet wel een vraag op scherp die we tot nu toe hebben laten liggen: <strong>hoe ver zit de lijn er eigenlijk naast, en zit hij er overal even ver naast?</strong></p>
-<p>Reken je het na, dan is het antwoord op die tweede vraag <em>nee</em>. Op de koelere helft van de zomer (tot en met 79 graden) zit de lijn er gemiddeld <strong>13.7</strong> ppb naast; op de warmere helft <strong>20.9</strong>. Eén lijn, en toch op de ene helft van de zomer duidelijk scherper dan op de andere.</p>
-<p>Trek even mee. We gaan die missers zélf opvragen — en het blijkt dat er drie verschillende dingen in te zien zijn, waarvan er twee niets met de lijn zelf te maken hebben.</p>
+<p>Van 3050 tot 4600 — anderhalve kilo verschil, bij één en dezelfde vinlengte. De lijn kan daar niets aan doen: hij weet maar één ding van een pinguïn, en dat ene ding was tweeëntwintig keer gelijk.</p>
+<p>En die tweeëntwintig zijn geen rariteit die je toevallig trof. Kies een andere vinlengte en je ziet hetzelfde, alleen met minder dieren tegelijk op een kluitje: overal langs de lijn zit de werkelijkheid erboven en eronder. Dat zet een vraag op scherp die we tot nu toe hebben laten liggen: <strong>hoe ver zit de lijn er per pinguïn naast — en wat kun je met die gokfouten doen?</strong></p>
+<p>Trek even mee. De lijn heeft gegokt; wij gaan nakijken.</p>
 <div class="kicker">
 <p>speel het</p>
 </div>
 </section>
-<section id="vraag-de-residuenplots-op-in-jasp" class="level2">
-<h2 class="anchored" data-anchor-id="vraag-de-residuenplots-op-in-jasp">Vraag de residuenplots op in JASP</h2>
-<p><span class="begrippen">residu · voorspelde waarde · residuenplot</span></p>
-<p>Zo’n misser heeft een naam, en je hebt hem in het boek al zien staan: <strong>DATA = FIT + RESIDU</strong>. De <em>fit</em> is wat de lijn gokt, het <strong>residu</strong> is wat er overblijft — de gokfout, nu niet meer ten opzichte van het gemiddelde maar ten opzichte van de lijn.</p>
-<p>Het goede nieuws voor jou: JASP tekent die residuen zelf, en je hoeft er niets voor uit te rekenen. Het zit verstopt onder één kopje in de regressie-analyse, en dat kopje is precies waar dit hele blok over gaat.</p>
+<section id="reken-de-gokfouten-uit-op-de-twaalf-steentjes" class="level2">
+<h2 class="anchored" data-anchor-id="reken-de-gokfouten-uit-op-de-twaalf-steentjes">Reken de gokfouten uit op de twaalf steentjes</h2>
+<p><span class="begrippen">residu · voorspelde waarde</span></p>
+<p>Zo’n gokfout heb je in het boek al zien staan: <strong>DATA = FIT + RESIDU</strong>. De <em>fit</em> is wat de lijn gokt, het <strong>residu</strong> is wat er overblijft — de gokfout, nu niet meer ten opzichte van het gemiddelde maar ten opzichte van de lijn.</p>
+<p>Je komt dat ene ding onder vier namen tegen: <strong>gokfout</strong>, <strong>residu</strong>, <strong>afwijking</strong>, en in Engelse uitvoer en artikelen <em>error</em> (of <em>residual</em>). Het is telkens de afstand tussen wat er echt is en wat de lijn gokte. In dit blok heet hij <em>gokfout</em>; zegt JASP <em>Residual</em> of een plaatje <em>residu</em>, dan is het precies hetzelfde.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -632,213 +629,44 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li>Open <code>diamantjes.csv</code>. Ga naar <strong>Regression → Linear Regression</strong>, zet <code>glans</code> bij <strong>Dependent Variable</strong> en <code>karaat</code> bij <strong>Covariates</strong>.</li>
-<li>Open het kopje <strong>Plots</strong> en vink onder <em>Residuals Plots</em> de optie <strong>Residuals vs.&nbsp;Predicted</strong> aan.</li>
-</ol>
-<p>Je krijgt twaalf stipjes rond een horizontale nullijn. De verste ligt op −36.1: dat is Kees, de steen die je in het boek al niet kon vergeten. Else ligt exact op nul — de lijn gaat dwars door haar heen.</p>
+<p>Open <code>diamantjes.csv</code> en maak twee kolommen in het <strong>R</strong>-vak (type <strong>Scale</strong>):</p>
+<pre><code>gok      -&gt;   fitted(lm(glans ~ karaat))
+residu   -&gt;   resid(lm(glans ~ karaat))</code></pre>
+<p>In <code>gok</code> staat wat de lijn gokt, in <code>residu</code> wat er overblijft. Afgerond op één decimaal:</p>
+<pre><code>gok       30.7   33.9   33.9   40.4   50.0   50.0   53.2   56.4   59.6   59.6   66.1   66.1
+residu   -10.7   -3.9   -3.9  -10.4    0.0   20.0   26.8    3.6   10.4   20.4  -36.1  -16.1</code></pre>
+<p>Tel <code>residu</code> daarna op: <strong>Descriptives</strong>, <code>residu</code> bij <strong>Variables</strong>, en onder <em>Statistics</em> het vinkje <strong>Sum</strong>.</p>
+<p><span class="even-checken">Kijk of die som ook bij jou nul is — op wat rekenstof na. Doet hij dat niet, dan heb je onderweg iets anders in handen gekregen dan de residuen van dit model.</span></p>
 </div>
 </div>
-<p>Kijk goed wat dat plaatje doet. De regressielijn is <strong>plat geworden</strong>: alles wat de lijn al wist is eruit gerekend, dus wat overblijft hoort rond de nullijn te zweven zonder patroon. Een residuenplot is een schoongeveegde scatterplot — je kijkt niet meer naar het verband, je kijkt naar wat het verband liet liggen.</p>
-<p>Met twaalf punten zie je er weinig aan, en dat is geen tegenvaller maar het eerste wat je leert: hierover zo meer.</p>
-<p><strong>Nu jij</strong> — bij het meetkastje, dat je van de mediaan-oefening al kent. Bekende data, nieuwe vraag: wat laat die ozon-lijn liggen?</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
+<p>Dat zijn precies de twee kolommen uit de tabel in het boek: Else valt op nul (de lijn gaat dwars door haar heen), Kees zit er met −36.1 het verst naast. Nieuw is alleen het <strong>plaatje</strong> hieronder — je zet die twee kolommen tegen elkaar in plaats van ze te lezen:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de gokfouten in een plaatje · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · trek eraan · JASP 0.98.1
+<span class="screen-reader-only">Opmerking</span>In JASP · de gokfouten in een plaatje · JASP 0.98.1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li>Open <code>luchtkwaliteit.csv</code>. <strong>Regression → Linear Regression</strong>, <code>ozon</code> bij <strong>Dependent Variable</strong>, <code>temp_F</code> bij <strong>Covariates</strong>.</li>
-<li>Open het kopje <strong>Plots</strong>. Onder <em>Residuals Plots</em> staan drie vinkjes die je alle drie aanzet — dit blok gaat om precies deze drie:
-<ul>
-<li><strong>Residuals vs.&nbsp;Predicted</strong> — de misser tegen de gok.</li>
-<li><strong>Residuals Histogram</strong> — de vorm van de missers.</li>
-<li><strong>Q-Q Plot Standardized Residuals</strong> — dezelfde vraag, strenger gesteld.</li>
-</ul></li>
-<li>Laat de tabel met <em>R</em>² ernaast staan; die heb je zo nodig.</li>
-</ol>
+<p>Draai <strong>Regression → Linear Regression</strong> met <code>glans</code> als <strong>Dependent Variable</strong> en <code>karaat</code> bij <strong>Covariates</strong>, en vink onder <strong>Plots</strong> de optie <strong>Residuals vs. predicted</strong> aan: de gok op de liggende as, de gokfout op de staande, en de nullijn er dwars doorheen.</p>
 </div>
 </div>
-<p>Drie plaatjes, en in alle drie staat iets.</p>
-<p><strong>De residuenplot</strong> begint smal en loopt open. Links, bij voorspellingen onder de 30 ppb, liggen de punten in een dun bandje om de nullijn; vanaf een voorspelling van 30 is dat bandje ruim twee keer zo breed. Aan de uiterste rechterkant lijkt hij weer te versmallen, maar daar staan nog maar dertien dagen — te weinig om iets van te vinden.</p>
-<p><strong>Het histogram en de Q-Q-plot</strong> wijzen naar iets anders. De missers liggen niet symmetrisch om nul: er is een lange staart naar rechts (die ene dag van 168, die op deze temperatuur 118 ppb boven de lijn uitkomt) en niets vergelijkbaars naar links. In de Q-Q-plot buigen de punten rechtsboven weg van de hulplijn.</p>
-<p>Die scheefheid is dezelfde scheefheid die je in de mediaan-oefening al zag — alleen zat hij toen in de ozon zelf, en zit hij nu in wat er van de ozon overblijft nadat de temperatuur zijn deel heeft gehad.</p>
-<p><strong>En nu het getal erbij</strong>, want een indruk is nog geen bevinding. Knip de zomer bij 79 graden doormidden — dat is de mediane dag — en laat JASP de spreiding links en rechts naast elkaar zetten:</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · knip de zomer doormidden">
+<p>Kijk goed wat dat plaatje doet. De regressielijn is <strong>plat geworden</strong>: alles wat de lijn al wist is eruit gerekend, dus wat overblijft hoort rond de nullijn te zweven. Een residuenplot is een schoongeveegde puntenwolk — je kijkt niet meer naar het verband, je kijkt naar wat het verband liet liggen.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Eerst de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · knip de zomer doormidden
+<span class="screen-reader-only">Opmerking</span>Eerst de twaalf diamantjes
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li>Maak een <strong>computed column</strong>: klik in de datatabel op de <strong>+</strong> helemaal rechts van de kolomkoppen, noem hem <code>warm</code> en geef hem de formule <code>temp_F &gt; 79</code>.</li>
-<li>Ga naar <strong>Descriptives</strong>, zet <code>ozon</code> bij <strong>Variables</strong> en <code>warm</code> bij <strong>Split</strong>.</li>
-</ol>
-<p>Je krijgt twee kolommen: 59 koelere dagen met <em>SD</em> = 16.91 ppb, en 57 warmere met <em>SD</em> = 33.43 ppb. Deel de breedste door de smalste — dus <strong>de warme helft door de koele</strong> — en je hebt 33.43 / 16.91 = <strong>1.98</strong>. De warme helft is bijna twee keer zo breed.</p>
-</div>
-</div>
-<p>Let op één ding, want het is eerlijk en het scheelt straks verwarring: dit is de spreiding van de <strong>ozon zelf</strong>, niet die van de residuen. Daar zit dus nog het stuk in dat de temperatuur netjes verklaart, en daardoor valt de verhouding hoger uit dan hij hoort — 1.98 tegen de 1.65 die je krijgt als je de residuen zelf neemt. Het wijst dezelfde kant op, maar het is een ruwer getal. De precieze versie komt hieronder.</p>
-<div class="kicker">
-<p>schud het</p>
-</div>
-</section>
-<section id="is-die-1.65-raar" class="level2">
-<h2 class="anchored" data-anchor-id="is-die-1.65-raar">Is die 1.65 raar?</h2>
-<p><span class="begrippen">schudden · loskoppelen · duizend werelden rond één</span></p>
-<p>1.65 keer zo breed. Dat <em>klinkt</em> als veel, maar de vorige alinea’s zijn een verhaal en geen bewijs: twee groepjes van pakweg 58 dagen hebben nooit precies dezelfde spreiding, ook niet als er niks aan de hand is. De vraag is dus niet of 1.65 groter is dan 1, maar <strong>hoeveel groter dan 1 een gewone wiebel al is</strong>.</p>
-<p>Daar hebben we een zet voor. Je laat de voorspellingen staan waar ze staan, en je hutselt de residuen erlangs — de misser van een hete dag verhuist naar een koele en omgekeerd.</p>
-<p>Dat husselen is de hele truc, en het loont om er even bij stil te staan: je <strong>koppelt het residu los van zijn eigen voorspelling</strong>. Je haalt met eigen handen weg dat een bepaalde misser bij een bepaalde temperatuur hoorde. In zo’n losgekoppelde wereld kán de spreiding niet meer meelopen met de voorspelling — en dus is elk verschil tussen de twee helften dat je er dan nóg in meet, per definitie puur toeval.</p>
-<p><strong>En hier moet ik eerlijk zijn: dat husselen is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar hutselen en duizend keer opnieuw kijken is <em>code</em>-werk. Dat is geen gemis van jou of van JASP — het boek doet het bewust zo. Voor deze zet is er geen los schud-speeltje; wil je de duizend werelden echt zien dansen, sla dan het <strong>R-broertje</strong> open bij deze oefening, waar het vijf regels code is.</p>
-<p>Wat je daar ziet: <strong>duizend werelden die dansen rond één</strong>. Rond één, niet rond nul, want dit is een verhouding: twee even brede helften geven 1.0. En kijk waar ze landen — tussen 0.66 en 1.53 ligt negentig procent van de gehusselde zomers. Dat is een brede dans. Twee helften kunnen dus zomaar anderhalf keer schelen zonder dat er iets aan de hand is.</p>
-<p>En dan die rode streep op 1.65, er net buiten: <strong>achttien</strong> van de duizend gehusselde zomers halen dat. Niet onmogelijk, wel ongewoon. Geen <em>p</em>-waarde die je moet geloven — een <strong>afstand die je zíet</strong>, en hier is die afstand krap.</p>
-<p>Bij de pinguïns, waar je in de vorige oefening het gewicht uit de vinlengte voorspelde, ligt dat heel anders: daar is de verhouding 0.92 en loopt de gewone-wiebel-band van 0.88 tot 1.14. Het echte getal ligt er gewoon <strong>in</strong>. Bij de pinguïns is er niets te zien, en dat is precies zoals het hoort: 342 dieren geven een smalle band, dus daar zou een trechter meteen opvallen. Bij 116 dagen is de band breder. Bij twaalf diamantjes — daar komen we zo op — is hij zo breed dat er bijna niets meer buiten valt.</p>
-<p>Wil je dat zelf zien in JASP: doe voor de pinguïns hetzelfde rondje als hierboven — <strong>Linear Regression</strong> met <code>gewicht</code> als <em>Dependent Variable</em> en <code>vinlengte</code> als <em>Covariate</em>, en dan de drie residuen-vinkjes. Het plaatje is een egale wolk zonder trechter, en het histogram is bijna symmetrisch. Zo ziet “niks aan de hand” eruit, en je moet het één keer gezien hebben om het te herkennen.</p>
-<div class="kicker">
-<p>snap het</p>
-</div>
-</section>
-<section id="drie-aannames-drie-plaatjes" class="level2">
-<h2 class="anchored" data-anchor-id="drie-aannames-drie-plaatjes">Drie aannames, drie plaatjes</h2>
-<p><span class="begrippen">onafhankelijkheid · gelijke spreiding · normaliteit</span></p>
-<p>Het boek noemt bij de regressielijn drie veronderstellingen, en ze gaan geen van drieën over de lijn zelf. De lijn eist maar één ding, en dat is dat het verband recht is. De drie hieronder gaan over het gedrag van de <strong>fouten</strong> — en je hebt ze net alle drie in beeld gehad.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>aanname</th>
-<th>welk vinkje in JASP</th>
-<th>waaraan je ziet dat het misgaat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>onafhankelijk</strong></td>
-<td>geen vinkje — je studieopzet</td>
-<td>dezelfde persoon of plek staat meerdere keren in de tabel</td>
-</tr>
-<tr class="even">
-<td><strong>gelijke spreiding</strong></td>
-<td>Residuals vs.&nbsp;Predicted</td>
-<td>een trechter: smal aan de ene kant, breed aan de andere</td>
-</tr>
-<tr class="odd">
-<td><strong>normaal verdeeld</strong></td>
-<td>Residuals Histogram of Q-Q Plot</td>
-<td>een scheve staart; in de Q-Q-plot buigen de punten weg van de hulplijn</td>
-</tr>
-</tbody>
-</table>
-<p>Loop ze langs op de ozon.</p>
-<p><strong>Onafhankelijk</strong> — dat is de enige van de drie waar geen vinkje voor bestaat, en dat is geen tekortkoming van JASP. Ben vat hem samen in één vraag: <em>“geeft elke rij in mijn dataset informatie die niet al ergens anders in de tabel zit?”</em> Het antwoord zit in je opzet, niet in je data. Bij het meetkastje is het antwoord twijfelachtig: dit zijn 116 opeenvolgende dagen op één plek. Een smoggerige dinsdag maakt een smoggerige woensdag waarschijnlijker, want de lucht is ’s nachts niet weg. Elke rij is dus deels een herhaling van de vorige.</p>
-<p>En let op wat er gebeurt als je dat tóch in de data probeert te zien. Meet de samenhang tussen het residu van de ene meetdag en dat van de volgende, en er komt .08 uit — een getal dat in 175 van de 1000 gehusselde zomers óók gehaald wordt. Het plaatje zegt dus: niets aan de hand. Het <strong>ontwerp</strong> zegt: dagen na elkaar op één plek. Die twee spreken elkaar niet tegen; ze meten iets anders. Daarom hoort deze aanname bij je opzet en niet bij je vinkjes — een steekproef kan er onafhankelijk <em>uitzien</em> en het niet zijn.</p>
-<p><strong>Gelijke spreiding</strong> — het deftige woord is <em>homoscedasticiteit</em>, en dat mag je hardop oefenen. Hier gaat het mis, zij het krap: 1.65 tegen een gewone-wiebel-band die tot 1.53 loopt. Het gevolg zit niet in de lijn maar in de <em>onzekerheid</em> om de lijn: JASP rekent één standaardfout uit voor het hele bereik, en die is dan te ruim voor de koele dagen en te krap voor de hete. Je helling blijft bruikbaar; je betrouwbaarheidsinterval wordt onbetrouwbaar, en precies daar waar de metingen het wildst zijn.</p>
-<p><strong>Normaal verdeeld</strong> — hier zit de duidelijkste schending. En één zin van Ben voorkomt dat je hem te streng leest: <em>“een steekproef kan niet normaal verdeeld zijn, alleen bíj benadering normaal verdeeld”</em> — voor een perfecte normale verdeling heb je oneindig veel scores nodig. Je zoekt dus geen perfecte klok maar een hoop zonder duidelijke scheefheid. Deze is dat niet: er is een lange staart naar rechts en niets vergelijkbaars naar links. Waar die vandaan komt, staat een paar alinea’s verderop — hij heeft dezelfde oorzaak als de trechter.</p>
-<p><strong>En dan de vraag die niemand stelt: hoeveel data heb je nodig om dit te zien?</strong> Op de twaalf diamantjes is de verhouding 2.09 — hoger dan bij de ozon. En toch kun je er niets van zeggen, want op twaalf steentjes loopt de gewone-wiebel-band van 0.48 tot <strong>2.08</strong>. De helft van je metingen mag dus zomaar twee keer zo breed zijn als de andere helft, puur door toeval. Zet de drie naast elkaar en de les is één regel breed:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 22%">
-<col style="width: 22%">
-<col style="width: 22%">
-<col style="width: 16%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>data</th>
-<th style="text-align: right;"><em>N</em></th>
-<th style="text-align: right;">verhouding</th>
-<th style="text-align: right;">gewone-wiebel-band</th>
-<th>oordeel</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>diamantjes</td>
-<td style="text-align: right;">12</td>
-<td style="text-align: right;">2.09</td>
-<td style="text-align: right;">0.48 – 2.08</td>
-<td>de band is zo breed dat je niets kunt zeggen</td>
-</tr>
-<tr class="even">
-<td>luchtkwaliteit</td>
-<td style="text-align: right;">116</td>
-<td style="text-align: right;">1.65</td>
-<td style="text-align: right;">0.66 – 1.53</td>
-<td>er net buiten: een trechter, krap</td>
-</tr>
-<tr class="odd">
-<td>pinguïns</td>
-<td style="text-align: right;">342</td>
-<td style="text-align: right;">0.92</td>
-<td style="text-align: right;">0.88 – 1.14</td>
-<td>er ruim binnen: gewone wiebel</td>
-</tr>
-</tbody>
-</table>
-<p>Hoe minder data, hoe wilder de gewone wiebel — en dus hoe minder een residuenplot je vertelt. Dat maakt een klein bestand niet verdacht; het maakt je oordeel erover ongegrond. Wie bij een handjevol punten roept dat hij een trechter ziet, ziet ruis. En let op: dit is precies waarom JASP je die twaalf stipjes tóch netjes tekent. Het programma weet niet hoeveel punten genoeg zijn — jij wel.</p>
-<p><strong>En wat doe je er dan aan?</strong> Er is nog een aanwijzing die dezelfde kant op wijst, en die zie je zonder enig plaatje. Lees in de coëfficiëntentabel de intercept af (−147.00) en de helling (2.43), en vul de koudste dag uit het bestand in: 57 graden. Je rekenmachine zegt −147.00 + 2.43 × 57 = <strong>−8.5</strong>; JASP, die met de onafgeronde −146.9955 en 2.4287 rekent, zegt −8.6. Allebei goed, en het hele verschil is die ene afronding.</p>
-<p>Wat er hoe dan ook staat is een min. Op de vier koelste dagen belooft deze lijn een negatieve hoeveelheid ozon, en minder dan niets bestaat niet. De lijn loopt door tot in de oneindigheid; de ozon heeft een bodem.</p>
-<p>Precies díé bodem maakt ook de trechter en de scheve staart. Een lijn die 20 voorspelt kan er maar 20 naast zitten aan de onderkant en onbeperkt aan de bovenkant. Drie waarnemingen, één oorzaak — en dat wijst meteen de gewone zet aan: reken op een andere schaal. Maak een computed column <code>log_ozon</code> met de formule <code>ln(ozon)</code> en draai dezelfde regressie daarop. De trechter zakt van 1.65 naar 0.82 en de <em>R</em>² gaat van .49 naar .55: het model is er ook nog beter van gaan passen.</p>
-<p>Dat is geen trucje om een controle te laten slagen. Het is de erkenning dat ozon zich in verhoudingen gedraagt en niet in optellingen — twintig ppb erbij op een smoggerige dag betekent iets anders dan twintig ppb erbij op een schone. De prijs is dat je uitkomst nu in logaritmen staat en dus vertaald moet worden voor je hem opschrijft, en dát is werk voor later in het boek.</p>
-<div class="kicker">
-<p>jouw beurt</p>
-</div>
-</section>
-<section id="twee-lijnen-keuren" class="level2">
-<h2 class="anchored" data-anchor-id="twee-lijnen-keuren">Twee lijnen keuren</h2>
-<p><span class="begrippen">residuenplot · Q-Q-plot · schud-band · oordelen</span></p>
-<p>Twee regressielijnen, allebei op data die je kent, en aan jou de vraag of je de residuen vertrouwt. Je doet voor allebei hetzelfde rondje: residuenplot, Q-Q-plot, de verhouding — en het duizend keer schudden om te zien hoe breed de gewone wiebel hier is, doet het R-broertje voor je, want schudden is geen knop in JASP en voor deze zet is er geen los schud-speeltje.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de twee lijnen · JASP 0.98.1">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · de twee lijnen · JASP 0.98.1
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li>De <strong>wind-lijn</strong>: open <code>luchtkwaliteit.csv</code>, ga naar <strong>Regression → Linear Regression</strong> en zet <code>ozon</code> bij <strong>Dependent Variable</strong> en <code>wind</code> bij <strong>Covariates</strong>. Open het kopje <strong>Plots</strong> en zet de drie residuen-vinkjes aan, net als eerder in dit blok.</li>
-<li>De <strong>vragenlijst-lijn</strong>: open <code>bigfive.csv</code>, maak met <strong>+ → Computed column</strong> de schalen <code>N</code> = <code>N1+N2+N3+N4+N5</code> en <code>O</code> = <code>O1+O2+O3+O4+O5</code>, en draai de <strong>Linear Regression</strong> met <code>N</code> bij <strong>Dependent Variable</strong> en <code>O</code> bij <strong>Covariates</strong> — ook weer met de drie vinkjes.</li>
-</ol>
-</div>
-</div>
-<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Jouw beurt
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Beantwoord de vragen op volgorde; ze bouwen op elkaar. De laatste heet met opzet <strong>Z)</strong> en niet k): de aannames staan altijd achteraan — ook in een oefening die zélf over aannames gaat.</p>
-<p><strong>a)</strong> Lees de <strong>wind-lijn</strong> af. (rapporteer <em>b</em><sub>0</sub>, <em>b</em><sub>1</sub> mét eenheid, en <em>R</em>²)</p>
-<p><strong>b)</strong> Vraag de residuenplot en de Q-Q-plot van deze lijn op. Wat zie je? (twee zinnen: één over de breedte, één over de vorm)</p>
-<p><strong>c)</strong> Let op, de knip loopt hier <strong>andersom</strong> dan bij de temperatuur. De helling is negatief — meer wind, minder smog — dus de hóóg voorspelde dagen zijn de dagen met <strong>weinig</strong> wind. Knip bij de mediane wind — dat is 9.7 mijl per uur, net zoals 79 graden de mediane dag was. De twee spreidingen zelf zijn in JASP niet op te vragen, want daarvoor moet je bij de residuen kunnen; het R-broertje meet <em>SD</em> = 31.08 ppb op de 62 dagen met weinig wind en <em>SD</em> = 19.88 ppb op de 54 met veel. Deel zelf de brede door de smalle. (de verhouding)</p>
-<p><strong>d)</strong> En nu het schudden — en dat is, zoals je hierboven las, geen knop in JASP, en voor deze zet is er ook geen los schud-speeltje. Het R-broertje schudt de residuen duizend keer los van hun eigen dag en meet de dans na: de middelste 90% van de geschudde zomers loopt van <strong>0.80 tot 1.26</strong>, en <strong>geen enkele</strong> van de duizend haalt de echte verhouding. (noteer de band, en zeg in één zin wat dat schudden loskoppelt)</p>
-<p><strong>e)</strong> Geef je oordeel over de wind-lijn, en zeg of het strenger of milder is dan bij de temperatuur-lijn. (twee zinnen, met allebei de verhoudingen én allebei de banden erbij)</p>
-<p><strong>f)</strong> Nu de tweede lijn: 2634 ingevulde vragenlijsten, neuroticisme voorspeld uit openheid. Lees de <strong>vragenlijst-lijn</strong> af. (rapporteer <em>b</em><sub>1</sub> mét eenheid en <em>R</em>²)</p>
-<p><strong>g)</strong> Doe het keuringsrondje ook hier: bekijk de drie plaatjes van de vragenlijst-lijn. De getallen meet het R-broertje: de verhouding komt op <strong>1.06</strong>, de schudband loopt van <strong>0.96 tot 1.04</strong>, en de scheefheid van de residuen is <strong>0.19</strong>. (noteer de drie getallen — bij h) heb je ze nodig)</p>
-<p><strong>h)</strong> Geef je oordeel over alle drie de aannames van deze tweede lijn. (drie korte uitspraken, elk met het getal waar je hem op baseert)</p>
-<p><strong>i)</strong> Die schudband is bij de vragenlijsten veel smaller dan bij de zomerdagen. Waarom? (één zin, en noem allebei de <em>n</em>’s)</p>
-<p><strong>j)</strong> De denk-vraag, en hij is de belangrijkste van dit blok. Bij de vragenlijst-lijn zijn de aannames in orde en is de <em>R</em>² .03 — nog geen drie procent. Waar geeft een residuenplot dus wél antwoord op, en waar niet? (drie zinnen)</p>
-<p><strong>Z) Mag je alles hierboven geloven?</strong> Eén van de drie aannames heeft geen plaatje, en juist die scheidt deze twee bestanden. Vraag je bij allebei af waar de rijen vandaan komen: 116 opeenvolgende dagen op één meetkastje, tegenover 2634 mensen die elk één keer een vragenlijst invulden. (zeg per bestand of de rijen onafhankelijk zijn, en welke van je antwoorden hierboven eraan hangen)</p>
+<p>Twee vragen voor je verder leest.</p>
+<p><strong>a)</strong> Vraag de standaardafwijking van de glans op, en die van de residuen. (twee getallen, en één zin over wat het verschil tussen die twee betekent)</p>
+<p><strong>b)</strong> Kwadrateer allebei die getallen, tel de twaalf gekwadrateerde afwijkingen van de glans op en doe hetzelfde met de residuen. (In de tabel <strong>ANOVA</strong> van je regressie staan ze allebei.) (twee sommen, en zeg welk deel van de eerste door de tweede wordt opgeslokt)</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
@@ -853,31 +681,267 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> <em>b</em><sub>0</sub> = 96.87 en <em>b</em><sub>1</sub> = −5.55 ppb ozon per mijl per uur wind; <em>R</em>² = .36. Elke mijl per uur meer wind gaat samen met ruim vijfeneenhalve ppb minder ozon.</p>
-<p><strong>b)</strong> De residuenplot loopt open naar de kant van de hóóg voorspelde dagen — dus naar de dagen met weinig wind. En de vorm is scheef: een lange staart omhoog, niets vergelijkbaars omlaag, en in de Q-Q-plot buigen de punten rechtsboven weg van de hulplijn. Dezelfde twee dingen als bij de temperatuur-lijn, en dat is geen toeval: het is dezelfde ozon met dezelfde bodem van nul.</p>
-<p><strong>c)</strong> De mediane wind is 9.7 mijl per uur. Bij weinig wind is <em>SD</em> = 31.08 ppb (<em>n</em> = 62), bij veel wind <em>SD</em> = 19.88 ppb (<em>n</em> = 54). De verhouding is dus 31.08 / 19.88 = <strong>1.56</strong>.</p>
-<p><strong>d)</strong> De gewone-wiebel-band loopt van <strong>0.80 tot 1.26</strong>, en <strong>geen enkele</strong> van de duizend gehusselde zomers haalt de 1.56. En wat het schudden loskoppelt: dat déze misser bij déze dag hoorde — in een losgekoppelde zomer kan de spreiding niet meer meelopen met de wind, dus alles wat er dan nog tussen de twee helften zit, is gewone wiebel.</p>
-<p><strong>e)</strong> Hier is de gelijke spreiding duidelijk geschonden, en het oordeel is <strong>strenger</strong> dan bij de temperatuur-lijn. Daar was het 1.65 tegen een band die tot 1.53 liep — er net buiten, en achttien van de duizend haalden het. Hier is de verhouding kleiner (1.56) maar de band ook véél smaller (tot 1.26), en dan haalt er niet één van de duizend meer. <strong>Een kleiner getal kan dus een harder oordeel opleveren</strong>, want je vergelijkt het niet met 1 maar met de band.</p>
-<p><strong>f)</strong> <em>b</em><sub>1</sub> = 0.35 punten neuroticisme per punt openheid, <em>R</em>² = .03.</p>
-<p><strong>g)</strong> De verhouding is <strong>1.06</strong>, de schudband loopt van <strong>0.96 tot 1.04</strong>, en de scheefheid van de residuen is <strong>0.19</strong>.</p>
-<p><strong>h)</strong> <em>Gelijke spreiding:</em> de verhouding 1.06 ligt net buiten de band 0.96–1.04. <em>Normaal verdeeld:</em> scheefheid 0.19, dus geen scheve staart van betekenis. <em>Onafhankelijk:</em> 2634 mensen die elk één keer invulden, dus elke rij is nieuwe informatie — zie Z).</p>
-<p>En dan meteen de vraag die je bij e) hebt leren stellen: buiten de band, dus mis? Hier niet, en dat is geen slap aftreksel van de regel maar de andere helft ervan. <strong>Buiten de band betekent “dit is geen toeval”; het zegt niets over hoe gróót het is.</strong> Bij 2634 waarnemingen wordt de band zó smal (0.96–1.04) dat een afwijking van zes procent er al buiten valt. Zes procent verschil in spreiding verandert aan geen enkele <em>p</em> in dit model iets. Bij de wind-lijn ging het om zesenvijftig procent, en dáár hangt je hele betrouwbaarheidsinterval aan.</p>
-<p>Kijk dus altijd naar allebei: <strong>ligt het buiten de band</strong> (is het echt?) én <strong>hoe ver van 1 ligt het</strong> (doet het ertoe?). Met veel data gaan die twee uiteenlopen, en dan is de tweede de vraag die telt.</p>
-<p><strong>i)</strong> Omdat een schudband smaller wordt naarmate je meer waarnemingen hebt: bij <em>n</em> = 2634 wiebelen twee helften nauwelijks van elkaar weg, bij <em>n</em> = 116 nog flink. Dat is dezelfde regel als in de tabel hierboven — twaalf diamantjes gaven 0.48 tot 2.08.</p>
-<p><strong>j)</strong> Een residuenplot beantwoordt: <em>mag ik de onzekerheid rond deze lijn geloven?</em> Hij zegt of de standaardfouten, de intervallen en de <em>p</em>’s op een kloppende aanname rusten. Hij zegt <strong>niet</strong> of het model iets waard is: hier is alles netjes en verklaart het model 3% van de verschillen. En hij zegt al helemaal niet of de lijn de júiste lijn is — dat is een derde vraag, en die komt in de Eindopdracht hieronder langs.</p>
-<p><strong>Z)</strong> Dit is de aanname zonder plaatje, en hij valt bij deze twee bestanden tegengesteld uit.</p>
-<ul>
-<li><strong>De vragenlijsten:</strong> 2634 verschillende mensen, elk één keer. Elke rij draagt informatie die niet al ergens anders in de tabel zit. Onafhankelijk, dus.</li>
-<li><strong>Het meetkastje:</strong> 116 <strong>opeenvolgende</strong> dagen op één plek. Een smoggerige dinsdag maakt een smoggerige woensdag waarschijnlijker; elke rij is dus deels een herhaling van de vorige. Níét onafhankelijk — en let op dat je dit niet aan de data ziet maar aan de opzet. De samenhang tussen het residu van de ene dag en dat van de volgende is .08, een getal dat in 175 van de 1000 gehusselde zomers óók gehaald wordt. Het plaatje zegt dus “niets aan de hand” terwijl het ontwerp iets anders zegt.</li>
-</ul>
-<p>Wat daar aan hangt:</p>
-<ul>
-<li><p><strong>Blijft staan:</strong> alle beschrijvende getallen — de hellingen bij a) en f), de <em>R</em>²’s, de verhoudingen bij c) en g), de scheefheid. Die beschrijven wat er in de tabel staat.</p></li>
-<li><p><strong>Doe je over:</strong> bij de wind-lijn de schudband bij d), en daarmee het oordeel bij e). Schudden gaat ervan uit dat de residuen onderling <strong>verwisselbaar</strong> zijn: elk residu had bij elke andere dag kunnen horen. Bij opeenvolgende dagen klopt dat niet.</p>
-<p>En dat maakt de band te smal, langs deze weg: als een smoggerige dag door een smoggerige buurdag wordt gevolgd, dan draagt zo’n paar maar één keer nieuwe informatie in plaats van twee keer. Je hebt dus minder échte waarnemingen dan de 116 die je telde — en hoe minder waarnemingen, hoe bréder de gewone wiebel, dat wist je uit de tabel hierboven. Door tóch met 116 losse dagen te schudden reken je een band uit die hoort bij méér data dan je hebt: te smal. En met een te smalle band lijkt je eigen getal er sneller buiten te vallen, dus je oordeel is strenger dan het mag zijn.</p>
-<p>Hier verandert dat de uitkomst niet — 0 van de 1000 is zo extreem dat een wat bredere band hem niet binnenhaalt — maar je weet nu wélke kant de fout op staat, en dat is meer dan “het klopt niet helemaal”.</p></li>
-</ul>
-<p>En dat is het eerlijke antwoord van deze hele oefening: de aanname die het minst te zien is, is degene die het meest kan kosten.</p>
+<p><strong>a)</strong> De glans zelf spreidt met <em>SD</em> = 21.74 glanspunten, de residuen met <em>SD</em> = 17.75. Zonder lijn is je beste gok voor elk steentje het gemiddelde, en dan zit je er typisch bijna 22 punten naast; met de lijn nog bijna 18. De lijn scheelt je dus wel iets, maar niet veel — bij deze twaalf steentjes is het karaat lang niet alles.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> met <code>glans</code> en <code>residu</code>: <em>Std. deviation</em> 21.742 en 17.746.</p>
+</div>
+</div>
+<p><strong>b)</strong> De glans om zijn eigen gemiddelde geeft <strong>5200.0</strong>; de glans om de lijn geeft <strong>3464.3</strong>. Van alle verschil in glans blijft er dus tweederde over nadat de lijn zijn deel heeft gehad — en dat ene derde dat hij wél pakt, is precies de <em>R</em>² = .33 die je in Oefening 3.1 en 3.2 zag.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In de tabel <strong>ANOVA</strong> staat onder <em>Sum of Squares</em>: <em>Total</em> 5200.000 en <em>Residual</em> 3464.286. De rij ertussen, <em>Regression</em> 1735.714, is het stuk dat de lijn wél pakt.</p>
+</div>
+</div>
+<p>Waaróm dat zo is, staat hieronder.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>snap het</p>
+</div>
+</section>
+<section id="het-residu-en-waar-r²-vandaan-komt" class="level2">
+<h2 class="anchored" data-anchor-id="het-residu-en-waar-r²-vandaan-komt">Het residu, en waar <em>R</em>² vandaan komt</h2>
+<p><span class="begrippen">residu · residuenplot · <em>R</em>²</span></p>
+<p>Kijk nog eens naar die som van de residuen. Nul — niet ongeveer, maar op afrondingsgruis na exact. Dat is geen toeval en ook geen compliment aan de lijn: het is de bouw. Zo is de lijn gelegd — voor elke gokfout in de plus staat er evenveel min tegenover, want bleef er iets over, dan kon de hele lijn een stukje opschuiven en was het de best passende lijn niet.</p>
+<p>Zoek voor jezelf momentjes om te controleren — het zou nul moeten zijn, klopt dat? Onthoud die nul dus wél als controle-momentje: telt jouw kolom residuen niet op tot nul, dan is er onderweg iets misgegaan.</p>
+<p>Maar let op wat het óók betekent. Juist omdát die som altijd nul is — bij een lijn die strak door de wolk loopt én bij een lijn die er van alles naast laat liggen — zegt hij níéts over hoe goed de lijn gokt. Plus en min heffen elkaar toch wel op. Wil je weten hoe goed, dan moet je niet optellen maar kijken: <strong>hoe breed liggen de gokfouten om de nul?</strong></p>
+<p>En dat is precies wat je in de residuenplot ziet. De tweeëntwintig waar dit blok mee opende staan er als één kolom in: zelfde gok, tweeëntwintig gokfouten, boven en onder de nul.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · teken de gokfouten en tel de tuin · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · teken de gokfouten en tel de tuin · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>penguins.csv</code> en draai <strong>Regression → Linear Regression</strong> met <code>gewicht</code> als <strong>Dependent Variable</strong> en <code>vinlengte</code> bij <strong>Covariates</strong>; vink onder <strong>Plots</strong> de <strong>Residuals vs.&nbsp;predicted</strong> aan. Maak daarna dezelfde kolom als bij de steentjes:</p>
+<pre><code>residu   -&gt;   resid(lm(gewicht ~ vinlengte))</code></pre>
+<p><strong>Descriptives</strong> geeft je de twee getallen die je nodig hebt: <code>gewicht</code> spreidt met <em>Std. deviation</em> 801.955, <code>residu</code> met 393.700. Deel ze op elkaar en kwadrateer, in drie stapjes die je allemaal kunt narekenen:</p>
+<pre><code>393.700 / 801.955 = 0.491
+0.491 x 0.491     = 0.241
+1 - 0.241         = .759</code></pre>
+<p>Let op één getal in <strong>Model Summary</strong>: daar staat <em>RMSE</em> 394.278 en niet 393.700. Geen van beide is fout — de <em>RMSE</em> deelt door 340 (342 dieren min de twee getallen die de lijn beschrijven, het intercept en de helling), een standaardafwijking door 341.</p>
+</div>
+</div>
+<p>Zonder lijn was je beste gok voor elk gewicht het gemiddelde — dat spel ken je — en dan was je typische gokfout 801.95 gram, de standaardafwijking van het gewicht. Mét de lijn blijft er 393.70 gram over: de standaardafwijking van de gokfouten. De lijn scheelt je dus 408.25 gram, <strong>ruim de helft</strong> van je gokfout.</p>
+<p>En toch zei Oefening 3.2 <em>R</em>² = .76. Driekwart. Wie liegt er — de helft of de driekwart? Geen van beide; ze tellen in een andere maat. Denk aan alle verschil in gewicht als een <strong>tuin vol variatie</strong>. Een verband verklaren is geen lijntje verklaren maar oppervlakte, en oppervlakte gaat in kwadraten — dus kwadrateer de twee gokfouten vóór je ze op elkaar deelt. Dan staat er .76: het verklaarde stuk van de tuin, gedeeld door de hele tuin. In meters langs de rand wint de lijn ruim de helft; in tuinoppervlakte driekwart. Het is dezelfde winst, twee keer opgemeten.</p>
+<p>En <em>R</em>² heeft daar niets nieuws voor nodig: alles wat hij weet, zit al in de gokfouten. Doe dezelfde deling op de twaalf steentjes en er komt .33 uit — precies het kwadraat van de <em>r</em> = .58 die je aan het begin van dit hoofdstuk zelf in elkaar zette. Twee routes, één getal: de correlatie kwadrateren, of de gokfouten boekhouden.</p>
+<div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="de-boekhouding-van-de-pinguïnlijn" class="level2">
+<h2 class="anchored" data-anchor-id="de-boekhouding-van-de-pinguïnlijn">De boekhouding van de pinguïnlijn</h2>
+<p><span class="begrippen">som van de residuen · residuenplot · <em>R</em>² uit de gokfouten</span></p>
+<p>Nu jij, op de lijn uit de prikkel: het gewicht van 342 pinguïns, voorspeld uit hun vinlengte. Je hebt hem in Oefening 3.2 getrokken en gelezen; nu ga je uitrekenen wat hij liet liggen.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet klaar · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · zet klaar · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>penguins.csv</code> staat open en de regressie van <code>gewicht</code> op <code>vinlengte</code> draait. Eén kolom komt er nog bij, naast <code>residu</code>:</p>
+<pre><code>gok      -&gt;   fitted(lm(gewicht ~ vinlengte))</code></pre>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Jouw beurt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Beantwoord de vragen op volgorde; ze bouwen op elkaar. De laatste heet met opzet <strong>Z)</strong> en niet k): de wolk-vraag staat altijd achteraan.</p>
+<p>Het zijn er elf, en dat is te veel voor één zitting. <strong>Na e) heb je de gokfouten in handen en heb je de prikkel teruggevonden</strong> — een goed moment om te stoppen. Bij f) begint de boekhouding, en dat is het stuk waar <em>R</em>² uit rolt.</p>
+<p><strong>a)</strong> Vraag van de eerste zes pinguïns de voorspelling en het residu op (de eerste zes rijen van <code>gok</code> en <code>residu</code>). Tel bij één van de zes de twee op en leg de uitkomst naast zijn echte gewicht. (twee rijtjes van zes, en één som)</p>
+<p><strong>b)</strong> Tel alle 342 residuen op. Wat komt eruit, en waarom is dat géén compliment aan de lijn? (één getal, en twee zinnen)</p>
+<p><strong>c)</strong> Teken de residuenplot. Wat hoort daar te staan, en wat zie je? (twee zinnen)</p>
+<p><strong>d)</strong> Zoek de pinguïn waar de lijn er het verst naast zit, naar boven en naar onder. (twee getallen mét eenheid, en zeg van welke soort ze zijn)</p>
+<p><strong>e)</strong> Terug naar de tweeëntwintig uit de prikkel. Vraag de residuen op van de pinguïns met een vin van precies 190 millimeter. (de kleinste en de grootste, en één zin over wat er in de residuenplot boven die ene gok staat)</p>
+<p><strong>f)</strong> Nu de boekhouding. Tel de gekwadrateerde afwijkingen van het gewicht om zijn eigen gemiddelde op, en die van de residuen om nul. Tel daarna de gekwadrateerde afstanden van de lijn tot het gemiddelde op (alle drie staan in de tabel <strong>ANOVA</strong>, onder <em>Sum of Squares</em>: bij <em>Total</em>, <em>Residual</em> en <em>Regression</em>). (drie getallen — en tel de laatste twee bij elkaar op)</p>
+<p><strong>g)</strong> Reken <em>R</em>² uit die getallen: één min de residu-som gedeeld door de totaal-som. Leg het naast de <em>R</em>² in <strong>Model Summary</strong>. (twee getallen)</p>
+<p><strong>h)</strong> Vraag de standaardafwijking van het gewicht op en die van de residuen. Hoeveel procent van je gokfout scheelt de lijn — en waarom is dat een ánder getal dan de <em>R</em>² uit g)? (twee getallen, en twee zinnen)</p>
+<p><strong>i)</strong> Kleur de residuenplot per soort en vraag het gemiddelde residu per soort op. Wat zegt dat over de lijn? (drie getallen, en twee zinnen)</p>
+<p><strong>j)</strong> Schrijf je bevinding op in één zin. (wat de lijn dekt, en wat hij per pinguïn laat liggen)</p>
+<p><strong>Z) Is de wolk recht, en zitten er geen punten tussen die de boel verneuken?</strong> Kijk naar je residuenplot uit c) — ligt er een boog in, of hangt er één dier zo ver weg dat het in zijn eentje aan de lijn trekt? (twee korte uitspraken, en zeg welke van je antwoorden hierboven eraan hangen)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> De zes voorspellingen zijn 3212.3 · 3460.7 · 3907.9 · 3808.5 · 3659.4 · 3212.3 gram, en de zes residuen 537.7 · 339.3 · −657.9 · −358.5 · −9.4 · 412.7. Tel ze per dier op en je hebt het gewicht terug: de eerste pinguïn weegt 3212.3 + 537.7 = 3750 gram, en dat staat ook in het bestand. <strong>DATA = FIT + RESIDU</strong>, letterlijk.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kijk in je gegevens naar de eerste zes rijen van <code>gok</code>, <code>residu</code> en <code>gewicht</code>. Wil je ze als tabel: vink onder <strong>Statistics</strong> bij <em>Residuals</em> de optie <strong>Casewise diagnostics</strong> aan en zet hem op <strong>All</strong>.</p>
+</div>
+</div>
+<p><strong>b)</strong> Nul, op afrondingsgruis na. En dat is geen compliment: het is de manier waarop de lijn gelegd is. Elke gokfout in de plus heeft een gokfout in de min tegenover zich staan, en dat geldt voor élke best passende lijn — ook voor een die er compleet naast zit. Een getal dat altijd hetzelfde is, kan je niets vertellen over hoe goed het gaat.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> met <code>residu</code>, vinkje <strong>Sum</strong>: er staat nul, op wat rekenstof na.</p>
+</div>
+</div>
+<p><strong>c)</strong> Er hoort een vormeloze wolk te staan rond de nullijn: alles wat de lijn al wist is eruit gerekend, dus wat overblijft mag geen patroon meer dragen. En dat is ook wat je ziet — een band van punten die van links naar rechts ongeveer even breed blijft en nergens duidelijk omhoog of omlaag loopt. Je ziet de verticale strepen wél: pinguïns zijn op hele millimeters opgemeten, dus de gokken vallen op een beperkt aantal plekken.</p>
+<p><strong>d)</strong> Naar boven zit de lijn er 1288.69 gram naast (een Adélie, rij 39) en naar onder 1058.80 gram (een Chinstrap, rij 313). Ruim een kilo, allebei — bij dieren die gemiddeld ruim vier kilo wegen.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> met <code>residu</code> geeft <em>Minimum</em> −1058.797 en <em>Maximum</em> 1288.687. Wie die twee dieren zijn, zoek je met het <strong>Filter</strong>: <code>residu == max(residu)</code> laat één rij over, en daar lees je de soort af. Zet het filter daarna weer uit.</p>
+</div>
+</div>
+<p><strong>e)</strong> Van −609 tot +941 gram. In de residuenplot staat boven die ene gok van 3659.4 dus één verticale streep van tweeëntwintig punten, ruim anderhalve kilo lang. Dat is de prikkel, nu als plaatje: dezelfde voorspelling, tweeëntwintig verschillende gokfouten.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Zet in het <strong>Filter</strong> <code>vinlengte == 190</code> — er blijven 22 dieren over — en vraag van <code>residu</code> het <em>Minimum</em> en <em>Maximum</em> op: −609.426 en 940.574. Filter daarna weer uit.</p>
+</div>
+</div>
+<p><strong>f)</strong> De totaal-som is <strong>219 307 697</strong>, de residu-som <strong>52 854 796</strong> en de fit-som <strong>166 452 902</strong>. Tel die laatste twee op en je krijgt de eerste terug, tot op de eenheid. Dat is <code>DATA = FIT + RESIDU</code>, maar dan in gekwadrateerde afwijkingen — en dát is de vorm waarin de boekhouding klopt.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Alle drie staan in de tabel <strong>ANOVA</strong>, onder <em>Sum of Squares</em>: <em>Total</em> 219307697.368, <em>Residual</em> 52854795.628 en <em>Regression</em> 166452901.740. Dat zijn dezelfde drie getallen als hierboven, alleen zonder spaties en met drie decimalen erachter.</p>
+</div>
+</div>
+<p><strong>g)</strong> <strong>.76</strong>, allebei.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Zelf rekenen: 1 − 52854795.628 / 219307697.368 = .759 — jouw eigen getal, dus zonder de nul ervoor. En in <strong>Model Summary</strong> staat 0.759, want JASP draagt zijn nul wél mee.</p>
+</div>
+</div>
+<p>En dat is de pointe van deze oefening. <em>R</em>² is geen aparte maat die JASP ergens vandaan tovert: het is de tuin die de lijn pakt, gedeeld door de hele tuin. Je hebt hem net zelf uit de gokfouten gerekend.</p>
+<p><strong>h)</strong> De standaardafwijking van het gewicht is 801.95 gram, die van de residuen 393.70. De lijn scheelt je dus 408.25 gram, en dat is <strong>51 procent</strong> van je gokfout — ruim de helft, niet driekwart.</p>
+<p>Twee zinnen waarom die twee getallen allebei kloppen: de 51 procent telt in grammen, langs de rand van de tuin, en de .76 telt in oppervlakte. Kwadrateren maakt van ruim de helft driekwart — reken maar na, 393.70 gedeeld door 801.95 is .49, en .49 in het kwadraat is .24, en één min .24 is .76.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> met <code>gewicht</code> en <code>residu</code>: <em>Std. deviation</em> 801.955 en 393.700. (De <em>RMSE</em> van 394.278 in <strong>Model Summary</strong> is een ander getal — zie het kader hierboven bij de tuin.)</p>
+</div>
+</div>
+<p><strong>i)</strong> Adélie <strong>+43.5</strong>, Chinstrap <strong>−215.7</strong>, Gentoo <strong>+65.8</strong> gram.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong>, <code>residu</code> bij <strong>Variables</strong> en <code>soort</code> bij <strong>Split</strong>: 43.539, −215.683 en 65.789 gram. De gekleurde residuenplot maak je onder <strong>Descriptives → Plots → Scatter plots</strong> met <code>gok</code> en <code>residu</code>, en <strong>Color by / group</strong> op <code>soort</code>.</p>
+</div>
+</div>
+<p>Twee zinnen: over alle 342 heen is het gemiddelde residu nul, maar per soort is het dat niet — de lijn zit voor de Chinstraps stelselmatig ruim twee ons te hoog en voor de andere twee een beetje te laag. Dat wil zeggen dat er ook hier nog een derde speler in de wolk zit, precies zoals in Oefening 3.1; alleen is hij deze keer klein genoeg om de lijn niet om te gooien.</p>
+<p><strong>j)</strong> Bijvoorbeeld:</p>
+<blockquote class="blockquote">
+<p>De lijn van gewicht op vinlengte dekte ruim driekwart van de verschillen in gewicht bij 342 pinguïns (<em>R</em>² = .76), maar liet per dier nog altijd bijna vierhonderd gram spreiding om zich heen liggen (<em>SD</em> van de residuen = 393.70).</p>
+</blockquote>
+<p><strong>Z)</strong> Ja — allebei komen ze goed uit.</p>
+<p><em>Er ligt geen boog in.</em> De residuen lopen niet stelselmatig omhoog of omlaag met de voorspelling; sterker nog, de samenhang tussen de gok en de gokfout is exact nul, en dat is geen bevinding maar de bouw — dat is precies wat “de lijn is plat geworden” betekent. Wat je wél kunt nakijken is of er een <em>kromme</em> in zit, en dat doe je door de lijn een knik toe te staan. De <em>R</em>² was .76, op vier decimalen .7590; met de knik erbij wordt het .7753. Ruim anderhalve procent erbij — maar dat is geen bocht, dat is een parameter erbij, en die kan de <em>R</em>² alleen maar omhoog duwen.</p>
+<p><em>En geen pinguïn trekt in zijn eentje aan de lijn.</em> De grootste gokfout is 1288.69 gram, en dat is ruim drie keer de standaardafwijking van de residuen — een dier dat opvalt, maar niet een dier dat de lijn kantelt. Laat je hem weg, dan beweegt de helling nauwelijks.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Regression → Correlation</strong> met <code>gok</code> en <code>residu</code>: <em>Pearson’s r</em> 0.000 — op machineruis na precies nul.</p>
+</div>
+</div>
+<p>Wat eraan hángt, als het wél mis was gegaan: de hele boekhouding blijft staan — de sommen bij f), de <em>R</em>² bij g), de standaardafwijkingen bij h) en de soortgemiddelden bij i) zijn optellingen op deze 342 dieren, en die kloppen wat er ook krom is. Wat je overdoet is elke zin waarin je de lijn <em>aanbeveelt</em>: bij j) staat dat hij driekwart dekt, en als het verband krom loopt is dat geen leugen maar wel een lijn die je op de verkeerde plek in de steek laat.</p>
 </div>
 </div>
 </div>
@@ -885,9 +949,9 @@ ul.task-list li input[type="checkbox"] {
 <p>eindopdracht</p>
 </div>
 </section>
-<section id="diepe-snavel-lichte-pinguïn-het-hele-hoofdstuk-in-één-wolk" class="level2">
-<h2 class="anchored" data-anchor-id="diepe-snavel-lichte-pinguïn-het-hele-hoofdstuk-in-één-wolk">Diepe snavel, lichte pinguïn? — het hele hoofdstuk in één wolk</h2>
-<p><span class="begrippen">correlatie · regressielijn · residuenplot · derde speler</span></p>
+<section id="dezelfde-boekhouding-op-2634-vragenlijsten" class="level2">
+<h2 class="anchored" data-anchor-id="dezelfde-boekhouding-op-2634-vragenlijsten">Dezelfde boekhouding op 2634 vragenlijsten</h2>
+<p><span class="begrippen">schaalscore · <em>R</em>² uit de gokfouten · steekproefzin</span></p>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -898,44 +962,38 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>De afsluiter van het hele hoofdstuk: de wolk, de lijn en de residuen komen samen in één taak. Zelfde 342 pinguïns, nieuw paar: <strong>gewicht op snaveldiepte</strong>. Allebei ken je — de diepte was de ster van de eerste oefening van dit hoofdstuk, het gewicht rolde in de vorige uit de vinlengte — maar sámen heb je ze nog nooit bekeken. En let op de verrassing die eraan zit te komen.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet de lijn klaar">
+<p>De afsluiter van het hele hoofdstuk, en hij eindigt waar dit boek altijd eindigt: bij mensen.</p>
+<p>In <code>bigfive.csv</code> staan <strong>2634 mensen</strong> die vijfentwintig uitspraken over zichzelf beoordeelden op een schaal van 1 tot 6. Je gebruikt er hier tien — vijf over <strong>neuroticisme</strong>, hoe snel je van slag raakt, en vijf over <strong>openheid</strong>, de smaak voor nieuwe dingen. Je hebt ze in Oefening 3.1 en 3.2 al ontmoet; nu doe je er de boekhouding van dit blok op.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet de mensen klaar · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · zet de lijn klaar
+<span class="screen-reader-only">Opmerking</span>In JASP · zet de mensen klaar · JASP 0.98.1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Zet eerst de lijn klaar, zoals je hem in dit blok leerde draaien: open <code>penguins.csv</code>, ga naar <strong>Regression → Linear Regression</strong>, zet <code>gewicht</code> bij <strong>Dependent Variable</strong> en <code>snaveldiepte</code> bij <strong>Covariates</strong>, en vink onder <strong>Statistics</strong> de <strong>Confidence intervals</strong> aan en onder <strong>Plots</strong> de <strong>Residuals vs.&nbsp;Predicted</strong>.</p>
+<p>Open <code>bigfive.csv</code> en maak drie kolommen in het <strong>R</strong>-vak (type <strong>Scale</strong>):</p>
+<pre><code>neuroticisme   -&gt;   rowMeans(data.frame(N1, N2, N3, N4, N5))
+openheid       -&gt;   rowMeans(data.frame(O1, O2, O3, O4, O5))
+residu_mens    -&gt;   resid(lm(neuroticisme ~ openheid))</code></pre>
+<p>Draai daarna <strong>Regression → Linear Regression</strong> met <code>neuroticisme</code> als <strong>Dependent Variable</strong> en <code>openheid</code> bij <strong>Covariates</strong>.</p>
 </div>
 </div>
-<p>En let op de vorm: een artikel valt in <strong>twee gelabelde stukken</strong>, en die volgorde is niet dezelfde als de volgorde waarin je het leerde. Toen mocht de aannamecontrole achteraf, want je moest eerst zien wát je nou eigenlijk controleerde. Nu je het opschrijft voor een lezer gaat hij vóórop, want die wil weten of hij je getallen mag geloven vóórdat hij ze leest.</p>
-<section id="methode-en-data-analyse" class="level3">
-<h3 class="anchored" data-anchor-id="methode-en-data-analyse">Methode en data-analyse</h3>
-<p><strong>a)</strong> Wat onderzoek je, waarop, en met welke analyse? Schrijf het op zonder één uitkomst te noemen. (twee of drie zinnen; wie of wat er gemeten is, hoeveel, en welke analyse)</p>
-<p><strong>b)</strong> Hoeveel pinguïns hebben allebei de maten compleet, en hoeveel staan er in het bestand? (twee getallen)</p>
-<p><strong>c)</strong> Doe het keuringsrondje uit dit blok: kijk naar de residuenplot die je bij het klaarzetten aanvinkte en <strong>beschrijf in één zin de vorm die je ziet</strong>. De metingen kan JASP hier niet doen — daarvoor moet je bij de residuen zelf kunnen — dus die staan klaar uit het R-broertje: de verhouding tussen de brede en de smalle helft is <strong>1.61</strong>, de schudband loopt van <strong>0.89 tot 1.12</strong>, geen van de duizend haalt het, en de scheefheid van de residuen is <strong>0.24</strong>. (die ene zin, en wat die getallen samen zeggen)</p>
-<p><strong>d)</strong> Schrijf de data-analyse-alinea: loop de drie aannames langs en zeg per stuk wat je vond. (drie korte uitspraken, elk met het getal waar je hem op baseert — en zeg welke van de drie eruit springt)</p>
-</section>
-<section id="resultaten" class="level3">
-<h3 class="anchored" data-anchor-id="resultaten">Resultaten</h3>
-<p><strong>e)</strong> Begin waar dit hoofdstuk begon: kijk éérst, reken dán. Ga naar <strong>Regression → Correlation</strong>, zet <code>snaveldiepte</code> en <code>gewicht</code> bij <strong>Variables</strong> en vink onder <strong>Plots</strong> de <strong>Scatterplots</strong> aan — de wolk naast het getal. (rapporteer <em>r</em>, en één zin over de wolk)</p>
-<p><strong>f)</strong> De lijn heb je bij het klaarzetten al getrokken — lees hem hardop af, mét zijn eenheden. (rapporteer <em>b</em><sub>0</sub>, <em>b</em><sub>1</sub>, <em>SE</em>, het 95%-interval en <em>R</em>²)</p>
-<p><strong>g)</strong> Herken het lege adres, en centreer daarna de snaveldiepte: maak een <strong>Computed column</strong> <code>diepte_c</code> met de formule <code>snaveldiepte - mean(snaveldiepte)</code> en draai hetzelfde model nog eens met <code>diepte_c</code> als covariaat. (twee getallen, en zeg welk bekend getal je terugziet)</p>
-<p><strong>h)</strong> Terug naar de zin die je bij c) opschreef. Een residuenplot hoort een vormeloze wolk te zijn; als jij daar iets anders zag, is dat te meten: knip de voorspelling in drie even brede stukken en vraag per stuk het gemiddelde residu op. Ook dat is werk voor het R-broertje, en daar komt <strong>+217, −255 en +220</strong> gram uit. Zeg wat die drie getallen wél en niet bewijzen. (twee zinnen)</p>
-<p><strong>i)</strong> Nu de onthulling. Kleur de wolk: ga terug naar de <strong>Correlation</strong> van e), open <strong>Plots</strong> en zet bij de scatterplot <strong>Color by / group</strong> op <code>soort</code>. Het gemiddelde residu per soort staat klaar in het R-broertje, in de oefening met dezelfde naam als deze. (drie getallen)</p>
-<p><strong>j)</strong> Trek de lijn binnen elke soort apart: zet met <strong>Filter</strong> (het trechtertje boven de data) <code>soort == "Adelie"</code> aan, draai de regressie opnieuw, en herhaal dat voor de andere twee soorten. Zet het filter daarna weer uit. (drie hellingen — en let op het teken)</p>
-<p><strong>k)</strong> Hoe kan dat? Zet de soortgemiddelden ernaast: <strong>Descriptives</strong> met <code>gewicht</code> en <code>snaveldiepte</code> bij <strong>Variables</strong> en <code>soort</code> bij <strong>Split</strong>. (twee rijtjes van drie, en twee zinnen; het verschijnsel heeft een naam)</p>
-<p><strong>l)</strong> Schrijf de resultaten-alinea uit, in rapportagevorm. (hele zinnen, verleden tijd, symbolen cursief — en de bevinding is tweeledig)</p>
-<p><strong>Z) Mag je alles hierboven geloven?</strong> Je hebt de aannames bij c) en d) al nagelopen, dus nu de vraag die erachteraan hoort. Dit blok kent <strong>twee</strong> zetten die “schudden” heten: koppels husselen om te zien of de samenhang echt is (uit de eerste oefening van dit hoofdstuk), en residuen husselen om te zien of de spreiding gelijk is (uit dit blok). Draaien kan hier geen van beide — ook het schud-speeltje niet, want dat kent alleen het paar uit de eerste oefening — dus het R-broertje draait ze voor je. Voorspel éérst zelf welke van de twee die omgeklapte lijn had gevangen — en welke niet, en waarom niet. (je voorspelling van allebei de uitkomsten, en twee of drie zinnen over wat je voortaan altijd controleert)</p>
-</section>
+<p><strong>a)</strong> Vraag de residuen op en tel ze op. (één getal, en één zin over waarom je dat had kunnen voorspellen)</p>
+<p><strong>b)</strong> Vraag de standaardafwijking van het neuroticisme op en die van de residuen. Hoeveel scheelt de lijn je? (twee getallen, en één zin)</p>
+<p><strong>c)</strong> Reken <em>R</em>² uit de gokfouten, net als bij de pinguïns. (één getal, en leg het naast de <em>R</em>² in <strong>Model Summary</strong>)</p>
+<p><strong>d)</strong> Nu de mensen-versie van de tweeëntwintig pinguïns. Hoeveel mensen scoren precies 4.0 op openheid, welke voorspelling krijgen die allemaal, en hoe ver loopt hun échte neuroticisme uiteen? (drie antwoorden, en één zin)</p>
+<p><strong>e)</strong> Schrijf op wat je gevonden hebt, in <strong>twee zinnen</strong> en in deze vaste vorm:</p>
+<blockquote class="blockquote">
+<p>Binnen deze <em>n</em> mensen geldt: … (<em>R</em>² = …). Of dat ook buiten deze <em>n</em> opgaat, weet je nog niet.</p>
+</blockquote>
+<p>(vul de <em>n</em>, de bevinding in gewone taal en de <em>R</em>² in — en laat die tweede zin staan zoals hij er staat)</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -944,101 +1002,79 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<section id="methode-en-data-analyse-1" class="level3">
-<h3 class="anchored" data-anchor-id="methode-en-data-analyse-1">Methode en data-analyse</h3>
-<p><strong>a)</strong> Bijvoorbeeld: <em>“Bij 342 pinguïns van drie soorten onderzochten we of het gewicht samenhangt met de snaveldiepte. We voorspelden het gewicht uit de snaveldiepte met een enkelvoudige regressie, en beoordeelden de residuen op gelijke spreiding, symmetrie en onafhankelijkheid.”</em> Geen enkel getal uit de uitkomsten — dat is de toets waaraan je ziet of de scheiding echt is.</p>
-<p><strong>b)</strong> <strong>342</strong> van de <strong>342</strong> rijen zijn compleet op allebei de maten; er valt er geen weg.</p>
-<p><strong>c)</strong> De verhouding tussen de brede en de smalle helft is <strong>1.61</strong>, de schudband loopt van <strong>0.89 tot 1.12</strong>, en <strong>geen enkele</strong> van de duizend gehusselde werelden haalt de 1.61. De scheefheid van de residuen is <strong>0.24</strong>.</p>
-<p>En de vorm die je opschreef: geen openlopende trechter maar <strong>schuine banen</strong>, van linksboven naar rechtsonder, en het zijn er zo op het oog twee — een linker en een rechter, en die rechter ligt hoger. Dat je de verhouding 1.61 uitrekent betekent dus niet dat je een trechter zíet; het betekent alleen dat de ene helft breder spreidt dan de andere, en dat kan ook door banen komen.</p>
-<p><strong>d)</strong> <em>Gelijke spreiding:</em> geschonden, en hard — 1.61 tegen een band die tot 1.12 loopt, en 0 van de 1000 gehusselde werelden halen het. Bij de ozon was 1.65 nog krap; hier is de band smal, want 342 dieren, en valt het echte getal er mijlenver buiten. <em>Normaal verdeeld:</em> geen bezwaar, scheefheid 0.24. Ter vergelijking kun je de vin-lijn erbij pakken, het model uit dit blok waar niets aan de hand was — die zit op 0.31.</p>
-<p>Deze residuen liggen dus nóg netter om nul dan die van een model waar je niets op aan te merken had. <em>Onafhankelijk:</em> elke pinguïn is één keer gewogen.</p>
-<p>Wat eruit springt is dus de <strong>gelijke spreiding</strong>, en let op wat dat wél en niet zegt: er is iets mis, maar niet wát.</p>
-</section>
-<section id="resultaten-1" class="level3">
-<h3 class="anchored" data-anchor-id="resultaten-1">Resultaten</h3>
-<p><strong>e)</strong> <em>r</em> = −.47. De wolk hangt omlaag — hoe dieper de snavel, hoe lichter het dier — en twee keer zo sterk als de −.24 waar dit hoofdstuk mee opende.</p>
-<p><strong>f)</strong> gewicht = 7488.65 − 191.64 × snaveldiepte, met <em>SE</em> = 19.42, <em>t</em>(340) = −9.87, <em>p</em> &lt; .001, 95% CI [−229.84, −153.45] en <em>R</em>² = .22. Elke millimeter snavel dieper is bijna tweehonderd gram pinguïn minder.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · waar de standaardfout en het interval vandaan komen">
+<p><strong>a)</strong> Nul, op afrondingsgruis na — en dat had je kunnen voorspellen, want dat geldt voor élke best passende lijn, hoe goed of slecht hij ook past. Bij de diamantjes was het zo, bij de pinguïns was het zo, en hier dus ook.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · waar de standaardfout en het interval vandaan komen
+<span class="screen-reader-only">Opmerking</span>In JASP
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>De standaardfout en het interval staan allebei in de coëfficiëntentabel — het interval dankzij het vinkje <strong>Confidence intervals</strong> dat je bij het klaarzetten aanzette.</p>
-<p>(Je scherm geeft meer cijfers dan je opschrijft. In je rapportagezin staat [−229.84, −153.45] — twee decimalen, want dat is APA; op je scherm staan er meer, zodat je kunt nakijken of jij hetzelfde voor je hebt.)</p>
+<p><strong>Descriptives</strong> met <code>residu_mens</code>, vinkje <strong>Sum</strong>: nul, op wat rekenstof na.</p>
 </div>
 </div>
-<p><strong>g)</strong> Het intercept 7488.65 is de voorspelling voor een pinguïn met een snavel van nul millimeter diep, terwijl de ondiepste snavel in het bestand 13.1 mm is — een leeg adres. Na het centreren staat er <strong>4201.75</strong>, en dat getal ken je: het is het gemiddelde gewicht van alle 342, precies zoals toen je in de vorige oefening de vinlengte centreerde. De helling verroert zich niet.</p>
-<p><strong>h)</strong> <strong>+217, −255 en +220</strong> gram. Let op dat dit grámmen zijn; er komt bij j) een 217.15 langs die gram per millimeter is, en dat is toeval.</p>
-<p>Over álle punten samen is het gemiddelde residu exact nul — daar is de lijn op gebouwd, dus dat bewijst niets. Maar per stuk hoort het óók ongeveer nul te zijn, en dat is het niet: erboven, eronder, er weer boven. Wat die drie getallen bewijzen is dat er <strong>structuur</strong> in zit; een vormeloze wolk doet dit niet. Dát het schuine banen zijn, zie je alleen in het plaatje.</p>
-<p><strong>i)</strong> Adélie <strong>−272.0</strong>, Chinstrap <strong>−225.4</strong>, Gentoo <strong>+458.6</strong> gram.</p>
-<p>De lijn zit er voor de Adélies gemiddeld 272 gram bóven — ze zijn lichter dan hij belooft — voor de Chinstraps 225 gram, en voor de Gentoo’s zit hij er 459 gram ónder. In het rechterderde van je plaatje zijn 97 van de 98 punten een Gentoo.</p>
-<p><strong>j)</strong> Adélie <strong>+217.15</strong>, Chinstrap <strong>+204.62</strong>, Gentoo <strong>+369.44</strong> gram per millimeter. Alle drie <strong>plus</strong>, waar de lijn over alle 342 heen −191.64 zei. Binnen élke soort geldt dus: hoe dieper de snavel, hoe zwáárder het dier. Het teken is omgeklapt, en dit keer niet bij een kale correlatie maar bij een complete regressielijn.</p>
-<p><strong>k)</strong> De Gentoo’s zijn veruit de zwaarste dieren (5076 gram, tegen 3701 en 3733) én ze hebben de ondiepste snavels (14.98 mm, tegen 18.35 en 18.42). Dat ene feit — zwaar én ondiep — trekt de hele wolk de verkeerde kant op. Het verschijnsel heet de <strong>Simpsons paradox</strong>: houd je rekening met een derde variabele, dan kan het verband tussen de eerste twee wegvallen of zelfs omdraaien.</p>
-<p>En knoop hem vast aan de naam uit de eerste oefening van dit hoofdstuk. Daar heette de derde speler die zich als het verband vermomt <strong>confounding</strong>. Dat is dezelfde vermomming: confounding is wat de derde variabele <em>doet</em>, de Simpsons paradox is hoe het eruitziet als hij het teken helemaal omdraait.</p>
-<p><strong>l)</strong> Bijvoorbeeld:</p>
-<blockquote class="blockquote">
-<p>We voorspelden het gewicht van de pinguïns uit hun snaveldiepte (<em>N</em> = 342). Over alle dieren samen ging elke millimeter meer snaveldiepte samen met 191.64 gram minder gewicht, <em>b</em> = −191.64, <em>SE</em> = 19.42, 95% CI [−229.84, −153.45], <em>R</em>² = .22. Binnen elk van de drie soorten liep het verband echter andersom: daar ging een diepere snavel juist samen met een zwaarder dier (<em>b</em> = 204.62 tot 369.44 gram per millimeter).</p>
-</blockquote>
-<p>Kijk wat die laatste zin doet: hij haalt het eerste resultaat niet weg, hij zet het in zijn verband. Allebei de helften zijn waar; alleen samen zijn ze eerlijk.</p>
-<p><strong>Z)</strong> De twee zetten geven tegengestelde antwoorden, en dat is de hele les.</p>
-<p><strong>Koppels husselen</strong> — de zet uit de eerste oefening — had je hier <strong>niets</strong> verteld. Schud je de snaveldieptes los van de gewichten, dan komt geen van de duizend geschudde werelden ook maar in de buurt van −.47. Die samenhang ís er dus. Hij zegt alleen niets over de <em>richting</em> die je eruit leest: <em>echt</em> en <em>waar</em> zijn twee verschillende dingen, en dat wist je sinds de snavels.</p>
-<p><strong>Residuen husselen</strong> — de zet uit dit blok — sloeg wél alarm: 1.61 tegen een band die tot 1.12 loopt, 0 van de 1000. Maar hij zei alleen <em>dát</em> er iets mis was, niet wat. Pas het kleuren per soort bij i) gaf de derde speler zijn naam.</p>
-<p>Twee keer 0 van de 1000, en ze betekenen het tegenovergestelde van elkaar: de eerste zegt <em>er is hier iets</em>, de tweede zegt <em>en je hebt het verkeerd opgeschreven</em>.</p>
-<p>Wat je voortaan altijd controleert voordat je een lijn door een wolk vertrouwt: teken de residuen tegen de voorspelling, en kijk of er <strong>structuur</strong> in zit in plaats van alleen te vragen of ze breed uitlopen. En vraag je bij elke wolk af wie er nog meer in zit — want dezelfde soort die zich in de eerste oefening als een correlatie vermomde, vermomde zich hier als een complete regressielijn.</p>
-</section>
-</div>
-</div>
-</div>
-<div class="kicker">
-<p>rapportage</p>
-</div>
-</section>
-<section id="schrijf-op-wat-je-gecontroleerd-hebt" class="level2">
-<h2 class="anchored" data-anchor-id="schrijf-op-wat-je-gecontroleerd-hebt">Schrijf op wat je gecontroleerd hebt</h2>
-<p><span class="begrippen">rapportage van een controle · APA-notatie</span></p>
-<div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
+<p><strong>b)</strong> Het neuroticisme spreidt met <em>SD</em> = 1.1946 schaalpunten, de residuen met <em>SD</em> = 1.1789. De lijn scheelt je dus 0.0156 schaalpunt op een schaal van 1 tot 6 — oftewel: bijna niets. (Vier decimalen hier met opzet: op twee zie je het verschil niet eens meer.) Wie de openheid van iemand kent, weet daarmee nauwelijks meer over zijn neuroticisme dan wie alleen het gemiddelde kent.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Rapportage
+<span class="screen-reader-only">Opmerking</span>In JASP
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Een assumptie-controle hoort in je verslag, en het is de kortste rapportage die je dit hele boek schrijft: één zin als er niks is, twee als er wél iets is. Wat je niet doet, is ’m weglaten — een lezer die niets leest, weet niet of je niets vond of niet gekeken hebt.</p>
-<p>Zo ziet ‘wél iets’ eruit:</p>
+<p><strong>Descriptives</strong>: <em>Std. deviation</em> 1.195 voor <code>neuroticisme</code> en 1.179 voor <code>residu_mens</code>. Wil je de vier decimalen uit de tekst zien — 1.1946 en 1.1789 — zet dan <strong>Preferences → Results → Fix the number of decimals</strong> op 4.</p>
+</div>
+</div>
+<p><strong>c)</strong> <strong>.03</strong>, allebei. Van de hele tuin pakt deze lijn nog geen drie procent.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>1 − 1.1789² / 1.1946² = .026 — jouw eigen getal, zonder de nul ervoor. In <strong>Model Summary</strong> staat 0.026.</p>
+</div>
+</div>
+<p><strong>d)</strong> <strong>470</strong> mensen scoren precies 4.0 op openheid. Die krijgen alle 470 dezelfde voorspelling: <strong>3.21</strong> schaalpunten neuroticisme. En hun échte neuroticisme loopt van <strong>1.0 tot 6.0</strong> — van de laagste score die op deze schaal bestaat tot de hoogste, allemaal binnen die ene gok.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Zet in het <strong>Filter</strong> <code>openheid == 4</code>: er blijven 470 rijen over, en dat aantal staat in <strong>Descriptives</strong> bij <em>Valid</em>. Van <code>neuroticisme</code> staat daar <em>Minimum</em> 1.000 en <em>Maximum</em> 6.000. De voorspelling reken je zelf uit met de twee getallen uit <strong>Coefficients</strong>: 1.798 + 0.353 × 4 = 3.210. Filter daarna weer uit.</p>
+</div>
+</div>
+<p>Dat is dezelfde figuur als de tweeëntwintig pinguïns waar dit blok mee opende, maar dan harder: daar liep het echte gewicht over anderhalve kilo uiteen bij één gok, hier loopt het echte neuroticisme over de <strong>hele schaal</strong> uiteen bij één gok. Bij mensen is dat de regel en niet de uitzondering.</p>
+<p><strong>e)</strong> Bijvoorbeeld:</p>
 <blockquote class="blockquote">
-<p>We voorspelden de dagelijkse ozonconcentratie uit de maximumtemperatuur (<em>N</em> = 116). De residuen werden visueel geïnspecteerd. De spreiding nam toe met de voorspelde waarde: op de koelere helft van de dagen was <em>SD</em> = 17.47 ppb (<em>n</em> = 59), op de warmere <em>SD</em> = 28.74 ppb (<em>n</em> = 57). De residuen waren rechtsscheef.</p>
+<p>Binnen deze 2634 mensen geldt: wie opener is, scoort gemiddeld iets hoger op neuroticisme, maar openheid en neuroticisme delen nog geen drie procent van hun verschillen (<em>R</em>² = .03). Of dat ook buiten deze 2634 opgaat, weet je nog niet.</p>
 </blockquote>
-<p>En zo ‘niks aan de hand’:</p>
-<blockquote class="blockquote">
-<p>We voorspelden het gewicht van de pinguïns uit hun vinlengte (<em>N</em> = 342). De residuen werden visueel geïnspecteerd; de spreiding was gelijkmatig over het bereik van de voorspelde waarden en de verdeling week niet zichtbaar af van normaal.</p>
-</blockquote>
-<p>Let op de kleine lettertjes. Alleen de symbolen <em>N</em>, <em>n</em> en <em>SD</em> staan cursief, de gewone woorden rechtop. En let op dat er twee n’en zijn: de <strong>hoofdletter</strong> <em>N</em> is je hele bestand, de <strong>kleine</strong> <em>n</em> een groep daarbinnen — hier dus <em>N</em> = 116 dagen, verdeeld over <em>n</em> = 59 koele en <em>n</em> = 57 warme. De zinnen staan in de verleden tijd, want je vertelt wat je gedáán en gevónden hebt. En ze noemen allebei de steekproef, de uitkomst én de voorspeller, zodat ze op eigen benen staan.</p>
-<p>En let op wélke twee getallen daar staan: 17.47 en 28.74, de spreiding van de <strong>residuen</strong>. Niet de 16.91 en 33.43 die je zelf uit <strong>Descriptives</strong> haalde — dat waren de ozonwaarden zelf. Je rapporteert wat de lijn heeft laten liggen, niet wat er lag.</p>
-<p>Eén woord dat je hier bewust <em>niet</em> schrijft: <strong>“aan de assumpties werd voldaan”</strong>. Dat klinkt als een toets die geslaagd is, en zo werkt het niet — je hebt gekeken, en je zag niets bijzonders. Schrijf op wat je zag.</p>
-<p>Jouw beurt: schrijf zo’n zin voor de wind-lijn uit de taak hierboven. Kies zelf welke van de twee vormen erbij past, en verdedig die keuze in één zin.</p>
-<p>En dan de eindopdracht, want die verdient een eigen zin. Een omgeklapt teken is de strengste proef op de regel dat een rapportage op eigen benen staat: het getal over alle 342 klopt, en tóch klopt het verhaal pas als de soorten erbij staan. Zo:</p>
-<blockquote class="blockquote">
-<p>We voorspelden het gewicht van de pinguïns uit hun snaveldiepte (<em>N</em> = 342). Over alle dieren samen ging elke millimeter meer snaveldiepte samen met 191.64 gram minder gewicht, <em>b</em> = −191.64, <em>SE</em> = 19.42, 95% CI [−229.84, −153.45], <em>R</em>² = .22. Binnen elk van de drie soorten liep het verband echter andersom: daar ging een diepere snavel juist samen met een zwaarder dier (<em>b</em> = 204.62 tot 369.44 gram per millimeter).</p>
-</blockquote>
-<p>Kijk wat die laatste zin doet: hij haalt het eerste resultaat niet weg, hij zet het in zijn verband. Allebei de helften zijn waar; alleen samen zijn ze eerlijk.</p>
-<p>Jouw beurt, nog één keer: schrijf diezelfde tweeledige bevinding op in de taal van de correlatie — met <em>r</em> in plaats van <em>b</em> (over alle 342 pinguïns <em>r</em> = −.47, binnen de soorten <em>r</em> = .58 tot .72). Die vorm ken je uit de eerste oefening van dit hoofdstuk; leen hem gerust. En toets bij allebei je zinnen: laat je de tweede helft weg, dan staat er iets wat niet waar is.</p>
+<p>Kijk wat die tweede zin doet. Alles wat je in dit hoofdstuk hebt uitgerekend — de covariantie, de correlatie, de lijn, de residuen, de <em>R</em>² — beschrijft de mensen die je vóór je hebt, en verder niemand. Je hebt geen enkele reden gekregen om aan te nemen dat de volgende 2634 mensen hetzelfde zouden laten zien, en ook geen manier om te zeggen hoe waarschijnlijk dat is.</p>
+<p>Dat is precies waar de volgende beweging mee begint.</p>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="W4">
 <p>◠ <strong>Zelfde vorm in het boek</strong></p>
-<p>Hier: de drie aannames aan de residuen afgelezen — welk plaatje je opvraagt, en waaraan je ziet dat het misgaat.</p>
+<p>Hier: de gokfouten zelf uitgerekend, en <em>R</em>² uit de boekhouding in plaats van uit een knop.</p>
 <p>In het boek: <strong>W4 — Hangen ze samen?</strong></p>
-<p><em>Daar krijgen de drie alleen hun naam, en staat erbij dat de lijn zélf niets meer eist dan rechtheid. Hier zie je wat de fouten ervan bakken.</em></p>
+<p><em>Daar valt DATA = FIT + RESIDU voor het eerst; hier zie je wat er in die derde term zit, en dat het verklaarde deel er gewoon uit te tellen is.</em></p>
 </div>
 
 
@@ -1048,7 +1084,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
 
 <ol>
-<li id="fn1"><p>Dagelijkse ozonmetingen (delen per miljard, <em>parts per billion</em>) op Roosevelt Island, New York, mei–september 1973; New York State Department of Conservation / National Weather Service. Beschikbaar als de klassieke R-dataset <code>airquality</code>; dit zijn de 116 dagen waarop de ozonmeting gelukt is. Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0). Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

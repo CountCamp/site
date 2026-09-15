@@ -587,15 +587,14 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#langere-snavel-ondiepere-snavel" id="toc-langere-snavel-ondiepere-snavel">Langere snavel, ondiepere snavel?</a></li>
-  <li><a href="#teken-de-wolk-en-bereken-r-in-jasp" id="toc-teken-de-wolk-en-bereken-r-in-jasp">Teken de wolk en bereken r in JASP</a></li>
-  <li><a href="#is-die-.24-echt-of-toeval" id="toc-is-die-.24-echt-of-toeval">Is die −.24 echt, of toeval?</a></li>
+  <li><a href="#waar-r-vandaan-komt-de-twaalf-steentjes-eerst" id="toc-waar-r-vandaan-komt-de-twaalf-steentjes-eerst">Waar <em>r</em> vandaan komt — de twaalf steentjes eerst</a></li>
   <li><a href="#drie-soorten-in-één-wolk" id="toc-drie-soorten-in-één-wolk">Drie soorten in één wolk</a></li>
   <li><a href="#van-snavel-naar-vin" id="toc-van-snavel-naar-vin">Van snavel naar vin</a></li>
-  <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#van-vin-naar-vragenlijst" id="toc-van-vin-naar-vragenlijst">Van vin naar vragenlijst</a></li>
   </ul>
 </nav>
 <div class="datastrook">
-<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/bigfive.csv" download="bigfive.csv">bigfive.csv</a> 2634 ingevulde vragenlijsten · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
 </div>
 <div class="kicker">
 <p>prikkel</p>
@@ -616,30 +615,122 @@ ul.task-list li input[type="checkbox"] {
 <p>speel het</p>
 </div>
 </section>
-<section id="teken-de-wolk-en-bereken-r-in-jasp" class="level2">
-<h2 class="anchored" data-anchor-id="teken-de-wolk-en-bereken-r-in-jasp">Teken de wolk en bereken r in JASP</h2>
-<p><span class="begrippen">scatterplot · richting en sterkte · r tussen −1 en +1</span></p>
-<p>Haal de pinguïns binnen en gooi ze in een plaatje. Elke pinguïn één stip: snavellengte op de ene as, snaveldiepte op de andere.</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
+<section id="waar-r-vandaan-komt-de-twaalf-steentjes-eerst" class="level2">
+<h2 class="anchored" data-anchor-id="waar-r-vandaan-komt-de-twaalf-steentjes-eerst">Waar <em>r</em> vandaan komt — de twaalf steentjes eerst</h2>
+<p><span class="begrippen">covariantie · <em>sum of products</em></span></p>
+<p>Twee kolommen, twaalf steentjes: karaat en glans, netjes naast elkaar. En jij wilt één getal dat zegt hoe die twee samen bewegen. Het halve werk heb je in het boek al gedaan — van elk steentje ken je de afwijking van het gemiddelde, de blauwe streepjes. Alleen heeft elk steentje er hier twéé: eentje op karaat (het gemiddelde is 1.60) en eentje op glans (gemiddelde 50.00).</p>
+<p>Dan de zet die je uit het boek kent: vermenigvuldig die twee afwijkingen per steentje met elkaar. Wijzen ze dezelfde kant op — allebei erboven, of allebei eronder — dan komt er plus uit; spreken ze elkaar tegen, dan min.</p>
+<p>Doe er twee met de hand, dan zie je het gebeuren. De twaalf steentjes hebben in het boek namen, en twee ervan komen hier goed uit. <strong>Anna</strong> weegt 1.0 karaat en glanst 20, dus haar afwijkingen zijn −0.6 karaat en −30 glanspunten: allebei onder het gemiddelde, en min keer min is plus. Haar bijdrage is +18. <strong>Kees</strong> weegt 2.1 karaat en glanst 30 — zwaar, maar dof. Zijn afwijkingen zijn +0.5 en −20, die spreken elkaar tegen, en zijn bijdrage is −10.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: right;">afwijking op karaat</th>
+<th style="text-align: right;">afwijking op glans</th>
+<th style="text-align: right;">die twee maal elkaar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Anna</td>
+<td style="text-align: right;">−0.6</td>
+<td style="text-align: right;">−30</td>
+<td style="text-align: right;"><strong>+18</strong></td>
+</tr>
+<tr class="even">
+<td>Kees</td>
+<td style="text-align: right;">+0.5</td>
+<td style="text-align: right;">−20</td>
+<td style="text-align: right;"><strong>−10</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Bij onze twaalf duwen acht steentjes de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel alles op en er staat 54.00 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
+<p>En nu de vraag die je bij élk getal hoort te stellen: 4.91 wát? Reken de eenheid maar gewoon mee — een afwijking in karaat keer een afwijking in glans is… karaat-glanzen. Is 4.91 karaat-glanzen veel samenhang? Weet je niet. Niemand denkt in karaat-glanzen. <strong>Ruw is ruk.</strong> De covariantie zit nog op de schaal van zijn twee variabelen; je kunt er de ríchting aan aflezen — plus, dus zwaarder gaat samen met glanzender — maar niet de sterkte.</p>
+<p>De reparatie is één deling. Deel de covariantie door de twee standaardafwijkingen — 0.3908 karaat en 21.7423 glanspunten — en kijk wat er met de eenheden gebeurt: karaat streept weg tegen karaat, glans tegen glans. Wat overblijft is een kaal getal zonder eenheid, de gestandaardiseerde versie van dezelfde samenhang, en dat getal kan nooit buiten −1 en +1 komen: <em>r</em> = .58. Dát kun je in één keer lezen, bij diamantjes net zo goed als bij pinguïns.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — bouw de correlatie zelf · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — bouw de correlatie zelf · JASP 0.98.1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Regression → Correlation</strong>, sleep <code>karaat</code> en <code>glans</code> naar rechts.</li>
-<li>Vink <strong>Display pairwise table</strong> aan; onder <strong>Plots</strong>: <strong>Scatter plots</strong>.</li>
-<li>Voor de lijn: <strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent</strong>, <code>karaat</code> als <strong>Covariate</strong>.</li>
-</ol>
-<p><em>r</em> = .578, en de lijn is glans = −1.43 + 32.14 × karaat.</p>
+<p>Open <code>diamantjes.csv</code> en maak twee kolommen: klik op de <strong><code>+</code></strong> rechts van de laatste kolom, geef een naam, kies type <strong>Scale</strong> en het icoon <strong>R</strong>.</p>
+<pre><code>S_xy     -&gt;   cov(karaat, glans)
+r_zelf   -&gt;   cov(karaat, glans) / (sd(karaat) * sd(glans))</code></pre>
+<p>In <code>S_xy</code> staat in elke rij hetzelfde getal: de covariantie, 4.909 — dat is de 4.91 uit de tekst hierboven, met de derde decimaal erbij die JASP standaard toont. In <code>r_zelf</code> staat 0.578; daar is de eenheid uit weggedeeld.</p>
+<p>Dan hetzelfde met één klik: <strong>Regression → Correlation</strong>, <code>karaat</code> en <code>glans</code> bij <strong>Variables</strong>, <strong>Pearson’s r</strong> aan (die staat al aan), en onder <strong>Plots</strong> de <strong>Scatter plots</strong>. Bij <em>Pearson’s r</em> staat 0.578.</p>
+<p>En welke lijn daarbij hoort: <strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent Variable</strong> en <code>karaat</code> bij <strong>Covariates</strong>. In <strong>Coefficients</strong> staat <code>(Intercept)</code> −1.429 en <code>karaat</code> 32.143.</p>
 </div>
 </div>
-<p>Karaat en glans hangen samen met <em>r</em> = .578, en de lijn erdoorheen leest glans = −1.43 + 32.14 × karaat. Kwadrateer die correlatie en je hebt <em>R</em>² = .33: een derde van de verschillen loopt langs het gewicht, de rest niet.</p>
+<p><strong>Correlation</strong> is dus geen zwarte doos: het is jouw covariantie, gedeeld door jouw twee standaardafwijkingen. JASP doet alleen het strepen sneller.</p>
+<p><span class="even-checken">Let op het verschil tussen wat je scherm zegt en wat je zelf opschrijft. JASP drukt <code>0.578</code> af, met nul en al; in de tekst hierboven staat <em>r</em> = .58. Dat is geen slordigheid van een van de twee. <strong>Een klikpad citeert je scherm; jouw eigen zin volgt APA</strong>, en daar laat je de nul weg omdat het ontbréken ervan iets zegt: dit getal kan niet voorbij de 1 komen. De getallen in de JASP-kaders van dit boekje staan daarom zoals JASP ze toont, zodat je kunt nakijken of jij hetzelfde voor je hebt.</span> Kwadrateer die .58 en je hebt <em>r</em>² = .33 — een derde van de verschillen in glans loopt langs het gewicht, de rest niet.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Eerst de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Twee vragen voor je verder leest, en dan mag je los op iets nieuws.</p>
+<p><strong>a)</strong> Een karaat is gewoon een gewicht: 200 milligram. Weeg de steentjes dus eens in milligram (maak een kolom <code>mg</code> met <code>karaat * 200</code>) en vraag de covariantie opnieuw op. (één getal, en één zin over wat er wél en niet veranderd is aan de twaalf steentjes)</p>
+<p><strong>b)</strong> Deel die nieuwe covariantie door de twee standaardafwijkingen die er nu bij horen. (één getal, en zeg wat je herkent)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> 981.82 milligram-glanzen — tweehonderd keer de covariantie van daarnet. (Reken je 200 × 4.91 met de hand, dan krijg je 982.00; JASP vermenigvuldigt de onafgeronde 4.9091. Zelfde soort scheefte als overal waar je met een gedrukt getal verder rekent.) En er is niets aan de steentjes veranderd: geen enkel gewicht, geen enkele glans, geen enkel punt in de wolk. Alleen de maatstok waarmee je het gewicht opschrijft is anders. <strong>Een getal dat tweehonderd keer zo groot wordt zodra je een andere maat kiest, kan niet zeggen hoe sterk een verband is.</strong></p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de steentjes in milligram">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · de steentjes in milligram
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>mg        -&gt;   karaat * 200
+S_xy_mg   -&gt;   cov(mg, glans)</code></pre>
+<p>Er komt 981.818 uit.</p>
+</div>
+</div>
+<p><strong>b)</strong> <strong>.58</strong> — hetzelfde getal als daarnet. Delen door de standaardafwijkingen haalt de maatstok eruit, en dat is precies waarom de correlatie bestaat.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · en weer gestandaardiseerd">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · en weer gestandaardiseerd
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>r_mg      -&gt;   cov(mg, glans) / (sd(mg) * sd(glans))</code></pre>
+<p>Er staat 0.578, precies wat <code>r_zelf</code> ook gaf.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p><strong>Nu jij</strong> — bij de pinguïns, die je inmiddels kent. Nieuwe vraag aan bekende beesten: hangt de lengte van een snavel samen met zijn diepte?</p>
+<p>Haal de pinguïns binnen en gooi ze in een plaatje. Elke pinguïn één stip: snavellengte op de ene as, snaveldiepte op de andere.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -651,27 +742,14 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>Open <code>penguins.csv</code> in JASP (menu linksboven → Open).</li>
-<li>Klik bovenin op <strong>Regression</strong> en kies <strong>Correlation</strong>.</li>
-<li>Sleep <code>snavellengte</code> en <code>snaveldiepte</code> naar het vak <strong>Variables</strong>; de rest laat je staan.</li>
-<li>Laat <strong>Pearson’s r</strong> aan staan. Open het kopje <strong>Plots</strong> en vink <strong>Scatterplot</strong> aan.</li>
+<li>Open <code>penguins.csv</code> (menu linksboven → <strong>Open</strong>).</li>
+<li><strong>Regression → Correlation</strong>, en sleep <code>snavellengte</code> en <code>snaveldiepte</code> naar <strong>Variables</strong>. Laat <strong>Pearson’s r</strong> aan staan.</li>
+<li>Vink onder <strong>Plots</strong> de <strong>Scatter plots</strong> aan: 342 stippen, een wolk.</li>
 </ol>
+<p>Bij <em>Pearson’s r</em> staat −0.235.</p>
 </div>
 </div>
 <p>Daar is-ie: een wolk die van linksboven naar rechtsonder hangt, en het getal −0.235 is één cijfer voor “hoe strak kantelt die wolk omláág?”. De schaal loopt van −1 (een perfecte dalende lijn) via 0 (geen rechtlijnig verband) naar +1 (een perfecte stijgende lijn). −.24 is een flauwe daling met veel rommel eromheen — zwak, maar het staat er. Langere snavel, ondiepere snavel. Zegt het getal.</p>
-<div class="kicker">
-<p>schud het</p>
-</div>
-</section>
-<section id="is-die-.24-echt-of-toeval" class="level2">
-<h2 class="anchored" data-anchor-id="is-die-.24-echt-of-toeval">Is die −.24 echt, of toeval?</h2>
-<p><span class="begrippen">schudden · loskoppelen · duizend werelden rond nul</span></p>
-<p>Eerst de vraag die telt: is die −.24 écht, of kan een wolk toevallig zo scheef gaan hangen? We gaan vals spelen. We knippen elke snaveldiepte los van z’n eigen pinguïn en plakken ’m op een willekeurige andere. De lengtes blijven lengtes, de dieptes blijven dieptes — maar wie bij wie hoort, is nu lukraak.</p>
-<p>Dát is de hele truc, en het is belangrijk genoeg om even stil bij te staan: door te husselen <strong>koppel je de twee metingen los van elkaar</strong>. Je haalt met eigen handen weg dat een bepaalde lengte en een bepaalde diepte bij dezelfde pinguïn horen. In zo’n losgekoppelde wereld kán er geen echt verband meer zijn — en dus is elke samenhang die je er tóch nog in meet, per definitie puur toeval. Zat er echte samenhang in de originele data, dan hoort die nu weg te vallen.</p>
-<p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar husselen en duizend keer opnieuw kijken is <em>speeltje</em>-werk. Dat is geen gemis van jou of van JASP — het boek doet het bewust zo: de simulatie-ervaring loopt via een <strong>schud-speeltje</strong> in de browser (of via het R-broertje, waar het drie regels code is).</p>
-<p><a href="../speeltjes/w4_schud_correlatie.html" target="_blank">▶ Speel het schud-speeltje</a></p>
-<p>Kijk naar wat het speeltje je laat zien. <strong>Duizend werelden die dansen rond nul</strong> — want in elke geschudde wereld is de échte samenhang doorgeknipt, maar toeval laat de <em>r</em> nooit precies op nul landen. Ze kruipen allemaal dicht om nul, zelden verder dan .17 van huis. En dan die rode streep op −.24, buiten het hele bergje. In duizend keer schudden kwam <strong>geen enkele</strong> geschudde wereld even ver als de echte pinguïns. Dát is wat “geen toeval” betekent — geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>. De echte pinguïns weten iets wat de geschudde niet weten.</p>
-<p>Dus: de samenhang is echt. Zaak gesloten? Nee. Hier begint het pas.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
@@ -679,20 +757,21 @@ ul.task-list li input[type="checkbox"] {
 <section id="drie-soorten-in-één-wolk" class="level2">
 <h2 class="anchored" data-anchor-id="drie-soorten-in-één-wolk">Drie soorten in één wolk</h2>
 <p><span class="begrippen">confounding · derde speler · omgeklapt teken · r²</span></p>
-<p>De verleiding is nu te schrijven: <em>“bij pinguïns gaat een langere snavel samen met een ondiepere.”</em> Het getal is echt, de zin lijkt te volgen. En toch is-ie mis. Kleur de wolk eens per soort:</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · kleur de wolk">
+<p>De verleiding is nu te schrijven: <em>“bij pinguïns gaat een langere snavel samen met een ondiepere.”</em> Het getal is netjes uitgerekend, de zin lijkt te volgen. En toch is-ie mis. Kleur de wolk eens per soort:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · kleur de wolk · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · kleur de wolk
+<span class="screen-reader-only">Opmerking</span>In JASP · kleur de wolk · JASP 0.98.1
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>In dezelfde <strong>Correlation</strong>-analyse, open <strong>Plots</strong> en zet bij de scatterplot de optie <strong>Color by / group</strong> op <code>soort</code> (JASP kleurt de stippen dan per soort).</li>
-<li>Wil je de getallen per soort: maak met <strong>Filter</strong> (het trechtertje boven de data) de selectie <code>soort == "Gentoo"</code> en lees de correlatie opnieuw af: <em>r</em> = +0.643. Herhaal voor de andere twee soorten.</li>
+<li>Zet in dezelfde <strong>Correlation</strong>-analyse, onder <strong>Plots</strong>, bij de scatterplot de optie <strong>Color by / group</strong> op <code>soort</code>. JASP kleurt de stippen dan per soort.</li>
+<li>En reken <em>r</em> nu apart uit binnen één soort: klik op het trechtertje boven de data (<strong>Filter</strong>) en typ in het <strong>R</strong>-vak <code>soort == "Gentoo"</code>. De <strong>Correlation</strong> rekent opnieuw, en bij <em>Pearson’s r</em> staat 0.643.</li>
+<li>Zet het filter daarna weer uit — anders rekent alles hierna over de Gentoo’s.</li>
 </ol>
 </div>
 </div>
@@ -700,10 +779,10 @@ ul.task-list li input[type="checkbox"] {
 <p>Wat gebeurde er? De Gentoo’s (rechtsonder) hebben lange, ondiepe snavels; de andere twee soorten (linksboven) korte, diepe. Gooi je ze op één hoop, dan trekt dat soortverschil de hele wolk schuin naar beneden — en dáár komt die −.24 vandaan. Niet uit een verband tussen snavellengte en -diepte, maar uit het verschil tússen de soorten. De <strong>soort</strong> is een derde speler die zich als het verband vermomt. Het boek noemt dat straks <em>confounding</em>; jij zag het hier gebeuren, in de kleuren van een scatterplot.</p>
 <p>En dat is de dubbele les van dit blok, mooier dan één van de twee alleen:</p>
 <ul>
-<li>De <strong>schud-toets</strong> zei: die −.24 is echt, geen toeval.</li>
-<li>De <strong>scatterplot</strong> zei: echt ja — maar niet wát je denkt. De richting is een luchtspiegeling van de soort.</li>
+<li>De <strong>rekenmachine</strong> zei: over deze 342 dieren is <em>r</em> precies −.24. Daar valt niets op af te dingen; reken het maar na.</li>
+<li>De <strong>scatterplot</strong> zei: klopt — maar niet wát je denkt. De richting is een luchtspiegeling van de soort.</li>
 </ul>
-<p><em>Echt</em> en <em>waar</em> zijn dus twee verschillende dingen. Een correlatie kan kraakhelder niet-toeval zijn en je tóch de verkeerde kant op wijzen. Daarom lees je <em>r</em> nooit zonder de wolk ernaast — en zeker niet zonder je af te vragen wie er nog meer in die wolk zit. Zou je het in één eerlijke zin moeten opschrijven, dan niet “langere snavels zijn ondieper”, maar: <em>over drie soorten heen hangt de wolk omlaag, maar binnen elke soort omhoog — het min-teken is een soorteffect.</em></p>
+<p><em>Uitgerekend</em> en <em>waar</em> zijn dus twee verschillende dingen. Een correlatie kan tot achter de komma kloppen en je tóch de verkeerde kant op wijzen. Daarom lees je <em>r</em> nooit zonder de wolk ernaast — en zeker niet zonder je af te vragen wie er nog meer in die wolk zit. Zou je het in één eerlijke zin moeten opschrijven, dan niet “langere snavels zijn ondieper”, maar: <em>over drie soorten heen hangt de wolk omlaag, maar binnen elke soort omhoog — het min-teken is een soorteffect.</em></p>
 <p>(En dat kleine getal <em>r</em>² dat je weleens ziet — hier .06 — is het “aandeel gedeelde variantie”: van alle verschil in snaveldiepte deelt maar een paar procent iets met snavellengte. Ook dat is geen “verklaring”, alleen boekhouding.)</p>
 <div class="kicker">
 <p>jouw beurt</p>
@@ -713,17 +792,17 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="van-snavel-naar-vin">Van snavel naar vin</h2>
 <p><span class="begrippen">correlatie berekenen · kleuren per soort · soortverschil</span></p>
 <p>Van snavel naar vin. In <code>penguins.csv</code> zitten ook de kolommen <code>vinlengte</code> (in mm) en <code>gewicht</code> (in gram). Zelfde recept, andere vraag: hangen die twee samen?</p>
-<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet klaar">
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet klaar · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>In JASP · zet klaar
+<span class="screen-reader-only">Opmerking</span>In JASP · zet klaar · JASP 0.98.1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open <code>penguins.csv</code> en ga naar <strong>Regression → Correlation</strong>. Zet <code>vinlengte</code> en <code>gewicht</code> in het vak <strong>Variables</strong>.</p>
+<p>Open <code>penguins.csv</code>. De covarianties maak je in het <strong>R</strong>-vak, zoals bij de diamantjes; de correlatie en de wolk komen uit <strong>Regression → Correlation</strong>, en de gemiddelden per soort uit <strong>Descriptives</strong>.</p>
 </div>
 </div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
@@ -736,22 +815,24 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Beantwoord de vragen op volgorde; ze bouwen op elkaar. De laatste heet met opzet <strong>Z)</strong> en niet k): de aannames staan altijd achteraan.</p>
-<p><strong>a)</strong> Zet bij <strong>Plots</strong> de <strong>Scatterplot</strong> aan en lees de correlatie af. (rapporteer <em>r</em>, en beschrijf in één zin welke kant de wolk op hangt en hoe strak)</p>
-<p><strong>b)</strong> Zeg in gewone taal wat dat teken hier betekent. (één zin, over pinguïns en niet over getallen)</p>
-<p><strong>c)</strong> Kwadrateer de correlatie. (rapporteer <em>r</em>², en zeg in één zin wat dat getal wél en niet is)</p>
-<p><strong>d)</strong> Is die samenhang echt, of kan toeval hem namaken? Dit is de vraag waar JASP je niet bij helpt — schudden is geen knop. Pak het schud-speeltje er nog eens bij dat je hierboven bij de snavels gebruikte, en redeneer verder. (zeg hoe ver de geschudde werelden daar van nul kwamen, en wat dat betekent voor een <em>r</em> van .87)</p>
-<p><strong>e)</strong> Nu de les van dit blok: vertrouw dat getal niet voor je de soorten hebt gezien. Zet bij de scatterplot <strong>Color by / group</strong> op <code>soort</code>, en lees <em>r</em> apart binnen elke soort af via <strong>Filter</strong> (<code>soort == "Adelie"</code>, enzovoort). (drie correlaties, elk met zijn <em>n</em>)</p>
-<p><strong>f)</strong> Vraag per soort het gemiddelde gewicht en de gemiddelde vinlengte op: <strong>Descriptives</strong>, met <code>gewicht</code> en <code>vinlengte</code> bij <strong>Variables</strong> en <code>soort</code> bij <strong>Split</strong>. (zes getallen)</p>
-<p><strong>g)</strong> Klapt het teken om, zoals het bij de snavels deed? (ja of nee, en één zin)</p>
-<p><strong>h)</strong> En toch is de <em>r</em> over alle 342 heen hóger dan binnen élke soort afzonderlijk. Hoe kan dat? (twee of drie zinnen, en gebruik de zes getallen uit f)</p>
-<p><strong>i)</strong> Zet dat naast de snavels hierboven. De soort deed daar iets anders met de wolk dan hier — wat? (twee zinnen)</p>
-<p><strong>j)</strong> Schrijf je bevinding op in één eerlijke zin. (<em>N</em>, allebei de variabelen, de <em>r</em> over alles én het bereik binnen de soorten, in APA-vorm)</p>
-<p><strong>Z) Mag je alles hierboven geloven?</strong> Een <em>r</em> vat één ding samen: hoe strak de punten om een <strong>rechte</strong> lijn liggen. Kijk dus terug naar je scatterplot uit a) — buigt hij ergens, en hangt er één punt zo ver weg dat hij in zijn eentje aan het getal trekt? En telt elke pinguïn maar één keer mee?</p>
+<p>Beantwoord de vragen op volgorde; ze bouwen op elkaar. De eerste drie zijn de route die je hierboven op de twaalf steentjes hebt zien lopen — ruw, en dan pas gestandaardiseerd. De laatste heet met opzet <strong>Z)</strong> en niet k): de wolk-vraag staat altijd achteraan.</p>
+<p>Het zijn er elf, en dat is te veel voor één zitting. <strong>Na f) heb je een hele correlatie van begin tot eind gemaakt</strong> — dat is een goed moment om te stoppen en er morgen weer in te vliegen. Bij g) begint iets anders: daar gaat het niet meer over het getal maar over wie er in de wolk zit.</p>
+<p><strong>a)</strong> Reken de covariantie uit tussen de vinlengte en het gewicht. (rapporteer <em>S<sub>xy</sub></em> <strong>mét zijn eenheid</strong> — en die eenheid is twee woorden lang)</p>
+<p><strong>b)</strong> Doe hetzelfde nog eens, maar zet het gewicht eerst in kilo’s (maak een kolom <code>kg</code> met <code>gewicht / 1000</code>). (het nieuwe getal, en één zin over waarom dit een probleem is voor een maat die <em>sterkte</em> zou moeten uitdrukken)</p>
+<p><strong>c)</strong> Deel allebei je covarianties door de twee standaardafwijkingen die erbij horen. (twee getallen, en zeg wat er met de eenheid gebeurd is)</p>
+<p><strong>d)</strong> Teken de wolk. (één zin over welke kant hij op hangt en hoe strak)</p>
+<p><strong>e)</strong> Zeg in gewone taal wat het teken hier betekent. (één zin, over pinguïns en niet over getallen)</p>
+<p><strong>f)</strong> Kwadrateer de correlatie. (rapporteer <em>r</em>², en één zin over wat dat getal wél zegt en wat het niet zegt)</p>
+<p><strong>g)</strong> Vertrouw dat getal niet voor je de soorten hebt gezien. Kleur de wolk per soort en reken <em>r</em> apart binnen elke soort. (drie correlaties, elk met zijn <em>n</em>)</p>
+<p><strong>h)</strong> En toch is de <em>r</em> over alle 342 heen <strong>hóger</strong> dan binnen élke soort afzonderlijk. Hoe kan dat?</p>
+<p>Doe het in twee stappen. Vraag eerst per soort het gemiddelde gewicht en de gemiddelde vinlengte op — zes getallen, één <strong>Descriptives</strong> met <code>soort</code> bij <strong>Split</strong>. Kijk daarna naar die zes en probeer te zeggen wat de Gentoo’s anders maakt. (twee of drie zinnen; kom je er niet uit, dan is het antwoord hieronder geen nederlaag maar de bedoeling)</p>
+<p><strong>i)</strong> Bij de snavels hierboven klapte het teken om; hier niet. Wat is het verschil? (twee zinnen)</p>
+<p><strong>j)</strong> Schrijf je bevinding op in één eerlijke zin. (<em>N</em>, allebei de variabelen, de <em>r</em> over alles én het bereik binnen de soorten)</p>
+<p><strong>Z) Is de wolk recht, en zitten er geen punten tussen die de boel verneuken?</strong> Een <em>r</em> vat één ding samen: hoe strak de punten om een <strong>rechte</strong> lijn liggen. Kijk dus terug naar je wolk uit d) — buigt hij ergens, en hangt er één punt zo ver weg dat het in zijn eentje aan het getal trekt? (twee korte uitspraken, en zeg welke van je antwoorden hierboven eraan hangen)</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -760,56 +841,310 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>a)</strong> <em>r</em> = .87. Een strak stijgende wolk: linksonder naar rechtsboven, en veel minder rommel omheen dan bij de snavels.</p>
-<p><strong>b)</strong> Pinguïns met langere vinnen zijn zwaarder. Meer niet — er staat niet dat de vin het gewicht <em>maakt</em>.</p>
-<p><strong>c)</strong> <em>r</em>² = .76. Drie kwart van alle verschil in gewicht loopt langs de vinlengte mee. Wat het níét is: een verklaring. Het is boekhouding — welk deel van de verschillen de twee maten delen, niet waaróm ze dat doen.</p>
-<p><strong>d)</strong> In het speeltje zag je bij de snavels duizend geschudde werelden om nul dansen, en geen van alle kwam verder dan ongeveer .17 van huis. Dat is de maat voor “wat toeval hier kan”. Een <em>r</em> van .87 ligt daar mijlenver buiten — vier keer zo ver als de wildste geschudde wereld. Deze samenhang is dus echt.</p>
-<p>Het R-broertje draait dit met de hand: negentig procent van de geschudde werelden ligt daar tussen −.09 en .09, de wildste haalde .19, en <strong>geen enkele</strong> van de duizend haalt de .87. JASP rekent één keurige uitkomst uit en laat je die dans niet zien — vandaar het speeltje.</p>
-<p><strong>e)</strong> Adélie <em>r</em> = .47 (<em>n</em> = 151), Chinstrap <em>r</em> = .64 (<em>n</em> = 68), Gentoo <em>r</em> = .70 (<em>n</em> = 123).</p>
-<p><strong>f)</strong> Adélie 3701 gram en 190.0 mm · Chinstrap 3733 gram en 195.8 mm · Gentoo 5076 gram en 217.2 mm.</p>
-<p><strong>g)</strong> Nee. Alle drie de correlaties zijn positief, en die over alles heen ook. Het teken blijft staan.</p>
-<p><strong>h)</strong> Kijk naar wat de Gentoo’s zijn: veruit de zwaarste dieren (5076 gram tegen 3701 en 3733) én de langste vinnen (217.2 mm tegen 190.0 en 195.8). Zwaar én lange vin — dat is dezelfde richting als het verband binnen elke soort. Het soortverschil duwt de wolk dus <strong>mee</strong>, langs dezelfde diagonaal, en zet er nog een flink stuk bovenop: tussen de drie soortgemiddelden zit 785 gram spreiding, binnen de soorten 452. Over alles heen tel je die twee bij elkaar, en dat maakt de wolk strákker dan hij binnen één soort is.</p>
-<p><strong>i)</strong> Bij de snavels lag het soortverschil <strong>dwars</strong> op het verband binnen de soorten: de Gentoo’s hebben lange én ondiepe snavels, terwijl binnen elke soort een langere snavel juist een diepere is. Daar duwde de soort de wolk de andere kant op, en klapte het teken om. Hier ligt het soortverschil <strong>mee</strong>, en dan versterkt het wat er binnen de soorten al gebeurt. Zelfde derde speler, twee tegengestelde uitkomsten — en dat is precies waarom je niet aan het teken alleen genoeg hebt.</p>
-<p><strong>j)</strong> Bijvoorbeeld:</p>
-<blockquote class="blockquote">
-<p>Bij 342 pinguïns hingen de vinlengte en het gewicht sterk positief samen, <em>r</em> = .87; binnen elk van de drie soorten was die samenhang zwakker, <em>r</em> = .47 tot .70.</p>
-</blockquote>
-<p>Let op dat die tweede helft er staat. Zonder haar leest je lezer .87 als het verband bij één soort pinguïn, en dat is het niet.</p>
-<p><strong>Z)</strong> Ja, met twee slagen om de arm, en het loont om te weten welke van je antwoorden eraan hangen.</p>
-<ul>
-<li><strong>Blijft staan:</strong> de drie correlaties binnen de soorten bij e), de soortgemiddelden bij f), en de redenering bij h) en i). Die beschrijven deze 342 dieren, en daar verandert een aanname niets aan.</li>
-<li><strong>Doe je over:</strong> de <em>r</em> over alles heen bij a) en c), zodra blijkt dat de wolk buigt of dat er één punt aan trekt. Een <em>r</em> meet rechtlijnigheid; ligt het verband krom, dan is het getal geen leugen maar wel een slechte samenvatting.</li>
-</ul>
-<p>Hier is er niets aan de hand: de wolk loopt recht en elke pinguïn is één keer gewogen. Dat geen enkel punt in zijn eentje aan de <em>r</em> trekt, kun je narekenen door met <strong>Filter</strong> de zwaarste pinguïn weg te laten — het getal schuift dan .0004 op, en de wildste van alle 342 verschuift hem met .004. Dat is de derde decimaal, en die haalt geen enkele conclusie onderuit.</p>
-</div>
-</div>
-</div>
-<div class="kicker">
-<p>rapportage</p>
-</div>
-</section>
-<section id="schrijf-het-op-als-een-onderzoeker" class="level2">
-<h2 class="anchored" data-anchor-id="schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</h2>
-<p><span class="begrippen">rapportage van een correlatie · APA-notatie</span></p>
-<div class="apa callout callout-style-default callout-note callout-titled" title="Rapportage">
+<p><strong>a)</strong> <em>S<sub>xy</sub></em> = 9824.42 <strong>millimeter-grammen</strong>. Zes cijfers voor de komma, en een eenheid die je nergens anders tegenkomt.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Rapportage
+<span class="screen-reader-only">Opmerking</span>In JASP
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Die ene eerlijke zin over de omhangende wolk had je al.&nbsp;Nu de nette jas eroverheen — net als bij het gemiddelde is dat geen dik handboek maar een <strong>boodschappenlijstje in zinsvorm</strong>: wat heb je onderzocht, hoeveel dieren, welk getal kwam eruit. Kijk maar:</p>
+<pre><code>S_vg      -&gt;   cov(vinlengte, gewicht)</code></pre>
+<p>Er komt 9824.416 uit.</p>
+</div>
+</div>
+<p><strong>b)</strong> In kilo’s is het 9.8244 millimeter-kilogrammen. Precies duizend keer kleiner, want je hebt duizend keer kleinere getallen in de ene kolom gezet — en verder niets. Geen enkele pinguïn is van gewicht veranderd, geen enkel punt is in de wolk verschoven, en toch staat er nu een ander getal. <strong>Een maat die van je weegschaal afhangt, kan niet zeggen hóé sterk een verband is.</strong></p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>kg        -&gt;   gewicht / 1000
+S_vkg     -&gt;   cov(vinlengte, kg)</code></pre>
+<p>Er komt 9.824 uit — op de vier decimalen van het antwoord hierboven is dat 9.8244.</p>
+</div>
+</div>
+<p><strong>c)</strong> Allebei <strong>.87</strong>. De standaardafwijking van de vinlengte is 14.0617 mm, die van het gewicht 801.9545 g, en die van het gewicht in kilo’s 0.8020 kg. Deel de covariantie door het product van de twee die erbij horen en je krijgt twee keer hetzelfde kale getal.</p>
+<p>En dat kómt doordat de eenheid weg is. In de teller stonden millimeter-grammen; in de noemer staat millimeter maal gram. Die vallen tegen elkaar weg, en wat overblijft kan niet meer weten in welke maat je gewogen hebt.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>r_vg      -&gt;   cov(vinlengte, gewicht) / (sd(vinlengte) * sd(gewicht))
+r_vkg     -&gt;   cov(vinlengte, kg) / (sd(vinlengte) * sd(kg))</code></pre>
+<p>Allebei 0.871. Dezelfde 0.871 staat bij <strong>Regression → Correlation</strong> onder <em>Pearson’s r</em>.</p>
+</div>
+</div>
+<p><strong>d)</strong> Een strak stijgende wolk, van linksonder naar rechtsboven, en veel minder rommel eromheen dan bij de snavels.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De wolk: <strong>Regression → Correlation</strong> met <code>vinlengte</code> en <code>gewicht</code>, en onder <strong>Plots</strong> de <strong>Scatter plots</strong> aan.</p>
+</div>
+</div>
+<p><strong>e)</strong> Pinguïns met langere vinnen zijn zwaarder. Meer niet — er staat niet dat de vin het gewicht <em>maakt</em>.</p>
+<p><strong>f)</strong> <em>r</em>² = .76. Drie kwart van alle verschil in gewicht loopt langs de vinlengte mee. Wat het níét is: een verklaring. Het is boekhouding — welk deel van de verschillen de twee maten delen, niet waaróm ze dat doen.</p>
+<p><strong>g)</strong> Adélie <em>r</em> = .47 (<em>n</em> = 151), Chinstrap <em>r</em> = .64 (<em>n</em> = 68), Gentoo <em>r</em> = .70 (<em>n</em> = 123).</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kleur de wolk met <strong>Color by / group</strong> op <code>soort</code>, en zet met het trechtertje (<strong>Filter</strong>) telkens één soort aan: <code>soort == "Adelie"</code>, en zo verder. Bij <em>Pearson’s r</em> staat 0.468, 0.642 en 0.703. Zet het filter daarna weer uit.</p>
+</div>
+</div>
+<p><strong>h)</strong> Houd je gekleurde plaatje uit g) erbij — dáár staat het antwoord in, en de zes getallen hieronder zeggen alleen wat je erop ziet. Vraag ze op:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong>, met <code>gewicht</code> en <code>vinlengte</code> bij <strong>Variables</strong> en <code>soort</code> bij <strong>Split</strong>. Er staat 3700.662 · 3733.088 · 5076.016 gram en 189.954 · 195.824 · 217.187 mm.</p>
+</div>
+</div>
+<p>Kijk nu naar wat de Gentoo’s zijn: veruit de zwaarste dieren (5076 gram tegen 3701 en 3733) én de langste vinnen (217.2 mm tegen 190.0 en 195.8). Zwaar én lange vin — dat is <strong>dezelfde richting</strong> als het verband binnen elke soort. Het soortverschil duwt de wolk dus mee langs die diagonaal in plaats van er dwars op te staan.</p>
+<p>En dan tel je over alle 342 heen twéé dingen bij elkaar op: het verband binnen elke soort, én de sprong van de ene soort naar de andere. Twee kluitjes die al schuin liggen én bovendien lángs diezelfde diagonaal van elkaar af liggen, vormen samen één lange strakke wolk — strakker dan elk kluitje afzonderlijk.</p>
+<p>Wil je zien hoe groot die sprong is, zet hem dan naast de rommel bínnen een soort — maar dat is een verdieping bovenop je antwoord, niet iets wat je uit de zes getallen had moeten halen:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>sprong    -&gt;   sd(tapply(gewicht, soort, mean))
+rommel    -&gt;   sqrt(mean(tapply(gewicht, soort, var)))</code></pre>
+<p>Er komt 784.868 en 451.711 uit — de 785 en 452 uit het antwoord hierboven, op hele grammen afgerond.</p>
+</div>
+</div>
+<p>De sprong tussen de soorten is dus ruim anderhalf keer zo groot als de rommel binnen één soort (785 gedeeld door 452 is 1.74), en dat hele stuk telt in die .87 volledig mee.</p>
+<p><strong>i)</strong> Bij de snavels lag het soortverschil <strong>dwars</strong> op het verband binnen de soorten: de Gentoo’s hebben lange én ondiepe snavels, terwijl binnen elke soort een langere snavel juist een diepere is. Daar duwde de soort de wolk de andere kant op, en klapte het teken om. Hier ligt het soortverschil <strong>mee</strong>, en dan versterkt het wat er binnen de soorten al gebeurt. Zelfde derde speler, twee tegengestelde uitkomsten — en dat is precies waarom je aan het teken alleen niet genoeg hebt.</p>
+<p><strong>j)</strong> Bijvoorbeeld:</p>
 <blockquote class="blockquote">
-<p>We onderzochten of snavellengte en snaveldiepte samenhingen. Over alle 342 pinguïns was die samenhang zwak negatief (<em>r</em> = −.24); binnen elk van de drie soorten bleek hij juist positief (<em>r</em> = .39 tot .65).</p>
+<p>Bij 342 pinguïns hingen de vinlengte en het gewicht sterk positief samen, <em>r</em> = .87; binnen elk van de drie soorten was die samenhang zwakker, <em>r</em> = .47 tot .70.</p>
 </blockquote>
-<p>Let op de kleine lettertjes: alleen het symbool <em>r</em> is cursief, de gewone woorden staan rechtop — juist zó zie je wat er speciaal is aan zo’n letter. En omdat <em>r</em> nooit voorbij de 1 kan, laat APA de nul vóór de punt weg: .87, geen 0.87. De zin staat in de verleden tijd, want je vertelt wat je vónd.</p>
-<p>Eén ding lijkt daarmee te botsen, en dat is met opzet. In het kader een paar schermen terug las je bij de Gentoo’s <strong>+0.643</strong> — mét nul. <strong>Een klikpad citeert je scherm; een rapportagezin volgt APA.</strong> JASP schrijft zijn getallen zoals JASP dat doet, en zou dit boekje ze onderweg bijschaven, dan kon je niet meer nakijken of jij hetzelfde voor je had. In je eigen zin haal je die nul wél weg, want daar betekent het ontbréken ervan iets: het zegt je lezer meteen dat dit getal niet voorbij de 1 kan komen.</p>
-<p>Jouw beurt: schrijf zelf zo’n zin voor de vinlengte en het gewicht uit de taak hierboven (<em>r</em> = .87, en binnen de soorten .47 tot .70). Benoem de 342 pinguïns en beide variabelen — de zin moet op eigen benen kunnen staan, ook voor iemand die dit blok nooit las.</p>
+<p>Let op dat die tweede helft er staat. Zonder haar leest je lezer .87 als het verband bij één soort pinguïn, en dat is het niet.</p>
+<p><strong>Z)</strong> Ja — allebei komen ze hier goed uit. Maar het loont om te weten wát eraan zou hangen als dat anders was.</p>
+<p><em>De wolk is recht.</em> Je ziet in het plaatje geen bocht, en je kunt het narekenen. Trek er een lijn doorheen en kijk hoeveel die dekt: dat is <em>R</em>², en met één voorspeller is dat exact hetzelfde getal als de <em>r</em>² uit f). Op vier decimalen .7590. Sta de lijn nu een knik toe — een extra term met de vinlengte in het kwadraat — en er staat .7753.</p>
+<p>Ruim anderhalve procent erbij dus, en toch is dat géén bewijs van een bocht. Een extra term kan de <em>R</em>² namelijk alleen maar omhoog duwen en nooit omlaag — ook een term die niets te melden heeft. (Dat is geen bevinding maar rekenkunde, en je komt het bij de meervoudige regressie nog eens tegen, waar een kolom willekeurige getallen precies datzelfde doet.) Wat je hier ziet is dus de gewone winst van een parameter erbij, niet een kromming die om aandacht vraagt.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Maak een kolom <code>vin2</code> met <code>vinlengte^2</code> en draai <strong>Regression → Linear Regression</strong> twee keer: eerst met alleen <code>vinlengte</code> bij <strong>Covariates</strong>, daarna met <code>vinlengte</code> én <code>vin2</code>. In <strong>Model Summary</strong> staat <em>R</em>² = 0.759 en daarna 0.775.</p>
+</div>
+</div>
+<p><em>En geen punt trekt in zijn eentje aan het getal.</em> Laat de zwaarste pinguïn weg en de correlatie beweegt pas in de vierde decimaal:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Zet in het <strong>Filter</strong> <code>gewicht &lt; max(gewicht)</code> — dan valt precies het zwaarste dier weg, en je hoeft zelf geen gewicht in te tikken. Bij <em>Pearson’s r</em> staat dan 0.872 in plaats van 0.871; op vier decimalen is dat .8716 tegen .8712.</p>
+</div>
+</div>
+<p>Doe je dat om de beurt voor alle 342, dan is de grootste verschuiving die één enkel dier veroorzaakt nog altijd maar .004. Dat is de derde decimaal, en die haalt geen enkele conclusie onderuit.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · en wat hier niet kan">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · en wat hier niet kan
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dat om de beurt voor alle 342 doen is geen knop in JASP. Het R-broertje rekent het in twee regels na, en daar komt .0042 uit.</p>
+</div>
+</div>
+<p>Wat eraan hángt, als het wél mis was gegaan:</p>
+<ul>
+<li><strong>Blijft staan:</strong> de drie correlaties binnen de soorten bij g), de zes soortgemiddelden bij h), en de redenering bij i). Die beschrijven wat er in de tabel staat, en daar verandert geen kromme wolk iets aan.</li>
+<li><strong>Doe je over:</strong> de covariantie bij a) en b) niet — die is gewoon een som — maar wél alles wat de <em>sterkte</em> uitdrukt: de <em>r</em> bij c), de <em>r</em>² bij f) die er het kwadraat van is, de uitspraak in pinguïn-taal bij e) die erop leunt, en de zin bij j). Een <em>r</em> meet rechtlijnigheid; ligt het verband krom, dan is het getal geen leugen maar wel een slechte samenvatting.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="van-vin-naar-vragenlijst" class="level2">
+<h2 class="anchored" data-anchor-id="van-vin-naar-vragenlijst">Van vin naar vragenlijst</h2>
+<p><span class="begrippen">schaalscore · totaalscore · dezelfde route, ander onderwerp</span></p>
+<p>Pinguïns hebben één groot voordeel: je kunt ze wegen. Bij mensen meet je zelden iets wat op een weegschaal past, en dan bouw je je variabele zélf uit een vragenlijst.</p>
+<p>In <code>bigfive.csv</code> staan <strong>2634 mensen</strong> die vijfentwintig uitspraken over zichzelf hebben beoordeeld op een schaal van 1 tot 6. Je gebruikt er hier tien: vijf gaan over <strong>neuroticisme</strong> — hoe snel raak je van slag — en vijf over <strong>openheid</strong>, de smaak voor nieuwe dingen en nieuwe ideeën. Eén rij is één mens.</p>
+<p>Tien losse antwoorden zijn nog geen variabele. Je maakt er twee getallen van door per persoon het gemiddelde van zijn vijf antwoorden te nemen; dan staat er voor iedereen één neuroticisme-score en één openheid-score, allebei nog steeds op die schaal van 1 tot 6.</p>
+<p>Zo’n getal heet een <strong>schaalscore</strong>: het gemiddelde van de vragen die bij één schaal horen. Het boek telt de vragen liever op en noemt dat een <strong>totaalscore</strong> (ook <em>somscore</em>, in het Engels <em>sum score</em>). Het is hetzelfde idee, alleen met grotere getallen, en de correlatie merkt daar niets van — bij b) en c) reken je zelf na waarom. Allebei zijn goed, als je er maar bij zegt welke je nam. Dit oefenboek middelt, omdat een gemiddelde op dezelfde 1 tot 6 blijft staan als de antwoorden zelf; zo lees je een score meteen terug als een antwoord op de vragenlijst.</p>
+<p>En dan loop je precies hetzelfde rondje als hierboven. Dat is de bedoeling: de vinlengte is nu de openheid, en het gewicht is het neuroticisme, maar de route is regel voor regel dezelfde.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · bouw de twee schalen · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · bouw de twee schalen · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>bigfive.csv</code> en maak twee kolommen in het <strong>R</strong>-vak (type <strong>Scale</strong>):</p>
+<pre><code>neuroticisme   -&gt;   rowMeans(data.frame(N1, N2, N3, N4, N5))
+openheid       -&gt;   rowMeans(data.frame(O1, O2, O3, O4, O5))</code></pre>
+<p>Let op wélk gemiddelde je hier neemt: één dwars over vijf kolommen, per persoon. Het <code>mean(y)</code>-blokje uit de sleep-route middelt juist één kolom over alle rijen — zie de <a href="../90_basishandelingen.html#centreren">gereedschapskist</a>.</p>
+<p><span class="even-checken">Kijk of je twee kolommen erbij hebt en of ze binnen de schaal blijven: zet <code>openheid</code> in <strong>Descriptives</strong> en kijk naar <em>Minimum</em> en <em>Maximum</em>. Er hoort iets tussen 1 en 6 te staan. Staat er een 0 of een 7, dan heb je een verkeerde kolom te pakken.</span></p>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Dezelfde route op vragenlijsten">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Dezelfde route op vragenlijsten
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Vier stappen, en dan de zin waar dit hoofdstuk op uitloopt.</p>
+<p><strong>a)</strong> Vraag van allebei de schalen het gemiddelde en de standaardafwijking op. (vier getallen, met de schaal erbij waarop ze staan)</p>
+<p><strong>b)</strong> Reken de covariantie uit tussen openheid en neuroticisme. Doe het daarna nog eens met de rijsóm in plaats van het rijgemiddelde (een kolom met <code>N1 + N2 + N3 + N4 + N5</code>, en net zo voor de O’s). (twee getallen, en zeg hoeveel keer ze schelen en waarom)</p>
+<p><strong>c)</strong> Deel allebei door de bijbehorende standaardafwijkingen. (twee getallen, en één zin over wat je hier herkent van de pinguïns)</p>
+<p><strong>d)</strong> Teken de wolk, en kwadrateer de correlatie. (rapporteer <em>r</em>², en één zin over hoe zo’n wolk eruitziet vergeleken met die van vin en gewicht)</p>
+<p><strong>e)</strong> Schrijf op wat je gevonden hebt, in <strong>twee zinnen</strong> en in deze vaste vorm:</p>
+<blockquote class="blockquote">
+<p>Binnen deze <em>n</em> mensen geldt: … (<em>r</em> = …). Of dat ook buiten deze <em>n</em> opgaat, weet je nog niet.</p>
+</blockquote>
+<p>(vul de <em>n</em>, de bevinding in gewone taal en de <em>r</em> in — en laat die tweede zin staan zoals hij er staat)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Neuroticisme: <em>M</em> = 3.16, <em>SD</em> = 1.19 schaalpunten. Openheid: <em>M</em> = 3.87, <em>SD</em> = 0.55 schaalpunten. Allebei op de schaal van 1 tot 6 waarop de vragen beantwoord zijn — dus de gemiddelde deelnemer zit bij neuroticisme net onder het midden en bij openheid er duidelijk boven.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong>, met <code>neuroticisme</code> en <code>openheid</code> bij <strong>Variables</strong>: <em>Mean</em> 3.163 en 3.867, <em>Std. deviation</em> 1.195 en 0.546.</p>
+</div>
+</div>
+<p><strong>b)</strong> Met de rijgemiddelden is de covariantie <strong>0.1050</strong>, met de rijsommen <strong>2.6253</strong>. Dat scheelt precies een factor 25, en niet toevallig: een som is vijf keer een gemiddelde, en in een covariantie zitten twee variabelen, dus vijf maal vijf. Weer hetzelfde als bij de kilo’s van de pinguïns — je hebt de maat veranderd en niet de mensen.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>N_som     -&gt;   N1 + N2 + N3 + N4 + N5
+O_som     -&gt;   O1 + O2 + O3 + O4 + O5
+cov_gem   -&gt;   cov(neuroticisme, openheid)
+cov_som   -&gt;   cov(N_som, O_som)</code></pre>
+<p>Er komt 0.105 en 2.625 uit.</p>
+</div>
+</div>
+<p><strong>c)</strong> Allebei <strong>.16</strong>. Dat is wat je bij de pinguïns ook zag: zodra je door de twee standaardafwijkingen deelt, vallen de eenheden weg en maakt het niet meer uit of je in gemiddelden of in sommen rekende.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De standaardafwijkingen van de sommen staan in <strong>Descriptives</strong>: 5.973 voor <code>N_som</code> en 2.728 voor <code>O_som</code>.</p>
+<pre><code>r_gem     -&gt;   cov(neuroticisme, openheid) / (sd(neuroticisme) * sd(openheid))
+r_som     -&gt;   cov(N_som, O_som) / (sd(N_som) * sd(O_som))</code></pre>
+<p>Allebei 0.161.</p>
+</div>
+</div>
+<p><strong>d)</strong> <em>r</em>² = .03. En de wolk zíet er ook zo uit: een dikke, ronde vlek zonder duidelijke richting, waar je met moeite een flauwe helling in ontdekt. Zet dat naast de vin-en-gewicht-wolk van hiervoor — daar lagen de punten in een strakke sliert. Hier delen de twee maten nog geen drie procent van hun verschillen.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Regression → Correlation</strong> met <code>openheid</code> en <code>neuroticisme</code>, <strong>Scatter plots</strong> aan. Bij <em>Pearson’s r</em> staat 0.161; kwadrateer dat zelf tot .03.</p>
+</div>
+</div>
+<p>Dat de punten in blokjes lijken te vallen is geen fout: een gemiddelde van vijf hele getallen kan maar een beperkt aantal waarden aannemen, dus veel mensen landen op precies hetzelfde plekje.</p>
+<p><strong>e)</strong> Bijvoorbeeld:</p>
+<blockquote class="blockquote">
+<p>Binnen deze 2634 mensen geldt: wie hoger scoort op openheid, scoort ook iets hoger op neuroticisme (<em>r</em> = .16). Of dat ook buiten deze 2634 opgaat, weet je nog niet.</p>
+</blockquote>
+<p>Die tweede zin is geen slag om de arm en geen bescheidenheid. Alles wat je in dit hoofdstuk hebt uitgerekend — de covariantie, de correlatie, de <em>r</em>² — beschrijft de mensen die je vóór je hebt, en verder niemand. Wat er nodig is om die stap naar buiten wél te zetten, is precies waar de volgende oefening mee begint.</p>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="W4">
