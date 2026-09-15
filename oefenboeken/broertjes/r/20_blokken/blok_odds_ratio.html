@@ -677,7 +677,7 @@ window.Quarto = {
 </section>
 <section id="tel-de-kruistabel-en-bereken-de-odds-ratio-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="tel-de-kruistabel-en-bereken-de-odds-ratio-in-r">Tel de kruistabel en bereken de odds ratio in R</h2>
-<p><span class="begrippen">odds versus kans · verhouding van twee odds</span></p>
+<p><span class="begrippen">log-odds en logit · odds versus kans · verhouding van twee odds</span></p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -701,15 +701,17 @@ window.Quarto = {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># logistische regressie: family = binomial</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>model.glans <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># coef() → −4.04  0.0814</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.glans)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># exp() maakt van de coëfficiënt een odds ratio</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># per glanspunt: exp() → 1.085</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans))[<span class="dv">2</span>]</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># per tien glanspunten: exp() → 2.26</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">10</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># de coëfficiënten zijn log-odds: de logaritme van de odds (in het boek: de logit)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># coef() → −4.04  0.0814</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(model.glans)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># exp() draait die logaritme terug, van log-odds naar odds; bij de helling</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># levert dat een odds ratio op: zoveel keer worden de odds per glanspunt</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># per glanspunt: exp() → 1.085</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans))[<span class="dv">2</span>]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># per tien glanspunten: exp() → 2.26</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">10</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -721,20 +723,21 @@ window.Quarto = {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>model.glans <span class="ot">&lt;-</span> <span class="fu">glm</span>(gepakt <span class="sc">~</span> glans, <span class="at">data =</span> d, <span class="at">family =</span> binomial)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># per glanspunt: exp() → 1.085</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans))[<span class="dv">2</span>]</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># en de kans die het model aan elke steen hangt</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Else .51, Leen .51</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">kans =</span> <span class="fu">round</span>(<span class="fu">predict</span>(model.glans, <span class="at">type =</span> <span class="st">"response"</span>), <span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(naam, glans, gepakt, kans)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># de coëfficiënten zijn log-odds; exp() maakt van de helling een odds ratio</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># per glanspunt: exp() → 1.085</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(model.glans))[<span class="dv">2</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># en de kans die het model aan elke steen hangt</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Else .51, Leen .51</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">kans =</span> <span class="fu">round</span>(<span class="fu">predict</span>(model.glans, <span class="at">type =</span> <span class="st">"response"</span>), <span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(naam, glans, gepakt, kans)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <p><span class="naslag"><code>gepakt</code> is hier géén hercodering: de kraai deed het, en het is opgeschreven. Dat scheelt een keuze die je anders zelf had moeten maken — en waar je die grens legt, verandert je hele uitkomst. Wil je toch van een getal een ja/nee-kolom maken (zoals <code>mooi</code>, glans boven de 50), dan staan de vormen (<code>ifelse</code>, <code>cut</code>, <code>case_when</code>, en het maken van dummies) bij <a href="../90_basishandelingen.html#hercoderen">nieuwe variabelen maken en hercoderen</a>.</span></p>
-<p>De kraai pakte er zes van de twaalf op. Laat de glans die uitkomst voorspellen en er rolt een keer-getal uit: per glanspunt worden de odds op oppakken <strong>1.085</strong> keer zo groot. Dat klinkt als niks, tot je bedenkt dat keer-getallen stapelen als machten en niet als sommen — tien glanspunten erbij is <span class="math inline">\(1.085^{10}\)</span> en dus <strong>2.26</strong> keer zo grote odds. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft: bij glans 49.6 zegt het model munt-opgooien, en daar liggen Else en Leen, allebei op 50, allebei op kans .51 — en toch had de een een andere nacht dan de ander.</p>
+<p>De kraai pakte er zes van de twaalf op. Laat de glans die uitkomst voorspellen, en het model geeft je eerst <strong>log-odds</strong>: de logaritme van de odds. In het boek heet dat de <strong>logit</strong>. Niemand voelt log-odds, dus draai je die logaritme terug, en dan rolt er een keer-getal uit: per glanspunt worden de odds op oppakken <strong>1.085</strong> keer zo groot. Dat klinkt als niks, tot je bedenkt dat keer-getallen stapelen als machten en niet als sommen — tien glanspunten erbij is <span class="math inline">\(1.085^{10}\)</span> en dus <strong>2.26</strong> keer zo grote odds. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft: bij glans 49.6 zegt het model munt-opgooien, en daar liggen Else en Leen, allebei op 50, allebei op kans .51 — en toch had de een een andere nacht dan de ander.</p>
 <p><strong>Nu jij</strong> — met nieuwe data: geboortegewichten, en een uitkomst die ja of nee is.</p>
 <p>Eerst het telwerk. Haal de 189 baby’s binnen en zet de twee ja/nee-kolommen tegen elkaar af in een kruistabel.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · trek eraan">
@@ -827,7 +830,7 @@ window.Quarto = {
 <li>in het andere van <strong>1 van de 100</strong> naar <strong>2 van de 100</strong> — <em>OR</em> = 2.02</li>
 </ul>
 <p>Die tweede 2.02 is geen toeval: op twee decimalen is dat precies de odds ratio die hierboven uit onze kruistabel rolde. Bijna hetzelfde getal, twee heel verschillende onderzoeken — en toch scheelt het in het ene <strong>15 van de 100</strong> en in het andere <strong>1 van de 100</strong>. Vijftien keer zoveel mensen. Dat aftreksommetje heet het <strong>risicoverschil</strong> (<em>risk difference</em>), en het is de kortste weg van een verhouding terug naar mensen.</p>
-<p>Is er in zo’n onderzoek ook écht iets gedáán — iemand behandeld — dan kun je dat verschil omkeren. Bij 15 van de 100 moet je er ongeveer <strong>7</strong> behandelen om er 1 extra te helpen; bij 1 van de 100 zijn dat er <strong>100</strong>. Dat getal heet de <strong>NNT</strong> (<em>number needed to treat</em>), en in de klinische literatuur kom je hem overal tegen. Let wel op dat woordje <em>gedaan</em>: bij onze moeders is niemand behandeld, er is alleen opgeschreven wat er gebeurde — een risicoverschil kun je daar dus wél uitrekenen, een NNT niet. Verder houden we het in dit boekje bij de verhoudingen. Maar zie je in een artikel alleen een odds ratio staan, dan weet je nu welke helft van het verhaal ontbreekt.</p>
+<p>Is er in zo’n onderzoek ook écht iets gedáán — iemand behandeld — dan kun je dat verschil omkeren. Bij 15 van de 100 moet je er ongeveer <strong>7</strong> behandelen om er 1 extra te helpen; bij 1 van de 100 zijn dat er <strong>100</strong>. Dat getal heet de <strong>NNT</strong> (<em>number needed to treat</em>). Het boek laat hem weg, maar in medische en verpleegkundige artikelen kom je hem overal tegen. Let wel op dat woordje <em>gedaan</em>: bij onze moeders is niemand behandeld, er is alleen opgeschreven wat er gebeurde — een risicoverschil kun je daar dus wél uitrekenen, een NNT niet. Verder houden we het in dit boekje bij de verhoudingen. Maar zie je in een artikel alleen een odds ratio staan, dan weet je nu welke helft van het verhaal ontbreekt.</p>
 <p>Zou je het in één eerlijke zin moeten zeggen, dan zo: “onder de rokende moeders kwam een laag geboortegewicht vaker voor dan onder de niet-rokende (41% tegenover 25%; <em>OR</em> = 2.02, dus ruim tweemaal zo grote odds — niet tweemaal zoveel kans, dat is 1.61) — samenhang in één ziekenhuis in 1986, geen bewijs van oorzaak.”</p>
 <div class="kicker">
 <p>jouw beurt</p>
