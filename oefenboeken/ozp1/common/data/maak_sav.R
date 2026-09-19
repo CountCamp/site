@@ -15,7 +15,7 @@ var_label(egels$leeftijd) <- "Leeftijd in maanden"
 var_label(egels$lengte) <- "Lengte in cm"
 write_sav(egels, file.path(OUT, "egels.sav"))
 
-## 2. egels_pienterheid.sav : steekproef (n=25, mean=106, sd=15). T3/T7/T9.
+## 2. egels_pienterheid.sav : steekproef (n=25, mean=106, sd=15). T4/T7/T9.
 n <- 25
 pient <- rnorm(n); pient <- round((pient - mean(pient))/sd(pient) * 15 + 106)
 steek <- data.frame(egel = 1:n, pienterheid = pient)
