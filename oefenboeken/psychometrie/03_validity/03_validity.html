@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3. Validity en classificatie — sensitivity, specificity en hoe je verkeerd gaat – Werkboek Psychometrie</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../04_pca/04_pca.html" rel="next">
+<link href="../02_reliability/02_reliability.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-45431c2918bd31147ddb3fa7038bb99f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../common/styles/countcamp.css">
+</head>
+
+<body class="nav-sidebar floating fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_measurement/01_measurement.html">Deel 1 · Wat een score betekent</a></li><li class="breadcrumb-item"><a href="../03_validity/03_validity.html">3. Validity en classificatie — sensitivity, specificity en hoe je verkeerd gaat</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Werkboek Psychometrie</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar CountCamp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Start</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 1 · Wat een score betekent</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_measurement/01_measurement.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Meten, schaal-niveaus, norm-scoren en classificatie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_reliability/02_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Reliability — Cronbach’s α, split-half en wat er overblijft</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03_validity/03_validity.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">3. Validity en classificatie — sensitivity, specificity en hoe je verkeerd gaat</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 2 · Wat een set items samen meet</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04_pca/04_pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Principal Component Analysis (PCA) — minder is meer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_measurement/01_measurement.html">Deel 1 · Wat een score betekent</a></li><li class="breadcrumb-item"><a href="../03_validity/03_validity.html">3. Validity en classificatie — sensitivity, specificity en hoe je verkeerd gaat</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">3. Validity en classificatie — sensitivity, specificity en hoe je verkeerd gaat</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="het-verhaal-van-dit-thema" class="level1">
+<h1>Het verhaal van dit thema</h1>
+<p>De vos kwam uit de hazelaars en zette zich naast de wezel. Hij rook iets, en hij wilde weten hoe goed hij dat rook.</p>
+<p>“Ik heb een test,” zei de vos. “Een vragenlijst die zegt of een dier alarm-snel is of niet.”</p>
+<p>“Werkt hij?” vroeg de wezel.</p>
+<p>“Daar gaat dit thema over. <em>Validiteit</em> heet het. De vraag is niet of de score consistent is — dat hebben jullie thema 2 al uitgemest — maar of hij <strong>meet wat hij beweert te meten</strong>.”</p>
+<p>“Hoe weet je dat?” vroeg de bunzing.</p>
+<p>“Door hem te vergelijken met een andere maat van hetzelfde, met een andere maat van iets <em>anders</em>, en met een externe waarheid.” De vos rook nog eens. “En dan reken je een tabel met vier cellen die je sensitivity, specificity, PPV en NPV oplevert. Als je het goed doet.”</p>
+<p><span class="getal">Tweehonderd</span> bosdieren in dit thema. Een continue <strong>Bos-Alarm-Vragenlijst</strong> (BAV, <span class="math inline">\(0\)</span>-<span class="math inline">\(100\)</span>). Plus een ware diagnose (alarm-snel / alarm-traag) op basis van geobserveerd reactiegedrag, een convergente maat (alertheid-observatie), en een divergente maat (kalmte). Mini-dataset: 80 dassen op een voorspeller-uitkomst-koppel voor E5.</p>
+<p>Drie hoofdvragen:</p>
+<ol type="1">
+<li><strong>Hangt de score samen met wat hij zou moeten meten?</strong> — convergent vs divergent (construct-validiteit).</li>
+<li><strong>Voorspelt hij een externe uitkomst?</strong> — criterion-validiteit + classification table.</li>
+<li><strong>Wat doe je bij meetfout?</strong> — correctie voor attenuatie, en waarom dat een gevaarlijk speeltje is.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A. Wat is <em>validity</em>?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Validity</strong> = de mate waarin een test <strong>meet wat hij beweert te meten</strong>. Verschillende soorten:</p>
+<ul>
+<li><strong>Content-validiteit</strong> <span class="eng">content validity</span> — dekken de items het construct? Theoretisch oordeel, geen statistiek. Bv. een depressie-schaal moet niet alleen stemming bevragen maar ook slaap, eetlust, concentratie.</li>
+<li><strong>Construct-validiteit</strong> <span class="eng">construct validity</span> — gedraagt de score zich zoals het construct dat zou moeten? Twee subtypes:
+<ul>
+<li><strong>Convergent</strong>: hoge correlatie met andere maten van <em>hetzelfde</em> construct.</li>
+<li><strong>Divergent / discriminant</strong>: lage of negatieve correlatie met maten van <em>andere</em> constructen.</li>
+</ul></li>
+<li><strong>Criterion-validiteit</strong> <span class="eng">criterion validity</span> — voorspelt de score een externe uitkomst? Twee subtypes:
+<ul>
+<li><strong>Concurrent</strong>: gelijktijdig gemeten externe uitkomst.</li>
+<li><strong>Predictive</strong>: latere uitkomst.</li>
+</ul></li>
+</ul>
+<p>Reliability <span class="math inline">\(\neq\)</span> validity. Een onbetrouwbare schaal kan onmogelijk valide zijn (te veel ruis); een betrouwbare schaal hoeft nog niet valide te zijn (kan consistent het verkeerde meten — <em>“perfect verkeerd”</em>). Validiteit is altijd <em>relatief aan een claim</em>: deze test is valide <em>voor het meten van X in populatie Y voor doel Z</em>. Niet “valide” in absolute zin.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>B. Classification table — vier cellen, vier verhoudingen die er echt toe doen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bij criterion-validiteit met een binaire uitkomst gaat het om de <strong>classification table</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Werkelijk <strong>positief</strong> (<span class="math inline">\(Y=1\)</span>)</th>
+<th>Werkelijk <strong>negatief</strong> (<span class="math inline">\(Y=0\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Voorspeld positief</td>
+<td>TP</td>
+<td>FP</td>
+</tr>
+<tr class="even">
+<td>Voorspeld negatief</td>
+<td>FN</td>
+<td>TN</td>
+</tr>
+</tbody>
+</table>
+<p>Vier ratio’s die er toe doen:</p>
+<ul>
+<li><strong>Sensitivity</strong> (TPR, true positive rate): <span class="math inline">\(\text{TP} / (\text{TP} + \text{FN})\)</span> — <em>gegeven dat iemand positief is, hoe vaak vindt de test hem?</em> Lees <strong>verticaal</strong> in de positieven-kolom.</li>
+<li><strong>Specificity</strong> (TNR): <span class="math inline">\(\text{TN} / (\text{TN} + \text{FP})\)</span> — <em>gegeven dat iemand negatief is, hoe vaak laat de test hem terecht gaan?</em> Lees <strong>verticaal</strong> in de negatieven-kolom.</li>
+<li><strong>PPV</strong> (positive predictive value): <span class="math inline">\(\text{TP} / (\text{TP} + \text{FP})\)</span> — <em>gegeven dat de test positief is, hoe vaak klopt dat?</em> Lees <strong>horizontaal</strong> in de voorspeld-positief-rij.</li>
+<li><strong>NPV</strong> (negative predictive value): <span class="math inline">\(\text{TN} / (\text{TN} + \text{FN})\)</span> — <em>gegeven dat de test negatief is, hoe vaak klopt dat?</em> Lees <strong>horizontaal</strong> in de voorspeld-negatief-rij.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Bens richting-van-lezen-conventie
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sensitivity en Specificity = <strong>verticaal</strong> lezen (in kolommen <em>werkelijk positief</em> / <em>werkelijk negatief</em>).</p>
+<p>PPV en NPV = <strong>horizontaal</strong> lezen (in rijen <em>voorspeld positief</em> / <em>voorspeld negatief</em>).</p>
+<p>Onthoud het zo: sensitivity vraagt <em>gegeven de waarheid</em>, PPV vraagt <em>gegeven de test</em>. Twee verschillende vragen, twee verschillende richtingen door de tabel.</p>
+</div>
+</div>
+<p>Plus een vijfde maat:</p>
+<ul>
+<li><strong>PAC</strong> (proportion accurate classifications, ofwel accuracy): <span class="math inline">\((\text{TP} + \text{TN}) / N\)</span> — <em>welk percentage classificaties klopte überhaupt?</em> Eenvoudig, maar misleidend bij scheve klassen (zie Don’t-callout verderop).</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>C. Vos-frame — wat onderzoeken we?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De vos heeft een test (BAV) en wil weten:</p>
+<ul>
+<li>Meet de BAV alertheid? (convergent: correleert hij met een tweede maat van alertheid?)</li>
+<li>Discrimineert hij van <em>kalmte</em>? (divergent: correleert hij negatief, of bijna nul, met een kalmte-maat?)</li>
+<li>Voorspelt hij wie er <strong>echt</strong> snel reageert? (criterion + classification table — sensitivity, specificity, PPV, NPV).</li>
+<li>En wat doe je als je weet dat de BAV niet perfect betrouwbaar is — corrigeer je dan voor attenuatie? (3.A — en daar gaat de vos zich verbazen).</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Refresh — wat je uit thema 1 en 2 hebt meegenomen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Thema 1</strong>: norm-scoren — z-, T-scores, percentielen. Plus <em>Ruw is Ruk</em>.</li>
+<li><strong>Thema 2</strong>: Cronbach’s <span class="math inline">\(\alpha\)</span> als internal consistency. Plus <em>een onbetrouwbare schaal kan onmogelijk valide zijn</em>.</li>
+</ul>
+<p>Validity bouwt voort op reliability. Stel je voor: een schaal met <span class="math inline">\(\alpha = .60\)</span> correleert <span class="math inline">\(r = .30\)</span> met een externe uitkomst. Klinkt magertjes — maar de echte correlatie tussen de <strong>constructs</strong> zou hoger zijn als de schaal betrouwbaar was. <em>Correctie voor attenuatie</em> (3.A) brengt die rekensom in beeld. Maar pas op: correctie zonder context is een eufemisme voor wensdenken.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="werkmaterialen-r-pakketten-en-functies" class="level1">
+<h1>Werkmaterialen — R-pakketten en functies</h1>
+<div class="dieren-subtitel">
+<p><em>De vos pakt zijn gereedschap</em></p>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Gereedschap</th>
+<th>Waar het voor is</th>
+<th>Pakket</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cor()</code></td>
+<td>Pearson-correlaties (convergent / divergent)</td>
+<td>base</td>
+</tr>
+<tr class="even">
+<td><code>table()</code></td>
+<td>Classification table</td>
+<td>base</td>
+</tr>
+<tr class="odd">
+<td><code>prop.table()</code></td>
+<td>Percentages uit tabel</td>
+<td>base</td>
+</tr>
+<tr class="even">
+<td><code>cor.test()</code></td>
+<td>Correlatie + <span class="math inline">\(p\)</span>-waarde + CI</td>
+<td>base</td>
+</tr>
+<tr class="odd">
+<td><code>glm(..., family = binomial)</code></td>
+<td>Logistische regressie als criterion-validatie</td>
+<td>base</td>
+</tr>
+<tr class="even">
+<td><code>psych::cor.smooth()</code></td>
+<td>Smoothing van correlatie-matrices (zelden nodig hier)</td>
+<td><code>psych</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Code in dit hoofdstuk — wat moet je kunnen typen?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Code is standaard <strong>open</strong> als je hem moet kunnen typen op het R-practical-tentamen: <code>cor()</code>, <code>cor.test()</code>, <code>table()</code>, <code>prop.table()</code>, en de classificatie-formules met de hand. Code voor gt-tabellen of plot-decoratie staat <strong>ingeklapt</strong>.</p>
+</div>
+</div>
+</section>
+<section id="notatie-symbolen-voor-validity" class="level1">
+<h1>Notatie — symbolen voor validity</h1>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Sleutelsymbolen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong><span class="math inline">\(r_{xy}\)</span></strong> — geschatte (sample) correlatie tussen <span class="math inline">\(X\)</span> en <span class="math inline">\(Y\)</span>.</li>
+<li><strong><span class="math inline">\(r_{xx}\)</span></strong> — reliability (Cronbach’s <span class="math inline">\(\alpha\)</span> of equivalent) van <span class="math inline">\(X\)</span>.</li>
+<li><strong><span class="math inline">\(r_{yy}\)</span></strong> — reliability van <span class="math inline">\(Y\)</span>.</li>
+<li><strong><span class="math inline">\(r_{xy}^*\)</span></strong> — voor attenuatie gecorrigeerde correlatie (zie 3.A).</li>
+<li><strong>TP, FP, FN, TN</strong> — true/false positive/negative.</li>
+<li><strong>PAC</strong> = proportion accurate classifications = <span class="math inline">\((TP + TN)/N\)</span>.</li>
+<li><strong>Sensitiviteit, specificiteit, PPV, NPV</strong> — zie callout B.</li>
+<li><strong>Base rate</strong> — proportie positieven in de populatie. PPV en NPV hangen ervan af, sensitivity en specificity niet.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Vuistregels zijn afspraken, geen wetten
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Convergent</strong>: <span class="math inline">\(r \geq .50\)</span> tussen maten van hetzelfde construct is een gangbare ondergrens. <span class="math inline">\(r \geq .70\)</span> is sterk.</li>
+<li><strong>Divergent</strong>: <span class="math inline">\(|r| &lt; .30\)</span> tussen maten van verschillende constructen. Hoger duidt op constructverschillen die niet duidelijk zijn.</li>
+<li><strong>Sensitivity / specificity bij screening</strong>: liever sensitivity hoog (<span class="math inline">\(\geq .80\)</span>); false negatives missen is duurder dan false positives.</li>
+<li><strong>Sensitivity / specificity bij definitieve diagnose</strong>: liever specificity hoog (<span class="math inline">\(\geq .90\)</span>); false positives kosten meer dan false negatives.</li>
+<li><strong>PPV en NPV</strong>: hangen sterk af van <strong>base rate</strong>. Bij zeldzame ziekte kan PPV laag zijn (<span class="math inline">\(&lt; .30\)</span>) zelfs bij goede sensitivity en specificity.</li>
+</ul>
+<p>Verschillende vakgroepen hanteren iets andere drempels. Voor je tentamen: <strong>check je eigen college-sheets</strong>.</p>
+</div>
+</div>
+</section>
+<section id="project--en-datavoorbereiding" class="level1">
+<h1>3.0 Project- en datavoorbereiding</h1>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"tidyverse"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="a">
+<li><strong>Open de hoofd-dataset.</strong></li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/bos_alarm_test.RData"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(bos_alarm_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   200 obs. of  7 variables:
+ $ dier_id      : Factor w/ 200 levels "d001","d002",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ diersoort    : Factor w/ 4 levels "bunzing","egel",..: 1 1 3 4 3 2 2 1 3 4 ...
+ $ leeftijd     : Factor w/ 3 levels "jong","volwassen",..: 1 3 2 1 2 1 3 1 2 2 ...
+ $ alarm_score  : num  45.9 60.2 55.6 40.8 47.6 43.3 27.9 14.1 47.1 66.8 ...
+ $ alertheid_obs: num  49 76.9 44.1 70 31.7 70.6 9.9 6.1 25.7 67.6 ...
+ $ kalmte_obs   : num  35.1 51.2 45.4 46.9 52.8 53.1 86.2 75.6 63.6 59.7 ...
+ $ ware_alarm   : Factor w/ 2 levels "traag","snel": 2 2 1 2 1 1 1 1 1 2 ...</code></pre>
+</div>
+</div>
+<p>Per dier: een <code>dier_id</code>, diersoort, leeftijd, een continue <code>alarm_score</code> (BAV, <span class="math inline">\(0\)</span>-<span class="math inline">\(100\)</span>), twee andere continue maten (<code>alertheid_obs</code> en <code>kalmte_obs</code>) voor convergente en divergente validatie, plus de <strong>ware</strong> binaire <code>ware_alarm</code> (snel/traag) als criterion.</p>
+</section>
+<section id="construct-validiteit-convergent-en-divergent" class="level1">
+<h1>3.1 Construct-validiteit — convergent en divergent</h1>
+<div class="dieren-subtitel">
+<p><em>Hangt de test samen met wat hij zou moeten meten?</em></p>
+</div>
+<blockquote class="blockquote">
+<p><em>“Convergent moet hoog,” zei de vos. “Divergent moet laag, of negatief. Anders zegt de test niets over alertheid maar gewoon over <strong>iets</strong> wat met alles samenhangt.”</em></p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Voor je gaat rekenen — vijf vragen aan jezelf
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Wie of wat wordt er gemeten?</strong> <em>De vos heeft 200 bosdieren genoteerd op vier maten.</em></li>
+<li><strong>Wat wordt er gemeten?</strong> <em>Drie continue scores plus één binaire diagnose.</em></li>
+<li><strong>Onafhankelijk of afhankelijk?</strong> <em>Voor construct-validatie geen voorspelmodel — we kijken naar <strong>correlatiepatronen</strong>. Voor criterion (3.2): wel een voorspelmodel.</em></li>
+<li><strong>Meetniveau?</strong> <em>Alle continue scores: interval. Ware-alarm: nominaal/binair.</em></li>
+<li><strong>Welke techniek?</strong> Construct-validiteit: correlaties (convergent vs divergent). Criterion-validiteit: classification + sensitivity/specificity, eventueel logistische regressie (vooruitblik LRA in MVDA).</li>
+</ol>
+</div>
+</div>
+<section id="t1-welke-validity-soort" class="level2">
+<h2 class="anchored" data-anchor-id="t1-welke-validity-soort">T1 — Welke validity-soort?</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag T1 — Pen-en-papier
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor elk vignet: kies tussen <strong>content-validiteit</strong>, <strong>convergent-validiteit</strong>, <strong>divergent-validiteit</strong>, <strong>concurrent criterion-validiteit</strong>, <strong>predictive criterion-validiteit</strong>.</p>
+<p><strong>a)</strong> <em>Een onderzoeker test of haar nieuwe burn-out-schaal sterker correleert met een gevestigde burn-out-meting (UBOS) dan met een depressie-meting.</em></p>
+<p><strong>b)</strong> <em>Een commissie expert-psychologen evalueert of een autisme-vragenlijst alle relevante symptoom-domeinen dekt.</em></p>
+<p><strong>c)</strong> <em>Een psychiater toetst of haar nieuwe ADHD-schaal vandaag samenhangt met een diagnose die op dezelfde dag is gesteld.</em></p>
+<p><strong>d)</strong> <em>Een opleidingspsycholoog meet bij studenten in jaar 1 een werkethiek-vragenlijst, en kijkt of die scores hun afstudeer-cijfer 4 jaar later voorspellen.</em></p>
+<p><strong>e)</strong> <em>Een psycholoog kijkt of een sociale-angst-schaal <strong>niet</strong> samenhangt met een tabel-tennis-vaardigheids-test (zou dat ook niet moeten).</em></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a) Convergent + divergent</strong>. Convergent: BAS-burnout met UBOS-burnout (hoge correlatie verwacht). Divergent: BAS-burnout met depressie (lagere correlatie verwacht omdat het andere construct is).</p>
+<p><strong>b) Content-validiteit</strong>. Theoretisch oordeel of de items het construct dekken. Geen statistiek — wel expert-review en theoretisch kader.</p>
+<p><strong>c) Concurrent criterion-validiteit</strong>. Schaal en criterium gelijktijdig gemeten, vraag: voorspelt de schaal de criterium-uitkomst?</p>
+<p><strong>d) Predictive criterion-validiteit</strong>. Schaal eerst, criterium later in de tijd. Voorspelt de schaal de toekomstige uitkomst?</p>
+<p><strong>e) Divergent-validiteit</strong>. Een sociale-angst-schaal zou <em>niet</em> moeten samenhangen met tafeltennis-vaardigheid; correlatie nul-of-laag bevestigt divergent.</p>
+<p><strong>Vuistregel.</strong> <em>Hetzelfde construct, andere maat</em> = convergent. <em>Ander construct</em> = divergent. <em>Externe binaire uitkomst</em> = criterion (concurrent of predictive afhankelijk van timing). <em>Theoretisch oordeel</em> = content.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="a-verkenning-correlatiematrix" class="level2">
+<h2 class="anchored" data-anchor-id="a-verkenning-correlatiematrix">3.1.a Verkenning — correlatiematrix</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cor_validity <span class="ot">&lt;-</span> <span class="fu">cor</span>(bos_alarm_test[, <span class="fu">c</span>(<span class="st">"alarm_score"</span>, <span class="st">"alertheid_obs"</span>, <span class="st">"kalmte_obs"</span>)])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(cor_validity, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              alarm_score alertheid_obs kalmte_obs
+alarm_score         1.000         0.720     -0.535
+alertheid_obs       0.720         1.000     -0.486
+kalmte_obs         -0.535        -0.486      1.000</code></pre>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vragen 3.1.a
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Wat is de convergente correlatie (<span class="math inline">\(r\)</span> tussen <code>alarm_score</code> en <code>alertheid_obs</code>)?</p>
+<p><strong>b)</strong> Wat is de divergente correlatie (<span class="math inline">\(r\)</span> tussen <code>alarm_score</code> en <code>kalmte_obs</code>)?</p>
+<p><strong>c)</strong> Past dit patroon bij wat je zou verwachten als de BAV alertheid meet?</p>
+<p><strong>d)</strong> Wat zou je concluderen als de divergente correlatie <span class="math inline">\(r = -.05\)</span> was geweest in plaats van duidelijk negatief?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <span class="math inline">\(r_{\text{convergent}} \approx .72\)</span> — sterk positief. Past bij een test die alertheid meet.</p>
+<p><strong>b)</strong> <span class="math inline">\(r_{\text{divergent}} \approx -.53\)</span> — duidelijk negatief. Past bij een test die het <em>tegenovergestelde</em> van kalmte meet (alertheid en kalmte zijn conceptueel tegengesteld).</p>
+<p><strong>c)</strong> Ja. Convergent hoog (<span class="math inline">\(&gt; .50\)</span>), divergent duidelijk negatief — sterke construct-validity-aanwijzingen.</p>
+<p><strong>d)</strong> Een correlatie van <span class="math inline">\(-.05\)</span> tussen alarm en kalmte zou suggereren dat de BAV <strong>niet</strong> echt het tegenovergestelde van kalmte meet — misschien meet hij iets <em>anders dan alertheid</em> (algemene fysieke activatie? motor-reactie?). De divergent-validity zou dan zwak zijn — de constructen zijn niet duidelijk uitgesplitst.</p>
+<p><strong>APA-stijl.</strong></p>
+<blockquote class="blockquote">
+<p>Construct-validity van de Bos-Alarm-Vragenlijst (BAV) werd onderzocht via correlaties met twee andere maten (<span class="math inline">\(N = 200\)</span>). De convergente correlatie met een onafhankelijke alertheid-observatie was sterk, <span class="math inline">\(r = .72\)</span>, <span class="math inline">\(p &lt; .001\)</span>. De divergente correlatie met een kalmte-maat was duidelijk negatief, <span class="math inline">\(r = -.53\)</span>, <span class="math inline">\(p &lt; .001\)</span>. Dit patroon ondersteunt de claim dat de BAV alertheid meet en niet alleen een algemene-activatie-construct.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</section>
+<section id="t2-convergent-én-divergent-wanneer-mag-je-tevreden-zijn" class="level2">
+<h2 class="anchored" data-anchor-id="t2-convergent-én-divergent-wanneer-mag-je-tevreden-zijn">T2 — Convergent én divergent — wanneer mag je tevreden zijn?</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag T2 — Pen-en-papier
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker rapporteert voor een nieuwe stress-schaal:</p>
+<ul>
+<li><span class="math inline">\(r_{\text{convergent}} = .55\)</span> (met een gevestigde stress-meting)</li>
+<li><span class="math inline">\(r_{\text{divergent}} = .42\)</span> (met een depressie-meting)</li>
+</ul>
+<p><strong>a)</strong> Hoe interpreteer je dit patroon?</p>
+<p><strong>b)</strong> Welke twee verklaringen zijn mogelijk?</p>
+<p><strong>c)</strong> Wat zou je willen zien om beter overtuigd te raken?</p>
+<p><strong>d)</strong> Stel het patroon was: <span class="math inline">\(r_{\text{convergent}} = .55\)</span>, <span class="math inline">\(r_{\text{divergent}} = .15\)</span>. Wat is dan de conclusie?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Het convergent-getal is hoog, maar het divergent-getal is bijna even hoog. Onvoldoende discriminatie tussen stress en depressie — de schaal meet <em>iets dat met beide samenhangt</em>.</p>
+<p><strong>b)</strong> (1) De <strong>constructen zijn echt verwant</strong> — stress en depressie correleren in de natuur (vaak <span class="math inline">\(r \approx .50\)</span>). De schaal volgt die natuur. (2) De <strong>schaal is niet specifiek</strong> — hij meet algemene-distress-zonder-onderscheid. Welke van beide klopt: lastig zonder verdere data.</p>
+<p><strong>c)</strong> <em>Multitrait-multimethod-matrix</em> (Campbell &amp; Fiske, 1959): meerdere constructen meten met meerdere methoden, en kijken of de constructen sterker samenhangen <em>binnen</em> dan <em>tussen</em> methoden. Plus: factor-analyse om dimensionaliteit expliciet te toetsen (komt in thema 5).</p>
+<p><strong>d)</strong> Wel-divergent. <span class="math inline">\(r_{\text{convergent}} = .55\)</span> is acceptabel, <span class="math inline">\(r_{\text{divergent}} = .15\)</span> is laag genoeg om te zeggen: schaal meet stress, niet algemeen-distress.</p>
+<p><strong>Inzicht.</strong> <em>Convergent hoog</em> op zichzelf is niet genoeg — moet altijd vergeleken met <em>divergent</em>. Het verschil tussen beide is de eigenlijke discriminatie-claim.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="b-visuele-inspectie-twee-scatters" class="level2">
+<h2 class="anchored" data-anchor-id="b-visuele-inspectie-twee-scatters">3.1.b Visuele inspectie — twee scatters</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Toon code (twee scatterplots)</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bos_alarm_test<span class="sc">$</span>alarm_score, bos_alarm_test<span class="sc">$</span>alertheid_obs,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#117733"</span>, <span class="at">alpha.f =</span> <span class="fl">0.5</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"BAV alarm-score"</span>, <span class="at">ylab =</span> <span class="st">"Alertheid-observatie"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Convergent — verwacht hoog positief"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(alertheid_obs <span class="sc">~</span> alarm_score, <span class="at">data =</span> bos_alarm_test),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"#CC3311"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(bos_alarm_test<span class="sc">$</span>alarm_score, bos_alarm_test<span class="sc">$</span>kalmte_obs,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#882255"</span>, <span class="at">alpha.f =</span> <span class="fl">0.5</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"BAV alarm-score"</span>, <span class="at">ylab =</span> <span class="st">"Kalmte-observatie"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Divergent — verwacht negatief"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(kalmte_obs <span class="sc">~</span> alarm_score, <span class="at">data =</span> bos_alarm_test),</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">"#CC3311"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_validity_files/figure-html/scatters-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Toon code (twee scatterplots)</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="criterion-validiteit-en-classification-table" class="level1">
+<h1>3.2 Criterion-validiteit en classification table</h1>
+<div class="dieren-subtitel">
+<p><em>Voorspelt de test wie er echt snel reageert?</em></p>
+</div>
+<blockquote class="blockquote">
+<p><em>“Nu de echte test,” zei de vos. “Niet correlatie met een andere lijst — een <strong>echte</strong> classificatie. Dier reageert echt snel of niet. Vraag: voorspelt mijn vragenlijst dat?”</em></p>
+</blockquote>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cutoff op alarm_score (mediaan, kan ook ergens anders).</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">median</span>(bos_alarm_test<span class="sc">$</span>alarm_score)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Cutoff (median):"</span>, <span class="fu">round</span>(cutoff, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cutoff (median): 50.25 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bos_alarm_test<span class="sc">$</span>voorspeld <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(bos_alarm_test<span class="sc">$</span>alarm_score <span class="sc">&gt;=</span> cutoff, <span class="st">"snel"</span>, <span class="st">"traag"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"traag"</span>, <span class="st">"snel"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Classification table.</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Voorspeld =</span> bos_alarm_test<span class="sc">$</span>voorspeld,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">Werkelijk =</span> bos_alarm_test<span class="sc">$</span>ware_alarm)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>ct</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Werkelijk
+Voorspeld traag snel
+    traag    82   18
+    snel     32   68</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Tidyverse-alternatief
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>bos_alarm_test <span class="ot">&lt;-</span> bos_alarm_test <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">voorspeld =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      alarm_score <span class="sc">&gt;=</span> <span class="fu">median</span>(alarm_score) <span class="sc">~</span> <span class="st">"snel"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>                                <span class="sc">~</span> <span class="st">"traag"</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">factor</span>(<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"traag"</span>, <span class="st">"snel"</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>bos_alarm_test <span class="sc">|&gt;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(voorspeld, ware_alarm) <span class="sc">|&gt;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> ware_alarm, <span class="at">values_from =</span> n)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>count()</code> + <code>pivot_wider()</code> produceert dezelfde tabel als <code>table()</code>. Voor downstream-berekeningen (sensitivity etc.) blijft de base-route met <code>ct["snel", "snel"]</code>-indexering korter.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>TP <span class="ot">&lt;-</span> ct[<span class="st">"snel"</span>,  <span class="st">"snel"</span>]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>FP <span class="ot">&lt;-</span> ct[<span class="st">"snel"</span>,  <span class="st">"traag"</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>FN <span class="ot">&lt;-</span> ct[<span class="st">"traag"</span>, <span class="st">"snel"</span>]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>TN <span class="ot">&lt;-</span> ct[<span class="st">"traag"</span>, <span class="st">"traag"</span>]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>sens <span class="ot">&lt;-</span> TP <span class="sc">/</span> (TP <span class="sc">+</span> FN)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>spec <span class="ot">&lt;-</span> TN <span class="sc">/</span> (TN <span class="sc">+</span> FP)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>PPV  <span class="ot">&lt;-</span> TP <span class="sc">/</span> (TP <span class="sc">+</span> FP)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>NPV  <span class="ot">&lt;-</span> TN <span class="sc">/</span> (TN <span class="sc">+</span> FN)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>PAC  <span class="ot">&lt;-</span> (TP <span class="sc">+</span> TN) <span class="sc">/</span> <span class="fu">sum</span>(ct)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">Sensitivity =</span> sens, <span class="at">Specificity =</span> spec,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">PPV =</span> PPV, <span class="at">NPV =</span> NPV, <span class="at">PAC =</span> PAC), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sensitivity Specificity         PPV         NPV         PAC 
+      0.791       0.719       0.680       0.820       0.750 </code></pre>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vragen 3.2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Wat is sensitivity? Specificity?</p>
+<p><strong>b)</strong> Wat is PPV? NPV?</p>
+<p><strong>c)</strong> Wat is PAC en wat is het verschil met sensitivity?</p>
+<p><strong>d)</strong> De cutoff staat nu op de mediaan. Wat verandert er als je hem verhoogt naar het 75ste percentiel?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Sensitivity <span class="math inline">\(\approx .79\)</span> — gegeven dat een dier echt snel-reagerend is, vindt de test dat in <span class="math inline">\(79\%\)</span> van de gevallen. Specificity <span class="math inline">\(\approx .72\)</span> — gegeven dat een dier echt traag-reagerend is, klassificeert de test dat correct in <span class="math inline">\(72\%\)</span> van de gevallen.</p>
+<p><strong>b)</strong> PPV <span class="math inline">\(\approx .68\)</span> — gegeven dat de test “snel” zegt, klopt dat in <span class="math inline">\(68\%\)</span> van de gevallen. NPV <span class="math inline">\(\approx .82\)</span> — gegeven dat de test “traag” zegt, klopt dat in <span class="math inline">\(82\%\)</span>.</p>
+<p><strong>c)</strong> PAC <span class="math inline">\(\approx .75\)</span> — overall classificatie-accuraatheid. Verschil met sensitivity: PAC kijkt naar alle correcte classificaties (TP + TN) gedeeld door totaal. Sensitivity kijkt alleen naar de positieven-kolom. Bij <strong>scheve klassen</strong> (bv. <span class="math inline">\(90\%\)</span> negatief) kan PAC misleidend zijn — <em>altijd “negatief” zeggen</em> geeft <span class="math inline">\(90\%\)</span> PAC, maar sensitivity <span class="math inline">\(= 0\%\)</span>.</p>
+<p><strong>d)</strong> Cutoff verhogen → minder dieren als “snel” geklassificeerd → <strong>specificity stijgt</strong> (minder false positives), <strong>sensitivity daalt</strong> (meer echte snel-reagerenden missen). PPV stijgt waarschijnlijk (de dieren die je wel als snel classificeert zijn extremer); NPV daalt iets. PAC kan beide kanten op afhankelijk van base rate.</p>
+<p><strong>APA-stijl.</strong></p>
+<blockquote class="blockquote">
+<p>Met een cutoff op de mediaan (<span class="math inline">\(Mdn = 50.25\)</span>) classificeerde de Bos-Alarm-Vragenlijst 200 dieren in snel-reagerend (<span class="math inline">\(n = 100\)</span>) versus traag-reagerend (<span class="math inline">\(n = 100\)</span>). Vergelijking met de geobserveerde ware-alarm-status leverde sensitivity <span class="math inline">\(= .79\)</span>, specificity <span class="math inline">\(= .72\)</span>, PPV <span class="math inline">\(= .68\)</span>, NPV <span class="math inline">\(= .82\)</span> en PAC <span class="math inline">\(= .75\)</span>. De BAV vertoont matige criterion-validity bij deze cutoff; verschuiving naar een strenger criterium zou specificity verbeteren ten koste van sensitivity.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<section id="t3-sensitivity-vs-specificity-vier-scenarios" class="level2">
+<h2 class="anchored" data-anchor-id="t3-sensitivity-vs-specificity-vier-scenarios">T3 — Sensitivity vs Specificity — vier scenario’s</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag T3 — Pen-en-papier
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor elk scenario: welke ratio is <strong>belangrijker</strong>?</p>
+<p><strong>a)</strong> <em>Een psychiater screent <span class="math inline">\(5000\)</span> kinderen op autisme-symptomen. Doel: niemand mag worden gemist; vervolgconsult is laagdrempelig.</em></p>
+<p><strong>b)</strong> <em>Een psychiater stelt een definitieve PTSS-diagnose. Gevolgen: medicatie, etiket, verzekerings-impact.</em></p>
+<p><strong>c)</strong> <em>Een psycholoog meet bij <span class="math inline">\(80\)</span> cliënten een burn-out-risico-score, en gebruikt die als triage voor wachtlijst-prioriteit.</em></p>
+<p><strong>d)</strong> <em>Een onderzoeker selecteert “extreem hoog scorers” voor een interventie-studie (<span class="math inline">\(n = 30\)</span> per groep).</em></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a) Sensitivity</strong> belangrijker. Missen is de fout — false negatives blijven onbehandeld. Iets meer false positives (vervolgconsult niet nodig) is laagdrempelig.</p>
+<p><strong>b) Specificity</strong> belangrijker. Onterechte diagnose is duur (medicatie, etiket, verzekerings-impact). Liever wat sensitivity opofferen.</p>
+<p><strong>c)</strong> Beide ongeveer even belangrijk; <strong>balans</strong> of <span class="math inline">\(F1\)</span>-score relevant. Bij triage kun je niet <em>iedereen</em> op de wachtlijst zetten (capaciteit) maar ook niemand met echt risico missen.</p>
+<p><strong>d) Specificity</strong> belangrijker. Doel: alleen <em>echte</em> extremen in de groep. False positives verwateren de “extreme” studiegroep.</p>
+<p><strong>Vuistregel.</strong> <em>Missen erger dan vals alarm</em> = sensitivity. <em>Vals alarm erger dan missen</em> = specificity. Vrijwel alle real-world toepassingen vereisen een keuze; geen formule lost het op.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="t4-ppv-en-npv-base-rate-effect" class="level2">
+<h2 class="anchored" data-anchor-id="t4-ppv-en-npv-base-rate-effect">T4 — PPV en NPV — base rate effect</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag T4 — Pen-en-papier
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een test heeft sensitivity <span class="math inline">\(= .90\)</span> en specificity <span class="math inline">\(= .90\)</span>.</p>
+<p><strong>a)</strong> Bij een base rate van <span class="math inline">\(50\%\)</span> (helft positief): wat is PPV?</p>
+<p><strong>b)</strong> Bij een base rate van <span class="math inline">\(1\%\)</span> (zeldzame ziekte, <span class="math inline">\(1\)</span> op <span class="math inline">\(100\)</span>): wat is PPV?</p>
+<p><strong>c)</strong> Wat zegt dit verschil?</p>
+<p><strong>d)</strong> Sensitivity en specificity hangen <em>niet</em> af van base rate — waarom PPV en NPV wel?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Bayes-formule: <span class="math inline">\(\text{PPV} = \frac{\text{sens} \cdot \text{base rate}}{\text{sens} \cdot \text{base rate} + (1 - \text{spec}) \cdot (1 - \text{base rate})}\)</span>.</p>
+<p><strong>a)</strong> <span class="math inline">\(\text{PPV} = (.90 \cdot .50) / (.90 \cdot .50 + .10 \cdot .50) = .45 / .50 = .90\)</span>. Negen op tien positieve uitslagen kloppen.</p>
+<p><strong>b)</strong> <span class="math inline">\(\text{PPV} = (.90 \cdot .01) / (.90 \cdot .01 + .10 \cdot .99) = .009 / .108 = .083\)</span>. Slechts <span class="math inline">\(8\%\)</span> van positieve uitslagen klopt — <span class="math inline">\(92\%\)</span> false positives.</p>
+<p><strong>c)</strong> Bij <strong>lage base rate</strong> is PPV laag, ook al is de test op zich goed (sens en spec hoog). De meerderheid van positieve uitslagen is false positive omdat er gewoon meer negatieven zijn die kunnen misclassificeren.</p>
+<p><strong>d)</strong> Sensitivity en specificity zijn <strong>conditional op de ware status</strong>: gegeven dat iemand positief is / gegeven dat iemand negatief is. Die kansen zijn <em>eigenschappen van de test</em>, niet van de populatie. PPV en NPV zijn conditional <strong>op de testuitslag</strong>: gegeven dat de test positief is / gegeven dat de test negatief is. Die kansen <em>hangen af</em> van hoeveel positieven er überhaupt in de populatie zijn.</p>
+<p><strong>Inzicht.</strong> <em>“Goed-werkende test”</em> (sensitivity en specificity hoog) is geen garantie voor <em>“betrouwbare diagnose”</em> (hoog PPV) als de ziekte zeldzaam is. Vandaar de waarschuwing tegen massaal screenen op zeldzame aandoeningen.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="t5-cutoff-verschuiven-en-de-roc-curve" class="level2">
+<h2 class="anchored" data-anchor-id="t5-cutoff-verschuiven-en-de-roc-curve">T5 — Cutoff verschuiven en de ROC-curve</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag T5 — Pen-en-papier
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een test heeft een continue score. Door de cutoff te verschuiven verandert het sensitivity/specificity-paar.</p>
+<p><strong>a)</strong> Als je de cutoff <em>verlaagt</em> (meer dieren positief gelabeld): wat gebeurt met sensitivity? Specificity?</p>
+<p><strong>b)</strong> En als je hem <em>verhoogt</em>?</p>
+<p><strong>c)</strong> Wat is een <strong>ROC-curve</strong>?</p>
+<p><strong>d)</strong> Wat is <strong>AUC</strong> (area under the ROC curve)? Welk getal zou je willen?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Cutoff lager → meer “positieven” geklassificeerd → <strong>sensitivity stijgt</strong> (meer echte positieven gevangen), <strong>specificity daalt</strong> (meer false positives).</p>
+<p><strong>b)</strong> Cutoff hoger → omgekeerd. Sensitivity daalt, specificity stijgt.</p>
+<p><strong>c)</strong> <strong>ROC-curve</strong> (Receiver Operating Characteristic): plot van sensitivity (Y-as) tegen <span class="math inline">\(1 -\)</span> specificity (X-as) bij elke mogelijke cutoff. Toont de trade-off visueel: hoe hoger de curve naar de linkerbovenhoek, hoe beter de test.</p>
+<p><strong>d)</strong> <strong>AUC</strong> = oppervlakte onder de ROC-curve. AUC <span class="math inline">\(= 1.0\)</span> = perfecte test. AUC <span class="math inline">\(= 0.5\)</span> = puur toevallig (de ROC-curve loopt over de diagonaal). Vuistregels: AUC <span class="math inline">\(&gt; .80\)</span> = goed; <span class="math inline">\(.70\)</span>-<span class="math inline">\(.80\)</span> = acceptabel; <span class="math inline">\(&lt; .70\)</span> = matig.</p>
+<p><strong>Inzicht.</strong> Een ROC-curve laat zien dat sensitivity en specificity samenhangen — geen vrije parameters. AUC is een <strong>cutoff-vrije</strong> maat: hij vat de hele ROC-curve samen. Vandaar de populariteit in machine learning en diagnostische test-validatie.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="a-correctie-voor-attenuatie-handle-with-care" class="level1">
+<h1>3.A Correctie voor attenuatie — handle with care</h1>
+<div class="dieren-subtitel">
+<p><em>De vos roept iets, en het klinkt als wensdenken</em></p>
+</div>
+<blockquote class="blockquote">
+<p><em>“En als ik weet dat mijn schaal niet perfect betrouwbaar is?” vroeg de bunzing.</em></p>
+<p><em>“Dan is je geobserveerde correlatie kleiner dan de werkelijke,” zei de vos. “Meetfout dempt elke samenhang.”</em></p>
+<p><em>“Kan je dat corrigeren?”</em></p>
+<p><em>“Technisch wel. Maar daar wil ik even over snauwen.”</em></p>
+</blockquote>
+<section id="wat-is-correctie-voor-attenuatie" class="level2">
+<h2 class="anchored" data-anchor-id="wat-is-correctie-voor-attenuatie">Wat is correctie voor attenuatie?</h2>
+<p>Wanneer je een correlatie meet tussen <span class="math inline">\(X\)</span> en <span class="math inline">\(Y\)</span>, en beide bevatten meetfout, dan <strong>onderschat</strong> je de “ware” correlatie tussen de onderliggende constructen. De geobserveerde correlatie is <em>gedempt</em> (afgenomen, attenuated) door meetfout. De Spearman-correctie:</p>
+<p><span class="math display">\[
+r^*_{xy} = \frac{r_{xy}}{\sqrt{r_{xx} \cdot r_{yy}}}
+\]</span></p>
+<p>Met <span class="math inline">\(r_{xx}\)</span> en <span class="math inline">\(r_{yy}\)</span> de reliability van <span class="math inline">\(X\)</span> en <span class="math inline">\(Y\)</span> (Cronbach’s <span class="math inline">\(\alpha\)</span> als proxy).</p>
+<p>Voorbeeld: <span class="math inline">\(r_{xy} = .50\)</span>, <span class="math inline">\(r_{xx} = .80\)</span>, <span class="math inline">\(r_{yy} = .85\)</span>.</p>
+<p><span class="math display">\[
+r^*_{xy} = \frac{.50}{\sqrt{.80 \cdot .85}} = \frac{.50}{\sqrt{.68}} = \frac{.50}{.825} \approx .606
+\]</span></p>
+<p>Geobserveerd <span class="math inline">\(r = .50\)</span>; gecorrigeerd <span class="math inline">\(r^* = .61\)</span>. Aha! Sterker.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pas op — de correctie is een schatting onder zware aannames
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Correctie voor attenuatie veronderstelt:</p>
+<ol type="1">
+<li><strong>Klassieke testtheorie geldt</strong> — meetfout is random, ongecorreleerd met ware score.</li>
+<li><strong>Reliability-schatting is precies</strong> — bij <span class="math inline">\(\alpha = .80\)</span> veronderstelt de formule dat de ware reliability <em>exact</em> <span class="math inline">\(.80\)</span> is. Als <span class="math inline">\(\alpha\)</span> in werkelijkheid <span class="math inline">\(.70\)</span> is, krijg je een fout antwoord.</li>
+<li><strong>Lineaire samenhang</strong> — geen niet-lineaire effecten, geen interactie.</li>
+</ol>
+<p>Bij <strong>lage</strong> reliability (<span class="math inline">\(\alpha &lt; .60\)</span>) wordt de correctie-factor <strong>explosief instabiel</strong>. Een kleine fout in <span class="math inline">\(\alpha\)</span> leidt tot een grote fout in <span class="math inline">\(r^*\)</span>. Plus: gecorrigeerde correlaties kunnen <span class="math inline">\(&gt; 1.0\)</span> uitkomen — wiskundig onmogelijk, maar in praktijk niet ongebruikelijk bij kleine steekproeven met lage reliability.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Don’t: correctie voor attenuatie als algemene “boost” voor je correlaties
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hier wordt het tijd om recht uit te snauwen.</p>
+<p>Correctie voor attenuatie is een <strong>rekentruc</strong> die zegt: <em>“Stel je voor dat onze metingen perfect betrouwbaar waren — dan zou onze correlatie hoger zijn.”</em> Dat klinkt als een uitspraak over de werkelijkheid. Het is geen uitspraak over de werkelijkheid. Het is een <strong>conditional gedachte-experiment</strong>: <em>als de wereld anders was, dan…</em>. De wereld is zoals hij is — de correlatie in jouw studie is wat je gemeten hebt.</p>
+<p>Wat ik in echte papers heb zien staan:</p>
+<blockquote class="blockquote">
+<p><em>“De gecorrigeerde correlatie tussen werkstress en burn-out was <span class="math inline">\(r^* = .87\)</span>, wat duidt op een sterke onderliggende samenhang.”</em></p>
+</blockquote>
+<p>Vraag aan jezelf: <strong>wat hadden ze écht gemeten?</strong> <span class="math inline">\(r = .50\)</span>. Met <span class="math inline">\(\alpha_x = .60\)</span>, <span class="math inline">\(\alpha_y = .55\)</span>. Reken het uit: <span class="math inline">\(r^* = .50 / \sqrt{.33} = .50 / .574 = .87\)</span>. Klopt op de cijfers. Maar dat <em>écht-gemeten</em> getal — <span class="math inline">\(.50\)</span> — verdwijnt in de gecorrigeerde versie, en niemand vermeldt dat de reliability van zowel werkstress- als burn-out-meting <strong>twijfelachtig</strong> was. Wat lezers zien: <em>“sterke onderliggende samenhang.”</em> Wat de studie eigenlijk toont: <em>“matige samenhang die we hebben opgepoetst door te delen door wortel-onbetrouwbaarheid.”</em></p>
+<p>Dit is <strong>niet hetzelfde</strong> als wetenschappelijk frauduleus zijn — de correctie is wiskundig legitiem. Het is wel <strong>dichterbij</strong>: kennis-presentatie waarbij de zwakheid van de meting wordt verstopt onder een formule die “corrigeert”.</p>
+<p>Wie een gecorrigeerde correlatie rapporteert moet <strong>altijd</strong>:</p>
+<ol type="1">
+<li>De <strong>rauwe</strong> <span class="math inline">\(r\)</span> erbij melden (“rauw” en “gecorrigeerd” naast elkaar).</li>
+<li>De gebruikte reliabilities <span class="math inline">\(r_{xx}\)</span> en <span class="math inline">\(r_{yy}\)</span> expliciet noemen.</li>
+<li>De <strong>standaardfout</strong> of CI rond de gecorrigeerde schatting rapporteren — die is bij lage reliability <em>enorm</em>.</li>
+<li>Een interpretatie geven van de gecorrigeerde correlatie als <strong>theoretische schatting</strong>, niet als de echte studie-uitkomst.</li>
+</ol>
+<p>Wie dat niet doet, en met <em>“<span class="math inline">\(r^* = .87\)</span>”</em> zwaait alsof het een echte uitkomst is, doet aan <strong>statistisch theater</strong>. Ik wil mensen vinden die dat doen en een copie van Cronbach (1951) op hun bureau leggen, opengeslagen op pagina <span class="math inline">\(309\)</span>, en zeggen: “Lees dit. En vertel me dan dat je correctie-voor-attenuatie <em>de echte correlatie</em> is.”</p>
+<p>Hint: dat staat er niet.</p>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Voorbeeld: alarm_score (BAV) en alertheid_obs.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Stel: BAV alpha = .85, alertheid_obs alpha = .75 (hypothetisch).</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>r_xy <span class="ot">&lt;-</span> <span class="fu">cor</span>(bos_alarm_test<span class="sc">$</span>alarm_score, bos_alarm_test<span class="sc">$</span>alertheid_obs)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>r_xx <span class="ot">&lt;-</span> <span class="fl">0.85</span>   <span class="co"># hypothetische reliability BAV.</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>r_yy <span class="ot">&lt;-</span> <span class="fl">0.75</span>   <span class="co"># hypothetische reliability alertheid_obs.</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>r_corrected <span class="ot">&lt;-</span> r_xy <span class="sc">/</span> <span class="fu">sqrt</span>(r_xx <span class="sc">*</span> r_yy)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">r_observed =</span> r_xy, <span class="at">r_corrected =</span> r_corrected), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> r_observed r_corrected 
+      0.720       0.902 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Die twee alpha’s zijn verzonnen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(r_{xy}\)</span> komt uit de data — 200 dieren, de BAV tegen de alertheid-observatie. De twee reliabilities eronder niet: <span class="math inline">\(r_{xx} = .85\)</span> en <span class="math inline">\(r_{yy} = .75\)</span> zijn <strong>hypothetische</strong> waarden. Deze dataset heeft geen losse items, en zonder items valt er geen Cronbach’s <span class="math inline">\(\alpha\)</span> te berekenen.</p>
+<p>Dat maakt het voorbeeld niet minder bruikbaar — het laat zien wát de correctie doet — maar het gecorrigeerde getal dat er zo meteen uit komt is dus een rekensom op een aanname, niet een uitkomst van deze studie. Dat is precies het onderscheid waar de rest van deze sectie over gaat.</p>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag 3.A
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Wat is <span class="math inline">\(r_{\text{observed}}\)</span> in dit voorbeeld? Wat is <span class="math inline">\(r^*\)</span>?</p>
+<p><strong>b)</strong> Bereken <span class="math inline">\(r^*\)</span> als <span class="math inline">\(r_{xx} = .60\)</span> en <span class="math inline">\(r_{yy} = .60\)</span> (lage reliability).</p>
+<p><strong>c)</strong> Wat is je conclusie over wat je in een paper rapporteert?</p>
+<p><strong>d)</strong> Schrijf één APA-zin die <em>eerlijk</em> rapporteert, met rauw + gecorrigeerd + reliabilities erbij.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <span class="math inline">\(r_{\text{observed}} \approx .72\)</span>, <span class="math inline">\(r^* = .72 / \sqrt{.85 \cdot .75} = .72 / .798 \approx .90\)</span>. Een aanzienlijke “boost”, gerekend met de twee <strong>hypothetische</strong> reliabilities uit het codeblok hierboven. Een lezer die alleen <span class="math inline">\(r^* = .90\)</span> ziet, denkt: <em>“vrijwel perfect samenhangend”</em>. De rauwe data zegt: <em>“sterk samenhangend, maar niet vrijwel perfect.”</em></p>
+<p><strong>b)</strong> <span class="math inline">\(r^* = .72 / \sqrt{.60 \cdot .60} = .72 / .60 = 1.20\)</span>. <strong>Wiskundig onmogelijk</strong> — een correlatie kan niet groter dan <span class="math inline">\(1\)</span> zijn. Bij lage reliability krachtigere overshoot. Dit is precies waarom de Don’t-callout boos doet.</p>
+<p><strong>c)</strong> <strong>Altijd</strong> rauw én gecorrigeerd rapporteren, met reliability-bronnen erbij. Een gecorrigeerde correlatie zonder context is misleidend.</p>
+<p><strong>d) Voorbeeldzin:</strong></p>
+<blockquote class="blockquote">
+<p>De geobserveerde correlatie tussen BAV en alertheid-observatie was <span class="math inline">\(r = .72\)</span>, <span class="math inline">\(p &lt; .001\)</span> (<span class="math inline">\(N = 200\)</span>). Onder correctie voor attenuatie (<span class="math inline">\(r_{xx} = .85\)</span> voor BAV en <span class="math inline">\(r_{yy} = .75\)</span> voor alertheid-observatie, beide Cronbach’s α) bedraagt de gecorrigeerde correlatie <span class="math inline">\(r^* = .90\)</span>. We rapporteren de gecorrigeerde schatting als hypothetische bovengrens van de werkelijke construct-correlatie; de geobserveerde <span class="math inline">\(r = .72\)</span> blijft het betrouwbare studie-resultaat.</p>
+</blockquote>
+<p><strong>Inzicht.</strong> Het VPRO-principe: een eerlijke rapportage laat de <em>truc</em> zien, niet alleen het resultaat. Wie alleen het gecorrigeerde getal rapporteert verbergt de bron.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="examen-stijl-vragen" class="level1">
+<h1>Examen-stijl vragen</h1>
+<div class="dieren-subtitel">
+<p><em>Vier kortere oefeningen plus één mini-practical</em></p>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag E1 — Classification table interpreteren
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een classification table:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Werkelijk <strong>positief</strong></th>
+<th>Werkelijk <strong>negatief</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Voorspeld positief</td>
+<td><span class="math inline">\(40\)</span></td>
+<td><span class="math inline">\(20\)</span></td>
+</tr>
+<tr class="even">
+<td>Voorspeld negatief</td>
+<td><span class="math inline">\(10\)</span></td>
+<td><span class="math inline">\(130\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Welke conclusie?</p>
+<ol type="a">
+<li>Sensitivity <span class="math inline">\(= .80\)</span>, specificity <span class="math inline">\(\approx .87\)</span>.</li>
+<li>Sensitivity <span class="math inline">\(= .67\)</span>, specificity <span class="math inline">\(\approx .87\)</span>.</li>
+<li>PPV <span class="math inline">\(= .80\)</span>, NPV <span class="math inline">\(\approx .87\)</span>.</li>
+<li>De test is onbruikbaar omdat PAC onder <span class="math inline">\(.90\)</span> ligt.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Sensitivity <span class="math inline">\(= 40 / (40 + 10) = .80\)</span>. Specificity <span class="math inline">\(= 130 / (130 + 20) \approx .867\)</span>.</p>
+<p>Optie b: sensitivity is <span class="math inline">\(.80\)</span>, niet <span class="math inline">\(.67\)</span> (<span class="math inline">\(.67\)</span> zou PPV zijn als je horizontaal leest). Optie c: PPV <span class="math inline">\(= 40/60 = .67\)</span>, NPV <span class="math inline">\(= 130/140 = .93\)</span> — die getallen kloppen niet. Optie d: PAC <span class="math inline">\(= (40+130)/200 = .85\)</span> — niet onbruikbaar, gewoon niet uitstekend.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag E2 — Convergent vs divergent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een nieuwe sociale-fobie-vragenlijst (SFV) wordt getest op construct-validiteit:</p>
+<ul>
+<li><span class="math inline">\(r\)</span>(SFV, andere SF-vragenlijst) <span class="math inline">\(= .68\)</span></li>
+<li><span class="math inline">\(r\)</span>(SFV, depressie-meting) <span class="math inline">\(= .42\)</span></li>
+<li><span class="math inline">\(r\)</span>(SFV, IQ-test) <span class="math inline">\(= .03\)</span></li>
+</ul>
+<p>Welke conclusie?</p>
+<ol type="a">
+<li>Sterk convergent en duidelijk divergent (alleen IQ).</li>
+<li>Onvoldoende discriminatie van depressie.</li>
+<li>Test heeft alleen content-validiteit.</li>
+<li>Meting is statistisch ongeldig.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>b)</strong> Convergent <span class="math inline">\(r = .68\)</span> is sterk. Divergent <span class="math inline">\(r = .42\)</span> met depressie is <strong>te hoog</strong> — sociale fobie en depressie verschillen, maar als je nieuwe meting bijna even hoog correleert met depressie als met andere sociale-fobie-meting, kun je de constructen niet onderscheiden. Wel duidelijke discriminatie van IQ.</p>
+<p>Optie a: <span class="math inline">\(r = .42\)</span> is geen “duidelijke discriminatie”. Optie c: er is wel construct-data, niet alleen content. Optie d: “statistisch ongeldig” is geen betekenisvol predikaat — wel: convergent OK, divergent zwak voor de specifieke vergelijking met depressie.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag E3 — Sensitivity, specificity en cutoff-verschuiving
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een test op een continue score heeft bij cutoff <span class="math inline">\(= 50\)</span>: sensitivity <span class="math inline">\(= .90\)</span>, specificity <span class="math inline">\(= .60\)</span>. Bij cutoff <span class="math inline">\(= 70\)</span>: sensitivity <span class="math inline">\(= .55\)</span>, specificity <span class="math inline">\(= .95\)</span>.</p>
+<p>Welke cutoff is geschikt voor <em>screening op zeldzame aandoeningen</em> waar missen kostbaar is?</p>
+<ol type="a">
+<li>Cutoff <span class="math inline">\(= 50\)</span> (hoge sensitivity).</li>
+<li>Cutoff <span class="math inline">\(= 70\)</span> (hoge specificity).</li>
+<li>Cutoff doet er niet toe.</li>
+<li>Beide gelijkwaardig — kies op basis van PAC.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Bij screening op zeldzame aandoening: missen (<span class="math inline">\(FN\)</span>) kostbaar — <em>false negatives</em> zijn de gevreesde fout. Hogere sensitivity vereist; cutoff <span class="math inline">\(= 50\)</span> (<span class="math inline">\(.90\)</span> sensitivity) is geschikt. Lagere specificity (<span class="math inline">\(.60\)</span>) accepteer je: false positives gaan door naar definitief onderzoek, daar wordt het verder uitgezocht.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag E4 — Correctie voor attenuatie
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker rapporteert:</p>
+<blockquote class="blockquote">
+<p><em>“De gecorrigeerde correlatie tussen werkstress en burn-out was <span class="math inline">\(r^* = .91\)</span>.”</em></p>
+</blockquote>
+<p>Reliabilities: <span class="math inline">\(r_{xx}\)</span> (werkstress) <span class="math inline">\(= .65\)</span>, <span class="math inline">\(r_{yy}\)</span> (burn-out) <span class="math inline">\(= .60\)</span>.</p>
+<p><strong>a)</strong> Bereken de <strong>rauwe</strong> correlatie <span class="math inline">\(r_{xy}\)</span> die hieraan voorafging.</p>
+<p><strong>b)</strong> Wat is je oordeel over deze rapportage?</p>
+<p><strong>c)</strong> Welke twee elementen ontbreken in de zin?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <span class="math inline">\(r_{xy} = r^* \cdot \sqrt{r_{xx} \cdot r_{yy}} = .91 \cdot \sqrt{.65 \cdot .60} = .91 \cdot \sqrt{.39} = .91 \cdot .624 \approx .57\)</span>. Een matige correlatie. De <span class="math inline">\(r^*\)</span>-presentatie maakt er een <em>vrijwel perfecte</em> samenhang van.</p>
+<p><strong>b) Misleidend</strong>. Een rauwe correlatie van <span class="math inline">\(.57\)</span> is een ander verhaal dan een gecorrigeerde van <span class="math inline">\(.91\)</span>. Zonder beide getallen + reliabilities erbij krijgt de lezer een vertekend beeld.</p>
+<p><strong>c)</strong> Ontbreken: (1) de <strong>rauwe</strong> <span class="math inline">\(r\)</span>, (2) de <strong>reliability-bronnen</strong> (<span class="math inline">\(\alpha\)</span>-waarden) gebruikt voor correctie. Plus eventueel: <span class="math inline">\(N\)</span>, <span class="math inline">\(p\)</span>-waarde, betrouwbaarheids-interval rond <span class="math inline">\(r^*\)</span>.</p>
+</div>
+</div>
+</div>
+<section id="r-practical-opdrachtje" class="level2">
+<h2 class="anchored" data-anchor-id="r-practical-opdrachtje">R-practical opdrachtje</h2>
+<div class="dieren-subtitel">
+<p><em>De das en de voorspelling</em></p>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag E5 — Mini-classificatie bij de das
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een ecoloog meet bij 80 dassen een continue voorspelscore en een binaire uitkomst (ja/nee). De dataset staat in <code>data/das_voorspelling.RData</code> met <code>das_id</code>, <code>voorspelscore</code>, en <code>uitkomst</code> (factor: nee/ja).</p>
+<p><strong>a)</strong> Bereken de mediaan van <code>voorspelscore</code> als cutoff. Maak de classification table.</p>
+<p><strong>b)</strong> Bereken sensitivity, specificity, PPV, NPV en PAC.</p>
+<p><strong>c)</strong> Verschuif de cutoff naar het 75ste percentiel. Wat verandert er?</p>
+<p><strong>d)</strong> Schrijf één APA-zin met je conclusie.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/das_voorspelling.RData"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(das_voorspelling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   80 obs. of  3 variables:
+ $ das_id       : Factor w/ 80 levels "b01","b02","b03",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ voorspelscore: num  28.8 41.1 45.1 46.8 11.4 61.4 33.3 53.2 63.5 46.5 ...
+ $ uitkomst     : Factor w/ 2 levels "nee","ja": 1 1 1 2 1 2 1 2 2 1 ...</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (a) Cutoff op mediaan, classification table.</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>cutoff_med <span class="ot">&lt;-</span> <span class="fu">median</span>(das_voorspelling<span class="sc">$</span>voorspelscore)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>das_voorspelling<span class="sc">$</span>voorspeld_med <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(das_voorspelling<span class="sc">$</span>voorspelscore <span class="sc">&gt;=</span> cutoff_med, <span class="st">"ja"</span>, <span class="st">"nee"</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"nee"</span>, <span class="st">"ja"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>ct_med <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Voorspeld =</span> das_voorspelling<span class="sc">$</span>voorspeld_med,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">Werkelijk =</span> das_voorspelling<span class="sc">$</span>uitkomst)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>ct_med</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Werkelijk
+Voorspeld nee ja
+      nee  31  9
+      ja   11 29</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (b) Sensitivity, specificity, PPV, NPV, PAC.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>TP <span class="ot">&lt;-</span> ct_med[<span class="st">"ja"</span>, <span class="st">"ja"</span>]; FP <span class="ot">&lt;-</span> ct_med[<span class="st">"ja"</span>, <span class="st">"nee"</span>]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>FN <span class="ot">&lt;-</span> ct_med[<span class="st">"nee"</span>,<span class="st">"ja"</span>]; TN <span class="ot">&lt;-</span> ct_med[<span class="st">"nee"</span>,<span class="st">"nee"</span>]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">Sensitivity =</span> TP<span class="sc">/</span>(TP<span class="sc">+</span>FN), <span class="at">Specificity =</span> TN<span class="sc">/</span>(TN<span class="sc">+</span>FP),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">PPV =</span> TP<span class="sc">/</span>(TP<span class="sc">+</span>FP), <span class="at">NPV =</span> TN<span class="sc">/</span>(TN<span class="sc">+</span>FN),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">PAC =</span> (TP<span class="sc">+</span>TN)<span class="sc">/</span><span class="fu">sum</span>(ct_med)) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sensitivity Specificity         PPV         NPV         PAC 
+      0.763       0.738       0.725       0.775       0.750 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (c) Cutoff op 75ste percentiel.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cutoff_75 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(das_voorspelling<span class="sc">$</span>voorspelscore, <span class="fl">0.75</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>das_voorspelling<span class="sc">$</span>voorspeld_75 <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(das_voorspelling<span class="sc">$</span>voorspelscore <span class="sc">&gt;=</span> cutoff_75, <span class="st">"ja"</span>, <span class="st">"nee"</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"nee"</span>, <span class="st">"ja"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>ct_75 <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Voorspeld =</span> das_voorspelling<span class="sc">$</span>voorspeld_75,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">Werkelijk =</span> das_voorspelling<span class="sc">$</span>uitkomst)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>ct_75</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Werkelijk
+Voorspeld nee ja
+      nee  39 21
+      ja    3 17</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>TP2 <span class="ot">&lt;-</span> ct_75[<span class="st">"ja"</span>, <span class="st">"ja"</span>]; FP2 <span class="ot">&lt;-</span> ct_75[<span class="st">"ja"</span>, <span class="st">"nee"</span>]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>FN2 <span class="ot">&lt;-</span> ct_75[<span class="st">"nee"</span>,<span class="st">"ja"</span>]; TN2 <span class="ot">&lt;-</span> ct_75[<span class="st">"nee"</span>,<span class="st">"nee"</span>]</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">Sensitivity =</span> TP2<span class="sc">/</span>(TP2<span class="sc">+</span>FN2), <span class="at">Specificity =</span> TN2<span class="sc">/</span>(TN2<span class="sc">+</span>FP2),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">PPV =</span> TP2<span class="sc">/</span>(TP2<span class="sc">+</span>FP2), <span class="at">NPV =</span> TN2<span class="sc">/</span>(TN2<span class="sc">+</span>FN2),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">PAC =</span> (TP2<span class="sc">+</span>TN2)<span class="sc">/</span><span class="fu">sum</span>(ct_75)) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sensitivity Specificity         PPV         NPV         PAC 
+      0.447       0.929       0.850       0.650       0.700 </code></pre>
+</div>
+</div>
+<p><strong>a)</strong> Cutoff op mediaan (<span class="math inline">\(48.85\)</span>); de classification table verdeelt de dassen over <span class="math inline">\(40\)</span> keer voorspeld <strong>ja</strong> en <span class="math inline">\(40\)</span> keer voorspeld <strong>nee</strong>.</p>
+<p><strong>b)</strong> Sens, spec, PPV, NPV, PAC liggen tussen <span class="math inline">\(.73\)</span> en <span class="math inline">\(.78\)</span> — matige tot redelijke voorspelling.</p>
+<p><strong>c)</strong> Cutoff op 75ste percentiel: minder dieren als “ja” geklassificeerd → specificity stijgt (minder false positives), sensitivity daalt (meer echte ja’s gemist). PPV stijgt vaak; PAC kan beide kanten op.</p>
+<blockquote class="blockquote">
+<p>Bij <span class="math inline">\(N = 80\)</span> dassen voorspelde de voorspelscore de binaire uitkomst met matige criterion-validity. Op de mediane cutoff: sensitivity <span class="math inline">\(= .76\)</span>, specificity <span class="math inline">\(= .74\)</span>, PPV <span class="math inline">\(= .73\)</span>, NPV <span class="math inline">\(= .78\)</span>, PAC <span class="math inline">\(= .75\)</span>. Bij verschuiving naar het 75ste percentiel verbeterde specificity ten koste van sensitivity, conform de cutoff-trade-off.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="r-spiekblad-validity-in-zes-stappen" class="level1">
+<h1>R-spiekblad — validity in zes stappen</h1>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Pakketten + data laden -------------------------------------------</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/bos_alarm_test.RData"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Construct-validiteit — convergent en divergent ------------------</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(bos_alarm_test[, <span class="fu">c</span>(<span class="st">"alarm_score"</span>, <span class="st">"alertheid_obs"</span>, <span class="st">"kalmte_obs"</span>)])</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Met p-waarden + CI:</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(bos_alarm_test<span class="sc">$</span>alarm_score, bos_alarm_test<span class="sc">$</span>alertheid_obs)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(bos_alarm_test<span class="sc">$</span>alarm_score, bos_alarm_test<span class="sc">$</span>kalmte_obs)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Cutoff op continue score -----------------------------------------</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>cutoff <span class="ot">&lt;-</span> <span class="fu">median</span>(bos_alarm_test<span class="sc">$</span>alarm_score)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>bos_alarm_test<span class="sc">$</span>voorspeld <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(bos_alarm_test<span class="sc">$</span>alarm_score <span class="sc">&gt;=</span> cutoff, <span class="st">"snel"</span>, <span class="st">"traag"</span>),</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"traag"</span>, <span class="st">"snel"</span>)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Classification table ---------------------------------------------</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">Voorspeld =</span> bos_alarm_test<span class="sc">$</span>voorspeld,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">Werkelijk =</span> bos_alarm_test<span class="sc">$</span>ware_alarm)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>ct</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Sensitivity, specificity, PPV, NPV, PAC --------------------------</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>TP <span class="ot">&lt;-</span> ct[<span class="st">"snel"</span>,  <span class="st">"snel"</span>]; FP <span class="ot">&lt;-</span> ct[<span class="st">"snel"</span>,  <span class="st">"traag"</span>]</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>FN <span class="ot">&lt;-</span> ct[<span class="st">"traag"</span>, <span class="st">"snel"</span>]; TN <span class="ot">&lt;-</span> ct[<span class="st">"traag"</span>, <span class="st">"traag"</span>]</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>sensitivity <span class="ot">&lt;-</span> TP <span class="sc">/</span> (TP <span class="sc">+</span> FN)</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>specificity <span class="ot">&lt;-</span> TN <span class="sc">/</span> (TN <span class="sc">+</span> FP)</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>PPV         <span class="ot">&lt;-</span> TP <span class="sc">/</span> (TP <span class="sc">+</span> FP)</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>NPV         <span class="ot">&lt;-</span> TN <span class="sc">/</span> (TN <span class="sc">+</span> FN)</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>PAC         <span class="ot">&lt;-</span> (TP <span class="sc">+</span> TN) <span class="sc">/</span> <span class="fu">sum</span>(ct)</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">Sensitivity =</span> sensitivity, <span class="at">Specificity =</span> specificity,</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">PPV =</span> PPV, <span class="at">NPV =</span> NPV, <span class="at">PAC =</span> PAC), <span class="dv">3</span>)</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Correctie voor attenuatie (gebruik met VOORZICHT) -----------------</span></span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>r_xy        <span class="ot">&lt;-</span> <span class="fu">cor</span>(bos_alarm_test<span class="sc">$</span>alarm_score, bos_alarm_test<span class="sc">$</span>alertheid_obs)</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>r_xx        <span class="ot">&lt;-</span> <span class="fl">0.85</span>   <span class="co"># HYPOTHETISCHE reliability BAV -- deze data heeft geen items</span></span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>r_yy        <span class="ot">&lt;-</span> <span class="fl">0.75</span>   <span class="co"># HYPOTHETISCHE reliability alertheid_obs</span></span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>r_corrected <span class="ot">&lt;-</span> r_xy <span class="sc">/</span> <span class="fu">sqrt</span>(r_xx <span class="sc">*</span> r_yy)</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">r_obs =</span> r_xy, <span class="at">r_corrected =</span> r_corrected)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="wat-blijft-liggen" class="level1">
+<h1>Wat blijft liggen</h1>
+<div class="dieren-subtitel">
+<p><em>Onderwerpen die buiten dit thema blijven</em></p>
+</div>
+<p>Construct + criterion validity met classification table en correctie voor attenuatie is de hoofdingang. Voor verdere studie:</p>
+<ul>
+<li><strong>Multitrait-multimethod-matrix</strong> (Campbell &amp; Fiske 1959) — meerdere constructen × meerdere methoden om convergent en divergent expliciet te toetsen.</li>
+<li><strong>ROC-curves en AUC</strong> — <code>pROC::roc()</code>. Cutoff-vrije evaluatie van diagnostische tests.</li>
+<li><strong>Likelihood ratios</strong> — alternatief voor sensitivity/specificity dat base rate apart houdt.</li>
+<li><strong>Bayesian updating</strong> — bij bekende prior-prevalence en testkenmerken: update naar posterieure waarschijnlijkheid van de aandoening.</li>
+<li><strong>Net Reclassification Improvement</strong> (NRI) — als je twee modellen vergelijkt op classification.</li>
+<li><strong>Calibratie</strong> — niet alleen <em>welke uitkomst</em> voorspeld, maar ook <em>of de voorspelde kansen kloppen</em>.</li>
+</ul>
+<p>Voor verdieping: Pepe (2003, <em>The Statistical Evaluation of Medical Tests</em>); Sackett et al.&nbsp;(2000, <em>Evidence-Based Medicine</em>); Streiner et al.&nbsp;(2015).</p>
+</section>
+<section id="aan-het-eind-van-de-dag" class="level1">
+<h1>Aan het eind van de dag</h1>
+<p>De vos zat tegen de schemer en wachtte. Hij had niet veel meer te zeggen.</p>
+<p>“Sensitivity en specificity,” zei hij eindelijk. “PPV en NPV. Vier getallen, twee richtingen door de tabel.”</p>
+<p>“En correctie voor attenuatie?” vroeg de bunzing.</p>
+<p>“Een goocheltruc,” zei de vos. “Mooi om te kennen, gevaarlijk om te gebruiken. Wie hem inzet zonder zijn rauwe correlatie erbij: ik vind hem.”</p>
+<p>“En morgen?”</p>
+<p>“PCA,” zei de vos. “Komt de rat tevoorschijn. Veel items, weinig dimensies — hij rangschikt ze.” Hij keek even naar de boom waar de rat zat. “Doe je best.”</p>
+<p>De rat blikte even op, en zijn ogen glinsterden. <em>“Eigenwaarden. Eindelijk.”</em></p>
+<p>De bunzing kroop naar zijn hol. Boven het bos werd het donker, en de vos sloop weg, geruisloos zoals altijd.</p>
+</section>
+<section id="verantwoording" class="level1">
+<h1>Verantwoording</h1>
+<p>Dit werkboek is geschreven voor studenten die psychometrie leren via R. Het is materiaal van CountCamp en niet van de opleiding: het volgt de weken van de cursus, maar het is er geen officieel onderdeel van. De voorbeelden, datasets, vragen en formuleringen zijn origineel; de didactische volgorde is dat bewust niet — die volgt de indeling van het college. De gebruikte drempels en formules zijn standaard psychometrische conventies; verwijzingen naar Cronbach (1951), Campbell &amp; Fiske (1959) en Streiner, Norman &amp; Cairney (2015) volgen de gebruikelijke citaatpraktijk in dit veld.</p>
+<p><strong>Waar dit thema een eigen weg gaat, en waar het de cursus volgt.</strong> Eigen keuze is het ezelsbruggetje in callout B: sensitiviteit en specificiteit lees je <strong>verticaal</strong> door de tabel, PPV en NPV <strong>horizontaal</strong>. Dat is onze manier om twee vragen uit elkaar te houden — <em>gegeven de waarheid</em> tegenover <em>gegeven de test</em> — en het is geen notatie die je ergens moet kunnen reproduceren; kijk in je eigen college-sheets wat daar van je gevraagd wordt, want daar en niet hier staat wat er op je tentamen kan komen. Eigen keuze is ook hoe streng dit thema doet over correctie voor attenuatie: je leert hier niet alleen de formule, maar ook dat je een gecorrigeerde correlatie nooit in je eentje rapporteert — de rauwe <span class="math inline">\(r\)</span> ernaast, beide betrouwbaarheden erbij, en een interval eromheen. En dat de twee betrouwbaarheden in 3.A verzonnen zijn, staat er met zoveel woorden bij: deze dataset heeft geen losse items, en dan valt er niets aan interne consistentie te berekenen. De cursus volgen we in de indeling van callout A — content, construct met convergent en divergent, criterion met concurrent en predictive. Die indeling en die namen zijn niet van ons.</p>
+<p>En waar dit werkboek en de cursus elkaar tegenspreken, wint de cursus: <strong>botst iets hieruit met je college, met het werkboek van de opleiding of met je formuleblad, dan winnen die drie.</strong></p>
+<p><em>Versie: September 2026 — CountCamp Lab</em></p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../02_reliability/02_reliability.html" class="pagination-link" aria-label="2. Reliability — Cronbach's α, split-half en wat er overblijft">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2. Reliability — Cronbach’s α, split-half en wat er overblijft</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../04_pca/04_pca.html" class="pagination-link" aria-label="4. Principal Component Analysis (PCA) — minder is meer">
+        <span class="nav-page-text">4. Principal Component Analysis (PCA) — minder is meer</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Werkboek Psychometrie · CountCamp Lab · wisi.nl</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Vragen, opmerkingen of suggesties? <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
