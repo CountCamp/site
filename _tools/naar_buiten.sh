@@ -79,6 +79,39 @@ controleer() {   # $1 = spook | echt   $2 = bladzij
   return "$fout"
 }
 
+# ---- de plank moet waarmaken wat hij belooft ---------------------------
+# De kaartjes op /oefenboeken/ dragen beweringen die met de hand werden
+# bijgehouden, en twee daarvan logen binnen twee dagen: het Psychometrie-
+# kaartje telde twee thema's waar er vier stonden (21-9), het OZP 1-kaartje
+# noemde een bijwerkdatum die negen dagen ouder was dan de map (22-9).
+# `plankwacht.py` rekent ze allebei na uit de bestanden en de geschiedenis
+# van deze repo.
+#
+# WAAROM HIER EN NIET IN DE ACTION: publish.yml checkt uit met
+# actions/checkout@v4 zonder fetch-depth, dus met één commit geschiedenis.
+# `git log` op een boekmap geeft daar niets terug -- en niets is dan geen
+# antwoord maar blindheid.
+#
+# WAAROM HIJ OP --productie TEGENHOUDT EN OP DE PROEFWEGEN NIET:
+# hij kan alleen rood worden doordat iemand een boek publiceerde zonder zijn
+# kaartje bij te werken. Hij loopt niet mee met de kalender -- een kaartje dat
+# vandaag klopt, klopt volgende week nog, want de wachter kijkt naar de laatste
+# commit op de boekmap en niet naar vandaag. Een poort die alleen afgaat bij een
+# echte fout, wordt niet omzeild. Op de proefwegen zegt hij het hardop en laat
+# hij je door: daar kíjk je juist, en dan wil je het weten vóór je levert.
+plank_nakijken() {   # $1 = blokkerend | melden
+  local streng="$1" code=0
+  python3 "$HIER/_tools/plankwacht.py" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  if [ "$streng" = blokkerend ]; then
+    echo "  De plank belooft iets dat niet klopt. Werk het kaartje bij, of"
+    echo "  publiceer het boek waar het kaartje over gaat."
+    return 1
+  fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 huidige_tak() { git branch --show-current; }
 
 # ============================================================
@@ -87,6 +120,7 @@ case "$WEG" in
 # ---- 1. lokaal ---------------------------------------------------------
 --lokaal)
   echo "== proefdruk bouwen, hier op de machine"
+  plank_nakijken melden
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
     QUARTO_PROFILE=spook quarto render
@@ -107,6 +141,7 @@ case "$WEG" in
 --proefdruk)
   TAK="${TAK:-$(huidige_tak)}"
   echo "== proefdruk op internet, vanaf tak '$TAK'"
+  plank_nakijken melden
   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
   if [ -n "$(git status --porcelain)" ]; then
@@ -153,7 +188,10 @@ case "$WEG" in
   echo "  te leveren: $VOOR commit(s)"
   git log --oneline origin/main..main | sed 's/^/    /'
   echo
-  echo "  eerst bouwen en controleren dat dit géén proefdruk is:"
+  echo "  eerst nakijken of de plank waarmaakt wat hij belooft:"
+  plank_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+  echo
+  echo "  dan bouwen en controleren dat dit géén proefdruk is:"
   if [ -z "$DROOG" ]; then
     quarto render >/dev/null
     controleer echt _site/index.html || { echo "  Niet geleverd."; exit 1; }
