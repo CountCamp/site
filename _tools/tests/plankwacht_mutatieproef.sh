@@ -45,4 +45,5 @@ proef "thema-telling uitgezet"        'if len(gepubliceerd) != beweerd:|||if Fal
 proef "blind telt voortaan als goed"  '    if blind:|||    if False and blind:'
 proef "niets gemeten telt als goed"   '    if getoetst == 0:|||    if False and getoetst == 0:'
 proef "verweesde map wordt genegeerd" 'if verweesd:|||if False:'
+proef "stopt bij de eerste treffer"   'if kaal.group(1).lower() in TELWOORDEN:|||if True:'
 rm -rf "$M"

@@ -21,9 +21,14 @@ Wat hij toetst
 --------------
   1. "**Bijgewerkt <dag> <maand> <jaar>**"
      tegen de laatste commit die de boekmap van dat kaartje raakte.
-  2. "<telwoord> van de <telwoord> thema's staan online"
-     tegen het aantal thema-mappen dat er staat én vanuit het boek zelf
-     gelinkt is.
+  2. "<telwoord> van de <telwoord> thema's staan online" (Psychometrie) en de
+     kale vorm "<telwoord> thema's" (MVDA), tegen het aantal thema-mappen dat
+     er staat én vanuit het boek zelf gelinkt is.
+
+     De NOEMER blijft handwerk: "van de zeven" is een plan, en een plan staat
+     niet op schijf. Wat hier nagerekend wordt is de teller. Zeg dat erbij als
+     iemand vraagt hoeveel de wachter dekt -- anders lijkt het kaartje
+     helemaal bewaakt.
 
 Welke boekmap bij welk kaartje hoort, wordt NIET ergens bijgehouden: het staat
 al in het kaartje zelf, in de link van de kop. Een tweede lijstje zou precies
@@ -95,17 +100,28 @@ RE_BIJGEWERKT = re.compile(
 )
 
 # "**Vier van de zeven thema's staan online:**" -- het sterretje mag ook ontbreken.
+# De noemer ("van de zeven") is met opzet GEEN belofte over bestanden: dat is
+# een plan, en plannen staan niet op schijf. Alleen de teller wordt nagerekend.
 RE_THEMATELLING = re.compile(
     r"([A-Za-zé]+)\s+van\s+de\s+([A-Za-zé]+)\s+thema[''`]s\s+staan\s+online",
     re.IGNORECASE,
 )
 
+# "Een opfris plus zeven thema's: meervoudige regressie, ..." -- de kale vorm.
+# Hij wordt pas gezocht nadat de vorm hierboven uit de tekst is geknipt, anders
+# zou "Vier van de zeven thema's" hier als "zeven" tellen en vals alarm geven.
+RE_THEMAS_KAAL = re.compile(r"([A-Za-zé]+)\s+thema[''`]s", re.IGNORECASE)
+
 # de kop van een kaartje: "### [Oefenboek OZP 1 →](ozp1/index.html) [SPSS]{.cc-chip}"
 RE_KOP_MET_LINK = re.compile(r"^#{2,4}\s*\[(?P<titel>[^\]]*?)\s*→?\s*\]\((?P<href>[^)]+)\)")
 RE_KOP_KAAL = re.compile(r"^#{2,4}\s*(?P<titel>.+?)\s*(?:\[[^\]]*\]\{[^}]*\}\s*)*$")
 
-# een thema-map: twee cijfers, liggend streepje, naam
-RE_THEMAMAP = re.compile(r"^\d{2}_")
+# Een thema-map: twee cijfers, liggend streepje, naam -- maar pas vanaf 01.
+# `00_` is in dit huis de opstap en geen thema (00_opfris bij MVDA,
+# 00_fundament bij OZP 1). Daardoor werken beide kaartjes met dezelfde regel:
+# MVDA belooft "een opfris plus zeven thema's" en heeft 00_opfris + 01 t/m 07,
+# Psychometrie belooft er vier en heeft 01 t/m 04.
+RE_THEMAMAP = re.compile(r"^(?!00_)\d{2}_")
 
 
 class Kaartje:
@@ -239,7 +255,28 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
 
     for k in kaartjes:
         heeft_datum = RE_BIJGEWERKT.search(k.body)
+
+        # Eerst de vorm "X van de Y thema's staan online", daarna -- in wat er
+        # van de tekst overblijft -- de kale vorm "X thema's". Andersom zou de
+        # kale vorm de noemer oppikken en een kaartje beschuldigen dat klopt.
         heeft_telling = RE_THEMATELLING.search(k.body)
+        if heeft_telling:
+            woord_online, woord_totaal = heeft_telling.groups()
+            citaat = f"{woord_online} van de {woord_totaal} thema's staan online"
+        else:
+            rest = RE_THEMATELLING.sub(" ", k.body)
+            # ALLE voorkomens aflopen, niet alleen het eerste. Het MVDA-kaartje
+            # opent met "er komen nog thema's bij" en noemt de telling pas in de
+            # zin daarna; wie bij de eerste treffer stopt, vindt "nog", ziet dat
+            # dat geen getal is, en concludeert dat er geen belofte staat.
+            woord_online = citaat = None
+            for kaal in RE_THEMAS_KAAL.finditer(rest):
+                if kaal.group(1).lower() in TELWOORDEN:
+                    woord_online = kaal.group(1)
+                    citaat = f"{woord_online} thema's"
+                    heeft_telling = kaal
+                    break
+
         if not (heeft_datum or heeft_telling):
             continue
 
@@ -277,7 +314,6 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
 
         # ---- 2. de thema-telling -------------------------------------
         if heeft_telling:
-            woord_online, woord_totaal = heeft_telling.groups()
             beweerd = TELWOORDEN.get(woord_online.lower())
             if beweerd is None:
                 bevindingen.append(Bevinding(
@@ -293,8 +329,8 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
                         namen = ", ".join(gepubliceerd) or "geen enkele"
                         bevindingen.append(Bevinding(
                             "fout", k,
-                            f"zegt '{woord_online} van de {woord_totaal} thema's staan online', "
-                            f"maar er staan er {len(gepubliceerd)} in {pad}/: {namen}",
+                            f"zegt '{citaat}', maar er staan er {len(gepubliceerd)} "
+                            f"in {pad}/: {namen}",
                         ))
                     if verweesd:
                         bevindingen.append(Bevinding(

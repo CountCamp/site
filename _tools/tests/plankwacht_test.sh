@@ -180,6 +180,28 @@ GIT_AUTHOR_DATE="2026-09-19T12:00:00+02:00" GIT_COMMITTER_DATE="2026-09-19T12:00
   git -C "$T6" commit -qm "thema 5 erbij gezet maar niet gelinkt"
 zaak "6  een thema-map zonder link bereikt geen lezer" 1 "05_cfa" "$T6"
 
+# ---- zaak 6b en 6c: de kale vorm "<telwoord> thema's" (het MVDA-kaartje) --
+# Dat kaartje opent met "er komen nog thema's bij" en noemt zijn telling pas
+# in de zin daarna. Wie bij de eerste treffer stopt, leest "nog", ziet dat dat
+# geen getal is, en meldt dat er geen belofte staat -- stil en fout.
+mvda_plank() {   # $1 = map, $2 = telwoord
+  cat > "$1/oefenboeken/index.qmd" <<QMD
+---
+title: "Oefenboeken"
+---
+::: {.cc-boek}
+### [Oefenboek MVDA →](psychometrie/index.html) [R]{.cc-chip}
+**Voorlopige versie — er komen nog thema's bij.** Een opfris plus $2 thema's:
+meten, betrouwbaarheid, validiteit en PCA.
+:::
+QMD
+}
+T6b="$(mktemp -d)"; klaarzetten "$T6b"; mvda_plank "$T6b" "vier"
+zaak "6b de kale vorm wordt herkend en klopt" 0 "1 belofte(s) nagerekend" "$T6b"
+T6c="$(mktemp -d)"; klaarzetten "$T6c"; mvda_plank "$T6c" "zes"
+zaak "6c de kale vorm vuurt als hij verouderd is" 1 "maar er staan er 4" "$T6c"
+rm -rf "$T6b" "$T6c"
+
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op
 # 18-8-2026 gebeurd met zeven mechanismen tegelijk: alle zelftests groen, geen
