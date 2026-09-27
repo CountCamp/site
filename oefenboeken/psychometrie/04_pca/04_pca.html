@@ -68,6 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../libs/quarto-search/fuse.min.js"></script>
 <script src="../libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../05_cfa/05_cfa.html" rel="next">
 <link href="../03_validity/03_validity.html" rel="prev">
 <script src="../libs/quarto-html/quarto.js" type="module"></script>
 <script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -235,6 +236,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../04_pca/04_pca.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">4. Principal Component Analysis (PCA) — minder is meer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05_cfa/05_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Confirmatory Factor Analysis (CFA) — eerst tekenen, dan pas kijken</span></a>
   </div>
 </li>
       </ul>
@@ -2373,11 +2380,12 @@ I op 0 → nerds 360, politieagenten 270, chippendales 400   (ANDERE volgorde)</
 <p>En wat R dan doet is dit. Hij gaat kijken of die gewichtjes een bepaalde waarde kunnen hebben, zódanig dat er iets zinvols uitkomt — en zinvol betekent hier eerst statistisch: zit er een heftige richting in, een richting waarin veel variatie zit. En als hij die gevonden heeft, zegt hij: leuk, en gaat hij verder zoeken. Kunnen we nóg andere gewichtjes verzinnen? Dat wordt dan de tweede component.</p>
 <p><span class="math display">\[
 \begin{aligned}
-C_1 &amp;= a_{11}X_1 + a_{12}X_2 + a_{13}X_3 + \dots + a_{1k}X_k \\[4pt]
-C_2 &amp;= a_{21}X_1 + a_{22}X_2 + a_{23}X_3 + \dots + a_{2k}X_k
+C_1 &amp;= a_{11}X_1 + a_{21}X_2 + a_{31}X_3 + \dots + a_{k1}X_k \\[4pt]
+C_2 &amp;= a_{12}X_1 + a_{22}X_2 + a_{32}X_3 + \dots + a_{k2}X_k
 \end{aligned}
 \]</span></p>
 <p>Dat is dezelfde vorm als mijn <span class="math inline">\(C_1\)</span> en <span class="math inline">\(C_2\)</span> hierboven. Alleen staan er nu letters op de plek van de gewichten, want R moet ze nog invullen.</p>
+<p>Let op de twee cijfertjes onder de <span class="math inline">\(a\)</span>, want die volgorde ligt vast en je komt hem het hele hoofdstuk tegen: <strong>eerst het item, dan de component.</strong> Dus <span class="math inline">\(a_{31}\)</span> is het gewicht van item <span class="math inline">\(3\)</span> op component <span class="math inline">\(1\)</span>, en <span class="math inline">\(a_{32}\)</span> is het gewicht van datzelfde item <span class="math inline">\(3\)</span> op component <span class="math inline">\(2\)</span>. Op de eerste regel loopt het eerste cijfertje dus op — de items komen langs — terwijl het tweede op <span class="math inline">\(1\)</span> blijft staan.</p>
 <p>En dán, als de gewichten er staan, gaan we ze <strong>interpreteren</strong>. Dat is op zich subjectief, en daar zit eigenlijk de hele crux.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2413,6 +2421,7 @@ C_2 &amp;= a_{21}X_1 + a_{22}X_2 + a_{23}X_3 + \dots + a_{2k}X_k
 <p>Hier lopen synoniemen doorheen, en ze betekenen in dit thema hetzelfde:</p>
 <p><strong>component</strong> · <strong>factor</strong> · <strong>dimensie</strong> · <strong>richting</strong> · <strong>as</strong></p>
 <p>Noem het assen, noem het functies, noem het latente variabelen, noem het dimensies. Factor is gewoon een ander woord voor dimensie of component. Waar het in dit thema écht uitmaakt — bij het verschil tussen PCA en factor-analyse — staat het er expliciet bij. Zie de cross-link-callout hieronder, en de Don’t aan het eind.</p>
+<p><strong>En dit geldt alleen deze week.</strong> Vanaf thema 5 is een factor níét meer hetzelfde als een component. Een component is een gewogen som van items: de items maken hem. Een factor is juist iets dat ónder de items zit en ze veroorzaakt. Dat hoef je nu nog niet te kunnen — onthoud alleen dat dit rijtje van vijf een week houdbaar is.</p>
 </div>
 </div>
 </section>
@@ -2612,6 +2621,16 @@ C_2 &amp;= a_{21}X_1 + a_{22}X_2 + a_{23}X_3 + \dots + a_{2k}X_k
 <td>gemeenschappelijke tegenover unieke variantie</td>
 </tr>
 <tr class="even">
+<td>Rotatie</td>
+<td>ja — je draait de assen tot ze leesbaar zijn</td>
+<td>EFA ook; bij <strong>CFA</strong> niet, want daar leg jij de structuur zelf vast</td>
+</tr>
+<tr class="odd">
+<td>Toets op het model</td>
+<td>geen</td>
+<td>bij <strong>CFA en SEM</strong>: χ², de fit-maten RMSEA, NFI en CFI, en de residuen</td>
+</tr>
+<tr class="even">
 <td>Schatting</td>
 <td>eigenvector-decompositie</td>
 <td>ML / GLS</td>
@@ -2628,6 +2647,9 @@ C_2 &amp;= a_{21}X_1 + a_{22}X_2 + a_{23}X_3 + \dots + a_{2k}X_k
 <p>Ken je de term <em>juppie</em>? Jong, een beetje rijk, een huis, een auto. Als jij aan die indicatoren voldoet, zit er dan een jup in je hoofd? Nee toch. Wij zeggen alleen dat die variabelen bij elkaar zo liggen, en dan noemen we dat een jup. Puur beschrijvend.</p>
 <p><strong>PCA kijkt formatief.</strong> Een component <em>is</em> de gewogen som van de items — er zit niks onder. Besef alleen dat mensen bij dit soort analyses makkelijk gaan geloven dat het ding er echt is. Heel veel psychologen doen alsof depressie bestaat zoals een steen bestaat, en dat is nooit bewezen.</p>
 <p>Wie <em>latente trekjes</em> met meetfout wil modelleren, gebruikt EFA of CFA — thema 5.</p>
+<p><strong>Kijk nu naar de rij <em>Variantie</em>.</strong> Daar zit het verschil dat volgende week alles stuurt, en het werkboek van de opleiding vat het in één zin samen: <em>PCA wil de varianties verklaren, factoranalyse de covarianties.</em></p>
+<p>Een <strong>covariantie</strong> is de samenhang tussen twee items in hun eigen ruwe eenheden; deel hem door de twee standaardafwijkingen en je houdt de correlatie over die je al kent.</p>
+<p>Lees die zin als een verdeling van het werk. PCA vist uit elk item zoveel mogelijk van <strong>dat item zelf</strong> op — de communaliteit telt precies dat op. Factoranalyse wil iets anders weten: waarom bewegen item <span class="math inline">\(X_1\)</span> en item <span class="math inline">\(X_2\)</span> <strong>samen</strong>? Wat een item in zijn eentje doet, mag daar in de error verdwijnen.</p>
 </div>
 </div>
 </section>
@@ -2715,10 +2737,10 @@ C_2 &amp;= a_{21}X_1 + a_{22}X_2 + a_{23}X_3 + \dots + a_{2k}X_k
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><strong>aantal items</strong> (<span class="math inline">\(k\)</span>). Let op: veel boeken schrijven hier <span class="math inline">\(p\)</span> voor. Dat is dezelfde <span class="math inline">\(p\)</span>-letter als die van een <em>p</em>-waarde en het heeft er niets mee te maken; in dit hoofdstuk houden we <span class="math inline">\(k\)</span> aan.</li>
-<li><strong>aantal behouden componenten</strong> (<span class="math inline">\(m\)</span>), met <span class="math inline">\(m &lt; k\)</span>.</li>
+<li><strong>aantal items</strong> (<span class="math inline">\(k\)</span>). Let op: veel boeken schrijven hier <span class="math inline">\(p\)</span> voor, en het werkboek van de opleiding ook. Dat is dezelfde <span class="math inline">\(p\)</span>-letter als die van een <em>p</em>-waarde en het heeft er niets mee te maken; in dit hoofdstuk houden we <span class="math inline">\(k\)</span> aan.</li>
+<li><strong>aantal behouden componenten</strong> (<span class="math inline">\(m\)</span>), met <span class="math inline">\(m &lt; k\)</span>. Ook hier gaan de letters uiteen: waar wij <span class="math inline">\(m\)</span> schrijven, schrijft het werkboek van de opleiding <span class="math inline">\(k\)</span>.</li>
 <li><strong>componentlading</strong> (<span class="math inline">\(a_{ij}\)</span>) — het gewicht van item <span class="math inline">\(i\)</span> op component <span class="math inline">\(j\)</span>. Eerste subscript is het <strong>item</strong>, tweede de <strong>component</strong>.</li>
-<li><strong>communaliteit</strong> (h²) — per <strong>item</strong>: hoeveel van de variatie in dat item de behouden componenten samen terugverklaren. Over de <strong>rij</strong> kwadrateren en dán optellen.</li>
+<li><strong>communaliteit</strong> (h²) — per <strong>item</strong>: hoeveel van de variatie in dat item de behouden componenten samen terugverklaren. Over de <strong>rij</strong> kwadrateren en dán optellen. Dat optellen mag zolang de componenten ongecorreleerd zijn, dus na varimax wel en na oblimin niet — bij 4.2.d zie je wat er dan misgaat.</li>
 <li><strong>eigenwaarde</strong> (λ) — per <strong>component</strong>: hoeveel variatie die component vangt. Over de <strong>kolom</strong> kwadrateren en dán optellen.</li>
 <li><strong>verklaarde variantie</strong> (VAF, <em>variance accounted for</em>) — λ gedeeld door het aantal items.</li>
 <li><strong>componentcorrelatie</strong> (Φ) — alleen bij oblique rotatie: hoe sterk de componenten onderling samenhangen.</li>
@@ -2732,6 +2754,13 @@ h_i^2 = \sum_{j=1}^{m} a_{ij}^2
 <p>Ze zien er bijna hetzelfde uit, en dat is geen toeval. Het verschil is de richting waarin je optelt: <span class="math inline">\(h^2\)</span> gaat over een <strong>rij</strong> (één item, over de componenten heen), λ over een <strong>kolom</strong> (één component, over de items heen).</p>
 <p>Let op de sommen: het is een <em>sum of squares</em>, geen <em>square of the sum</em>. Eerst kwadrateren, dan pas optellen. En omdat je kwadrateert, verdwijnen de minnetjes vanzelf — die hoef je niet eens in te tikken.</p>
 <p>Ook handig om te weten: <span class="math inline">\(\sum_j \lambda_j = k\)</span> als je álle componenten meeneemt. Gebruik je er minder, dan is de som kleiner, en dat verschil ís de reductie.</p>
+<p><strong>De letter <span class="math inline">\(p\)</span> gaat in dit vak drie dingen betekenen.</strong> Een <em>p</em>-waarde, het aantal items, en straks het aantal parameters van een model. Er staat telkens bij welke bedoeld wordt; je hoeft ze alleen niet door elkaar te halen.</p>
+<p>Waar je ze tegenkomt:</p>
+<ul>
+<li><strong>een <em>p</em>-waarde</strong> — die ken je al, en die bedoelen wij hier nooit met een kale <span class="math inline">\(p\)</span>.</li>
+<li><strong>het aantal items</strong> — zo gebruikt het werkboek van de opleiding hem. De eigenwaarde staat daar als <span class="math inline">\(\lambda_j = \sum_{i=1}^{p} a_{ij}^2\)</span>: precies onze formule hierboven, alleen heet het aantal items daar <span class="math inline">\(p\)</span> en hier <span class="math inline">\(k\)</span>.</li>
+<li><strong>het aantal parameters</strong> — dat komt in thema 5, in de formule voor de vrijheidsgraden van een model. Het is dan gewoon het aantal pijlen dat je getekend hebt.</li>
+</ul>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -2760,6 +2789,7 @@ h_i^2 = \sum_{j=1}^{m} a_{ij}^2
 <li><strong>Componentlading</strong>: <span class="math inline">\(\geq .40\)</span> voor een primaire lading; boven <span class="math inline">\(.30\)</span> op méér componenten tegelijk is een ambigu item.</li>
 </ul>
 <p>Verschillende vakgroepen hanteren andere drempels. Voor je tentamen: <strong>check je eigen college-sheets</strong>, en let ook even op de letter die zij voor een lading gebruiken — sommige boeken schrijven <span class="math inline">\(a_{ij}\)</span>, andere <span class="math inline">\(c_{ij}\)</span>. Het is hetzelfde getal. Wat overal λ heet is de eigenwaarde, en dat is iets anders dan een lading.</p>
+<p>Voor de lading zit je hier trouwens goed: het werkboek van de opleiding schrijft hem óók als <span class="math inline">\(a_{ij}\)</span>, en ook daar is het eerste subscript het item en het tweede de component. Bij die ene letter hoef je dus niets om te rekenen — alleen bij de <em>aantallen</em> hierboven.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -3051,6 +3081,7 @@ u4 0.10 0.11 0.13 0.20 0.23 0.23 0.28 0.23 0.53 0.59 0.52 1.00</code></pre>
 <p><strong>b)</strong> Piekeren (<code>p1</code>–<code>p4</code>), alertheid (<code>a1</code>–<code>a4</code>), uitstelgedrag (<code>u1</code>–<code>u4</code>).</p>
 <p><strong>c)</strong> Gemiddeld <span class="math inline">\(.21\)</span> — duidelijk lager dan binnen een blok, maar <strong>niet nul</strong>. De drie dimensies hangen onderling samen. Onthoud dat, want bij 4.2.d wordt het de reden om oblimin te overwegen.</p>
 <p><strong>d)</strong> Drie componenten met een eigenwaarde boven <span class="math inline">\(1\)</span>, en na rotatie drie nette groepjes. Maar let op: “blok-diagonaal in de correlatiematrix” is een <em>verwachting</em>, geen uitslag. Dat de ontwerper drie dimensies bedoelde, verplicht de data tot niets.</p>
+<p><strong>Kijk nog even naar dat patroon, want volgende week begin je ermee.</strong> Plussen binnen een blok, bijna-nullen ertussen: hier las je dat áf uit de matrix die er al was. In thema 5 schrijf je precies dit patroon op een blaadje — een <code>+</code> of een <code>0</code> per cel — vóórdat je één getal hebt gezien. Dat is dan je model, en de toets vraagt of de data eraan voldoen. Zelfde plaatje, andere volgorde: hier is het een vondst, daar een belofte.</p>
 </div>
 </div>
 </div>
@@ -3115,6 +3146,13 @@ $df
 <p><strong>c)</strong> χ²(66) = 859.15, <em>p</em> &lt; .001. Sterk significant, dus de correlatiematrix verschilt duidelijk van een identiteitsmatrix.</p>
 <p><strong>d)</strong> Ja, allebei de drempels worden gehaald.</p>
 <p>Maar wees eerlijk over wat je nu weet. Bartlett wordt bij <span class="math inline">\(n = 200\)</span> vrijwel altijd significant — hij zegt alleen dat er <em>íets</em> samenhangt, niet dat het zinvol is. En KMO zegt niets over of je straks iets kunt interpreteren. Deze twee openen de deur; ze zeggen niet wat er in de kamer staat.</p>
+<p><strong>Die identiteitsmatrix komt volgende week terug, onder een andere naam.</strong> Bartlett toetst tegen een matrix met alleen enen op de diagonaal en nullen daarbuiten: <em>geen enkel item hangt met een ander samen.</em> In thema 5 heet datzelfde model het <strong>nulmodel</strong>, en dan is het de lat waar je je eigen model langs legt.</p>
+<p>Het is niet alleen dezelfde matrix maar ook letterlijk hetzelfde model, en daar is één getal het bewijs van: het aantal vrijheidsgraden. Bartlett heeft er hier 66, en dat is <span class="math inline">\(k(k-1)/2\)</span> — één voor elke correlatie die op nul gezet wordt:</p>
+<p><span class="math display">\[
+\frac{k(k-1)}{2} = \frac{12 \cdot 11}{2} = 66
+\]</span></p>
+<p>Kom je dat getal in thema 5 weer tegen bij het nulmodel, dan is dat geen toeval.</p>
+<p>Wat wél omdraait, is wat je hoopt. Hier wíl je deze <span class="math inline">\(H_0\)</span> — <em>geen enkel item hangt met een ander samen</em> — verwerpen: was hij waar, dan viel er niets te reduceren en kon je meteen stoppen. In thema 5 toets je je eigen tekening, en daar zegt de <span class="math inline">\(H_0\)</span> iets heel anders, namelijk dat jouw model bij de data past. Díé hoop je juist te houden.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3397,6 +3435,16 @@ Fit based upon off diagonal values = 0.98</code></pre>
 <li>Onderaan staat <strong><code>SS loadings</code></strong>. Dat is de som van de gekwadrateerde ladingen per kolom — oftewel de <strong>eigenwaarde</strong> λ. R noemt hem alleen niet zo.</li>
 <li>Lege cellen zijn <strong>niet nul</strong>. Die zijn weggelaten door <code>cut = 0.30</code>; er staat gewoon een kleiner getal. Zet <code>cut = 0</code> en je ziet ze.</li>
 </ul>
+<p><strong>Houd die <code>u2</code> even vast, want volgende week krijgt hij een eigen pijl.</strong> In thema 5 tekent elk item er een pijltje van opzij bij — zijn <strong>error</strong> — en wat daarin zit heet in de uitvoer zijn <strong>residuvariantie</strong>. Het is dan geen restje meer dat overblijft maar een deel van het model. Dat komt doordat de vergelijking omdraait. Hier bouw je de component uít de items:</p>
+<p><span class="math display">\[
+C_j = \sum_i a_{ij} X_i
+\]</span></p>
+<p>En in thema 5 komt het item juist uit de factoren, met een rest:</p>
+<p><span class="math display">\[
+X_i \approx \sum_j a_{ij} F_j + \text{rest}
+\]</span></p>
+<p>Let op dat die <span class="math inline">\(F\)</span> geen <span class="math inline">\(C\)</span> meer is. Een component <span class="math inline">\(C_j\)</span> maak je uít de items; een factor <span class="math inline">\(F_j\)</span> zit eronder en veroorzaakt ze. Het is met opzet een andere letter, want het is een ander soort ding.</p>
+<p>En die rest is de <code>u2</code> van hierboven. Zelfde getal, andere rol: hier valt het overschot buiten de boot, daar hoort het bij het model.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -4129,7 +4177,7 @@ Fit based upon off diagonal values = 0.98</code></pre>
 </tr>
 </tbody><tfoot>
 <tr class="gt_sourcenotes odd">
-<td colspan="4" class="gt_sourcenote"><em>Note.</em> <em>h</em>² = communaliteit: de som van de gekwadrateerde ladingen van een item over de drie behouden componenten. Het grootste werkelijke verschil tussen de twee kolommen bedraagt 1.4 × 10⁻¹⁵; de kolom <em>verschil</em> toont dat op drie decimalen en is dus overal .000.</td>
+<td colspan="4" class="gt_sourcenote"><em>Note.</em> <em>h</em>² = communaliteit: de som van de gekwadrateerde ladingen van een item over de drie behouden componenten – een som die mag omdat de componenten in allebei deze kolommen ongecorreleerd zijn. Het grootste werkelijke verschil tussen de twee kolommen bedraagt 1.4 × 10⁻¹⁵; de kolom <em>verschil</em> toont dat op drie decimalen en is dus overal .000.</td>
 </tr>
 </tfoot>
 
@@ -5095,9 +5143,14 @@ PC1 0.37 0.35 1.00</code></pre>
 <div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> De drie componentcorrelaties liggen tussen <span class="math inline">\(.18\)</span> en <span class="math inline">\(.37\)</span>, gemiddeld <span class="math inline">\(.30\)</span>. De drie dimensies hangen dus echt onderling samen — precies wat je bij 4.1.a al zag aan de correlaties tussen de blokken.</p>
+<p>Die scheve hoek tussen twee assen krijgt in thema 5 een eigen streepje op je tekening: daar trek je tussen twee factoren een <strong>dubbele pijl</strong> als je vindt dat ze mogen samenhangen, en laat je hem weg als je vindt van niet. Wat hier uit de rotatie róllt, kies jij daar zelf.</p>
 <p><strong>b)</strong> Vuistregel: vanaf <span class="math inline">\(|r| \geq .30\)</span> tussen componenten is oblimin theoretisch passender; onder <span class="math inline">\(|r| &lt; .20\)</span> is varimax simpeler en praktisch gelijk. Daartussen — dus tussen <span class="math inline">\(.20\)</span> en <span class="math inline">\(.30\)</span> — zegt de vuistregel niets, en dat is geen slordigheid maar het punt: daar beslist de inhoud. De betere vraag is sowieso inhoudelijk: <em>verwacht je dat deze constructen samenhangen?</em> Bij piekeren, alertheid en uitstelgedrag: ja, natuurlijk.</p>
 <p><strong>c)</strong> De primaire ladingen worden onder oblimin meestal iets hoger en de kruisladingen iets lager, omdat de dwang van de rechte hoek eraf is. De <strong>structuur</strong> — welk item bij welke component hoort — verandert hier niet.</p>
 <p><strong>d)</strong> Bij oblimin rapporteer je <strong>beide</strong>: de ladingen én de componentcorrelaties. Zonder die tweede matrix weet je lezer niet hoe scheef de assen stonden, en kan hij de ladingen niet op waarde schatten.</p>
+<p><strong>Nog één ding, en dit scheelt je werk: lees <code>h2</code> hier gewoon uit de uitvoer.</strong> Niet narekenen met de hand, zodra de assen scheef staan. Waarom niet:</p>
+<p>Het snelle sommetje uit de notatie — kwadrateer de ladingen van een item en tel ze op — werkt omdat de componenten <strong>ongecorreleerd</strong> zijn. Bij varimax is dat zo, en dan klopt het tot ver achter de komma. Onder oblimin staan de assen scheef, en dan telt de samenhang tússen de componenten ook mee. Doe je het sommetje tóch, dan zit je ernaast: bij <code>a3</code> het meest, met <span class="math inline">\(.54\)</span> waar de communaliteit in werkelijkheid <span class="math inline">\(.63\)</span> is. Dat scheelt <span class="math inline">\(.09\)</span>, en dat is geen afrondingsverschil.</p>
+<p>De communaliteit zélf is niets veranderd — onder oblimin tot op de laatste decimaal gelijk aan die onder varimax, precies zoals de tabel hierboven zegt. Alleen het sommetje breekt, niet het getal.</p>
+<p><strong>En dit is geen losse voetnoot.</strong> In thema 5 gebeurt precies hetzelfde zodra je twee factoren laat samenhangen: ook daar mag je niet meer zomaar kwadrateren en optellen, want de dubbele pijl tussen die twee telt dan mee. Dezelfde reden, ander hoofdstuk.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -7087,6 +7140,64 @@ h_{v1}^2 = (-.10)^2 + (.67)^2
 </div>
 </div>
 </section>
+<section id="e8-tellen-vóór-je-rekent-en-twee-tekeningen" class="level2">
+<h2 class="anchored" data-anchor-id="e8-tellen-vóór-je-rekent-en-twee-tekeningen">E8 — Tellen vóór je rekent, en twee tekeningen</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Vraag E8 — Pen-en-papier
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een vragenlijst heeft 13 items.</p>
+<p><strong>a)</strong> Hoeveel <strong>unieke</strong> correlaties staan er in de correlatiematrix? Dus: hoeveel cellen houd je over als je de diagonaal weghaalt en elke correlatie maar één keer telt?</p>
+<p><strong>b)</strong> Hoeveel <strong>varianties</strong> staan erin?</p>
+<p><strong>c)</strong> Hoeveel getallen liggen er dan in totaal, waar een model iets mee zou moeten doen?</p>
+<p><strong>d)</strong> Neem nu 6 items en 2 dimensies, en teken twee plaatjes naast elkaar: hoe ziet dat eruit als <strong>PCA</strong>, en hoe als <strong>CFA</strong>? Zet bij elke pijl welke kant hij op wijst, en let op wat er in het ene plaatje wél staat en in het andere niet.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-68-contents" aria-controls="callout-68" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-68" class="callout-68-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> 78. De matrix is 13 bij 13, dus 169 cellen. Haal de 13 van de diagonaal eraf en je houdt er 156 over. Elke correlatie staat er twee keer in — boven en onder de diagonaal — dus deel door twee: <span class="math inline">\(13 \cdot 12 / 2 = 78\)</span>.</p>
+<p><strong>b)</strong> 13. Eén per item, en dat is precies de diagonaal.</p>
+<p><strong>c)</strong> <span class="math inline">\(78 + 13 = 91\)</span>. Oftewel <span class="math inline">\(k(k+1)/2\)</span>: de hele onderste driehoek van de matrix, de diagonaal meegerekend.</p>
+<p><strong>Onthoud dat laatste getal, want volgende week heeft het een naam.</strong> In thema 5 heet het <span class="math inline">\(V\)</span>, en dan is het je voorraad: alle informatie die je hebt om een model uit te schatten. Elke pijl die je tekent kost er één van. Wat overblijft zijn je vrijheidsgraden.</p>
+<p>(Dat is een andere <span class="math inline">\(V\)</span> dan die uit de eigenvalue-decompositie helemaal aan het begin van dit hoofdstuk. Die was een matrix vol eigenvectoren; deze is gewoon een aantal. Ook hier geldt weer: kijk wat er bij staat.)</p>
+<p><strong>d)</strong> Leg je eigen blaadje ernaast.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_pca_files/figure-html/e8-twee-tekeningen-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Hierboven staan dezelfde 6 items twee keer getekend: links als PCA, rechts als CFA. Eerst wat in allebei hetzelfde is. <strong>Een vierkantje is iets dat je gemeten hebt, een ovaal iets dat je er niet rechtstreeks aan af kunt lezen.</strong> Tekende jij alles als vierkantjes, dan mist je plaatje dat onderscheid.</p>
+<p>Twee verschillen, en de rest volgt daaruit.</p>
+<ul>
+<li><strong>PCA (links).</strong> 6 vierkantjes, 2 ovalen die hier <span class="math inline">\(C_1\)</span> en <span class="math inline">\(C_2\)</span> heten — componenten — en de pijlen wijzen van de items <em>naar</em> de componenten. Elk item heeft een pijl naar élke component, dus 12 pijlen, en die kruisen elkaar in het midden. Verder staat er niets: geen errorpijlen, want een component ís de gewogen som van de items, en er blijft niets over dat je apart zou modelleren.</li>
+<li><strong>CFA (rechts).</strong> Dezelfde 6 vierkantjes en 2 ovalen, maar die heten nu <span class="math inline">\(F_1\)</span> en <span class="math inline">\(F_2\)</span> — factoren, want het is een ander soort ding — en de pijlen wijzen de andere kant op: van de factor <em>naar</em> het item. Elk item krijgt er van opzij een grijs pijltje bij, zijn error: <span class="math inline">\(E_1\)</span> tot en met <span class="math inline">\(E_6\)</span>, grijs en zonder hokje omdat je hem niet gemeten hebt. Je tekent bovendien niet alle 12 pijlen maar alleen die waarvan jij denkt dat ze er zijn — hier 3 items per factor. Wat je niet tekent, staat op nul.</li>
+</ul>
+<p><strong>Die <span class="math inline">\(E\)</span>’tjes ken je al onder een andere naam.</strong> Het is de <code>u2</code> uit de uitvoer van 4.2.a, het stuk van een item dat de oplossing niet terugverklaart. In thema 4 is dat een restje dat overblijft; in thema 5 krijgt het een eigen pijl en hoort het bij het model.</p>
+<p>En de samenhang tussen de twee dimensies? Rechts zie je hem staan: de gebogen <strong>dubbele pijl</strong> tussen <span class="math inline">\(F_1\)</span> en <span class="math inline">\(F_2\)</span>, die je zelf trekt of weglaat. Links staat hij niet, en dat hoort zo — bij PCA heb je die vraag al beantwoord met je keuze van rotatie: varimax zegt nee, oblimin zegt ja.</p>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="r-spiekblad-pca-van-begin-tot-eind" class="level1">
 <h1>R-spiekblad — PCA van begin tot eind</h1>
@@ -7161,6 +7272,60 @@ h_{v1}^2 = (-.10)^2 + (.67)^2
 <p>“En morgen?”</p>
 <p>“CFA,” zei de rat. “De das gaat het <em>toetsen</em>. Niet ontdekken zoals ik nu deed — bevestigen. Hij heeft een model en kijkt of de data erop past.” Hij keek naar de plek waar de das altijd zat. “Hij graaft fundamenten. Mijn werk is verkennen, dat van hem is bevestigen.”</p>
 <p>De bunzing knikte en kroop weg. Boven het bos werd het donker, en de rat liet zijn pijlen op de plot staan.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Brug naar thema 5 — vijf dingen die omgaan
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>thema 4, deze week</th>
+<th>thema 5, volgende week</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>de pijl</strong></td>
+<td>van het item naar de component</td>
+<td>van de factor naar het item</td>
+</tr>
+<tr class="even">
+<td><strong>de error</strong></td>
+<td>die is er niet: een component <em>ís</em> de som van de items</td>
+<td>elk item krijgt er een, met een eigen pijl</td>
+</tr>
+<tr class="odd">
+<td><strong>waar het over gaat</strong></td>
+<td>de varianties van de items</td>
+<td>de covarianties tússen de items</td>
+</tr>
+<tr class="even">
+<td><strong>rotatie</strong></td>
+<td>ja, tot de ladingen leesbaar zijn</td>
+<td>nee — jij hebt de nullen al gezet toen je tekende</td>
+</tr>
+<tr class="odd">
+<td><strong>toetsen</strong></td>
+<td>er valt niets te toetsen</td>
+<td>χ², de fit-maten RMSEA, NFI en CFI, en de residuen</td>
+</tr>
+</tbody>
+</table>
+<p><strong>De eerste regel draagt de andere vier.</strong> Draai de pijl om, en de rest volgt vanzelf. Het item is dan niet langer een bouwsteen maar een gevolg, dus houdt het iets over dat de factor niet verklaart: de error. De vraag verschuift van <em>hoeveel vang ik van elk item apart</em> naar <em>waarom bewegen deze items samen</em>: de covarianties. En omdat jij de pijlen zelf tekent, ligt de structuur al vast voordat de data iets mogen zeggen — draaien hoeft niet meer, en er valt eindelijk iets te toetsen.</p>
+</div>
+</div>
 </section>
 <section id="verantwoording" class="level1">
 <h1>Verantwoording</h1>
@@ -7585,6 +7750,9 @@ h_{v1}^2 = (-.10)^2 + (.67)^2
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../05_cfa/05_cfa.html" class="pagination-link" aria-label="5. Confirmatory Factor Analysis (CFA) — eerst tekenen, dan pas kijken">
+        <span class="nav-page-text">5. Confirmatory Factor Analysis (CFA) — eerst tekenen, dan pas kijken</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
