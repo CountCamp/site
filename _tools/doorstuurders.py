@@ -65,6 +65,8 @@ import os
 import re
 import subprocess
 import sys
+import traceback
+import unicodedata
 from urllib.parse import quote, unquote, urlparse
 
 sys.dont_write_bytecode = True
@@ -122,8 +124,10 @@ def lees_tabel(pad: str) -> list[dict]:
             if kop is None:
                 kop = velden
                 if kop[:3] != KOLOMMEN[:3]:
-                    raise SystemExit(f'{pad}: onverwachte kop {kop[:3]}')
+                    raise ValueError(f'{pad}: onverwachte kop {kop[:3]}')
                 continue
+            if len(velden) < 3:
+                raise ValueError(f'{pad}: rij met {len(velden)} velden: {r!r}')
             rijen.append(dict(zip(kop, velden)))
     return rijen
 
@@ -202,15 +206,37 @@ def wordt_bladzij(site: str, rel: str) -> str | None:
 
     `oefenboeken/index.html` bestaat in de repo niet -- hij komt uit
     `oefenboeken/index.qmd`. Wie alleen naar het html-bestand kijkt, verklaart de
-    plank dood; zo begon het eerste nakijken hier met drie vals alarmen."""
-    if os.path.isfile(os.path.join(site, rel)):
+    plank dood; zo begon het eerste nakijken hier met drie vals alarmen.
+
+    Letter voor letter: macOS vindt `OEFENBOEKEN/OZP1/INDEX.HTML` gewoon, GitHub
+    Pages geeft daar een 404 (nakijker, 1-10-2026). Dus elk stuk van het pad moet
+    precies zo in zijn map staan."""
+    if bestaat_exact(site, rel):
         return 'bestand'
     romp = os.path.splitext(rel)[0]
     if not os.path.basename(romp).startswith('_'):
         for ext in BRONNEN:
-            if os.path.isfile(os.path.join(site, romp + ext)):
+            if bestaat_exact(site, romp + ext):
                 return 'gerenderd'
     return None
+
+
+def bestaat_exact(site: str, rel: str) -> bool:
+    """Bestaat `rel` als bestand, met precies deze hoofd- en kleine letters?
+    Namen worden in NFC vergeleken: de ĳ komt uit git anders binnen dan uit de
+    schijf, en dat is geen verschil dat een webserver ziet."""
+    if not os.path.isfile(os.path.join(site, rel)):
+        return False
+    map_ = site
+    for deel in rel.split('/'):
+        try:
+            namen = {unicodedata.normalize('NFC', n) for n in os.listdir(map_)}
+        except OSError:
+            return False
+        if unicodedata.normalize('NFC', deel) not in namen:
+            return False
+        map_ = os.path.join(map_, deel)
+    return True
 
 
 def alle_doorstuurders(site: str):
@@ -363,15 +389,23 @@ KRAP = 0.05
 
 # Een besluit dat niet uit de regels volgt, staat HIER -- met datum en wie --
 # en niet als handwerk in de tabel, want die wordt bij --afleiden herschreven.
-HANDMATIG: dict[str, tuple[str, str]] = {
-    # 'pad/naar/oud.html': ('niet', 'Ben 1-10: ...'),
+# (besluit, doel, reden). Bij 'niet' blijft het doel leeg; bij 'bouwen' moet het
+# doel een bestaande bladzij zijn, anders weigert --afleiden.
+HANDMATIG: dict[str, tuple[str, str, str]] = {
+    # 'werkboeken/broertjes/s2_schud_tabel.html':
+    #     ('bouwen', 'speeltjes/schud-tabel.html', 'Ben 1-10: naar de speelkist'),
+    # 'werkboeken/broertjes/r_preview/installatie.html':
+    #     ('niet', '', 'Ben 1-10: preview van één dag, laat maar'),
 }
 
 
 def afleiden(site: str, uit: str) -> int:
+    # pr-preview/ is de proefdruk (--proefdruk schrijft naar dezelfde tak): nooit
+    # een adres voor een lezer, dus nooit een doorstuurder waard.
     ooit = {p for p in git(site, 'log', 'origin/gh-pages', '--no-renames', '--format=',
                            '--name-only', '--diff-filter=A').splitlines()
-            if p.endswith('.html') and not re.search(r'(^|/)(site_libs|libs)/', p)}
+            if p.endswith('.html') and not re.search(r'(^|/)(site_libs|libs)/', p)
+            and not p.startswith('pr-preview/')}
     # --no-renames is geen versiering: zonder die vlag ziet git een hernummerd
     # hoofdstuk als een HERNOEMING, en dan heet het nieuwe bestand niet
     # "toegevoegd". Gemeten 1-10-2026: 303 in plaats van 430 bladzijden.
@@ -403,8 +437,17 @@ def afleiden(site: str, uit: str) -> int:
             return soort(t) != 'doorstuurder' or MERK not in t
         return wordt_bladzij(site, p) == 'gerenderd'
 
+    def van_ons(p: str) -> bool:
+        pad = os.path.join(site, p)
+        return os.path.isfile(pad) and MERK in lees(pad)
+
     dood = sorted(p for p in ooit if not echt_hier(p))
-    ter_controle = sorted(p for p in ooit if p not in nu_live and p not in huidig)
+    # De tweede telling, langs een andere weg: wat nu NIET live staat. Onze eigen
+    # doorstuurders staan na publicatie wél live, en tellen hier dus als dood
+    # mee -- anders loeit deze controle bij elke run met 181 regels (nakijker,
+    # 1-10-2026), en een alarm dat altijd loeit leer je negeren.
+    ter_controle = sorted(p for p in ooit
+                          if (p not in nu_live or van_ons(p)) and p not in huidig)
     print('ooit op gh-pages: %d html · nu live (%s): %d · dood: %d (langs gh-pages: %d)'
           % (len(ooit), gh, len([p for p in nu_live if p.endswith('.html')]), len(dood), len(ter_controle)))
     if set(dood) ^ set(ter_controle):
@@ -450,8 +493,12 @@ def afleiden(site: str, uit: str) -> int:
         stond = '%s..%s' % (van, weg_datum)
         doelen = set(kand.values())
         if oud in HANDMATIG:
-            besluit, grond = HANDMATIG[oud]
-            nieuw = ''
+            besluit, nieuw, grond = HANDMATIG[oud]
+            grond = 'HANDMATIG: ' + grond
+            if besluit == 'bouwen' and wordt_bladzij(site, nieuw) != 'bestand':
+                raise ValueError('HANDMATIG %s -> %r: dat doel bestaat niet als bladzij' % (oud, nieuw))
+            if besluit == 'niet':
+                nieuw = ''
         elif not boek:
             # Zonder boek in het pad zoeken we over de hele site -- niet om te
             # bouwen, maar om de reden eerlijk te maken: "er zijn er vier" is
@@ -492,7 +539,7 @@ def afleiden(site: str, uit: str) -> int:
                          % (regels, score[nieuw], tweede.split('/')[-1] if tweede else '-',
                             score[tweede] if tweede else 0.0,
                             '; KRAP (marge %.2f)' % marge if marge < KRAP else ''))
-        rijen.append([oud, nieuw, besluit, grond, stond, ot, huidig[nieuw][0] if nieuw else ''])
+        rijen.append([oud, nieuw, besluit, grond, stond, ot, huidig.get(nieuw, ('',))[0] if nieuw else ''])
 
     with open(uit, 'w', encoding='utf-8') as f:
         f.write('# Afgeleid door `python3 _tools/doorstuurders.py --afleiden` uit gh-pages %s.\n' % gh)
@@ -516,16 +563,25 @@ def main() -> int:
     ap.add_argument('--onder', metavar='MAP', help='bij --bouw: alleen deze map')
     a = ap.parse_args()
     site = os.path.abspath(a.site)
-    if a.afleiden:
-        return afleiden(site, os.path.join(site, TABEL))
-    if a.bouw:
-        n, v, z, w = bouw(site, a.onder)
-        print('doorstuurders gebouwd: %d nieuw, %d ververst, %d ongewijzigd, %d geweigerd'
-              % (len(n), len(v), len(z), len(w)))
-        for oud, reden in w:
-            print('    GEWEIGERD %s — %s' % (oud, reden))
-        return 1 if w else 0
-    return nakijken(site)
+    # Een wachter die omvalt heeft niets gemeten. Zonder dit vangnet eindigt een
+    # crash met afloopcode 1 -- en 1 betekent hier "er klopt iets niet", dus
+    # naar_buiten.sh gaf dan de doorstuurders de schuld (nakijker, 1-10-2026).
+    try:
+        if a.afleiden:
+            return afleiden(site, os.path.join(site, TABEL))
+        if a.bouw:
+            n, v, z, w = bouw(site, a.onder)
+            print('doorstuurders gebouwd: %d nieuw, %d ververst, %d ongewijzigd, %d geweigerd'
+                  % (len(n), len(v), len(z), len(w)))
+            for oud, reden in w:
+                print('    GEWEIGERD %s — %s' % (oud, reden))
+            return 1 if w else 0
+        return nakijken(site)
+    except Exception:
+        print('\nLIEP VAST — de doorstuurwachter viel om; wat hij had moeten meten is '
+              'ONGEMETEN, dit zegt niets over de doorstuurders zelf:')
+        traceback.print_exc(file=sys.stdout)
+        return 3
 
 
 if __name__ == '__main__':

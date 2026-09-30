@@ -94,6 +94,14 @@ zaak "5  een doorstuurder die ergens anders heen wijst dan de tabel" 1 "WIJKT AF
 S="$(proefsite verhuisd)"; rm "$S/oefenboeken/ozp1/04_normaal/04_normaal.html"
 zaak "6  een doel dat niet meer bestaat" 1 "DOEL WEG    oefenboeken/ozp1/03_normaal/03_normaal.html" kijk "$S"
 
+# ---- 6b. hoofdletters: macOS vindt het, GitHub Pages niet ---------------
+S="$(proefsite hoofdletters)"
+printf '%s\t%s\t%s\t%s\n' oud nieuw besluit grond \
+  oefenboeken/ozp1/03_normaal/03_normaal.html oefenboeken/ozp1/04_Normaal/04_normaal.html bouwen proef \
+  > "$S/_tools/doorstuurders.tsv"
+python3 "$S/_tools/doorstuurders.py" --site "$S" --bouw > /dev/null 2>&1
+zaak "6b een doel met andere hoofdletters bestaat live niet" 1 "DOEL WEG    oefenboeken/ozp1/03_normaal/03_normaal.html -> oefenboeken/ozp1/04_Normaal" kijk "$S"
+
 # ---- 7. het doel is zelf een doorstuurder (ketting) ----------------------
 S="$(proefsite ketting)"
 cp "$S/manuscript/handleiding/01-oud.html" "$S/oefenboeken/ozp1/04_normaal/04_normaal.html"
@@ -124,6 +132,10 @@ S="$(proefsite geen_tabel)"; rm "$S/_tools/doorstuurders.tsv"
 zaak "10 zonder tabel is het blind, niet goed" 3 "NIETS GEMETEN" kijk "$S"
 S="$(proefsite lege_tabel)"; printf 'oud\tnieuw\tbesluit\tgrond\n' > "$S/_tools/doorstuurders.tsv"
 zaak "10b een tabel zonder één rij om te bouwen is ook blind" 3 "NIETS GEMETEN" kijk "$S"
+# 10c: een wachter die omvalt heeft niets gemeten -- afloop 3, niet 1. Met 1
+# gaf naar_buiten.sh de doorstuurders de schuld van een kapotte tabel.
+S="$(proefsite kapot)"; printf 'kapot\n' > "$S/_tools/doorstuurders.tsv"
+zaak "10c een kapotte tabel laat de wachter omvallen: blind, niet 'fout'" 3 "LIEP VAST" kijk "$S"
 
 # ---- 11. de tellerwachter herkent ze als doorstuurder --------------------
 #     Anders telt hij ze als bladzij zonder teller, en de enige 'oplossing'
@@ -132,6 +144,61 @@ S="$(proefsite teller)"
 cp _tools/controleer_tellers.py "$S/_tools/"
 zaak "11 controleer_tellers.py sluit ze uit en noemt ze" 0 "doorstuurder   oefenboeken/ozp1/03_normaal/03_normaal.html" \
      python3 "$S/_tools/controleer_tellers.py" --site "$S" --map oefenboeken
+
+# ---- 13. --afleiden: op inhoud, en stabiel nadat de doorstuurders live staan --
+#     Een nagemaakte gh-pages-geschiedenis in drie publicaties:
+#       A  thema 3 = normaalverdeling, thema 4 = discreet
+#       B  de wissel: 03_normaal en 04_discreet weg, 03_discreet en 04_normaal erbij
+#       C  (na onze publicatie) de doorstuurders zelf staan op de oude adressen
+#     Na B moeten beide oude adressen naar hun INHOUD gekoppeld worden, niet naar
+#     hun nummer. Na C moet dezelfde tabel eruit komen, zonder alarm.
+thema() {  # $1 = pad, $2 = titel, $3 = tekst
+  mkdir -p "$(dirname "$1")"
+  printf '<!doctype html>\n<html><head><title>%s – Oefenboek OZP 1</title>\n%s\n</head><body><main><h1>%s</h1><p>%s</p></main></body></html>\n' \
+    "$2" "$TELLER" "$2" "$3" > "$1"
+}
+NORMAAL="de normaalverdeling klokvorm gemiddelde standaardafwijking zscore oppervlakte tabel ruwe score marsmannetje"
+DISCREET="discrete kansvariabele dobbelsteen verwachtingswaarde gewogen gemiddelde uitkomsten kansen bosspel"
+GH="$M/gh"; mkdir -p "$GH"; git -C "$GH" init -q -b main
+git -C "$GH" config user.email toets@countcamp.org; git -C "$GH" config user.name doorstuurtoets
+thema "$GH/oefenboeken/ozp1/03_normaal/03_normaal.html"   "Thema 3 · Normaalverdeling" "$NORMAAL"
+thema "$GH/oefenboeken/ozp1/04_discreet/04_discreet.html" "Thema 4 · Discreet"         "$DISCREET"
+git -C "$GH" add -A; git -C "$GH" commit -qm A
+git -C "$GH" rm -rq oefenboeken/ozp1/03_normaal oefenboeken/ozp1/04_discreet
+thema "$GH/oefenboeken/ozp1/03_discreet/03_discreet.html" "Thema 3 · Discreet"         "$DISCREET"
+thema "$GH/oefenboeken/ozp1/04_normaal/04_normaal.html"   "Thema 4 · Normaalverdeling" "$NORMAAL"
+# een proefdruk (--proefdruk schrijft naar dezelfde tak): nooit een lezersadres
+thema "$GH/pr-preview/pr-1/oefenboeken/ozp1/05_proef/05_proef.html" "Thema 5 · Proef" "$NORMAAL"
+git -C "$GH" add -A; git -C "$GH" commit -qm B
+
+S="$M/afleiden"; mkdir -p "$S/_tools"
+cp "$WACHT" "$S/_tools/doorstuurders.py"; cp _tools/tellerregel.py "$S/_tools/"
+cp -R "$GH/oefenboeken" "$S/"
+git -C "$S" init -q -b main
+git -C "$S" fetch -q "$GH" +main:refs/remotes/origin/gh-pages
+zaak "13  --afleiden na de wissel" 0 "dood: 2 (langs gh-pages: 2)" \
+     python3 "$S/_tools/doorstuurders.py" --site "$S" --afleiden
+zaak "13b oud thema 3 (normaalverdeling) gaat naar het nieuwe thema 4, niet naar nummer 3" 0 \
+     "oefenboeken/ozp1/03_normaal/03_normaal.html	oefenboeken/ozp1/04_normaal/04_normaal.html	bouwen" \
+     cat "$S/_tools/doorstuurders.tsv"
+zaak "13c oud thema 4 (discreet) gaat naar het nieuwe thema 3" 0 \
+     "oefenboeken/ozp1/04_discreet/04_discreet.html	oefenboeken/ozp1/03_discreet/03_discreet.html	bouwen" \
+     cat "$S/_tools/doorstuurders.tsv"
+python3 "$S/_tools/doorstuurders.py" --site "$S" --bouw > /dev/null 2>&1
+cp "$S/_tools/doorstuurders.tsv" "$M/tabel_voor"
+# C: de doorstuurders gepubliceerd
+mkdir -p "$GH/oefenboeken/ozp1/03_normaal" "$GH/oefenboeken/ozp1/04_discreet"
+cp "$S/oefenboeken/ozp1/03_normaal/03_normaal.html"   "$GH/oefenboeken/ozp1/03_normaal/"
+cp "$S/oefenboeken/ozp1/04_discreet/04_discreet.html" "$GH/oefenboeken/ozp1/04_discreet/"
+git -C "$GH" add -A; git -C "$GH" commit -qm C
+git -C "$S" fetch -q "$GH" +main:refs/remotes/origin/gh-pages
+zaak "13d na publicatie van de doorstuurders: nog steeds 2 dood, en geen alarm" 0 "dood: 2 (langs gh-pages: 2)" \
+     python3 "$S/_tools/doorstuurders.py" --site "$S" --afleiden
+# De kopregel noemt de gh-pages-commit en verandert dus terecht; de rijen niet.
+grep -v '^#' "$M/tabel_voor" > "$M/rijen_voor"
+grep -v '^#' "$S/_tools/doorstuurders.tsv" > "$M/rijen_na"
+zaak "13e en de rijen van de tabel zijn byte voor byte dezelfde" 0 "" \
+     cmp "$M/rijen_voor" "$M/rijen_na"
 
 # ---- 12. de bedrading: de echte naar_buiten.sh --nakijken ----------------
 bedraad() {  # $1 = naam -> proefsite met de echte pers, en nagemaakte plank- en tellerwachters

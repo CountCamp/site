@@ -326,7 +326,15 @@ def main() -> int:
             log(f"  doorstuurders: _tools/doorstuurders.py niet te laden ({e}) -- "
                 f"NIETS teruggezet; draai python3 _tools/doorstuurders.py --bouw")
         else:
-            nw, vv, zelfde, geweigerd = doorstuurders_bouw(SITE_ROOT, doorstuur_rel)
+            # Valt het terugzetten om, dan staat het boek er al (stap 1-5 zijn
+            # gedaan). Dan luid melden en de slotcontrole hieronder wél laten
+            # printen; de doorstuurpoort in naar_buiten.sh ziet het gat daarna.
+            try:
+                nw, vv, zelfde, geweigerd = doorstuurders_bouw(SITE_ROOT, doorstuur_rel)
+            except Exception as e:  # noqa: BLE001
+                nw, vv, zelfde, geweigerd = [], [], [], []
+                log(f"  doorstuurders: LIEP VAST ({type(e).__name__}: {e}) -- NIETS "
+                    f"teruggezet; draai python3 _tools/doorstuurders.py --bouw")
             log(f"  doorstuurders onder {doorstuur_rel}/: {len(nw)} teruggezet, "
                 f"{len(vv)} ververst, {len(zelfde)} stonden er nog")
             for oud, reden in geweigerd:

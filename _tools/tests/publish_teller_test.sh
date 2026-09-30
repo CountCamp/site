@@ -187,6 +187,13 @@ printf '<!doctype html>\n<html><head><title>echt</title>\n%s\n</head><body>echt<
   "$TELLER" > "$M/bron/03_oud/03_oud.html"
 zaak    "een echte bladzij op een oud adres wordt niet overschreven" 0
 verwacht "  en de achterhaalde rij wordt genoemd" "NIET teruggezet: oefenboeken/proefboek/03_oud/03_oud.html"
+# 6c: een kapotte tabel laat het terugzetten omvallen. Het boek staat er dan al;
+#     de publicatie moet het luid zeggen en de slotcontrole tóch printen.
+printf 'kapot\n' > "$PROEFSITE/_tools/doorstuurders.tsv"
+bouw_bron
+zaak    "een kapotte doorstuurtabel laat de publicatie niet stil omvallen" 0
+verwacht "  en zegt dat het terugzetten vastliep" "doorstuurders: LIEP VAST"
+verwacht "  en de slotcontrole komt er nog steeds" "Compleet en gevalideerd"
 rm -f "$PROEFSITE/_tools/doorstuurders.py" "$PROEFSITE/_tools/doorstuurders.tsv"
 
 echo ""

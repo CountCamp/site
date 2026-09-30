@@ -66,5 +66,20 @@ proef "een tabel zonder bouwrijen heet goed" \
   "    if not bouwen:|||    if False:"
 proef "geen procent-codering in het doel" \
   "    return '/' + quote(nieuw, safe='/')|||    return '/' + nieuw"
+# Wat de nakijker van 1-10 vond, en wat daarvoor gerepareerd is:
+proef "hoofdletters worden niet exact vergeleken" \
+  "        if unicodedata.normalize('NFC', deel) not in namen:|||        if False:"
+proef "een wachter die omvalt heet 'fout' in plaats van blind" \
+  "              'ONGEMETEN, dit zegt niets over de doorstuurders zelf:')
+        traceback.print_exc(file=sys.stdout)
+        return 3|||              'ONGEMETEN, dit zegt niets over de doorstuurders zelf:')
+        traceback.print_exc(file=sys.stdout)
+        return 1"
+proef "--afleiden: eigen doorstuurders tellen als levende bladzij" \
+  "return soort(t) != 'doorstuurder' or MERK not in t|||return soort(t) != 'doorstuurder' or True"
+proef "--afleiden: de controletelling loeit na publicatie" \
+  "if (p not in nu_live or van_ons(p)) and p not in huidig|||if (p not in nu_live) and p not in huidig"
+proef "--afleiden: de proefdruk telt mee als lezersadres" \
+  "            and not p.startswith('pr-preview/')}|||            }"
 [ "$SLECHT" -eq 0 ] || { echo "mutatieproef: $SLECHT proef/proeven zonder uitslag of zonder beet"; exit 1; }
 echo "elke mutatie werd opgemerkt; de toets meet echt iets."
