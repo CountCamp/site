@@ -5,6 +5,7 @@
 #   naar_buiten.sh --lokaal              proefdruk bouwen en hier bekijken
 #   naar_buiten.sh --proefdruk           proefdruk op internet, via een PR
 #   naar_buiten.sh --productie           naar de ECHTE site (countcamp.org)
+#   naar_buiten.sh --nakijken            alleen de poorten draaien, verder niets
 #
 #   erbij mag:  --droogloop   zeg wat je zou doen, doe het niet
 #               --tak <naam>  welke tak (standaard: de tak waar je op staat)
@@ -40,7 +41,7 @@ DROOG=""
 TAK=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --lokaal|--proefdruk|--productie) WEG="$1" ;;
+    --lokaal|--proefdruk|--productie|--nakijken) WEG="$1" ;;
     --droogloop) DROOG=ja ;;
     --tak) shift; TAK="${1:?geef een taknaam}" ;;
     *) echo "onbekende schakelaar: $1"; exit 1 ;;
@@ -112,15 +113,71 @@ plank_nakijken() {   # $1 = blokkerend | melden
   return 0
 }
 
+# ---- elke oefenboek-bladzij moet geteld worden -------------------------
+# `controleer()` hierboven kijkt naar de bezoekersteller, maar op ÉÉN bladzij:
+# _site/index.html. Daar kon hij de echte blindheid niet zien, want de
+# thuispagina krijgt zijn teller uit `_quarto-echt.yml` en stond dus altijd
+# goed. De oefenboeken komen als RESOURCE binnen -- onveranderd gekopieerd,
+# nooit door de site gerenderd -- dus voor die bladzijden zegt de teller op de
+# thuispagina niets.
+#
+# Gemeten op 30-9-2026, vóór dit erin kwam: 112 van de 161 oefenboek-bladzijden
+# droegen een teller. Het hele psychometrie-oefenboek was blind, en de
+# bouwcontrole stond groen. Eén bladzij nakijken is geen steekproef maar een
+# blinde vlek.
+#
+# WAAROM BLOKKEREND OP --productie EN MELDEND OP DE PROEFWEGEN: dit is dezelfde
+# afweging als bij `plank_nakijken`. Rood kan hij alleen worden doordat er een
+# bladzij binnenkwam zonder teller, en dat is altijd een echte fout -- hij loopt
+# niet mee met de kalender. Een poort die alleen afgaat bij een echte fout, wordt
+# niet omzeild.
+tellers_nakijken() {   # $1 = blokkerend | melden
+  local streng="$1" code=0
+  python3 "$HIER/_tools/controleer_tellers.py" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  if [ "$streng" = blokkerend ]; then
+    echo "  Er gaan bladzijden de deur uit die niemand kan tellen."
+    echo "  Herstellen: python3 _tools/controleer_tellers.py --repareer"
+    return 1
+  fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 huidige_tak() { git branch --show-current; }
 
 # ============================================================
 case "$WEG" in
 
+# ---- 0. alleen nakijken ------------------------------------------------
+# Draait de poorten die --productie ook draait, net zo streng, en doet daarna
+# niets. Twee redenen om dit te hebben:
+#
+#   * je kunt vóór een levering vragen "zou dit doorkomen?" zonder main te
+#     hoeven zijn en zonder iets te duwen;
+#   * de poorten zijn ZO te proeven. Dat kon eerst niet: --productie eist dat
+#     je op main staat en pusht daarna. Een wachter die je alleen kunt proeven
+#     door te publiceren, wordt nooit geproefd -- en dan weet je niet of hij
+#     bijt. Getoetst in _tools/tests/naar_buiten_teller_test.sh.
+--nakijken)
+  echo "== alleen nakijken (er wordt niets gebouwd en niets geduwd)"
+  code=0
+  plank_nakijken   blokkerend || code=1
+  tellers_nakijken blokkerend || code=1
+  echo
+  if [ "$code" = 0 ]; then
+    echo "Alle poorten staan groen. --productie zou hierop niet struikelen."
+  else
+    echo "Minstens één poort staat rood. --productie zou hier stoppen."
+  fi
+  exit "$code"
+  ;;
+
 # ---- 1. lokaal ---------------------------------------------------------
 --lokaal)
   echo "== proefdruk bouwen, hier op de machine"
   plank_nakijken melden
+  tellers_nakijken melden
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
     QUARTO_PROFILE=spook quarto render
@@ -142,6 +199,7 @@ case "$WEG" in
   TAK="${TAK:-$(huidige_tak)}"
   echo "== proefdruk op internet, vanaf tak '$TAK'"
   plank_nakijken melden
+  tellers_nakijken melden
   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
   if [ -n "$(git status --porcelain)" ]; then
@@ -189,7 +247,8 @@ case "$WEG" in
   git log --oneline origin/main..main | sed 's/^/    /'
   echo
   echo "  eerst nakijken of de plank waarmaakt wat hij belooft:"
-  plank_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+  plank_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
+  tellers_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   echo
   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
   if [ -z "$DROOG" ]; then
