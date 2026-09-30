@@ -3,16 +3,26 @@
 -- regelt het al via .callout-note.<class>).
 --
 -- Classes: .opgave, .tidy-alt, .spss-syntax, .rotterdam-conventie,
---          .conventie (zelfde kader als Rotterdam)
+--          .conventie (zelfde kader als Rotterdam), .formule
+-- Kale div (geen callout): .rapportage
 -- Plus inline-spans: .getal, .eng
+--
+-- LET OP — de vier takken hieronder vuren niet meer (gemeten 15-8-2026).
+-- Quarto zet `::: {.callout-note .opgave}` om in een Callout-knoop vóór deze
+-- filter draait, dus `Div()` ziet hem nooit; de PDF valt daardoor terug op
+-- Quarto's standaard-callout en ccOpgave/ccTidyAlt/ccSpssSyntax/ccRotterdam
+-- in countcamp.tex zijn dode code. In HTML klopt alles wél, want dat gaat
+-- via CSS. Zie de reparatielijst; niet meegenomen in de rapportage-klus om
+-- die niet te laten uitdijen.
+--
+-- `.rapportage` is daarom bewust een KALE div en geen callout: die bereikt
+-- de filter wel, en het geeft één markup voor het boek (stil, alleen CSS)
+-- en de werkboeken (zichtbaar kader). De auteur typt overal hetzelfde en
+-- hoeft niet te weten waar hij is.
 
 -- Rapportage-blok: de zin die de student letterlijk overneemt in haar eigen
--- verslag. Geen uitleg maar rapportage, dus APA onverkort (TAALGIDS.md §2).
+-- verslag. Geen uitleg maar rapportage, dus APA onverkort (TAALGIDS §2).
 -- De kop zegt wat de lezer met het blok moet DOEN, niet welk register het is.
---
--- Een KALE div, geen callout: Quarto zet `::: {.callout-note .x}` om in een
--- Callout-knoop vóór deze filter draait, dus die bereikt `Div()` nooit.
--- Gemeten 15-8-2026. Dezelfde markup werkt daardoor ook in het boek.
 local RAP_KOP = "Zo rapporteer je het"
 
 local function rapportage(el)
@@ -82,6 +92,14 @@ function Div(el)
         pandoc.RawBlock("latex", "\\end{ccRotterdam}")
       }
     end
+    if el.classes:includes("formule") then
+      local title = el.attributes["title"] or "Formule"
+      return {
+        pandoc.RawBlock("latex", "\\begin{ccFormule}[" .. title .. "]"),
+        el,
+        pandoc.RawBlock("latex", "\\end{ccFormule}")
+      }
+    end
     if el.classes:includes("dieren-subtitel") then
       local content = pandoc.utils.stringify(el)
       return pandoc.RawBlock("latex", "\\dierensubtitel{" .. content .. "}")
@@ -130,6 +148,7 @@ local LATEX_ENV = {
   ["spss-syntax"] = "ccSpssSyntax",
   ["rotterdam-conventie"] = "ccRotterdam",
   ["conventie"] = "ccRotterdam",
+  ["formule"] = "ccFormule",
 }
 
 local INGEBOUWD_ENV = {
