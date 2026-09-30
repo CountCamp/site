@@ -112,6 +112,27 @@ BLIND="$(nep_repo blindrepo 3 \
   "NIETS GEMETEN - geen enkele .html gevonden onder oefenboeken, werkboeken")"
 keur     "een wachter die niets kon meten: HOUDT TEGEN" 1 "$BLIND"
 verwacht "  en laat de blindheid zien" "NIETS GEMETEN"
+verwacht "  en noemt dat als blindheid, niet als missende teller" \
+         "stilte betekent ongeldig, nooit goed"
+
+# --- 4. een wachter die er niet is, mag niet de schuld op de bladzijden leggen
+#     Dit is de fout die deze poort bij het schrijven zelf maakte: de wachter
+#     stond niet in de proefrepo van plankwacht_test.sh, python kon het bestand
+#     niet openen (afloopcode 2), en de poort meldde "er gaan bladzijden de deur
+#     uit die niemand kan tellen". Er was niets met de bladzijden. Een verkeerde
+#     reden is erger dan geen, want daar handelt iemand naar.
+WEG_REPO="$(nep_basis wegrepo)"
+# geen controleer_tellers.py neerzetten -> python3 stopt met afloopcode 2
+keur     "een wachter die ontbreekt: HOUDT TEGEN" 1 "$WEG_REPO"
+verwacht "  en zegt dat het ONGEMETEN is"      "is dus ONGEMETEN"
+verwacht "  en wijst naar het ontbrekende script" "controleer_tellers.py er, en draait hij los"
+getoetst=$((getoetst + 1))
+if grep -qF "Er gaan bladzijden de deur uit" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
 
 echo ""
 if [ "$gezakt" = "0" ]; then

@@ -112,6 +112,26 @@ verse_boom
 zaak "lege boom is BLIND, niet schoon" 3
 verwacht_in_uitvoer "  en zegt dat hardop" "NIETS GEMETEN"
 
+# === 1b. een map die er NIET IS, is geen blindheid ==========================
+#     `werkboeken/` bestaat alleen uit doorstuurders van een oud pad en mag best
+#     verdwijnen. Daarop de levering tegenhouden is een valse alarmbel, en die
+#     leer je wegklikken. Maar hij moet het wel ZEGGEN, want anders lijkt "niet
+#     gekeken" op "niets gevonden" -- precies huisregel 5.
+#     Gemeten op 30-9-2026: hierop struikelde zaak 8 van plankwacht_test.sh.
+verse_boom
+rm -rf "$M/boom/werkboeken"
+bladzij "oefenboeken/a/met.html" "$TELLER_EEN_REGEL" ""
+zaak "een ontbrekende map houdt de levering niet tegen" 0
+verwacht_in_uitvoer "  maar wordt wel genoemd" \
+  "niet gekeken, want de map bestaat hier niet: werkboeken"
+
+# === 1c. ALLE mappen weg is wel blindheid ===================================
+verse_boom
+rm -rf "$M/boom/oefenboeken" "$M/boom/werkboeken"
+zaak "zijn alle mappen weg, dan is het BLIND" 3
+verwacht_in_uitvoer "  en zegt welke er niet waren" \
+  "van die mappen bestaat hier geen enkele: oefenboeken, werkboeken"
+
 # === 2. de drie schrijfwijzen worden alle drie erkend =======================
 verse_boom
 bladzij "oefenboeken/a/een_regel.html"   "$TELLER_EEN_REGEL"   ""

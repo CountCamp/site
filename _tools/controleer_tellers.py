@@ -92,10 +92,19 @@ def main() -> int:
     hersteld: list[str] = []
     gezien = 0
 
+    afwezig: list[str] = []
     for wortel in mappen:
+        # Een map die er NIET IS, is iets anders dan een map waarin ik niets kon
+        # zien. `werkboeken/` bestaat alleen uit doorstuurders van een oud pad en
+        # mag best verdwijnen; daarop de levering tegenhouden is een valse
+        # alarmbel, en een wachter die valse alarmbellen geeft leer je wegklikken.
+        # De blindheidstoets staat verderop en kijkt of er ergens ÜBERHAUPT een
+        # bladzij gevonden is -- dát is waar stilte ongeldig betekent.
+        # Gemeten op 30-9-2026: hierop struikelde zaak 8 van plankwacht_test.sh,
+        # die een proefrepo bouwt met wél oefenboeken/ en géén werkboeken/.
         if not os.path.isdir(os.path.join(SITE, wortel)):
-            print('map bestaat niet: %s' % wortel)
-            return 3
+            afwezig.append(wortel)
+            continue
         for rel, vol in loop(wortel):
             gezien += 1
             t = open(vol, encoding='utf-8', errors='ignore').read()
@@ -137,6 +146,11 @@ def main() -> int:
     tu = sum(v[2] for v in telling.values())
     print('  %-30s %8d %8d %12d' % ('TOTAAL', tg, tb, tu))
 
+    if afwezig:
+        print('')
+        print('niet gekeken, want de map bestaat hier niet: %s'
+              % ', '.join(afwezig))
+
     if uitgesloten:
         print('')
         print('uitgesloten (%d) — geen bladzij, dus geen teller:' % len(uitgesloten))
@@ -162,6 +176,9 @@ def main() -> int:
         print('')
         print('NIETS GEMETEN — geen enkele .html gevonden onder %s. Dat is geen '
               'schone uitslag maar een blinde: klopt het pad?' % ', '.join(mappen))
+        if afwezig:
+            print('  (van die mappen bestaat hier geen enkele: %s)'
+                  % ', '.join(afwezig))
         return 3
 
     if mist:

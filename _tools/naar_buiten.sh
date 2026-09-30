@@ -135,11 +135,22 @@ tellers_nakijken() {   # $1 = blokkerend | melden
   local streng="$1" code=0
   python3 "$HIER/_tools/controleer_tellers.py" | sed 's/^/  /' || code=$?
   if [ "$code" -eq 0 ]; then return 0; fi
-  if [ "$streng" = blokkerend ]; then
-    echo "  Er gaan bladzijden de deur uit die niemand kan tellen."
-    echo "  Herstellen: python3 _tools/controleer_tellers.py --repareer"
-    return 1
-  fi
+  # WAAROM DRIE REDENEN EN NIET ÉÉN: een verkeerde reden is erger dan geen, want
+  # daar handelt iemand naar. Bij het schrijven hiervan gebeurde dat meteen: de
+  # wachter stond niet in de proefrepo van plankwacht_test.sh, python kon het
+  # bestand niet openen (afloopcode 2), en deze poort meldde vrolijk "er gaan
+  # bladzijden de deur uit die niemand kan tellen". Er was niets met de
+  # bladzijden; de wachter was er niet.
+  case "$code" in
+    1) echo "  Er gaan bladzijden de deur uit die niemand kan tellen."
+       echo "  Herstellen: python3 _tools/controleer_tellers.py --repareer" ;;
+    3) echo "  De tellerwachter kon niet kijken. Dat is geen schone uitslag maar"
+       echo "  een blinde: stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De tellerwachter zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
+       echo "  Staat _tools/controleer_tellers.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
   echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
   return 0
 }

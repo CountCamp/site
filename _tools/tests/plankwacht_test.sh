@@ -212,6 +212,21 @@ klaarzetten "$T7"
 mkdir -p "$T7/_tools"
 cp "$BRON/_tools/naar_buiten.sh" "$T7/_tools/"
 cp "$BRON/_tools/plankwacht.py"  "$T7/_tools/"
+# Sinds 30-9-2026 hangt er een TWEEDE wachter aan dezelfde draad: --productie
+# kijkt ook of elke oefenboek-bladzij de bezoekersteller draagt. Die moet hier
+# mee, anders meet zaak 8 niet "laat een kloppend kaartje door" maar "de
+# tellerwachter ontbreekt" -- en dan staat de toets rood om de verkeerde reden.
+cp "$BRON/_tools/controleer_tellers.py" "$T7/_tools/"
+cp "$BRON/_tools/tellerregel.py"        "$T7/_tools/"
+# Eén echte bladzij mét teller, zodat de tellerwachter hier groen staat omdat
+# hij iets ZAG en niet omdat er niets te zien was.
+mkdir -p "$T7/oefenboeken/geteld"
+cat > "$T7/oefenboeken/geteld/index.html" <<'HTML'
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8"><title>Geteld</title>
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head><body><p>een bladzij die geteld wordt</p></body></html>
+HTML
 plank_schrijven "$T7" "19 september 2026" "Vier"
 git -C "$T7" add -A
 git -C "$T7" commit -qm "de plank en het gereedschap"
