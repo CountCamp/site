@@ -334,7 +334,29 @@ doorstuurder "$T14b/oefenboeken/psychometrie/05_oud/05_oud.html" /oefenboeken/ps
 op "$T14b" 2026-09-19 "oude adres van thema 5"
 zaak "14b een map met alleen een doorstuurder is geen thema" 0 \
      "alle nagerekende beloftes kloppen" "$T14b"
-rm -rf "$T12" "$T13" "$T14" "$T14b"
+
+# zaak 14c: een echte bladzij VERWIJDEREN telt wél. De nakijker van 1-10 zag
+# dat geen zaak dit bewaakte: "D": [] liet de hele toets groen.
+T14c="$(mktemp -d)"; klaarzetten "$T14c"
+plank_schrijven "$T14c" "19 september 2026" "Vier"
+op "$T14c" 2026-09-19 "plank"
+git -C "$T14c" rm -q "$OZP"
+op "$T14c" 2026-10-01 "Fundament weg"
+zaak "14c een bladzij verwijderen telt wél" 1 \
+     "is voor het laatst veranderd op 2026-10-01" "$T14c"
+
+# zaak 14d: alleen een FIGUUR vervangen (binair, geen html) telt wél -- en de
+# wachter mag er niet op omvallen. Gevonden door de nakijker van 1-10: de eerste
+# versie van is_doorstuurcommit las elk bestand als tekst, kreeg bij een PNG een
+# UnicodeDecodeError, en naar_buiten.sh las die crash als "werk het kaartje bij".
+T14d="$(mktemp -d)"; klaarzetten "$T14d"
+plank_schrijven "$T14d" "19 september 2026" "Vier"
+op "$T14d" 2026-09-19 "plank"
+printf '\211PNG\r\n\032\n\000\000\000\rIHDR\377\376' > "$T14d/oefenboeken/ozp1/00_fundament/figuur.png"
+op "$T14d" 2026-10-01 "Figuur verbeterd"
+zaak "14d een commit met alleen een figuur telt wél, zonder om te vallen" 1 \
+     "is voor het laatst veranderd op 2026-10-01" "$T14d"
+rm -rf "$T12" "$T13" "$T14" "$T14b" "$T14c" "$T14d"
 
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op

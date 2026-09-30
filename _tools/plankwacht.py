@@ -266,6 +266,9 @@ def is_doorstuurcommit(wortel: str, commit: str, pad: str) -> bool:
         bladzij die door een doorstuurder wordt VERVANGEN is een boekwijziging:
         die inhoud staat daar niet meer;
       * een verwijderd bestand wás een doorstuurder;
+      * alleen `.html` kan een doorstuurder zijn: een figuur, css of data in
+        dezelfde commit is een echte wijziging, en wordt dus nooit gelezen --
+        de eerste versie las een PNG als tekst en viel om (nakijker, 1-10-2026);
       * geen hernoeming, geen bestand dat niet te lezen is.
     Eén echte bladzij erbij, weg of anders, en de commit telt gewoon mee.
     """
@@ -279,14 +282,17 @@ def is_doorstuurcommit(wortel: str, commit: str, pad: str) -> bool:
         return False
     for r in regels:
         status, _, bestand = r.partition("\t")
+        if not bestand.endswith(".html"):
+            return False
         versies = {"A": [commit], "M": [commit + "^", commit], "D": [commit + "^"]}.get(status)
         if versies is None:
             return False
         for versie in versies:
             inhoud = subprocess.run(
                 ["git", "-c", "core.quotepath=off", "show", f"{versie}:{bestand}"],
-                cwd=wortel, capture_output=True, text=True)
-            if inhoud.returncode != 0 or soort(inhoud.stdout) != "doorstuurder":
+                cwd=wortel, capture_output=True)
+            tekst = inhoud.stdout.decode("utf-8", errors="replace")
+            if inhoud.returncode != 0 or soort(tekst) != "doorstuurder":
                 return False
     return True
 

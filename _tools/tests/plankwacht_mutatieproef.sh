@@ -28,12 +28,16 @@ proef() {  # $1 = naam, $2 = sed-uitdrukking die de wachter kreupel maakt
   # proef zichzelf in plaats van de wachter.
   if ! python3 - "$M/kreupel.py" "$2" <<'PY'
 import sys
-pad, oud_nieuw = sys.argv[1], sys.argv[2]
-oud, nieuw = oud_nieuw.split("|||")
+pad, paren = sys.argv[1], sys.argv[2]
 s = open(pad, encoding="utf-8").read()
-if oud not in s:
-    sys.exit(f"mutatie niet gevonden: {oud!r}")
-open(pad, "w", encoding="utf-8").write(s.replace(oud, nieuw, 1))
+# Meerdere vervangingen in één mutatie, gescheiden door '&&&': nodig waar twee
+# beschermingen elkaar dekken en er pas iets misgaat als ze allebei weg zijn.
+for oud_nieuw in paren.split("&&&"):
+    oud, nieuw = oud_nieuw.split("|||")
+    if oud not in s:
+        sys.exit(f"mutatie niet gevonden: {oud!r}")
+    s = s.replace(oud, nieuw, 1)
+open(pad, "w", encoding="utf-8").write(s)
 PY
   then
     echo "  MISLUKT    $1 -- de mutatie sloeg niet aan; dit is geen uitslag"
@@ -77,7 +81,18 @@ proef "uitzondering helemaal uitgezet" \
 proef "doorstuur-uitzondering helemaal uitgezet" \
   '        if alleen_doorstuur:|||        if False:'
 proef "doorstuurcommit kijkt niet naar de inhoud" \
-  '            if inhoud.returncode != 0 or soort(inhoud.stdout) != "doorstuurder":|||            if inhoud.returncode != 0:'
+  '            if inhoud.returncode != 0 or soort(tekst) != "doorstuurder":|||            if inhoud.returncode != 0:'
+proef "een verwijderde bladzij wordt niet nagekeken" \
+  '"D": [commit + "^"]}|||"D": []}'
+# De crash van 1-10 (een PNG als tekst gelezen). Twee beschermingen dekken
+# elkaar -- alleen .html lezen, en als bytes lezen -- dus pas als ze allebei
+# weg zijn, valt de wachter om. Eén van beide weghalen blijft terecht groen.
+proef "een figuur wordt als tekst gelezen (beide beschermingen weg)" \
+  '        if not bestand.endswith(".html"):
+            return False
+|||&&&                cwd=wortel, capture_output=True)
+            tekst = inhoud.stdout.decode("utf-8", errors="replace")|||                cwd=wortel, capture_output=True, text=True)
+            tekst = inhoud.stdout'
 proef "bij een wijziging telt de oude versie niet" \
   '{"A": [commit], "M": [commit + "^", commit]|||{"A": [commit], "M": [commit]'
 proef "doorstuur-overslag wordt niet meer gemeld" \
