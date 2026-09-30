@@ -20,7 +20,9 @@ kaartje. Deze wachter rekent beide beloftes na uit de bestanden.
 Wat hij toetst
 --------------
   1. "**Bijgewerkt <dag> <maand> <jaar>**"
-     tegen de laatste commit die de boekmap van dat kaartje raakte.
+     tegen de laatste commit die de boekmap van dat kaartje raakte -- met
+     uitzondering van commits die daar alleen de bezoekersteller toevoegden
+     (zie `is_tellercommit`). Die worden altijd bij naam genoemd.
   2. "<telwoord> van de <telwoord> thema's staan online" (Psychometrie) en de
      kale vorm "<telwoord> thema's" (MVDA), tegen het aantal thema-mappen dat
      er staat én vanuit het boek zelf gelinkt is.
@@ -74,6 +76,11 @@ import os
 import re
 import subprocess
 import sys
+
+# De tellerregel komt uit het ene bestand dat weet hoe hij eruitziet, niet
+# overgetikt: een tweede schrijfwijze hier zou stil uiteenlopen met de eerste.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from tellerregel import REGEL  # noqa: E402
 
 # ------------------------------------------------------------------
 # Nederlandse telwoorden en maanden. Alleen wat we echt tegenkomen --
@@ -193,25 +200,86 @@ def boekmap(plank_pad: str, href: str) -> str:
     return os.path.dirname(doel)
 
 
-def laatste_commitdatum(wortel: str, pad: str) -> tuple[str | None, str]:
-    """(datum als JJJJ-MM-DD, toelichting). Datum None = kon niet kijken."""
+def is_tellercommit(wortel: str, commit: str, pad: str) -> bool:
+    """Deed deze commit binnen `pad/` NIETS anders dan de teller toevoegen?
+
+    Waarom dit bestaat: op 30-9-2026 kreeg elke oefenboek-bladzij de onzichtbare
+    GoatCounter-regel (commit b9fd33a). Daarmee werd dát de laatste verandering
+    aan `oefenboeken/ozp1/`, en eiste de wachter "Bijgewerkt 30 september" --
+    voor een regel die geen lezer ooit ziet. Ben koos 30-9: leer de wachter zo'n
+    commit over te slaan, in plaats van een datum op het kaartje te zetten die
+    niets over het boek zegt.
+
+    Beslist wordt op de ECHTE diff, nooit op de commitboodschap: een boodschap
+    is een bewering. Streng, per bestand:
+      * geen enkele weggehaalde regel,
+      * elke toegevoegde regel is (op inspringing na) precies `tellerregel.REGEL`,
+      * geen nieuw, verwijderd, hernoemd of binair bestand, geen modewissel.
+    Eén afwijking en de commit telt gewoon mee -- een commit die de teller
+    toevoegt ÉN iets anders verandert, is een echte verandering.
+
+    Bij een merge wordt tegen de eerste ouder vergeleken: dat is wat er op deze
+    lijn binnenkwam.
+    """
+    uit = subprocess.run(
+        ["git", "show", "-U0", "--format=", "--no-renames", "--no-color",
+         "--no-ext-diff", "--diff-merges=first-parent", commit, "--", pad + "/"],
+        cwd=wortel, capture_output=True, text=True, check=True,
+    )
+    toegevoegd = 0
+    for regel in uit.stdout.splitlines():
+        if regel.startswith(("diff --git ", "index ", "--- a/", "+++ b/", "@@ ")):
+            continue
+        if regel.startswith("+"):
+            if regel[1:].strip() != REGEL:
+                return False
+            toegevoegd += 1
+            continue
+        # Alles wat hier nog komt -- een '-'-regel, "new file mode",
+        # "deleted file mode", "Binary files ...", "--- /dev/null",
+        # "\ No newline at end of file" -- is meer dan de teller erbij zetten.
+        return False
+    # Een lege diff (niets binnen pad/) is geen tellercommit maar een raadsel;
+    # die laten we meetellen in plaats van hem stil weg te poetsen.
+    return toegevoegd > 0
+
+
+def laatste_commitdatum(wortel: str, pad: str) -> tuple[str | None, str, list[str]]:
+    """(datum als JJJJ-MM-DD, toelichting, overgeslagen tellercommits).
+
+    Datum None = kon niet kijken. De lijst overgeslagen commits gaat altijd mee
+    naar buiten: een overslag die je niet ziet, is een gat.
+    """
     vol = os.path.join(wortel, pad)
     if not os.path.isdir(vol):
-        return None, f"de map {pad}/ bestaat niet"
+        return None, f"de map {pad}/ bestaat niet", []
     try:
         uit = subprocess.run(
-            ["git", "log", "-1", "--format=%ad%x09%h%x09%s", "--date=short", "--", pad + "/"],
+            ["git", "log", "--format=%h%x09%ad%x09%s", "--date=short", "--", pad + "/"],
             cwd=wortel, capture_output=True, text=True, check=True,
         )
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        return None, f"git gaf geen antwoord op {pad}/ ({e})"
+        return None, f"git gaf geen antwoord op {pad}/ ({e})", []
     if not uit.stdout.strip():
         return None, (
             f"geen enkele commit raakt {pad}/ -- is dit een ondiepe kloon "
             f"(actions/checkout zonder fetch-depth)?"
-        )
-    datum, kort, onderwerp = (uit.stdout.strip().split("\t", 2) + ["", ""])[:3]
-    return datum, f"{kort} {onderwerp}"
+        ), []
+    overgeslagen: list[str] = []
+    for r in uit.stdout.strip().splitlines():
+        kort, datum, onderwerp = (r.split("\t", 2) + ["", ""])[:3]
+        try:
+            alleen_teller = is_tellercommit(wortel, kort, pad)
+        except subprocess.CalledProcessError as e:
+            return None, f"git show {kort} gaf geen antwoord op {pad}/ ({e})", overgeslagen
+        if alleen_teller:
+            overgeslagen.append(kort)
+            continue
+        return datum, f"{kort} {onderwerp}", overgeslagen
+    return None, (
+        f"elke commit op {pad}/ zette alleen de teller erin "
+        f"({len(overgeslagen)} stuks) -- dan is er geen boekdatum om na te rekenen"
+    ), overgeslagen
 
 
 def gepubliceerde_themas(wortel: str, pad: str) -> tuple[list[str], list[str], str | None]:
@@ -299,7 +367,14 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
                     "blind", k, f"noemt de maand {maandwoord!r}, en die ken ik niet"))
             else:
                 beweerd = f"{int(jaar):04d}-{maand:02d}-{int(dag):02d}"
-                echt, waaruit = laatste_commitdatum(wortel, pad)
+                echt, waaruit, overgeslagen = laatste_commitdatum(wortel, pad)
+                if overgeslagen:
+                    bevindingen.append(Bevinding(
+                        "overgeslagen", k,
+                        f"{len(overgeslagen)} tellercommit(s) overgeslagen in {pad}/: "
+                        f"{', '.join(overgeslagen)} -- die zetten alleen de "
+                        f"bezoekersteller erin",
+                    ))
                 if echt is None:
                     bevindingen.append(Bevinding("blind", k, waaruit))
                 else:
@@ -359,11 +434,16 @@ def main() -> int:
     bevindingen, aantal_kaartjes, getoetst = toets(wortel, args.plank)
     fouten = [b for b in bevindingen if b.soort == "fout"]
     blind = [b for b in bevindingen if b.soort == "blind"]
+    overgeslagen = [b for b in bevindingen if b.soort == "overgeslagen"]
 
-    if fouten or blind or not args.stil:
+    # Een overgeslagen tellercommit wordt ALTIJD genoemd, ook met --stil: de
+    # wachter kijkt dan bewust langs een commit heen, en dat moet je kunnen zien.
+    if fouten or blind or overgeslagen or not args.stil:
         print(f"plankwacht: {aantal_kaartjes} kaartjes, {getoetst} belofte(s) nagerekend "
               f"tegen de bestanden")
 
+    for b in overgeslagen:
+        print(f"  NB    {b.kaartje.titel} (regel {b.kaartje.regel}): {b.regel}")
     for b in fouten:
         print(f"  FOUT  {b.kaartje.titel} (regel {b.kaartje.regel}): {b.regel}")
     for b in blind:
