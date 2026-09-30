@@ -1,6 +1,6 @@
 # Doorstuurders voor dode adressen — 1 oktober 2026
 
-Spoor `doorstuur`, tak `worktree-doorstuur`, stand `ac8ebda`. **Er is niets gepubliceerd en niets gepusht.** Elk getal hieronder is uitgerekend: uit `_tools/doorstuurders.tsv`, uit git, of uit een poort die voor dit verslag opnieuw gedraaid is. Die tabel is zelf afgeleid uit de gh-pages-geschiedenis (`f8a5885`) met `python3 _tools/doorstuurders.py --afleiden`. Dit verslag, de lokale bouw en de klikproef komen uit de scripts in `~/Documents/Ben_OS/_logs/doorstuur_2026-10-01_werk/` (op broodje).
+Spoor `doorstuur`, tak `worktree-doorstuur`, stand `4a875df`. **Er is niets gepubliceerd en niets gepusht.** Elk getal hieronder is uitgerekend: uit `_tools/doorstuurders.tsv`, uit git, of uit een poort die voor dit verslag opnieuw gedraaid is. Die tabel is zelf afgeleid uit de gh-pages-geschiedenis (`ac20dff`) met `python3 _tools/doorstuurders.py --afleiden`. Dit verslag, de lokale bouw en de klikproef komen uit de scripts in `~/Documents/Ben_OS/_logs/doorstuur_2026-10-01_werk/` (op broodje).
 
 ## In één alinea
 
@@ -17,7 +17,9 @@ Van de 190 adressen die ooit live stonden en nu een 404 geven, krijgen er **181*
 | Handleiding (bookdown, 2021) | 6 |
 | **totaal** | **181** |
 
-**Wat er nodig is voor één "ja":** de tak `worktree-doorstuur` in `main` halen en `naar_buiten.sh --productie` draaien. Er hoeft geen boek opnieuw gerenderd te worden. De doorstuurders zijn losse bestanden die de site onveranderd meeneemt, net als de acht onder `werkboeken/` sinds 7-8. **Haal de tak in zijn geheel binnen, niet alleen de doorstuurders.** Twee ervan staan ín `oefenboeken/ozp1/`, en zonder de aangepaste plankwacht eist die dan "Bijgewerkt 1 oktober" op het OZP 1-kaartje en stopt `--productie`. Dat is op deze tak gemeten vóór de aanpassing (afloop 1).
+**Wat er nodig is voor één "ja":** de tak `worktree-doorstuur` in `main` halen en `naar_buiten.sh --productie` draaien. De tak staat op de nieuwste `main` (`3a375b5`). Er hoeft geen boek opnieuw gerenderd te worden. De doorstuurders zijn losse bestanden die de site onveranderd meeneemt, net als de acht onder `werkboeken/` sinds 7-8.
+
+**Eén keuze kun je uitstellen: de plankwacht.** Op de stand waar dit spoor begon (`7041b48`) was het nog nodig. Toen zei het OZP 1-kaartje "Bijgewerkt 28 september", en de oude plankwacht hield de doorstuurders tegen met de eis "Bijgewerkt 1 oktober" (gemeten, afloop 1). Vannacht is het kaartje op `main` zelf naar 1 oktober gegaan, met het formuleblad. Opnieuw gemeten op de bijgetrokken tak: de oude plankwacht van `main` staat nu **ook groen**. Dat is toeval: de doorstuurders landen op dezelfde dag als de laatste boekwijziging. De wijziging (`9c0cfda` en `3f84238`) voorkomt dat het misgaat zodra een doorstuurder op een andere dag landt. Je kunt die twee commits er dus uit laten en later beslissen; geproefd met `git revert` erop: botst niet, en de toetsen en de poort blijven groen.
 
 ## OZP 1 — de reden voor vannacht
 
@@ -103,7 +105,7 @@ Alle vier de wijzigingen hebben een eigen commit, zodat ze los te bekijken zijn.
    - zonder vlag kijkt het na.
 
    De doorstuurders hebben dezelfde vorm als `werkboeken/index.html`: meta-refresh, canonical, noindex, een gewone link en geen teller. Er komt één regel commentaar bij die zegt waar ze vandaan komen. `tellerregel.soort()` herkent ze als doorstuurder, dus de tellerwachter slaat ze over en noemt ze bij naam. Ze vallen onder `resources` in `_quarto.yml` en komen daardoor niet in de sitemap.
-2. **`plankwacht.py`** slaat een commit over die binnen een boekmap alleen doorstuurders neerzet. Het is dezelfde vorm als jouw besluit over de tellercommit van 30-9. Streng op de inhoud: een echte bladzij die door een doorstuurder wordt vervangen, telt wél als wijziging. Een themamap met alleen een doorstuurder erin is geen thema. **Dit is een keuze over wat "Bijgewerkt" betekent, en die is van jou.** Ik heb hem gemaakt naar het voorbeeld van 30-9; wil je het anders, dan kan die commit er los uit.
+2. **`plankwacht.py`** slaat een commit over die binnen een boekmap alleen doorstuurders neerzet. Het is dezelfde vorm als jouw besluit over de tellercommit van 30-9. Streng op de inhoud: een echte bladzij die door een doorstuurder wordt vervangen, telt wél als wijziging. Een themamap met alleen een doorstuurder erin is geen thema. **Dit is een keuze over wat "Bijgewerkt" betekent, en die is van jou.** Ik heb hem gemaakt naar het voorbeeld van 30-9; wil je het anders, dan kunnen die commits er los uit (zie bovenaan).
 3. **`publish_workbook.py`** zet na zijn `rmtree` van `oefenboeken/<boek>/` de doorstuurders in die map terug. Zonder die stap waren de twee OZP 1-doorstuurders bij de eerstvolgende OZP 1-publicatie stil verdwenen.
 4. **`naar_buiten.sh`** heeft een derde poort naast de plank en de teller: het nakijken van de doorstuurders. Die poort blokkeert op `--nakijken` en `--productie`, en meldt alleen op de proefwegen. Hij vangt een doorstuurder die verdwenen is, en een doel dat verhuisd is waardoor de doorstuurder naar een 404 wijst. Van de 23 doorstuurders die al bestonden kijkt hij **alleen of hun doel bestaat, niet of het het goede doel is**. Dat is geen theorie: de inventaris vond al dat `werkplaats/h3.html` en `h4.html` naar elkaars hoofdstuk wijzen, en de nakijker zag dat de werkplaats-doorstuurders een nummer opschuiven (h7 → h8, h8 → h9, h9 → h10, h10 → h12). Of dat klopt, heeft niemand op inhoud nagemeten; ze komen uit `_cascade_stubs.py` in het lab en vallen buiten dit spoor.
 
@@ -111,14 +113,13 @@ Waarom de koppeling alleen binnen hetzelfde boek zoekt: op tekst alleen lijkt ee
 
 `publiceer_oefenboeken.sh` in het lab spiegelt met `rsync --delete` naar `oefenboeken/broertjes/*` en `oefenboeken/ggz_vs`. Daar staat bewust geen doorstuurder: alle oude broertjes- en GGZ-VS-adressen liggen onder `werkboeken/`, en daar schrijft geen enkel script.
 
-## Poorten — opnieuw gedraaid voor dit verslag, op stand `ac8ebda`
+## Poorten — opnieuw gedraaid voor dit verslag, op stand `4a875df`
 
 `bash _tools/naar_buiten.sh --nakijken` → afloopcode **0**. De kernregels, letterlijk:
 
 ```
 plankwacht: 10 kaartjes, 3 belofte(s) nagerekend tegen de bestanden
-NB    Oefenboek OZP 1 (regel 122): 1 tellercommit(s) overgeslagen in oefenboeken/ozp1/: b9fd33a -- die zetten alleen de bezoekersteller erin
-NB    Oefenboek OZP 1 (regel 122): 1 doorstuurcommit(s) overgeslagen in oefenboeken/ozp1/: 557d7e8 -- die zetten alleen doorstuurders op oude adressen, geen boektekst
+NB    Oefenboek OZP 1 (regel 122): 1 doorstuurcommit(s) overgeslagen in oefenboeken/ozp1/: ccb4281 -- die zetten alleen doorstuurders op oude adressen, geen boektekst
 uitgesloten (183) — geen bladzij, dus geen teller:
 Alle 161 bladzijden dragen de teller.
 Alle 181 doorstuurders uit de tabel staan er en wijzen naar een bestaande bladzij; de 23 andere ook.
@@ -138,7 +139,7 @@ Alle poorten staan groen. --productie zou hierop niet struikelen.
 
 ## Lokale bouw en klikproef
 
-`naar_buiten.sh --lokaal` **in de werkkopie zelf levert een lege site op.** `quarto inspect` ziet daar 0 invoerbestanden, en `_site/` bevat alleen `robots.txt` en een lege `sitemap.xml`. De werkkopie staat onder `.claude/worktrees/`, en Quarto slaat kennelijk alles over wat onder een map met een punt vooraan ligt. Daarom is de gecommitte stand (`git archive`, stand `ac8ebda`) in een tijdelijke map buiten `.claude/` gezet, en daar draaide `naar_buiten.sh --lokaal` wel (15 bronnen gerenderd, afloop 0, 4 seconden). Tegen die bouw liep een echte HTTP-server, en daartegen draaide curl:
+`naar_buiten.sh --lokaal` **in de werkkopie zelf levert een lege site op.** `quarto inspect` ziet daar 0 invoerbestanden, en `_site/` bevat alleen `robots.txt` en een lege `sitemap.xml`. De werkkopie staat onder `.claude/worktrees/`, en Quarto slaat kennelijk alles over wat onder een map met een punt vooraan ligt. Daarom is de gecommitte stand (`git archive`, stand `4a875df`) in een tijdelijke map buiten `.claude/` gezet, en daar draaide `naar_buiten.sh --lokaal` wel (15 bronnen gerenderd, afloop 0, 4 seconden). Tegen die bouw liep een echte HTTP-server, en daartegen draaide curl:
 
 ```
 
@@ -172,7 +173,7 @@ Alle poorten staan groen. --productie zou hierop niet struikelen.
 
 Voor het afmelden heeft een onafhankelijke nakijker (agent `nakijker`) de tak doorgelicht. Hij draaide de poorten en toetsen zelf, rekende alle 181 koppelingen na met een eigen overlapmaat (reeksen van drie woorden), en opende er 16 met de hand, waaronder de vier van de wissel. **Geen enkele doorstuurder wees verkeerd.** Wel vond hij acht punten, en alle acht zijn op deze tak opgelost: zeven in het gereedschap, elk met een toetszaak en een mutatie erbij, en één in dit verslag.
 
-- **Ernstig, en een fout van mij:** de eerste versie van de plankwacht-uitzondering viel om op een commit met alleen een figuur (een PNG als tekst gelezen). `naar_buiten.sh` las die crash als "werk het kaartje bij", en `--productie` zat dan vast met een verkeerde reden. Vóór deze tak ging dat gewoon goed. Gerepareerd (`1711ea1`), en zaak 14d bootst het na.
+- **Ernstig, en een fout van mij:** de eerste versie van de plankwacht-uitzondering viel om op een commit met alleen een figuur (een PNG als tekst gelezen). `naar_buiten.sh` las die crash als "werk het kaartje bij", en `--productie` zat dan vast met een verkeerde reden. Vóór deze tak ging dat gewoon goed. Gerepareerd (`9c0cfda`), en zaak 14d bootst het na.
 - Na publicatie zou `--afleiden` bij elke run 181 regels alarm geven. De telling zelf bleef goed; alleen de controle loeide.
 - Een crash van de doorstuurwachter kreeg afloopcode 1 ("klopt niet") in plaats van 3 ("kon niet kijken").
 - Hoofdletters: macOS vindt een doel met verkeerde hoofdletters, GitHub Pages niet.
@@ -191,7 +192,7 @@ Het achtste punt zat in dit verslag: bij een even aantal nam de mediaan de boven
 
 ## Verrassingen
 
-1. **De plankwacht zou de doorstuurders hebben tegengehouden, of een onware datum hebben afgedwongen.** De twee OZP 1-doorstuurders zijn een commit in `oefenboeken/ozp1/`. De plankwacht las dat als een boekwijziging en eiste "Bijgewerkt 1 oktober". Wie op de dag van de herkansing snel wil publiceren, past dan het kaartje aan in plaats van de wachter, en dan liegt de plank. Hersteld op deze tak; zie de keuze onder punt 2 hierboven.
+1. **De plankwacht leest een doorstuurder als boekwijziging.** De twee OZP 1-doorstuurders zijn een commit in `oefenboeken/ozp1/`. Op `7041b48` eiste de plankwacht daardoor "Bijgewerkt 1 oktober" op een kaartje dat toen nog 28 september zei. Wie dan snel wil publiceren, past het kaartje aan in plaats van de wachter, en dan liegt de plank. Vannacht ging het kaartje om een andere reden toch naar 1 oktober, dus vandaag bijt het niet meer. De val zelf blijft staan voor elke doorstuurder die later landt. Hersteld op deze tak; zie "Eén keuze kun je uitstellen" bovenaan.
 2. **`publish_workbook.py` zou ze bij de volgende OZP 1-publicatie stil hebben gewist.** Het script gooit de hele boekmap weg voor het kopieert. Niets had dat gemeld. Hersteld, en getoetst: met de oude versie van het script zakken er 3 zaken.
 3. **`git log --diff-filter=A` mist 127 van de 430 ooit gepubliceerde bladzijden.** Over de gh-pages-geschiedenis gaf het 303 bladzijden, en met `--no-renames` erbij 430. Git ziet een nieuw bestand dat genoeg op een verdwenen bestand lijkt als een *hernoeming*, en een hernoemd bestand heet dan niet "toegevoegd". Voorbeeld: `manuscript/h12.html` verscheen op 22-7 (`a698042`), maar git las dat als `h5.html` → `h12.html` (62%% gelijk), en `git log --diff-filter=A` over de hele tak noemt h12 nergens. Het is een nieuwe gedaante van "zoeken is niet gevonden hebben": leeg, geen fout, en het leest als "bestond niet". Het raakt iedereen die met git uitzoekt wat er ooit online stond.
 4. **In een werkkopie van een zetter bouwt `naar_buiten.sh --lokaal` een lege site.** Quarto ziet onder `.claude/worktrees/` 0 invoerbestanden. De controle in de pers zegt het tenminste hardop ("_site/index.html is niet gebouwd"). Maar elke zetter die in zijn eigen werkkopie een lokale proefdruk wil, krijgt niets. `git archive` naar een map buiten `.claude/` werkt wel (4 seconden, zie hierboven).
