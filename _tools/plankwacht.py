@@ -85,7 +85,7 @@ import sys
 # de werkkopie die hij bewaakt niet vuil maken.
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from tellerregel import REGEL  # noqa: E402
+from tellerregel import REGEL, soort  # noqa: E402
 
 # ------------------------------------------------------------------
 # Nederlandse telwoorden en maanden. Alleen wat we echt tegenkomen --
@@ -249,42 +249,112 @@ def is_tellercommit(wortel: str, commit: str, pad: str) -> bool:
     return toegevoegd > 0
 
 
-def laatste_commitdatum(wortel: str, pad: str) -> tuple[str | None, str, list[str]]:
-    """(datum als JJJJ-MM-DD, toelichting, overgeslagen tellercommits).
+def is_doorstuurcommit(wortel: str, commit: str, pad: str) -> bool:
+    """Zette deze commit binnen `pad/` NIETS anders neer dan doorstuurders?
 
-    Datum None = kon niet kijken. De lijst overgeslagen commits gaat altijd mee
-    naar buiten: een overslag die je niet ziet, is een gat.
+    Waarom dit bestaat: op 1-10-2026 kregen de oude adressen van OZP 1-thema 3
+    en 4 (gewisseld op 19-9) een doorstuurder, en die staan nu eenmaal ÍN
+    `oefenboeken/ozp1/`. Zonder deze uitzondering eiste de wachter daarna
+    "Bijgewerkt 1 oktober" -- voor een bestand dat geen lezer ooit leest, want
+    het stuurt hem binnen nul seconden door. Dat is dezelfde vorm als de
+    tellercommit van 30-9, en Ben koos daar voor overslaan.
+
+    Streng, per bestand, op de INHOUD en niet op de naam of de boodschap:
+      * een toegevoegd bestand is een doorstuurder
+        (`tellerregel.soort`: een `<head>` met een meta-refresh);
+      * een gewijzigd bestand was een doorstuurder én is er een -- een echte
+        bladzij die door een doorstuurder wordt VERVANGEN is een boekwijziging:
+        die inhoud staat daar niet meer;
+      * een verwijderd bestand wás een doorstuurder;
+      * geen hernoeming, geen bestand dat niet te lezen is.
+    Eén echte bladzij erbij, weg of anders, en de commit telt gewoon mee.
+    """
+    uit = subprocess.run(
+        ["git", "-c", "core.quotepath=off", "show", "--format=", "--name-status",
+         "--no-renames", "--diff-merges=first-parent", commit, "--", pad + "/"],
+        cwd=wortel, capture_output=True, text=True, check=True,
+    )
+    regels = [r for r in uit.stdout.splitlines() if r.strip()]
+    if not regels:
+        return False
+    for r in regels:
+        status, _, bestand = r.partition("\t")
+        versies = {"A": [commit], "M": [commit + "^", commit], "D": [commit + "^"]}.get(status)
+        if versies is None:
+            return False
+        for versie in versies:
+            inhoud = subprocess.run(
+                ["git", "-c", "core.quotepath=off", "show", f"{versie}:{bestand}"],
+                cwd=wortel, capture_output=True, text=True)
+            if inhoud.returncode != 0 or soort(inhoud.stdout) != "doorstuurder":
+                return False
+    return True
+
+
+def laatste_commitdatum(wortel: str, pad: str) -> tuple[str | None, str, list[str], list[str]]:
+    """(datum als JJJJ-MM-DD, toelichting, overgeslagen tellercommits,
+    overgeslagen doorstuurcommits).
+
+    Datum None = kon niet kijken. Beide lijsten overgeslagen commits gaan altijd
+    mee naar buiten: een overslag die je niet ziet, is een gat.
     """
     vol = os.path.join(wortel, pad)
     if not os.path.isdir(vol):
-        return None, f"de map {pad}/ bestaat niet", []
+        return None, f"de map {pad}/ bestaat niet", [], []
     try:
         uit = subprocess.run(
             ["git", "log", "--format=%h%x09%ad%x09%s", "--date=short", "--", pad + "/"],
             cwd=wortel, capture_output=True, text=True, check=True,
         )
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        return None, f"git gaf geen antwoord op {pad}/ ({e})", []
+        return None, f"git gaf geen antwoord op {pad}/ ({e})", [], []
     if not uit.stdout.strip():
         return None, (
             f"geen enkele commit raakt {pad}/ -- is dit een ondiepe kloon "
             f"(actions/checkout zonder fetch-depth)?"
-        ), []
+        ), [], []
     overgeslagen: list[str] = []
+    doorgestuurd: list[str] = []
     for r in uit.stdout.strip().splitlines():
         kort, datum, onderwerp = (r.split("\t", 2) + ["", ""])[:3]
         try:
             alleen_teller = is_tellercommit(wortel, kort, pad)
+            alleen_doorstuur = (not alleen_teller) and is_doorstuurcommit(wortel, kort, pad)
         except subprocess.CalledProcessError as e:
-            return None, f"git show {kort} gaf geen antwoord op {pad}/ ({e})", overgeslagen
+            return None, f"git show {kort} gaf geen antwoord op {pad}/ ({e})", overgeslagen, doorgestuurd
         if alleen_teller:
             overgeslagen.append(kort)
             continue
-        return datum, f"{kort} {onderwerp}", overgeslagen
+        if alleen_doorstuur:
+            doorgestuurd.append(kort)
+            continue
+        return datum, f"{kort} {onderwerp}", overgeslagen, doorgestuurd
     return None, (
-        f"elke commit op {pad}/ zette alleen de teller erin "
-        f"({len(overgeslagen)} stuks) -- dan is er geen boekdatum om na te rekenen"
-    ), overgeslagen
+        f"elke commit op {pad}/ zette alleen de teller of een doorstuurder erin "
+        f"({len(overgeslagen) + len(doorgestuurd)} stuks) -- dan is er geen boekdatum "
+        f"om na te rekenen"
+    ), overgeslagen, doorgestuurd
+
+
+def alleen_doorstuurders(map_: str) -> bool:
+    """Staat er in deze map minstens één html, en is elke html een doorstuurder?
+
+    `oefenboeken/ozp1/03_normaalverdeling_z/` is sinds 1-10-2026 zo'n map: het
+    oude adres van wat nu thema 4 is. Dat is geen thema en ook geen verweesde
+    bladzij, maar een wegwijzer. Een lege map telt NIET als doorstuurmap -- die
+    blijft gewoon een (verweesd) thema, zodat een halve publicatie niet
+    stilletjes uit beeld verdwijnt.
+    """
+    htmls = []
+    for dp, _dn, fn in os.walk(map_):
+        htmls += [os.path.join(dp, f) for f in fn if f.endswith(".html")]
+    if not htmls:
+        return False
+    for p in htmls:
+        with open(p, encoding="utf-8", errors="ignore") as f:
+            if soort(f.read()) != "doorstuurder":
+                return False
+    return True
 
 
 def gepubliceerde_themas(wortel: str, pad: str) -> tuple[list[str], list[str], str | None]:
@@ -301,6 +371,7 @@ def gepubliceerde_themas(wortel: str, pad: str) -> tuple[list[str], list[str], s
     mappen = sorted(
         d for d in os.listdir(vol)
         if RE_THEMAMAP.match(d) and os.path.isdir(os.path.join(vol, d))
+        and not alleen_doorstuurders(os.path.join(vol, d))
     )
     index = os.path.join(vol, "index.html")
     if not os.path.isfile(index):
@@ -372,13 +443,20 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
                     "blind", k, f"noemt de maand {maandwoord!r}, en die ken ik niet"))
             else:
                 beweerd = f"{int(jaar):04d}-{maand:02d}-{int(dag):02d}"
-                echt, waaruit, overgeslagen = laatste_commitdatum(wortel, pad)
+                echt, waaruit, overgeslagen, doorgestuurd = laatste_commitdatum(wortel, pad)
                 if overgeslagen:
                     bevindingen.append(Bevinding(
                         "overgeslagen", k,
                         f"{len(overgeslagen)} tellercommit(s) overgeslagen in {pad}/: "
                         f"{', '.join(overgeslagen)} -- die zetten alleen de "
                         f"bezoekersteller erin",
+                    ))
+                if doorgestuurd:
+                    bevindingen.append(Bevinding(
+                        "overgeslagen", k,
+                        f"{len(doorgestuurd)} doorstuurcommit(s) overgeslagen in {pad}/: "
+                        f"{', '.join(doorgestuurd)} -- die zetten alleen doorstuurders "
+                        f"op oude adressen, geen boektekst",
                     ))
                 if echt is None:
                     bevindingen.append(Bevinding("blind", k, waaruit))

@@ -71,5 +71,20 @@ proef "overslag wordt niet meer gemeld" \
   '    for b in overgeslagen:|||    for b in []:'
 proef "uitzondering helemaal uitgezet" \
   '        if alleen_teller:|||        if False:'
+# De doorstuurcommit-uitzondering (1-10-2026). Dezelfde vraag: welke
+# verslapping laat een echte boekwijziging onzichtbaar worden, en welke laat de
+# wachter weer om een doorstuurder zeuren?
+proef "doorstuur-uitzondering helemaal uitgezet" \
+  '        if alleen_doorstuur:|||        if False:'
+proef "doorstuurcommit kijkt niet naar de inhoud" \
+  '            if inhoud.returncode != 0 or soort(inhoud.stdout) != "doorstuurder":|||            if inhoud.returncode != 0:'
+proef "bij een wijziging telt de oude versie niet" \
+  '{"A": [commit], "M": [commit + "^", commit]|||{"A": [commit], "M": [commit]'
+proef "doorstuur-overslag wordt niet meer gemeld" \
+  '                if doorgestuurd:|||                if False:'
+proef "doorstuurmap telt als thema" \
+  '        and not alleen_doorstuurders(os.path.join(vol, d))|||'
+proef "elke map telt als doorstuurmap" \
+  '            if soort(f.read()) != "doorstuurder":|||            if False:'
 rm -rf "$M"
 [ "$SLECHT" -eq 0 ] || { echo "mutatieproef: $SLECHT proef/proeven zonder uitslag of zonder beet"; exit 1; }

@@ -271,6 +271,71 @@ zaak "11b een inhoudsregel vervangen door de teller telt wél" 1 \
      "is voor het laatst veranderd op 2026-09-30" "$T11b"
 rm -rf "$T9" "$T10" "$T10b" "$T11" "$T11b"
 
+# ---- zaak 12 t/m 14: doorstuurcommits (1-10-2026) ----------------------
+# Het oude adres van OZP 1-thema 3 (gewisseld met 4 op 19-9) kreeg een
+# doorstuurder, en die staat ÍN oefenboeken/ozp1/. Zonder uitzondering eiste de
+# wachter daarna "Bijgewerkt 1 oktober" voor een bestand dat geen lezer leest.
+# Overslaan mag -- maar alleen als er echt niets anders gebeurde.
+doorstuurder() {   # $1 = bestand, $2 = doel
+  mkdir -p "$(dirname "$1")"
+  cat > "$1" <<HTML
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url=$2">
+</head><body><a href="$2">verhuisd</a></body></html>
+HTML
+}
+OUD="oefenboeken/ozp1/03_oud/03_oud.html"
+
+# zaak 12: alleen een doorstuurder erbij -> overslaan, en dat hardop zeggen
+T12="$(mktemp -d)"; klaarzetten "$T12"
+plank_schrijven "$T12" "19 september 2026" "Vier"
+op "$T12" 2026-09-19 "plank"
+doorstuurder "$T12/$OUD" /oefenboeken/ozp1/00_fundament/00_fundament.html
+op "$T12" 2026-10-01 "Doorstuurder voor het oude adres"
+H12="$(git -C "$T12" log -1 --format=%h)"
+zaak "12 een commit met alleen een doorstuurder telt niet als boekwijziging" 0 \
+     "alle nagerekende beloftes kloppen" "$T12"
+zaak "12b en de overslag staat bij naam in de uitvoer" 0 \
+     "1 doorstuurcommit(s) overgeslagen in oefenboeken/ozp1/: $H12" "$T12"
+# 12c: dezelfde doorstuurder later naar een ander doel (M, oud en nieuw allebei
+# doorstuurder) is nog steeds geen boekwijziging.
+doorstuurder "$T12/$OUD" /oefenboeken/ozp1/index.html
+op "$T12" 2026-10-02 "Doorstuurder wijst ergens anders heen"
+zaak "12c een doorstuurder bijstellen telt ook niet" 0 \
+     "2 doorstuurcommit(s) overgeslagen" "$T12"
+
+# zaak 13: doorstuurder erbij ÉN een echte bladzij veranderd -> telt wél
+T13="$(mktemp -d)"; klaarzetten "$T13"
+plank_schrijven "$T13" "19 september 2026" "Vier"
+op "$T13" 2026-09-19 "plank"
+doorstuurder "$T13/$OUD" /oefenboeken/ozp1/00_fundament/00_fundament.html
+echo '<p>nieuwe opgave</p>' >> "$T13/$OZP"
+op "$T13" 2026-10-01 "Doorstuurder voor het oude adres"   # <- de boodschap liegt met opzet
+zaak "13 doorstuurder plus inhoud in één commit telt wél" 1 \
+     "is voor het laatst veranderd op 2026-10-01" "$T13"
+
+# zaak 14: een ECHTE bladzij vervangen door een doorstuurder -> telt wél.
+# Na de commit is alles een doorstuurder; alleen de oude versie verraadt dat
+# hier inhoud verdween. Zelfde val als zaak 11b bij de teller.
+T14="$(mktemp -d)"; klaarzetten "$T14"
+plank_schrijven "$T14" "19 september 2026" "Vier"
+op "$T14" 2026-09-19 "plank"
+doorstuurder "$T14/$OZP" /oefenboeken/ozp1/index.html
+op "$T14" 2026-10-01 "Doorstuurder"
+zaak "14 een bladzij vervangen door een doorstuurder telt wél" 1 \
+     "is voor het laatst veranderd op 2026-10-01" "$T14"
+
+# zaak 14b: een themamap met alleen een doorstuurder is geen verweesd thema,
+# en telt ook niet mee als thema ("Vier" blijft vier).
+T14b="$(mktemp -d)"; klaarzetten "$T14b"
+plank_schrijven "$T14b" "19 september 2026" "Vier"
+doorstuurder "$T14b/oefenboeken/psychometrie/05_oud/05_oud.html" /oefenboeken/psychometrie/04_pca/04_pca.html
+op "$T14b" 2026-09-19 "oude adres van thema 5"
+zaak "14b een map met alleen een doorstuurder is geen thema" 0 \
+     "alle nagerekende beloftes kloppen" "$T14b"
+rm -rf "$T12" "$T13" "$T14" "$T14b"
+
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op
 # 18-8-2026 gebeurd met zeven mechanismen tegelijk: alle zelftests groen, geen
