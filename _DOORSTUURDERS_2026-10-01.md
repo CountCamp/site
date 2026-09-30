@@ -1,6 +1,6 @@
 # Doorstuurders voor dode adressen — 1 oktober 2026
 
-Spoor `doorstuur`, tak `worktree-doorstuur`, stand `8562e8b`. **Er is niets gepubliceerd en niets gepusht.** Elk getal hieronder is uitgerekend: uit `_tools/doorstuurders.tsv`, uit git, of uit een poort die voor dit verslag opnieuw gedraaid is. Die tabel is zelf afgeleid uit de gh-pages-geschiedenis (`f8a5885`) met `python3 _tools/doorstuurders.py --afleiden`. Dit verslag, de lokale bouw en de klikproef komen uit de scripts in `~/Documents/Ben_OS/_logs/doorstuur_2026-10-01_werk/` (op broodje).
+Spoor `doorstuur`, tak `worktree-doorstuur`, stand `ac8ebda`. **Er is niets gepubliceerd en niets gepusht.** Elk getal hieronder is uitgerekend: uit `_tools/doorstuurders.tsv`, uit git, of uit een poort die voor dit verslag opnieuw gedraaid is. Die tabel is zelf afgeleid uit de gh-pages-geschiedenis (`f8a5885`) met `python3 _tools/doorstuurders.py --afleiden`. Dit verslag, de lokale bouw en de klikproef komen uit de scripts in `~/Documents/Ben_OS/_logs/doorstuur_2026-10-01_werk/` (op broodje).
 
 ## In één alinea
 
@@ -80,7 +80,7 @@ Hier wint het doel, maar met een marge van minder dan 0,05. Het doel is steeds h
 | `werkboeken/broertjes/w6_schud_verschil.html` | 24-7 | Schud het — verschil | geen boek in het pad, en vier kopieën van dezelfde bladzij: JASP, R, SPSS, speelkist (`speeltjes/schud-verschil.html`). Welke bedoeld is, is een keuze |
 | `werkboeken/broertjes/w6_trek_interval.html` | 24-7 | Trek opnieuw — het betrouwbaarheidsinterval | geen boek in het pad, en vier kopieën van dezelfde bladzij: JASP, R, SPSS, speelkist (`speeltjes/trek-opnieuw.html`). Welke bedoeld is, is een keuze |
 
-De drie bovenste waren interne stukken die even per ongeluk online stonden (een heropstartnotitie, een leesmij bij de data, een opdracht). Daar hoort een 404. De zes speeltjes stonden op 24-7 één dag onder `werkboeken/broertjes/` zonder boeknaam; er zijn nu vier kopieën van elk, en kiezen is aan jou.
+De drie bovenste waren interne stukken die even per ongeluk online stonden (een heropstartnotitie, een leesmij bij de data, een opdracht). Daar hoort een 404. De zes speeltjes stonden op 24-7 één dag onder `werkboeken/broertjes/` zonder boeknaam. Er zijn nu vier kopieën van elk, en kiezen is aan jou. Wil je ze toch doorsturen, bijvoorbeeld naar de speelkist, dan is dat per speeltje één regel in `HANDMATIG` in `doorstuurders.py` (er staat een voorbeeld), en daarna `--afleiden` en `--bouw`.
 
 ## Alle overige koppelingen
 
@@ -89,7 +89,7 @@ Per groep het aantal, de spreiding van de overlap en één voorbeeld. De volledi
 - **broertjes (R, JASP, SPSS)** (75): overlap 0,27 tot 1,00, mediaan 0,59. Voorbeeld: `werkboeken/broertjes/jasp/20_blokken/blok_anova.html` → `oefenboeken/broertjes/jasp/20_blokken/blok_anova.html` ("Oefening 9.3 · ANOVA en η²" → "Oefening 9.4 · Eenweg ANOVA en η²").
 - **GGZ-VS** (27): overlap 0,42 tot 1,00, mediaan 0,99. Voorbeeld: `werkboeken/ggz_vs/20_blokken/00_parkeerkaart.html` → `oefenboeken/ggz_vs/20_blokken/00_parkeerkaart.html` ("De parkeerkaart" → "De parkeerkaart").
 - **broertjes, de R-preview van 2-8** (25): overlap 0,15 tot 1,00, mediaan 0,43. Voorbeeld: `werkboeken/broertjes/r_preview/20_blokken/blok_anova.html` → `oefenboeken/broertjes/r/20_blokken/blok_anova.html` ("Hoofdstuk 9 · ANOVA en η²" → "Oefening 9.4 · Eenweg ANOVA en η²").
-- **broertjes, de platte adressen van 24-7** (16): overlap 0,29 tot 0,65, mediaan 0,46. Voorbeeld: `werkboeken/broertjes/jasp_betrouwbaarheidsinterval.html` → `oefenboeken/broertjes/jasp/20_blokken/blok_betrouwbaarheidsinterval.html` ("Het betrouwbaarheidsinterval" → "Oefening 5.1 · Het betrouwbaarheidsinterval").
+- **broertjes, de platte adressen van 24-7** (16): overlap 0,29 tot 0,65, mediaan 0,45. Voorbeeld: `werkboeken/broertjes/jasp_betrouwbaarheidsinterval.html` → `oefenboeken/broertjes/jasp/20_blokken/blok_betrouwbaarheidsinterval.html` ("Het betrouwbaarheidsinterval" → "Oefening 5.1 · Het betrouwbaarheidsinterval").
 - **MVDA** (16): overlap 0,99 tot 1,00, mediaan 1,00. Voorbeeld: `werkboeken/mvda/00_opfris.html` → `oefenboeken/mvda/00_opfris/00_opfris.html` ("0. Opfris — enkelvoudige regressie vóór het echte werk" → "0. Opfris — enkelvoudige regressie vóór het echte werk").
 - **Handleiding (bookdown, 2021)** (6): overlap 0,99 tot 1,00, mediaan 1,00. Voorbeeld: `manuscript/handleiding/01-descriptive-statistics.html` → `manuscript/handleiding/hoofdstuk-1---het-beschrĳven-van-data-aan-de-hand-van-statistieken-descriptive-statistics..html` ("Hoofdstuk 1 - Het beschrĳven van data aan de hand van statistieken, Descriptive Statistics." → "1 Hoofdstuk 1 - Het beschrĳven van data aan de hand van statistieken, Descriptive Statistics.").
 
@@ -105,11 +105,13 @@ Alle vier de wijzigingen hebben een eigen commit, zodat ze los te bekijken zijn.
    De doorstuurders hebben dezelfde vorm als `werkboeken/index.html`: meta-refresh, canonical, noindex, een gewone link en geen teller. Er komt één regel commentaar bij die zegt waar ze vandaan komen. `tellerregel.soort()` herkent ze als doorstuurder, dus de tellerwachter slaat ze over en noemt ze bij naam. Ze vallen onder `resources` in `_quarto.yml` en komen daardoor niet in de sitemap.
 2. **`plankwacht.py`** slaat een commit over die binnen een boekmap alleen doorstuurders neerzet. Het is dezelfde vorm als jouw besluit over de tellercommit van 30-9. Streng op de inhoud: een echte bladzij die door een doorstuurder wordt vervangen, telt wél als wijziging. Een themamap met alleen een doorstuurder erin is geen thema. **Dit is een keuze over wat "Bijgewerkt" betekent, en die is van jou.** Ik heb hem gemaakt naar het voorbeeld van 30-9; wil je het anders, dan kan die commit er los uit.
 3. **`publish_workbook.py`** zet na zijn `rmtree` van `oefenboeken/<boek>/` de doorstuurders in die map terug. Zonder die stap waren de twee OZP 1-doorstuurders bij de eerstvolgende OZP 1-publicatie stil verdwenen.
-4. **`naar_buiten.sh`** heeft een derde poort naast de plank en de teller: het nakijken van de doorstuurders. Die poort blokkeert op `--nakijken` en `--productie`, en meldt alleen op de proefwegen. Hij vangt een doorstuurder die verdwenen is, en een doel dat verhuisd is waardoor de doorstuurder naar een 404 wijst. Hij kijkt ook de 23 doorstuurders na die al bestonden.
+4. **`naar_buiten.sh`** heeft een derde poort naast de plank en de teller: het nakijken van de doorstuurders. Die poort blokkeert op `--nakijken` en `--productie`, en meldt alleen op de proefwegen. Hij vangt een doorstuurder die verdwenen is, en een doel dat verhuisd is waardoor de doorstuurder naar een 404 wijst. Van de 23 doorstuurders die al bestonden kijkt hij **alleen of hun doel bestaat, niet of het het goede doel is**. Dat is geen theorie: de inventaris vond al dat `werkplaats/h3.html` en `h4.html` naar elkaars hoofdstuk wijzen, en de nakijker zag dat de werkplaats-doorstuurders een nummer opschuiven (h7 → h8, h8 → h9, h9 → h10, h10 → h12). Of dat klopt, heeft niemand op inhoud nagemeten; ze komen uit `_cascade_stubs.py` in het lab en vallen buiten dit spoor.
+
+Waarom de koppeling alleen binnen hetzelfde boek zoekt: op tekst alleen lijkt een oud R-blok vaak meer op het huidige JASP-blok dan op het huidige R-blok (de nakijker: `blok_anova` 0,288 tegen 0,231, in zijn eigen maat). Het pad zegt welk boek het was; de tekst zegt alleen welke bladzij daarbinnen.
 
 `publiceer_oefenboeken.sh` in het lab spiegelt met `rsync --delete` naar `oefenboeken/broertjes/*` en `oefenboeken/ggz_vs`. Daar staat bewust geen doorstuurder: alle oude broertjes- en GGZ-VS-adressen liggen onder `werkboeken/`, en daar schrijft geen enkel script.
 
-## Poorten — opnieuw gedraaid voor dit verslag, op stand `8562e8b`
+## Poorten — opnieuw gedraaid voor dit verslag, op stand `ac8ebda`
 
 `bash _tools/naar_buiten.sh --nakijken` → afloopcode **0**. De kernregels, letterlijk:
 
@@ -125,18 +127,18 @@ Alle poorten staan groen. --productie zou hierop niet struikelen.
 
 | toets | afloop | laatste regel |
 |---|---:|---|
-| `doorstuurders_test.sh` | 0 | 20 zaken getoetst, alles groen. |
-| `doorstuurders_mutatieproef.sh` | 0 | 10 mutaties bijten, 0 niet |
-| `plankwacht_test.sh` | 0 | goed: 25   gezakt: 0 |
-| `plankwacht_mutatieproef.sh` | 0 | 17 mutaties bijten, 0 niet |
-| `publish_teller_test.sh` | 0 | 20 zaken getoetst, alles groen. |
+| `doorstuurders_test.sh` | 0 | 27 zaken getoetst, alles groen. |
+| `doorstuurders_mutatieproef.sh` | 0 | 15 mutaties bijten, 0 niet |
+| `plankwacht_test.sh` | 0 | goed: 27   gezakt: 0 |
+| `plankwacht_mutatieproef.sh` | 0 | 19 mutaties bijten, 0 niet |
+| `publish_teller_test.sh` | 0 | 23 zaken getoetst, alles groen. |
 | `naar_buiten_teller_test.sh` | 0 | 15 zaken getoetst, alles groen. |
 | `tellers_test.sh` | 0 | 24 zaken getoetst, alles groen. |
 | `tellers_mutatieproef.sh` | 0 | 16 mutaties bijten, 0 niet |
 
 ## Lokale bouw en klikproef
 
-`naar_buiten.sh --lokaal` **in de werkkopie zelf levert een lege site op.** `quarto inspect` ziet daar 0 invoerbestanden, en `_site/` bevat alleen `robots.txt` en een lege `sitemap.xml`. De werkkopie staat onder `.claude/worktrees/`, en Quarto slaat kennelijk alles over wat onder een map met een punt vooraan ligt. Daarom is de gecommitte stand (`git archive HEAD`) in een tijdelijke map buiten `.claude/` gezet, en daar draaide `naar_buiten.sh --lokaal` wel (15 bronnen, afloop 0). Tegen die bouw liep een echte HTTP-server, en daartegen draaide curl:
+`naar_buiten.sh --lokaal` **in de werkkopie zelf levert een lege site op.** `quarto inspect` ziet daar 0 invoerbestanden, en `_site/` bevat alleen `robots.txt` en een lege `sitemap.xml`. De werkkopie staat onder `.claude/worktrees/`, en Quarto slaat kennelijk alles over wat onder een map met een punt vooraan ligt. Daarom is de gecommitte stand (`git archive`, stand `ac8ebda`) in een tijdelijke map buiten `.claude/` gezet, en daar draaide `naar_buiten.sh --lokaal` wel (15 bronnen gerenderd, afloop 0, 4 seconden). Tegen die bouw liep een echte HTTP-server, en daartegen draaide curl:
 
 ```
 
@@ -166,6 +168,20 @@ Alle poorten staan groen. --productie zou hierop niet struikelen.
 
 **Niet in een browser geproefd.** curl volgt geen meta-refresh; het bewijst dat het oude adres een 200 geeft en naar het goede doel wijst, en dat dat doel bestaat. Headless Chrome bleef hier drie keer 60 seconden hangen (de inventaris van 30-9 liep daar ook op vast). Dat een browser de refresh volgt, rust dus op de vorm. Die is gelijk aan die van de acht doorstuurders die sinds 7-8 live staan onder `werkboeken/`.
 
+## Een tweede paar ogen
+
+Voor het afmelden heeft een onafhankelijke nakijker (agent `nakijker`) de tak doorgelicht. Hij draaide de poorten en toetsen zelf, rekende alle 181 koppelingen na met een eigen overlapmaat (reeksen van drie woorden), en opende er 16 met de hand, waaronder de vier van de wissel. **Geen enkele doorstuurder wees verkeerd.** Wel vond hij acht punten, en alle acht zijn op deze tak opgelost: zeven in het gereedschap, elk met een toetszaak en een mutatie erbij, en één in dit verslag.
+
+- **Ernstig, en een fout van mij:** de eerste versie van de plankwacht-uitzondering viel om op een commit met alleen een figuur (een PNG als tekst gelezen). `naar_buiten.sh` las die crash als "werk het kaartje bij", en `--productie` zat dan vast met een verkeerde reden. Vóór deze tak ging dat gewoon goed. Gerepareerd (`1711ea1`), en zaak 14d bootst het na.
+- Na publicatie zou `--afleiden` bij elke run 181 regels alarm geven. De telling zelf bleef goed; alleen de controle loeide.
+- Een crash van de doorstuurwachter kreeg afloopcode 1 ("klopt niet") in plaats van 3 ("kon niet kijken").
+- Hoofdletters: macOS vindt een doel met verkeerde hoofdletters, GitHub Pages niet.
+- `pr-preview/` (de proefdruk) zou na de eerste `--proefdruk` als honderden dode lezersadressen meetellen.
+- `HANDMATIG` kon geen doel vastleggen.
+- Een verwijderde echte bladzij werd door geen enkele plankwacht-zaak bewaakt.
+
+Het achtste punt zat in dit verslag: bij een even aantal nam de mediaan de bovenste van de twee middelste waarden. Die wordt nu goed uitgerekend.
+
 ## Wat niet gemeten is
 
 - **Of een browser de refresh volgt**: zie hierboven.
@@ -178,6 +194,6 @@ Alle poorten staan groen. --productie zou hierop niet struikelen.
 1. **De plankwacht zou de doorstuurders hebben tegengehouden, of een onware datum hebben afgedwongen.** De twee OZP 1-doorstuurders zijn een commit in `oefenboeken/ozp1/`. De plankwacht las dat als een boekwijziging en eiste "Bijgewerkt 1 oktober". Wie op de dag van de herkansing snel wil publiceren, past dan het kaartje aan in plaats van de wachter, en dan liegt de plank. Hersteld op deze tak; zie de keuze onder punt 2 hierboven.
 2. **`publish_workbook.py` zou ze bij de volgende OZP 1-publicatie stil hebben gewist.** Het script gooit de hele boekmap weg voor het kopieert. Niets had dat gemeld. Hersteld, en getoetst: met de oude versie van het script zakken er 3 zaken.
 3. **`git log --diff-filter=A` mist 127 van de 430 ooit gepubliceerde bladzijden.** Over de gh-pages-geschiedenis gaf het 303 bladzijden, en met `--no-renames` erbij 430. Git ziet een nieuw bestand dat genoeg op een verdwenen bestand lijkt als een *hernoeming*, en een hernoemd bestand heet dan niet "toegevoegd". Voorbeeld: `manuscript/h12.html` verscheen op 22-7 (`a698042`), maar git las dat als `h5.html` → `h12.html` (62%% gelijk), en `git log --diff-filter=A` over de hele tak noemt h12 nergens. Het is een nieuwe gedaante van "zoeken is niet gevonden hebben": leeg, geen fout, en het leest als "bestond niet". Het raakt iedereen die met git uitzoekt wat er ooit online stond.
-4. **In een werkkopie van een zetter bouwt `naar_buiten.sh --lokaal` een lege site.** Quarto ziet onder `.claude/worktrees/` 0 invoerbestanden. De controle in de pers zegt het tenminste hardop ("_site/index.html is niet gebouwd"). Maar elke zetter die in zijn eigen werkkopie een lokale proefdruk wil, krijgt niets. `git archive` naar een map buiten `.claude/` werkt wel (5 seconden).
+4. **In een werkkopie van een zetter bouwt `naar_buiten.sh --lokaal` een lege site.** Quarto ziet onder `.claude/worktrees/` 0 invoerbestanden. De controle in de pers zegt het tenminste hardop ("_site/index.html is niet gebouwd"). Maar elke zetter die in zijn eigen werkkopie een lokale proefdruk wil, krijgt niets. `git archive` naar een map buiten `.claude/` werkt wel (4 seconden, zie hierboven).
 5. **De uitvoer van de tellerpoort wordt lang.** `controleer_tellers.py` noemt elke uitgesloten doorstuurder bij naam. Dat waren er 8 en nu 183, dus `--nakijken` geeft zo'n 200 regels, en de paar regels die ertoe doen verdwijnen daartussen. Ik heb dat niet veranderd, omdat "een uitsluiting die je niet ziet, is een gat" een ontwerpkeuze van die wachter is. Per map tellen, met één voorbeeld, zou het leesbaar houden.
 
