@@ -1,5 +1,5 @@
 % =====================================================================
-% CountCamp Lab — LaTeX-preamble voor STAT 3 SPSS-werkboek (PDF-output)
+% CountCamp Lab — LaTeX-preamble voor het OZP 1-werkboek (PDF-output)
 % Synchroon met _common/styles/countcamp.css.
 % =====================================================================
 
@@ -15,6 +15,8 @@
 \definecolor{ccAlt}{HTML}{9CC4A3}
 \definecolor{ccSpss}{HTML}{4A5D7E}
 \definecolor{ccRot}{HTML}{D3D182}
+\definecolor{ccForm}{HTML}{2F7E78}
+\definecolor{ccRap}{HTML}{33322E}
 \definecolor{ccGreyText}{HTML}{6C7A89}
 \definecolor{ccGetal}{HTML}{B56028}
 \definecolor{ccEng}{HTML}{7D8A93}
@@ -40,6 +42,24 @@
   enhanced, breakable,
   colback=ccOpg!12, colframe=ccOpg,
   colbacktitle=ccOpg, coltitle=white,
+  leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
+  arc=2pt, outer arc=2pt,
+  boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
+  fonttitle=\sffamily\bfseries,
+  attach boxed title to top left={xshift=0pt, yshift=0pt},
+  boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
+  title filled,
+  title={#1}
+}
+
+% Rapportage-blok: de zin die de student letterlijk overneemt in haar verslag.
+% Geen palet-kleur maar warm grafiet — de negen hexen coderen lesfuncties, en
+% dit is geen lesonderdeel maar een stukje eindproduct. Zie countcamp.css §11
+% en TAALGIDS.md §2 ("Drie registers").
+\newtcolorbox{ccRapportage}[1][]{%
+  enhanced, breakable,
+  colback=ccRap!8, colframe=ccRap,
+  colbacktitle=ccRap, coltitle=white,
   leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
   arc=2pt, outer arc=2pt,
   boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
@@ -78,10 +98,16 @@
   title={#1}
 }
 
-\newtcolorbox{ccRotterdam}[1][]{%
+% Formule-blok: een naslag-anker, geen uitleg. In countcamp.css §10 draagt de
+% kop een cursieve ƒ in plaats van Quarto's ℹ-icoon; die zetten we hier ook,
+% anders zegt de PDF iets anders dan het scherm. Bewust `\textit{f}` en niet
+% U+0192: welk font een werkboek meekrijgt staat in de qmd (`mainfont`), en een
+% glyph die daar toevallig ontbreekt wordt een tofu-blokje -- precies wat we
+% 16-8 in de Rotterdam-kop hebben opgeruimd.
+\newtcolorbox{ccFormule}[1][]{%
   enhanced, breakable,
-  colback=ccRot!12, colframe=ccRot,
-  colbacktitle=ccRot, coltitle=ccDonkereTitel,
+  colback=ccForm!12, colframe=ccForm,
+  colbacktitle=ccForm, coltitle=white,
   leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
   arc=2pt, outer arc=2pt,
   boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
@@ -89,84 +115,13 @@
   attach boxed title to top left={xshift=0pt, yshift=0pt},
   boxed title style={frame hidden, sharp corners, top=4pt, bottom=4pt, left=10pt, right=10pt},
   title filled,
-  title={#1}
+  title={\textit{f}\hspace{0.55em}#1}
 }
 
-\newcommand{\getal}[1]{\textcolor{ccGetal}{#1}}
-\newcommand{\engterm}[1]{\textcolor{ccEng}{\textit{\footnotesize(#1)}}}
-\newcommand{\dierensubtitel}[1]{%
-  \par\vspace{-0.6em}%
-  {\itshape\color{ccGreyText}#1}%
-  \par\vspace{0.6em}%
-}
-
-\AtBeginDocument{%
-  \colorlet{quarto-callout-note-color}{ccConcept}%
-  \colorlet{quarto-callout-note-color-frame}{ccConcept!12}%
-  \colorlet{quarto-callout-tip-color}{ccTip}%
-  \colorlet{quarto-callout-tip-color-frame}{ccTip!12}%
-  \colorlet{quarto-callout-warning-color}{ccAlarm}%
-  \colorlet{quarto-callout-warning-color-frame}{ccAlarm!12}%
-  \colorlet{quarto-callout-important-color}{ccDont}%
-  \colorlet{quarto-callout-important-color-frame}{ccDont!12}%
-  \colorlet{quarto-callout-caution-color}{ccAns}%
-  \colorlet{quarto-callout-caution-color-frame}{ccAns!18}%
-}
-
-\usepackage{fvextra}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{%
-  commandchars=\\\{\},
-  breaklines=true,
-  breakanywhere=true,
-  breakautoindent=true,
-  fontsize=\small,
-  numbers=none
-}
-\renewcommand{\FancyVerbBreakSymbolLeft}{\textcolor{gray!60}{\hookrightarrow}}
-
-\usepackage{booktabs}
-\renewcommand{\arraystretch}{1.15}
-\usepackage{amsmath}
-\usepackage{amssymb}
-
-% --- Unicode-pijlen -> math (xelatex + Charter missen deze glyphs; voorkomt de tofu-blokjes (vierkantjes) in de PDF) ---
-\usepackage{newunicodechar}
-\newunicodechar{→}{\ensuremath{\rightarrow}}
-\newunicodechar{←}{\ensuremath{\leftarrow}}
-\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
-\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
-\newunicodechar{⇐}{\ensuremath{\Leftarrow}}
-\newunicodechar{⇄}{\ensuremath{\rightleftarrows}}
-\newunicodechar{↑}{\ensuremath{\uparrow}}
-\newunicodechar{↓}{\ensuremath{\downarrow}}
-\newunicodechar{⟶}{\ensuremath{\longrightarrow}}
-\newunicodechar{⟵}{\ensuremath{\longleftarrow}}
-\newunicodechar{∞}{\ensuremath{\infty}}
-\newunicodechar{≤}{\ensuremath{\le}}
-\newunicodechar{≥}{\ensuremath{\ge}}
-\newunicodechar{≈}{\ensuremath{\approx}}
-\newunicodechar{≠}{\ensuremath{\neq}}
-\newunicodechar{±}{\ensuremath{\pm}}
-\newunicodechar{√}{\ensuremath{\surd}}
-\newunicodechar{χ}{\ensuremath{\chi}}
-\newunicodechar{μ}{\ensuremath{\mu}}
-\newunicodechar{σ}{\ensuremath{\sigma}}
-\newunicodechar{α}{\ensuremath{\alpha}}
-\newunicodechar{β}{\ensuremath{\beta}}
-\newunicodechar{λ}{\ensuremath{\lambda}}
-\newunicodechar{Δ}{\ensuremath{\Delta}}
-\newunicodechar{Σ}{\ensuremath{\Sigma}}
-
-
-% Rapportage-blok: de zin die de student letterlijk overneemt in haar verslag.
-% Geen palet-kleur maar warm grafiet -- de andere hexen coderen lesfuncties, en
-% dit is geen lesonderdeel maar een stukje eindproduct. Synchroon met de
-% .rapportage-regels in countcamp.css; zie TAALGIDS.md §2 ("Drie registers").
-\definecolor{ccRap}{HTML}{33322E}
-\newtcolorbox{ccRapportage}[1][]{%
+\newtcolorbox{ccRotterdam}[1][]{%
   enhanced, breakable,
-  colback=ccRap!8, colframe=ccRap,
-  colbacktitle=ccRap, coltitle=white,
+  colback=ccRot!12, colframe=ccRot,
+  colbacktitle=ccRot, coltitle=ccDonkereTitel,
   leftrule=0pt, toprule=0pt, rightrule=0pt, bottomrule=0pt,
   arc=2pt, outer arc=2pt,
   boxsep=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt,
@@ -254,3 +209,68 @@
   title filled,
   title={#1}
 }
+
+\newcommand{\getal}[1]{\textcolor{ccGetal}{#1}}
+\newcommand{\engterm}[1]{\textcolor{ccEng}{\textit{\footnotesize(#1)}}}
+\newcommand{\dierensubtitel}[1]{%
+  \par\vspace{-0.6em}%
+  {\itshape\color{ccGreyText}#1}%
+  \par\vspace{0.6em}%
+}
+
+\AtBeginDocument{%
+  \colorlet{quarto-callout-note-color}{ccConcept}%
+  \colorlet{quarto-callout-note-color-frame}{ccConcept!12}%
+  \colorlet{quarto-callout-tip-color}{ccTip}%
+  \colorlet{quarto-callout-tip-color-frame}{ccTip!12}%
+  \colorlet{quarto-callout-warning-color}{ccAlarm}%
+  \colorlet{quarto-callout-warning-color-frame}{ccAlarm!12}%
+  \colorlet{quarto-callout-important-color}{ccDont}%
+  \colorlet{quarto-callout-important-color-frame}{ccDont!12}%
+  \colorlet{quarto-callout-caution-color}{ccAns}%
+  \colorlet{quarto-callout-caution-color-frame}{ccAns!18}%
+}
+
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{%
+  commandchars=\\\{\},
+  breaklines=true,
+  breakanywhere=true,
+  breakautoindent=true,
+  fontsize=\small,
+  numbers=none
+}
+\renewcommand{\FancyVerbBreakSymbolLeft}{\textcolor{gray!60}{\hookrightarrow}}
+
+\usepackage{booktabs}
+\renewcommand{\arraystretch}{1.15}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% --- Unicode-pijlen -> math (xelatex + Charter missen deze glyphs; voorkomt de tofu-blokjes (vierkantjes) in de PDF) ---
+\usepackage{newunicodechar}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\newunicodechar{⇐}{\ensuremath{\Leftarrow}}
+\newunicodechar{⇄}{\ensuremath{\rightleftarrows}}
+\newunicodechar{↑}{\ensuremath{\uparrow}}
+\newunicodechar{↓}{\ensuremath{\downarrow}}
+\newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+\newunicodechar{⟵}{\ensuremath{\longleftarrow}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\newunicodechar{≠}{\ensuremath{\neq}}
+\newunicodechar{±}{\ensuremath{\pm}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{χ}{\ensuremath{\chi}}
+\newunicodechar{μ}{\ensuremath{\mu}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
