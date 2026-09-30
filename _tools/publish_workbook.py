@@ -309,6 +309,33 @@ def main() -> int:
     for p in problems[:20]:
         log("    MIST: " + p)
 
+    # 6) de doorstuurders op oude adressen BINNEN deze map terugzetten.
+    #    Stap 1 gooide de hele map weg. Daar stonden sinds 1-10-2026 twee
+    #    doorstuurders (de oude OZP 1-nummers 3 en 4, gewisseld op 19-9), en
+    #    zonder deze stap waren die bij elke publicatie van OZP 1 stil verdwenen
+    #    -- met de studenten die ze nog in een bladwijzer hebben erachteraan.
+    #    Pas NA de validatie: die kent geen links die met `/` beginnen, en een
+    #    doorstuurder heeft er precies zo een.
+    doorstuur_rel = os.path.relpath(dst, SITE_ROOT)
+    if not os.path.isfile(os.path.join(SITE_ROOT, "_tools", "doorstuurders.tsv")):
+        log("  doorstuurders: geen _tools/doorstuurders.tsv in deze site -- niets teruggezet")
+    else:
+        try:
+            from doorstuurders import bouw as doorstuurders_bouw  # noqa: E402
+        except ImportError as e:
+            log(f"  doorstuurders: _tools/doorstuurders.py niet te laden ({e}) -- "
+                f"NIETS teruggezet; draai python3 _tools/doorstuurders.py --bouw")
+        else:
+            nw, vv, zelfde, geweigerd = doorstuurders_bouw(SITE_ROOT, doorstuur_rel)
+            log(f"  doorstuurders onder {doorstuur_rel}/: {len(nw)} teruggezet, "
+                f"{len(vv)} ververst, {len(zelfde)} stonden er nog")
+            for oud, reden in geweigerd:
+                # Geen weigering van de publicatie: de lezer krijgt hier een
+                # echte bladzij, en dat is beter dan een doorstuurder. Maar de
+                # rij in de tabel is achterhaald, en dat moet iemand zien.
+                log(f"    NIET teruggezet: {oud} -- {reden}; haal die rij uit "
+                    f"_tools/doorstuurders.tsv (of draai --afleiden)")
+
     log(f"resultaat: {human(dirsize(dst))}")
     # grootste 5 html's
     sizes = []

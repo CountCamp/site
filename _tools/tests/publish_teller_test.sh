@@ -151,6 +151,44 @@ HTML
 zaak    "een bladzij zonder sluitende head-tag laat het script WEIGEREN" 1
 verwacht "  en noemt hem bij naam" "GEEN TELLER: scheef.html"
 
+# === 6. doorstuurders in de boekmap overleven de verse kopie (1-10-2026) =====
+#     publish_workbook.py gooit oefenboeken/<naam>/ eerst weg. Stond daar een
+#     doorstuurder op een oud adres (zoals oefenboeken/ozp1/03_normaalverdeling_z/),
+#     dan moet hij na afloop weer staan -- anders verdwijnt hij bij elke
+#     publicatie stil. De ECHTE doorstuurders.py doet het werk, met een eigen tabel.
+cp _tools/doorstuurders.py "$PROEFSITE/_tools/"
+printf '%s\t%s\t%s\t%s\n' oud nieuw besluit grond \
+  oefenboeken/proefboek/03_oud/03_oud.html oefenboeken/proefboek/00_thema/00_thema.html bouwen proef \
+  oefenboeken/ander/weg.html oefenboeken/proefboek/index.html bouwen 'buiten deze map' \
+  > "$PROEFSITE/_tools/doorstuurders.tsv"
+bouw_bron
+zaak    "een doorstuurder in de boekmap komt na de verse kopie terug" 0
+verwacht "  en het script zegt dat hij teruggezet is" "doorstuurders onder oefenboeken/proefboek/: 1 teruggezet"
+getoetst=$((getoetst + 1))
+if grep -qF 'url=/oefenboeken/proefboek/00_thema/00_thema.html' \
+     "$PROEFSITE/oefenboeken/proefboek/03_oud/03_oud.html" 2>&1; then
+  echo "  ok    de doorstuurder staat er en wijst naar het doel uit de tabel"
+else
+  echo "  ZAKT  oefenboeken/proefboek/03_oud/03_oud.html ontbreekt of wijst verkeerd"
+  gezakt=$((gezakt + 1))
+fi
+getoetst=$((getoetst + 1))
+if [ ! -e "$PROEFSITE/oefenboeken/ander/weg.html" ]; then
+  echo "  ok    een doorstuurder BUITEN de boekmap wordt niet aangeraakt"
+else
+  echo "  ZAKT  publish_workbook.py schreef buiten oefenboeken/proefboek/"
+  gezakt=$((gezakt + 1))
+fi
+# 6b: rendert het boek nu zelf een echte bladzij op dat oude adres, dan wint
+#     de bladzij -- en het script zegt dat de rij in de tabel achterhaald is.
+bouw_bron
+mkdir -p "$M/bron/03_oud"
+printf '<!doctype html>\n<html><head><title>echt</title>\n%s\n</head><body>echt</body></html>\n' \
+  "$TELLER" > "$M/bron/03_oud/03_oud.html"
+zaak    "een echte bladzij op een oud adres wordt niet overschreven" 0
+verwacht "  en de achterhaalde rij wordt genoemd" "NIET teruggezet: oefenboeken/proefboek/03_oud/03_oud.html"
+rm -f "$PROEFSITE/_tools/doorstuurders.py" "$PROEFSITE/_tools/doorstuurders.tsv"
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."
