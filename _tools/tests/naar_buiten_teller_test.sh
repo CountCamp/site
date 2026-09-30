@@ -34,6 +34,10 @@ nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
   mkdir -p "$r/_tools"
   cp _tools/naar_buiten.sh "$r/_tools/"
   printf 'print("plankwacht - nagemaakt, alles in orde")\n' > "$r/_tools/plankwacht.py"
+  # Sinds 1-10-2026 draait er een DERDE poort: de doorstuurwachter. Zelfde
+  # reden als bij de plankwacht hierboven -- deze toets meet de tellerpoort, en
+  # de doorstuurpoort heeft zijn eigen toets (doorstuurders_test.sh).
+  printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$r/_tools/doorstuurders.py"
   echo "$r"
 }
 

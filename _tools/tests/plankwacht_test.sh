@@ -352,6 +352,10 @@ cp "$BRON/_tools/plankwacht.py"  "$T7/_tools/"
 # tellerwachter ontbreekt" -- en dan staat de toets rood om de verkeerde reden.
 cp "$BRON/_tools/controleer_tellers.py" "$T7/_tools/"
 cp "$BRON/_tools/tellerregel.py"        "$T7/_tools/"
+# En sinds 1-10-2026 een DERDE: de doorstuurwachter. Die is hier nagemaakt en
+# groen -- zaak 7 en 8 meten de plank, en de doorstuurpoort heeft zijn eigen
+# toets (doorstuurders_test.sh, met de echte naar_buiten.sh).
+printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$T7/_tools/doorstuurders.py"
 # Eén echte bladzij mét teller, zodat de tellerwachter hier groen staat omdat
 # hij iets ZAG en niet omdat er niets te zien was.
 mkdir -p "$T7/oefenboeken/geteld"

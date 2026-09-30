@@ -155,6 +155,35 @@ tellers_nakijken() {   # $1 = blokkerend | melden
   return 0
 }
 
+# ---- elke oude bladwijzer moet ergens uitkomen -------------------------
+# Sinds 1-10-2026 staan er doorstuurders op 181 oude adressen (zie
+# _tools/doorstuurders.py). Die kunnen op twee manieren stil stukgaan:
+#   * ze verdwijnen -- publish_workbook.py gooit oefenboeken/<boek>/ weg (hij
+#     zet ze terug, maar een ander script doet dat misschien niet), en
+#     publiceer_oefenboeken.sh spiegelt met rsync --delete;
+#   * hun doel verhuist -- een thema krijgt een nieuw nummer, en de
+#     doorstuurder wijst voortaan naar een 404.
+# Allebei geven ze geen enkele foutmelding: de site bouwt, de 404 staat er
+# gewoon. Zelfde afweging als hierboven: rood kan hij alleen worden door een
+# echte fout, dus blokkerend op --productie en meldend op de proefwegen.
+doorstuur_nakijken() {   # $1 = blokkerend | melden
+  local streng="$1" code=0
+  python3 "$HIER/_tools/doorstuurders.py" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) echo "  Een oude bladwijzer komt niet (meer) uit waar hij hoort."
+       echo "  Herstellen: python3 _tools/doorstuurders.py --bouw  (of --afleiden als een doel verhuisde)" ;;
+    3) echo "  De doorstuurwachter kon niet kijken. Dat is geen schone uitslag maar"
+       echo "  een blinde: stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De doorstuurwachter zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de doorstuurders."
+       echo "  Staat _tools/doorstuurders.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 huidige_tak() { git branch --show-current; }
 
 # ============================================================
@@ -173,8 +202,9 @@ case "$WEG" in
 --nakijken)
   echo "== alleen nakijken (er wordt niets gebouwd en niets geduwd)"
   code=0
-  plank_nakijken   blokkerend || code=1
-  tellers_nakijken blokkerend || code=1
+  plank_nakijken     blokkerend || code=1
+  tellers_nakijken   blokkerend || code=1
+  doorstuur_nakijken blokkerend || code=1
   echo
   if [ "$code" = 0 ]; then
     echo "Alle poorten staan groen. --productie zou hierop niet struikelen."
@@ -189,6 +219,7 @@ case "$WEG" in
   echo "== proefdruk bouwen, hier op de machine"
   plank_nakijken melden
   tellers_nakijken melden
+  doorstuur_nakijken melden
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
     QUARTO_PROFILE=spook quarto render
@@ -211,6 +242,7 @@ case "$WEG" in
   echo "== proefdruk op internet, vanaf tak '$TAK'"
   plank_nakijken melden
   tellers_nakijken melden
+  doorstuur_nakijken melden
   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
   if [ -n "$(git status --porcelain)" ]; then
@@ -258,8 +290,9 @@ case "$WEG" in
   git log --oneline origin/main..main | sed 's/^/    /'
   echo
   echo "  eerst nakijken of de plank waarmaakt wat hij belooft:"
-  plank_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
-  tellers_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+  plank_nakijken blokkerend     || { echo "  Niet geleverd."; exit 1; }
+  tellers_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
+  doorstuur_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   echo
   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
   if [ -z "$DROOG" ]; then
