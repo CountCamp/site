@@ -80,8 +80,9 @@ OVERSLAAN = {'_site', '.quarto', '.git', 'site_libs', 'libs', '.claude'}
 # Zelfde vorm als werkboeken/index.html (7-8-2026), plus één regel commentaar
 # die zegt waar hij vandaan komt -- wie hem opent, moet niet met de hand gaan
 # repareren wat bij de volgende `--bouw` weer terugkomt.
+MERK = 'doorstuurder: gemaakt door _tools/doorstuurders.py'
 SJABLOON = '''<!doctype html>
-<!-- doorstuurder: gemaakt door _tools/doorstuurders.py uit _tools/doorstuurders.tsv; niet met de hand bewerken -->
+<!-- ''' + MERK + ''' uit _tools/doorstuurders.tsv; niet met de hand bewerken -->
 <html lang="nl"><head><meta charset="utf-8">
 <title>Verhuisd naar {zicht_pad}</title>
 <link rel="canonical" href="https://countcamp.org{url}">
@@ -392,10 +393,14 @@ def afleiden(site: str, uit: str) -> int:
     # doorstuurders live staan, zou een volgende --afleiden ze dan voor levend
     # aanzien, ze uit de tabel laten vallen -- en dan zet publish_workbook.py ze
     # na zijn rmtree niet meer terug.
+    # Een doorstuurder die NIET van ons is (de acht onder werkboeken/, de
+    # vijftien onder manuscript/werkplaats/) telt als "hier geregeld": die heeft
+    # al een eigenaar, en wij gaan er niet overheen schrijven.
     def echt_hier(p: str) -> bool:
         pad = os.path.join(site, p)
         if os.path.isfile(pad):
-            return soort(lees(pad)) != 'doorstuurder'
+            t = lees(pad)
+            return soort(t) != 'doorstuurder' or MERK not in t
         return wordt_bladzij(site, p) == 'gerenderd'
 
     dood = sorted(p for p in ooit if not echt_hier(p))
@@ -408,10 +413,24 @@ def afleiden(site: str, uit: str) -> int:
 
     rijen = []
     for oud in dood:
-        log = git(site, 'log', 'origin/gh-pages', '--no-renames', '--format=%h %cs', '--', oud).split()
-        weg_commit, weg_datum = log[0], log[1]
-        van = log[-1]
-        oude_tekst = git(site, 'show', weg_commit + '^:' + oud)
+        log = [r.split() for r in git(site, 'log', 'origin/gh-pages', '--no-renames',
+                                      '--format=%h %cs', '--', oud).splitlines()]
+        van = log[-1][1]
+        # De laatste versie die een ECHTE bladzij was. Niet "de ouder van de
+        # nieuwste commit": staat onze doorstuurder eenmaal live, dan is de
+        # nieuwste commit op dit pad die doorstuurder zelf.
+        oude_tekst, weg_datum = None, '?'
+        for i, (h, _d) in enumerate(log):
+            t = subprocess.run(['git', '-C', site, '-c', 'core.quotepath=off', 'show', h + ':' + oud],
+                               capture_output=True, text=True)
+            if t.returncode == 0 and soort(t.stdout) == 'bladzij':
+                oude_tekst = t.stdout
+                weg_datum = log[i - 1][1] if i > 0 else '?'
+                break
+        if oude_tekst is None:
+            rijen.append([oud, '', 'niet', 'geen enkele versie op gh-pages was een echte bladzij',
+                          '%s..?' % van, '', ''])
+            continue
         ot = titel(oude_tekst)
         ow = woorden(oude_tekst)
         boek = boek_van(oud)
