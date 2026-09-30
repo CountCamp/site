@@ -202,6 +202,75 @@ T6c="$(mktemp -d)"; klaarzetten "$T6c"; mvda_plank "$T6c" "zes"
 zaak "6c de kale vorm vuurt als hij verouderd is" 1 "maar er staan er 4" "$T6c"
 rm -rf "$T6b" "$T6c"
 
+# ---- zaak 9 t/m 11: tellercommits (Ben, 30-9-2026, optie b) -------------
+# Commit b9fd33a zette op 30-9 één onzichtbare tellerregel in elke bladzij, en
+# werd daarmee de "laatste verandering" van oefenboeken/ozp1/. De wachter moet
+# zo'n commit overslaan -- maar ALLEEN zo'n commit. De regel komt uit
+# tellerregel.py naast de wachter die we toetsen, niet overgetikt.
+REGEL="$(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); from tellerregel import REGEL; print(REGEL)' "$(dirname "$WACHT")")"
+OZP="oefenboeken/ozp1/00_fundament/00_fundament.html"
+op() {   # $1 = map, $2 = datum JJJJ-MM-DD, $3 = boodschap
+  git -C "$1" add -A
+  GIT_AUTHOR_DATE="$2T12:00:00+02:00" GIT_COMMITTER_DATE="$2T12:00:00+02:00" \
+    git -C "$1" commit -qm "$3"
+}
+teller_erbij() { printf '  %s\n' "$REGEL" >> "$1/$2"; }
+
+# zaak 9: alleen de teller erbij -> overslaan, en dat hardop zeggen
+T9="$(mktemp -d)"; klaarzetten "$T9"
+plank_schrijven "$T9" "19 september 2026" "Vier"
+op "$T9" 2026-09-19 "plank"
+teller_erbij "$T9" "$OZP"; teller_erbij "$T9" oefenboeken/ozp1/index.html
+op "$T9" 2026-09-30 "Bezoekersteller erbij"
+H9="$(git -C "$T9" log -1 --format=%h)"
+zaak "9  een commit met alleen de teller telt niet als boekwijziging" 0 \
+     "alle nagerekende beloftes kloppen" "$T9"
+zaak "9b en de overslag staat bij naam in de uitvoer" 0 \
+     "1 tellercommit(s) overgeslagen in oefenboeken/ozp1/: $H9" "$T9"
+
+# zaak 10: teller erbij ÉN iets anders -> telt gewoon mee.
+# 10 in hetzelfde bestand, 10b in een ander bestand binnen dezelfde commit.
+T10="$(mktemp -d)"; klaarzetten "$T10"
+plank_schrijven "$T10" "19 september 2026" "Vier"
+op "$T10" 2026-09-19 "plank"
+teller_erbij "$T10" "$OZP"; echo '<p>nieuwe opgave</p>' >> "$T10/$OZP"
+op "$T10" 2026-09-30 "Bezoekersteller erbij"   # <- de boodschap liegt met opzet
+zaak "10 teller plus inhoud in één bestand telt wél" 1 \
+     "is voor het laatst veranderd op 2026-09-30" "$T10"
+T10b="$(mktemp -d)"; klaarzetten "$T10b"
+plank_schrijven "$T10b" "19 september 2026" "Vier"
+op "$T10b" 2026-09-19 "plank"
+teller_erbij "$T10b" "$OZP"; echo '<p>nieuwe opgave</p>' >> "$T10b/oefenboeken/ozp1/index.html"
+op "$T10b" 2026-09-30 "Bezoekersteller erbij"
+zaak "10b teller in het ene, inhoud in het andere bestand telt wél" 1 \
+     "is voor het laatst veranderd op 2026-09-30" "$T10b"
+
+# zaak 11: de teller WEGHALEN is geen tellercommit. Eerst een echte
+# tellercommit (25-9, overgeslagen), dan eentje die hem weer weghaalt (30-9).
+T11="$(mktemp -d)"; klaarzetten "$T11"
+plank_schrijven "$T11" "19 september 2026" "Vier"
+op "$T11" 2026-09-19 "plank"
+teller_erbij "$T11" "$OZP"
+op "$T11" 2026-09-25 "Bezoekersteller erbij"
+echo '<html>x</html>' > "$T11/$OZP"
+op "$T11" 2026-09-30 "Bezoekersteller weer weg"
+zaak "11 een commit die de teller weghaalt telt wél" 1 \
+     "is voor het laatst veranderd op 2026-09-30" "$T11"
+
+# zaak 11b: een inhoudsregel VERVANGEN door de teller. Toegevoegd is dan alleen
+# de tellerregel -- alleen de weggehaalde regel verraadt dat hier inhoud
+# verdween. Zaak 11 vangt dat niet: een commit zonder één toegevoegde regel
+# telt ook al mee, dus daar hoeft de wachter weggehaalde regels niet te zien.
+# De mutatieproef bewees het: "weggehaalde regels tellen niet" bleef groen.
+T11b="$(mktemp -d)"; klaarzetten "$T11b"
+plank_schrijven "$T11b" "19 september 2026" "Vier"
+op "$T11b" 2026-09-19 "plank"
+printf '  %s\n' "$REGEL" > "$T11b/$OZP"   # '<html>x</html>' eruit, teller erin
+op "$T11b" 2026-09-30 "Bezoekersteller erbij"
+zaak "11b een inhoudsregel vervangen door de teller telt wél" 1 \
+     "is voor het laatst veranderd op 2026-09-30" "$T11b"
+rm -rf "$T9" "$T10" "$T10b" "$T11" "$T11b"
+
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op
 # 18-8-2026 gebeurd met zeven mechanismen tegelijk: alle zelftests groen, geen

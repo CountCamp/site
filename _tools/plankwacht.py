@@ -79,6 +79,11 @@ import sys
 
 # De tellerregel komt uit het ene bestand dat weet hoe hij eruitziet, niet
 # overgetikt: een tweede schrijfwijze hier zou stil uiteenlopen met de eerste.
+# Zonder bytecode: de wachter draait in `naar_buiten.sh` vóór de toets op
+# ongecommit werk, en een verse `_tools/__pycache__/` liet die toets in een repo
+# zonder .gitignore-regel vallen (plankwacht_test.sh, zaak 8). Een wachter mag
+# de werkkopie die hij bewaakt niet vuil maken.
+sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tellerregel import REGEL  # noqa: E402
 
