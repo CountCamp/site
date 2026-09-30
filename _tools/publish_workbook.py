@@ -19,9 +19,15 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
   3. De map moet als project-resource in `_quarto.yml` staan, anders kopieert
      `quarto render` van de site 'm niet naar `_site/`.
      (`resources: - "oefenboeken/<naam>/**"`)
+  4. Een werkboek-render brengt zijn eigen `<head>` mee en wordt daarna als
+     RESOURCE overgenomen, niet opnieuw gerenderd. De bezoekersteller die de
+     site in `_quarto-echt.yml` heeft, bereikt zo'n bladzij dus nooit: hij moet
+     uit de werkboek-bron komen. Dat gaat stil mis — gemeten op 30-9-2026 was
+     het hele psychometrie-oefenboek blind (0 van 6), OZP1 op 2 van 18 en MVDA
+     op 1 van 9, en niets zei er iets over. → hier invoegen en anders weigeren.
 
-Dit script doet 1 en 2 deterministisch + valideert dat geen enkele asset breekt.
-Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
+Dit script doet 1, 2 en 4 deterministisch + valideert dat geen enkele asset
+breekt. Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
 
 Gebruik
 -------
@@ -37,6 +43,9 @@ site-repo. Raakt de werkboek-bron NIET aan.
 
 from __future__ import annotations
 import argparse, os, re, shutil, sys, html
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from tellerregel import met_teller, soort  # noqa: E402
 
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -152,6 +161,38 @@ def validate_assets(dst: str) -> list[str]:
     return problems
 
 
+def zorg_voor_tellers(dst: str) -> tuple[list[str], list[str], list[tuple[str, str]]]:
+    """Zet de bezoekersteller in elke bladzij onder `dst`.
+
+    Geeft (al_goed, toegevoegd, overgeslagen). `overgeslagen` bevat per bestand
+    de reden, en die wordt hardop gemeld: een uitsluiting die je niet ziet, is
+    een gat. Wie de teller er al heeft, krijgt hem niet twee keer.
+    """
+    al_goed: list[str] = []
+    bij: list[str] = []
+    over: list[tuple[str, str]] = []
+    for root, _d, files in os.walk(dst):
+        for fn in sorted(files):
+            if not fn.endswith(".html"):
+                continue
+            f = os.path.join(root, fn)
+            rel = os.path.relpath(f, dst)
+            s = open(f, encoding="utf-8", errors="ignore").read()
+            k = soort(s)
+            if k != "bladzij":
+                over.append((rel, k))
+                continue
+            nieuw, wat = met_teller(s)
+            if wat == "al_goed":
+                al_goed.append(rel)
+            elif wat == "toegevoegd":
+                open(f, "w", encoding="utf-8").write(nieuw)
+                bij.append(rel)
+            else:
+                over.append((rel, wat))
+    return al_goed, bij, over
+
+
 def human(n: int) -> str:
     for unit in ("B", "KB", "MB", "GB"):
         if n < 1024:
@@ -248,7 +289,21 @@ def main() -> int:
     log(f"  gestripte data:text/html-tags: {stripped_total}")
     log(f"  gestripte 'Other Formats'-blokken: {formats_total}")
 
-    # 4) validatie
+    # 4) de bezoekersteller — elke bladzij, of het gaat niet door
+    al_goed, bijgezet, overgeslagen = zorg_voor_tellers(dst)
+    log(f"  teller: {len(al_goed)} bladzij(den) had hem al, "
+        f"{len(bijgezet)} erbij gezet, {len(overgeslagen)} overgeslagen")
+    for rel in bijgezet:
+        log(f"    + teller in {rel}")
+    for rel, reden in overgeslagen:
+        log(f"    overgeslagen ({reden}): {rel}")
+    # De weigering staat hieronder bij `problems`, zodat één run álles meldt in
+    # plaats van bij het eerste bezwaar te stoppen. Een half rapport laat je
+    # twee keer draaien om twee dingen te zien.
+    zonder_teller = [rel for rel, reden in overgeslagen
+                     if reden in ("geen_head", "half_gevonden")]
+
+    # 5) validatie
     problems = validate_assets(dst)
     log(f"  ontbrekende assets: {len(problems)}")
     for p in problems[:20]:
@@ -267,8 +322,19 @@ def main() -> int:
     for sz, rel in sizes[:5]:
         log(f"    {human(sz):>8}  {rel}")
 
+    fout = False
     if problems:
         log("\n⚠️  Er ontbreken assets — NIET publiceren tot opgelost.")
+        fout = True
+    if zonder_teller:
+        log(f"\n⚠️  {len(zonder_teller)} bladzij(den) dragen de bezoekersteller "
+            f"niet en konden hem ook niet krijgen — NIET publiceren tot opgelost:")
+        for rel in zonder_teller:
+            log("    GEEN TELLER: " + rel)
+        log("    Een halve teller telt niets en ziet er toch uit als een teller;"
+            " een bladzij zonder </head> heeft geen plek om hem te zetten.")
+        fout = True
+    if fout:
         return 1
     log("\n✅ Compleet en gevalideerd. Volgende stap: quarto render + git push.")
     return 0
