@@ -3,6 +3,14 @@ lang: nl
 project:
   type: website
   output-dir: _site
+  # Alleen een .qmd wordt een bladzij (1-10-2026, Ben: "4a"). Zonder deze
+  # lijst maakt Quarto van elk .md-bestand zonder _ een openbare bladzij, en
+  # zo stonden DUBBELINGEN.md, LICENSE.md en manuscript/werkplaats/LEESMIJ.md
+  # live én in de sitemap. Een .md is hier een notitie voor onszelf.
+  # Tweede reden, gemeten: zonder deze lijst ziet Quarto in een werkkopie onder
+  # .claude/worktrees/ NUL bronnen en bouwt hij een lege site, met afloopcode 0.
+  render:
+    - "*.qmd"
   resources:
     - CNAME
     - google7b04654a69a0c7b2.html
@@ -21,8 +29,13 @@ project:
     - "manuscript/dankwoord.html"
     - "manuscript/verhalen.html"
     - "manuscript/verhalen_puur.html"
-    - "manuscript/figuren_overzicht.html"
     - "manuscript/werkplaats/**"
+    # Bronnen en notities gaan nooit als los bestand mee. De brede globs
+    # hierboven ("oefenboeken/**", "manuscript/werkplaats/**") vingen
+    # oefenboeken/index.qmd (de bron van de plank, met zijn interne
+    # commentaar) en werkplaats/LEESMIJ.md, en zetten die als download online.
+    - "!*.qmd"
+    - "!*.md"
 
 website:
   title: "CountCamp"
