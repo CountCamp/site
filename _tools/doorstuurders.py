@@ -197,7 +197,12 @@ def doel_van_refresh(site: str, bestand: str, tekst: str) -> str | None:
     return rel
 
 
-BRONNEN = ('.qmd', '.md', '.ipynb', '.Rmd')
+# Wat Quarto hier tot bladzij maakt. Moet gelijk lopen met `project: render:`
+# in _quarto.yml, en dat is sinds 1-10-2026 alleen "*.qmd": daarvoor werd elk
+# .md een openbare bladzij (DUBBELINGEN, LICENSE, werkplaats/LEESMIJ). Stond
+# '.md' hier nog, dan hield deze wachter een adres als DUBBELINGEN.html voor
+# levend terwijl het van de site verdwijnt.
+BRONNEN = ('.qmd',)
 
 
 def wordt_bladzij(site: str, rel: str) -> str | None:
