@@ -423,6 +423,27 @@ table {
   font-size: 0.95rem;
 }
 
+/* KAAPA-tabellen zonder grijze strepen.
+   gt_apa() zet uitdrukkelijk geen rijstrepen (APA: geen arcering, alleen drie
+   lijnen). Maar Quarto geeft elke gt-tabel er zelf vier Bootstrap-klassen bij,
+   `table table-sm table-striped small`, en `table-striped` legt op elke oneven
+   rij een grijze waas: een box-shadow van rgba(0,0,0,.05). Gemeten 3-10-2026
+   op thema 4 (_kaapameting/stijl_meten.R): van die vier klassen lekt alleen die
+   waas door -- lijnen, lettergrootte en celruimte blijven die van gt. Zo stond
+   het ook online, in alle zeven tabellen van thema 4.
+
+   De klassen tegenhouden kan ook, met tab_options(quarto.disable_processing =
+   TRUE), maar dan maakt Quarto de markdown in de cellen niet meer op: een
+   scorepatroon als $11100$ in thema 6 komt er dan als \(11100\) te staan
+   (gemeten op _kaapameting/strepen.qmd). Daarom hier de waas weg en niet de
+   klassen.
+
+   Dit hoort eigenlijk in de canonieke gt_apa(), want elke Quarto-bladzijde met
+   een KAAPA-tabel heeft het. Staat het daar ooit, dan mag deze regel weg. */
+table.gt_table.table > :not(caption) > * > * {
+  box-shadow: none;
+}
+
 /* Woordenlijst-links — subtiel stippellijntje, herkenbaar als klikbaar begrip */
 a[href*="woordenlijst.html#"] {
   text-decoration: none;
