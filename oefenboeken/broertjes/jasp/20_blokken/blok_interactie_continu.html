@@ -625,6 +625,7 @@ window.Quarto = {
   <li><a href="#een-tweede-moderator-die-de-waaier-de-andere-kant-op-zet" id="toc-een-tweede-moderator-die-de-waaier-de-andere-kant-op-zet">Een tweede moderator, die de waaier de andere kant op zet</a></li>
   <li><a href="#van-getal-naar-groep-en-weer-terug" id="toc-van-getal-naar-groep-en-weer-terug">Van getal naar groep — en weer terug</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -661,14 +662,12 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p>Maak eerst een productkolom. Klik in het databad op de <strong>+</strong> rechts van de laatste kolom, noem hem <code>gladXkaraat</code> en typ in de <strong>R</strong>-modus:</p>
 <pre><code>gladheid * karaat</code></pre>
-<p>Draai dan <strong>Regression → Linear Regression</strong>: <code>glans</code> als <strong>Dependent</strong>, en <code>gladheid</code>, <code>karaat</code> én <code>gladXkaraat</code> als <strong>Covariates</strong>.</p>
-<pre><code>gladheid       b = 10.00
-karaat         b =  4.70
-gladXkaraat    b = -1.21   p = .80</code></pre>
+<p>Draai dan <strong>Regression → Linear Regression</strong>: <code>glans</code> als <strong>Dependent Variable</strong>, en <code>gladheid</code>, <code>karaat</code> én <code>gladXkaraat</code> als <strong>Covariates</strong>.</p>
+<p>In <strong>Coefficients</strong> staat <code>gladheid</code> op 10.005, <code>karaat</code> op 4.696 en <code>gladXkaraat</code> op −1.215, met <em>p</em> = 0.802.</p>
 </div>
 </div>
 <p>En hier moet ik meteen eerlijk zijn: <strong>op twaalf steentjes valt over deze interactie niets te zeggen.</strong> <em>p</em> = .80, en dat blijft zo hoe je ook kijkt. Een interactie tussen twee getallen is de hongerigste term die er in een model kan zitten — hij vraagt om veel meer waarnemingen dan een hoofdeffect, want hij moet een verschil in een verschil zichtbaar maken. Twaalf steentjes zijn genoeg om een lijn te trekken en te krap om een waaier te zien. Dat is geen tegenvaller maar een les die je meeneemt.</p>
-<p>Kijk wél naar dat eerste getal, want dáár leren de diamantjes je iets wat de pinguïns straks nodig hebben. <code>gladheid</code> staat op <strong>10.00</strong>. Maar in oefening 10.1 stond de helling van gladheid op 6.14, en in de meervoudige regressie weer op iets anders. Hoe kan dat?</p>
+<p>Kijk wél naar dat eerste getal, want dáár leren de diamantjes je iets wat de pinguïns straks nodig hebben. <code>gladheid</code> staat op <strong>10.00</strong> (in JASP zie je 10.005: hetzelfde getal, op drie decimalen). Maar in oefening 10.1 stond de helling van gladheid op 6.14, en in de meervoudige regressie weer op iets anders. Hoe kan dat?</p>
 <p>Omdat een coëfficiënt in een model met een interactie altijd de helling is <strong>bij nul van de ander</strong>. Die 10.00 is de helling van glans op gladheid bij een steentje van <strong>nul karaat</strong>. En een steentje van nul karaat bestaat niet — het gemiddelde steentje weegt 1.6 karaat. Je leest dus een helling af op een adres waar niemand woont.</p>
 <p>De reparatie is één aftrekking:</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · centreren is aftrekken · JASP 0.98.1">
@@ -682,19 +681,15 @@ gladXkaraat    b = -1.21   p = .80</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <p>Maak drie nieuwe kolommen met <strong>Compute Column</strong>, in de <strong>R</strong>-modus:</p>
-<pre><code>glad_c        -&gt;   gladheid - mean(gladheid)     # gemiddelde gladheid = 5.0
-kar_c         -&gt;   karaat   - mean(karaat)       # gemiddelde karaat   = 1.6
+<pre><code>glad_c        -&gt;   gladheid - mean(gladheid)
+kar_c         -&gt;   karaat   - mean(karaat)
 gladXkar_c    -&gt;   glad_c * kar_c</code></pre>
-<p>Let op de derde: het product maak je van de <strong>gecentreerde</strong> kolommen, niet van de ruwe. Draai dan dezelfde <strong>Linear Regression</strong> met <code>glad_c</code>, <code>kar_c</code> en <code>gladXkar_c</code>.</p>
-<pre><code>glad_c         b = 8.06    &lt;- helling bij GEMIDDELDE karaat
-gladXkar_c     b = -1.21   &lt;- exact hetzelfde als hierboven</code></pre>
+<p>Wat je aftrekt is het gemiddelde: 5.0 bij gladheid, 1.6 bij karaat. Let op de derde: het product maak je van de <strong>gecentreerde</strong> kolommen, niet van de ruwe. Draai dan dezelfde <strong>Linear Regression</strong> met <code>glad_c</code>, <code>kar_c</code> en <code>gladXkar_c</code>.</p>
+<p>In <strong>Coefficients</strong> staat <code>glad_c</code> nu op 8.061 — de helling bij een gemiddeld steentje — en <code>gladXkar_c</code> op −1.215, precies als hierboven.</p>
 </div>
 </div>
 <p>Twee dingen om vast te houden. <strong>De interactie verandert niet</strong> — hij was −1.21 en hij blijft −1.21. Centreren verschuift alleen waar de nul ligt; het verzet het model niet. <strong>De helling van gladheid verandert wél</strong>, van 10.00 naar 8.06, en dat komt doordat je hem nu op een ander adres afleest: niet bij nul karaat maar bij een gemiddeld steentje.</p>
-<p>Ben zegt het in de les zo:</p>
-<blockquote class="blockquote">
-<p>Nul is hier gemiddeld. Als je naar een moderatieregressie kijkt, dan staat het effect van die X in de coëfficiëntentabel altijd bij een nulwaarde van de moderator. De vraag is dus: wat betekent nul?</p>
-</blockquote>
+<p>Nul is hier gemiddeld. Kijk je naar een moderatieregressie, dan staat het effect van de voorspeller op de uitkomst in de coëfficiëntentabel altijd bij een nulwaarde van de moderator. De vraag is dus: wat betekent nul?</p>
 <p>Onthoud die vraag. Vanaf hier is het de vraag die je bij elke tabel stelt.</p>
 </section>
 <section id="de-waaier-bij-de-pinguïns" class="level2">
@@ -712,10 +707,10 @@ gladXkar_c     b = -1.21   &lt;- exact hetzelfde als hierboven</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <p>Open <code>penguins.csv</code> en maak drie kolommen met <strong>Compute Column</strong> (<strong>R</strong>-modus):</p>
-<pre><code>vin_c        -&gt;   vinlengte    - mean(vinlengte)      # gemiddelde: 200.92 mm
-snav_c       -&gt;   snavellengte - mean(snavellengte)   # gemiddelde:  43.92 mm
+<pre><code>vin_c        -&gt;   vinlengte    - mean(vinlengte)
+snav_c       -&gt;   snavellengte - mean(snavellengte)
 vinXsnav     -&gt;   vin_c * snav_c</code></pre>
-<p>Zet ze alle drie op <strong>Scale</strong>. Ter controle: het gemiddelde van <code>vin_c</code> en van <code>snav_c</code> moet nul zijn — kijk het na met <strong>Descriptives</strong>.</p>
+<p>Wat je aftrekt is het gemiddelde: 200.92 mm bij de vin, 43.92 mm bij de snavel. Zet de drie kolommen op <strong>Scale</strong>. Ter controle: het gemiddelde van <code>vin_c</code> en van <code>snav_c</code> moet nul zijn — kijk het na met <strong>Descriptives</strong>.</p>
 </div>
 </div>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
@@ -728,17 +723,13 @@ vinXsnav     -&gt;   vin_c * snav_c</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Regression → Linear Regression</strong>: <code>gewicht</code> als <strong>Dependent</strong>, en <code>vin_c</code>, <code>snav_c</code> én <code>vinXsnav</code> als <strong>Covariates</strong>. Vink onder <strong>Statistics</strong> de optie <strong>Estimates</strong> aan.</p>
-<pre><code>(Intercept)   b = 4141.49        &lt;- gewicht van een dóórsnee pinguïn
-vin_c         b =   45.39        &lt;- helling bij GEMIDDELDE snavellengte
-snav_c        b =   11.82   p = .027
-vinXsnav      b =    1.20   p &lt; .001
-R²            = 0.769</code></pre>
+<p><strong>Regression → Linear Regression</strong>: <code>gewicht</code> als <strong>Dependent Variable</strong>, en <code>vin_c</code>, <code>snav_c</code> én <code>vinXsnav</code> als <strong>Covariates</strong>. Vink onder <strong>Statistics</strong> de optie <strong>Estimates</strong> aan.</p>
+<p>In <strong>Coefficients</strong> staat <code>(Intercept)</code> op 4141.488 — het gewicht van een dóórsnee pinguïn — en <code>vin_c</code> op 45.391, de helling bij een gemiddelde snavellengte. <code>snav_c</code> staat op 11.825 met <em>p</em> = 0.027, en <code>vinXsnav</code> op 1.200 met <em>p</em> &lt; .001. In <strong>Model Summary</strong> staat <em>R</em>² = 0.769.</p>
 </div>
 </div>
 <p>Lees die tabel nu met de vraag van hierboven in je hoofd — <em>wat betekent nul?</em></p>
 <ul>
-<li>De intercept, <strong>4141.49</strong> gram, is het voorspelde gewicht van een pinguïn met een gemiddelde vin én een gemiddelde snavel. Dat is een pinguïn die kán bestaan. Vergelijk dat met oefening 3.2, waar de intercept op −5780.83 gram stond: een pinguïn met een vin van nul millimeter, die bijna zes kilo negatief weegt. Het adres is nu bewoond.</li>
+<li>Het intercept, <strong>4141.49</strong> gram, is het voorspelde gewicht van een pinguïn met een gemiddelde vin én een gemiddelde snavel. Dat is een pinguïn die kán bestaan. Vergelijk dat met oefening 3.2, waar het intercept op −5780.83 gram stond: een pinguïn met een vin van nul millimeter, die bijna zes kilo negatief weegt. Het adres is nu bewoond.</li>
 <li><strong>45.39</strong> is de helling van gewicht op vinlengte bij een pinguïn met een gemiddelde snavel — niet bij álle pinguïns, bij een gemiddelde. En let op: in oefening 3.2 stond hier 49.69. Dat verschil komt niet door het centreren maar doordat de snavellengte nu <strong>in het model zit</strong>: 45.39 is de helling van gewicht op vinlengte bij pinguïns die even lang van snavel zijn. Precies de verschuiving die je in oefening 8.1 bij de meervoudige regressie zag.</li>
 <li>En <strong>1.20</strong> is de interactie: per millimeter extra snavellengte komt er 1.20 gram per millimeter bij de helling van de vin bij.</li>
 </ul>
@@ -751,7 +742,9 @@ R²            = 0.769</code></pre>
 <p>De standaardafwijking van de snavellengte is <strong>5.46</strong> millimeter (vraag hem op met <strong>Descriptives</strong>). Dus je leest de helling af bij een snavel van 38.46, van 43.92 en van 49.38 millimeter — kort, gemiddeld, lang.</p>
 <p>En dan is het optellen, net als bij de dummy in 10.1:</p>
 <blockquote class="blockquote">
-<p>45.39 − 1.20 × 5.46 = <strong>38.84</strong> bij een korte snavel 45.39 = <strong>45.39</strong> bij een gemiddelde snavel 45.39 + 1.20 × 5.46 = <strong>51.94</strong> bij een lange snavel</p>
+<p>45.39 − 1.20 × 5.46 = <strong>38.84</strong> bij een korte snavel<br>
+45.39 = <strong>45.39</strong> bij een gemiddelde snavel<br>
+45.39 + 1.20 × 5.46 = <strong>51.94</strong> bij een lange snavel</p>
 </blockquote>
 <p><strong>38.84 · 45.39 · 51.94.</strong> Bij een pinguïn met een korte snavel weegt elke millimeter vin bijna negenendertig gram; bij een lange snavel bijna tweeënvijftig. Dertien gram per millimeter verschil tussen de buitenste twee. Hoe langer de snavel, hoe zwaarder elke millimeter vin telt.</p>
 <p>En dat zijn geen echte groepen — er staat nergens een pinguïn met het bordje “lange snavel” om zijn nek. Het zijn drie plekken op een glijdende schaal, door jou gekozen omdat je ergens moest gaan staan. Kies je andere waarden, dan krijg je andere hellingen; het model is hetzelfde gebleven.</p>
@@ -766,7 +759,7 @@ R²            = 0.769</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>De mediaan van <code>snavellengte</code> vraag je op met <strong>Descriptives</strong> (vink <strong>Median</strong> aan). Zet dan het <strong>trechtertje</strong> op <code>snavellengte &lt; 44.45</code> en draai een gewone <strong>Linear Regression</strong> van <code>gewicht</code> op <code>vinlengte</code>: <strong>37.17</strong>. Draai het filter om naar <code>snavellengte &gt;= 44.45</code> en je vindt <strong>57.27</strong>. Zet het filter daarna weer uit.</p>
+<p>De mediaan van <code>snavellengte</code> vraag je op met <strong>Descriptives</strong> (vink <strong>Median</strong> aan): 44.450. Zet dan het <strong>trechtertje</strong> op <code>snavellengte &lt; 44.45</code> en draai een gewone <strong>Linear Regression</strong> van <code>gewicht</code> op <code>vinlengte</code>: bij <code>vinlengte</code> staat 37.171. Draai het filter om naar <code>snavellengte &gt;= 44.45</code> en je vindt 57.269. Zet het filter daarna weer uit.</p>
 </div>
 </div>
 <p>37.17 tegen 57.27 — dezelfde richting, en forser, want een mediaan-knip zet de uitersten tegenover elkaar in plaats van één standaardafwijking. Doe dat níét als je het echt gaat rapporteren: je gooit de helft van de informatie weg en je verzint groepen die niet bestaan. Als controle bij het leren is het prima.</p>
@@ -774,10 +767,21 @@ R²            = 0.769</code></pre>
 <section id="waarom-centreren-hier-geen-gemak-meer-is" class="level2">
 <h2 class="anchored" data-anchor-id="waarom-centreren-hier-geen-gemak-meer-is">Waarom centreren hier geen gemak meer is</h2>
 <p><span class="begrippen">intercept · onmogelijke nul</span></p>
-<p>In oefening 3.2 was centreren een leuk extraatje. Hier is het dat niet meer, en dat kun je in één run zien. Draai hetzelfde model nog eens, nu met de <strong>ruwe</strong> kolommen: maak <code>vinXsnav_ruw</code> als <code>vinlengte * snavellengte</code>, en zet <code>vinlengte</code>, <code>snavellengte</code> en die nieuwe kolom in de regressie.</p>
-<pre><code>vinlengte        b =   -7.31   p = .63
-snavellengte     b = -229.24   p &lt; .001
-vinXsnav_ruw     b =    1.20   p &lt; .001   &lt;- exact hetzelfde</code></pre>
+<p>In oefening 3.2 was centreren een leuk extraatje. Hier is het dat niet meer, en dat kun je in één regel zien. Draai hetzelfde model nog eens, nu zonder te centreren:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · dezelfde data, ongecentreerd · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · dezelfde data, ongecentreerd · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Maak met <strong>Compute Column</strong> de kolom <code>vinXsnav_ruw</code> als <code>vinlengte * snavellengte</code>, en draai de <strong>Linear Regression</strong> opnieuw met de <strong>ruwe</strong> kolommen: <code>vinlengte</code>, <code>snavellengte</code> en <code>vinXsnav_ruw</code> als <strong>Covariates</strong>.</p>
+<p>In <strong>Coefficients</strong> staat <code>vinlengte</code> nu op −7.309 met <em>p</em> = 0.627, en <code>snavellengte</code> op −229.242 met <em>p</em> &lt; .001. <code>vinXsnav_ruw</code> staat op 1.200 met <em>p</em> &lt; .001 — exact wat <code>vinXsnav</code> in het gecentreerde model gaf. En <code>(Intercept)</code> is verschoven naar 5090.509.</p>
+</div>
+</div>
 <p>Kijk naar de eerste regel. De helling van gewicht op vinlengte is nu <strong>−7.31</strong>. Negatief. Alsof een langere vin een pinguïn <em>lichter</em> maakt.</p>
 <p>Dat is geen rekenfout en het spreekt oefening 3.2 niet tegen. Het is de helling van gewicht op vinlengte <strong>bij een snavellengte van nul millimeter</strong> — bij een pinguïn zonder snavel. Zo’n dier bestaat niet, de data bevat er geen enkele in de buurt van, en het model verzint daar dus maar wat. Je leest een echt getal af op een onmogelijk adres.</p>
 <p>De interactie blijft ondertussen exact 1.20, gecentreerd of niet. Dát is het patroon: <strong>centreren raakt de hoofdeffecten en laat de interactie met rust.</strong> En precies daarom kun je het niet overslaan — het getal dat je wél mag aflezen verandert van betekenis, en niets in de uitvoer waarschuwt je.</p>
@@ -793,7 +797,7 @@ vinXsnav_ruw     b =    1.20   p &lt; .001   &lt;- exact hetzelfde</code></pre>
 <p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; het door elkaar husselen en duizend keer opnieuw kijken is <em>code</em>-werk. Voor deze interactie is er (nog) geen browser-speeltje — dus voor de schud-ervaring <strong>draai je het R-broertje</strong>, waar het husselen een paar regels code is. Dat is geen gemis van jou of van JASP: het boek doet het bewust zo, de simulatie leeft in de code en in de speeltjes.</p>
 <p>Wat je daar ziet: <strong>duizend werelden waarin de snavellengte de vin-gewicht-relatie niet modereert.</strong> Het gemiddelde van die duizend is −0.002 — zo goed als nul, precies zoals het hoort, want in elke geschudde wereld ís de waarheid nul. En tóch landt geen enkele wereld precies op nul: ze dansen eromheen, met een spreiding van 0.27, en de wildste haalde 0.94.</p>
 <p>En dan de echte 1.1998, buiten het hele bergje. Geen van de duizend kwam er in de buurt. De echte pinguïns weten iets wat de geschudde niet weten: bij een langere snavel telt een millimeter vin écht zwaarder mee.</p>
-<p>Kijk voor de aardigheid ook eens wat er in zo’n geschudde wereld met de drie simple slopes gebeurt. Die komen alle drie rond de 49.6 uit te liggen — de gewone helling van gewicht op vinlengte over alle pinguïns, zonder waaier. Als er niets te moduleren valt, valt de waaier dicht tot één lijn.</p>
+<p>Kijk voor de aardigheid ook eens wat er in zo’n geschudde wereld met de drie simple slopes gebeurt. Die komen alle drie rond de 49.7 uit te liggen — de gewone helling van gewicht op vinlengte over alle pinguïns, zonder waaier. Als er niets te moduleren valt, valt de waaier dicht tot één lijn.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
@@ -806,7 +810,7 @@ vinXsnav_ruw     b =    1.20   p &lt; .001   &lt;- exact hetzelfde</code></pre>
 <p>En daar zit iets in verstopt wat makkelijk te missen is. Een interactie is <strong>symmetrisch</strong>. Wij hebben hem gelezen als <em>“hoe langer de snavel, hoe zwaarder elke millimeter vin telt”</em>, maar je mag hem net zo goed omdraaien: <em>“hoe langer de vin, hoe zwaarder elke millimeter snavel telt”</em>. Het is één getal en het staat op één regel; welke van de twee de moderator heet, is jouw keuze en niet die van het model. Bij een groep als moderator voelde dat vanzelfsprekend — soort modereert vinlengte, niet andersom — maar dat kwam alleen doordat een soort geen helling kán hebben. Tussen twee getallen is die asymmetrie weg.</p>
 <p>Kies dus bewust. Wat je de moderator noemt, bepaalt welk verhaal je vertelt, en je moet dat verhaal kunnen verdedigen met iets buiten de statistiek om: theorie, of de volgorde waarin de dingen gebeuren.</p>
 <p><strong>Wat dit hoofdstuk bij elkaar houdt.</strong> In 10.1 was de moderator een groep en kon je het tekenen; de hellingen rolden uit de tabel omdat elke groep er een had. Hier is de moderator een getal, is er geen enkele groep om een helling van af te lezen, en moet je zélf de plekken kiezen waarop je kijkt. Dat is de hele stap. Alles eromheen — de interactieterm, het product, de vraag of het verschil in verschil groot genoeg is — is hetzelfde gebleven.</p>
-<p>En de vraag eronder ook. Ook hier geldt wat Ben over de therapie zei: het gaat er niet om óf vinlengte effect heeft op gewicht, maar <strong>onder welke conditie</strong>, en hoeveel. Alleen is de conditie nu geen hokje meer maar een schaal waarop je zelf een plek moet aanwijzen.</p>
+<p>En de vraag eronder ook. Denk aan de therapie in het land waar geen eten is: het gaat er niet om óf vinlengte effect heeft op gewicht, maar <strong>onder welke conditie</strong>, en hoeveel. Alleen is de conditie nu geen hokje meer maar een schaal waarop je zelf een plek moet aanwijzen.</p>
 <div class="kicker">
 <p>jouw beurt</p>
 </div>
@@ -815,7 +819,7 @@ vinXsnav_ruw     b =    1.20   p &lt; .001   &lt;- exact hetzelfde</code></pre>
 <h2 class="anchored" data-anchor-id="een-tweede-moderator-die-de-waaier-de-andere-kant-op-zet">Een tweede moderator, die de waaier de andere kant op zet</h2>
 <p><span class="begrippen">continue moderatie · negatieve interactie</span></p>
 <p>Jouw beurt. Je hebt gezien dat de snavel<strong>lengte</strong> het effect van vinlengte op gewicht versterkt: hoe langer de snavel, hoe zwaarder elke millimeter vin telt. Er staat nog een kolom in het bestand die je niet gebruikt hebt: de snavel<strong>diepte</strong> — hoe hoog de snavel is, van boven naar onder. Dezelfde vraag, dezelfde uitkomst, dezelfde vin-voorspeller, andere moderator.</p>
-<p>Zet eerst klaar, en beantwoord daarna de vragen. De laatste heet met opzet <strong>Z)</strong> en niet l): de aannames staan altijd achteraan, en die vreemde letter zegt <em>“en ook, elke keer, deze”</em>.</p>
+<p>Zet eerst klaar, en beantwoord daarna de vragen. De laatste heet met opzet <strong>Z)</strong> en niet l): de aannames staan altijd achteraan, en die vreemde letter zegt <em>“en ook, elke keer, deze”</em>. En onder <em>Tentamenvragen</em>, aan het eind van deze oefening, staan dezelfde onderwerpen nog een keer in de vorm waarin een tentamen ze stelt.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet klaar · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -827,7 +831,7 @@ vinXsnav_ruw     b =    1.20   p &lt; .001   &lt;- exact hetzelfde</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <p>Maak twee kolommen met <strong>Compute Column</strong> (<strong>R</strong>-modus):</p>
-<pre><code>dp_c      -&gt;   snaveldiepte - mean(snaveldiepte)   # gemiddelde: 17.15 mm
+<pre><code>dp_c      -&gt;   snaveldiepte - mean(snaveldiepte)
 vinXdp    -&gt;   vin_c * dp_c</code></pre>
 <p>Draai dan <strong>Regression → Linear Regression</strong>: <code>gewicht</code> als <strong>Dependent Variable</strong>, en <code>vin_c</code>, <code>dp_c</code> én <code>vinXdp</code> als <strong>Covariates</strong>. Vink onder <strong>Statistics</strong> ook <strong>Confidence intervals</strong> aan — die heb je bij e) nodig.</p>
 </div>
@@ -858,7 +862,7 @@ vinXdp    -&gt;   vin_c * dp_c</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -867,7 +871,7 @@ vinXdp    -&gt;   vin_c * dp_c</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> <em>M</em> = 17.15 mm, <em>SD</em> = 1.97 mm.</p>
 <p><strong>b)</strong> Vier getallen, vier adressen:</p>
@@ -881,14 +885,40 @@ vinXdp    -&gt;   vin_c * dp_c</code></pre>
 <p><strong>d)</strong> De nulhypothese: het effect van vinlengte op gewicht hangt niet af van de snaveldiepte. In symbolen: <span class="math inline">\(H_0:\ \beta_3 = 0\)</span> tegen <span class="math inline">\(H_1:\ \beta_3 \neq 0\)</span>, waarin <span class="math inline">\(\beta_3\)</span> het gewicht van de interactieterm in de populatie is. Je mag ook zeggen dat de helling van de vin voor elke snaveldiepte dezelfde is; één van de twee is genoeg. Grieks, want het gaat over de populatie en niet over deze 342.</p>
 <p><strong>e)</strong> <em>b</em> = −8.60, <em>SE</em> = 1.34, <em>t</em>(338) = −6.41, <em>p</em> &lt; .001, 95% CI [−11.23, −5.96]. Het interval blijft ruim aan één kant van de nul.</p>
 <p><strong>f)</strong> Bij 15.18, 17.15 en 19.13 mm: één standaardafwijking onder het gemiddelde, het gemiddelde zelf, en één erboven. Dat is een afspraak en geen wet — er staat nergens een pinguïn met het bordje “ondiepe snavel” om zijn nek. Je moest ergens gaan staan, en dit is waar iedereen gaat staan.</p>
-<p><strong>g)</strong> <strong>65.61 · 48.63 · 31.66</strong> gram per millimeter. Kwam jij op 65.57 en 31.69 uit? Dan heb je met de afgeronde 48.63, 8.60 en 1.97 gerekend — die paar honderdsten zijn het afronden, niet jij. Met één decimaal meer (48.635, −8.596 en 1.975) land je op 65.61 en 31.66.</p>
+<p><strong>g)</strong> <strong>65.61 · 48.63 · 31.66</strong> gram per millimeter.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · als je met de hand rekent">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · als je met de hand rekent
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kwam jij op 65.57 en 31.69 uit? Dan heb je met de afgeronde 48.63, 8.60 en 1.97 gerekend — die paar honderdsten zijn het afronden, niet jij. Met één decimaal meer (48.635, −8.596 en 1.975) land je op 65.61 en 31.66.</p>
+</div>
+</div>
 <p><strong>h)</strong> 65.61 / 31.66 = <strong>2.07</strong> keer. Bij een ondiepe snavel telt een millimeter vin dus ruim tweemaal zo zwaar als bij een diepe.</p>
 <p><strong>i)</strong> Hetzelfde: allebei de moderatoren zijn een getal, allebei op precies dezelfde 342 pinguïns, met dezelfde uitkomstmaat en dezelfde voorspeller. Tegengesteld: bij de snavellengte loopt de reeks omhoog (38.84 → 45.39 → 51.94), hier omlaag (65.61 → 48.63 → 31.66). Twee moderatoren die de waaier de tegengestelde kant op kantelen.</p>
 <p><strong>j)</strong> <em>“Per millimeter langere vin gaat er 8.60 gram per millimeter af van de helling van de snaveldiepte.”</em> Precies hetzelfde getal, precies dezelfde regel in de tabel — alleen jouw verhaal is omgedraaid. Welke van de twee je de moderator noemt, is jouw keuze en niet die van het model.</p>
 <p><strong>k)</strong> <strong>Gelijk blijft de interactie: −8.60</strong>, tot op de decimaal. <strong>Onherkenbaar verandert <code>vinlengte</code>: van 48.63 naar 196.07.</strong> Dat komt doordat je hem nu afleest bij een snaveldiepte van nul millimeter — bij een pinguïn zónder snavel. Zo’n dier bestaat niet, de data bevat er geen enkele in de buurt van, en het model verzint daar maar wat. Dat is het patroon van dit blok: centreren verzet alleen waar de nul ligt, dus het raakt de hoofdeffecten en laat de interactie met rust.</p>
-<p><strong>l)</strong> Je weet het op dit punt nog niet, en dat is het eerlijke antwoord. De Gentoo’s hebben gemiddeld een snaveldiepte van 14.98 mm tegen 18.37 bij de rest, dus “ondiepe snavel” en “Gentoo” zijn bijna hetzelfde bericht. Om ze uit elkaar te trekken moet je één van de twee vasthouden: draai de interactie <strong>binnen</strong> één soort, want daar valt aan de soort niets meer te variëren. Dat doe je in de Eindopdracht hieronder, bij k). Dit is de vraag uit oefening 8.2 in een nieuw jasje: een verband dat verdwijnt zodra je een derde variabele in het model zet die met allebei samenhangt.</p>
+<p><strong>l)</strong> Je weet het op dit punt nog niet, en dat is het eerlijke antwoord. De Gentoo’s hebben gemiddeld een snaveldiepte van 14.98 mm tegen 18.37 bij de rest, dus “ondiepe snavel” en “Gentoo” zijn bijna hetzelfde bericht. Om ze uit elkaar te trekken moet je één van de twee vasthouden: draai de interactie <strong>binnen</strong> één soort, want daar valt aan de soort niets meer te variëren. Dat doe je in de Eindopdracht hieronder, bij l). Dit is de vraag uit oefening 8.2 in een nieuw jasje: een verband dat verdwijnt zodra je een derde variabele in het model zet die met allebei samenhangt.</p>
 <p><strong>Z)</strong> Eerst de nieuwe aanname, want die is de belangrijkste. De snaveldiepte loopt in deze data van <strong>13.1 tot 21.5 mm</strong>, en je leest af op 15.18, 17.15 en 19.13 — alle drie ruim binnen dat bereik. Er zitten zelfs 23 pinguïns binnen een kwart millimeter van je onderste afleespunt en 29 binnen een kwart millimeter van je bovenste. Je leest je hellingen dus af op adressen waar écht dieren wonen. Was een van de drie buiten het bereik gevallen, dan had je een helling gerapporteerd voor een pinguïn die niet bestaat — precies de fout die de ongecentreerde 196.07 bij k) maakt.</p>
-<p>De gewone drie houden ook stand; de residu-getallen hierna zijn in het R-broertje nagemeten, want jouw scherm zet ze niet zelf op een rij. De residuen liggen in een egale band: bij de lage helft van de voorspelde waarden is hun standaardafwijking 359.85 gram, bij de hoge helft 381.21 — een verhouding van 1.06, geen trechter. Ze liggen bijna symmetrisch (scheefheid 0.37). En elke pinguïn is één keer gewogen, dus de waarnemingen zijn onafhankelijk.</p>
+<p>De gewone drie houden ook stand. De residuen liggen in een egale band: bij de lage helft van de voorspelde waarden is hun standaardafwijking 359.85 gram, bij de hoge helft 381.21 — een verhouding van 1.06, geen trechter. Ze liggen bijna symmetrisch (scheefheid 0.37). En elke pinguïn is één keer gewogen, dus de waarnemingen zijn onafhankelijk.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · waar die residu-getallen vandaan komen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · waar die residu-getallen vandaan komen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De standaardafwijkingen per helft (359.85 en 381.21) en de scheefheid (0.37) zijn in het R-broertje nagemeten, want jouw scherm zet ze niet zelf op een rij.</p>
+</div>
+</div>
 <p>Eén ding om op te merken en niet af te doen als niets: vinlengte en snaveldiepte hangen onderling samen, <em>r</em> = −.58. Dat is genoeg om de standaardfouten wat op te blazen, maar niet genoeg om het model onbruikbaar te maken.</p>
 <p>De weg terug, voor als de residuen wél getrechterd hadden:</p>
 <ul>
@@ -924,14 +954,14 @@ vinXdp    -&gt;   vin_c * dp_c</code></pre>
 <li><p><strong>Geknipt in tweeën</strong>, bij de middelste snavel. Twee kolommen erbij:</p>
 <pre><code>lang       -&gt;   as.numeric(snavellengte &gt;= median(snavellengte))
 vinXlang   -&gt;   vin_c * lang</code></pre>
-<p>Dan dezelfde regressie met <code>vin_c</code>, <code>lang</code> én <code>vinXlang</code>.</p></li>
+<p>Dan dezelfde regressie met <code>vin_c</code>, <code>lang</code> én <code>vinXlang</code>. Wil je <code>lang</code> straks bij <strong>Split</strong> of in een kruistabel gebruiken, zet hem dan even op <strong>Nominal</strong>, en voor de regressie weer terug op <strong>Scale</strong>.</p></li>
 <li><p><strong>Geknipt in drieën</strong>, in vrijwel even grote klassen. Maak de kolom <code>klasse</code>:</p>
 <pre><code>cut(snavellengte, c(-Inf, quantile(snavellengte, c(1/3, 2/3)), Inf),
     labels = c("kort", "midden", "lang"))</code></pre>
-<p>Zet hem op <strong>Nominal</strong>. Het model is hier een <strong>ANOVA → ANCOVA</strong>: <code>gewicht</code> naar <strong>Dependent Variable</strong>, <code>klasse</code> naar <strong>Fixed Factors</strong>, <code>vin_c</code> naar <strong>Covariates</strong>, en voeg onder <strong>Model</strong> de interactieterm <code>vin_c✻klasse</code> toe. Wil je straks de drie hellingen los: filter op <code>klasse == "kort"</code> en draai een gewone regressie van <code>gewicht</code> op <code>vin_c</code>, en zo verder — en zet het filter daarna weer uit.</p></li>
+<p>Zet hem op <strong>Nominal</strong>. Het model is hier een <strong>ANOVA → ANCOVA</strong>: <code>gewicht</code> naar <strong>Dependent Variable</strong>, <code>klasse</code> naar <strong>Fixed Factors</strong>, <code>vin_c</code> naar <strong>Covariates</strong>, en voeg onder <strong>Model</strong> de interactieterm <code>vin_c✻klasse</code> toe. Wil je straks de drie hellingen los: zet het <strong>trechtertje</strong> op <code>klasse == "kort"</code> en draai een gewone regressie van <code>gewicht</code> op <code>vin_c</code>, en zo verder — en zet het filter daarna weer uit.</p></li>
 <li><p><strong>De echte soort</strong>, uit <a href="../20_blokken/blok_interactie.html">Oefening 10.1</a>: dezelfde ANCOVA, met <code>soort</code> in plaats van <code>klasse</code>.</p></li>
 </ol>
-<p>De twee regressies zetten <em>R</em>² in <strong>Model Summary</strong>; de ANCOVA geeft hem onder zijn tabel — staat hij er niet, vink dan onder <strong>Options</strong> de optie <strong>η²</strong> aan.</p>
+<p>De twee regressies zetten <em>R</em>² in <strong>Model Summary</strong>. De ANCOVA drukt hem niet af; voor de <em>R</em>² draai je dezelfde drie termen nog een keer als <strong>Linear Regression</strong>: <code>klasse</code> (of <code>soort</code>) bij <strong>Factors</strong>, <code>vin_c</code> bij <strong>Covariates</strong>, en onder <strong>Model</strong> de interactie <code>vin_c✻klasse</code> erbij. Dan staat hij in <strong>Model Summary</strong>. (Tel de η²’s van de ANCOVA niet op: die rekent standaard met type III, en dan komen ze niet op de <em>R</em>² uit.)</p>
 </div>
 </div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Eindopdracht">
@@ -946,7 +976,7 @@ vinXlang   -&gt;   vin_c * lang</code></pre>
 <div class="callout-body-container callout-body">
 <section id="methode-en-data-analyse" class="level3">
 <h3 class="anchored" data-anchor-id="methode-en-data-analyse">Methode en data-analyse</h3>
-<p><strong>a)</strong> Wat onderzoek je, waarop, en in welke vier gedaanten laat je de moderator meedoen? Schrijf het op zonder één uitkomst te noemen. (twee of drie zinnen; wie of wat er gemeten is, hoeveel, en de vier modellen)</p>
+<p><strong>a)</strong> Wat onderzoek je, waarop, en in welke vier gedaanten laat je de moderator meedoen? Schrijf het op zonder één uitkomst te noemen. (twee of drie zinnen; wie of wat er gemeten is, hoeveel, en de vier modellen; meer antwoorden zijn goed)</p>
 <p><strong>b)</strong> Tel per model hoeveel <strong>parameters</strong> het mag invullen — getallen die het model zelf uit de data haalt. Welke twee paren mag je daarna tegen elkaar uitkomen, en welke niet? (vier getallen en twee paren)</p>
 <p><strong>c)</strong> Waarom mag je <em>R</em>² niet tussen modellen met ongelijke parameteraantallen vergelijken? Zeg het in gewone woorden. (één zin; zie het als draaiknoppen)</p>
 <p><strong>d)</strong> Kijk of elke gedaante genoeg dieren per groep overhoudt: vraag <code>lang</code> en <code>klasse</code> op met <strong>Descriptives</strong> en vink <strong>Frequency tables</strong> aan. En hoeveel pinguïns doen er in alle vier de modellen mee? (twee plus drie groepsaantallen, en één totaal)</p>
@@ -959,14 +989,14 @@ vinXlang   -&gt;   vin_c * lang</code></pre>
 <p><strong>h)</strong> Knip nu in drieën en toets zoals bij de drie soorten: eerst één toets over allebei de interactieregels samen — dat is de regel <code>vin_c✻klasse</code> in je ANCOVA-tabel — dan de drie hellingen los, met het klasse-filter uit het kader hierboven. De twee grenzen lees je af als het maximum binnen <em>kort</em> en binnen <em>midden</em>: <strong>Descriptives</strong>, <code>snavellengte</code> bij <strong>Variables</strong> en <code>klasse</code> bij <strong>Split</strong>. (rapporteer de twee grenzen, <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>), <em>p</em> en de drie hellingen)</p>
 <p><strong>i)</strong> Zet de vier <em>R</em>²’s op een rij, en vergelijk alleen wat je bij b) mocht vergelijken. Waar zit de verrassing? (vier <em>R</em>²’s en één zin)</p>
 <p><strong>j)</strong> Die verrassing is niet gratis. Tel na wie er in die groepen zit: <strong>Frequencies → Contingency Tables</strong>, met <code>lang</code> bij <strong>Rows</strong> en <code>soort</code> bij <strong>Columns</strong>, en daarna nog eens met <code>klasse</code>. Wat blijkt de knip eigenlijk te zijn? (twee percentages en één zin)</p>
-<p><strong>k)</strong> Draai het nu om en geef de groep een getal. Vergelijk de Gentoo-regressie uit oefening 10.1 — <code>gewicht</code> op <code>vinlengte</code>, <code>gentoo</code> én <code>vinXgentoo</code> — met het diepte-model uit je Jouw beurt, en reken uit wat de gemiddelde snaveldiepte van de Gentoo’s bij een interactie van −8.60 zou voorspellen. Die twee gemiddelden: <strong>Descriptives</strong>, <code>snaveldiepte</code> bij <strong>Variables</strong> en <code>gentoo</code> bij <strong>Split</strong>. (twee <em>R</em>²’s, twee gemiddelde diepten, en één voorspelde helling naast één gemeten)</p>
-<p><strong>l)</strong> Houd tot slot één soort tegelijk vast en draai dezelfde interactie binnen elke soort: zet het <strong>Filter</strong> op <code>soort == "Adelie"</code> en draai de regressie met <code>vin_c</code>, <code>dp_c</code> én <code>vinXdp</code>; herhaal voor <code>"Chinstrap"</code> en <code>"Gentoo"</code>, en zet het filter daarna weer uit. Wat blijft er van de snaveldiepte over? (per soort <em>b</em>, <em>SE</em> en <em>p</em>, en daarna twee of drie zinnen met je eerlijke antwoord)</p>
+<p><strong>k)</strong> Draai het nu om en geef de groep een getal. Vergelijk de Gentoo-regressie uit oefening 10.1 — <code>gewicht</code> op <code>vinlengte</code>, <code>gentoo</code> én <code>vinXgentoo</code> — met het diepte-model uit je Jouw beurt, en reken uit wat de gemiddelde snaveldiepte van de Gentoo’s bij een interactie van −8.60 zou voorspellen. Die twee gemiddelden: <strong>Descriptives</strong>, <code>snaveldiepte</code> bij <strong>Variables</strong> en <code>gentoo</code> bij <strong>Split</strong> (zet <code>gentoo</code> daarvoor even op <strong>Nominal</strong>). (twee <em>R</em>²’s, twee gemiddelde diepten, en één voorspelde helling naast één gemeten)</p>
+<p><strong>l)</strong> Houd tot slot één soort tegelijk vast en draai dezelfde interactie binnen elke soort: zet het <strong>trechtertje</strong> op <code>soort == "Adelie"</code> en draai de regressie met <code>vin_c</code>, <code>dp_c</code> én <code>vinXdp</code>; herhaal voor <code>"Chinstrap"</code> en <code>"Gentoo"</code>, en zet het filter daarna weer uit. Wat blijft er van de snaveldiepte over? (per soort <em>b</em>, <em>SE</em> en <em>p</em>, en daarna twee of drie zinnen met je eerlijke antwoord)</p>
 <p><strong>Z) Mag je alles hierboven geloven?</strong> Je hebt bij b) en c) al gecontroleerd of de vergelijking eerlijk was — dus nu de vraag die erachteraan hoort. Waar kwam die mediaan van 44.45 mm vandaan, en waarom is de <em>R</em>² van .7762 daardoor eerder te mooi dan te lelijk? (één zin over waar het mes vandaan kwam, en in welke richting dat je uitkomst duwt)</p>
 </section>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -975,7 +1005,7 @@ vinXlang   -&gt;   vin_c * lang</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <section id="methode-en-data-analyse-1" class="level3">
 <h3 class="anchored" data-anchor-id="methode-en-data-analyse-1">Methode en data-analyse</h3>
@@ -1045,6 +1075,109 @@ vinXlang   -&gt;   vin_c * lang</code></pre>
 </blockquote>
 <p>Leg hem naast de modelzin bovenaan deze rapportage. Die moest zeggen op welke waarden je de hellingen hebt afgelezen; deze moet zeggen waar het mes viel. Twee keer dezelfde plicht — een helling zonder adres is niet na te rekenen — alleen het soort adres verschilt. En ja: eerder in deze oefening stond dat je níét moet knippen als je echt gaat rapporteren. Dat advies staat nog steeds. Maar wie tóch knipt, zegt het er in elk geval bij, want het is een keuze die de getallen verandert — en dat is precies wat je in de eindopdracht zag gebeuren.</p>
 <p>Jouw beurt, de laatste van dit hoofdstuk: schrijf de rapportage-zin voor de knip in drieën. Je hebt eraan: de modelvergelijking van h), <em>F</em>(2, 336) = 20.89, <em>p</em> &lt; .001, de drie hellingen (23.02, 42.22 en 60.26 g/mm) en de twee grenzen (40.80 en 46.73 mm). De eerste modelzin uit de rapportage van <a href="../20_blokken/blok_interactie.html">Oefening 10.1</a> — die over de drie soorten — mag je als voorbeeld ernaast leggen, want dit is precies dat model, alleen met geknipte klassen in plaats van echte soorten. En keur je eigen zin daarna op de nieuwe eis: kan een lezer aan jouw woorden zien dát de snavellengte geknipt is, en waar de grenzen lagen?</p>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">waar de nul woont · simple slopes als gekozen plek · symmetrie</span></p>
+<p>Deze vijf hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord. Er staan er vijf en geen zes, want deze oefening is de langste van het hoofdstuk. Bij vraag 2 reken je; bij de rest kies je.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> In het <strong>ongecentreerde</strong> model, met de ruwe <code>vinlengte</code>, <code>snavellengte</code> en hun product <code>vinXsnav_ruw</code>, staat <code>vinlengte</code> op −7.31 gram per millimeter. Welke omschrijving is de beste?</p>
+<ol type="a">
+<li>Dit is de helling bij een snavellengte van nul millimeter, en zo’n dier bestaat niet.</li>
+<li>Een langere vin gaat bij deze pinguïns samen met een lichter dier.</li>
+<li>Het model is verkeerd opgeschreven, want deze helling kan niet negatief zijn.</li>
+<li>Het centreren is vergeten, en daardoor is ook de interactie onbetrouwbaar geworden.</li>
+</ol>
+<p><strong>2.</strong> De helling van gewicht op vinlengte is 45.39 gram per millimeter bij een gemiddelde snavel, de interactie is 1.20, en de standaardafwijking van de snavellengte is 5.46 mm. Hoe steil loopt het bij een snavel van één standaardafwijking boven het gemiddelde?</p>
+<ol type="a">
+<li>38.84</li>
+<li>46.59</li>
+<li>51.94</li>
+<li>57.27</li>
+</ol>
+<p><strong>3.</strong> Je draait hetzelfde model nog een keer, nu zonder de twee voorspellers te centreren. Welk van deze vier getallen komt er precies hetzelfde uit?</p>
+<ol type="a">
+<li>Het intercept.</li>
+<li>De helling van gewicht op vinlengte.</li>
+<li>De helling van gewicht op snavellengte.</li>
+<li>De interactie.</li>
+</ol>
+<p><strong>4.</strong> Je rapporteert de hellingen op een snavellengte van 38.46, 43.92 en 49.38 mm. Welke uitspraak over die drie waarden is de beste?</p>
+<ol type="a">
+<li>Het zijn de drie groepen waarin de pinguïns uiteenvallen: korte, gemiddelde en lange snavels.</li>
+<li>Het zijn de drie waarden waarop de interactie significant is.</li>
+<li>Het zijn drie plekken op een glijdende schaal die jij gekozen hebt.</li>
+<li>Het zijn de mediaan van de snavellengte en de twee kwartielen eromheen.</li>
+</ol>
+<p><strong>5.</strong> De interactie tussen vinlengte en snavellengte staat op 1.20. Iemand zegt: <em>“dan is de snavellengte dus de moderator.”</em> Welke reactie is de beste?</p>
+<ol type="a">
+<li>Dat kun je nagaan door beide modellen te draaien en te kijken welk van de twee de hoogste <em>R</em>² geeft.</li>
+<li>Het is één getal op één regel, en je mag het beide kanten op lezen.</li>
+<li>Dat klopt, want de snavellengte staat in je model ná de vinlengte.</li>
+<li>Dat klopt niet, want tussen twee getallen bestaat geen moderator — alleen een interactie.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 a · 2 c · 3 d · 4 c · 5 b</strong></p>
+<p>Hieronder staat per vraag eerst waaróm het goede antwoord goed is, en dan per foute optie één regel. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. a.</strong> Een coëfficiënt in een model met een interactie is altijd de helling <strong>bij nul van de ander</strong>, en nul snavellengte is hier een onbewoond adres.</p>
+<ul>
+<li><strong>b</strong> — leest het getal gewoon voor, en zegt dan iets onwaars over pinguïns: in oefening 3.2 gaat een langere vin juist samen met een zwaarder dier, 49.69 gram per millimeter.</li>
+<li><strong>c</strong> — verwart een onzinnige uitkomst met een fout model. Het model is precies goed opgeschreven en antwoordt braaf op een vraag die niemand wilde stellen.</li>
+<li><strong>d</strong> — eerste helft goed, tweede fout: de interactie is gecentreerd of niet exact 1.1998. Centreren raakt de hoofdeffecten en laat de interactie met rust.</li>
+</ul>
+<p><strong>2. c.</strong> 45.39 + 1.20 × 5.46 = <strong>51.94</strong> gram per millimeter.</p>
+<ul>
+<li><strong>a</strong> — dezelfde som met een minteken, dus de korte snavel in plaats van de lange.</li>
+<li><strong>b</strong> — de fout die bijna iedereen één keer maakt: de standaardafwijking vergeten en 45.39 + 1.20 opschrijven. De interactie is een helling per millimeter snavel, dus hij moet mee met hoeveel millimeter je opschuift.</li>
+<li><strong>d</strong> — een echt getal uit dit blok: de helling in de lange helft ná de mediaan-knip. Verleidelijk, want ook dat gaat over lange snavels — maar een mediaan-knip zet de uitersten tegenover elkaar en komt daarom forser uit.</li>
+</ul>
+<p><strong>3. d.</strong> De interactie: 1.1998 met en zonder centreren, tot op de laatste decimaal. Centreren verschuift waar de nul ligt, en de interactie zegt niets over waar je staat maar over hoe het verloop verandert.</p>
+<ul>
+<li><strong>a</strong> — springt van 4141.49 gram, het gewicht van een doorsnee pinguïn, naar 5090.51: ruim vijf kilo voor een dier met een vin én een snavel van nul millimeter.</li>
+<li><strong>b</strong> — gaat van 45.39 naar −7.31 gram per millimeter, en dat is vraag 1.</li>
+<li><strong>c</strong> — maakt de omslag van 11.82 naar −229.24 gram per millimeter snavel, dus ook van plus naar min.</li>
+</ul>
+<p><strong>4. c.</strong> Je moest ergens gaan staan, en dit is waar iedereen gaat staan — een afspraak, geen wet. Kies je andere waarden, dan krijg je andere hellingen terwijl het model hetzelfde gebleven is.</p>
+<ul>
+<li><strong>a</strong> — de misvatting die het woord <em>simple slopes</em> uitlokt: er staat nergens een pinguïn met een bordje “lange snavel” om zijn nek.</li>
+<li><strong>b</strong> — maakt er een uitspraak over significantie van. De interactie is één toets (<em>p</em> &lt; .001) en niet drie.</li>
+<li><strong>d</strong> — narekenbaar onwaar: de mediaan van de snavellengte is 44.45 mm en niet 43.92 — dat laatste is het <strong>gemiddelde</strong>. Deze drie waarden zijn het gemiddelde met één standaardafwijking eraf en erbij.</li>
+</ul>
+<p><strong>5. b.</strong> Een interactie is symmetrisch: <em>“hoe langer de snavel, hoe zwaarder elke millimeter vin telt”</em> en <em>“hoe langer de vin, hoe zwaarder elke millimeter snavel telt”</em> zijn dezelfde 1.20. Welke van de twee je de moderator noemt, is dus jouw keuze — en die verdedig je met theorie, of met de volgorde waarin de dingen gebeuren. Niet met een getal uit de uitvoer.</p>
+<ul>
+<li><strong>a</strong> — de scherpste afleider, want die toets kun je echt doen; er komt alleen niets uit. Of je de productkolom nu als <code>vin_c * snav_c</code> of als <code>snav_c * vin_c</code> uitrekent, het is dezelfde kolom en dus hetzelfde model, met dezelfde <em>R</em>² van .7694.</li>
+<li><strong>c</strong> — haalt het uit de volgorde waarin je de kolommen invoert, en die doet hier niets.</li>
+<li><strong>d</strong> — gooit een bruikbaar woord weg: moderatie bestaat prima tussen twee getallen. Wat niet bestaat, is een moderator die het model voor je kiest.</li>
+</ul>
+<p>De getallen in deze vijf vragen staan allemaal al eerder op deze bladzij: in de lopende tekst, of in een JASP-kader — met de drie decimalen die JASP toont. Daar staat ook het intercept van het ongecentreerde model, 5090.509, en staan de twee snavel-hellingen van vraag 3 als 11.825 en −229.242 (die 11.825 is voluit 11.8249, vandaar 11.82 bij vraag 3). Eén getal is nieuw, de afleider 46.59 bij vraag 2, en die staat hierboven als som voluit: 45.39 + 1.20. Zo kun je alles narekenen zonder het te geloven.</p>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="W10">

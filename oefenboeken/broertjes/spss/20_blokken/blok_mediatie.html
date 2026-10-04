@@ -621,6 +621,7 @@ window.Quarto = {
   <li><a href="#wat-mediatie-wél-en-niet-bewijst" id="toc-wat-mediatie-wél-en-niet-bewijst">Wat mediatie wél en niet bewijst</a></li>
   <li><a href="#nu-de-omweg-van-de-wind" id="toc-nu-de-omweg-van-de-wind">Nu de omweg van de wind</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -656,23 +657,28 @@ window.Quarto = {
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p>SPSS heeft geen mediatie-knop in het basispakket; dit gaat via de <strong>PROCESS</strong>-macro van Hayes (model 4), of met twee losse regressies:</p>
+<p>SPSS heeft geen mediatie-knop in het basispakket. Het gaat via <strong>PROCESS</strong> (model 4), of met drie losse regressies onder <strong>Analyze → Regression → Linear</strong>. Lees telkens de kolom <strong>B</strong> in de tabel <strong>Coefficients</strong>:</p>
 <ol type="1">
-<li><code>gladheid</code> op <code>karaat</code> → dat is pad <em>a</em> (3.93).</li>
-<li><code>glans</code> op <code>karaat</code> én <code>gladheid</code> → <code>gladheid</code> is pad <em>b</em> (7.93), <code>karaat</code> is het directe effect (0.98).</li>
+<li><code>glans</code> als <strong>Dependent</strong>, <code>karaat</code> als <strong>Independent(s)</strong> → het totale effect: 32.143.</li>
+<li><code>gladheid</code> als <strong>Dependent</strong>, <code>karaat</code> als <strong>Independent(s)</strong> → pad <em>a</em>: 3.929.</li>
+<li><code>glans</code> als <strong>Dependent</strong>, <code>karaat</code> én <code>gladheid</code> als <strong>Independent(s)</strong> → bij <code>gladheid</code> staat pad <em>b</em> (7.932), bij <code>karaat</code> het directe effect (.980).</li>
 </ol>
-<p><em>a</em> × <em>b</em> = 31.16 van de totale 32.14 — 97% via de slijper.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<pre><code>REGRESSION /DEPENDENT gladheid /METHOD=ENTER karaat.
+<pre><code>* het totale effect: glans op karaat alleen.
+REGRESSION /DEPENDENT glans /METHOD=ENTER karaat.
 
+* pad a: gladheid op karaat.
+REGRESSION /DEPENDENT gladheid /METHOD=ENTER karaat.
+
+* pad b en het directe effect: glans op karaat en gladheid samen.
 REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<p>Het pad karaat → gladheid → glans draagt <em>a</em> × <em>b</em> = 31.16 van het totale effect van 32.14: 97% loopt via de slijper, en wat rechtstreeks overblijft is die 0.98 uit het vorige hoofdstuk.</p>
+<p>Het pad karaat → gladheid → glans draagt <em>a</em> × <em>b</em> = 31.16 van het totale effect van 32.14: 97% loopt via de slijper, en wat rechtstreeks overblijft is die 0.98 uit het blok over meervoudige regressie.</p>
 <p><strong>Nu jij</strong> — met de luchtmetingen die je in oefening 2.1 al zag. Bekende data, nieuwe vraag: die helling van 0.13, langs welke weg loopt die eigenlijk?</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · trek eraan · PROCESS model 4">
 <div class="callout-header d-flex align-content-center">
@@ -684,17 +690,30 @@ REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <ol type="1">
 <li>Open <code>luchtkwaliteit.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype op <strong>CSV</strong>.</li>
-<li>Nog geen PROCESS? Haal ’m gratis bij de site van Hayes en installeer via <strong>Extensions → Utilities → Install Custom Dialog</strong>. Daarna staat hij onder <strong>Analyze → Regression → PROCESS</strong>.</li>
+<li>Nog geen PROCESS? Hoe je hem installeert staat in <a href="../installatie.html">Oefening 0.0</a>, onder <em>PROCESS van Hayes</em>. Daarna staat hij onder <strong>Analyze → Regression → PROCESS</strong>.</li>
 <li>Open PROCESS. Zet <strong>Y variable</strong> op <code>ozon</code>, <strong>X variable</strong> op <code>zon</code>, <strong>Mediator(s) M</strong> op <code>temp_F</code>.</li>
 <li>Kies bij <strong>Model number</strong> het getal <strong>4</strong>.</li>
 <li>Draai. PROCESS drukt de paden af én, onderaan, een blok <strong>Total, Direct, and Indirect effects of X on Y</strong>.</li>
 </ol>
 </div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Draai eerst <code>process.sps</code> (zie <a href="../installatie.html">Oefening 0.0</a>); dat moet elke keer dat je SPSS opent.</p>
+<pre><code>* model 4: zon via temp_F naar ozon.
+process y=ozon/x=zon/m=temp_F/model=4.</code></pre>
 </div>
-<p>Wil je het zónder macro checken, dan kun je de drie regressies met de hand draaien via <strong>Analyze → Regression → Linear</strong>: <code>ozon ~ zon</code> geeft het totale effect, <code>temp_F ~ zon</code> geeft pad a, en <code>ozon ~ zon + temp_F</code> geeft pad b én het directe effect. Datzelfde wat PROCESS voor je optelt.</p>
-<p>Kijk naar het effecten-blok. Het <strong>totale</strong> effect van zon op ozon is <strong>0.127</strong>. Het <strong>directe</strong> effect is <strong>0.057</strong> — dat stuk loopt rechtstreeks, buiten de warmte om. En het <strong>indirecte</strong> effect is <strong>0.070</strong> — het stuk dat via de temperatuur wordt doorgegeven. Ze passen op elkaar als puzzelstukjes: 0.057 + 0.070 = 0.127. Direct plus indirect is precies het totaal. Die 0.070 is een product van twee paden: zon warmt de lucht op (pad a ≈ <strong>0.031</strong> graad per streepje) en elke graad warmer levert meer ozon op (pad <em>b</em> ≈ <strong>2.28</strong> ppb per graad). 0.031 × 2.28 ≈ 0.070.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Wil je het zónder macro checken, dan kun je de drie regressies met de hand draaien via <strong>Analyze → Regression → Linear</strong>: <code>ozon</code> op <code>zon</code> alleen geeft het totale effect, <code>temp_F</code> op <code>zon</code> geeft pad <em>a</em>, en <code>ozon</code> op <code>zon</code> en <code>temp_F</code> samen geeft pad <em>b</em> én het directe effect. Precies wat PROCESS voor je uitrekent.</p>
+<p>Kijk naar het effecten-blok. PROCESS drukt vier decimalen af, zonder nul vóór de punt. Het <strong>totale</strong> effect van zon op ozon staat er als <strong>.1272</strong>. Het <strong>directe</strong> effect is <strong>.0571</strong> — dat stuk loopt rechtstreeks, buiten de warmte om. En het <strong>indirecte</strong> effect is <strong>.0701</strong> — het stuk dat via de temperatuur wordt doorgegeven. Ze passen op elkaar als puzzelstukjes: .0571 + .0701 = .1272. Direct plus indirect is precies het totaal.</p>
+<p>Die .0701 is het product van de twee paden, en PROCESS drukt ze allebei af, elk in een eigen model boven het effecten-blok. Zon warmt de lucht op met .0307 graad per streepje (pad <em>a</em>, in het model met <code>temp_F</code> als uitkomst), en elke graad warmer levert 2.2785 ppb meer ozon op bij gelijke zon (pad <em>b</em>, in het model met <code>ozon</code> als uitkomst). Vermenigvuldig je die twee zoals ze er staan, dan komt er .0699 uit en geen .0701. Dat is geen fout van jou: PROCESS vermenigvuldigt de paden vóór hij ze afrondt.</p>
 <div class="kicker">
 <p>trek het opnieuw</p>
 </div>
@@ -714,14 +733,14 @@ REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>Blijf in <strong>PROCESS</strong> met dezelfde velden (Y = <code>ozon</code>, X = <code>zon</code>, <em>M</em> = <code>temp_F</code>, Model 4).</li>
+<li>Blijf in <strong>PROCESS</strong> met dezelfde velden (Y = <code>ozon</code>, X = <code>zon</code>, M = <code>temp_F</code>, Model 4).</li>
 <li>Zet <strong>Number of bootstrap samples</strong> op <strong>1000</strong> (of hoger; 5000 is Hayes’ standaard).</li>
 <li>Laat <strong>Confidence level</strong> op <strong>95</strong> staan en draai.</li>
 <li>Lees onder <strong>Indirect effect(s) of X on Y</strong> de kolommen <strong>BootLLCI</strong> en <strong>BootULCI</strong> — de onder- en bovengrens van het interval.</li>
 </ol>
 </div>
 </div>
-<p>Kijk naar die twee grenzen: het 95%-interval loopt van ongeveer <strong>0.023 tot 0.113</strong> — en het komt met geen enkele voet aan de nul. Duizend hertrekkingen, en het indirecte pad blijft staan. De omweg via de temperatuur is niet toeval; hij is echt. <em>(Je eigen grenzen wijken een paar duizendsten af — een bootstrap trekt elke keer nét andere steekproeven, dus de staart wiebelt een beetje. De boodschap blijft: ruim boven nul.)</em> Draait PROCESS niet, dan is de klassieke vangnet-toets de <strong>Sobel-test</strong>, maar die gaat uit van een symmetrische verdeling die a·b juist niet heeft — de bootstrap is eerlijker.</p>
+<p>Kijk naar die twee grenzen: het 95%-interval loopt van ongeveer <strong>.023 tot .113</strong> — en het komt met geen enkele voet aan de nul. Duizend hertrekkingen, en het indirecte pad blijft staan. De omweg via de temperatuur is niet toeval; hij is echt. <em>(Je eigen grenzen wijken een paar duizendsten af — een bootstrap trekt elke keer nét andere steekproeven, dus de staart wiebelt een beetje. De boodschap blijft: ruim boven nul.)</em> Draait PROCESS niet, dan is de klassieke vangnet-toets de <strong>Sobel-test</strong>, maar die gaat uit van een symmetrische verdeling die <em>ab</em> juist niet heeft — de bootstrap is eerlijker. Die Sobel-test reken je onderaan deze oefening één keer met de hand uit, bij <em>De Sobel-toets op een kladje</em>; hier hoef je er nog niets mee.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
@@ -756,10 +775,12 @@ REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <p>Jouw beurt — dezelfde ontleding, maar nu met de <strong>wind</strong> als startpunt. In <code>luchtkwaliteit.csv</code> zit ook de kolom <code>wind</code> (windsnelheid in mijl/uur). Meer wind gaat samen met mínder ozon; de vraag is weer: loopt dat effect rechtstreeks, of deels via de temperatuur? (Wind koelt de lucht af, koelere lucht maakt minder ozon — dat is de omweg die je gaat opmeten.)</p>
+<p>Onder <em>Tentamenvragen</em>, aan het eind van deze oefening, staan dezelfde onderwerpen nog een keer in de vorm waarin een tentamen ze stelt.</p>
 <ol type="1">
-<li>Draai <strong>PROCESS model 4</strong> opnieuw, maar zet nu de <strong>wind</strong> vooraan: kies <code>wind</code> als <strong>X variable</strong> en laat <code>ozon</code> als <strong>Y variable</strong> en <code>temp_F</code> als <strong>Mediator(s) M</strong> staan. Lees onderaan weer het blok <strong>Total, Direct, and Indirect effects of X on Y</strong>. Ter controle kom je op een <strong>totaal</strong> effect van ongeveer <strong>−5.73</strong>: elke mijl/uur meer wind gaat samen met bijna zes ppb minder ozon.</li>
-<li>Kijk naar de andere twee regels: het <strong>directe</strong> effect is ongeveer <strong>−3.29</strong> en het <strong>indirecte</strong> effect ongeveer <strong>−2.43</strong> — samen precies de −5.73 van het totaal (op afronding na). Ruim veertig procent van het wind-effect loopt dus via de temperatuur.</li>
-<li>Denk-vraag: alle getallen zijn hier negatíef, en tóch klopt de optelsom direct + indirect = totaal net zo netjes als bij de zon. Waaróm mag een indirect pad negatief zijn — en wat betekent een negatief indirect effect eigenlijk voor de omweg die de wind neemt? (Hint: kijk naar het teken van pad a — wat doet wind mét de temperatuur? — en het teken van pad b.)</li>
+<li>Werk met dezelfde 111 dagen als bij de zon. Op vijf dagen is de wind wél gemeten en de zon niet, en zodra <code>zon</code> niet meer in je analyse zit, rekent SPSS die vijf gewoon mee. Kies daarom <strong>Data → Select Cases</strong>, vink <strong>If condition is satisfied</strong> aan, klik <strong>If</strong> en typ <code>NOT MISSING(zon)</code>. Zet onder <strong>Output</strong> de keuze op <strong>Delete unselected cases</strong>, zodat de vijf dagen echt uit je actieve bestand gaan. Je csv op schijf blijft heel, zolang je het bestand niet opslaat.</li>
+<li>Draai <strong>PROCESS model 4</strong> opnieuw, maar zet nu de <strong>wind</strong> vooraan: kies <code>wind</code> als <strong>X variable</strong> en laat <code>ozon</code> als <strong>Y variable</strong> en <code>temp_F</code> als <strong>Mediator(s) M</strong> staan. Kijk eerst bovenaan bij <strong>Sample Size</strong>: daar hoort 111 te staan. Staat er 116, dan zijn de vijf dagen er nog, en klopt geen enkel getal hieronder: ga terug naar stap 1. Lees daarna onderaan weer het blok <strong>Total, Direct, and Indirect effects of X on Y</strong>. Ter controle staat bij het <strong>totale</strong> effect <strong>−5.7288</strong>: elke mijl/uur meer wind gaat samen met bijna zes ppb minder ozon.</li>
+<li>Kijk naar de andere twee regels: het <strong>directe</strong> effect is <strong>−3.2948</strong> en het <strong>indirecte</strong> effect <strong>−2.4340</strong> — samen precies de −5.7288 van het totaal. Ruim veertig procent van het wind-effect loopt dus via de temperatuur.</li>
+<li>Denk-vraag: alle getallen zijn hier negatíef, en tóch klopt de optelsom direct + indirect = totaal net zo netjes als bij de zon. Waaróm mag een indirect pad negatief zijn — en wat betekent een negatief <em>a</em>·<em>b</em> eigenlijk voor de omweg die de wind neemt? (Hint: kijk naar het teken van pad <em>a</em> — wat doet wind mét de temperatuur? — en het teken van pad <em>b</em>.)</li>
 </ol>
 </div>
 </div>
@@ -785,7 +806,123 @@ REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 <p>Om te onderzoeken of de zomerzon boven New York zijn effect op de ozonconcentratie deels via de luchttemperatuur doorgaf, ontleedden we het totale zon-effect (<em>n</em> = 111) in een direct en een indirect deel. Het totale effect bedroeg <em>c</em> = 0.13; daarvan liep <em>c′</em> = 0.06 rechtstreeks en <em>ab</em> = 0.07 via de temperatuur (95% bootstrap-CI [0.02, 0.11], 1000 hertrekkingen) — ruim de helft van het effect nam dus de omweg.</p>
 </blockquote>
 <p>Zie hoe de zin op eigen benen staat: hij noemt de steekproef, de variabelen én de drie paden, en je kunt hem zó uit de opdracht tillen. Twee vormafspraken lopen weer mee: alléén de symbolen <em>c</em>, <em>c′</em>, <em>ab</em> en <em>n</em> zijn cursief — de gewone woorden blijven rechtop — en de getallen krijgen een punt (0.13, geen komma), netjes op twee decimalen.</p>
-<p>Jouw beurt: schrijf zelf zo’n zelfstandige zin voor de omweg van de wind (<em>c</em> = −5.73, <em>c′</em> = −3.29, <em>ab</em> = −2.43). Let op de min-tekens — een omweg mag best de andere kant op wijzen. Hardop voorlezen mag.</p>
+<p>Jouw beurt: schrijf zelf zo’n zelfstandige zin voor de omweg van de wind (<em>c</em> = −5.73, <em>c′</em> = −3.29, <em>ab</em> = −2.43). Let op de min-tekens — een omweg mag best de andere kant op wijzen. En dat −3.29 + −2.43 op −5.72 uitkomt en niet op −5.73, is afronding, geen fout: het model rekent met alle decimalen. Hardop voorlezen mag.</p>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">direct, indirect en totaal · richting van de pijlen · teken van a·b</span></p>
+<p>Deze zes hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord. Bij vraag 1 reken je; bij de rest kies je.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> Bij de zomerzon boven New York is het totale effect van zon op ozon <em>c</em> = 0.127 en het directe effect <em>c′</em> = 0.057. Hoe groot is het indirecte effect <em>ab</em>?</p>
+<ol type="a">
+<li>0.031</li>
+<li>0.070</li>
+<li>0.184</li>
+<li>2.278</li>
+</ol>
+<p><strong>2.</strong> In het model met zon én temperatuur staat de temperatuur op 2.278. Welke omschrijving van dat getal is de beste?</p>
+<ol type="a">
+<li>Elke graad warmere lucht gaat samen met 2.278 ppb meer ozon, bij gelijke zonnestraling.</li>
+<li>Elk streepje zonnestraling erbij gaat samen met 2.278 graad warmere lucht.</li>
+<li>De temperatuur geeft 2.278 keer zoveel effect op de ozon door als de zon rechtstreeks doet.</li>
+<li>Van het totale zon-effect op de ozon loopt 2.278 ppb via de temperatuur.</li>
+</ol>
+<p><strong>3.</strong> Bij <em>Bootstrap het indirecte pad</em> geeft dit blok voor <em>ab</em> een bootstrap-interval en geen gewone foutmarge met een <em>p</em>. Wat is de beste reden?</p>
+<ol type="a">
+<li>Met 111 dagen is de steekproef te klein voor een toets op <em>ab</em>.</li>
+<li>Een bootstrap maakt geen enkele aanname over de data, en zo’n toets wel.</li>
+<li><em>ab</em> is een product van twee schattingen, en dat ligt scheef.</li>
+<li>Het interval laat zien dat de nul er niet in valt, en dat kan een <em>p</em> niet.</li>
+</ol>
+<p><strong>4.</strong> Iemand schrijft “pinguïnsoort → vinlengte → gewicht” op als mediatiemodel: de soort werkt op het gewicht via de vin. Waarom is dat geen mediatie?</p>
+<ol type="a">
+<li>Omdat vinlengte en gewicht te sterk samenhangen (<em>r</em> = .87) om hun paden nog uit elkaar te trekken.</li>
+<li>Omdat pinguïnsoort een categorie is, en mediatie drie getallen nodig heeft.</li>
+<li>Omdat de rekensom op deze data geen bruikbare getallen oplevert.</li>
+<li>Omdat de vin het gewicht niet veroorzaakt: de soort maakt vin én gewicht groot.</li>
+</ol>
+<p><strong>5.</strong> Bij de wind als startpunt komt het indirecte pad op <em>ab</em> = −2.43 uit: een negatief getal. Pad <em>a</em> is daar −1.33 en pad <em>b</em> is +1.83 — op je scherm staan die twee bij <em>Jouw beurt</em> in de uitvoer van PROCESS, met vier decimalen. Waar komt dat minteken vandaan?</p>
+<ol type="a">
+<li>Pad <em>a</em> is negatief en pad <em>b</em> positief; min keer plus is min.</li>
+<li>Pad <em>a</em> en pad <em>b</em> zijn allebei negatief, en min keer min is min.</li>
+<li>Zodra het totale effect negatief is, is het indirecte pad dat ook.</li>
+<li>Er kwam minder ozon uit dan het model voorspelde, en dat verschil draagt een minteken.</li>
+</ol>
+<p><strong>6.</strong> Van het effect van zon op ozon loopt 55% via de temperatuur. Wat mag je daaruit besluiten?</p>
+<ol type="a">
+<li>Dat de temperatuur voor de ozon belangrijker is dan de zon.</li>
+<li>Dat de temperatuur meer dan de helft van het effect van zon op ozon veroorzaakt.</li>
+<li>Dat 55% van het zon-effect op ozon met de temperatuur meebeweegt — meer niet.</li>
+<li>Dat de pijlen deze kant op móéten lopen, want andersom klopt de optelsom <em>c′</em> + <em>ab</em> = <em>c</em> niet meer.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 b · 2 a · 3 c · 4 d · 5 a · 6 c</strong></p>
+<p>Hieronder staat per vraag eerst waaróm het goede antwoord goed is, en daaronder een korte toelichting per foute optie. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. b.</strong> Direct plus indirect is het totaal, dus <em>ab</em> = 0.127 − 0.057 = <strong>0.070</strong>.</p>
+<ul>
+<li><strong>a</strong> — dat is pad <em>a</em>: hoeveel warmer de lucht wordt per streepje zon.</li>
+<li><strong>c</strong> — de twee opgeteld in plaats van afgetrokken; dan wordt de omweg groter dan het hele effect.</li>
+<li><strong>d</strong> — dat is pad <em>b</em>, en het staat in ppb per graad in plaats van per streepje zon.</li>
+</ul>
+<p><strong>2. a.</strong> Pad <em>b</em> is de helling van ozon op temperatuur in het model waar de zon óók in zit — dus bij gelijke zonnestraling.</p>
+<ul>
+<li><strong>b</strong> — dat is pad <em>a</em> (0.0307), met graden als uitkomst in plaats van als ingang.</li>
+<li><strong>c</strong> — 2.278 is geen keer-getal maar een aantal ppb per graad.</li>
+<li><strong>d</strong> — het stuk dat via de temperatuur loopt is <em>ab</em> = 0.070, niet pad <em>b</em>.</li>
+</ul>
+<p><strong>3. c.</strong> Een product van twee schattingen trekt scheef, en een symmetrische foutmarge past daar niet omheen.</p>
+<ul>
+<li><strong>a</strong> — 111 dagen is ruim genoeg; het zit in de vórm van de verdeling, niet in de omvang.</li>
+<li><strong>b</strong> — een bootstrap neemt nog altijd aan dat je steekproef de populatie vertegenwoordigt.</li>
+<li><strong>d</strong> — waar over dit interval, en toch de verkeerde reden: je kiest een bootstrap vóórdat je de uitkomst ziet, en wel omdat de verdeling scheef is. Een <em>p</em>-waarde kan ook prima “niet nul” zeggen.</li>
+</ul>
+<p><strong>4. d.</strong> De pijl klopt niet: de soort maakt vin en gewicht samen groot. Wat hier “mediator” heet, is een gemeenschappelijke oorzaak.</p>
+<ul>
+<li><strong>a</strong> — die <em>r</em> van .87 komt uit <a href="../20_blokken/blok_enkelvoudige_regressie.html">Oefening 3.2</a> en maakt de schatting onzeker, niet de richting fout.</li>
+<li><strong>b</strong> — een categorie mag prima in een mediatiemodel staan; deze pijl mag niet.</li>
+<li><strong>c</strong> — de rekensom levert juist keurige getallen op, en dát is het gevaar.</li>
+</ul>
+<p><strong>5. a.</strong> Min keer plus is min. Wind koelt de lucht en koelere lucht maakt minder ozon: twee stappen, en een omweg die daardoor omlaag loopt.</p>
+<ul>
+<li><strong>b</strong> — twee mintekens vóelen hier kloppend, maar min keer min is plus; dan was <em>ab</em> positief geweest. Pad <em>b</em> is +1.83: warmere lucht geeft méér ozon, of je nu met wind of met zon begint.</li>
+<li><strong>c</strong> — zo’n regel bestaat niet; een totaal en een omweg mogen tegengesteld van teken zijn.</li>
+<li><strong>d</strong> — dat beschrijft een residu, niet een pad.</li>
+</ul>
+<p><strong>6. c.</strong> De ontleding meet hoe het effect verdeeld is. Dát de pijlen die kant op lopen weet je uit de fotochemie, niet uit deze getallen.</p>
+<ul>
+<li><strong>a</strong> — pad <em>b</em> en het totale zon-effect op de ozon staan in verschillende eenheden en zijn niet te vergelijken.</li>
+<li><strong>b</strong> — het antwoord dat bijna iedereen geeft, en precies één woord te sterk: <em>veroorzaakt</em>.</li>
+<li><strong>d</strong> — draai de pijlen om en de wiskunde loopt net zo hard door; de som komt nog steeds uit.</li>
+</ul>
+<p>De getallen in deze zes vragen staan eerder op deze bladzij of op je eigen SPSS-scherm bij <em>Jouw beurt</em>. PROCESS toont ze met vier decimalen: de 0.031 en de 2.278 uit vraag 1 en 2 staan daar als .0307 en 2.2785. Alleen de <em>r</em> van .87 komt uit Oefening 3.2. De foute opties zijn sommen met diezelfde getallen die net misgaan: opgeteld in plaats van afgetrokken, of het verkeerde pad genomen.</p>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="W11">
@@ -802,7 +939,7 @@ REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 <h3 class="anchored" data-anchor-id="de-sobel-toets-op-een-kladje">De Sobel-toets op een kladje</h3>
 <p>Je hebt het indirecte pad: <em>a</em> × <em>b</em> = 31.16. Maar twaalf steentjes is een kleine wereld — kan zo’n omweg-getal ook uit toeval opborrelen? Dat is precies wat de Sobel-toets vraagt. Hij zet het product <em>ab</em> af tegen zijn eigen standaardfout: dat geeft een <em>z</em>, en die <em>z</em> geeft een <em>p</em>. Meer is het niet — één breuk. Je hebt er geen macro voor nodig en geen menu; een kladje en de getallen die je net zelf hebt uitgerekend zijn genoeg. Pak een pen.</p>
 <p><span class="math display">\[ z \;=\; \frac{a \times b}{\sqrt{\,b^2 \cdot SE_a^2 \;+\; a^2 \cdot SE_b^2\,}} \]</span></p>
-<p>Invullen met wat je hebt — <em>a</em> = 3.93 (<em>SE</em> = 1.54) en <em>b</em> = 7.93 (<em>SE</em> = 1.62):</p>
+<p>Invullen met wat je hebt — <em>a</em> = 3.93 (<em>SE</em> = 1.54) en <em>b</em> = 7.93 (<em>SE</em> = 1.62). De standaardfouten staan in je diamantjes-regressies naast <strong>B</strong>, in de kolom <strong>Std. Error</strong>: die van pad <em>a</em> in de tweede regressie, die van pad <em>b</em> in de derde.</p>
 <ul>
 <li>onder het wortelteken: 7.93² × 1.54² = 150.0, plus 3.93² × 1.62² = 40.4, samen 190.4</li>
 <li>de wortel daarvan: <em>SE</em> van <em>ab</em> = <strong>13.80</strong></li>
@@ -822,8 +959,9 @@ REGRESSION /DEPENDENT glans /METHOD=ENTER karaat gladheid.</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Heb je PROCESS geïnstalleerd (zie <strong>Oefening 0.0</strong>), dan is dit de hele analyse in één regel. Draai eerst <code>process.sps</code> — dat moet elke keer dat je SPSS opent.</p>
-<pre><code>process y=glans/x=karaat/m=gladheid/model=4/boot=5000/seed=31216/conf=95.</code></pre>
+<p>Heb je PROCESS geïnstalleerd (zie <a href="../installatie.html">Oefening 0.0</a>), dan is dit de hele analyse in één regel. Het menu-venster installeer je één keer; wie zoals hier de syntax gebruikt, draait eerst <code>process.sps</code>, en dat elke keer dat je SPSS opent.</p>
+<pre><code>* model 4 is gewone mediatie; seed zet het toeval vast, zodat je elke keer hetzelfde interval krijgt.
+process y=glans/x=karaat/m=gladheid/model=4/boot=5000/seed=31216/conf=95.</code></pre>
 <p>Wat je terugkrijgt is wat je net met de hand deed — pad <em>a</em>, pad <em>b</em>, het totale en het directe effect — plus het indirecte effect met een <strong>bootstrap-interval</strong> eromheen in plaats van een Sobel-<em>z</em>. Ligt dat interval helemaal boven nul, dan is het indirecte pad er een.</p>
 </div>
 </div>

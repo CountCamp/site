@@ -592,6 +592,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#wat-χ²-wél-en-niet-zegt" id="toc-wat-χ²-wél-en-niet-zegt">Wat χ² wél en niet zegt</a></li>
   <li><a href="#van-klasse-naar-rol" id="toc-van-klasse-naar-rol">Van klasse naar rol</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -629,26 +630,62 @@ ul.task-list li input[type="checkbox"] {
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <ol type="1">
-<li><strong>Analyze → Descriptive Statistics → Crosstabs</strong>, <code>merk</code> naar <strong>Row(s)</strong>, <code>gepakt</code> naar <strong>Column(s)</strong>.</li>
-<li><strong>Cells…</strong> → vink naast <strong>Observed</strong> ook <strong>Expected</strong> aan.</li>
-<li><strong>Statistics…</strong> → <strong>Chi-square</strong>. <strong>OK</strong>.</li>
+<li>Open <code>diamantjes.csv</code>: <strong>File → Open → Data</strong>, bestandstype op <strong>CSV</strong>.</li>
+<li><strong>Analyze → Descriptive Statistics → Crosstabs</strong>, <code>merk</code> bij <strong>Row(s)</strong> en <code>gepakt</code> bij <strong>Column(s)</strong>.</li>
+<li>Klik <strong>Cells…</strong> en vink naast <strong>Observed</strong> ook <strong>Expected</strong> aan. <strong>Continue</strong>, <strong>OK</strong>.</li>
 </ol>
-<p>Bij golfje 4 om 2, bij sterretje 2 om 4 — en let op alles wat SPSS er ongevraagd bij zet.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<pre><code>CROSSTABS
+<pre><code>* de vier hokjes, en per hokje wat de saaie tabel zou verwachten.
+CROSSTABS
+  /TABLES=merk BY gepakt
+  /CELLS=COUNT EXPECTED.</code></pre>
+</div>
+</div>
+</div>
+<p>Elk hokje krijgt twee regels: <em>Count</em> (bij golfje 4 en 2, bij sterretje 2 en 4) en <em>Expected Count</em> — vier keer 3.0.</p>
+</div>
+</div>
+<p><span class="naslag"><code>gepakt</code> is hier géén hercodering — de kraai deed het en iemand schreef het op. Vaker moet je vóór een kruistabel eerst van een getal een categorie máken, en dan gaat het erom wáár je de grenzen legt, want die bepalen de tabel. De vormen (<code>COMPUTE</code>, <code>IF</code> en <code>RECODE</code>) staan bij <a href="../90_basishandelingen.html#hercoderen">nieuwe variabelen maken en hercoderen</a>.</span></p>
+<p>Daar staan de vier hokjes uit het boek — <strong>Tabel 12.3</strong>. Van de zes sterretjes pakte de kraai er vier op, van de zes golfjes twee. (Het boek drukt dezelfde vier getallen gespiegeld af, sterretje bovenaan en <em>gepakt</em> links; SPSS zet golfje en de 0 eerst omdat hij rijen en kolommen oplopend sorteert.) Meer heeft een kruistabel niet nodig: geen gemiddelden, geen spreiding, alleen tellingen.</p>
+<p>En dan wil je natuurlijk de toets — dus vraag hem op, en lees wat SPSS eronder zet:</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · de toets die zichzelf tegenspreekt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In SPSS · de toets die zichzelf tegenspreekt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Open <strong>Crosstabs</strong> opnieuw (de vakken staan nog goed), klik <strong>Statistics…</strong> en vink <strong>Chi-square</strong> aan. <strong>Continue</strong>, <strong>OK</strong>.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>* de toets: bij een 2x2 drie antwoorden onder elkaar.
+CROSSTABS
   /TABLES=merk BY gepakt
   /CELLS=COUNT EXPECTED
   /STATISTICS=CHISQ.</code></pre>
 </div>
 </div>
 </div>
+<p>Onder de kruistabel staat nu <em>Chi-Square Tests</em>, en bij een 2×2 zet SPSS daar drie toetsen onder elkaar:</p>
+<ul>
+<li><em>Pearson Chi-Square</em>: 1.333, <em>df</em> 1, en in de kolom <em>Asymptotic Significance (2-sided)</em> .248;</li>
+<li><em>Continuity Correction</em>: .333 en .564;</li>
+<li><em>Fisher’s Exact Test</em>: in de kolom <em>Exact Sig. (2-sided)</em> .567.</li>
+</ul>
+<p>De rijen <em>Likelihood Ratio</em> en <em>Linear-by-Linear Association</em> laat je in dit blok liggen. En onder de tabel staat een voetnoot waar je niet om vroeg: <em>4 cells (100.0%) have expected count less than 5. The minimum expected count is 3.00.</em></p>
 </div>
 </div>
-<p>Daar staan de vier hokjes uit het boek — <strong>Tabel 12.3</strong>. Van de zes sterretjes pakte de kraai er vier op, van de zes golfjes twee. Meer heeft een kruistabel niet nodig: geen gemiddelden, geen spreiding, alleen tellingen.</p>
-<p>En dan de rest van wat SPSS je gaf, want daar zit het halve blok in. Onder de toetsentabel staat een voetnoot die je nergens om gevraagd hebt: <em>4 cells (100.0%) have expected count less than 5. The minimum expected count is 3.00.</em> Kijk zelf: de <strong>verwachte aantallen</strong> zijn vier keer 3. De vuistregel is dat geen enkele verwachte cel onder de 5 mag zakken, en hier zakt er niet één bóven. χ² is namelijk geen exacte som maar een <strong>benadering</strong> — het toeval-bergje dat je zo gaat bouwen wordt bij grote tabellen mooi glad, maar bij twaalf stenen is het een handvol losse blokjes, en de gladde formule past er niet omheen.</p>
-<p>Je ziet dat meteen aan de rijen die SPSS bij een 2×2 altijd samen afdrukt. <em>Pearson Chi-Square</em> = 1.33 geeft <em>p</em> = .248 — de kleinste van de drie. De <em>Continuity Correction</em> maakt er χ² = 0.33 van en <em>p</em> = .564 — ruim twee keer zo groot. En <em>Fisher’s Exact Test</em>, die niks benadert maar alle mogelijke tabellen met deze randtotalen gewoon uittelt, komt op <em>p</em> = .567 uit.</p>
-<p>Kijk waar die laatste twee liggen: bijna op elkaar. Dat is geen toeval — de continuïteitscorrectie bestáát om de benadering richting de exacte uitkomst te duwen. De ongecorrigeerde χ² zit er meer dan een factor twee naast. Eén tabel, drie regels in dezelfde output, en alleen de derde rekent werkelijk uit wat er in de vier hokjes zit. Het boek kiest hier Fishers exacte toets — en trekt er de enige conclusie uit die twaalf stenen toestaan: hier valt niets te bewijzen. Dat de sterretjes-odds vier keer zo groot zijn als de golfjes-odds (<em>OR</em> = 4, en het relatieve risico 2) blijft waar; het is alleen een schatting uit vier hokjes waar je bijna niks van weet.</p>
+<p>Die voetnoot is geen zeurderigheid; hij is het halve blok. Kijk naar de verwachte aantallen die je net opvroeg: <strong>vier keer 3</strong>. De vuistregel is dat geen enkele verwachte cel onder de 5 mag zakken, en hier zakt er niet één bóven. χ² is namelijk geen exacte som maar een <strong>benadering</strong> — het toeval-bergje dat je zo gaat bouwen wordt bij grote tabellen mooi glad, maar bij twaalf stenen is het een handvol losse blokjes, en de gladde formule past er niet omheen.</p>
+<p>Je ziet dat meteen aan de drie antwoorden die dezelfde vier hokjes je geven. De kale χ² = 1.33 zegt <em>p</em> = .248 — de kleinste van de drie, en de bovenste rij, die SPSS <em>Pearson Chi-Square</em> noemt. Met Yates’ continuïteitscorrectie — de rij <em>Continuity Correction</em> eronder — wordt het χ² = 0.33 en <em>p</em> = .564 — een <em>p</em> die ruim twee keer zo groot is. En Fisher, die niks benadert maar alle mogelijke tabellen met deze randtotalen gewoon uittelt, komt op <em>p</em> = .567 uit.</p>
+<p>Kijk waar die laatste twee liggen: bijna op elkaar. Dat is geen toeval — Yates’ correctie bestáát om de benadering richting de exacte uitkomst te duwen. De ongecorrigeerde χ² zit er meer dan een factor twee naast. Eén tabel, drie rijen die ertoe doen, en alleen <em>Fisher’s Exact Test</em> rekent werkelijk uit wat er in de vier hokjes zit. Het boek kiest hier daarom Fishers exacte toets — en trekt er de enige conclusie uit die twaalf stenen toestaan: hier valt niets te bewijzen. Dat de sterretjes-odds vier keer zo groot zijn als de golfjes-odds (<em>OR</em> = 4, en het relatieve risico 2) blijft waar; het is alleen een schatting uit vier hokjes waar je bijna niks van weet.</p>
 <p>Onthoud dat, want het is de belangrijkste zin over χ²: <strong>de toets heeft aantallen nodig om iets te mogen zeggen.</strong> Vandaar dat we hem nu op iets groters loslaten.</p>
 <p><strong>Nu jij</strong> — met de Titanic: 2201 opvarenden, en daar mág χ² wel.</p>
 <p>Zelfde huis, groter: klassen als rijen, overleefd ja/nee als kolommen, en in elke cel hoeveel mensen daar zitten. Vier rijen dit keer in plaats van twee.</p>
@@ -662,16 +699,31 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <ol type="1">
 <li>Open <code>titanic.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype <strong>CSV</strong>.</li>
 <li>Ga naar <strong>Analyze → Descriptive Statistics → Crosstabs</strong>.</li>
-<li>Zet <code>klasse</code> bij <strong>Rows</strong> en <code>overleefd</code> bij <strong>Columns</strong>.</li>
-<li>Klik <strong>Cells</strong> en vink aan: <strong>Observed</strong>, <strong>Expected</strong> en onder <em>Percentages</em> de optie <strong>Row</strong> — zo zie je per klasse wie overleefde.</li>
-<li>Klik <strong>Statistics</strong> en vink <strong>Chi-square</strong> aan, plus <strong>Phi and Cramer’s V</strong>.</li>
+<li>Zet <code>klasse</code> bij <strong>Row(s)</strong> en <code>overleefd</code> bij <strong>Column(s)</strong>.</li>
+<li>Klik <strong>Cells…</strong> en vink aan: <strong>Observed</strong>, <strong>Expected</strong> en onder <em>Percentages</em> de optie <strong>Row</strong> — zo zie je per klasse wie overleefde.</li>
+<li>Klik <strong>Statistics…</strong> en vink <strong>Chi-square</strong> aan, plus <strong>Phi and Cramer’s V</strong>.</li>
 </ol>
 </div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<pre><code>* de kruistabel met verwachte aantallen en rijpercentages, de toets en Cramers V.
+CROSSTABS
+  /TABLES=klasse BY overleefd
+  /CELLS=COUNT EXPECTED ROW
+  /STATISTICS=CHISQ PHI.</code></pre>
 </div>
-<p>Daar staat de tabel: 203 van de 325 eersteklassers overleefden, 212 van de 885 bemanningsleden. En daaronder één getal voor de héle tabel: <strong>χ² = 190.4</strong> (spreek uit: chi-kwadraat, <em>chi-square</em>). Wat dat getal doet: het vergelijkt elke cel met de saaiste tabel denkbaar — de tabel die je zou krijgen als klasse en overleven níéts met elkaar te maken hadden en elke klasse gewoon het scheepsbrede 32% zou volgen. Onder die saaie tabel zouden er in de eerste klasse zo’n 105 overlevenden “horen” te zitten — de verwachte aantallen weer, die je net opnieuw hebt aangevinkt; de magerste van deze acht cellen verwacht er 92 in plaats van 3, dus die voetnoot blijft dit keer weg. Het waren er 203. χ² telt al die verschillen tussen geteld en verwacht op tot één maat voor “hoe scheef is deze tabel?”. Nul betekent: precies zo saai als verwacht. En 190.4 — is dat veel? Geen idee, nog. Daarvoor moeten we eerst weten hoe scheef púúr toeval kan zijn.</p>
+</div>
+</div>
+<p>In <em>Chi-Square Tests</em> staat bij <em>Pearson Chi-Square</em> 190.401 met <em>df</em> 3, en bij de significantie <em>p</em> &lt; .001 (SPSS toont <code>.000</code> — lees: kleiner dan .001). De voetnoot van de diamantjes staat er weer, nu met <em>0 cells (0.0%) have expected count less than 5. The minimum expected count is 92.06.</em> En in <em>Symmetric Measures</em> staat bij <em>Cramer’s V</em> .294.</p>
+</div>
+</div>
+<p>Daar staat de tabel: 203 van de 325 eersteklassers overleefden, 212 van de 885 bemanningsleden. En daaronder één getal voor de héle tabel: <strong>χ² = 190.401</strong> (spreek uit: chi-kwadraat, <em>chi-square</em>). Wat dat getal doet: het vergelijkt elke cel met de saaiste tabel denkbaar — de tabel die je zou krijgen als klasse en overleven níéts met elkaar te maken hadden en elke klasse gewoon het scheepsbrede 32% zou volgen. Onder die saaie tabel zouden er in de eerste klasse zo’n 105 overlevenden “horen” te zitten — dat zijn de verwachte aantallen (<em>expected counts</em>) weer, en de magerste van deze acht cellen verwacht er 92 in plaats van 3; de voetnoot onder <em>Chi-Square Tests</em> telt dit keer nul cellen. Het waren er 203. χ² telt al die verschillen tussen geteld en verwacht op tot één maat voor “hoe scheef is deze tabel?”. Nul betekent: precies zo saai als verwacht. En 190.4 — is dat veel? Geen idee, nog. Daarvoor moeten we eerst weten hoe scheef púúr toeval kan zijn.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -679,10 +731,11 @@ ul.task-list li input[type="checkbox"] {
 <section id="is-die-scheefheid-echt-of-toeval" class="level2">
 <h2 class="anchored" data-anchor-id="is-die-scheefheid-echt-of-toeval">Is die scheefheid echt, of toeval?</h2>
 <p><span class="begrippen">schudden · werelden zonder verband · toeval-bergje</span></p>
-<p>Dus dat zou je willen maken: toeval, met je eigen handen. De kolom <em>overleefd</em> losknippen van de kolom <em>klasse</em> en lukraak opnieuw uitdelen — iedereen houdt z’n klasse, de 711 “ja”s blijven 711 “ja”s, maar wíé overleeft, is nu puur lot. Zo <strong>koppel je klasse en overleven los van elkaar</strong>: je haalt met eigen handen weg dat een bepaalde klasse en een bepaalde afloop bij dezelfde opvarende horen. Doe dat duizend keer, en je hebt duizend werelden gebouwd waarin er <strong>écht geen samenhang</strong> is tussen klasse en overleven; reken in elk van die werelden χ² uit en kijk waar de echte 190.4 valt.</p>
+<p>Dus dat gaan we maken: toeval, met onze eigen handen. We knippen de kolom <em>overleefd</em> los van de kolom <em>klasse</em> en delen ’m lukraak opnieuw uit. Iedereen houdt z’n klasse, de 711 “ja”s blijven 711 “ja”s — maar wíé overleeft, is nu puur lot. Doe dat duizend keer, en je hebt duizend werelden gebouwd waarin er <strong>écht geen samenhang</strong> is tussen klasse en overleven. In elk van die werelden rekenen we χ² uit.</p>
 <p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in SPSS.</strong> SPSS rekent één keurige uitkomst uit; het duizend keer husselen en opnieuw kijken is <em>code-</em> of <em>speeltje</em>-werk. Dat is geen gemis van jou of van SPSS — het boek doet het bewust zo: de simulatie-ervaring loopt via een <strong>schud-speeltje</strong> in de browser (of via het R-broertje, waar het een paar regels code is).</p>
 <p><a href="../speeltjes/s2_schud_tabel.html" target="_blank">▶ Speel het schud-speeltje</a></p>
-<p>Kijk naar wat het speeltje je laat zien. <strong>Duizend werelden die dansen rond nul</strong> — want in elke geschudde wereld is de echte samenhang doorgeknipt, maar toeval laat de scheefheid nooit precies op nul landen. In duizend werelden waarin de waarheid “geen verband” is, was de kleinste geschudde χ² 0.02, en de meeste liggen er ruim boven. Toeval deelt nooit perfect eerlijk uit; een beetje scheefheid krijg je altijd cadeau. Al die geschudde χ²’s samen vormen het <strong>toeval-bergje</strong>: zó ver komt puur geluk — tot een keer of 22, en dan houdt het op.</p>
+<p>Het speeltje schudt elke keer opnieuw. Waar het onder het bergje meldt hoe ver <em>het verste toeval</em> kwam, staat bij jou dus net iets anders dan de 22 hieronder — die komt, net als de 0.02, uit één vaste ronde van duizend keer schudden in het R-broertje. Het bergje heeft dezelfde vorm.</p>
+<p>Kijk eerst naar het bergje zelf, want daar zit al een les in. In duizend werelden waarin de waarheid “geen verband” is, is de gemeten scheefheid <strong>nooit precies nul</strong> — de kleinste geschudde χ² was 0.02, en de meeste liggen er ruim boven. Toeval deelt nooit perfect eerlijk uit; een beetje scheefheid krijg je altijd cadeau. Dát is wat het toeval-bergje je laat zien: zó ver komt puur geluk — tot een keer of 22, en dan houdt het op.</p>
 <p>En dan die rode streep op 190.4. Niet aan de rand van het bergje — er <strong>mijlenver</strong> voorbij, bijna tien keer zo ver als het wildste toeval in duizend pogingen. Geen <em>p</em>-waarde die je moet geloven, maar een afstand die je zíét. De echte nacht van 1912 ligt niet in de wereld van het lot. De samenhang tussen klasse en overleven is echt.</p>
 <div class="kicker">
 <p>snap het</p>
@@ -704,15 +757,27 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li>In dezelfde <strong>Crosstabs</strong>-analyse, open <strong>Cells</strong> en vink onder <strong>Residuals</strong> de optie <strong>Standardized</strong> aan (dat is de Pearson-residu (geteld − verwacht)/√verwacht; de <em>Adjusted standardized</em> variant ernaast geeft grotere getallen).</li>
-<li>Elke cel krijgt nu een extra getal: hoe ver zit geteld van verwacht af?</li>
-</ol>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>In dezelfde <strong>Crosstabs</strong>: klik <strong>Cells…</strong> en vink onder <strong>Residuals</strong> de optie <strong>Standardized</strong> aan. <strong>Continue</strong>, <strong>OK</strong>.</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<pre><code>* per cel: hoe ver zit geteld van verwacht af.
+CROSSTABS
+  /TABLES=klasse BY overleefd
+  /CELLS=COUNT EXPECTED ROW SRESID
+  /STATISTICS=CHISQ PHI.</code></pre>
+</div>
+</div>
+</div>
+<p>Elke cel krijgt een regel <em>Standardized Residual</em> erbij; bij <code>1st</code> en <code>ja</code> staat 9.6. Dat is (geteld − verwacht) / √verwacht. <strong>Adjusted standardized</strong> ernaast is een andere maat, die grotere getallen geeft — 12.6 in diezelfde cel; die laat je hier uit.</p>
 </div>
 </div>
 <p>De uitschieters vertellen het verhaal: eerste klasse zit ver bóven verwacht bij de overlevenden (+9.6), bemanning en derde klasse ver erónder (−4.4 en −3.3). De scheefheid is geen gelijkmatig waas over de tabel — het is een trap, van boven naar beneden door het schip.</p>
 <p><strong>En waaróm?</strong> Hier houdt de statistiek haar mond, en terecht. De kruistabel zegt dat klasse en overleven samenhangen; ze zegt niet dat je ticket je redde. De verklaring is historisch, geen getal: de eersteklashutten lagen dekken dichter bij de reddingsboten, de bemanning bleef werken terwijl anderen instapten, hekken en gangen en taal zaten ertussen. Dat verhaal is waarschijnlijk wáár — maar het komt uit de geschiedenisboeken, niet uit χ². Wie alleen de toets rapporteert (“χ²(3) = 190.4, <em>p</em> &lt; .001, dus er is een verband”) heeft het minst interessante deel te pakken. De percentages — 62, 41, 25, 24 — vertellen wat er die nacht gebeurde; de residuen wijzen aan waar; χ² zegt alleen dat het geen toeval was. Je hebt ze alle drie nodig, in die volgorde. En één ding nog, omdat het makkelijk wegzakt achter de getallen: dit waren tellingen van mensen. Wat de saaie verwachte tabel “gladstrijkt”, waren er die nacht honderden.</p>
-<p>(Dat kleine getal <em>df</em> = 3 dat SPSS erbij zet — de <strong>vrijheidsgraden</strong> — is boekhouding over de maat van de tabel: (4−1)×(2−1) = 3. Het vertelt de toets hoe groot het toeval-bergje voor een tabel van dit formaat hoort te zijn. Precies wat het speeltje voor je bouwde door te schudden.)</p>
+<p>(Dat kleine getal <em>df</em> = 3 dat SPSS erbij zet — de <strong>vrijheidsgraden</strong> — is boekhouding over de maat van de tabel: (4−1)×(2−1) = 3. Het vertelt de toets hoe groot het toeval-bergje voor een tabel van dit formaat hoort te zijn. Precies wat jij net zelf hebt gebouwd door te schudden.)</p>
 <div class="kicker">
 <p>jouw beurt</p>
 </div>
@@ -732,11 +797,30 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <ol type="1">
-<li>Maak eerst de tweedeling. Ga naar <strong>Transform → Recode into Different Variables</strong>, zet <code>klasse</code> in het vak en noem de nieuwe variabele <code>rol</code>. Klik <strong>Old and New Values</strong>: bij <em>Old Value</em> de waarde <code>Crew</code> → <em>New Value</em> <code>bemanning</code> (<strong>Add</strong>), dan <em>All other values</em> → <em>New Value</em> <code>passagier</code> (<strong>Add</strong>), <strong>Continue → Change → OK</strong>.</li>
-<li>Draai <strong>Crosstabs</strong> opnieuw met <code>rol</code> bij <strong>Rows</strong> en <code>overleefd</code> bij <strong>Columns</strong>; <strong>Cells → Row percentages</strong>; <strong>Statistics → Chi-square + Phi and Cramer’s V</strong>.</li>
-<li>Bij een 2×2-tabel zet SPSS in de χ²-tabel een aparte rij <strong>Continuity Correction</strong> — lees díé af, want dat is de gecorrigeerde χ² die R standaard voor een 2×2 rekent.</li>
+<li>Maak eerst de tweedeling. Ga naar <strong>Transform → Recode into Different Variables</strong>, zet <code>klasse</code> in het vak en noem de nieuwe variabele <code>rol</code>. Klik <strong>Old and New Values</strong>, vink <strong>Output variables are strings</strong> aan en zet <strong>Width</strong> op 10 — anders knipt SPSS <code>bemanning</code> en <code>passagier</code> af op acht letters. Dan bij <em>Old Value</em> de waarde <code>Crew</code> → <em>New Value</em> <code>bemanning</code> (<strong>Add</strong>), en <em>All other values</em> → <em>New Value</em> <code>passagier</code> (<strong>Add</strong>), <strong>Continue → Change → OK</strong>.</li>
+<li>Draai <strong>Crosstabs</strong> opnieuw met <code>rol</code> bij <strong>Row(s)</strong> en <code>overleefd</code> bij <strong>Column(s)</strong>; <strong>Cells → Row percentages</strong>, en daar ook <strong>Expected</strong> en bij <em>Residuals</em> <strong>Standardized</strong> (voor e), h) en i)); <strong>Statistics → Chi-square + Phi and Cramer’s V</strong>.</li>
+<li>Bij een 2×2-tabel zet SPSS in de χ²-tabel een aparte rij <strong>Continuity Correction</strong> — lees díé af, want vraag c) vraagt de gecorrigeerde χ².</li>
 </ol>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<pre><code>* de tweedeling: wie werkte en wie betaalde.
+STRING rol (A10).
+RECODE klasse ('Crew'='bemanning') (ELSE='passagier') INTO rol.
+EXECUTE.
+
+* de 2x2: Pearson, Continuity Correction en Fisher onder elkaar.
+CROSSTABS
+  /TABLES=rol BY overleefd
+  /CELLS=COUNT EXPECTED ROW SRESID
+  /STATISTICS=CHISQ PHI.</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
@@ -758,7 +842,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>g)</strong> Over de vier klassen heen was <em>V</em> = .29 en hier is hij kleiner. Er is niet mínder gebeurd — je bent minder gaan kíjken. Wat heb je weggegooid door eerste, tweede en derde klasse op één hoop te vegen? (één zin)</p>
 <p><strong>h)</strong> Welke cel wijkt in deze 2×2 het verst van verwacht af, en welke kant op? (één cel, één getal, en de richting)</p>
 <p><strong>i)</strong> Leg de residuen van de vier klassen ernaast — +9.6, +2.7, −3.3 en −4.4. Welk verschil verdwijnt zodra je de eerste drie “passagier” noemt? (twee getallen, en één zin)</p>
-<p><strong>j)</strong> R zet op een 2×2 standaard Yates’ correctie aan. Reken χ² ook zonder, en kijk wat dat met Cramérs V doet. (twee keer χ², twee keer <em>V</em>, en één zin over of het uitmaakt)</p>
+<p><strong>j)</strong> SPSS zet op een 2×2 de χ² met en zonder Yates’ correctie onder elkaar. Lees ze allebei, en kijk wat dat met Cramérs V doet. SPSS toont er één <em>V</em>; bij een 2×2 is <em>V</em> = √(χ² / <em>N</em>), dus de andere reken je zelf. (twee keer χ², twee keer <em>V</em>, en één zin over of het uitmaakt)</p>
 <p><strong>k)</strong> Geef een inhoudelijke conclusie in niet meer dan vijf zinnen. (over de mensen aan boord — een getal mag, mits erbij staat wát het telt; meer antwoorden zijn goed)</p>
 <p><strong>Z) Mag je alles hierboven geloven?</strong> Loop na:</p>
 <ul>
@@ -770,7 +854,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -779,13 +863,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Bemanning: <strong>212</strong> overleefden, <strong>673</strong> niet. Passagiers: <strong>499</strong> overleefden, <strong>817</strong> niet. Samen <strong>2201</strong> — iedereen aan boord.</p>
 <p><strong>b)</strong> Van de passagiers overleefde <strong>37.9%</strong>, van de bemanning <strong>24.0%</strong>. Ruim een derde tegen bijna een kwart.</p>
 <p><strong>c)</strong> χ²(1, <em>N</em> = 2201) = <strong>46.54</strong>, <em>p</em> &lt; .001. Wat je verwerpt is de nulhypothese dat rol en overleven niets met elkaar te maken hebben — oftewel dat beide rollen gewoon het scheepsbrede overlevingspercentage van 32.3% zouden volgen. Die tabel is te scheef om van toeval te komen.</p>
 <p><strong>d)</strong> (2−1) × (2−1) = <strong>1</strong> hier, en (4−1) × (2−1) = <strong>3</strong> daar. In woorden: de randtotalen liggen vast, dus zodra je één cel van een 2×2 invult liggen de andere drie er al.&nbsp;Er is maar één cel echt vrij, en dat is de <em>df</em>. Bij vier rijen zijn dat er drie.</p>
-<p><strong>e)</strong> De magerste verwachte cel is <strong>285.9</strong> — de overlevende bemanningsleden. Ruim vijftig keer de vuistregel van vijf, dus hier mag χ² zijn werk doen. Vergelijk dat met de twaalf diamantjes aan het begin van dit blok: daar verwachtte elke cel er 3, en zei R er meteen een waarschuwing bij.</p>
+<p><strong>e)</strong> De magerste verwachte cel is <strong>285.9</strong> — de overlevende bemanningsleden. Ruim vijftig keer de vuistregel van vijf, dus hier mag χ² zijn werk doen. Vergelijk dat met de twaalf diamantjes aan het begin van dit blok: daar verwachtte elke cel er 3, en zette SPSS er meteen een voetnoot onder.</p>
 <p><strong>f)</strong> <em>V</em> = <strong>.15</strong>.</p>
 <p><strong>g)</strong> Je hebt het verschil <em>tussen</em> de drie passagiersklassen weggegooid. Een eersteklasser en een derdeklasser tellen na het samenvoegen als hetzelfde soort mens, terwijl juist tussen die twee het grootste verschil van de hele tabel zat. Wat overblijft is het verschil tussen twee groepen die elk al een mengsel zijn — en een mengsel middelt naar het scheepsgemiddelde toe.</p>
 <p><strong>h)</strong> De <strong>overlevende bemanningsleden</strong>, met een residu van <strong>−4.4</strong>: van alle acht cellen ligt deze het verst onder wat je zou verwachten als rol en overleven niets met elkaar te maken hadden. Er “hoorden” er 285.9 te zijn en het waren er 212.</p>
@@ -825,6 +909,127 @@ ul.task-list li input[type="checkbox"] {
 </blockquote>
 <p>Dat is ’m. De zin staat op eigen benen: wie er geteld werden, welke twee dingen gekruist, en tussen de komma’s de maat. De afspraken die je al kent, plus een paar nieuwe: alleen de symbolen <em>N</em>, <em>p</em> en <em>V</em> zijn cursief (χ² is al zijn eigen teken en blijft rechtop), de getallen staan op twee decimalen, decimalen krijgen een punt, en omdat <em>V</em> nooit voorbij de 1 kan, laat je de nul vóór de punt weg (.29). De zin staat in de verleden tijd, want je vertelt wat je vónd.</p>
 <p>Jouw beurt: schrijf zo’n zelfstandige zin voor jouw passagier-vs-bemanning-tabel uit de taak hierboven (χ²(1, <em>N</em> = 2201) = 46.54, <em>p</em> &lt; .001, Cramérs <em>V</em> = .15). Benoem de opvarenden en beide variabelen — de zin moet op eigen benen kunnen staan, ook voor iemand die dit blok nooit las. Hardop voorlezen mag.</p>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">vuistregel van vijf · vrijheidsgraden · verwachte aantallen · wat χ² niet zegt</span></p>
+<p>Deze zes hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord. Bij vraag 2 en 3 reken je — en bij 3 is schatten genoeg, want de vier opties liggen ver uit elkaar.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> In de tabel van de twaalf steentjes staan in de vier hokjes 4, 2, 2 en 4 steentjes, en alle vier de verwachte aantallen zijn 3. Wat betekent dat voor de toets die je rapporteert?</p>
+<ol type="a">
+<li>Er zijn te weinig steentjes om een verband te kúnnen vinden.</li>
+<li>De benadering is hier onbetrouwbaar; Fisher telt de tabellen gewoon uit.</li>
+<li>Je voegt cellen samen tot elke verwachte cel boven de vijf komt.</li>
+<li>Ook de gételde aantallen 4, 2, 2 en 4 liggen onder de vijf, dus mag χ² al daarom niet.</li>
+</ol>
+<p><strong>2.</strong> Je kruist de vier klassen tegen overleefd ja/nee: vier rijen bij twee kolommen, 2201 opvarenden, acht cellen. Hoeveel vrijheidsgraden heeft de χ²-toets?</p>
+<ol type="a">
+<li>1</li>
+<li>3</li>
+<li>7</li>
+<li>8</li>
+</ol>
+<p><strong>3.</strong> Van de 2201 opvarenden overleefden er 711. In de derde klasse reisden 706 mensen, waarvan 178 het overleefden. Hoeveel overlevenden zou de saaie tabel — waarin klasse en overleven niets met elkaar te maken hebben — in de derde klasse verwachten?</p>
+<ol type="a">
+<li>105</li>
+<li>178</li>
+<li>228</li>
+<li>353</li>
+</ol>
+<p><strong>4.</strong> Je vindt χ²(3, <em>N</em> = 2201) = 190.40, <em>p</em> &lt; .001. Wat weet je daarmee?</p>
+<ol type="a">
+<li>Dat 190.40 van de scheefheid in de tabel door de klasse wordt verklaard.</li>
+<li>Dat je reisklasse je kans om te overleven bepaalde.</li>
+<li>Dat de samenhang tussen klasse en overleven sterk is, want 190.40 is een groot getal naast een <em>df</em> van 3.</li>
+<li>Dat klasse en overleven samenhangen — en verder niets.</li>
+</ol>
+<p><strong>5.</strong> Over de vier klassen is Cramérs <em>V</em> = .29, over de tweedeling passagier-bemanning .15. Welke uitspraak is de beste?</p>
+<ol type="a">
+<li>Over de vier klassen meet je meer: ook het verschil tússen de passagiersklassen.</li>
+<li>Over de vier klassen is er méér gebeurd dan over de tweedeling.</li>
+<li>De tweedeling is de betere analyse, want een lagere <em>V</em> wijst op een zuiverder verband.</li>
+<li><em>V</em> hangt van de maat van de tabel af, dus .29 en .15 zijn niet naast elkaar te leggen.</li>
+</ol>
+<p><strong>6.</strong> Er zaten 2201 mensen op de Titanic en je hebt ze alle 2201. Wat betekent die <em>p</em> &lt; .001 dan?</p>
+<ol type="a">
+<li>Niets: bij een volledige telling komt een <em>p</em>-waarde altijd op 1 uit.</li>
+<li>Je toetst hier niet de populatie, maar of het lót dit had kunnen uitdelen.</li>
+<li>Hoe vaak een andere steekproef uit dezelfde populatie dit verband zou namaken.</li>
+<li>Dat deze 2201 opvarenden een steekproef zijn uit alle scheepsrampen van die jaren.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 b · 2 b · 3 c · 4 d · 5 a · 6 b</strong></p>
+<p>Hieronder staat per vraag eerst waaróm het goede antwoord goed is, en daaronder een korte toelichting per foute optie. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. b.</strong> Vier verwachte cellen van 3 halen de vuistregel niet, en Fisher heeft die regel niet nodig — hij telt uit in plaats van te benaderen.</p>
+<ul>
+<li><strong>a</strong> — verwart <em>mogen</em> met <em>kunnen</em>. Twaalf steentjes geven weinig bewijskracht, en dat is een andere klacht dan een benadering die niet klopt.</li>
+<li><strong>c</strong> — echte praktijk bij grotere tabellen, en hier onmogelijk: een 2×2 heeft niets om samen te voegen.</li>
+<li><strong>d</strong> — fout op één woord: de vuistregel gaat over de <strong>verwachte</strong> aantallen, niet over de getelde. Dat ze hier allebei onder de vijf liggen is toeval van deze tabel.</li>
+</ul>
+<p><strong>2. b.</strong> (4 − 1) × (2 − 1) = <strong>3</strong>.</p>
+<ul>
+<li><strong>a</strong> — de <em>df</em> van de 2×2 verderop in dit blok: een echt getal op de verkeerde tabel.</li>
+<li><strong>c</strong> — het aantal cellen min één. Dat is de regel voor één enkele rij tellingen; in een kruistabel liggen de randtotalen vast, dus er zijn er minder vrij.</li>
+<li><strong>d</strong> — rijen keer kolommen, dus het aantal cellen zelf.</li>
+</ul>
+<p><strong>3. c.</strong> 706 × 711 / 2201 = 228.06, dus <strong>228</strong>. De verwachte aantallen volgen uit de randtotalen: dit rijtotaal, dat kolomtotaal, gedeeld door iedereen.</p>
+<ul>
+<li><strong>a</strong> — de goede som op de verkeerde rij: 325 × 711 / 2201 = 104.99, de eerste klasse.</li>
+<li><strong>b</strong> — wat er werkelijk geteld is. Dat de verwachting daar zo ver van af ligt, is precies waar χ² van leeft.</li>
+<li><strong>d</strong> — de helft van 706. De saaie tabel deelt niet in tweeën maar volgt het scheepsbrede overlevingspercentage van 32.3%.</li>
+</ul>
+<p><strong>4. d.</strong> χ² beantwoordt één vraag met veel gezag en weinig woorden: is dit toeval-scheefheid? Nee. Niet hoe sterk, niet waar in de tabel, en niet waarom.</p>
+<ul>
+<li><strong>a</strong> — leest hem als verklaarde variantie. χ² is een optelsom van afwijkingen en heeft geen bovengrens, dus hij kan niets “verklaren”.</li>
+<li><strong>b</strong> — de causale stap die de tabel niet zet. De verklaring is historisch — waar de hutten lagen, wie bleef werken — en komt uit de geschiedenisboeken.</li>
+<li><strong>c</strong> — leest χ² als een sterktemaat. Dat is hij niet: hij groeit mee met <em>n</em>. Bij een tiende van deze omvang had er ongeveer 19 gestaan, met exact dezelfde Cramérs <em>V</em>.</li>
+</ul>
+<p><strong>5. a.</strong> Er is niet mínder gebeurd — je bent minder gaan kíjken. Het verschil tússen de drie passagiersklassen zat in de eerste analyse nog in de tabel en in de tweede niet meer. Precies wat vraag g) van <em>Jouw beurt</em> al liet zien.</p>
+<ul>
+<li><strong>b</strong> — de verwarring die dat antwoord moet voorkomen: de nacht van 1912 verandert niet doordat jij twee kolommen samenvoegt.</li>
+<li><strong>c</strong> — klinkt methodologisch en is het niet. Een lagere <em>V</em> is geen kwaliteitskeurmerk maar een kleiner effect.</li>
+<li><strong>d</strong> — hier zit een echte kern in: <em>V</em> schaalt χ² met de maat van de tabel, en bij méér dan twee rijen én twee kolommen deelt hij ook door het kleinste aantal categorieën min één. Maar dát is juist waaróm je hem naast elkaar mág leggen — een kale χ² van 190.40 tegen 46.54 zou je niet mogen vergelijken, en .29 tegen .15 wel.</li>
+</ul>
+<p><strong>6. b.</strong> Geen steekproef, dus geen steekproefvraag — maar de schud-vraag blijft staan, en die heb je een paar treden hoger met eigen handen gesteld.</p>
+<ul>
+<li><strong>a</strong> — klinkt logisch en is onwaar: SPSS weet niet of je een steekproef of een volledige telling invoert en rekent gewoon door. Je krijgt hier <em>p</em> &lt; .001 (SPSS toont <code>.000</code> — lees: kleiner dan .001), geen 1.</li>
+<li><strong>c</strong> — de gewone lezing, keurig opgeschreven. Alleen bestaat de populatie waaruit deze greep zou komen niet.</li>
+<li><strong>d</strong> — verzint die populatie er dan bij. Het klinkt als een redding, maar deze 2201 zijn niet lukraak uit andere scheepsrampen getrokken.</li>
+</ul>
+<p>De getallen in deze zes vragen staan bijna allemaal al eerder op deze bladzij, of de som staat er voluit bij. Een paar komen van je eigen scherm, en die kun je zo nagaan:</p>
+<ul>
+<li>706 en 178 (vraag 3): de rij <code>3rd</code> in je kruistabel van de vier klassen — 706 in de kolom <em>Total</em>, 178 in de kolom <code>ja</code>. De 711 en de 2201 staan in de rij <em>Total</em> eronder.</li>
+<li>228 (vraag 3): met <strong>Expected</strong> aan staat hij in de cel <code>3rd</code> · <code>ja</code>, op de regel <em>Expected Count</em>, op één decimaal: 228.1. In de cel <code>1st</code> · <code>ja</code> staat 105.0, de 105 van afleider a. Met <strong>Row</strong> aan zie je waar hij vandaan komt: in de rij <em>Total</em> staat bij <code>ja</code> 32.3%, en dat percentage verwacht de saaie tabel in élke klasse. 32.3% van 706 is weer die 228.</li>
+<li>190.40 (vraag 4): de <em>Pearson Chi-Square</em> in je eigen <em>Chi-Square Tests</em>, waar hij als 190.401 staat. Een tiende ervan is 19.04. Cramérs <em>V</em> blijft staan, omdat hij χ² deelt door het aantal mensen: √(190.40 / 2201) en √(19.04 / 220.1) zijn allebei .29.</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="S2">
