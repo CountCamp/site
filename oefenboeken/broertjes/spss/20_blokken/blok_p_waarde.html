@@ -595,7 +595,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Derde beweging · Verschil op de proef</li><li class="breadcrumb-item"><a href="../20_blokken/blok_p_waarde.html">H6 · Hoe beslis je?</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_p_waarde.html">Oefening 6.1 · De p-waarde</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Oefening 6.1 · De p-waarde</h1>
-<p class="subtitle lead">Hoe slecht passen de data bij ‘er is niks’? · <em>the p-value</em></p>
+<p class="subtitle lead">Toetsen tegen de nulhypothese, en de <em>p</em> zelf tellen · <em>the p-value</em></p>
 </div>
 
 
@@ -620,6 +620,7 @@ window.Quarto = {
   <li><a href="#duizend-werelden-waarin-het-voer-niks-doet" id="toc-duizend-werelden-waarin-het-voer-niks-doet">Duizend werelden waarin het voer niks doet</a></li>
   <li><a href="#wat-p-.048-wél-en-niet-zegt" id="toc-wat-p-.048-wél-en-niet-zegt">Wat <em>p</em> = .048 wél en niet zegt</a></li>
   <li><a href="#voer-één-tegen-voer-twee" id="toc-voer-één-tegen-voer-twee">Voer één tegen voer twee</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -684,13 +685,26 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <ol type="1">
 <li>Open <code>plantgroei.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype <strong>CSV</strong>.</li>
 <li>Ga naar <strong>Analyze → Compare Means → Independent-Samples T Test</strong>.</li>
 <li>Zet <code>gewicht</code> bij <strong>Test Variable(s)</strong> en <code>groep</code> bij <strong>Grouping Variable</strong>.</li>
 <li>Klik <strong>Define Groups</strong> en typ <code>behandeling2</code> als <strong>Group 1</strong> en <code>controle</code> als <strong>Group 2</strong> — alleen die twee doen mee, en in die volgorde rekent SPSS voer twee mín gewoon water.</li>
-<li>In de output vind je het gemiddelde verschil, het 95%-CI en de <em>p</em>. SPSS drukt twee rijen af; lees de rij <strong>Equal variances not assumed</strong> — dat is de Welch-variant, die niet eist dat beide groepen precies even wild spreiden, en het huismerk van deze boekjes. Links in diezelfde tabel staat ook <strong>Levene’s Test</strong>; die hoef je hier niet te gebruiken, want wij lezen altijd de Welch-rij.</li>
 </ol>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>* voer twee als Group 1, controle als Group 2: SPSS rekent voer twee min controle.
+T-TEST GROUPS=groep('behandeling2' 'controle')
+  /VARIABLES=gewicht
+  /CRITERIA=CI(.95).</code></pre>
+</div>
+</div>
+</div>
+<p>In de output vind je het gemiddelde verschil, het 95%-CI en de <em>p</em>. SPSS drukt twee rijen af; lees de rij <strong>Equal variances not assumed</strong> — dat is de Welch-variant, die niet eist dat beide groepen precies even wild spreiden, en het huismerk van deze boekjes. Links in diezelfde tabel staat ook <strong>Levene’s Test</strong>; die hoef je hier niet te gebruiken, want wij lezen altijd de Welch-rij.</p>
 </div>
 </div>
 <p>Rechts staat het: het verschil is 0.49 gram, <em>t</em> = 2.13, en <strong><em>p</em> = .048</strong>. Het 95%-betrouwbaarheidsinterval loopt van 0.01 tot 0.98 — het schampt de nul, maar gaat er nét niet overheen. Volgens de gewoonte-grens van .05 is dit “significant” — nét. Maar wat <em>ís</em> die .048 eigenlijk? Voor je die vraag beantwoordt uit een tabel, gaan we hem zelf maken.</p>
@@ -737,7 +751,21 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Verander in <strong>Define Groups</strong> alleen <strong>Group 1</strong> naar <code>behandeling1</code> en laat <strong>Group 2</strong> op <code>controle</code> staan. Lees de <em>t</em>-toets opnieuw af: <em>p</em> = .25 — dik niet-significant.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Verander in <strong>Define Groups</strong> alleen <strong>Group 1</strong> naar <code>behandeling1</code> en laat <strong>Group 2</strong> op <code>controle</code> staan.</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<pre><code>* nu voer een als Group 1, de controle blijft Group 2.
+T-TEST GROUPS=groep('behandeling1' 'controle')
+  /VARIABLES=gewicht
+  /CRITERIA=CI(.95).</code></pre>
+</div>
+</div>
+</div>
+<p>Lees de <em>t</em>-toets opnieuw af: <em>p</em> = .25 — dik niet-significant.</p>
 </div>
 </div>
 <p>Daar komt <em>p</em> = .25 uit: het toeval haalt zó’n verschil moeiteloos, in een kwart van de werelden. Niks aan de hand? <strong>Voorzichtig.</strong> “Niet significant” betekent <em>niet aangetoond</em> — niet <em>aangetoond dat er niks is</em>. Misschien werkt behandeling 1 wél en waren tien planten te weinig om het te zien. Afwezigheid van bewijs is geen bewijs van afwezigheid. Een <em>p</em> die groot is, sluit niets uit; hij zwijgt alleen.</p>
@@ -759,7 +787,20 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <p>Ga naar <strong>Analyze → Compare Means → Independent-Samples T Test</strong> en typ bij <strong>Define Groups</strong> <code>behandeling1</code> als <strong>Group 1</strong> en <code>behandeling2</code> als <strong>Group 2</strong>.</p>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<pre><code>* voer een als Group 1, voer twee als Group 2: de controle doet niet mee.
+T-TEST GROUPS=groep('behandeling1' 'behandeling2')
+  /VARIABLES=gewicht
+  /CRITERIA=CI(.95).</code></pre>
+</div>
+</div>
+</div>
 <p><span class="even-checken">Die volgorde bepaalt het teken: SPSS rekent Group 1 mín Group 2, dus voer één mín voer twee. Zo komt er hetzelfde min-teken uit als in R en JASP, waar het alfabet dat regelt.</span></p>
 </div>
 </div>
@@ -775,14 +816,14 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Schrijf de nulhypothese en het alternatief voluit op, in woorden én in symbolen. (twee zinnen, en die twee ook in symbolen)</p>
 <p><strong>b)</strong> Lees de rij <strong>Equal variances not assumed</strong> — de Welch-variant. (rapporteer <em>t</em>, <em>df</em> en <em>p</em>)</p>
-<p><strong>c)</strong> Mag de nulhypothese verworpen worden bij de gewoonte-grens van .05? Zeg erbij wát je precies verwerpt. (ja of nee, en over planten, niet over getallen)</p>
+<p><strong>c)</strong> Mag de nulhypothese verworpen worden bij de gewoonte-grens van .05? Zeg erbij wát je precies verwerpt. (ja of nee, en één zin over planten — een getal mag, mits de eenheid erbij staat)</p>
 <p><strong>d)</strong> Lees het betrouwbaarheidsinterval erbij af, en zeg waar de nul ligt. (rapporteer het 95% CI met allebei de grenzen)</p>
 <p><strong>e)</strong> En nu het tellen — en hier moet ik eerlijk zijn. Voor dít paar is er geen speeltje: het schud-speeltje in de romp is op controle tegen voer twee gebouwd. In het R-broertje is het vijf regels, en daar komt uit: van de duizend werelden waarin het voer niks doet, halen er <strong>6</strong> het verschil van 0.87 gram. (noteer die fractie, en zeg wat er geteld is)</p>
-<p><strong>f)</strong> Leg je getelde fractie naast de <em>p</em> van de toets bij b). Vertellen ze hetzelfde verhaal? (twee getallen en één zin)</p>
+<p><strong>f)</strong> Leg de getelde fractie uit e) naast de <em>p</em> van de toets bij b). Vertellen ze hetzelfde verhaal? (twee getallen en één zin)</p>
 <p><strong>g)</strong> Schud je die duizend werelden opnieuw met een andere greep, dan komt er .012 uit in plaats van .006 — twee keer zoveel, op precies dezelfde planten. Hoe kan dat? (waar de wiebel vandaan komt)</p>
-<p><strong>h)</strong> Je hoeft niet te schudden om het echte antwoord te krijgen: je kunt álle manieren langslopen waarop twintig planten in twee tientallen uiteen kunnen vallen. Dat zijn er 184756, en dat getal hoef je niet zelf te kunnen uitrekenen. De uitkomst daarvan is .0086. Wat zegt dat over je twee getellingen bij e) en g)?</p>
+<p><strong>h)</strong> Je hoeft niet te schudden om het echte antwoord te krijgen: je kunt álle manieren langslopen waarop twintig planten in twee tientallen uiteen kunnen vallen. Dat zijn er 184756, en dat getal hoef je niet zelf te kunnen uitrekenen. De uitkomst daarvan is .0086. Wat zegt dat over de twee tellingen bij e) en g)?</p>
 <p><strong>i)</strong> Wat zegt deze <em>p</em> <strong>niet</strong>? Noem er twee. (twee dingen, elk in één zin)</p>
-<p><strong>j)</strong> Schrijf de inhoudelijke conclusie, in maximaal vijf zinnen. (over de twee soorten voer, met de grootte van het verschil erin en niet alleen de <em>p</em>)</p>
+<p><strong>j)</strong> Schrijf de inhoudelijke conclusie, in maximaal vijf zinnen. (over de twee soorten voer, met de grootte van het verschil erin en niet alleen de <em>p</em>; meer antwoorden zijn goed)</p>
 <p><strong>Z)</strong> Mag je alles hierboven geloven? De toets bij b) en de telling bij e) leunen op verschillende dingen — kijk voor de toets naar de vorm van de twintig gewichten (<strong>Graphs → Chart Builder → Boxplot</strong>, gesplitst op <code>groep</code>) en naar de twee standaarddeviaties in <strong>Group Statistics</strong>, en vraag je bij de telling af of het etiket “voer één” of “voer twee” onder de nulhypothese echt willekeurig op een plant geplakt had kunnen worden.</p>
 </div>
 </div>
@@ -805,19 +846,19 @@ window.Quarto = {
 <p><strong>c)</strong> Ja. Wat je verwerpt is het idee dat de twee soorten voer gemiddeld hetzelfde opleveren: onder díé aanname is een verschil van 0.87 gram zeldzaam genoeg om er niet in te blijven geloven. Je verwerpt niet “toeval” in het algemeen, en je bewijst ook niet dat voer twee altijd beter is.</p>
 <p><strong>d)</strong> 95% CI [−1.48, −0.25]. De nul valt er ruim buiten — geen geschamp deze keer, zoals bij controle tegen voer twee.</p>
 <p><strong>e)</strong> <strong>.006</strong>, oftewel <strong>6 van de 1000</strong> werelden. Geteld is: hoe vaak het blinde toeval alléén al een verschil van 0.87 gram of meer oplevert.</p>
-<p><strong>f)</strong> .006 tegen .009. Twee wegen naar hetzelfde oordeel: dit verschil is zeldzaam in een wereld waarin het voer niets doet. Dat ze niet precies gelijk zijn is geen fout — de toets rekent met een formule, jouw telling met duizend willekeurige werelden.</p>
+<p><strong>f)</strong> .006 tegen .009. Twee wegen naar hetzelfde oordeel: dit verschil is zeldzaam in een wereld waarin het voer niets doet. Dat ze niet precies gelijk zijn is geen fout — de toets rekent met een formule, de telling met duizend willekeurige werelden.</p>
 <p><strong>g)</strong> De planten zijn niet veranderd; die duizend werelden wel. Duizend werelden is zélf ook maar een greep, en hoe kleiner de <em>p</em> die je zoekt, hoe schaarser de werelden die meetellen — bij zes tegen twaalf treffers hangt het getal aan een handvol werelden en wiebelt het dus hard. Wil je een kleine <em>p</em> nauwkeurig tellen, dan heb je er veel meer dan duizend nodig.</p>
-<p><strong>h)</strong> Dat .0086 is het antwoord waar geen toeval meer in zit: alle 184756 hersplitsingen langsgelopen, 1592 daarvan komen even ver of verder. Jouw .006 en .012 liggen er aan weerskanten omheen, en dat is precies wat je verwacht van twee grepen van duizend. Niet één van beide is “de goede” — ze zijn allebei een schatting van dit getal.</p>
+<p><strong>h)</strong> Dat .0086 is het antwoord waar geen toeval meer in zit: alle 184756 hersplitsingen langsgelopen, 1592 daarvan komen even ver of verder. De .006 en .012 liggen er aan weerskanten omheen, en dat is precies wat je verwacht van twee grepen van duizend. Niet één van beide is “de goede” — ze zijn allebei een schatting van dit getal.</p>
 <p><strong>i)</strong> Twee dingen, en bij allebei struikelt bijna iedereen:</p>
 <ul>
 <li><em>p</em> is <strong>niet</strong> hoe groot het effect is. Dat lees je af aan het verschil van 0.87 gram en het interval [−1.48, −0.25], niet aan de .009.</li>
 <li><em>p</em> is <strong>niet</strong> de kans dat er niks aan de hand is. Hij vertrekt vanuit “er is niks” en vraagt hoe raar jouw data dan zijn. P(data | er is niks) is iets heel anders dan P(er is niks | data).</li>
 </ul>
-<p><strong>j)</strong> Bijvoorbeeld:</p>
+<p><strong>j)</strong> Meer antwoorden zijn goed; welke vijf zinnen je kiest is aan jou. Bijvoorbeeld:</p>
 <blockquote class="blockquote">
-<p>De planten op voer twee wogen gedroogd gemiddeld 5.53 gram, die op voer één 4.66 gram — een verschil van 0.87 gram in het voordeel van voer twee. Dat verschil was significant, <em>t</em>(14.10) = −3.01, <em>p</em> = .009, 95% CI [−1.48, −0.25]. Zo’n verschil kwam in maar zes van de duizend geschudde werelden voor, dus “de twee soorten voer doen hetzelfde” past slecht bij deze data. Hoe groot het verschil precies is, ligt nog ruim open: ergens tussen een kwart gram en anderhalve gram. Met tien potten per groep is dat de eerlijke marge.</p>
+<p>De planten op voer één wogen gedroogd gemiddeld 4.66 gram, die op voer twee 5.53 gram: voer één leverde 0.87 gram minder droge plant op. Dat verschil was significant, <em>t</em>(14.10) = −3.01, <em>p</em> = .009, 95% CI [−1.48, −0.25]. Zo’n verschil kwam in maar zes van de duizend geschudde werelden voor, dus “de twee soorten voer doen hetzelfde” past slecht bij deze data. Hoe groot het verschil precies is, ligt nog ruim open: ergens tussen een kwart gram en anderhalve gram. Met tien potten per groep is dat de eerlijke marge.</p>
 </blockquote>
-<p>Wat erin hoort: de richting, de grootte, én de onzekerheid — niet alleen dat het significant was.</p>
+<p>Wat erin hoort: de richting, de grootte, én de onzekerheid — niet alleen dat het significant was. En het teken volgt de leesrichting van je zin: deze zin vertelt voer één mín voer twee, net als de toets, dus blijven <em>t</em> en interval negatief. Vertel je het andersom — “voer twee leverde méér op” — dan draaien ze allebei mee, zoals in de rapportage van <a href="../20_blokken/blok_betrouwbaarheidsinterval.html">Oefening 5.1</a>.</p>
 <p><strong>Z)</strong> Ja, met een kanttekening bij de toets. De twee toetsen leunen op verschillende dingen, en dat is de les van deze vraag.</p>
 <p>De <em>t</em>-toets bij b) leunt erop dat de gewichten redelijk symmetrisch liggen en dat de gemiddelden netjes rond de waarheid wiebelen. Dat valt hier goed uit; de scheefheid is 0.47 bij voer één en 0.48 bij voer twee, met tien potten per groep gewone ruis. De twee spreidingen liggen wél het verst uiteen van alle paren in dit bestand — <em>SD</em> = 0.79 tegen 0.44, een verhouding van 1.79 — maar het huis houdt onder de 2 aan, en de rij <em>Equal variances not assumed</em> is juist gebouwd voor ongelijke spreiding.</p>
 <p>De <strong>schudtoets</strong> bij e) leunt op iets anders: dat de etiketten onder de nulhypothese uitwisselbaar zijn. Doet het voer niets, dan had elk etiket op elke plant gekund, en dan is husselen eerlijk. Dat is een zwaardere eis dan hij klinkt: hij zegt niet alleen dat de gemiddelden gelijk zijn, maar dat de twee groepen onder de nulhypothese in álles op elkaar lijken — ook in spreiding. Zou het ene voer de planten alleen maar <strong>wisselvalliger</strong> maken zonder het gemiddelde te raken, dan verwerpt deze toets iets wat je niet bedoelde te toetsen.</p>
@@ -825,6 +866,97 @@ window.Quarto = {
 <ul>
 <li><strong>Blijft staan:</strong> de gemiddelden en het verschil van 0.87 gram bij b) en j). Dat is optellen en delen.</li>
 <li><strong>Doe je over:</strong> de <em>p</em> bij b) en e), en daarmee het oordeel bij c). Een scheve verdeling raakt de toets; ongelijke spreiding raakt vooral de telling.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">wat een p wél zegt · niet-significant · de grens van .05 · de p als breuk</span></p>
+<p>Hierboven stonden de open vragen; hier staan dezelfde onderwerpen nog een keer, in de vorm waarin een tentamen ze stelt. Zes stuks, vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord. Rekenen hoeft alleen bij vraag 4, en daar liggen de opties ver genoeg uit elkaar om te schatten; een precies getal heb je niet nodig.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> Voor voer één tegen voer twee vond je <em>t</em>(14.10) = −3.01, <em>p</em> = .009. Welke omschrijving van die <em>p</em> is de beste?</p>
+<ol type="a">
+<li>De kans dat de twee soorten voer gemiddeld hetzelfde opleveren.</li>
+<li>De kans dat het verschil van 0.87 gram door toeval komt.</li>
+<li>De kans dat je conclusie fout is.</li>
+<li>Hoe vaak toeval alléén al een verschil van 0.87 gram haalt, als de twee soorten voer gemiddeld hetzelfde opleveren.</li>
+</ol>
+<p><strong>2.</strong> Voor controle tegen voer één komt er <em>p</em> = .25 uit. Welke conclusie is de beste?</p>
+<ol type="a">
+<li>Niet aangetoond dát voer één iets doet — en dat is iets anders dan aangetoond dat het niets doet.</li>
+<li>Voer één werkt niet, want het verschil is niet significant.</li>
+<li>Er is 25% kans dat voer één niets doet.</li>
+<li>De twee groepen zijn gelijk; met twintig potten is dat nu vastgesteld.</li>
+</ol>
+<p><strong>3.</strong> Twee onderzoekers doen hetzelfde experiment. De een vindt <em>p</em> = .048, de ander <em>p</em> = .052. Welke uitspraak daarover is de beste?</p>
+<ol type="a">
+<li>De eerste heeft een effect gevonden en de tweede niet; dat zijn tegengestelde uitkomsten.</li>
+<li>De tweede mag zijn nulhypothese niet verwerpen, dus bij hem is de nulhypothese waar.</li>
+<li>Ze vertellen hetzelfde verhaal; .05 is een afspraak en geen natuurgrens.</li>
+<li>De tweede moet zijn toets opnieuw draaien met meer werelden.</li>
+</ol>
+<p><strong>4.</strong> Je kunt álle 184756 manieren langslopen waarop twintig planten in twee tientallen uiteen kunnen vallen. Daarvan komen er 1592 even ver of verder dan jouw echte verschil van 0.87 gram. Wat is dan de exacte <em>p</em>? (De vier opties liggen elk een factor twee uit elkaar, dus grofweg rekenen is genoeg.)</p>
+<ol type="a">
+<li>.0043</li>
+<li>.0086</li>
+<li>.0172</li>
+<li>Dat kun je niet uitrekenen zonder te weten hoeveel werelden je geschud hebt.</li>
+</ol>
+<p><strong>5.</strong> Je wil weten hoe <strong>groot</strong> het verschil tussen de twee soorten voer is. Waar lees je dat af?</p>
+<ol type="a">
+<li>Aan de <em>p</em> van .009 — hoe kleiner de <em>p</em>, hoe groter het verschil.</li>
+<li>Aan de <em>t</em> van −3.01, want die is het verschil gedeeld door zijn eigen wiebel.</li>
+<li>Aan het aantal geschudde werelden dat even ver kwam: zes van de duizend.</li>
+<li>Aan het verschil van 0.87 gram en het interval [−1.48, −0.25].</li>
+</ol>
+<p><strong>6.</strong> De schudtoets husselt de etiketten “voer één” en “voer twee” over de twintig planten. Waarop leunt dat husselen?</p>
+<ol type="a">
+<li>Dat elk etiket op elke plant gekund had — dus dat de groepen in álles op elkaar lijken, ook in spreiding.</li>
+<li>Dat de gewichten in beide groepen normaal verdeeld zijn, zoals de <em>t</em>-toets wil.</li>
+<li>Dat de twee groepen precies even groot zijn, hier tien en tien.</li>
+<li>Dat je minstens duizend werelden schudt, anders wiebelt de telling te hard.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 d · 2 a · 3 c · 4 b · 5 d · 6 a</strong></p>
+<p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. d.</strong> Een <em>p</em> vertrekt vanuit “er is niks” en vraagt hoe raar jouw data dán zijn — dat is precies de telling uit e). (Let op de twee getallen: de toets geeft <em>p</em> = .009, dus 9 op de 1000, en de duizend geschudde werelden uit e) gaven 6 op de 1000. Twee wegen, twee getallen, dezelfde boodschap — zie f).) <strong>a</strong> en <strong>b</strong> rekenen allebei de andere kant op, en dat is dé denkfout van dit onderwerp: P(data | er is niks) is iets heel anders dan P(er is niks | data). <strong>b</strong> klinkt het onschuldigst en is even fout — “de kans dat het verschil door toeval komt” is een uitspraak over de wereld. <strong>c</strong> maakt van de <em>p</em> een foutkans van jóuw conclusie; die kans kent niemand.</p>
+<p><strong>2. a.</strong> “Niet significant” betekent <em>niet aangetoond</em>, niet <em>aangetoond dat er niks is</em>. Misschien werkt voer één wél en waren tien potten te weinig om het te zien. <strong>b</strong> trekt die conclusie tóch, en dat is afwezigheid van bewijs verwarren met bewijs van afwezigheid. <strong>d</strong> doet hetzelfde in nettere woorden, en is daarom gevaarlijker: “de groepen zijn gelijk” is een bewering die geen enkele toets kan opleveren. <strong>c</strong> leest de .25 als een kans op de nulhypothese — dezelfde omkering als bij vraag 1, nu in de andere richting.</p>
+<p><strong>3. c.</strong> Was er één zware plant net iets lichter geweest, dan stond er .052 in plaats van .048, en dan zou dezelfde uitkomst ineens anders heten. Dat kan niet kloppen — dus beide getallen vertellen hetzelfde: een zwak, wankel signaaltje dat om nuance vraagt, niet om een stempel. <strong>a</strong> is de gewoonte van het vak en precies wat deze vraag wil doorbreken: een verschil van vier duizendsten in een getal is geen tegenstelling in een bevinding. <strong>b</strong> haalt de grootste denkfout over toetsen binnen: niet verwerpen is geen aannemen. <strong>d</strong> verwart de toets met de schudtelling — een <em>t</em>-toets heeft geen werelden en dus geen aantal om te verhogen.</p>
+<p><strong>4. b.</strong> De <em>p</em> ís een breuk: 1592 / 184756 = <strong>.0086</strong>. Geen formule om te geloven, gewoon een deling. <strong>a</strong> en <strong>c</strong> halveren en verdubbelen, en die reflex komt van hoe het schud-recept telt: het neemt de verschillen zonder plus of min, dus een verschil van 0.87 gram naar de éne kant telt net zo hard mee als naar de andere. Beide kanten zitten er dus al in — er valt niets te halveren en niets bij te tellen. <strong>d</strong> is de aantrekkelijkste, want hij gold de hele opdracht door: deze vraag schudt niet. Alle 184756 splitsingen langslopen is het antwoord waar geen toeval meer in zit; de tellingen bij e) en g) — .006 en .012 — liggen er aan weerskanten omheen en zijn er allebei een schatting van.</p>
+<p><strong>5. d.</strong> De grootte lees je af aan het verschil in grammen en aan het interval eromheen, nooit aan de <em>p</em>. <strong>a</strong> is de misvatting die deze vraag bestaat om te vangen: een piepklein effect krijgt een piepkleine <em>p</em> als je maar genoeg planten weegt, en een groot effect een grote <em>p</em> als je er te weinig weegt. <strong>b</strong> komt het dichtst bij iets waars en is het net niet: de <em>t</em> is het verschil gedeeld door zijn eigen wiebel, dus hij hángt er wel aan, maar hij vertelt je niet in grammen hoe veel het is. Twee experimenten met hetzelfde verschil en verschillende steekproefgrootte geven een verschillende <em>t</em>. <strong>c</strong> is de getelde <em>p</em> in een ander jasje, en heeft dus dezelfde tekortkoming als <strong>a</strong>.</p>
+<p><strong>6. a.</strong> Doet het voer niets, dan had elk etiket op elke plant gekund, en dan is husselen eerlijk. Die eis is zwaarder dan hij klinkt: hij zegt niet alleen dat de gemiddelden gelijk zijn, maar dat de twee groepen onder de nulhypothese in álles op elkaar lijken — ook in spreiding. Maakte het ene voer de planten alleen maar wisselvalliger, dan verwerpt deze toets iets wat je niet bedoelde te toetsen. <strong>b</strong> hoort bij de <em>t</em>-toets; dát het husselen die aanname níét nodig heeft is juist zijn charme. <strong>c</strong> is hier waar (tien en tien) en niet nodig: husselen werkt ook bij ongelijke groepen. <strong>d</strong> verwart de aanname met de nauwkeurigheid — duizend werelden is een keuze over de wiebel van je telling, niet over de planten.</p>
+<p>Wil je de getallen uit vraag 4 zelf zien ontstaan, pak dan je rekenmachine. De twee getallen in de vraag — 184756 splitsingen, waarvan 1592 even ver of verder — tel je niet in SPSS; die komen uit het R-broertje, dat ze alle 184756 langsloopt. De rest is delen:</p>
+<ul>
+<li>vraag 4: de exacte <em>p</em> is die breuk: 1592 / 184756 = .0086</li>
+<li>vraag 4, afleider <strong>a</strong> — gehalveerd, alsof de telling eenzijdig was: .0086 / 2 = .0043</li>
+<li>vraag 4, afleider <strong>c</strong> — verdubbeld, om dezelfde verkeerde reden: .0086 × 2 = .0172</li>
 </ul>
 </div>
 </div>

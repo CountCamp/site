@@ -620,6 +620,7 @@ window.Quarto = {
   <li><a href="#duizend-werelden-waarin-de-waarheid-nul-is" id="toc-duizend-werelden-waarin-de-waarheid-nul-is">Duizend werelden waarin de waarheid nul is</a></li>
   <li><a href="#echt-is-niet-hetzelfde-als-belangrijk" id="toc-echt-is-niet-hetzelfde-als-belangrijk">Echt is niet hetzelfde als belangrijk</a></li>
   <li><a href="#dezelfde-tien-slapers-van-twee-kanten-bekeken" id="toc-dezelfde-tien-slapers-van-twee-kanten-bekeken">Dezelfde tien slapers, van twee kanten bekeken</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -642,7 +643,6 @@ window.Quarto = {
 <section id="draai-allebei-de-t-toetsen" class="level2">
 <h2 class="anchored" data-anchor-id="draai-allebei-de-t-toetsen">Draai allebei de <em>t</em>-toetsen</h2>
 <p><span class="begrippen">gepaard versus onafhankelijk · t · p · 95%-CI</span></p>
-<p>Twee raadsels, twee toetsen — en het verschil zit in het <em>design</em>. Bij de slaapmiddelen meten we <strong>dezelfde tien mensen twee keer</strong>; die twee kolommen horen per rij bij elkaar. Dat vraagt een <strong>gepaarde <em>t</em>-toets</strong> (<em>paired</em>). Bij de pinguïns hebben we <strong>twee losse groepen</strong> dieren, geen koppels — dat vraagt een <strong>onafhankelijke <em>t</em>-toets</strong> (<em>independent</em>). Doe ze allebei.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -658,21 +658,64 @@ window.Quarto = {
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <ol type="1">
-<li><strong>Analyze → Compare Means → Independent-Samples T Test</strong>.</li>
+<li>Open <code>diamantjes.csv</code> en ga naar <strong>Analyze → Compare Means → Independent-Samples T Test</strong>.</li>
 <li><code>glans</code> naar <strong>Test Variable(s)</strong>, <code>merk</code> naar <strong>Grouping Variable</strong>; klik <strong>Define Groups</strong> en vul <code>golfje</code> en <code>sterretje</code> in.</li>
+<li>Lees deze ene keer de rij <strong>Equal variances assumed</strong>.</li>
 </ol>
-<p><em>t</em>(10) = −1.73, <em>p</em> = .11.</p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<pre><code>T-TEST GROUPS=merk('golfje' 'sterretje')
+<pre><code>* golfje als Group 1, sterretje als Group 2: SPSS rekent golfje min sterretje.
+T-TEST GROUPS=merk('golfje' 'sterretje')
   /VARIABLES=glans.</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<p>Golfje tegen sterretje: <em>t</em>(10) = −1.73, <em>p</em> = .114. Het verschil is met het blote oog te zien, maar de toets zegt: bij twaalf steentjes kan dit ook toeval zijn. Onthoud die −1.73 — hij komt in de volgende twee oefeningen nog terug. In de vórige oefening stond hij er trouwens ook al, met een plus ervoor: daar was het golfje het vertrekpunt, dus rekende de dummy sterretje mín golfje. Zelfde toets, andere richting.</p>
+<p>Golfje tegen sterretje: <em>t</em>(10) = −1.73, <em>p</em> = .11. Het verschil is met het blote oog te zien, maar de toets zegt: bij twaalf steentjes kan dit ook toeval zijn. Onthoud die −1.73 — hij komt in de volgende twee oefeningen nog terug. In de vórige oefening stond hij er trouwens ook al, met een plus ervoor: daar was het golfje het vertrekpunt, dus rekende de dummy sterretje mín golfje. Zelfde toets, andere richting.</p>
+<p>Blijf nog even bij die rij <strong>Equal variances assumed</strong> hangen, want daar zit meer onder dan een instelling. Stel dezelfde vraag twee keer — één keer als toets, één keer als regressie:</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · dezelfde som, twee keer opgeschreven">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In SPSS · dezelfde som, twee keer opgeschreven
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<ol type="1">
+<li><strong>Transform → Compute Variable</strong>: noem de <strong>Target Variable</strong> <code>sterretje</code> en typ bij <strong>Numeric Expression</strong> <code>merk = "sterretje"</code>. Dat is een dummy: 1 voor een sterretje, 0 voor een golfje.</li>
+<li><strong>Analyze → Regression → Linear</strong>, <code>glans</code> als <strong>Dependent</strong> en <code>sterretje</code> bij <strong>Independent(s)</strong>.</li>
+<li>Kijk in de tabel <strong>Coefficients</strong> naar de rij <code>sterretje</code>.</li>
+</ol>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>* Een dummy: 1 voor een sterretje, 0 voor een golfje.
+COMPUTE sterretje = (merk = "sterretje").
+EXECUTE.
+
+* Dezelfde vraag als regressie.
+REGRESSION
+  /DEPENDENT glans
+  /METHOD=ENTER sterretje.</code></pre>
+</div>
+</div>
+</div>
+<p><span class="even-checken">In de rij <code>sterretje</code> hoort <em>t</em> = 1.732 te staan, met dezelfde Sig. als in de <em>t</em>-toets. Staat er alleen een intercept, dan is de dummy niet aangemaakt.</span></p>
+</div>
+</div>
+<p>Niet ongeveer hetzelfde — <strong>dezelfde <em>t</em>, dezelfde tien vrijheidsgraden, dezelfde <em>p</em>.</strong> Alleen het teken draait om: de <em>t</em>-toets rekent hier golfje mín sterretje, en de dummy rekent sterretje mín golfje. Dat is dezelfde spiegeling als in <a href="../20_blokken/blok_dummy_regressie.html">Oefening 9.1</a>, en verder verandert er niets.</p>
+<p>Een <em>t</em>-toets op twee groepen lijkt dus niet op een regressie: het ís er een. Je voorspelt de glans uit één voorspeller, het merk, en dan houd je <em>n</em> − 2 = 10 vrijheidsgraden over — precies waar de rij <em>Equal variances assumed</em> zelf ook op uitkomt, want <em>n</em><sub>1</sub> + <em>n</em><sub>2</sub> − 2 = 6 + 6 − 2 = 10. Twee routes, dezelfde som.</p>
+<p>Kijk nu in de <em>t</em>-toets één rij lager, en bij <strong>Group Statistics</strong> naar de twee spreidingen. SPSS heeft ze allebei al afgedrukt; daar hoef je niets voor aan te zetten.</p>
+<p>De rij <strong>Equal variances not assumed</strong> is de Welch-toets. De <em>t</em> blijft staan, maar de vrijheidsgraden zakken van 10 naar 8.62 en de <em>p</em> schuift van .11 naar .12. Welch neemt namelijk niet aan dat de twee merken even veel spreiden — en kijk maar bij Group Statistics, dat doen ze ook niet: 23.66 tegen 15.49, ruim anderhalf keer zo breed. Die voorzichtigheid betaal je in vrijheidsgraden, en aan die gebroken 8.62 zie je dat je betaald hebt.</p>
+<p>Overal in deze boekjes lezen we Welch, want hij is voorzichtiger en je hoeft er niets voor te kiezen. Bij deze twaalf steentjes niet, en dat is met opzet: van Welch bestaat geen gewone regressie-versie, en dit is de plek waar we die twee juist gelijk willen zien vallen. Bij de pinguïns hieronder lees je dus gewoon weer de Welch-rij. Links in die tabel staat ook <strong>Levene’s Test</strong>, en je eigen vak vraagt je misschien om die eerst te lezen en dán een rij te kiezen — dat hoeft van ons niet, want wij lezen altijd Welch.</p>
 <p><strong>Nu jij</strong> — twee keer, want er zijn twee soorten <em>t</em>-toets. De pinguïns ken je; de slaapmiddelen van 1905 zijn nieuw, en die zijn juist bedoeld om het verschil tussen de twee toetsen te laten voelen.</p>
+<p>Twee raadsels, twee toetsen — en het verschil zit in het <em>design</em>. Bij de slaapmiddelen meten we <strong>dezelfde tien mensen twee keer</strong>; die twee kolommen horen per rij bij elkaar. Dat vraagt een <strong>gepaarde <em>t</em>-toets</strong> (<em>paired</em>). Bij de pinguïns hebben we <strong>twee losse groepen</strong> dieren, geen koppels — dat vraagt een <strong>onafhankelijke <em>t</em>-toets</strong> (<em>independent</em>). Doe ze allebei.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · de slaapmiddelen (gepaard)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -683,6 +726,10 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <ol type="1">
 <li>Open <code>slaap_middelen.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype <strong>CSV</strong>.</li>
 <li>Ga naar <strong>Analyze → Compare Means → Paired-Samples T Test</strong>.</li>
@@ -690,8 +737,17 @@ window.Quarto = {
 <li>Onder <strong>Options</strong> kun je het CI-niveau kiezen; in SPSS 27+ staat Cohen’s <em>d</em> in de aparte <strong>Effect Sizes</strong>-tabel bij de output.</li>
 </ol>
 </div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<pre><code>* A en B horen per rij bij dezelfde persoon: PAIRED koppelt ze.
+T-TEST PAIRS=slaap_middelA WITH slaap_middelB (PAIRED)
+  /CRITERIA=CI(.95)
+  /ES DISPLAY(TRUE).</code></pre>
 </div>
-<p>Rechts lees je af: het verschil A − B = −1.58 uur, <em>t</em>(9) = −4.06, <em>p</em> = 0.003, en een 95%-interval van [−2.46, −0.70]. Het min-teken zegt alleen dat A mínder oplevert dan B; de grootte is 1.58 uur. De <em>p</em> van 0.003 zegt: als de twee middelen in werkelijkheid even goed waren, zou je zó’n verschil bij tien mensen zelden per ongeluk tegenkomen. En dat interval is eerlijker dan de <em>p</em>: het beste dat je over het echte verschil durft te zeggen is “ergens tussen 0.70 en 2.46 uur in B’s voordeel”. Klein onderzoek, breed interval — het interval is meteen zijn eigen slag om de arm.</p>
+</div>
+</div>
+</div>
+</div>
+<p>Rechts lees je af: het verschil A − B = −1.58 uur, <em>t</em>(9) = −4.06, <em>p</em> = .003, en een 95%-interval van [−2.46, −0.70]. Het min-teken zegt alleen dat A mínder oplevert dan B; de grootte is 1.58 uur. De <em>p</em> van .003 zegt: als de twee middelen in werkelijkheid even goed waren, zou je zó’n verschil bij tien mensen zelden per ongeluk tegenkomen. En dat interval is eerlijker dan de <em>p</em>: het beste dat je over het echte verschil durft te zeggen is “ergens tussen 0.70 en 2.46 uur in B’s voordeel”. Klein onderzoek, breed interval — het interval is meteen zijn eigen slag om de arm.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · de pinguïns (onafhankelijk)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -702,15 +758,31 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <ol type="1">
 <li>Open <code>penguins.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype <strong>CSV</strong>.</li>
 <li>Ga naar <strong>Analyze → Compare Means → Independent-Samples T Test</strong>.</li>
 <li>Zet <code>gewicht</code> bij <strong>Test Variable(s)</strong> en <code>soort</code> bij <strong>Grouping Variable</strong>.</li>
-<li>Klik <strong>Define Groups</strong> en typ <code>Gentoo</code> en <code>Adelie</code> — zo doet de derde soort niet mee. (Cohen’s <em>d</em> staat in SPSS 27+ in de <strong>Effect Sizes</strong>-tabel.)</li>
+<li>Klik <strong>Define Groups</strong> en typ <code>Adelie</code> als <strong>Group 1</strong> en <code>Gentoo</code> als <strong>Group 2</strong> — zo doet de derde soort niet mee. (Cohen’s <em>d</em> staat in SPSS 27+ in de <strong>Effect Sizes</strong>-tabel.)</li>
 </ol>
 </div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<pre><code>* Adelie als Group 1, Gentoo als Group 2: de Chinstraps doen niet mee.
+T-TEST GROUPS=soort('Adelie' 'Gentoo')
+  /VARIABLES=gewicht
+  /CRITERIA=CI(.95)
+  /ES DISPLAY(TRUE).</code></pre>
 </div>
-<p>Rechts: het verschil is ongeveer 1375 gram, met een <em>t</em> van bijna −23.6 en een <em>p</em> die zó klein is dat SPSS ’m als “.000” toont (lees: kleiner dan .001). Bij de slaapmiddelen was de <em>t</em> −4.06 en dat vonden we al overtuigend; hier is-ie bijna zes keer zo groot. Onthoud dat cijfer even — in “Snap het” blijkt het minder indrukwekkend dan het lijkt.</p>
+</div>
+</div>
+<p>Lees de rij <strong>Equal variances not assumed</strong>: de Welch-toets, het huismerk van deze boekjes.</p>
+<p><span class="even-checken">SPSS rekent Group 1 mín Group 2, dus Adélie mín Gentoo, en dan hoort de <em>t</em> negatief te zijn. Staat er een positieve <em>t</em>, dan heb je Gentoo eerst ingetypt.</span></p>
+</div>
+</div>
+<p>Kijk naar die <em>t</em> van −23.39, en naar het interval dat helemaal onder nul ligt. De rij erboven, <em>Equal variances assumed</em>, geeft een net iets andere <em>t</em>. Bij de twaalf diamantjes vielen die twee samen, want daar stonden zes tegen zes; hier staan 151 Adélies tegen 123 Gentoo’s, die ook nog verschillend spreiden, en dan gaan de twee rijen een klein beetje uiteen. Jij leest de onderste. Je typte Adélie als eerste groep, en SPSS rekent de eerste min de tweede, dus negatief betekent gewoon: de Adélies zijn lichter. Bij de slaapmiddelen was de <em>t</em> −4.06 en dat vonden we al overtuigend; hier is-ie bijna zes keer zo groot. De <em>p</em> is zó klein dat SPSS ’m als “.000” toont (lees: kleiner dan .001). Onthoud dat cijfer even — in “Snap het” blijkt het minder indrukwekkend dan het lijkt.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -732,7 +804,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="echt-is-niet-hetzelfde-als-belangrijk">Echt is niet hetzelfde als belangrijk</h2>
 <p><span class="begrippen">effectgrootte · Cohens <em>d</em> · significantie en steekproefgrootte</span></p>
 <p>Allebei de verschillen zijn dus echt, geen toeval. Maar “echt” is niet hetzelfde als “belangrijk”, en juist de pinguïns laten dat scherp zien.</p>
-<p>Herinner je die <em>t</em> van −23.6 en de <em>p</em> die als “.000” verscheen? Die duizelingwekkende getallen betekenen <strong>niet</strong> dat het pinguïn-verschil belangrijker is dan het slaap-verschil. Ze zijn zo groot om twee saaie redenen: het verschil is bruut (anderhalve kilo) én we hebben veel dieren (274 stuks). Een <em>t</em>-toets straft kleine steekproeven af en beloont grote; gooi er genoeg waarnemingen in en zelfs een schamel verschil wordt “hoogsignificant”. <strong>Bij een groot, duidelijk verschil met een royale N is significantie triviaal</strong> — de toets bevestigt alleen wat je met het blote oog al zag. De interessante vraag is dan niet <em>óf</em> er verschil is, maar <em>hoe groot</em>.</p>
+<p>Herinner je die <em>t</em> van −23.39 en de <em>p</em> die als “.000” verscheen? Die duizelingwekkende getallen betekenen <strong>niet</strong> dat het pinguïn-verschil belangrijker is dan het slaap-verschil. Ze zijn zo groot om twee saaie redenen: het verschil is bruut (anderhalve kilo) én we hebben veel dieren (274 stuks). Een <em>t</em>-toets straft kleine steekproeven af en beloont grote; gooi er genoeg waarnemingen in en zelfs een schamel verschil wordt “hoogsignificant”. <strong>Bij een groot, duidelijk verschil met een royale <em>N</em> is significantie triviaal</strong> — de toets bevestigt alleen wat je met het blote oog al zag. De interessante vraag is dan niet <em>óf</em> er verschil is, maar <em>hoe groot</em>.</p>
 <p>Daarvoor bestaat de <strong>effectgrootte</strong> (<em>effect size</em>) — een verschil losgemaakt van de steekproefgrootte. Voor twee groepen is dat <strong>Cohens <em>d</em></strong>: het verschil uitgedrukt in standaarddeviaties. Je hebt het bij “Speel het” al aangevinkt.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · hoe groot is groot? (Cohens *d*)">
 <div class="callout-header d-flex align-content-center">
@@ -747,8 +819,8 @@ window.Quarto = {
 <p>Kijk in de output van de <strong>Independent-Samples T Test</strong> naar de aparte <strong>Effect Sizes</strong>-tabel (SPSS 27 en later): daar staat <strong>Cohen’s d</strong>. Zie je die tabel niet, dan draai je een oudere SPSS — reken <em>d</em> dan met de hand of gebruik het R-broertje.</p>
 </div>
 </div>
-<p><em>d</em> = 2.87. Dat is enorm — de twee soorten liggen bijna drie standaarddeviaties uit elkaar; wijs een willekeurige Gentoo en een willekeurige Adélie aan en de Gentoo is vrijwel altijd zwaarder. Dáár zit het echte verhaal, niet in de <em>t</em>.</p>
-<p>En de slaapmiddelen, met hun bescheiden N van 10? De effectgrootte voor een gepaard verschil (SPSS toont ’m als <strong>Cohen’s d</strong> in de Effect Sizes-tabel bij de Paired-Samples T Test) is hier <strong>−1.28</strong> — ook fors. Het verschil tussen A en B is meer dan één standaarddeviatie groot. Klein onderzoek, maar geen klein effect. Precies het omgekeerde plaatje van de pinguïns: daar was de <em>t</em> spectaculair en het nieuws de grootte; hier is de <em>t</em> bescheiden en is de grootte nog steeds het nieuws.</p>
+<p><em>d</em> = 2.87 — SPSS zet er een minteken voor, en dat is weer alleen de volgorde die jij intypte, Adélie min Gentoo. Zo’n <em>d</em> is enorm: de twee soorten liggen bijna drie standaarddeviaties uit elkaar; wijs een willekeurige Gentoo en een willekeurige Adélie aan en de Gentoo is vrijwel altijd zwaarder. Dáár zit het echte verhaal, niet in de <em>t</em>.</p>
+<p>En de slaapmiddelen, met hun bescheiden <em>N</em> van 10? De effectgrootte voor een gepaard verschil heet <em>d<sub>z</sub></em> (SPSS toont ’m als <strong>Cohen’s d</strong> in de Effect Sizes-tabel bij de Paired-Samples T Test), en die is hier <strong>−1.28</strong> — ook fors. Het verschil tussen A en B is meer dan één standaarddeviatie groot. Klein onderzoek, maar geen klein effect. Precies het omgekeerde plaatje van de pinguïns: daar was de <em>t</em> spectaculair en het nieuws de grootte; hier is de <em>t</em> bescheiden en is de grootte nog steeds het nieuws.</p>
 <p>En nog één ding, om de oefeningen aan elkaar te knopen. Die 1375 gram tussen Gentoo’s en Adélies heb je in <a href="../20_blokken/blok_dummy_regressie.html">Oefening 9.1</a> al zien staan, en niet als gemiddelde maar als <strong>regressiegewicht</strong>: het was daar het getal bij de Gentoo-dummy. Dezelfde vergelijking, één keer als toets en één keer als lijn. Wat de <em>t</em>-toets eraan toevoegt is niet het verschil zelf maar de vraag eromheen — hoe ver kan toeval dit verschil namaken?</p>
 <p>De les van dit blok, in drie zinnen:</p>
 <ul>
@@ -756,7 +828,7 @@ window.Quarto = {
 <li><strong>Significant zegt “waarschijnlijk niet nul”, niet “groot”.</strong> Bij veel data is significantie goedkoop; laat je niet imponeren door een <em>t</em> van 23.</li>
 <li><strong>De grootte is de vraag die overblijft.</strong> Rapporteer altijd een effectgrootte naast de toets — <em>d</em>, een interval, of gewoon het verschil in gewone eenheden (uren, grammen). Dát is wat een mens wil weten.</li>
 </ul>
-<p>Zou je het in één eerlijke zin opschrijven: niet “het verschil is significant (<em>p</em> &lt; .001)”, maar: Gentoo’s zijn gemiddeld 1375 gram zwaarder dan Adélies (95% CI [1261, 1490]), een zeer groot effect (<em>d</em> = 2.87). Het getal met een maat eromheen, niet een sterretje.</p>
+<p>Zou je het in één eerlijke zin opschrijven: niet “het verschil is significant (<em>p</em> &lt; .001)”, maar: Gentoo’s zijn gemiddeld 1375 gram zwaarder dan Adélies (95% CI [1260, 1491]), een zeer groot effect (<em>d</em> = 2.87). Het getal met een maat eromheen, niet een sterretje. Deze zin rekent andersom, Gentoo min Adélie, en dan draait alles om: het interval van −1491.18 tot −1259.53 op je scherm wordt hier 1259.53 tot 1491.18 (op hele grammen [1260, 1491]), en de <em>d</em> verliest zijn minteken.</p>
 <div class="kicker">
 <p>jouw beurt</p>
 </div>
@@ -765,7 +837,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="dezelfde-tien-slapers-van-twee-kanten-bekeken">Dezelfde tien slapers, van twee kanten bekeken</h2>
 <p><span class="begrippen">gepaard versus onafhankelijk · persoonsverschillen · samenhang tussen twee metingen</span></p>
 <p>Jouw beurt — bekende data, en een toets die je van een andere kant benadert. De les hierboven was: het design kiest de toets. Nu ga je zien wat die keuze waard is: je draait dezelfde twintig metingen twee keer, één keer zoals het hoort en één keer zoals het níét hoort, en je kijkt wat dat kost.</p>
-<p>Zet eerst klaar, en beantwoord daarna de vragen. De laatste heet met opzet <strong>Z)</strong> en niet l): de aannames staan altijd achteraan, en die vreemde letter zegt <em>“en ook, elke keer, deze”</em>.</p>
+<p>Zet eerst klaar, en beantwoord daarna de vragen. De laatste heet met opzet <strong>Z)</strong> en niet l): de aannames staan altijd achteraan, en die vreemde letter zegt <em>“en ook, elke keer, deze”</em>. En onder <em>Tentamenvragen</em>, aan het eind van deze oefening, staan dezelfde onderwerpen nog een keer in de vorm waarin een tentamen ze stelt.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · zet klaar">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -777,15 +849,15 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <ol type="1">
 <li>Open <code>slaap_middelen.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype <strong>CSV</strong>.</li>
 <li>Ga naar <strong>Transform → Compute Variable</strong>: noem de <strong>Target Variable</strong> <code>verschil</code> en vul bij <strong>Numeric Expression</strong> <code>slaap_middelA - slaap_middelB</code> in.</li>
 </ol>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <pre><code>COMPUTE verschil = slaap_middelA - slaap_middelB.
 EXECUTE.</code></pre>
 </div>
@@ -819,7 +891,7 @@ EXECUTE.</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -828,7 +900,7 @@ EXECUTE.</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> <strong>10</strong> mensen, elk <strong>2</strong> keer gemeten. Je ziet het aan de vorm van de tabel: er staat één rij per persoon met twee kolommen ernaast. Die twee getallen op één rij horen bij hetzelfde mens — dát is wat “gepaard” betekent.</p>
 <p><strong>b)</strong> Middel A gaf <em>M</em> = 0.75 uur extra slaap, middel B <em>M</em> = 2.33 uur. B wint met <strong>1.58 uur</strong>.</p>
@@ -841,12 +913,104 @@ EXECUTE.</code></pre>
 <p><strong>i)</strong> Een <em>t</em> is een verschil gedeeld door een spreiding. Boven de streep staat in allebei de toetsen dezelfde −1.58. Onder de streep niet: de gepaarde toets rekent met de spreiding van de tien verschillen (1.23) en komt op een standaardfout van 0.39, de onafhankelijke rekent met de twee losse spreidingen (1.79 en 2.00) en komt op 0.85. Deel hetzelfde getal door iets kleiners en er komt een grotere <em>t</em> uit — vandaar −4.06 tegen −1.86. Wat de onafhankelijke toets weggooit, is precies die <em>r</em> van .80.</p>
 <p><strong>j)</strong> <strong>Negen</strong> van de tien sliepen beter op B, <strong>niemand</strong> beter op A, en <strong>één</strong> precies even lang. Dat is het concreetste bewijs dat er iets te koppelen valt: negen van de tien wijzen dezelfde kant op, hoe verschillend die mensen onderling ook slapen.</p>
 <p><strong>k)</strong> De <strong>onafhankelijke</strong> liegt. Die doet alsof de twintig metingen van twintig verschillende mensen komen, en dat is niet zo. Lag de samenhang rond nul, dan zou de spreiding van de verschillen niet 1.23 zijn maar ongeveer 2.69 — de twee losse spreidingen die dan niets van elkaar afhalen — en dan lopen de twee toetsen bijna gelijk. De winst van het gepaarde design zit dus niet in de toets maar in de samenhang: hoe sterker de twee metingen samenhangen, hoe meer je eraan hebt.</p>
-<p><strong>Z)</strong> De aanname is dat de <strong>verschilscores</strong> normaal verdeeld zijn — niet de twee kolommen, en niet in deze steekproef maar in de populatie waar ze uit komen. Ben zegt het in de les zo:</p>
-<blockquote class="blockquote">
-<p>Hadden wij zomaar een gepaarde <em>t</em>-toets mogen doen? Wat is de assumptie? Dat de verschilscores normaal verdeeld zijn. Zijn deze verschilscores normaal verdeeld? Nee — geen enkele steekproef is precies normaal verdeeld. Maar dat is ook niet de assumptie: de assumptie is dat de populatie-verschilscores normaal verdeeld zijn.</p>
-</blockquote>
+<p><strong>Z)</strong> Hadden we zomaar een gepaarde <em>t</em>-toets mogen doen? Wat is de aanname? Dat de <strong>verschilscores</strong> normaal verdeeld zijn — niet de twee kolommen. Zijn déze verschilscores normaal verdeeld? Nee — geen enkele steekproef is precies normaal verdeeld. Maar dat is de aanname ook niet: de aanname is dat de verschilscores normaal verdeeld zijn in de populatie waar ze uit komen.</p>
 <p>En hier is het eerlijke antwoord: <strong>hij wankelt.</strong> Kijk naar de rij — −1.2 −2.4 −1.3 −1.3 0.0 −1.0 −1.8 −0.8 <strong>−4.6</strong> −1.4. Negen getallen liggen tussen 0 en −2.4, en dan is er één van −4.6. Die ene trekt de rij scheef, en bij tien waarnemingen weegt hij zwaar.</p>
-<p>Wat dat kost, en wat niet: haal je die persoon weg, dan wordt de uitkomst <strong>sterker</strong>, niet zwakker — <em>t</em> = −5.66 met <em>p</em> &lt; .001 in plaats van <em>t</em> = −4.06 met <em>p</em> = .003. De conclusie draait dus niet om. Maar dat had je niet kunnen weten zonder te kijken, en dat is het hele punt van deze vraag. Zoals Ben eraan toevoegt: <em>“je zou het eigenlijk even moeten toetsen.”</em></p>
+<p>Wat dat kost, en wat niet: haal je die persoon weg, dan wordt de uitkomst <strong>sterker</strong>, niet zwakker — <em>t</em> = −5.66 met <em>p</em> &lt; .001 in plaats van <em>t</em> = −4.06 met <em>p</em> = .003. De conclusie draait dus niet om. Maar dat had je niet kunnen weten zonder te kijken, en dat is het hele punt van deze vraag: je zou het eigenlijk even moeten toetsen.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">het design kiest de toets · de breuk onder de <em>t</em> · Welch · echt tegenover groot</span></p>
+<p>Deze zes hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar klínken en toch niet het beste antwoord zijn. Rekenen hoeft alleen bij vraag 2, en schatten mag daar ook: 1.23 gedeeld door ruim drie is ongeveer 0.4, en daarmee heb je hem al.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> Dezelfde twintig metingen van de tien slapers, twee keer geanalyseerd. Gepaard: <em>t</em>(9) = −4.06, <em>p</em> = .003. Als twee losse groepen: <em>t</em>(17.78) = −1.86, <em>p</em> = .079. Welke uitspraak is de beste?</p>
+<ol type="a">
+<li>De onafhankelijke toets is de voorzichtigste van de twee — hij komt niet eens onder .05 — dus dat is de uitkomst die je rapporteert.</li>
+<li>De twee toetsen spreken elkaar tegen over dezelfde tien mensen — de ene komt onder .05 en de andere niet — dus je hebt een derde toets nodig om te zien welke van de twee gelijk heeft.</li>
+<li>Je mag zelf kiezen: het gemeten verschil is in allebei 1.58 uur, dus alleen de <em>p</em> hangt aan je keuze.</li>
+<li>De gepaarde toets hoort hier, want dezelfde tien mensen zijn twee keer gemeten; de onafhankelijke doet alsof het twintig verschillende mensen zijn en gooit de samenhang tussen die twee metingen weg.</li>
+</ol>
+<p><strong>2.</strong> De tien persoonsverschillen (A min B) hebben <em>M</em> = −1.58 uur en <em>SD</em> = 1.23 uur. Een <em>t</em> is een verschil gedeeld door een standaardfout, en die standaardfout is de spreiding gedeeld door de wortel uit het aantal: <em>SE</em> = <em>SD</em> / √<em>n</em>. Welke standaardfout en welke <em>t</em> horen bij de gepaarde toets? (De standaardfouten staan op vier decimalen, zodat elk paar op zichzelf narekenbaar is.)</p>
+<ol type="a">
+<li><em>SE</em> = 0.1230 uur en <em>t</em> = −12.85</li>
+<li><em>SE</em> = 0.3890 uur en <em>t</em> = −4.06</li>
+<li><em>SE</em> = 0.8491 uur en <em>t</em> = −1.86</li>
+<li><em>SE</em> = 1.2300 uur en <em>t</em> = −1.28</li>
+</ol>
+<p><strong>3.</strong> Bij de twaalf diamantjes staat in de rij <strong>Equal variances assumed</strong> <em>df</em> = 10 op je scherm, en in de rij <strong>Equal variances not assumed</strong> <em>df</em> = 8.62. Waar komt dat gebroken getal vandaan?</p>
+<ol type="a">
+<li>Welch laat de steentjes weg die te ver van hun eigen groepsgemiddelde af liggen.</li>
+<li>Vrijheidsgraden zijn <em>n</em> − 2, dus 12 − 2 = 10; die 8.62 is een afrondfout van SPSS.</li>
+<li>Welch neemt niet aan dat de twee merken even veel spreiden in glans, en die voorzichtigheid betaal je in vrijheidsgraden.</li>
+<li>8.62 is het aantal steentjes dat meetelt nadat SPSS de twee merken tot één hoop heeft samengevoegd en de randgevallen half heeft geteld.</li>
+</ol>
+<p><strong>4.</strong> De pinguïn-toets geeft <em>t</em> = −23.39 met een <em>p</em> die SPSS als “.000” toont; de slaap-toets geeft <em>t</em> = −4.06 met <em>p</em> = .003. Welke uitspraak is de beste?</p>
+<ol type="a">
+<li>Het gewichtsverschil tussen de soorten is belangrijker dan het slaapverschil tussen de middelen, want de <em>t</em> is er bijna zes keer zo groot.</li>
+<li>De <em>t</em> is negatief, dus de Gentoo’s zijn lichter dan de Adélies.</li>
+<li>Die <em>t</em> is hoog om twee saaie redenen — een bruut verschil en 274 dieren — en hoe groot het verschil is, zegt <em>d</em> = 2.87.</li>
+<li>Bij een <em>p</em> die het programma niet eens meer voluit op het scherm schrijft, staat vast dat de twee soorten in gewicht van elkaar verschillen.</li>
+</ol>
+<p><strong>5.</strong> Voor diezelfde tien slapers geeft de gepaarde toets 95% CI [−2.46, −0.70] uur en de onafhankelijke 95% CI [−3.37, 0.21] uur. Wat is het scherpste verschil tussen die twee intervallen?</p>
+<ol type="a">
+<li>Het gepaarde interval is smaller, dus het echte verschil tussen de twee middelen is daar groter dan de onafhankelijke toets laat zien.</li>
+<li>De twee intervallen liggen om een ander gemeten verschil heen, en daar komt de andere breedte vandaan; hetzelfde verschil zou hetzelfde interval geven.</li>
+<li>Het onafhankelijke interval bevat de nul, dus daar is aangetoond dat de twee middelen even veel extra slaap opleveren en het verschil dus nul is.</li>
+<li>Het gepaarde interval blijft aan één kant van de nul; het onafhankelijke pakt de nul erbij.</li>
+</ol>
+<p><strong>6.</strong> De gepaarde <em>t</em>-toets leunt op één normaliteitsaanname. Waarover gaat die?</p>
+<ol type="a">
+<li>Over de tien metingen van middel A en de tien van middel B, elk apart.</li>
+<li>Over de twintig metingen samen op één hoop.</li>
+<li>Over de tien verschilscores, in de populatie waar ze uit komen — dus over de rij die je krijgt door per persoon A van B af te trekken, en niet over de twee kolommen waar die rij uit ontstaat.</li>
+<li>Over niets: bij tien personen valt normaliteit toch niet te toetsen, en een aanname die je niet kunt nakijken kun je ook niet schenden, dus hier vervalt hij.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 d · 2 b · 3 c · 4 c · 5 d · 6 c</strong></p>
+<p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. d.</strong> Het design kiest de toets, en dat is geen smaak maar een feit over je data: twee getallen op één rij horen bij hetzelfde mens. <strong>a</strong> is de verleidelijkste van de drie, want dit blok noemt Welch een paar alinea’s eerder zélf voorzichtiger, en voorzichtig klinkt veilig. Maar voorzichtig-zijn helpt alleen tegen een aanname die je niet durft te doen; hier weet je zeker dát de metingen gepaard zijn, en dan is de onafhankelijke toets niet voorzichtig maar verkeerd. <strong>b</strong> ziet twee uitkomsten en denkt aan een derde meting. Er is niets tegenstrijdigs: het gemeten verschil is in allebei precies −1.58 uur, en alleen de onzekerheid eromheen verschilt. <strong>c</strong> heeft dat goed gezien en trekt er de verkeerde conclusie uit — dat twee toetsen hetzelfde verschil vinden, maakt ze niet allebei geldig.</p>
+<p><strong>2. b.</strong> De gepaarde toets rekent met de spreiding van de tien verschillen: 1.23 / √10 = 0.3890, en −1.58 / 0.3890 = −4.06.</p>
+<p>Let op die vier decimalen, want daar zit een val. Rapporteren doe je 0.39, maar rond je op 0.39 áf en deel je dán, dan staat er −4.05 en niet −4.06. Dat is dezelfde val die <a href="../20_blokken/blok_effectgrootte_d.html">Oefening 9.3</a> bij <strong>f)</strong> uitlegt: rond af aan het eind, nooit onderweg. Daarom staan de standaardfouten in de vraag op vier decimalen — zo komt elk van de vier paren op zichzelf uit.</p>
+<p><strong>a</strong> deelt door 10 in plaats van door de wortel uit 10: 1.23 / 10 = 0.1230, en −1.58 / 0.1230 = −12.85. Dat is de meest gemaakte fout in deze som, en hij valt op doordat de uitkomst absurd groot wordt — een <em>t</em> van bijna dertien bij tien mensen bestaat niet. <strong>c</strong> zijn de twee getallen van de ónafhankelijke toets, die je bij vraag 1 naast de gepaarde zag staan: 1.58 / 0.8491 geeft inderdaad 1.86. Goede getallen, verkeerde toets — die 0.8491 komt uit de twee lósse spreidingen (1.79 en 2.00) en niet uit de spreiding van de tien verschillen. <strong>d</strong> deelt het verschil door de spreiding zelf in plaats van door de standaardfout, en vergeet dus de wortel helemaal. Dat geeft geen <em>t</em> maar een effectgrootte: precies de <em>d</em><sub>z</sub> van −1.28 die een paar alinea’s hoger staat. Vandaar dat dat getal zo bekend voelt.</p>
+<p><strong>3. c.</strong> Welch gunt elk merk zijn eigen spreiding, en betaalt die voorzichtigheid in vrijheidsgraden — dáár zie je aan de gebroken 8.62 dat er betaald is. <strong>a</strong> verzint een opschoning: geen van beide toetsen gooit ooit een waarneming weg. <strong>b</strong> rekent de goede som voor de verkéérde toets. In de rij <em>assumed</em> is <em>n</em> − 2 = 10 inderdaad het antwoord, en die 10 staat er ook; wat het niet verklaart is waarom het getal ernaast gebroken is, en een programma dat vrijheidsgraden afrondt bestaat niet. <strong>d</strong> leest 8.62 als een aantal steentjes. Er zijn er twaalf, en 8.62 steentjes bestaan niet — dat is precies de aanwijzing dat vrijheidsgraden geen dingen tellen.</p>
+<p><strong>4. c.</strong> Een <em>t</em> straft kleine steekproeven af en beloont grote; gooi er genoeg waarnemingen in en zelfs een schamel verschil wordt hoogsignificant. De grootte staat in <em>d</em>, niet in <em>t</em>. <strong>a</strong> leest de <em>t</em> als een belangrijkheidsmaat, en dat is precies de val waar deze sectie van het blok tegen bestaat. <strong>b</strong> heeft het teken goed gezien en de volgorde niet: jij typte Adelie als Group 1, en SPSS rekent Group 1 min Group 2, dus Adélie min Gentoo — de Adélies zijn de lichte. <strong>d</strong> maakt van een kleine <em>p</em> zekerheid. Hoe klein hij ook wordt, een <em>p</em> zegt hoe raar je verschil zou zijn als er niets was; hij wordt nooit een garantie.</p>
+<p><strong>5. d.</strong> Zelfde data, zelfde verschil, ander oordeel — en dat oordeel zie je aan één ding: of de nul binnen het interval valt. <strong>a</strong> leest breedte als grootte. Het gemeten verschil is in allebei −1.58 uur; alleen de onzekerheid eromheen verschilt. <strong>b</strong> verzint een tweede verschil dat er niet is, en dat is te controleren: het midden van [−2.46, −0.70] is −1.58, en het midden van [−3.37, 0.21] is óók −1.58. <strong>c</strong> springt van <em>“de nul zit erin”</em> naar <em>“gelijk bevonden”</em>. Dat interval laat verschillen van bijna drieënhalf uur in B’s voordeel net zo goed toe als nul; het zegt dat je het niet weet, niet dat er niets is.</p>
+<p><strong>6. c.</strong> De aanname zit op de tien verschilscores, want dát is de rij waarop de toets rekent. <strong>a</strong> is de aanname van de ónafhankelijke toets, en juist die draaien we hier niet. <strong>b</strong> gooit de twintig metingen op één hoop en verliest daarmee de koppeling per persoon — dezelfde fout die de onafhankelijke toets bij vraag 1 maakte. <strong>d</strong> begint waar met <em>“valt niet te toetsen”</em> en gaat daarna tweemaal de mist in. Een aanname die je niet kunt nakijken kun je wel degelijk schenden — hij gaat over de populatie en die trekt zich van jouw toetsvermogen niets aan — en hij vervalt dus ook niet. Juist omdát een toets weinig zegt bij tien getallen, kíjk je naar de rij. Doe je dat hier, dan zie je tussen negen getallen van 0 tot −2.4 één van −4.6 staan — de aanname vervalt niet, hij wankelt.</p>
+<p>Wil je de getallen uit vraag 2 zelf zien ontstaan, pak dan je rekenmachine. Het gemiddelde verschil (−1.58) en de spreiding van <code>verschil</code> (1.23) staan in <strong>Analyze → Descriptive Statistics → Descriptives</strong> op de kolom <code>verschil</code> die je bij het klaarzetten maakte:</p>
+<ul>
+<li>vraag 2b: de standaardfout die erbij hoort, en de <em>t</em> eruit: 1.23 / √10 = 0.3890 en −1.58 / 0.3890 = −4.06</li>
+<li>vraag 2b: en dit is de val, eerst afronden en dan pas delen: −1.58 / 0.39 = −4.05</li>
+<li>vraag 2a: delen door 10 in plaats van door de wortel uit 10: 1.23 / 10 = 0.1230 en −1.58 / 0.1230 = −12.85</li>
+<li>vraag 2d: delen door de spreiding zelf geeft geen <em>t</em> maar <em>d</em><sub>z</sub>: −1.58 / 1.23 = −1.28</li>
+<li>vraag 2c: de standaardfout van de ónafhankelijke toets is 0.8491. Die staat niet op jouw scherm: het R-broertje rekent hem uit, onderaan zijn eigen tentamenantwoorden. Uit e) kun je hem ook terugrekenen: 1.58 / 1.86 ≈ 0.85. En dan de <em>t</em>: −1.58 / 0.8491 = −1.86</li>
+</ul>
 </div>
 </div>
 </div>
