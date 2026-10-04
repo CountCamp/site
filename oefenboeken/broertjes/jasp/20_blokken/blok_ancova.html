@@ -23,41 +23,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -657,6 +622,7 @@ window.Quarto = {
   <li><a href="#van-soort-naar-sekse-nu-met-een-aanname-die-houdt" id="toc-van-soort-naar-sekse-nu-met-een-aanname-die-houdt">Van soort naar sekse — nu met een aanname die houdt</a></li>
   <li><a href="#de-afsluiter-van-het-hele-hoofdstuk" id="toc-de-afsluiter-van-het-hele-hoofdstuk">De afsluiter van het hele hoofdstuk</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -710,15 +676,15 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <ol type="1">
 <li><p>Open <code>penguins.csv</code> in JASP (menu linksboven → Open). Voor dit blok houd je de Adélies als vertrekpunt aan, zoals in <a href="../20_blokken/blok_dummy_regressie.html">Oefening 9.1</a> afgesproken — dus bouw je de dummy’s <code>chinstrap</code> en <code>gentoo</code>. Heb je <code>chinstrap</code> nog staan van die oefening, dan hoeft alleen <code>gentoo</code> erbij: een berekende kolom (klik op de <strong><code>+</code></strong> rechts van de laatste kolom, icoon <strong>R</strong>) met</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(soort <span class="sc">==</span> <span class="st">"Gentoo"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div></li>
+<pre><code>ifelse(soort == "Gentoo", 1, 0)</code></pre></li>
 <li><p>Kijk of hij staat waar je denkt: <strong>Frequencies → Contingency Tables</strong>, <code>gentoo</code> in <strong>Rows</strong> en <code>soort</code> in <strong>Columns</strong> — 123 Gentoo’s op 1, alle andere op 0.</p></li>
 <li><p><strong>Model 1 — alleen de soort.</strong> Dit is de eenweg-ANOVA uit <a href="../20_blokken/blok_anova.html">Oefening 9.4</a>, nu als regressie geschreven. <strong>Regression → Linear Regression</strong>: <code>gewicht</code> naar <strong>Dependent Variable</strong>, <code>chinstrap</code> en <code>gentoo</code> naar <strong>Covariates</strong>. In <em>Coefficients</em>: intercept <strong>3700.66</strong>, <code>chinstrap</code> <strong>32.43</strong>, <code>gentoo</code> <strong>1375.35</strong>; in <em>Model Summary</em> drukt JASP <strong>0.670</strong> af.</p></li>
-<li><p><strong>Model 2 — de vinlengte erbij.</strong> Sleep ook <code>vinlengte</code> naar <strong>Covariates</strong>. In <em>Coefficients</em> staat nu:</p>
+<li><p><strong>Model 2 — de vinlengte erbij.</strong> Sleep ook <code>vinlengte</code> naar <strong>Covariates</strong>. In <em>Coefficients</em> staan nu deze vier, hier afgerond op twee decimalen (je scherm geeft er meer):</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th></th>
-<th>Estimate</th>
+<th>Unstandardized</th>
 </tr>
 </thead>
 <tbody>
@@ -943,7 +909,7 @@ window.Quarto = {
 <ol type="1">
 <li><p><strong>Tel eerst wie er meedoet</strong>, net als in <a href="../20_blokken/blok_anova.html">Oefening 9.4</a>: <strong>Descriptives → Descriptive Statistics</strong>, <code>sekse</code> bij <strong>Variables</strong>, vink <strong>Frequency tables</strong> aan. Je hoort <strong>Valid</strong> 333 en <strong>Missing</strong> 9 te zien staan — van negen pinguïns is de sekse nooit vastgesteld. Staat er 342 bij <strong>Valid</strong> met <code>NA</code> als derde categorie, zet die twee letters dan onder <strong>Preferences → Data</strong> in de lijst met ontbrekende waarden en draai opnieuw.</p></li>
 <li><p>Bouw de dummy <code>man</code>: een berekende kolom (<strong><code>+</code></strong>, icoon <strong>R</strong>) met</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(sekse <span class="sc">==</span> <span class="st">"male"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>ifelse(sekse == "male", 1, 0)</code></pre>
 <p>Kijk het na: vraag ook van <code>man</code> een <strong>Frequency table</strong> — 165 nullen, 168 enen en 9 bij <strong>Missing</strong>. Staan de negen zonder sekse op 0 in plaats van bij <strong>Missing</strong>, dan tellen ze stiekem als vrouwtje mee; regel dan eerst stap 1.</p></li>
 <li><p>Model 1: <strong>Regression → Linear Regression</strong>, <code>gewicht</code> naar <strong>Dependent Variable</strong> en <code>man</code> naar <strong>Covariates</strong>. Model 2: sleep ook <code>vinlengte</code> naar <strong>Covariates</strong>. Vraag onder <strong>Statistics</strong> weer de <strong>Confidence intervals</strong> op.</p></li>
 </ol>
@@ -1096,6 +1062,100 @@ window.Quarto = {
 <p>De aanname van evenwijdige regressielijnen werd geschonden, <em>F</em>(2, 336) = 5.53, <em>p</em> = .004; de vinlengte is daarom niet als covariaat gebruikt en de soortverschillen worden ongecorrigeerd gerapporteerd.</p>
 </blockquote>
 <p>Dat is geen bekentenis van falen maar gewoon wat er gebeurd is. Wie de gezakte toets weglaat en de gecorrigeerde gemiddelden tóch opschrijft, rapporteert wat goed uitkwam.</p>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">twee doelen van een covariaat · gecorrigeerde gemiddelden · evenwijdige lijnen</span></p>
+<p>Deze zes hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord. Rekenen hoeft alleen bij vraag 6.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> Wat is een ANCOVA?</p>
+<ol type="a">
+<li>Een ANOVA waarbij de groepen eerst op de covariaat vergelijkbaar zijn gemaakt door waarnemingen weg te laten.</li>
+<li>Een toets die nagaat of de covariaat in elke groep dezelfde helling op de uitkomst heeft.</li>
+<li>Een regressie met een nominale voorspeller en een getalsmatige voorspeller naast elkaar in één model.</li>
+<li>Een regressie waarin de covariaat de afhankelijke variabele is en de factor de voorspeller.</li>
+</ol>
+<p><strong>2.</strong> Bij de twaalf steentjes schelen de twee merken 20.00 glanspunten, <em>p</em> = .11. Met de gladheid als covariaat wordt het merkverschil op de glans <strong>kleiner</strong> (14.95) en tegelijk <strong>significant</strong> (<em>p</em> = .001). Hoe kan die <em>p</em> zakken terwijl het verschil zelf ook zakt?</p>
+<ol type="a">
+<li>De covariaat nam ruis weg: in minder onverklaarde ruis is zelfs een kleiner merkverschil goed te zien.</li>
+<li>De covariaat nam vertekening weg: het echte merkverschil ís 14.95, en dat het nu significant is volgt uit die eerlijkere schatting.</li>
+<li>Het tweede model houdt meer vrijheidsgraden voor de restspreiding over, en met meer vrijheidsgraden zakt elke <em>p</em> vanzelf.</li>
+<li>Een tweede voorspeller maakt elke schatting in het model nauwkeuriger, dus ook die van het merkverschil op de glans.</li>
+</ol>
+<p><strong>3.</strong> De Chinstraps wegen ruw 32.43 gram méér dan de Adélies, en met de vinlengte in het model 206.51 gram mínder. Welke uitleg van die omslag is de beste?</p>
+<ol type="a">
+<li>De referentiecategorie is veranderd, en daarom staan de twee soorten nu omgekeerd in de uitvoer.</li>
+<li>De vinlengte hangt negatief samen met het gewicht, en een negatieve covariaat draait het teken van het soortverschil om.</li>
+<li>De vinlengte verklaart zoveel van het gewicht dat er voor de soort een negatief restje overblijft — een rekenkundig gevolg zonder inhoudelijke betekenis.</li>
+<li>Chinstraps hebben langere vinnen dan Adélies; houd je de vinlengte gelijk, dan is een Chinstrap gewoon een lichter beest.</li>
+</ol>
+<p><strong>4.</strong> Waarom is de aanname van evenwijdige regressielijnen belangrijk bij een ANCOVA?</p>
+<ol type="a">
+<li>Omdat de groepen dan op de gecorrigeerde gemiddelden even veel van elkaar verschillen als ze op de covariaat verschillen.</li>
+<li>Omdat de gecorrigeerde gemiddelden worden uitgerekend met één helling voor de covariaat, in alle groepen dezelfde.</li>
+<li>Omdat je er de interactie tussen de covariaat en de factor mee kunt toetsen.</li>
+<li>Omdat de spreiding binnen de groepen anders niet gelijk is, en de toets dat wel aanneemt.</li>
+</ol>
+<p><strong>5.</strong> De soort-ANCOVA zakt voor die aanname: <em>F</em>(2, 336) = 5.53, <em>p</em> = .004. De gecorrigeerde gemiddelden zijn 4146.86 gram voor de Adélies, 3940.35 voor de Chinstraps en 4413.67 voor de Gentoo’s. Wat doe je ermee?</p>
+<ol type="a">
+<li>Rapporteren mag, mits je de gezakte toets in een voetnoot meldt.</li>
+<li>Rapporteren mag, want Δ<em>R</em>² van de interactie is maar .007 en dat is verwaarloosbaar.</li>
+<li>Niet rapporteren: waaieren de lijnen, dan hangt het soortverschil ervan af bij welke vinlengte je meet.</li>
+<li>Niet rapporteren, en ook de gemiddelde vinlengte per soort niet, want die staat onder precies dezelfde aanname.</li>
+</ol>
+<p><strong>6.</strong> Voor het sekse-model reken je de gecorrigeerde gemiddelden uit bij één vinlengte. Welke vul je in?</p>
+<ol type="a">
+<li>Het gemiddelde over de 333 pinguïns waarop dit model draait: 200.97 mm.</li>
+<li>Het gemiddelde over alle 342 pinguïns (200.92 mm), zodat de twee modellen van dit blok op dezelfde vinlengte vergeleken worden.</li>
+<li>Per sekse het eigen gemiddelde: 204.51 mm voor de mannetjes en 197.36 mm voor de vrouwtjes.</li>
+<li>Dat maakt niet uit, want een ander invulgetal verschuift allebei de gecorrigeerde gemiddelden even veel.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 c · 2 a · 3 d · 4 b · 5 c · 6 a</strong></p>
+<p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. c.</strong> Meer is het niet: een regressie met twee voorspellers, waarvan de ene groepen aanwijst en de andere een getal is. <strong>a</strong> is de gok dat corrigeren hetzelfde is als groepen gelijk máken; een ANCOVA gooit niemand weg, hij rekent. <strong>b</strong> verwart de ANCOVA met zijn eigen keuring — dat toetsen van gelijke hellingen is de aannamecontrole, niet de analyse. <strong>d</strong> zet de twee rollen om; dan onderzoek je iets anders.</p>
+<p><strong>2. a.</strong> Kijk naar de <em>R</em>²: die springt van .231 naar .945, dus bijna alle onverklaarde spreiding in glans verdwijnt zodra de gladheid meedoet. De <em>p</em> hangt aan de verhouding tussen verschil en ruis, en hier krimpt de noemer harder dan de teller. <strong>b</strong> heeft een echt punt — het merkverschil op de glans zakt inderdaad naar 14.95 — maar dat deel alléén zou de <em>p</em> juist gróter maken: een kleiner verschil is moeilijker aan te tonen, niet makkelijker. Dat de <em>p</em> tóch zakt, komt van de ruis. <strong>c</strong> staat er andersom in: het tweede model schat één getal meer, dus gaan de vrijheidsgraden van de restspreiding van 10 naar 9 — ze nemen af. <strong>d</strong> is te ruim; een voorspeller die niets weet maakt niets nauwkeuriger, en hij kan een schatting zelfs wiebeliger maken.</p>
+<p><strong>3. d.</strong> Het is een schijnverband tussen de soort en het gewicht, via de vinlengte, en het mechanisme staat erbij: de Chinstraps hebben 195.82 millimeter vin tegen 189.95 bij de Adélies. <strong>a</strong> is een goede gewoonte — bij een omgeklapt teken kijk je eerst naar de referentie — maar hier blijven de Adélies in allebei de modellen het vertrekpunt. <strong>b</strong> klinkt logisch en klopt niet: <em>r</em>(vinlengte, gewicht) = .871, dus de samenhang tussen vinlengte en gewicht is juist stevig positief. <strong>c</strong> verklaart een uitkomst weg als machinerie, terwijl de vraag “wat weegt een Chinstrap bij dezelfde vinlengte?” een echte vraag met een echt antwoord is.</p>
+<p><strong>4. b.</strong> Eén helling voor alle groepen — dat is wat model 2 doet, en dat mag alleen als die ene helling in elke groep ongeveer klopt. <strong>a</strong> draait de zaak om: de aanname gaat over de hellingen, niet over hoevéél de groepen op de covariaat verschillen. <strong>c</strong> noemt het gereedschap in plaats van de reden; dát je de interactie kunt toetsen is hoe je de aanname nakijkt, niet waarom hij ertoe doet. <strong>d</strong> is een andere aanname — gelijke spreiding binnen de groepen — en die heeft elke ANOVA al, met of zonder covariaat.</p>
+<p><strong>5. c.</strong> Drie evenwijdige lijnen liggen overal even ver uit elkaar, dus dan is “het verschil tussen de soorten” één getal. Waaieren ze, dan is het er geen. <strong>a</strong> en <strong>b</strong> zijn allebei de verleiding om door te rekenen met wat je al hebt staan; <strong>b</strong> is de gevaarlijkste van de zes, want die .007 is echt klein — maar De Heus kent geen drempel en zegt woordelijk <em>“the variable should not be used as a covariate”</em>. <strong>d</strong> is te streng: die gemiddelde vinlengtes van 189.95, 195.82 en 217.19 zijn gewone gemiddelden en staan onder geen enkele aanname.</p>
+<p><strong>6. a.</strong> Reken het gemiddelde van de covariaat uit op precies de gegevens waar je model op draait — hier de 333 pinguïns met een bekende sekse.</p>
+<p><strong>d</strong> is de scherpste van de drie, want hij klopt in wat hij beweert: het <em>verschil</em> tussen de twee gecorrigeerde gemiddelden is bij evenwijdige lijnen 347.85 gram, welk invulgetal je ook kiest. Alleen vraagt de vraag niet naar het verschil maar naar de gemiddelden zelf, en die schuiven wel mee.</p>
+<p><strong>b</strong> klinkt zorgvuldig en is het niet: dan rapporteer je gecorrigeerde gemiddelden bij een vinlengte die dit model nooit gezien heeft. Bij de vrouwtjes scheelt dat 4029.13 tegen 4031.57 gram — weinig, en de verkeerde gewoonte. <strong>c</strong> haalt de hele correctie weg: vul je per groep zijn eigen gemiddelde in, dan krijg je de rúwe gemiddelden terug.</p>
+<p>De getallen in deze zes vragen staan bijna allemaal al eerder op deze bladzij. Vier niet, en die kun je zo nagaan:</p>
+<ul>
+<li>10 en 9 (vraag 2): de vrijheidsgraden van de restspreiding. Je vindt ze in de <em>ANOVA</em>-tabel van de twee diamantjes-modellen, rij <em>Residual</em>, kolom <em>df</em>.</li>
+<li>.871 (vraag 3): de correlatie tussen vinlengte en gewicht. <strong>Regression → Correlation</strong> met <code>vinlengte</code> en <code>gewicht</code>.</li>
+<li>.007 (vraag 5): wat de interactie toevoegt aan de <em>R</em>² van model 2. Neem de route van vraag c) bij de soort: <code>vinlengte</code>, <code>chinstrap</code> en <code>gentoo</code> in het nulmodel, en voeg onder <strong>Model</strong> de interactietermen <code>vinlengte✻chinstrap</code> en <code>vinlengte✻gentoo</code> toe. Je ziet hem bij het tweede model als <em>R</em>² Change.</li>
+<li>4029.13 (vraag 6): die rekent JASP niet uit, want JASP kiest zelf de 200.97. Reken hem na in twee stappen. De twee gemiddelde vinlengtes schelen 0.052 mm (200.967 tegen 200.915, op drie decimalen). Maal de vin-helling van 46.98 gram per millimeter is dat 2.44 gram. Dan is 4031.57 − 2.44 = 4029.13.</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="W9">

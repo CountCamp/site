@@ -621,6 +621,7 @@ window.Quarto = {
   <li><a href="#wat-de-odds-ratio-wél-en-niet-zegt" id="toc-wat-de-odds-ratio-wél-en-niet-zegt">Wat de odds ratio wél en niet zegt</a></li>
   <li><a href="#draai-de-tabel-om" id="toc-draai-de-tabel-om">Draai de tabel om</a></li>
   <li><a href="#schrijf-het-op-als-een-onderzoeker" id="toc-schrijf-het-op-als-een-onderzoeker">Schrijf het op als een onderzoeker</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
   </ul>
 </nav>
 <div class="datastrook">
@@ -643,7 +644,6 @@ window.Quarto = {
 <section id="tel-de-kruistabel-en-bereken-de-odds-ratio-in-jasp" class="level2">
 <h2 class="anchored" data-anchor-id="tel-de-kruistabel-en-bereken-de-odds-ratio-in-jasp">Tel de kruistabel en bereken de odds ratio in JASP</h2>
 <p><span class="begrippen">log-odds en logit · odds versus kans · verhouding van twee odds</span></p>
-<p>Eerst het telwerk. Haal de 189 baby’s binnen en zet de twee ja/nee-kolommen tegen elkaar af in een kruistabel.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -655,15 +655,17 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li><strong>Regression → Logistic Regression</strong>, <code>gepakt</code> naar <strong>Dependent</strong> (die kolom staat al klaar: 1 als de kraai de steen die nacht oppakte).</li>
-<li><code>glans</code> naar <strong>Covariates</strong>.</li>
-<li>Vink <strong>Odds ratio</strong> aan onder de statistieken.</li>
+<li>Open <code>diamantjes.csv</code>. De kolom <code>gepakt</code> staat al klaar: 1 als de kraai het steentje die nacht oppakte, anders 0.</li>
+<li><strong>Regression → Logistic Regression</strong>: <code>gepakt</code> naar <strong>Dependent Variable</strong> en <code>glans</code> naar <strong>Covariates</strong>.</li>
+<li>Onder <strong>Statistics</strong> staat <strong>Odds ratios</strong> al aan.</li>
 </ol>
-<p>In de coëfficiëntentabel staat <em>b</em> = 0.081 met intercept −4.04, en de odds ratio erachter: <strong>1.085</strong> per glanspunt.</p>
+<p>In de tabel <em>Coefficients</em>, op de rij <code>glans</code>: bij <strong>Estimate</strong> 0.081 — log-odds; wat dat zijn, staat hieronder — en bij <strong>Odds Ratio</strong> <strong>1.085</strong> per glanspunt.</p>
 </div>
 </div>
+<p><span class="naslag"><code>gepakt</code> is hier géén hercodering: de kraai deed het, en het is opgeschreven. Dat scheelt een keuze die je anders zelf had moeten maken — en waar je die grens legt, verandert je hele uitkomst. Wil je toch van een getal een ja/nee-kolom maken (zoals <code>mooi</code>, glans boven de 50), dan staan de vormen (een <strong><code>ifElse</code></strong>-blokje in de sleep-route, <code>ifelse</code> of <code>cut</code> in het R-vak, en het maken van dummies) bij <a href="../90_basishandelingen.html#hercoderen">nieuwe variabelen maken en hercoderen</a>.</span></p>
 <p>De kraai pakte er zes van de twaalf op. Laat de glans die uitkomst voorspellen, en het model geeft je eerst <strong>log-odds</strong>: de logaritme van de odds. In het boek heet dat de <strong>logit</strong>. Niemand voelt log-odds, dus draai je die logaritme terug, en dan rolt er een keer-getal uit: per glanspunt worden de odds op oppakken <strong>1.085</strong> keer zo groot. Dat klinkt als niks, tot je bedenkt dat keer-getallen stapelen als machten en niet als sommen — tien glanspunten erbij is <span class="math inline">\(1.085^{10}\)</span> en dus <strong>2.26</strong> keer zo grote odds. Geen rechte lijn meer, maar een kans die tussen 0 en 1 blijft: bij glans 49.6 zegt het model munt-opgooien, en daar liggen Else en Leen, allebei op 50, allebei op kans .51 — en toch had de een een andere nacht dan de ander.</p>
 <p><strong>Nu jij</strong> — met nieuwe data: geboortegewichten, en een uitkomst die ja of nee is.</p>
+<p>Eerst het telwerk. Haal de 189 baby’s binnen en zet de twee ja/nee-kolommen tegen elkaar af in een kruistabel.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · trek eraan · JASP 0.98.1">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -679,11 +681,11 @@ window.Quarto = {
 <li>Klik bovenin op <strong>Frequencies</strong> en kies <strong>Contingency Tables</strong>.</li>
 <li>Sleep <code>roken</code> naar <strong>Rows</strong> en <code>laag_geboortegewicht</code> naar <strong>Columns</strong>.</li>
 <li>Open <strong>Cells</strong> en vink bij <strong>Percentages</strong> de optie <strong>Row</strong> aan.</li>
-<li>Open <strong>Statistics</strong> en vink <strong>Odds ratio</strong> aan.</li>
+<li>Open <strong>Statistics</strong> en vink <strong>Odds ratio (2x2 only)</strong> aan. Eronder staat <strong>Log Odds Ratio</strong> al aangevinkt: zet dat vinkje uit.</li>
 </ol>
 </div>
 </div>
-<p>Rechts staat nu de kruistabel: bij de rokers 30 keer ja en 44 keer nee, bij de niet-rokers 29 keer ja en 86 keer nee — en dankzij de rij-percentages die 41% tegenover 25% uit de prikkel. Daaronder: odds ratio <strong>2.02</strong>. (Staat er bij jou 0.70 met het label <em>log</em>? Dat is dezelfde boodschap in logaritme-taal: e^0.70 = 2.02. En zie je 0.49, dan heeft JASP de groepen andersom gedeeld — 0.49 = 1/2.02.)</p>
+<p>Rechts staat nu de kruistabel: bij de rokers 30 keer ja en 44 keer nee, bij de niet-rokers 29 keer ja en 86 keer nee — en dankzij de rij-percentages die 41% tegenover 25% uit de prikkel. Daaronder staat de tabel <em>Odds Ratio</em>, met op de bovenste rij bij <strong>Estimate</strong> <strong>2.022</strong>: de 2.02 uit de prikkel, met één decimaal meer. De rij <em>Fisher’s exact test</em> eronder schat hetzelfde getal langs een andere weg en komt op 2.014; hier gaat het om de bovenste. (Liet je <strong>Log Odds Ratio</strong> aan staan, dan heet de tabel <em>Log Odds Ratio</em> en staat er 0.704. Dat is dezelfde odds ratio in logaritme-taal, net als de <strong>Estimate</strong> bij de diamantjes: e<sup>0.704</sup> = 2.02.)</p>
 <p>Kijk goed naar hoe die 2.02 gebouwd is, want hier begint bijna elk misverstand. Een <strong>kans</strong> (<em>probability</em>) zet de ja’s af tegen álle moeders: 30 van de 74 rokers, dus .41. Een <strong>odds</strong> zet de ja’s af tegen de <em>nee’s</em>: 30 tegenover 44, dus 0.68. Dat is de taal van het wedkantoor — “0.68 tegen 1”. Zelfde telwerk, andere breuk: odds = kans / (1 − kans). Onthoud dus als eerste: <strong>een odds is geen kans.</strong> Bij een kans van 0.5 is de odds al 1; bij een kans van 0.9 is de odds 9.</p>
 <p>Deel je de twee odds op elkaar, dan krijg je de <strong>odds ratio</strong> (<em>odds ratio</em>, OR): <strong>2.02</strong>. Deel dan wel de hele breuken op elkaar en niet de afgeronde 0.68 en 0.34 — die geven 2.0, en dat verschil van twee honderdsten komt dan uit jouw afronding en niet uit de moeders. De odds op een laag geboortegewicht zijn bij de rokende moeders ruim twee keer die van de niet-rokende. Dát is waar die 2 vandaan komt — niet uit de kansen, maar uit de odds.</p>
 <div class="kicker">
@@ -693,11 +695,12 @@ window.Quarto = {
 <section id="is-die-2.02-echt-of-toeval" class="level2">
 <h2 class="anchored" data-anchor-id="is-die-2.02-echt-of-toeval">Is die 2.02 echt, of toeval?</h2>
 <p><span class="begrippen">schud-toets · toeval rond 1 · 95%-interval</span></p>
-<p>Nu de vraag die telt: is die 2.02 écht, of kan toeval een kruistabel zomaar zo scheef trekken? Je zou dat willen uitproberen door vals te spelen — alle rook-labels losknippen van hun eigen moeder en lukraak opnieuw uitdelen. Zo <strong>koppel je roken en geboortegewicht los van elkaar</strong>: evenveel rokers, evenveel baby’s met laag gewicht, maar wíé rookte is nu puur toeval. Duizend keer. Duizend werelden waarin roken en geboortegewicht gegarandeerd níéts met elkaar te maken hebben.</p>
-<p><strong>En hier moet ik eerlijk zijn: dat schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; duizend keer husselen en opnieuw kijken is <em>code-</em> of <em>speeltje</em>-werk. Geen gemis van jou of van JASP — het boek doet het bewust zo: de simulatie-ervaring loopt via een <strong>schud-speeltje</strong> in de browser (of via het R-broertje, waar het een handvol regels code is).</p>
+<p>Nu de vraag die telt: is die 2.02 écht, of kan toeval een kruistabel zomaar zo scheef trekken? We spelen vals. We knippen alle rook-labels los van hun eigen moeder en delen ze lukraak opnieuw uit. Evenveel rokers, evenveel baby’s met laag gewicht — maar wíé rookte is nu puur toeval. Duizend keer. Duizend werelden waarin roken en geboortegewicht gegarandeerd níéts met elkaar te maken hebben.</p>
+<p>Eén ding vooraf: bij een verschil is “niks aan de hand” nul, maar bij een <em>verhouding</em> is niks-aan-de-hand <strong>1</strong> — twee gelijke odds op elkaar gedeeld. Het bergje gaat dus niet om 0 dansen, maar om 1.</p>
+<p><strong>En hier moet ik eerlijk zijn: dat duizend keer schudden is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; husselen en opnieuw kijken is <em>code-</em> of <em>speeltje</em>-werk. Geen gemis van jou of van JASP — het boek doet het bewust zo: de simulatie-ervaring loopt via een <strong>schud-speeltje</strong> in de browser (of via het R-broertje, waar het een handvol regels code is).</p>
 <p><a href="../speeltjes/w12_schud_odds.html" target="_blank">▶ Speel het schud-speeltje</a></p>
-<p>Eén ding vooraf: bij een verschil is “niks aan de hand” nul, maar bij een <em>verhouding</em> is niks-aan-de-hand <strong>1</strong> — twee gelijke odds op elkaar gedeeld. Het bergje in het speeltje danst dus niet om 0, maar om 1.</p>
-<p>En dat is precies wat je ziet: de duizend geschudde OR’s dansen om de 1 — de mediaan op 0.99, 95% tussen ongeveer 0.5 en 1.8. Maar let op: <strong>geen enkele geschudde wereld geeft precies 1</strong>, terwijl in élk van die werelden de waarheid exact 1 is. Toeval maakt van “niks” altijd “nét niet niks”. En dan de rode streep op 2.02: buiten het bergje, maar niet mijlenver — in 23 van de 1000 geschudde werelden kwam het toeval óók tot 2.02 of verder. Zeldzaam, geen nooit. De samenhang is dus vrijwel zeker echt, maar met bescheiden marge: het 95%-interval [1.08, 3.78] dat JASP je kan geven zegt hetzelfde met zijn onderkant, die tegen de 1 aan schuurt.</p>
+<p>Kijk naar het plaatje dat het speeltje bouwt als je op <strong>Schud 1000×</strong> klikt. Jouw ronde valt net iets anders uit dan de getallen hieronder, want elke keer schudden is nieuw toeval — hoeveel van jóúw werelden tot 2.02 of verder kwamen, telt het speeltje onder het plaatje zelf. Een middelste waarde en een band laat het niet zien; die komen uit één vaste ronde van duizend. De duizend geschudde OR’s dansen om de 1 — de mediaan zit op 0.99, en 95% blijft tussen ongeveer 0.5 en 1.8. Maar let op: <strong>geen enkele geschudde wereld geeft precies 1</strong>, terwijl in élk van die werelden de waarheid exact 1 is. Toeval maakt van “niks” altijd “nét niet niks”. Precies daarom schudden we: om te zien hoe ver “nét niet niks” kan komen.</p>
+<p>En dan de rode streep op 2.02: buiten het bergje, maar niet mijlenver. In 23 van de 1000 geschudde werelden kwam het toeval óók tot 2.02 of verder. Zeldzaam, geen nooit. De samenhang is dus vrijwel zeker echt, maar hij staat niet onaantastbaar ver van het toeval — het 95%-interval [1.08, 3.78] (in JASP naast de 2.022, als <strong>Lower</strong> 1.081 en <strong>Upper</strong> 3.783) zegt hetzelfde met zijn onderkant, die tegen de 1 aan schuurt. Echt, ja. Met een bescheiden marge.</p>
 <div class="kicker">
 <p>snap het</p>
 </div>
@@ -738,7 +741,7 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <ol type="1">
 <li>Draai in <strong>Contingency Tables</strong> de vakken om: zet nu <code>laag_geboortegewicht</code> bij <strong>Rows</strong> en <code>roken</code> bij <strong>Columns</strong>.</li>
-<li>Onder <strong>Statistics</strong> staat <strong>Odds ratio</strong> al aan; lees hem opnieuw af.</li>
+<li>Onder <strong>Statistics</strong> staat <strong>Odds ratio (2x2 only)</strong> al aan; lees hem opnieuw af.</li>
 <li>Het relatieve risico geeft JASP je niet kant en klaar. Lees daarvoor de vier vakjes uit de omgedraaide tabel af en reken het met de rekenmachine — het zijn drie delingen.</li>
 </ol>
 </div>
@@ -829,6 +832,122 @@ window.Quarto = {
 </blockquote>
 <p>Let op de kleine lettertjes: <em>OR</em> helt, want dat teken draagt zélf de waarde 2.02. CI helt niet — die benoemt alleen het interval dat erachter staat, en benoemen is geen waarde dragen. De zin staat in de verleden tijd, want je vertelt wat je vónd — en hij staat op eigen benen: wie er onderzocht werden, wat er gemeten werd, en het getal mét zijn interval. En APA rekent op twee decimalen: 2.02, niet 2.0219.</p>
 <p>Jouw beurt: schrijf zelf zo’n zelfstandige zin, maar noem er nu <strong>beide</strong> verhoudingen in — de odds ratio én het relatieve risico (<em>OR</em> = 2.02, <em>RR</em> = 1.61) — zodat een lezer niet in de val trapt om die 2.02 te lezen als “twee keer zoveel kans”. Hardop voorlezen mag.</p>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">odds tegenover kans · OR tegenover RR · symmetrie · wat een interval zegt</span></p>
+<p>Deze zes hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord. Bij vraag 2 reken je, en bij 6 helpt één aftreksom.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> In een artikel over deze 189 bevallingen staat <em>OR</em> = 2.02 voor roken en een laag geboortegewicht. Welke omschrijving is de beste?</p>
+<ol type="a">
+<li>Rokende moeders hadden twee keer zoveel kans op een baby met een laag geboortegewicht.</li>
+<li>Bij de rokende moeders waren de odds op een laag geboortegewicht ruim verdubbeld.</li>
+<li>Roken maakte de kans op een laag geboortegewicht ruim twee keer zo groot.</li>
+<li>Van de rokende moeders kreeg 2.02% meer een baby met een laag geboortegewicht.</li>
+</ol>
+<p><strong>2.</strong> Van de 74 rokende moeders kregen 30 een baby met een laag geboortegewicht en 44 niet. Hoe groot zijn de odds op een laag geboortegewicht in die groep?</p>
+<ol type="a">
+<li>.41</li>
+<li>0.68</li>
+<li>1.47</li>
+<li>2.02</li>
+</ol>
+<p><strong>3.</strong> Op deze data is <em>OR</em> = 2.02 en <em>RR</em> = 1.61. Waarom ligt de odds ratio hoger dan het relatieve risico?</p>
+<ol type="a">
+<li>Omdat de uitkomst hier vaak voorkomt: bijna één op de drie baby’s heeft een laag geboortegewicht.</li>
+<li>Omdat de odds in beide groepen hoger uitvallen dan de kansen zelf.</li>
+<li>Omdat de odds ratio alle 189 bevallingen meeneemt en het relatieve risico alleen de rokende groep.</li>
+<li>Omdat het relatieve risico op de afgeronde kansen gerekend is (.41 en .25) en de odds ratio op de ruwe aantallen.</li>
+</ol>
+<p><strong>4.</strong> Je kantelt de tabel: niet meer “rookte de moeder → had de baby een laag gewicht”, maar “had de baby een laag gewicht → rookte de moeder”. Welk getal blijft dan exact hetzelfde?</p>
+<ol type="a">
+<li>Alle drie, want het zijn dezelfde 189 bevallingen.</li>
+<li>Het relatieve risico.</li>
+<li>Het risicoverschil.</li>
+<li>De odds ratio.</li>
+</ol>
+<p><strong>5.</strong> Het risicoverschil is ongeveer 15 baby’s per honderd. Mag je daaruit een NNT van ongeveer 7 melden?</p>
+<ol type="a">
+<li>Nee, want een NNT hoort bij een relatief risico en niet bij een risicoverschil.</li>
+<li>Ja: 100 / 15 = 6.67, naar boven afgerond zeven moeders.</li>
+<li>Nee, want een NNT vraagt dat er iets gedáán is, en hier is niemand behandeld.</li>
+<li>Nee, want met 189 bevallingen is het interval daarvoor te breed.</li>
+</ol>
+<p><strong>6.</strong> Bij die odds ratio van 2.02 hoort een 95%-interval van [1.08, 3.78]. Welke uitspraak past daar het best bij?</p>
+<ol type="a">
+<li>Het interval is breed, dus de 2.02 is niet goed uitgerekend.</li>
+<li>Omdat de 1 erbuiten valt, is de samenhang sterk.</li>
+<li>Omdat 2.02 precies midden tussen 1.08 en 3.78 ligt, is dat de betrouwbaarste schatting.</li>
+<li>Echt, maar met een bescheiden marge: de ondergrens schuurt tegen de 1 aan.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 b · 2 b · 3 a · 4 d · 5 c · 6 d</strong></p>
+<p>Hieronder staat per vraag eerst waaróm het goede antwoord goed is, en daaronder een korte toelichting per foute optie. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. b.</strong> Het zijn de <strong>odds</strong> die ruim verdubbelden. De kans zelf werd 1.61 keer zo groot, niet 2.02.</p>
+<ul>
+<li><strong>a</strong> — de fout die je op het journaal hoort: <em>“als je rookt heb je zes keer zoveel kans op kanker”</em> is bijna altijd een odds ratio, geen kansverhouding.</li>
+<li><strong>c</strong> — dezelfde fout, mét een oorzaak erbij. Niemand heeft deze moeders láten roken.</li>
+<li><strong>d</strong> — leest de 2.02 als procentpunten. Het verschil in percentages bestaat wel (41% tegen 25%, ruim vijftien procentpunt), maar dat is het risicoverschil.</li>
+</ul>
+<p><strong>2. b.</strong> Een odds zet de ja’s tegen de <strong>nee’s</strong>: 30 / 44 = <strong>0.68</strong>.</p>
+<ul>
+<li><strong>a</strong> — dat is de kans: de ja’s tegen álle 74 moeders, 30 / 74 = .41. Precies de verwarring waar dit blok over gaat, en let op de nul: een kans krijgt er geen, een odds wel.</li>
+<li><strong>c</strong> — de odds ondersteboven, 44 / 30: de odds op géén laag geboortegewicht.</li>
+<li><strong>d</strong> — de odds ratio, en die heb je pas ná het delen van twee odds.</li>
+</ul>
+<p><strong>3. a.</strong> Hoe gewoner de uitkomst, hoe verder de odds ratio van het relatieve risico af gaat liggen. Alleen bij zeldzame uitkomsten kruipen ze naar elkaar toe.</p>
+<ul>
+<li><strong>b</strong> — waar in deze twee groepen: de odds van 0.68 en 0.34 liggen allebei boven hun kans van .41 en .25. En toch niet de reden. Neem een zeldzame uitkomst, 1 tegen 2 per honderd: daar liggen de odds óók boven de kansen, maar dan is de <em>OR</em> 2.02 en het <em>RR</em> 2.00 — vrijwel gelijk.</li>
+<li><strong>c</strong> — onwaar: beide maten gebruiken alle vier de hokjes.</li>
+<li><strong>d</strong> — de scherpste afleider, want die som bestaat echt: .41 / .25 = 1.64, vlak bij 1.61. Alleen komt het gat daar niet vandaan; op de ruwe aantallen is het <em>RR</em> 1.6076 en blijft het net zo groot.</li>
+</ul>
+<p><strong>4. d.</strong> Een odds ratio ís het kruisproduct (30 × 86) / (44 × 29), en dat merkt niet dat je de tabel kantelt.</p>
+<ul>
+<li><strong>a</strong> — klinkt als gezond verstand: dezelfde mensen, dus dezelfde getallen. Maar de vráag verandert, en twee van de drie maten merken dat.</li>
+<li><strong>b</strong> — verschuift van 1.61 naar 1.50: een kans heeft de groep waaruit je grabbelt in zijn noemer, en die groep wisselt.</li>
+<li><strong>c</strong> — verschuift ook, van .153 naar .170. Precies wat vraag g) van <em>Jouw beurt</em> je liet natellen.</li>
+</ul>
+<p><strong>5. c.</strong> Een NNT — hoeveel mensen je moet behandelen om er één extra te helpen — vraagt een behandeling. Hier is er geen.</p>
+<ul>
+<li><strong>a</strong> — verzint een koppeling die niet bestaat: een NNT komt juist uít het risicoverschil.</li>
+<li><strong>b</strong> — de verleidelijkste afleider van dit blok, want de rekensom is goed. Dit blok maakt hem zelf, maar bij twee verzonnen onderzoeken, en met een <em>als</em> eraan vast: <em>“is er in zo’n onderzoek ook écht iets gedáán, dán kun je dat verschil omkeren.”</em> Hier is die als niet vervuld.</li>
+<li><strong>d</strong> — een andere klacht: een breed interval maakt een schatting onzeker, niet ongeoorloofd.</li>
+</ul>
+<p><strong>6. d.</strong> Echt, met een bescheiden marge. Die twee helften horen bij elkaar, en de tweede laten de meeste lezers weg.</p>
+<ul>
+<li><strong>a</strong> — verwart breed met verkeerd. De 2.02 is precies uitgerekend, alleen onzeker.</li>
+<li><strong>b</strong> — leest “de 1 valt erbuiten” als een uitspraak over <strong>sterkte</strong>, terwijl het er een over <strong>toeval</strong> is. Dezelfde fout als een <em>p</em> voor een effectgrootte aanzien.</li>
+<li><strong>c</strong> — narekenbaar onwaar: het midden tussen 1.08 en 3.78 is 2.43, niet 2.02. <em>(Extra, niet nodig voor het antwoord: een interval om een verhouding ligt symmetrisch om de logaritme, dus het <strong>meetkundige</strong> midden — de wortel uit 1.08 × 3.78 — komt wél op 2.02 uit. Daarom loopt zo’n interval altijd verder naar boven dan naar beneden.)</em></li>
+</ul>
+<p>De getallen in deze zes vragen staan bijna allemaal al eerder op deze bladzij: in de kruistabel, in <em>Wat de odds ratio wél en niet zegt</em> en in de antwoorden van <em>Jouw beurt</em>. Wat er nieuw bij komt zijn de foute afleiders, en bij elk staat de som erachter, zodat je ze met de rekenmachine narekent in plaats van ze te geloven: 44 / 30 bij vraag 2, .41 / .25 bij vraag 3, 100 / 15 bij vraag 5 en het midden tussen 1.08 en 3.78 bij vraag 6. Eén getal staat er met meer decimalen dan elders: de 1.6076 bij vraag 3 is het relatieve risico uit <em>Wat de odds ratio wél en niet zegt</em>, op vier decimalen — (30 / 74) / (29 / 115). JASP rekent dat niet voor je uit, dus die deling doe je zelf.</p>
+</div>
 </div>
 </div>
 <div class="boekvorm" data-w="W12">
