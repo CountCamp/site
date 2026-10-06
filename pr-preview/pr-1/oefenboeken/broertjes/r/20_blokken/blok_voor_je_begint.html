@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Oefening 0.1 · Kijken naar de data – R-oefenboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_gemiddelde_spreiding.html" rel="next">
+<link href="../installatie.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Eerste beweging · Verschil onder de loep</li><li class="breadcrumb-item"><a href="../installatie.html">H0 · In den beginne</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_voor_je_begint.html">Oefening 0.1 · Kijken naar de data</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">R-oefenboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R-oefenboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Eerste beweging · Verschil onder de loep</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">H0 · In den beginne</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 0.0 · Installeren &amp; instellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Oefening 0.1 · Kijken naar de data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">H1 · De gemiddelde slok</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 1.1 · Het gemiddelde en de standaardafwijking</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">H2 · De vorm van de hoop</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 2.1 · Mediaan, kwartielen en scheefheid</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Tweede beweging · Verschillen koppelen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">H3 · Het rechthoekje</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 3.1 · Correlatie en scatterplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 3.2 · Enkelvoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 3.3 · De residuen bekijken</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Derde beweging · Verschil op de proef</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">H4 · De grabbelton geschud</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.1 · Steekproevenverdeling en standaardfout</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">H5 · Bestaat het echt?</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 5.1 · Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">H6 · Hoe beslis je?</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 6.1 · De p-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 6.2 · Power, type I en II</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">H7 · Tien keer welnee</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 7.1 · Betrouwbaarheid en Cronbachs α</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Vierde beweging · Verschil onthechten</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">H8 · Meer dan één verschil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 8.1 · Meervoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_confounding_partiele_correlatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 8.2 · Confounding en partiële correlatie</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">H9 · Groepen zijn ook getallen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_dummy_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.1 · Dummy-codering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.2 · De t-toets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.3 · Effectgrootte: Cohens d</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.4 · Eenweg ANOVA en η²</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_ancova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.5 · ANCOVA: een groep én een getal</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">H10 · Verschil in verschil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 10.1 · Als de moderator een groep is</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie_continu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 10.2 · Als de moderator een getal is</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false">
+ <span class="menu-text">H11 · Het doorgegeven verschil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 11.1 · Mediatie: direct en indirect</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false">
+ <span class="menu-text">Slot · Verschil dat buigt</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-17" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false">
+ <span class="menu-text">H12 · En hij buigt</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-18" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 12.1 · Logistische regressie: odds en odds ratio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false">
+ <span class="menu-text">Naast het boek · Schil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-19" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schil · Kruistabel en χ²</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false">
+ <span class="menu-text">Naslag</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-20" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basishandelingen in R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../91_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-21" role="navigation" aria-expanded="false">
+ <span class="menu-text">Schud-speeltjes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-21" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-21" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/h3_grabbel.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De grabbelton (steekproef)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w4_schud_correlatie.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Correlatie schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_schud_verschil.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Het verschil schudden (t)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_p_planten.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De p geteld</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/s2_schud_tabel.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De tabel schudden (χ²)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w12_schud_odds.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De odds schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_trek_interval.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Trek opnieuw (interval)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<p class="beweging">Eerste beweging · Verschil onder de loep</p>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Eerste beweging · Verschil onder de loep</li><li class="breadcrumb-item"><a href="../installatie.html">H0 · In den beginne</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_voor_je_begint.html">Oefening 0.1 · Kijken naar de data</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Oefening 0.1 · Kijken naar de data</h1>
+<p class="subtitle lead">Kijken voor je rekent</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">In deze oefening</h2>
+   
+  <ul>
+  <li><a href="#die-linker-is-dikker-dan-die-rechter" id="toc-die-linker-is-dikker-dan-die-rechter">Die linker is dikker dan die rechter</a></li>
+  <li><a href="#bekijk-de-tabel-in-r" id="toc-bekijk-de-tabel-in-r">Bekijk de tabel in R</a></li>
+  <li><a href="#wat-een-tabel-is-en-wat-hij-weglaat" id="toc-wat-een-tabel-is-en-wat-hij-weglaat">Wat een tabel is — en wat hij weglaat</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
+  </ul>
+</nav>
+<div class="datastrook">
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
+</div>
+<div class="kicker">
+<p>prikkel</p>
+</div>
+<section id="die-linker-is-dikker-dan-die-rechter" class="level2">
+<h2 class="anchored" data-anchor-id="die-linker-is-dikker-dan-die-rechter">Die linker is dikker dan die rechter</h2>
+<p><span class="begrippen">kijken vóór rekenen · verschil voelen</span></p>
+<p>Voordat er ergens gerekend wordt, wordt er gekeken. Iemand staat op een koude rots, ziet twee pinguïns voorbij waggelen en denkt: die linker is dikker dan die rechter. Meer is het niet. Geen formule, geen toets — een blik, en het begin van een vraag.</p>
+<p>Zo begon het boek ook: bij het vóélen van verschil, ver voordat er iets aan gerekend werd. Dit oefenboek is de andere helft van dat verhaal, en het loopt er de hele tijd naast: het boek vertelt, hier doe je het zelf. Jij en R — en de bedoeling is dat jij die computer stap voor stap zover krijgt dat hij laat zíen wat jij al kon voelen.</p>
+<p>Maar voor je ook maar één knop aanraakt, wil ik dat je iets doet wat bijna iedereen overslaat: kijken naar wat data eigenlijk zíjn. Niet rekenen — kijken.</p>
+<div class="kicker">
+<p>kijk</p>
+</div>
+</section>
+<section id="bekijk-de-tabel-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="bekijk-de-tabel-in-r">Bekijk de tabel in R</h2>
+<p><span class="begrippen">data inlezen · rijen en kolommen</span></p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">dplyr</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de twaalf steentjes binnenhalen</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Kijken wat er ligt ----</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># head() laat standaard de eerste zes rijen zien: Anna tot Faas</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nrow() → 12</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(d)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ncol() → 9</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(d)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># str() zet achter elke kolom wat erin zit: tekst of getal</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># de twaalf steentjes binnenhalen</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Kijken wat er ligt ----</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># dim() → 12  9</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(d)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># glimpse() doet wat str() doet, maar leesbaarder</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(d)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Een regel die begint met een <strong>hekje</strong> (<code>#</code>) is <strong>commentaar</strong> (Engels: <em>comment</em>): een briefje voor jezelf. R slaat alles achter een hekje over, dus je mag erachter schrijven wat je wilt — zo lees en begrijp je je script later terug.</p>
+<p>Staat er in zo’n briefje een pijltje <code>→</code>, dan zegt het wat je hoort te zien: bij <code># nrow() → 12</code> hoort 12. Op je scherm zet R er zelf nog <code>[1]</code> voor. Dat is geen fout: R nummert wat hij teruggeeft, en <code>[1]</code> betekent alleen <em>“hier begint het eerste getal”</em> — ook als er twee staan, zoals bij <code>dim()</code>. En <code>## Kijken wat er ligt ----</code>, met twee hekjes en streepjes? Ook commentaar, alleen dan als kopje in je script. Een heel stuk tegelijk commentaar maken kan ook, met <a href="../installatie.html#zes-sneltoetsen">de commentaar-sneltoets uit de installatie</a>.</p>
+</div>
+</div>
+<p>Twaalf rijen, negen kolommen — de hele dataset past in één blik, en dat is precies waarom het boek ermee rekent. Bij echte data lukt dat kijken-in-één-keer niet meer, en dan heb je gereedschap nodig om te zien wat er ligt.</p>
+<p><strong>Nu jij</strong> — met 342 pinguïns, te veel rijen voor één blik.</p>
+<p>Bij dit boekje hoort een bestand: <code>penguins.csv</code> — 342 pinguïns van een rots bij Antarctica, écht opgetild, écht gewogen.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Haal het binnen en kijk alleen maar. Er wordt hier niks berekend.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="In R · alleen kijken">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In R · alleen kijken
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de 342 pinguïns binnenhalen</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Kijken wat er ligt ----</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># head() laat de eerste zes rijen zien</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(peng)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># nrow() → 342 pinguïns</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(peng)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># names() geeft de negen kolomnamen</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(peng)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Wil je er doorheen scrollen zoals in een spreadsheet? <code>View(peng)</code> opent de hele tabel in een eigen venster. Doen — scrollen hoort bij kijken.</p>
+</div>
+</div>
+<p><span class="naslag">Achterin dit boekje ligt een <strong><a href="../90_basishandelingen.html">gereedschapskist</a></strong>: alle handelingen die telkens terugkomen — inlezen, filteren, kolommen maken, plotten — in base R én dplyr naast elkaar. Je hoeft hem nu niet te lezen. Loop je straks vast op een handeling, dan sla je hem daar op. Voor dit moment: <a href="../90_basishandelingen.html#inlezen">inlezen en wegschrijven</a> en <a href="../90_basishandelingen.html#kijken">kijken wat je hebt</a>.</span></p>
+<p>Wat je ziet is een tabel: <strong>342 rijen, negen kolommen</strong> — <code>id</code>, <code>soort</code>, <code>sekse</code>, <code>snavellengte</code>, <code>snaveldiepte</code>, <code>vinlengte</code>, <code>gewicht</code>, <code>stikstof</code> en <code>koolstof</code>. En daarbij de belangrijkste leesregel van dit hele boekje: <strong>één rij is één pinguïn.</strong> Rij 1 is een Adelie-man met een snavel van 39.1 mm, en hij weegt 3750 gram. Kijk bij hem onder <code>stikstof</code> en <code>koolstof</code>: daar staat twee keer <code>NA</code>. Op die plek ontbreekt een meting — geen fout van jou en geen fout in het bestand. Wat die twee kolommen zijn, staat op <a href="../91_datasets.html#penguins">de datasetbladzij</a>. Scroll eens een flink eind naar beneden: rij 173 is een Gentoo van 5000 gram. Wijs ze allebei maar even aan. Dit beest weegt 3750 gram; dat beest 5000 — ruim een kilo verschil, twee dieren, één rots.</p>
+<p>Je hebt nog helemaal niks berekend. En toch heb je al iets gezien.</p>
+<div class="kicker">
+<p>snap het</p>
+</div>
+</section>
+<section id="wat-een-tabel-is-en-wat-hij-weglaat" class="level2">
+<h2 class="anchored" data-anchor-id="wat-een-tabel-is-en-wat-hij-weglaat">Wat een tabel is — en wat hij weglaat</h2>
+<p><span class="begrippen">wat data zijn · meten · kijk eerst, reken dan</span></p>
+<p>Dít is data. Geen mystiek, geen wiskunde — een tabel. Elke rij een echt beest (of straks, in andere bestanden, een echt mens), en elke kolom een vraag die iemand aan dat beest gesteld heeft: hoe zwaar ben je, hoe lang is je snavel, wat voor soort ben je.</p>
+<p>En meteen ook dit, want het hoort er vanaf dag één bij: de tabel is niet de pinguïn. Rij 1 zegt niks over hoe dat dier over de rots waggelde, of hij zich liet optillen of protesteerde, hoe de wind stond die dag. Wat je meet is nooit alles wat er was. Een dataset is een net van getallen dat een stukje werkelijkheid probeert vast te houden — en er glipt altijd iets doorheen. Maar wat blijft hangen, daar kun je mee kijken. Dat is geen verlies om bij te blijven treuren; het is een begin.</p>
+<p>Vanaf hier gaan we die tabel steeds iets slimmer laten praten. Hoofdstuk voor hoofdstuk, één techniek per keer: eerst samenvatten, dan tekenen, dan schudden, uiteindelijk voorspellen. En telkens in dezelfde volgorde, die je nu al kent: <strong>kijk eerst, reken dan.</strong></p>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">één rij is één pinguïn · wat <code>NA</code> betekent · tekst tegenover getal · wat <code>head()</code> laat zien</span></p>
+<p>Er valt in deze opdracht nog niets te rekenen, en tóch kan een tentamen er al vragen over stellen. Deze vijf hebben die vorm: vier opties, en precies één is de beste — de andere drie kunnen best waar zijn en toch niet het beste antwoord.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> <code>penguins.csv</code> heeft 342 rijen en 9 kolommen. Wat staat er in één rij?</p>
+<ol type="a">
+<li>Eén meting aan één pinguïn.</li>
+<li>Eén van de negen dingen die aan de pinguïns gemeten zijn.</li>
+<li>Eén pinguïn, met al zijn metingen naast elkaar.</li>
+<li>Eén van de drie soorten pinguïns.</li>
+</ol>
+<p><strong>2.</strong> Bij de eerste pinguïn staat onder <code>stikstof</code> en <code>koolstof</code> twee keer <code>NA</code>. Wat betekent dat?</p>
+<ol type="a">
+<li>Op die twee plekken ontbreekt een meting.</li>
+<li>Die twee metingen kwamen op nul uit.</li>
+<li>Er is een fout gemaakt bij het inlezen van het bestand.</li>
+<li>Die pinguïn hoort niet in de dataset en moet eruit.</li>
+</ol>
+<p><strong>3.</strong> Je wil weten hoeveel pinguïns er in het bestand staan. Welke regel geeft je dat?</p>
+<ol type="a">
+<li><code>ncol(peng)</code></li>
+<li><code>names(peng)</code></li>
+<li><code>head(peng)</code></li>
+<li><code>nrow(peng)</code></li>
+</ol>
+<p><strong>4.</strong> In de kolom <code>soort</code> staat tekst (<code>Adelie</code>, <code>Chinstrap</code>, <code>Gentoo</code>), in de kolom <code>gewicht</code> staan getallen (3750, 5000, …). Wat kun je door dat verschil straks wél mét <code>gewicht</code> doen en níét met <code>soort</code>?</p>
+<ol type="a">
+<li>De waarden bij elkaar optellen en er zo één getal van maken.</li>
+<li>Tellen hoe vaak elke waarde voorkomt.</li>
+<li>De rijen op die kolom sorteren.</li>
+<li>Niets — je kunt met beide kolommen precies hetzelfde.</li>
+</ol>
+<p><strong>5.</strong> <code>head(peng)</code> laat de eerste zes rijen zien, en daarin zijn alle zes pinguïns een Adelie. Wat mag je daaruit besluiten?</p>
+<ol type="a">
+<li>Dat meer dan de helft van de pinguïns in het bestand een Adelie is.</li>
+<li>Dat het bestand op soort gesorteerd staat.</li>
+<li>Niets over de andere 336 — <code>head()</code> is een kijkje, geen samenvatting.</li>
+<li>Dat de Chinstraps en Gentoo’s in een ander bestand staan.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 c · 2 a · 3 d · 4 a · 5 c</strong></p>
+<p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. c.</strong> Dit is de leesregel van dit hele boekje: <strong>één rij is één pinguïn</strong>, en de negen kolommen zijn de negen dingen die over dat ene dier zijn opgeschreven. <strong>a</strong> ligt er het dichtst naast en is de belangrijkste om af te pellen: één meting staat in één <em>vakje</em>, op het kruispunt van een rij en een kolom. Wie een rij als één meting leest, raakt het idee kwijt dat de metingen van hetzélfde dier bij elkaar horen — en dat idee is straks alles. <strong>b</strong> beschrijft een <strong>kolom</strong>: negen dingen, negen kolommen. <strong>d</strong> verwart de tabel met een groepsindeling; de soort is één van de negen kolommen, niet de eenheid waarop een rij gaat.</p>
+<p><strong>2. a.</strong> <code>NA</code> betekent: hier hoort een meting, en hij is er niet. Geen fout van jou en geen fout in het bestand. <strong>b</strong> is de gevaarlijkste van de drie, want nul is juist wél een meting — een gemeten nul zegt “ik heb gekeken en er was niets”, en <code>NA</code> zegt “ik heb niet gekeken” of “het lukte niet”. Dat verschil maakt later het verschil tussen een gemiddelde dat klopt en een dat omlaag getrokken is door verzonnen nullen. <strong>c</strong> zoekt de oorzaak in het inlezen; je ziet het gat omdat het er echt is. <strong>d</strong> gooit een pinguïn weg om twee ontbrekende metingen, terwijl zijn gewicht en zijn snavel er gewoon staan en prima meedoen.</p>
+<p><strong>3. d.</strong> <code>nrow()</code> telt de rijen, en één rij is één pinguïn — dus dat getal, 342, is het aantal dieren. <strong>a</strong> telt de kolommen en geeft 9: het aantal dingen dat gemeten is, niet het aantal dieren. Dat is dezelfde verwisseling als bij vraag 1, nu in commandovorm. <strong>b</strong> geeft de negen kolomnamen, dus wél waarover het bestand gaat en niet over hoeveel. <strong>c</strong> laat zes rijen zien en zegt niets over de rest — zie vraag 5.</p>
+<p><strong>4. a.</strong> Gewichten kun je bij elkaar optellen; soorten niet. Adelie plus Gentoo is niets, en Chinstrap is niet twee keer Adelie — de tekst in die kolom is een etiket, geen hoeveelheid. Dat klinkt vanzelfsprekend, en het is de bodem onder alles wat je hierna gaat doen: wát je met een kolom kunt doen, hangt af van wat erin staat. <strong>b</strong> kan bij allebei — hoe vaak <code>Adelie</code> voorkomt is net zo telbaar als hoe vaak 3750 gram voorkomt. <strong>c</strong> kan ook bij allebei: tekst sorteert op alfabet, getallen op grootte. <strong>d</strong> is de val, want twee van de vier dingen kunnen inderdaad bij allebei; het optellen is juist wat de twee kolommen scheidt.</p>
+<p><strong>5. c.</strong> <code>head()</code> laat zien wát er ligt — welke kolommen, welke soort waarden, waar de gaten zitten — en niets over hoe de andere 336 rijen eruitzien. Wil je dat weten, dan tel je (<code>nrow</code>) of je kijkt de hele tabel door (<code>View</code>). <strong>b</strong> is de verleidelijkste, en hij valt om op één ding: zes rijen kunnen het niet aantonen. Zes Adelies op een rij krijg je ook in een bestand waarin niets op orde staat. Dat is het verschil tussen <em>het klopt</em> en <em>je hebt het gezien</em> — en het klopt hier zelfs bijna, want de dieren staan wél per soort bij elkaar: eerst 151 Adelies, dan 123 Gentoo’s, dan 68 Chinstraps. <em>Gegroepeerd</em> dus, niet <em>gesorteerd</em>, want alfabetisch zou Chinstrap in het midden staan. <strong>a</strong> is een uitspraak over alle 342 op grond van zes, en dat is precies de sprong die deze vraag wil tegenhouden. Hij is hier bovendien onwaar: er lopen <strong>151</strong> Adelies rond van de 342, oftewel <strong>44.2%</strong> — de grootste groep van de drie, maar geen meerderheid. <strong>d</strong> verzint een tweede bestand; alle drie de soorten staan in dit ene.</p>
+<p>Wil je de getallen uit deze vijf vragen zelf zien ontstaan — geen ervan is overgetikt:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 1 en 3 — zoveel pinguïns: nrow() → 342</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(peng)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 1 — zoveel dingen zijn er per pinguïn opgeschreven: ncol() → 9</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(peng)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 5 — zoveel van de 342 rijen blijven buiten dat kijkje van zes → 336</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(peng) <span class="sc">-</span> <span class="dv">6</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 5 — zoveel van de 342 zijn Adelie → 151</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 5 — en dat is dus geen meerderheid, in procenten → 44.2</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">sum</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>) <span class="sc">/</span> <span class="fu">nrow</span>(peng), <span class="dv">1</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 5 — de soorten staan per blok bij elkaar, in deze lengtes → 151  123  68</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rle</span>(peng<span class="sc">$</span>soort)<span class="sc">$</span>lengths</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div class="boekvorm">
+<p>◠ <strong>Zelfde adem in het boek</strong></p>
+<p>Hier: voor het eerst naar een echte tabel kijken — zonder één berekening.</p>
+<p>In het boek: <strong>H0 — In den beginne</strong></p>
+<p><em>Daar begint het nog vroeger: niet bij een tabel, maar bij het ervaren van verschil zelf.</em></p>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
+
+<ol>
+<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0). Echte dieren, echte metingen.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../installatie.html" class="pagination-link" aria-label="Oefening 0.0 · Installeren &amp; instellen">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 0.0 · Installeren &amp; instellen</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="pagination-link" aria-label="Oefening 1.1 · Het gemiddelde en de standaardafwijking">
+        <span class="nav-page-text">Oefening 1.1 · Het gemiddelde en de standaardafwijking</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>

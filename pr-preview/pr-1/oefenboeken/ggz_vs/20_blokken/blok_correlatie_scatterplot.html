@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>De correlatie r en de scatterplot – GGZ-VS/JASP-oefenboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_enkelvoudige_regressie.html" rel="next">
+<link href="../20_blokken/blok_standaardfout.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">De correlatie <em>r</em> en de scatterplot</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">GGZ-VS/JASP-oefenboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GGZ-VS/JASP-oefenboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/00_parkeerkaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De parkeerkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/01_vijf_basisvragen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De vijf basisvragen</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/02_effectmaten_kaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectmatenkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meetniveaus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meetniveaus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gemiddelde en standaardafwijking</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_kwartielen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediaan, kwartielen en scheefheid</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_standaardfout.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Standaardfout en non-respons</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">De correlatie <em>r</em> en de scatterplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enkelvoudige regressie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectgrootte — Cohens <em>d</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cronbachs α</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">W6 · Bestaat het verschil echt?</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>p</em>-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets_gepaard_onafhankelijk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>t</em>-toets: gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power_significant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Significantie en power</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meervoudige regressie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ANOVA en η²</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactie en moderatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De odds ratio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_klinische_relevantie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Van significant naar relevant</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schil (naast het boek)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De kruistabel en χ²</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mann_whitney.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De Mann-Whitney-toets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/99_register.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het register</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">De correlatie <em>r</em> en de scatterplot</h1>
+<p class="subtitle lead">Samenhang tussen twee variabelen · <em>correlation &amp; scatterplot</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p><strong>Vooraf, in één zin:</strong> <em>r</em> vat de samenhang tussen twee variabelen samen in één getal, maar alléén de <em>rechtlijnige</em> samenhang — twee totaal verschillende puntenwolken kunnen dezelfde <em>r</em> opleveren, dus lees <em>r</em> nooit zonder de scatterplot ernaast; waarom, staat onderaan bij <em>Wat het niet zegt</em>.</p>
+</blockquote>
+<section id="wat-je-ziet" class="level2">
+<h2 class="anchored" data-anchor-id="wat-je-ziet">Wat je ziet</h2>
+<p><strong>In het kort.</strong> Een getal tussen −1 en 1, vaak met een <em>p</em> en een interval erachter: <em>r</em> = −.44. Dit is de <strong>correlatiecoëfficiënt</strong> / <em>correlation coefficient</em> (voluit die van Pearson) — een antwoord op de vraag <em>hangen deze twee dingen samen, en hoe sterk?</em> Het <strong>teken</strong> zegt de richting (min = de een omhoog, de ander omlaag), de <strong>grootte</strong> zegt hoe strak de samenhang is.</p>
+<p>Dat teken is geen opsmuk maar de halve bevinding: <em>r</em> = .44 en <em>r</em> = −.44 zijn even sterk en vertellen het tegenovergestelde verhaal. Een <em>r</em> die je zonder minteken overschrijft, heb je dus half opgeschreven.</p>
+<p>Zo ziet hij eruit in het wild:</p>
+<blockquote class="blockquote">
+<p><em>Voorbeeldfragment, geschreven in de stijl van een resultatensectie — het artikel bestaat niet.</em></p>
+<p>In this cross-sectional sample of outpatients (<em>N</em> = 68), symptom severity was moderately and negatively associated with sleep quality: patients who slept worse reported more severe complaints, <em>r</em> = −.44, 95% CI [−.62, −.23], <em>p</em> &lt; .001.</p>
+</blockquote>
+</section>
+<section id="wat-er-staat" class="level2">
+<h2 class="anchored" data-anchor-id="wat-er-staat">Wat er staat</h2>
+<p><strong>In het kort.</strong> <em>r</em> = −.44 is een matige, negatieve samenhang: hoe beter iemand slaapt, hoe lichter de klachten, en omgekeerd. De schaal loopt van −1 (een perfecte dalende lijn) via 0 (geen rechtlijnig verband) naar +1 (een perfecte stijgende lijn). En bij dat getal hoort een plaatje — de scatterplot — want dat is wat <em>r</em> in één cijfer probeert samen te vatten.</p>
+<p>Hier is hij. Kijk er eerst even naar zonder aan het getal te denken.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-wolk-kaal" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Spreidingsdiagram van 68 patiënten. Op de horizontale as staat slaapkwaliteit van 0 tot 100, op de verticale as klachtenernst van 0 tot 40. De punten vormen een brede wolk die van linksboven naar rechtsonder afloopt. Helemaal links ligt één punt op slaapkwaliteit 0; de eerstvolgende zit pas op 21. Onderaan in het midden ligt de laagste stip van allemaal, bij slaapkwaliteit 61 en ernst 0.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wolk-kaal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="blok_correlatie_scatterplot_files/figure-html/fig-wolk-kaal-1.png" class="img-fluid figure-img" alt="Spreidingsdiagram van 68 patiënten. Op de horizontale as staat slaapkwaliteit van 0 tot 100, op de verticale as klachtenernst van 0 tot 40. De punten vormen een brede wolk die van linksboven naar rechtsonder afloopt. Helemaal links ligt één punt op slaapkwaliteit 0; de eerstvolgende zit pas op 21. Onderaan in het midden ligt de laagste stip van allemaal, bij slaapkwaliteit 61 en ernst 0." width="595">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wolk-kaal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1: Klachtenernst en slaapkwaliteit van 68 patiënten. Elke stip is één patiënt.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Nu rustig van voren af aan. Van elke patiënt heb je twee metingen: klachtenernst en slaapkwaliteit. Zet elke patiënt als een stip in een grafiek — ernst op de ene as, slaapkwaliteit op de andere — en je krijgt een wolk van achtenzestig stippen. Loopt die wolk van linksboven naar rechtsonder, dan gaat meer ernst samen met minder goede slaap: een negatief verband. <em>r</em> is één getal voor hoe strák die stippen een rechte, dalende lijn volgen. −.44 is een duidelijke helling met nog flink wat rommel eromheen — geen sliert, geen willekeur, iets ertussenin.</p>
+<p>Leg nu de lijn erover. Dezelfde wolk, dezelfde assen, één laag erbij:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-wolk-lijn" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Hetzelfde spreidingsdiagram als hiervoor, met daar overheen één rechte dalende lijn. De lijn begint linksboven bij ongeveer 27 en zakt naar rechts tot ongeveer 10. Veel punten liggen er duidelijk boven of onder; één punt ligt negen punten boven de lijn.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wolk-lijn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="blok_correlatie_scatterplot_files/figure-html/fig-wolk-lijn-1.png" class="img-fluid figure-img" alt="Hetzelfde spreidingsdiagram als hiervoor, met daar overheen één rechte dalende lijn. De lijn begint linksboven bij ongeveer 27 en zakt naar rechts tot ongeveer 10. Veel punten liggen er duidelijk boven of onder; één punt ligt negen punten boven de lijn." width="595">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wolk-lijn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2: Dezelfde 68 patiënten, met de best passende rechte lijn erdoorheen. Wat <em>r</em> samenvat, is hoe dicht de stippen bij die lijn liggen.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Je ziet ook vaak <em>r</em>² erbij, hier .20. Dat is het <strong>aandeel gedeelde variantie</strong> / <em>shared variance</em>: ongeveer een vijfde van de verschillen in slaapkwaliteit tussen patiënten gaat samen met verschillen in ernst (en andersom). De andere vier vijfde is van alles behalve deze twee samen. Onthoud die verhouding — een matige <em>r</em> laat het meeste nog onverklaard.</p>
+</section>
+<section id="waar-het-vandaan-komt" class="level2">
+<h2 class="anchored" data-anchor-id="waar-het-vandaan-komt">Waar het vandaan komt</h2>
+<p>Dit hoort bij de boek-eenheid <em>Hangen ze samen?</em> — waar de correlatie, de scatterplot en de <a href="../20_blokken/blok_enkelvoudige_regressie.html">enkelvoudige regressie</a> voor het eerst langskomen. <em>r</em> is familie van de regressierechte: dezelfde onderliggende motor (de covariantie — bewegen twee variabelen samen?), maar dan gestandaardiseerd, zodat er een getal tussen −1 en 1 uitkomt dat je van het ene onderzoek naast dat van het andere kunt leggen, wat de meetlatten daar ook waren. In diezelfde geest is <em>r</em> het effectgrootte-familielid voor twee doorlopende variabelen: waar Cohens <em>d</em> een verschil tussen twee groepen op maat brengt, brengt <em>r</em> een samenhang op maat.</p>
+<p>Eén ding uit het boek moet je hier paraat hebben: <em>r</em> meet uitsluitend de <strong>rechtlijnige</strong> samenhang. Alles wat krom is, ziet hij niet of half. Daarom loopt in die boek-eenheid de scatterplot altijd vóór het getal uit, en niet andersom.</p>
+</section>
+<section id="zelf-doen-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-doen-in-jasp">Zelf doen in JASP</h2>
+<p><a href="../10_data/slaap_ernst.csv" class="data-download" download="slaap_ernst.csv">⬇ Download de data — <code>slaap_ernst.csv</code></a></p>
+<p>Bij dit blok hoort het databestand <code>slaap_ernst.csv</code>: 68 rijen (de patiënten), drie kolommen — <code>id</code>, <code>ernst</code> (klachtenernst, 0–40, hoger is ernstiger) en <code>slaapkwaliteit</code> (0–100, hoger is beter geslapen). De rijen zijn gegenereerd — er zit geen echte patiënt in — en ze reproduceren precies de getallen uit het fragment.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open het bestand in JASP (menu linksboven → Open).</li>
+<li>Klik in de balk bovenin op <strong>Regression</strong> en kies <strong>Correlation</strong>.</li>
+<li>Sleep <code>ernst</code> en <code>slaapkwaliteit</code> naar het vak <strong>Variables</strong>; <code>id</code> laat je staan.</li>
+<li>Laat <strong>Pearson’s r</strong> aangevinkt staan en vink erbij aan: <strong>Confidence intervals</strong> (laat 95 staan). Open dan het kopje <strong>Plots</strong> en vink <strong>Scatterplot</strong> aan.</li>
+</ol>
+</div>
+</div>
+<p>In de tabel rechts staat nu <em>r</em> = −0.443, met daaronder <em>p</em> &lt; .001 en het 95%-interval [−0.616, −0.229]. Reken <em>r</em>² zelf even na op een kladblaadje: −0.443 in het kwadraat is 0.196, dus die .20 klopt. En kijk dan vooral naar de <strong>scatterplot</strong>: een wolk die van linksboven naar rechtsonder zakt, met één rechte lijn er dwars doorheen — maar met stippen die er soms fors naast liggen. Díé spreiding rond de lijn is het verschil tussen de .20 die de twee delen en de 1.00 die er in totaal te verdelen valt. JASP tekent; jij leest.</p>
+<p>En dan ziet je oog meteen nog iets: helemaal links ligt <strong>één patiënt op slaapkwaliteit 0</strong>, met een gat tot de eerstvolgende op 21. Zo iemand is precies het geval waar dit blok verderop voor waarschuwt — één punt aan de rand kan een getal optillen. Hier doet hij dat ook: laat je hem weg, dan zakt <em>r</em> van −.44 naar −.39. Onthoud hem; in het <a href="../20_blokken/blok_enkelvoudige_regressie.html">blok over enkelvoudige regressie</a> reken je precies uit wat hij draagt.</p>
+<p>Die afstandjes van stip tot lijn hebben trouwens een naam die je in je bijeenkomsten tegenkomt: <strong>residuen</strong> / <em>residuals</em> — gemeten min voorspeld, wat het model van díé ene patiënt niet raadde. Let op, want het woord doet dubbel dienst: in een kruistabel is een residu iets anders, namelijk geteld min verwacht in één hokje (zie <a href="../20_blokken/blok_kruistabel_chikwadraat.html">De kruistabel en χ²</a>). Zelfde woord, twee objecten. De regel is dezelfde als daar: kijk waar het residu van aftrekt.</p>
+<p>En dezelfde leesgewoonte als altijd: kijk hóé de variabelen gecodeerd zijn. Hier is hoger op <code>slaapkwaliteit</code> beter slapen, dus de samenhang met ernst is negatief. Had de vragenlijst juist slaap<em>problemen</em> geteld (hoger = slechter), dan had er +0.443 gestaan: exact dezelfde samenhang, ander teken. Het teken zit in de codering, niet in de wereld.</p>
+</section>
+<section id="zelf-opschrijven" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-opschrijven">Zelf opschrijven</h2>
+<div class="apa callout callout-style-default callout-note callout-titled" title="Schrijf het op — de correlatie *r*">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Schrijf het op — de correlatie <em>r</em>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor je eigen Nederlandstalige literatuurstudie:</p>
+<blockquote class="blockquote">
+<p>In een dwarsdoorsnede (<em>N</em> = 68) hing klachtenernst matig negatief samen met slaapkwaliteit: patiënten die slechter sliepen, rapporteerden ernstiger klachten (<em>r</em> = −.44, 95%-betrouwbaarheidsinterval [−.62, −.23], <em>p</em> &lt; .001).</p>
+</blockquote>
+<p>Drie werkafspraken daarbij:</p>
+<ul>
+<li><strong>Noem beide variabelen én de richting.</strong> “Een correlatie van −.44” zonder erbij te zeggen <em>tussen wat en wat</em>, en <em>welke kant op</em>, is geen bevinding maar een los getal. Een samenhang is altijd een samenhang <em>tussen</em> twee benoemde dingen.</li>
+<li><strong>Neem <em>r</em> mét zijn interval over</strong>, zonder voorloopnul (net als <em>p</em>: −.44, niet −0.44), twee decimalen, met <em>N</em> of de vrijheidsgraden erbij. Het interval zegt hoe hard de −.44 meewiebelt bij deze steekproefomvang.</li>
+<li><strong>Geen causale taal.</strong> Schrijf “hangt samen met” of “is geassocieerd met”, nooit “leidt tot”, “veroorzaakt” of “door” — lees eerst hieronder waarom een correlatie die woorden niet mag dragen. En kijk naar de scatterplot vóórdat je de <em>r</em> opschrijft.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="wat-het-niet-zegt" class="level2">
+<h2 class="anchored" data-anchor-id="wat-het-niet-zegt">Wat het niet zegt</h2>
+<p>De verleidelijkste redenering die je over dit fragment kunt opschrijven is: “<em>r</em> = −.44, <em>p</em> &lt; .001 — slecht slapen maakt de klachten erger.” Eén korte zin, drie haarscheurtjes.</p>
+<p><strong>“maakt erger.”</strong> Een correlatie is geen causaliteit. <em>r</em> ziet dat twee dingen samen bewegen, maar niet wáárom. Het kan de andere kant op zijn (ernstiger klachten verstoren de slaap), het kan door een derde variabele komen die ze allebei aandrijft (een angststoornis, middelengebruik, een recente crisis — die maken zowel de slaap slechter <em>als</em> de klachten ernstiger), of het is een mengsel. <em>r</em> kan de richting van de pijl niet zien; in een dwarsdoorsnede, één momentopname, is er niet eens een tijdsvolgorde om op te leunen. Een samenhang <em>tussen wat en wat</em> kun je opschrijven; een oorzaak niet.</p>
+<p><strong>“−.44” als hét getal.</strong> <em>r</em> vat álleen de rechtlijnige samenhang samen, en daardoor kunnen twee totaal verschillende wolken exact dezelfde <em>r</em> geven: een nette schuine sliert, maar net zo goed een duidelijke kromme (waar <em>r</em> laag uitvalt terwijl er een prachtig verband is), of een verder richtingloze wolk met één extreme uitschieter die het getal in zijn eentje optilt of onderuit haalt. Zonder de scatterplot weet je niet wélke van die situaties je voor je hebt. Dát is de reden dat bij elke gerapporteerde <em>r</em> een plaatje hoort — en dat je, als een artikel er geen laat zien, één vraag overhoudt.</p>
+<p><strong>“<em>r</em>² = .20, dus 20% verklaard.”</strong> Als aandeel gedeelde variantie mag dat, maar “verklaard” is hier een rekenterm en geen inhoudelijke verklaring: er wordt niets uitgelegd, er wordt variantie gedeeld. En vergeet de andere 80% niet. Let ook op de <strong>breedte van de wolk</strong>: bekijk je alleen de zwaarste patiënten (een afgeknepen range op ernst), dan zakt <em>r</em> vanzelf, zonder dat de samenhang zelf ook maar iets verandert — een lage <em>r</em> in een smalle steekproef is geen bewijs dat er weinig aan de hand is. Grootte, vorm, richting én oorzaak zijn vier verschillende vragen, en <em>r</em> beantwoordt er hooguit één.</p>
+</section>
+<section id="oefening" class="level2">
+<h2 class="anchored" data-anchor-id="oefening">Oefening</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Oefening">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Oefening
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Leesopgave.</strong> Hieronder een voorbeeldfragment (verzonnen). Vertel in gewone Nederlandse zinnen wat er gemeten is, en leg uit waarom de conclusie van de auteurs niet volgt uit dit getal. Noem minstens twee alternatieve verklaringen.</p>
+<blockquote class="blockquote">
+<p>In a cross-sectional study, higher social media use was associated with more depressive symptoms (<em>r</em> = .35, <em>p</em> &lt; .001). The authors concluded that reducing social media use would lower depressive symptoms.</p>
+</blockquote>
+<p><strong>Doe-opgave.</strong> Draai de correlatie van hierboven (<code>slaap_ernst.csv</code>) met de scatterplot erbij. Lees <em>r</em>, het interval en <em>r</em>² af, en beschrijf in één zin de wolk die je ziet. Maak dan het range-effect zelf zichtbaar: zet in JASP een filter op de rij-selectie zodat alleen patiënten met <code>ernst</code> ≥ 18 meedoen (ongeveer de bovenste helft), en draai de correlatie opnieuw. Twee vragen: gaat <em>r</em> omhoog of omlaag als je de range zo inknijpt — en betekent dat verschil dat de samenhang bij zware patiënten écht anders is, of dat je iets anders naar het getal hebt gedaan?</p>
+<p><strong>Drie wolken, drie getallen.</strong> Hierboven ging het over één samenhang. Nu twee andere, uit bestanden die elders in dit oefenboek ook langskomen:</p>
+<p><a href="../10_data/wachttijd_intake.csv" class="data-download" download="wachttijd_intake.csv">⬇ <code>wachttijd_intake.csv</code></a> <a href="../10_data/nazorg_therapietrouw_terugval.csv" class="data-download" download="nazorg_therapietrouw_terugval.csv">⬇ <code>nazorg_therapietrouw_terugval.csv</code></a></p>
+<p>Maak in JASP van allebei een scatterplot — bij het eerste bestand de samenhang tussen <code>leeftijd</code> en <code>wachttijd_dagen</code>, bij het tweede die tussen <code>therapietrouw</code> en <code>symptoomdaling</code>. <strong>Kijk eerst naar de twee wolken en dek de tabel af.</strong> Schrijf van elke wolk op wat je ziet, in gewone zinnen, en gok welke van deze drie getallen erbij hoort: −.44, −.08, .78. Draai daarna pas de correlatie en kijk of je goed gokte.</p>
+<p>Twee vragen erna:</p>
+<ol type="1">
+<li>Bij <code>wachttijd_intake</code> ligt het 95%-interval rond <em>r</em> anders dan je in dit blok tot nu toe zag. Zoek op waar dat interval loopt, en zeg wat dat betekent voor de zin <em>“leeftijd hangt samen met wachttijd”</em>.</li>
+<li>In de wolk van <code>wachttijd_intake</code> liggen twee patiënten hoog boven de rest: zij wachtten een half jaar. Haal die twee eruit en draai <em>r</em> opnieuw. Vergelijk wat er gebeurt met wat er eerder in dit blok gebeurde toen je de patiënt op slaapkwaliteit 0 weghaalde. Waarom doet een uiterste punt de ene keer bijna niets en de andere keer wel iets?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Uitwerkingen — klik open">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Uitwerkingen — klik open
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="uitwerking-leesopgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-leesopgave">Uitwerking leesopgave</h3>
+<p>Er is in één moment gemeten hoeveel mensen sociale media gebruiken en hoeveel depressieve klachten ze hebben, en die twee hangen matig positief samen: <em>r</em> = .35 (zo’n .12 gedeelde variantie — de ruime meerderheid van de verschillen staat er los van). Maar de conclusie is <em>causaal</em> (“minder gebruiken zou de klachten verlagen”), en dat kan <em>r</em> niet dragen. De correlatie is symmetrisch en blind voor richting: net zo goed gaan mensen die zich somber voelen méér scrollen (terugtrekken, afleiding zoeken), of drijft een derde factor allebei op — eenzaamheid, slaapgebrek, ingrijpende levensgebeurtenissen. Bovendien is dit een dwarsdoorsnede: één momentopname, zonder tijdsvolgorde, dus zelfs “wat kwam eerst” is niet te zien. Om te mogen zeggen dat mínder gebruiken helpt, zou je moeten ingrijpen en vergelijken (een experiment), niet meten en correleren. In je literatuurstudie schrijf je dus dat de studie een matige samenhang vond, en dat de causale conclusie van de auteurs niet door het design gedekt wordt.</p>
+</section>
+<section id="uitwerking-doe-opgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-doe-opgave">Uitwerking doe-opgave</h3>
+<p>Over de volle range is <em>r</em> = −.44 met interval [−.62, −.23] en <em>r</em>² = .20; de wolk zakt van linksboven naar rechtsonder met stevige spreiding rond de lijn — een duidelijke maar losse samenhang, met links één losse patiënt op slaapkwaliteit 0. Knijp je de range in tot <code>ernst</code> ≥ 18, dan zakt <em>r</em> naar ongeveer −.38, en de steekproef krimpt van 68 naar 36 patiënten. De samenhang bij zware patiënten is niet echt zwakker geworden — je hebt alleen de spreiding op <code>ernst</code> weggehaald (de standaarddeviatie valt van 7.0 terug naar 4.4), en met minder spreiding om mee te werken heeft <em>r</em> minder te pakken. Dit is <strong>range-restrictie</strong> / <em>range restriction</em>: een correlatie is altijd een correlatie ín een bepaalde steekproef, en hoe smaller je die maakt, hoe kleiner <em>r</em> wordt — ook als er onderliggend niets veranderd is. De les voor het lezen van artikelen: een lage <em>r</em> kan net zo goed over de steekproef gaan als over het verband.</p>
+</section>
+<section id="uitwerking-drie-wolken-drie-getallen" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-drie-wolken-drie-getallen">Uitwerking drie wolken, drie getallen</h3>
+<p>De drie getallen horen zo: .78 bij <code>nazorg_therapietrouw_terugval</code>, −.44 bij <code>slaap_ernst</code>, en −.08 bij <code>wachttijd_intake</code>.</p>
+<p><strong>De wolk van <code>nazorg_therapietrouw_terugval</code></strong> is de makkelijkste:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-nazorg" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Spreidingsdiagram van 120 patiënten. Horizontaal staat therapietrouw van ongeveer 40 tot 82, verticaal symptoomdaling van 1 tot ruim 41. De punten vormen een duidelijke strook die van linksonder naar rechtsboven loopt.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-nazorg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="blok_correlatie_scatterplot_files/figure-html/fig-nazorg-1.png" class="img-fluid figure-img" alt="Spreidingsdiagram van 120 patiënten. Horizontaal staat therapietrouw van ongeveer 40 tot 82, verticaal symptoomdaling van 1 tot ruim 41. De punten vormen een duidelijke strook die van linksonder naar rechtsboven loopt." width="595">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nazorg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;3: Therapietrouw en symptoomdaling bij 120 patiënten uit de nazorgstudie. De assen tonen alleen het gemeten bereik, niet de hele schaal.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Een duidelijke strook van linksonder naar rechtsboven: patiënten die hun afspraken beter nakwamen, zagen hun klachten sterker dalen. Dat is <em>r</em> = .78, 95%-interval [.70, .84], bij <em>N</em> = 120 — strak en positief, en dus het spiegelbeeld van de −.44 uit dit blok: even duidelijk, andere kant op, en nog wat sterker.</p>
+<p>En dan een addertje dat je alleen ziet als je de kolomnamen leest. Dit bestand heeft er vier: naast <code>therapietrouw</code> en <code>symptoomdaling</code> staat <code>nazorg</code> — wie wel en wie niet een intensief nazorgprogramma kreeg. Dat programma duwt allebei de andere kolommen omhoog: mensen erin kwamen hun afspraken beter na <em>en</em> zagen hun klachten sterker dalen. Precies de derde variabele waar dit blok verderop voor waarschuwt, en hier staat hij gewoon in het bestand. Je kunt hem zelf wegen: splits in JASP de correlatie per <code>nazorg</code>-groep, en de .78 valt uiteen in .57 bij gebruikelijke zorg en .77 bij het nazorgprogramma. Een deel van die mooie strook is dus niet het verband tussen die twee, maar het programma dat er onder beide ligt. Dít is hoe een derde variabele er in echte data uitziet — geen abstractie, een kolom.</p>
+<p><strong>De wolk van <code>wachttijd_intake</code></strong> loopt geen kant op:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-wachttijd" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Spreidingsdiagram van 80 patiënten. Horizontaal staat leeftijd van 18 tot 68 jaar, verticaal de wachttijd in dagen van 3 tot 187. De punten liggen als een vormloze vlek door elkaar, zonder dat er een richting in te zien is. Twee punten liggen hoog boven de rest, bij ongeveer 180 dagen.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wachttijd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="blok_correlatie_scatterplot_files/figure-html/fig-wachttijd-1.png" class="img-fluid figure-img" alt="Spreidingsdiagram van 80 patiënten. Horizontaal staat leeftijd van 18 tot 68 jaar, verticaal de wachttijd in dagen van 3 tot 187. De punten liggen als een vormloze vlek door elkaar, zonder dat er een richting in te zien is. Twee punten liggen hoog boven de rest, bij ongeveer 180 dagen." width="595">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wachttijd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;4: Leeftijd en wachttijd bij 80 patiënten. Twee van hen wachtten een half jaar.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Er is geen hoek in te zien, en het getal zegt hetzelfde: <em>r</em> = −.08 bij <em>N</em> = 80. Dit is wat “geen rechtlijnig verband” er in het echt uitziet — geen bijzonder plaatje, gewoon een vlek. De twee punten bovenin springen wel in het oog, maar dat is iets anders dan richting.</p>
+<p>Twee dingen die je oog er tóch in zal zien, en die er niet zijn. De langste wachttijden liggen allemaal bij de middelbare leeftijden, wat op een boog lijkt — maar daar zitten ook gewoon de meeste patiënten; leg je er een kromme door, dan wint die niets. En helemaal links staan zes stippen recht boven elkaar: dat zijn zes mensen van achttien, de jongste leeftijd in het bestand. Allebei vormen die je oog maakt van drukte, niet van samenhang. Dat is precies waarom “ik zie er wel iets in” nooit het antwoord is — je legt het getal ernaast.</p>
+<p><strong>(1)</strong> Het 95%-interval loopt hier van −.30 tot .14, en dat is het verschil met alles wat je hierboven zag: <strong>de nul ligt erin.</strong> Het interval laat een kleine negatieve samenhang toe, een kleine positieve, en niets — alle drie passen bij deze data. De zin “leeftijd hangt samen met wachttijd” kun je dus niet opschrijven; wat je wél mag opschrijven is dat je geen samenhang tussen leeftijd en wachttijd gevonden hebt, met het interval erbij zodat de lezer ziet hoe groot een gemist verband had kunnen zijn. Let op het verschil: <em>geen samenhang gevonden</em> is iets anders dan <em>aangetoond dat er geen samenhang is</em>.</p>
+<p><strong>(2)</strong> De twee losse punten zijn de wachttijden van 187 en 180 dagen. Haal je ze weg, en <em>r</em> blijft gewoon op −.08 staan. Pas op de vierde decimaal beweegt er iets: −.0832 wordt −.0835. Bij de patiënt op slaapkwaliteit 0 ging <em>r</em> wél merkbaar omlaag, van −.44 naar −.39.</p>
+<p>Het verschil zit niet in hóé ver een punt weg ligt, maar in <strong>of hij de wolk oprekt in de richting die <em>r</em> meet.</strong> De patiënt op slaapkwaliteit 0 lag ver aan de linkerkant en verder niet bijzonder: zijn afstand tot de lijn is met 4.4 punt precies doorsnee voor deze wolk. Wat hij wél deed, is de wolk breder maken in precies de richting waarin het verband loopt, en daarmee droeg hij een stuk van het getal. De twee lange wachters liggen hoog boven een wolk die nergens heen loopt — er is geen richting om te versterken, dus er valt ook niets te dragen. “Er ligt een punt ver weg” is daarom geen reden om iets te verwijderen; het is een reden om te kijken wáár hij ligt ten opzichte van de rest.</p>
+</section>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W4">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: één getal voor de rechtlijnige samenhang tussen twee gemeten dingen, altijd met het plaatje ernaast.</p>
+<p>In het boek: <strong>W4 — Hangen ze samen?</strong></p>
+<p><em>Daar is het getal niet het begin maar de uitkomst: eerst de wolk zien, dan pas de lijn eronder samenvatten.</em></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_standaardfout.html" class="pagination-link" aria-label="Standaardfout en non-respons">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Standaardfout en non-respons</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="pagination-link" aria-label="Enkelvoudige regressie">
+        <span class="nav-page-text">Enkelvoudige regressie</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>

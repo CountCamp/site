@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Oefening 9.2 · De t-toets – JASP-oefenboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_effectgrootte_d.html" rel="next">
+<link href="../20_blokken/blok_dummy_regressie.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_t_toets.html">Oefening 9.2 · De t-toets</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">JASP-oefenboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">JASP-oefenboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Eerste beweging · Verschil onder de loep</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">H0 · In den beginne</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 0.0 · Installeren &amp; instellen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 0.1 · Kijken naar de data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">H1 · De gemiddelde slok</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 1.1 · Het gemiddelde en de standaardafwijking</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">H2 · De vorm van de hoop</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 2.1 · Mediaan, kwartielen en scheefheid</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Tweede beweging · Verschillen koppelen</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">H3 · Het rechthoekje</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 3.1 · Correlatie en scatterplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 3.2 · Enkelvoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 3.3 · De residuen bekijken</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Derde beweging · Verschil op de proef</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">H4 · De grabbelton geschud</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_steekproevenverdeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 4.1 · Steekproevenverdeling en standaardfout</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">H5 · Bestaat het echt?</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 5.1 · Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">H6 · Hoe beslis je?</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 6.1 · De p-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 6.2 · Power, type I en II</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">H7 · Tien keer welnee</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 7.1 · Betrouwbaarheid en Cronbachs α</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="true">
+ <span class="menu-text">Vierde beweging · Verschil onthechten</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">H8 · Meer dan één verschil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 8.1 · Meervoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_confounding_partiele_correlatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 8.2 · Confounding en partiële correlatie</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="true">
+ <span class="menu-text">H9 · Groepen zijn ook getallen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_dummy_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.1 · Dummy-codering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Oefening 9.2 · De t-toets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.3 · Effectgrootte: Cohens d</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.4 · Eenweg ANOVA en η²</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_ancova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 9.5 · ANCOVA: een groep én een getal</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">H10 · Verschil in verschil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 10.1 · Als de moderator een groep is</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie_continu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 10.2 · Als de moderator een getal is</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false">
+ <span class="menu-text">H11 · Het doorgegeven verschil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 11.1 · Mediatie: direct en indirect</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false">
+ <span class="menu-text">Slot · Verschil dat buigt</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-17" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false">
+ <span class="menu-text">H12 · En hij buigt</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-18" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Oefening 12.1 · Logistische regressie: odds en odds ratio</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false">
+ <span class="menu-text">Naast het boek · Schil</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-19" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Schil · Kruistabel en χ²</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false">
+ <span class="menu-text">Naslag</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-20" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basishandelingen in JASP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../91_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-21" role="navigation" aria-expanded="false">
+ <span class="menu-text">Schud-speeltjes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-21" role="navigation" aria-expanded="false" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-21" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/h3_grabbel.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De grabbelton (steekproef)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w4_schud_correlatie.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Correlatie schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_schud_verschil.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Het verschil schudden (t)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_p_planten.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De p geteld</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/s2_schud_tabel.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De tabel schudden (χ²)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w12_schud_odds.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">De odds schudden</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../speeltjes/w6_trek_interval.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Trek opnieuw (interval)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<p class="beweging">Vierde beweging · Verschil onthechten</p>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Vierde beweging · Verschil onthechten</li><li class="breadcrumb-item"><a href="../20_blokken/blok_dummy_regressie.html">H9 · Groepen zijn ook getallen</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_t_toets.html">Oefening 9.2 · De t-toets</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Oefening 9.2 · De t-toets</h1>
+<p class="subtitle lead">Twee gemiddelden vergelijken, gepaard of onafhankelijk · <em>paired &amp; independent t-test</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">In deze oefening</h2>
+   
+  <ul>
+  <li><a href="#twee-raadsels-over-één-woord-verschil" id="toc-twee-raadsels-over-één-woord-verschil">Twee raadsels over één woord: verschil</a></li>
+  <li><a href="#draai-allebei-de-t-toetsen" id="toc-draai-allebei-de-t-toetsen">Draai allebei de <em>t</em>-toetsen</a></li>
+  <li><a href="#duizend-werelden-waarin-de-waarheid-nul-is" id="toc-duizend-werelden-waarin-de-waarheid-nul-is">Duizend werelden waarin de waarheid nul is</a></li>
+  <li><a href="#echt-is-niet-hetzelfde-als-belangrijk" id="toc-echt-is-niet-hetzelfde-als-belangrijk">Echt is niet hetzelfde als belangrijk</a></li>
+  <li><a href="#dezelfde-tien-slapers-van-twee-kanten-bekeken" id="toc-dezelfde-tien-slapers-van-twee-kanten-bekeken">Dezelfde tien slapers, van twee kanten bekeken</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen">Tentamenvragen</a></li>
+  </ul>
+</nav>
+<div class="datastrook">
+<p><strong>Data bij deze oefening</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 pinguïns · <a href="../10_data/slaap_middelen.csv" download="slaap_middelen.csv">slaap_middelen.csv</a> slaapmiddelen, 1905 · <a href="../10_data/diamantjes.csv" download="diamantjes.csv">diamantjes.csv</a> de twaalf steentjes uit het boek · <a href="../91_datasets.html">wat elke kolom betekent</a></p>
+</div>
+<div class="kicker">
+<p>prikkel</p>
+</div>
+<section id="twee-raadsels-over-één-woord-verschil" class="level2">
+<h2 class="anchored" data-anchor-id="twee-raadsels-over-één-woord-verschil">Twee raadsels over één woord: verschil</h2>
+<p><span class="begrippen">verschil tussen twee gemiddelden · echt of toeval</span></p>
+<p>Twee kleine raadsels, allebei over hetzelfde woord: <em>verschil</em>.</p>
+<p>Het eerste is meer dan honderd jaar oud.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Tien mensen krijgen twee nachten lang elk een ander slaapmiddel, en iemand meet hoeveel uur extra slaap ze ervan krijgen. Middel A levert gemiddeld 0.75 uur op, middel B 2.33 uur. Middel B wint dus met 1.58 uur. Maar het zijn er maar tien, en mensen slapen de ene nacht nu eenmaal anders dan de andere. Is die 1.58 uur een echt verschil tussen de middelen — of hadden we gewoon een paar goede nachten voor B?</p>
+<p>Het tweede raadsel staat op een rots bij Antarctica.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Gentoo-pinguïns wegen gemiddeld 5076 gram, Adélies 3701 gram. Dat is 1375 gram verschil — anderhalve kilo, een flink beest lichter. Maar we hebben niet álle pinguïns gewogen, alleen degene die we toevallig oppakten. Is die 1375 gram het échte soortverschil, of hadden we pech (of geluk) met wie er in onze armen belandde?</p>
+<p>Dezelfde vraag, twee keer: <strong>bestaat het verschil echt, of danst het op toeval?</strong> En let straks op iets moois — bij de pinguïns wordt het antwoord zó overweldigend dat de interessante vraag verschuift. Trek even mee.</p>
+<div class="kicker">
+<p>speel het</p>
+</div>
+</section>
+<section id="draai-allebei-de-t-toetsen" class="level2">
+<h2 class="anchored" data-anchor-id="draai-allebei-de-t-toetsen">Draai allebei de <em>t</em>-toetsen</h2>
+<p><span class="begrippen">gepaard versus onafhankelijk · t · p · 95%-CI</span></p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Eerst zoals in het boek — de twaalf diamantjes · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>diamantjes.csv</code> en kies <strong>T-Tests → Independent Samples T-Test</strong>.</li>
+<li><code>glans</code> naar <strong>Dependent Variables</strong>, <code>merk</code> naar <strong>Grouping Variable</strong>.</li>
+<li>Laat onder <strong>Tests</strong> alleen <strong>Student</strong> aangevinkt — dat is JASP’s eigen standaard.</li>
+</ol>
+</div>
+</div>
+<p>Golfje tegen sterretje: <em>t</em>(10) = −1.73, <em>p</em> = .11. Het verschil is met het blote oog te zien, maar de toets zegt: bij twaalf steentjes kan dit ook toeval zijn. Onthoud die −1.73 — hij komt in de volgende twee oefeningen nog terug. In de vórige oefening stond hij er trouwens ook al, met een plus ervoor: daar was het golfje het vertrekpunt, dus rekende de dummy sterretje mín golfje. Zelfde toets, andere richting.</p>
+<p>Blijf nog even bij die keuze voor <strong>Student</strong> hangen, want daar zit meer onder dan een instelling. Stel dezelfde vraag twee keer — één keer als toets, één keer als regressie:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · dezelfde som, twee keer opgeschreven · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · dezelfde som, twee keer opgeschreven · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Laat de <em>t</em>-toets van hierboven staan.</li>
+<li>Kies daarnaast <strong>Regression → Linear Regression</strong>, met <code>glans</code> als <strong>Dependent</strong> en <code>merk</code> bij <strong>Factors</strong>.</li>
+<li>Kijk in de <strong>Coefficients</strong>-tabel naar de rij van het sterretje.</li>
+</ol>
+<p><span class="even-checken">In die rij hoort <em>t</em> = 1.73 te staan, met dezelfde <em>p</em> als in de <em>t</em>-toets. Staat er een heel andere <em>t</em>, kijk dan of <code>merk</code> echt bij <strong>Factors</strong> staat en niet bij <strong>Covariates</strong>.</span></p>
+</div>
+</div>
+<p>Niet ongeveer hetzelfde — <strong>dezelfde <em>t</em>, dezelfde tien vrijheidsgraden, dezelfde <em>p</em>.</strong> Alleen het teken draait om: de <em>t</em>-toets rekent hier golfje mín sterretje, en de dummy rekent sterretje mín golfje. Dat is dezelfde spiegeling als in <a href="../20_blokken/blok_dummy_regressie.html">Oefening 9.1</a>, en verder verandert er niets.</p>
+<p>Een <em>t</em>-toets op twee groepen lijkt dus niet op een regressie: het ís er een. Je voorspelt de glans uit één voorspeller, het merk, en dan houd je <em>n</em> − 2 = 10 vrijheidsgraden over — precies waar de Student-toets zelf ook op uitkomt, want <em>n</em><sub>1</sub> + <em>n</em><sub>2</sub> − 2 = 6 + 6 − 2 = 10. Twee routes, dezelfde som.</p>
+<p>Zet er nu Welch naast, en vraag meteen de twee spreidingen erbij:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · en dan met Welch ernaast · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · en dan met Welch ernaast · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Vink in dezelfde <strong>Independent Samples T-Test</strong> onder <strong>Tests</strong> ook <strong>Welch</strong> aan. Er komt een tweede rij bij.</li>
+<li>Vink onder <strong>Additional Statistics</strong> ook <strong>Descriptives</strong> aan.</li>
+</ol>
+</div>
+</div>
+<p>JASP zet in de kolom <strong>Test</strong> zelf welke toets elke rij is: <strong>Student</strong> en <strong>Welch</strong>. De <em>t</em> blijft staan, maar de vrijheidsgraden zakken van 10 naar 8.62 en de <em>p</em> schuift van .11 naar .12. Welch neemt namelijk niet aan dat de twee merken even veel spreiden — en kijk maar in de Descriptives, dat doen ze ook niet: 23.66 tegen 15.49, ruim anderhalf keer zo breed. Die voorzichtigheid betaal je in vrijheidsgraden, en aan die gebroken 8.62 zie je dat je betaald hebt.</p>
+<p>Overal in deze boekjes lezen we Welch, want hij is voorzichtiger en je hoeft er niets voor te kiezen. Bij deze twaalf steentjes niet, en dat is met opzet: van Welch bestaat geen gewone regressie-versie, en dit is de plek waar we die twee juist gelijk willen zien vallen. Bij de pinguïns hieronder staat Welch dus gewoon weer aan. JASP zelf begint op <strong>Student</strong>, de rij die wél gelijke spreiding aanneemt, en je eigen vak vraagt je misschien om eerst Levene’s toets te lezen en dán een rij te kiezen — dat hoeft van ons niet, want wij lezen altijd Welch.</p>
+<p><strong>Nu jij</strong> — twee keer, want er zijn twee soorten <em>t</em>-toets. De pinguïns ken je; de slaapmiddelen van 1905 zijn nieuw, en die zijn juist bedoeld om het verschil tussen de twee toetsen te laten voelen.</p>
+<p>Twee raadsels, twee toetsen — en het verschil zit in het <em>design</em>. Bij de slaapmiddelen meten we <strong>dezelfde tien mensen twee keer</strong>; die twee kolommen horen per rij bij elkaar. Dat vraagt een <strong>gepaarde <em>t</em>-toets</strong> (<em>paired</em>). Bij de pinguïns hebben we <strong>twee losse groepen</strong> dieren, geen koppels — dat vraagt een <strong>onafhankelijke <em>t</em>-toets</strong> (<em>independent</em>). Doe ze allebei.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de slaapmiddelen (gepaard) · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · de slaapmiddelen (gepaard) · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>slaap_middelen.csv</code> in JASP (menu linksboven → Open).</li>
+<li>Klik bovenin op <strong>T-Tests</strong> en kies <strong>Paired Samples T-Test</strong>.</li>
+<li>Sleep het paar <code>slaap_middelA</code> en <code>slaap_middelB</code> samen naar het vak <strong>Variables</strong> (JASP koppelt ze als één rij).</li>
+<li>Vink onder <strong>Additional Statistics</strong> <strong>Location parameter</strong> aan, met daaronder <strong>Confidence interval</strong>, en ook <strong>Effect size</strong>. Zonder de eerste twee toont JASP het verschil en het interval niet.</li>
+</ol>
+</div>
+</div>
+<p>Rechts lees je af: het verschil A − B = −1.58 uur, <em>t</em>(9) = −4.06, <em>p</em> = 0.003, en een 95%-interval van [−2.46, −0.70]. Het min-teken zegt alleen dat A mínder oplevert dan B; de grootte is 1.58 uur. De <em>p</em> van 0.003 zegt: als de twee middelen in werkelijkheid even goed waren, zou je zó’n verschil bij tien mensen zelden per ongeluk tegenkomen. En dat interval is eerlijker dan de <em>p</em>: het beste dat je over het echte verschil durft te zeggen is “ergens tussen 0.70 en 2.46 uur in B’s voordeel”. Klein onderzoek, breed interval — het interval is meteen zijn eigen slag om de arm.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · de pinguïns (onafhankelijk)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · de pinguïns (onafhankelijk)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>penguins.csv</code>. Klik eerst het trechtertje (<strong>Filter</strong>) boven de data en typ in het <strong>R</strong>-vak <code>soort != "Chinstrap"</code>, zodat alleen de Adélies en de Gentoo’s meedoen.</li>
+<li>Klik op <strong>T-Tests</strong> en kies <strong>Independent Samples T-Test</strong>.</li>
+<li>Sleep <code>gewicht</code> naar <strong>Dependent Variables</strong> en <code>soort</code> naar <strong>Grouping Variable</strong>.</li>
+<li>Vink onder <strong>Tests</strong> de optie <strong>Welch</strong> aan, het huismerk van deze boekjes. <strong>Student</strong> mag blijven staan; die rij heb je straks voor Cohens <em>d</em> nodig.</li>
+<li>Vink onder <strong>Additional Statistics</strong> aan: <strong>Location parameter</strong> met zijn <strong>Confidence interval</strong>, en <strong>Effect size</strong>.</li>
+</ol>
+</div>
+</div>
+<p>Kijk in de rij <strong>Welch</strong> naar die <em>t</em> van −23.39, en naar het interval dat helemaal onder nul ligt. De rij <strong>Student</strong> erboven geeft een net iets andere <em>t</em>. Bij de twaalf diamantjes vielen die twee samen, want daar stonden zes tegen zes; hier staan 151 Adélies tegen 123 Gentoo’s, die ook nog verschillend spreiden, en dan gaan Student en Welch een klein beetje uiteen. Laat die rij gewoon staan: in “Snap het” lees je er de <em>d</em> in. JASP zet de groepen op alfabet en rekent de eerste min de tweede, hier dus Adélie min Gentoo, en negatief betekent gewoon: de Adélies zijn lichter. Bij de slaapmiddelen was de <em>t</em> −4.06 en dat vonden we al overtuigend; hier is-ie bijna zes keer zo groot. De <em>p</em> is zó klein dat JASP ’m alleen nog als “&lt; .001” toont. Onthoud dat cijfer even — in “Snap het” blijkt het minder indrukwekkend dan het lijkt.</p>
+<div class="kicker">
+<p>schud het</p>
+</div>
+</section>
+<section id="duizend-werelden-waarin-de-waarheid-nul-is" class="level2">
+<h2 class="anchored" data-anchor-id="duizend-werelden-waarin-de-waarheid-nul-is">Duizend werelden waarin de waarheid nul is</h2>
+<p><span class="begrippen">labels husselen · teken omgooien · toeval-bergje rond nul</span></p>
+<p>Nu de vraag die telt: bestaat het verschil écht? Je zou het toeval willen nabouwen. De truc is telkens dezelfde, en hij is mooi: <strong>je bouwt duizend werelden waarin de waarheid nul is</strong> — waarin er per definitie géén verschil bestaat — en kijkt hoe ver puur geluk het gemeten verschil dan tóch van nul wegtrekt. In geen enkele van die werelden meet je precies nul; het toeval laat het verschil <strong>dansen</strong> om nul. Die dans is een bergje. Ligt jouw echte verschil ín het bergje, dan kan toeval het verklaren. Ligt het erbuiten, dan is het echt.</p>
+<p>Bij de pinguïns bouw je die nul-werelden door de <strong>soort-labels te husselen</strong>: je houdt alle gewichten precies zoals ze zijn, maar plakt er lukraak “Gentoo” of “Adélie” op. Dát is de kern, en het is belangrijk genoeg om even stil bij te staan: door te husselen <strong>koppel je de soort los van het gewicht</strong>. Je haalt met eigen handen weg dat een bepaald dier bij een bepaalde soort hoort, zodat de soort niets meer over het gewicht zegt — en het echte soortverschil per definitie nul is. Bij de slaapmiddelen — ander design — gooi je per persoon een muntje dat bepaalt of zijn verschil met plus of min meetelt; ook dat koppelt het verschil los van de vraag welk middel A heette. Twee manieren van husselen, één idee.</p>
+<p><strong>En hier moet ik eerlijk zijn: dat husselen is geen knop in JASP.</strong> JASP rekent één keurige uitkomst uit; duizend nul-werelden bouwen en kijken waar het toeval landt is <em>speeltje-</em> of <em>code</em>-werk. Dat is geen gemis van jou of van JASP — het boek doet het bewust zo: de schud-ervaring loopt via een <strong>schud-speeltje</strong> in de browser (of via het R-broertje, waar het een paar regels zijn).</p>
+<p><a href="../speeltjes/w6_schud_verschil.html" target="_blank">▶ Speel het schud-speeltje</a></p>
+<p>Wat je in dat speeltje ziet, voor de pinguïns: duizend werelden waarin soort er niet toe doet, en het toeval komt niet verder dan zo’n 386 gram van nul — een klein beetje geschommel. En dan de echte 1375 gram, kilometers rechts van het hele bergje. <strong>Geen enkele</strong> nul-wereld haalt jouw verschil, of komt zelfs maar in de buurt. Voor de slaapmiddelen hetzelfde beeld: het toeval danst om nul en de echte −1.58 uur ligt aan de uiterste rand. Dát is “geen toeval”: geen <em>p</em>-waarde die je moet geloven, maar een <strong>afstand die je zíet</strong>. Kort gezegd: <strong>duizend werelden waarin de waarheid nul is, maar het gemeten verschil nooit precies nul.</strong></p>
+<p>Dus: beide verschillen zijn echt. Zaak gesloten? Nee — en dit kun je wél gewoon weer in JASP.</p>
+<div class="kicker">
+<p>snap het</p>
+</div>
+</section>
+<section id="echt-is-niet-hetzelfde-als-belangrijk" class="level2">
+<h2 class="anchored" data-anchor-id="echt-is-niet-hetzelfde-als-belangrijk">Echt is niet hetzelfde als belangrijk</h2>
+<p><span class="begrippen">effectgrootte · Cohens <em>d</em> · significantie en steekproefgrootte</span></p>
+<p>Allebei de verschillen zijn dus echt, geen toeval. Maar “echt” is niet hetzelfde als “belangrijk”, en juist de pinguïns laten dat scherp zien.</p>
+<p>Herinner je die <em>t</em> van −23.39 en de <em>p</em> die als “&lt; .001” verscheen? Die duizelingwekkende getallen betekenen <strong>niet</strong> dat het pinguïn-verschil belangrijker is dan het slaap-verschil. Ze zijn zo groot om twee saaie redenen: het verschil is bruut (anderhalve kilo) én we hebben veel dieren (274 stuks). Een <em>t</em>-toets straft kleine steekproeven af en beloont grote; gooi er genoeg waarnemingen in en zelfs een schamel verschil wordt “hoogsignificant”. <strong>Bij een groot, duidelijk verschil met een royale <em>N</em> is significantie triviaal</strong> — de toets bevestigt alleen wat je met het blote oog al zag. De interessante vraag is dan niet <em>óf</em> er verschil is, maar <em>hoe groot</em>.</p>
+<p>Daarvoor bestaat de <strong>effectgrootte</strong> (<em>effect size</em>) — een verschil losgemaakt van de steekproefgrootte. Voor twee groepen is dat <strong>Cohens <em>d</em></strong>: het verschil uitgedrukt in standaarddeviaties. Je hebt het bij “Speel het” al aangevinkt.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · hoe groot is groot? (Cohens *d*)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · hoe groot is groot? (Cohens <em>d</em>)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kijk in de output van de <strong>Independent Samples T-Test</strong> naar de kolom <strong>Effect Size (Cohen’s d)</strong>, in de rij <strong>Student</strong>. Staat-ie er niet, vink dan <strong>Effect size</strong> aan onder <strong>Additional Statistics</strong>.</p>
+</div>
+</div>
+<p><em>d</em> = 2.87 — JASP zet er een minteken voor, en dat is weer alleen de volgorde, Adélie min Gentoo. In de rij <strong>Welch</strong> staat −2.85. Daar middelt JASP de twee spreidingen gewoon, alsof beide soorten even veel dieren hadden; in de rij <strong>Student</strong> telt elke soort mee naar zijn aantal, 151 Adélies en 123 Gentoo’s. Zo rekent Oefening 9.3 de <em>d</em> ook uit, en daarom lezen we hem hier in de rij Student. Kort: <strong>de toets lees je in de rij Welch, de <em>d</em> in de rij Student.</strong> Zo’n <em>d</em> is enorm: de twee soorten liggen bijna drie standaarddeviaties uit elkaar; wijs een willekeurige Gentoo en een willekeurige Adélie aan en de Gentoo is vrijwel altijd zwaarder. Dáár zit het echte verhaal, niet in de <em>t</em>.</p>
+<p>En de slaapmiddelen, met hun bescheiden <em>N</em> van 10? De effectgrootte voor een gepaard verschil heet <em>d<sub>z</sub></em> (JASP toont ’m als <strong>Cohen’s d</strong> bij de Paired Samples T-Test), en die is hier <strong>−1.28</strong> — ook fors. Het verschil tussen A en B is meer dan één standaarddeviatie groot. Klein onderzoek, maar geen klein effect. Precies het omgekeerde plaatje van de pinguïns: daar was de <em>t</em> spectaculair en het nieuws de grootte; hier is de <em>t</em> bescheiden en is de grootte nog steeds het nieuws.</p>
+<p>En nog één ding, om de oefeningen aan elkaar te knopen. Die 1375 gram tussen Gentoo’s en Adélies heb je in <a href="../20_blokken/blok_dummy_regressie.html">Oefening 9.1</a> al zien staan, en niet als gemiddelde maar als <strong>regressiegewicht</strong>: het was daar het getal bij de Gentoo-dummy. Dezelfde vergelijking, één keer als toets en één keer als lijn. Wat de <em>t</em>-toets eraan toevoegt is niet het verschil zelf maar de vraag eromheen — hoe ver kan toeval dit verschil namaken?</p>
+<p>De les van dit blok, in drie zinnen:</p>
+<ul>
+<li><strong>Het design kiest de toets.</strong> Dezelfde mensen twee keer gemeten → gepaard. Twee losse groepen → onafhankelijk. Dat is geen smaak maar een feit over je data.</li>
+<li><strong>Significant zegt “waarschijnlijk niet nul”, niet “groot”.</strong> Bij veel data is significantie goedkoop; laat je niet imponeren door een <em>t</em> van 23.</li>
+<li><strong>De grootte is de vraag die overblijft.</strong> Rapporteer altijd een effectgrootte naast de toets — <em>d</em>, een interval, of gewoon het verschil in gewone eenheden (uren, grammen). Dát is wat een mens wil weten.</li>
+</ul>
+<p>Zou je het in één eerlijke zin opschrijven: niet “het verschil is significant (<em>p</em> &lt; .001)”, maar: Gentoo’s zijn gemiddeld 1375 gram zwaarder dan Adélies (95% CI [1260, 1491]), een zeer groot effect (<em>d</em> = 2.87). Het getal met een maat eromheen, niet een sterretje. Deze zin rekent andersom, Gentoo min Adélie, en dan draait alles om: JASP’s interval van −1491.18 tot −1259.53 wordt hier 1259.53 tot 1491.18 (op hele grammen [1260, 1491]), en de <em>d</em> verliest zijn minteken.</p>
+<div class="kicker">
+<p>jouw beurt</p>
+</div>
+</section>
+<section id="dezelfde-tien-slapers-van-twee-kanten-bekeken" class="level2">
+<h2 class="anchored" data-anchor-id="dezelfde-tien-slapers-van-twee-kanten-bekeken">Dezelfde tien slapers, van twee kanten bekeken</h2>
+<p><span class="begrippen">gepaard versus onafhankelijk · persoonsverschillen · samenhang tussen twee metingen</span></p>
+<p>Jouw beurt — bekende data, en een toets die je van een andere kant benadert. De les hierboven was: het design kiest de toets. Nu ga je zien wat die keuze waard is: je draait dezelfde twintig metingen twee keer, één keer zoals het hoort en één keer zoals het níét hoort, en je kijkt wat dat kost.</p>
+<p>Zet eerst klaar, en beantwoord daarna de vragen. De laatste heet met opzet <strong>Z)</strong> en niet l): de aannames staan altijd achteraan, en die vreemde letter zegt <em>“en ook, elke keer, deze”</em>. En onder <em>Tentamenvragen</em>, aan het eind van deze oefening, staan dezelfde onderwerpen nog een keer in de vorm waarin een tentamen ze stelt.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · zet klaar · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · zet klaar · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>slaap_middelen.csv</code> in JASP.</li>
+<li>Reken met de <strong><code>+</code></strong> rechts van de data een nieuwe kolom (<strong>Computed column</strong>) <code>verschil</code> uit als <code>slaap_middelA - slaap_middelB</code>.</li>
+</ol>
+<p><span class="even-checken">Naast de twee middelen hoort nu een derde kolom te staan met tien verschillen, en de bovenste hoort <strong>−1.2</strong> te zijn — A mín B, per persoon.</span></p>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Jouw beurt">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Jouw beurt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Hoeveel mensen doen er mee, en hoeveel metingen heeft elk van hen? Waar in de tabel zie je dat de twee metingen bij dezelfde persoon horen? (twee getallen en één zin over de vorm van de tabel)</p>
+<p><strong>b)</strong> Hoeveel uur extra slaap leverden de twee middelen gemiddeld op, en hoeveel scheelt dat? (rapporteer <em>M</em> per middel en het verschil, in uren)</p>
+<p><strong>c)</strong> Schrijf de nulhypothese voor de gepaarde toets voluit op, in woorden én in symbolen. (één zin, en die ook in symbolen)</p>
+<p><strong>d)</strong> Draai de gepaarde toets nog eens, zoals bij “Speel het”: <strong>T-Tests → Paired Samples T-Test</strong>, met het paar <code>slaap_middelA</code> en <code>slaap_middelB</code> samen in <strong>Variables</strong>, en onder <strong>Additional Statistics</strong> <strong>Location parameter</strong> met <strong>Confidence interval</strong> aan. (rapporteer <em>t</em>(<em>df</em>), <em>p</em> en het 95%-interval)</p>
+<p><strong>e)</strong> Draai nu dezelfde twintig metingen als twee lósse groepen. En hier moet ik eerlijk zijn: dat kan in JASP niet zomaar — de tabel staat <strong>wide</strong>, één rij per persoon, en een onafhankelijke toets wil één rij per méting; voor dat kantelen heeft JASP geen knop. Het R-broertje draait hem in één regel, en daar komt uit: <em>t</em> = −1.86, <em>df</em> = 17.78, <em>p</em> = .079, 95% CI [−3.37, 0.21]. (noteer alle vier de getallen)</p>
+<p><strong>f)</strong> Vergelijk d) en e). Eén getal is in beide toetsen precies hetzelfde. Welk, en wat is er dan wél veranderd? (één getal, en wat de twee intervallen verschillend doen)</p>
+<p><strong>g)</strong> Vraag drie spreidingen op via <strong>Descriptives</strong>: die van middel A, die van middel B, en die van <code>verschil</code> — de tien persoonsverschillen. (drie getallen)</p>
+<p><strong>h)</strong> Reken de samenhang tussen de twee metingen uit met <strong>Regression → Correlation</strong> op <code>slaap_middelA</code> en <code>slaap_middelB</code>. (rapporteer <em>r</em>)</p>
+<p><strong>i)</strong> Leg g) en h) naast elkaar en verklaar waarom de gepaarde <em>t</em> ruim twee keer zo groot is. (één breuk in woorden: wat staat er boven en wat onder de streep)</p>
+<p><strong>j)</strong> Kijk naar de tien verschillen zelf. Hoeveel mensen sliepen er beter op B, hoeveel beter op A, en hoeveel precies even lang? (drie getallen)</p>
+<p><strong>k)</strong> Welke van de twee toetsen liegt hier? En stel dat die samenhang géén .80 was maar ongeveer nul — wat zou er dan met de spreiding van de tien verschillen gebeuren, en dus met het verschil tussen de twee <em>p</em>’s? (één keuze en twee gevolgen)</p>
+<p><strong>Z) Mag je alles hierboven geloven?</strong> De gepaarde <em>t</em>-toets leunt op één aanname, en die gaat niet over de twee kolommen maar over de tien verschillen. Welke is dat, en houdt hij hier stand? Kijk naar de tien getallen zelf. (één aanname, en het getal in de rij dat je aan het twijfelen brengt)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <strong>10</strong> mensen, elk <strong>2</strong> keer gemeten. Je ziet het aan de vorm van de tabel: er staat één rij per persoon met twee kolommen ernaast. Die twee getallen op één rij horen bij hetzelfde mens — dát is wat “gepaard” betekent.</p>
+<p><strong>b)</strong> Middel A gaf <em>M</em> = 0.75 uur extra slaap, middel B <em>M</em> = 2.33 uur. B wint met <strong>1.58 uur</strong>.</p>
+<p><strong>c)</strong> De nulhypothese: de twee middelen leveren gemiddeld evenveel extra slaap op, dus het gemiddelde verschil is in de populatie nul. In symbolen: <span class="math inline">\(H_0:\ \mu_d = 0\)</span> tegen <span class="math inline">\(H_1:\ \mu_d \neq 0\)</span>, waarin <span class="math inline">\(d\)</span> het verschil per persoon is. Je mag het ook als <span class="math inline">\(H_0:\ \mu_A = \mu_B\)</span> schrijven; één van de twee is genoeg. Grieks, want het gaat over de populatie en niet over deze tien.</p>
+<p><strong>d)</strong> <em>t</em>(9) = −4.06, <em>p</em> = .003, 95% CI [−2.46, −0.70]. Het min-teken zegt alleen dat A mínder oplevert dan B.</p>
+<p><strong>e)</strong> <em>t</em> = −1.86, <em>df</em> = 17.78, <em>p</em> = .079, 95% CI [−3.37, 0.21] — de getallen uit het R-broertje.</p>
+<p><strong>f)</strong> Het verschil zelf: <strong>−1.58 uur</strong>, in allebei de toetsen precies gelijk. Wat er wél verandert is de onzekerheid eromheen. Het gepaarde interval loopt van −2.46 tot −0.70 en blijft aan één kant van de nul; het onafhankelijke loopt van −3.37 tot 0.21 en pákt de nul erbij. Zelfde data, zelfde verschil, ander oordeel.</p>
+<p><strong>g)</strong> <em>SD</em>(A) = 1.79, <em>SD</em>(B) = 2.00, <em>SD</em>(verschil) = <strong>1.23</strong>. De tien verschillen spreiden dus mínder dan de twee kolommen waar ze uit komen.</p>
+<p><strong>h)</strong> <em>r</em> = <strong>.80</strong>. Wie makkelijk slaapt, sliep op állebei de middelen veel; wie ligt te woelen, op allebei weinig.</p>
+<p><strong>i)</strong> Een <em>t</em> is een verschil gedeeld door een spreiding. Boven de streep staat in allebei de toetsen dezelfde −1.58. Onder de streep niet: de gepaarde toets rekent met de spreiding van de tien verschillen (1.23) en komt op een standaardfout van 0.39, de onafhankelijke rekent met de twee losse spreidingen (1.79 en 2.00) en komt op 0.85. Deel hetzelfde getal door iets kleiners en er komt een grotere <em>t</em> uit — vandaar −4.06 tegen −1.86. Wat de onafhankelijke toets weggooit, is precies die <em>r</em> van .80.</p>
+<p><strong>j)</strong> <strong>Negen</strong> van de tien sliepen beter op B, <strong>niemand</strong> beter op A, en <strong>één</strong> precies even lang. Dat is het concreetste bewijs dat er iets te koppelen valt: negen van de tien wijzen dezelfde kant op, hoe verschillend die mensen onderling ook slapen.</p>
+<p><strong>k)</strong> De <strong>onafhankelijke</strong> liegt. Die doet alsof de twintig metingen van twintig verschillende mensen komen, en dat is niet zo. Lag de samenhang rond nul, dan zou de spreiding van de verschillen niet 1.23 zijn maar ongeveer 2.69 — de twee losse spreidingen die dan niets van elkaar afhalen — en dan lopen de twee toetsen bijna gelijk. De winst van het gepaarde design zit dus niet in de toets maar in de samenhang: hoe sterker de twee metingen samenhangen, hoe meer je eraan hebt.</p>
+<p><strong>Z)</strong> Hadden we zomaar een gepaarde <em>t</em>-toets mogen doen? Wat is de aanname? Dat de <strong>verschilscores</strong> normaal verdeeld zijn — niet de twee kolommen. Zijn déze verschilscores normaal verdeeld? Nee — geen enkele steekproef is precies normaal verdeeld. Maar dat is de aanname ook niet: de aanname is dat de verschilscores normaal verdeeld zijn in de populatie waar ze uit komen.</p>
+<p>En hier is het eerlijke antwoord: <strong>hij wankelt.</strong> Kijk naar de rij — −1.2 −2.4 −1.3 −1.3 0.0 −1.0 −1.8 −0.8 <strong>−4.6</strong> −1.4. Negen getallen liggen tussen 0 en −2.4, en dan is er één van −4.6. Die ene trekt de rij scheef, en bij tien waarnemingen weegt hij zwaar.</p>
+<p>Wat dat kost, en wat niet: haal je die persoon weg, dan wordt de uitkomst <strong>sterker</strong>, niet zwakker — <em>t</em> = −5.66 met <em>p</em> &lt; .001 in plaats van <em>t</em> = −4.06 met <em>p</em> = .003. De conclusie draait dus niet om. Maar dat had je niet kunnen weten zonder te kijken, en dat is het hele punt van deze vraag: je zou het eigenlijk even moeten toetsen.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>tentamen</p>
+</div>
+</section>
+<section id="tentamenvragen" class="level2">
+<h2 class="anchored" data-anchor-id="tentamenvragen">Tentamenvragen</h2>
+<p><span class="begrippen">het design kiest de toets · de breuk onder de <em>t</em> · Welch · echt tegenover groot</span></p>
+<p>Deze zes hebben de vorm waarin een tentamen dit onderwerp stelt: vier opties, en precies één is de beste — de andere drie kunnen best waar klínken en toch niet het beste antwoord zijn. Rekenen hoeft alleen bij vraag 2, en schatten mag daar ook: 1.23 gedeeld door ruim drie is ongeveer 0.4, en daarmee heb je hem al.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Tentamenvragen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Tentamenvragen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> Dezelfde twintig metingen van de tien slapers, twee keer geanalyseerd. Gepaard: <em>t</em>(9) = −4.06, <em>p</em> = .003. Als twee losse groepen: <em>t</em>(17.78) = −1.86, <em>p</em> = .079. Welke uitspraak is de beste?</p>
+<ol type="a">
+<li>De onafhankelijke toets is de voorzichtigste van de twee — hij komt niet eens onder .05 — dus dat is de uitkomst die je rapporteert.</li>
+<li>De twee toetsen spreken elkaar tegen over dezelfde tien mensen — de ene komt onder .05 en de andere niet — dus je hebt een derde toets nodig om te zien welke van de twee gelijk heeft.</li>
+<li>Je mag zelf kiezen: het gemeten verschil is in allebei 1.58 uur, dus alleen de <em>p</em> hangt aan je keuze.</li>
+<li>De gepaarde toets hoort hier, want dezelfde tien mensen zijn twee keer gemeten; de onafhankelijke doet alsof het twintig verschillende mensen zijn en gooit de samenhang tussen die twee metingen weg.</li>
+</ol>
+<p><strong>2.</strong> De tien persoonsverschillen (A min B) hebben <em>M</em> = −1.58 uur en <em>SD</em> = 1.23 uur. Een <em>t</em> is een verschil gedeeld door een standaardfout, en die standaardfout is de spreiding gedeeld door de wortel uit het aantal: <em>SE</em> = <em>SD</em> / √<em>n</em>. Welke standaardfout en welke <em>t</em> horen bij de gepaarde toets? (De standaardfouten staan op vier decimalen, zodat elk paar op zichzelf narekenbaar is.)</p>
+<ol type="a">
+<li><em>SE</em> = 0.1230 uur en <em>t</em> = −12.85</li>
+<li><em>SE</em> = 0.3890 uur en <em>t</em> = −4.06</li>
+<li><em>SE</em> = 0.8491 uur en <em>t</em> = −1.86</li>
+<li><em>SE</em> = 1.2300 uur en <em>t</em> = −1.28</li>
+</ol>
+<p><strong>3.</strong> Bij de twaalf diamantjes staat in de rij <strong>Student</strong> <em>df</em> = 10 op je scherm, en in de rij <strong>Welch</strong> <em>df</em> = 8.62. Waar komt dat gebroken getal vandaan?</p>
+<ol type="a">
+<li>Welch laat de steentjes weg die te ver van hun eigen groepsgemiddelde af liggen.</li>
+<li>Vrijheidsgraden zijn <em>n</em> − 2, dus 12 − 2 = 10; die 8.62 is een afrondfout van JASP.</li>
+<li>Welch neemt niet aan dat de twee merken even veel spreiden in glans, en die voorzichtigheid betaal je in vrijheidsgraden.</li>
+<li>8.62 is het aantal steentjes dat meetelt nadat JASP de twee merken tot één hoop heeft samengevoegd en de randgevallen half heeft geteld.</li>
+</ol>
+<p><strong>4.</strong> De pinguïn-toets geeft <em>t</em> = −23.39 met een <em>p</em> die JASP alleen nog als “&lt; .001” toont; de slaap-toets geeft <em>t</em> = −4.06 met <em>p</em> = .003. Welke uitspraak is de beste?</p>
+<ol type="a">
+<li>Het gewichtsverschil tussen de soorten is belangrijker dan het slaapverschil tussen de middelen, want de <em>t</em> is er bijna zes keer zo groot.</li>
+<li>De <em>t</em> is negatief, dus de Gentoo’s zijn lichter dan de Adélies.</li>
+<li>Die <em>t</em> is hoog om twee saaie redenen — een bruut verschil en 274 dieren — en hoe groot het verschil is, zegt <em>d</em> = 2.87.</li>
+<li>Bij een <em>p</em> die het programma niet eens meer voluit op het scherm schrijft, staat vast dat de twee soorten in gewicht van elkaar verschillen.</li>
+</ol>
+<p><strong>5.</strong> Voor diezelfde tien slapers geeft de gepaarde toets 95% CI [−2.46, −0.70] uur en de onafhankelijke 95% CI [−3.37, 0.21] uur. Wat is het scherpste verschil tussen die twee intervallen?</p>
+<ol type="a">
+<li>Het gepaarde interval is smaller, dus het echte verschil tussen de twee middelen is daar groter dan de onafhankelijke toets laat zien.</li>
+<li>De twee intervallen liggen om een ander gemeten verschil heen, en daar komt de andere breedte vandaan; hetzelfde verschil zou hetzelfde interval geven.</li>
+<li>Het onafhankelijke interval bevat de nul, dus daar is aangetoond dat de twee middelen even veel extra slaap opleveren en het verschil dus nul is.</li>
+<li>Het gepaarde interval blijft aan één kant van de nul; het onafhankelijke pakt de nul erbij.</li>
+</ol>
+<p><strong>6.</strong> De gepaarde <em>t</em>-toets leunt op één normaliteitsaanname. Waarover gaat die?</p>
+<ol type="a">
+<li>Over de tien metingen van middel A en de tien van middel B, elk apart.</li>
+<li>Over de twintig metingen samen op één hoop.</li>
+<li>Over de tien verschilscores, in de populatie waar ze uit komen — dus over de rij die je krijgt door per persoon A van B af te trekken, en niet over de twee kolommen waar die rij uit ontstaat.</li>
+<li>Over niets: bij tien personen valt normaliteit toch niet te toetsen, en een aanname die je niet kunt nakijken kun je ook niet schenden, dus hier vervalt hij.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord — open na je eigen poging
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 d · 2 b · 3 c · 4 c · 5 d · 6 c</strong></p>
+<p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
+<p><strong>1. d.</strong> Het design kiest de toets, en dat is geen smaak maar een feit over je data: twee getallen op één rij horen bij hetzelfde mens. <strong>a</strong> is de verleidelijkste van de drie, want dit blok noemt Welch een paar alinea’s eerder zélf voorzichtiger, en voorzichtig klinkt veilig. Maar voorzichtig-zijn helpt alleen tegen een aanname die je niet durft te doen; hier weet je zeker dát de metingen gepaard zijn, en dan is de onafhankelijke toets niet voorzichtig maar verkeerd. <strong>b</strong> ziet twee uitkomsten en denkt aan een derde meting. Er is niets tegenstrijdigs: het gemeten verschil is in allebei precies −1.58 uur, en alleen de onzekerheid eromheen verschilt. <strong>c</strong> heeft dat goed gezien en trekt er de verkeerde conclusie uit — dat twee toetsen hetzelfde verschil vinden, maakt ze niet allebei geldig.</p>
+<p><strong>2. b.</strong> De gepaarde toets rekent met de spreiding van de tien verschillen: 1.23 / √10 = 0.3890, en −1.58 / 0.3890 = −4.06.</p>
+<p>Let op die vier decimalen, want daar zit een val. Rapporteren doe je 0.39, maar rond je op 0.39 áf en deel je dán, dan staat er −4.05 en niet −4.06. Dat is dezelfde val die <a href="../20_blokken/blok_effectgrootte_d.html">Oefening 9.3</a> bij <strong>f)</strong> uitlegt: rond af aan het eind, nooit onderweg. Daarom staan de standaardfouten in de vraag op vier decimalen — zo komt elk van de vier paren op zichzelf uit.</p>
+<p><strong>a</strong> deelt door 10 in plaats van door de wortel uit 10: 1.23 / 10 = 0.1230, en −1.58 / 0.1230 = −12.85. Dat is de meest gemaakte fout in deze som, en hij valt op doordat de uitkomst absurd groot wordt — een <em>t</em> van bijna dertien bij tien mensen bestaat niet. <strong>c</strong> zijn de twee getallen van de ónafhankelijke toets, die je bij vraag 1 naast de gepaarde zag staan: 1.58 / 0.8491 geeft inderdaad 1.86. Goede getallen, verkeerde toets — die 0.8491 komt uit de twee lósse spreidingen (1.79 en 2.00) en niet uit de spreiding van de tien verschillen. <strong>d</strong> deelt het verschil door de spreiding zelf in plaats van door de standaardfout, en vergeet dus de wortel helemaal. Dat geeft geen <em>t</em> maar een effectgrootte: precies de <em>d</em><sub>z</sub> van −1.28 die een paar alinea’s hoger staat. Vandaar dat dat getal zo bekend voelt.</p>
+<p><strong>3. c.</strong> Welch gunt elk merk zijn eigen spreiding, en betaalt die voorzichtigheid in vrijheidsgraden — dáár zie je aan de gebroken 8.62 dat er betaald is. <strong>a</strong> verzint een opschoning: geen van beide toetsen gooit ooit een waarneming weg. <strong>b</strong> rekent de goede som voor de verkéérde toets. In de rij Student is <em>n</em> − 2 = 10 inderdaad het antwoord, en die 10 staat er ook; wat het niet verklaart is waarom het getal ernaast gebroken is, en een programma dat vrijheidsgraden afrondt bestaat niet. <strong>d</strong> leest 8.62 als een aantal steentjes. Er zijn er twaalf, en 8.62 steentjes bestaan niet — dat is precies de aanwijzing dat vrijheidsgraden geen dingen tellen.</p>
+<p><strong>4. c.</strong> Een <em>t</em> straft kleine steekproeven af en beloont grote; gooi er genoeg waarnemingen in en zelfs een schamel verschil wordt hoogsignificant. De grootte staat in <em>d</em>, niet in <em>t</em>. <strong>a</strong> leest de <em>t</em> als een belangrijkheidsmaat, en dat is precies de val waar deze sectie van het blok tegen bestaat. <strong>b</strong> heeft het teken goed gezien en de volgorde niet: JASP zet de soorten op alfabet en rekent de eerste min de tweede, dus Adélie min Gentoo — de Adélies zijn de lichte. <strong>d</strong> maakt van een kleine <em>p</em> zekerheid. Hoe klein hij ook wordt, een <em>p</em> zegt hoe raar je verschil zou zijn als er niets was; hij wordt nooit een garantie.</p>
+<p><strong>5. d.</strong> Zelfde data, zelfde verschil, ander oordeel — en dat oordeel zie je aan één ding: of de nul binnen het interval valt. <strong>a</strong> leest breedte als grootte. Het gemeten verschil is in allebei −1.58 uur; alleen de onzekerheid eromheen verschilt. <strong>b</strong> verzint een tweede verschil dat er niet is, en dat is te controleren: het midden van [−2.46, −0.70] is −1.58, en het midden van [−3.37, 0.21] is óók −1.58. <strong>c</strong> springt van <em>“de nul zit erin”</em> naar <em>“gelijk bevonden”</em>. Dat interval laat verschillen van bijna drieënhalf uur in B’s voordeel net zo goed toe als nul; het zegt dat je het niet weet, niet dat er niets is.</p>
+<p><strong>6. c.</strong> De aanname zit op de tien verschilscores, want dát is de rij waarop de toets rekent. <strong>a</strong> is de aanname van de ónafhankelijke toets, en juist die draaien we hier niet. <strong>b</strong> gooit de twintig metingen op één hoop en verliest daarmee de koppeling per persoon — dezelfde fout die de onafhankelijke toets bij vraag 1 maakte. <strong>d</strong> begint waar met <em>“valt niet te toetsen”</em> en gaat daarna tweemaal de mist in. Een aanname die je niet kunt nakijken kun je wel degelijk schenden — hij gaat over de populatie en die trekt zich van jouw toetsvermogen niets aan — en hij vervalt dus ook niet. Juist omdát een toets weinig zegt bij tien getallen, kíjk je naar de rij. Doe je dat hier, dan zie je tussen negen getallen van 0 tot −2.4 één van −4.6 staan — de aanname vervalt niet, hij wankelt.</p>
+<p>Wil je de getallen uit vraag 2 zelf zien ontstaan, pak dan je rekenmachine. Het gemiddelde verschil (−1.58) en de spreiding van <code>verschil</code> (1.23) staan in <strong>Descriptives</strong> op de kolom <code>verschil</code> die je bij het klaarzetten maakte:</p>
+<ul>
+<li>vraag 2b: de standaardfout die erbij hoort, en de <em>t</em> eruit: 1.23 / √10 = 0.3890 en −1.58 / 0.3890 = −4.06</li>
+<li>vraag 2b: en dit is de val, eerst afronden en dan pas delen: −1.58 / 0.39 = −4.05</li>
+<li>vraag 2a: delen door 10 in plaats van door de wortel uit 10: 1.23 / 10 = 0.1230 en −1.58 / 0.1230 = −12.85</li>
+<li>vraag 2d: delen door de spreiding zelf geeft geen <em>t</em> maar <em>d</em><sub>z</sub>: −1.58 / 1.23 = −1.28</li>
+<li>vraag 2c: de standaardfout van de ónafhankelijke toets is 0.8491. Die staat niet op jouw scherm: het R-broertje rekent hem uit, onderaan zijn eigen tentamenantwoorden. Uit e) kun je hem ook terugrekenen: 1.58 / 1.86 ≈ 0.85. En dan de <em>t</em>: −1.58 / 0.8491 = −1.86</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W6">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: twee groepen (of twee metingen), één verschil, en de vraag of dat verschil het toeval overleeft — plus hoe groot het eigenlijk is.</p>
+<p>In het boek: <strong>W6 — Bestaat het verschil echt?</strong></p>
+<p><em>Daar komt de toets pas ná het interval en na de simulatie: eerst vóélen hoe ver toeval reikt, dan pas de vraag “stel dat er niks was”.</em></p>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Voetnoten</h2>
+
+<ol>
+<li id="fn1"><p>Cushny &amp; Peebles (1905), het klassieke slaapmiddelen-experiment — dezelfde data waarop Student in 1908 zijn <em>t</em>-verdeling demonstreerde. <code>slaap_middelen.csv</code>, 10 personen. Alle getallen nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0). <code>penguins.csv</code>. Alle getallen op die échte data nagerekend.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_dummy_regressie.html" class="pagination-link" aria-label="Oefening 9.1 · Dummy-codering">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Oefening 9.1 · Dummy-codering</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_effectgrootte_d.html" class="pagination-link" aria-label="Oefening 9.3 · Effectgrootte: Cohens d">
+        <span class="nav-page-text">Oefening 9.3 · Effectgrootte: Cohens d</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>

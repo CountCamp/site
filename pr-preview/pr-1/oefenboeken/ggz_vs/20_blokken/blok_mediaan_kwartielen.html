@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Mediaan, kwartielen en scheefheid – GGZ-VS/JASP-oefenboek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_standaardfout.html" rel="next">
+<link href="../20_blokken/blok_gemiddelde_spreiding.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+</head>
+
+<body class="nav-sidebar docked fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../20_blokken/blok_mediaan_kwartielen.html">Mediaan, kwartielen en scheefheid</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">GGZ-VS/JASP-oefenboek</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/manuscript/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar het boek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GGZ-VS/JASP-oefenboek</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/00_parkeerkaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De parkeerkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/01_vijf_basisvragen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De vijf basisvragen</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/02_effectmaten_kaart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectmatenkaart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meetniveaus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meetniveaus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gemiddelde en standaardafwijking</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_kwartielen.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Mediaan, kwartielen en scheefheid</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_standaardfout.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Standaardfout en non-respons</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De correlatie <em>r</em> en de scatterplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enkelvoudige regressie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_effectgrootte_d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De effectgrootte — Cohens <em>d</em></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_cronbach_alpha.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cronbachs α</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">W6 · Bestaat het verschil echt?</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_betrouwbaarheidsinterval.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het betrouwbaarheidsinterval</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_p_waarde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>p</em>-waarde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_t_toets_gepaard_onafhankelijk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De <em>t</em>-toets: gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_power_significant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Significantie en power</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_meervoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Meervoudige regressie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ANOVA en η²</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_interactie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactie en moderatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mediatie</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_odds_ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De odds ratio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_klinische_relevantie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Van significant naar relevant</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Schil (naast het boek)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_kruistabel_chikwadraat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De kruistabel en χ²</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mann_whitney.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">De Mann-Whitney-toets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/99_register.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het register</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Mediaan, kwartielen en scheefheid</h1>
+<p class="subtitle lead"><em>median, quartiles &amp; skewness</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p><strong>Vooraf, in één zin:</strong> een gemiddelde wachttijd van 45 dagen betekent níét dat de doorsnee-patiënt ongeveer 45 dagen wacht — bij een scheve verdeling vertelt het gemiddelde het verhaal van de staart en de mediaan dat van de middelste patiënt; waarom, staat onderaan bij <em>Wat het niet zegt</em>.</p>
+</blockquote>
+<section id="wat-je-ziet" class="level2">
+<h2 class="anchored" data-anchor-id="wat-je-ziet">Wat je ziet</h2>
+<p><strong>In het kort.</strong> Geen toets deze keer, maar iets dat nog eerder in het artikel staat: de beschrijvende statistiek, meestal de allereerste tabel of de eerste alinea van de resultaten. <em>M</em> = 44.89, <em>SD</em> = 40.26 — het gemiddelde / <em>mean</em> en de standaardafwijking / <em>standard deviation</em>, het zwaartepunt en het lineaaltje uit het vorige blok. Niks nieuws dus. Het nieuwe is de vraag van dit blok: wanneer zijn die twee vertrouwde getallen de verkéérde samenvatting — en welke getallen vertellen dan wél het eerlijke verhaal?</p>
+<p>Zo ziet het eruit in het wild:</p>
+<blockquote class="blockquote">
+<p><em>Voorbeeldfragment, geschreven in de stijl van een resultatensectie — het artikel bestaat niet.</em></p>
+<p>Between January and December 2024, 80 consecutive patients referred to our outpatient mental health service were included. The mean waiting time from referral to intake was 44.9 days (<em>SD</em> = 40.26, range 3–187).</p>
+</blockquote>
+</section>
+<section id="wat-er-staat" class="level2">
+<h2 class="anchored" data-anchor-id="wat-er-staat">Wat er staat</h2>
+<p><strong>In het kort.</strong> Er staat: gemiddeld zaten er 44.9 dagen tussen aanmelding en intake. Maar kijk naar wat er omheen staat. De standaardafwijking is 40.3 — bijna net zo groot als het gemiddelde zelf. En de kortste wachttijd is 3 dagen, de langste 187. Een wachttijd kan niet onder de nul, en als het lineaaltje bijna zo lang is als de afstand van het gemiddelde tot die nul, dan kán de verdeling niet netjes symmetrisch om dat gemiddelde heen liggen. Dit fragment rapporteert het zwaartepunt van een verdeling met een lange staart — en verzwijgt de staart.</p>
+<p>Nu hetzelfde, rustig en van voren af aan. Het gemiddelde is het zwaartepunt van de data: élke waarde trekt eraan, en hoe verder een waarde van de rest af ligt, hoe harder hij trekt. Meestal is dat precies wat je wilt. Maar wachttijden in de zorg hebben een typische vorm: de meeste mensen worden binnen enkele weken gezien, en een kleine groep wacht heel erg lang. Die kleine groep — de staart naar rechts — trekt het zwaartepunt naar zich toe. Het is het Willem-Alexander-effect: zeg dat het gemiddelde vermogen in een dorp hoog is, en het kan best dat één kasteelbewoner dat gemiddelde in z’n eentje omhoogtrekt terwijl de rest van het dorp gewoon moet sappelen. Het gemiddelde liegt niet — het is echt het zwaartepunt — maar het gaat over niemand in het bijzonder.</p>
+<p>Daarvoor heb je de <strong>mediaan</strong> / <em>median</em>: de middelste waarde. Zet alle 80 patiënten op een rij van kort naar lang wachten; de mediaan vind je in twee stappen. Eerst de plek: (n + 1) / 2 = 81 / 2 = 40.5 — tussen rangnummer 40 en 41 in. Dan pas de waarde die daar ligt. In deze data is dat 30 dagen (straks zie je het zelf in JASP): de helft van de patiënten werd binnen 30 dagen gezien, de andere helft moest langer wachten. En let op het gat: het gemiddelde zegt 44.9, de mediaan zegt 30. Dat verschil van twee weken ís de staart. Bij een symmetrische verdeling vallen gemiddelde en mediaan ongeveer samen; schuiven ze uit elkaar, dan wijst het gemiddelde altijd naar de kant van de staart.</p>
+<p>De <strong>kwartielen</strong> / <em>quartiles</em> maken het beeld af: dat zijn de strepen die de geordende rij in vier gelijke stukken hakken. Het eerste kwartiel (Q1, hier 17 dagen) heeft een kwart van de patiënten onder zich, het derde (Q3, hier 69.5) driekwart — de mediaan is gewoon het tweede kwartiel. De middelste helft van de patiënten wachtte dus tussen de 17 en de 69.5 dagen; die afstand (52.5 dagen) heet de interkwartielafstand / <em>interquartile range</em>, IQR. Samen vertellen mediaan en kwartielen wat M en SD hier niet kunnen: waar de doorsnee zit én hoe scheef de boel eromheen hangt. En voor die scheefheid bestaat ook een getal, de <strong>scheefheid</strong> / <em>skewness</em>: nul bij symmetrie, positief bij een staart naar rechts, negatief bij een staart naar links. Hier: 1.48, stevig rechts-scheef.</p>
+</section>
+<section id="waar-het-vandaan-komt" class="level2">
+<h2 class="anchored" data-anchor-id="waar-het-vandaan-komt">Waar het vandaan komt</h2>
+<p>Dit blok leunt op twee eenheden uit het boek. In <em>Gemiddelde en spreiding</em> werden het zwaartepunt en het lineaaltje geplant, en kwam de mediaan al even langs als de buurman van het gemiddelde — de middelste, die zich niets aantrekt van hoe extreem de uiteinden zijn. In <em>De vorm van de hoop</em> krijgt de verdeling vervolgens een vórm: daar leer je dat je een variabele pas kent als je niet alleen weet wáár hij zit en hoe breed hij is, maar ook hoe hij hángt — symmetrisch, of met een staart. Daar wonen de boxplot, de kwartielen en de scheefheid.</p>
+<p>Eén ding moet je hier paraat hebben: het verschil in karakter tussen de twee centrummaten. Het gemiddelde luistert naar de wáárde van elke observatie — verschuif één patiënt van 187 naar 500 dagen en het gemiddelde schuift mee. De mediaan luistert alleen naar de vólgorde: voor haar is die patiënt gewoon “iemand boven mij”, of hij nu 187 of 500 dagen wachtte. Dat maakt de mediaan robuust / <em>robust</em>: ongevoelig voor wat er in de staarten gebeurt. Precies daarom is zij bij scheve verdelingen de eerlijker verteller — en precies daarom kan zij ook dingen níét die het gemiddelde wél kan, maar dat komt onderaan.</p>
+</section>
+<section id="zelf-doen-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-doen-in-jasp">Zelf doen in JASP</h2>
+<p><a href="../10_data/wachttijd_intake.csv" class="data-download" download="wachttijd_intake.csv">⬇ Download de data — <code>wachttijd_intake.csv</code></a></p>
+<p>Bij dit blok hoort het databestand <code>wachttijd_intake.csv</code>: 80 rijen, drie kolommen — <code>id</code> (patiëntnummer), <code>wachttijd_dagen</code> (dagen tussen aanmelding en intake) en <code>leeftijd</code>. Het verhaal is echt — zó scheef zien wachttijden in de ggz er werkelijk uit — maar de rijen zijn gegenereerd: er zit geen echte patiënt in. Ze reproduceren precies de getallen uit het fragment.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In JASP · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open het bestand in JASP (menu linksboven → Open).</li>
+<li>Klik in de balk bovenin op <strong>Descriptives</strong>.</li>
+<li>Sleep <code>wachttijd_dagen</code> naar het vak <strong>Variables</strong>; <code>id</code> en <code>leeftijd</code> laat je staan waar ze staan.</li>
+<li>Klap het paneel <strong>Statistics</strong> open en vink aan: onder Central Tendency <strong>Median</strong> (Mean staat al aan), onder Percentile Values <strong>Quartiles</strong>, onder Distribution <strong>Skewness</strong> en onder Dispersion <strong>IQR</strong> (Std. deviation, Minimum en Maximum staan al aan).</li>
+<li>Klap <strong>Basic plots</strong> open en vink <strong>Distribution plots</strong> en <strong>Boxplots</strong> aan.</li>
+</ol>
+</div>
+</div>
+<p>In de tabel rechts staat nu alles naast elkaar: Mean 44.89 en Median 30.00, Std. Deviation 40.26 en IQR 52.50, de kwartielen als 25th percentile 17.00 en 75th percentile 69.50, Minimum 3 en Maximum 187. En Skewness 1.481, met daaronder zijn standaardfout, 0.269. Is 1.48 veel? Een ruw scheefheidsgetal zegt op zichzelf weinig — deel het eerst door die standaardfout: 1.48 / 0.27 ≈ 5.5, ruim voorbij de vuistgrens van 3 waar je van duidelijke scheefheid mag spreken. Deze verdeling is niet een béétje scheef.</p>
+<p>Maar de plaatjes vertellen het sneller dan de getallen. Het histogram: een hoge bult links — daar wonen de meeste patiënten, met korte wachttijden — en dan een lange, steeds dunnere staart naar rechts. De boxplot: een doos van 17 tot 69.5 met de mediaanstreep op 30, opvallend láág in de doos (de onderste helft van de middenmoot zit dicht opeen, de bovenste is uitgerekt), een lange snorhaar omhoog, en daarboven twee losse stippen — de twee extreemste wachters, op 180 en 187 dagen. Zo tekent JASP observaties die ver buiten de doos vallen: als kandidaat-uitschieters / <em>outliers</em>. Onthoud waar die stippen zaten; in de oefening ga je ze narekenen.</p>
+</section>
+<section id="zelf-opschrijven" class="level2">
+<h2 class="anchored" data-anchor-id="zelf-opschrijven">Zelf opschrijven</h2>
+<div class="apa callout callout-style-default callout-note callout-titled" title="Schrijf het op — een scheve variabele">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Schrijf het op — een scheve variabele
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor je eigen Nederlandstalige literatuurstudie:</p>
+<blockquote class="blockquote">
+<p>De wachttijd tussen aanmelding en intake was rechts-scheef verdeeld: de helft van de patiënten werd binnen 30 dagen gezien (mediaan = 30 dagen, kwartielen 17 en 69.5), maar de langste wachttijden liepen op tot ruim een half jaar (bereik 3–187 dagen).</p>
+</blockquote>
+<p>Drie werkafspraken daarbij:</p>
+<ul>
+<li><strong>Bij een scheve verdeling: mediaan mét kwartielen</strong>, niet M ± SD. En zeg wat er tussen je haken staat: sommige auteurs schrijven de IQR als één afstand (52.5), de meeste als de twee kwartielen (17–69.5). Beide mag — als je lezer maar niet hoeft te raden.</li>
+<li><strong>Laat de staart niet verdwijnen.</strong> “Mediaan 30 dagen” alleen is óók een halve waarheid; het bereik of de kwartielen erbij laten zien dat een deel van de patiënten maanden wachtte.</li>
+<li><strong>Neem over wat het artikel geeft, met kanttekening.</strong> Rapporteert een artikel een vermoedelijk scheve variabele (wachttijd, ligduur, zorgkosten, aantal contacten) alléén als M (SD), noteer dat dan in je evidencetabel: “alleen gemiddelde gerapporteerd; verdeling vermoedelijk rechts-scheef.” Dat is geen pietluttigheid — het bepaalt of je het getal met andere studies mag vergelijken.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="wat-het-niet-zegt" class="level2">
+<h2 class="anchored" data-anchor-id="wat-het-niet-zegt">Wat het niet zegt</h2>
+<p>De verleidelijkste redenering die je over dit fragment kunt opschrijven is: <em>“De gemiddelde wachttijd is 45 dagen — patiënten wachten hier dus zo’n anderhalve maand.”</em> Eén korte zin, drie haarscheurtjes.</p>
+<p><strong>“Gemiddeld 45 dagen, dus dat is de typische ervaring.”</strong> Nee: 52 van de 80 patiënten — bijna twee derde — wachtten kórter dan dat gemiddelde. Het zwaartepunt van een scheve verdeling is geen typische patiënt; het is het compromis tussen een grote groep korte wachters en een handvol heel lange. “De helft werd binnen 30 dagen gezien” beschrijft de doorsnee-ervaring; “gemiddeld 45 dagen” beschrijft een rekenkundige plek waar relatief weinig patiënten daadwerkelijk zitten.</p>
+<p><strong>“<em>M</em> = 44.89, <em>SD</em> = 40.26” — de suggestie van symmetrie.</strong> Wie M ± SD leest, denkt onwillekeurig aan een nette bult: evenveel eronder als erboven, zo’n twee derde van de mensen binnen één SD. Reken hier eens door: 44.9 − 40.3 = 4.6, en twee lineaaltjes onder het gemiddelde zit je op −35.6 dagen — een negatieve wachttijd, die niet bestaat. Als M ± SD onmogelijke waarden belooft, is dat je signaal dat de vorm niet symmetrisch is. Dit is een leestruc die je op elk abstract kunt toepassen, ook zonder de data: een SD die bijna zo groot is als het gemiddelde, bij een variabele die niet onder nul kan — daar hangt vrijwel zeker een staart.</p>
+<p><strong>“Eén getal, dus één stabiel verhaal.”</strong> Haal in gedachten de drie langste wachters (145, 180 en 187 dagen) uit de data: het gemiddelde zakt van 44.9 naar 40.0 — bijna vijf dagen verschoven door drie van de tachtig rijen. De mediaan? Die blijft exact 30. Eén extreme waarde kan het gemiddelde een heel eind meeslepen; de mediaan geeft geen krimp. Maar pas op voor de omgekeerde conclusie — dat je die drie dan maar moet wegpoetsen. Die drie wachtten écht een half jaar, en juist voor een verpleegkundig specialist is dát misschien wel de belangrijkste rij van de tabel. De vraag is niet hoe je ze kwijtraakt; de vraag is welke samenvatting ze niet laat overheersen én niet laat verdwijnen. Mediaan plus kwartielen plus bereik doet precies dat.</p>
+</section>
+<section id="oefening" class="level2">
+<h2 class="anchored" data-anchor-id="oefening">Oefening</h2>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Oefening">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Oefening
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Leesopgave.</strong> Hieronder twee voorbeeldfragmenten (verzonnen), uit twee studies naar wachttijden in de specialistische ggz. Vertel in gewone Nederlandse zinnen wat er staat. Bij welke instelling lijken patiënten sneller terecht te kunnen — en kun je die vraag met deze twee fragmenten eigenlijk wel beantwoorden? Wat neem je van elk fragment over in je evidencetabel?</p>
+<blockquote class="blockquote">
+<p>Study A: The median waiting time from referral to intake was 28 days (IQR 15–58).</p>
+<p>Study B: The mean waiting time from referral to intake was 41.2 days (<em>SD</em> = 39.80).</p>
+</blockquote>
+<p><strong>Doe-opgave.</strong> Draai de analyse van hierboven (<code>wachttijd_intake.csv</code>) en pak de boxplot erbij. Drie vragen. (a) Draai de boxplot in gedachten een kwartslag, zodat er een liggende verdeling ontstaat: naar welke kant wijst de staart, en heet dat links- of rechts-scheef? (b) De boxplot zet twee stippen boven de snorhaar — maar in de data zitten drie patiënten die langer dan 120 dagen wachtten (145, 180 en 187). Reken op een kladblaadje de bovengrens van de snorhaar na: Q3 + 1.5 × IQR. Waarom kreeg de 145 geen stip? (c) Kijk nog eens naar de mediaanstreep in de doos: hij ligt niet in het midden. Wat vertelt dát je over de middelste helft van de patiënten?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Uitwerkingen — klik open">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Uitwerkingen — klik open
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<section id="uitwerking-leesopgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-leesopgave">Uitwerking leesopgave</h3>
+<p>Studie A vertelt het volledige verhaal in één regel: de helft van de patiënten binnen 28 dagen, de middelste helft tussen de 15 en 58 — een scheve verdeling, netjes samengevat. Studie B geeft alleen een gemiddelde, en de SD die bijna zo groot is als dat gemiddelde verraadt dat ook dáár een flinke staart hangt. En dan de valkuil: 41.2 (B) tegen 28 (A) lezen alsof B trager is. Dat is appels met peren — een gemiddelde en een mediaan zijn verschillende maten, en bij een rechts-scheve verdeling ligt het gemiddelde fors bóven de mediaan. Onze eigen dataset laat zien hoe groot dat gat kan zijn: gemiddelde 44.9 bij een mediaan van 30. De mediaan van studie B is dus vrijwel zeker een stuk lager dan 41.2 en zou zomaar in de buurt van A’s 28 kunnen liggen — maar je wéét het niet, want hij is niet gerapporteerd. In je evidencetabel: van A neem je mediaan en IQR over; van B het gemiddelde mét de kanttekening “alleen M (SD) gerapporteerd, verdeling vermoedelijk rechts-scheef; mediaan onbekend”. En de vergelijkingsvraag beantwoord je eerlijk: niet te zeggen met deze fragmenten.</p>
+</section>
+<section id="uitwerking-doe-opgave" class="level3">
+<h3 class="anchored" data-anchor-id="uitwerking-doe-opgave">Uitwerking doe-opgave</h3>
+<ol type="a">
+<li>Gedraaid komt de lange kant bij de hoge waarden te liggen: de staart wijst naar rechts, dus rechts-scheef — de staart geeft de naam, niet de bult. (b) Q3 + 1.5 × IQR = 69.5 + 1.5 × 52.5 = 69.5 + 78.75 = 148.25. De 145 valt daar nét onder en hangt dus nog aan de snorhaar; alleen 180 en 187 komen erboven en krijgen een stip. Merk op wat dit je leert: die grens is een afspraak (de 1.5-regel van Tukey), geen natuurwet. De patiënt van 145 dagen is niet wezenlijk anders dan die van 180 — hij valt alleen aan de andere kant van een streep die wij getrokken hebben. (c) De mediaanstreep ligt laag in de doos: van Q1 naar de mediaan is maar 13 dagen (17 → 30), van de mediaan naar Q3 bijna 40 (30 → 69.5). Ook bínnen de middelste helft zijn de korte wachttijden dus dicht opeengepakt en waaieren de langere uit — de scheefheid zit niet alleen in de extreme staart, hij zit al in de kern van de verdeling.</li>
+</ol>
+</section>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W2">
+<p>◠ <strong>Zelfde vorm in het boek</strong></p>
+<p>Hier: een scheve verdeling waarvan het gemiddelde een ander verhaal vertelt dan de middelste patiënt.</p>
+<p>In het boek: <strong>W2 — De vorm van de hoop</strong> (waar de verdeling een vorm krijgt: mediaan, kwartielen, boxplot, staart).</p>
+<p><em>Daar gaat het over hoop in de wachtkamer; hier lees je met dezelfde ogen een wachtlijst — wie de vorm ziet, weet welk getal het eerlijke verhaal vertelt.</em></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="pagination-link" aria-label="Gemiddelde en standaardafwijking">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Gemiddelde en standaardafwijking</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_standaardfout.html" class="pagination-link" aria-label="Standaardfout en non-respons">
+        <span class="nav-page-text">Standaardfout en non-respons</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ inhoud':'⌫ verberg inhoud';">⌫ verberg inhoud</button>
+
+
+
+
+</body></html>
