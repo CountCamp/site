@@ -1023,7 +1023,8 @@
   // ===== het zwaard: de balk van groep I, met de sneden erin (zichtbaar zodra S gevonden is) =====
   function zwaard(svg, rr){
     while (svg.firstChild) svg.removeChild(svg.firstChild);
-    var L = 40, R = 420, yb = 44, hb = 22, tot = rr.vI;
+    // L op 60: zo past het eerste etiket ("H/M = 2") links van de eerste snede, waar het zwaard rust (proefdruk 1c)
+    var L = 60, R = 420, yb = 44, hb = 22, tot = rr.vI;
     var volgorde = ['HM','X','T','S'];             // dezelfde volgorde als de trap: H/M, X, T, S
     if (tot <= 0) return;                          // een balk zonder lengte valt niet te klieven
     var sx = (R - L) / tot, x = L, grens = [];
@@ -1032,8 +1033,8 @@
       var rect = el(svg, 'rect', {x:x, y:yb, width:Math.max(w, 0), height:hb, 'class':'stuk seg-' + KLEUR[k]});
       el(rect, 'title', {}, NAAM[k] + ' = ' + g(rr[k]));
       // met "=", net als het bijschrift: "T 1" las als T1, een meetmoment (APA-lens, 8-10).
-      // Het eerste etiket begint bij de linkerrand van de balk, zodat het niet onder het zwaard op de eerste snede komt.
-      el(svg, 'text', {x:x === L ? L : x + w / 2, y:yb - 7, 'text-anchor':x === L ? 'start' : 'middle', 'class':'etiket'}, NAAM[k] + ' = ' + g(rr[k]));
+      // Het eerste etiket eindigt net vóór de eerste snede, waar het zwaard rust; de andere staan midden boven hun stuk.
+      el(svg, 'text', {x:x === L ? x + w - 4 : x + w / 2, y:yb - 7, 'text-anchor':x === L ? 'end' : 'middle', 'class':'etiket'}, NAAM[k] + ' = ' + g(rr[k]));
       x += w; grens.push(x);
     });
     el(svg, 'rect', {x:L, y:yb, width:R - L, height:hb, 'class':'totaal'});
