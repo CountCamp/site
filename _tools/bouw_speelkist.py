@@ -86,8 +86,38 @@ def schrijf(doel, t):
     veranderd.append(str(doel.relative_to(HIER)))
     return True
 
+TELWOORD = ["nul", "één", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht",
+            "negen", "tien", "elf", "twaalf", "dertien", "veertien", "vijftien",
+            "zestien", "zeventien", "achttien", "negentien", "twintig"]
+
+def tel_de_kist():
+    """Klopt het telwoord in de kist en op de voordeur nog met het aantal tegels?
+
+    "Twaalf kleine dingen" stond met de hand getypt op twee plekken
+    (speeltjes/index.qmd en de tegel op index.qmd). Bij het dertiende
+    speeltje, Solomon (8-10-2026), moest het op beide plekken mee — en een
+    getypt getal verloopt stil zodra er een tegel bij komt. Dit telt de tegels
+    en vergelijkt. Geeft het aantal problemen terug.
+    """
+    hub = (HIER / "speeltjes" / "index.qmd").read_text()
+    n = len(re.findall(r"^::: \{\.cc-card \.cc-card-", hub, re.M))
+    woord = TELWOORD[n] if n < len(TELWOORD) else str(n)
+    problemen = 0
+    for pad in ("speeltjes/index.qmd", "index.qmd"):
+        t = (HIER / pad).read_text()
+        m = re.search(r"\b(\w+) kleine dingen die", t)
+        if not m:
+            print("TELWOORD NIET GEVONDEN in %s (zocht '<woord> kleine dingen die')" % pad); problemen += 1
+        elif m.group(1).lower() != woord:
+            print("TELWOORD KLOPT NIET in %s: er staat '%s', er zijn %d tegels (%s)" % (pad, m.group(1), n, woord)); problemen += 1
+        else:
+            print("   %-22s '%s kleine dingen' — %d tegels, klopt" % (pad, m.group(1), n))
+    return problemen
+
 def main():
     global fout
+    print("— het telwoord —")
+    fout += tel_de_kist()
     if not BRON.is_dir():
         sys.exit("bron niet gevonden: %s" % BRON)
 

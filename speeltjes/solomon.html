@@ -117,7 +117,12 @@
   /* ===== figuren: dunne lijnen, dunne streepjes, geen stippen ===== */
   figure{margin:.8rem 0}
   figure svg{width:100%;height:auto;display:block;max-width:560px}
-  figcaption{font-size:14px;color:var(--dim);font-style:italic;max-width:600px}
+  /* bijschrift rechtop: in een cursief bijschrift worden R, X en H/M ineens cursief, en elders staan ze rechtop */
+  figcaption{font-size:14px;color:var(--dim);max-width:600px}
+  figure.mini svg{max-width:400px}
+  .kaartregel{font-size:15.5px;border-left:2px solid var(--lijn);padding-left:10px}
+  .kaartregel span{color:var(--dim)}
+  details.verder{margin-top:.8rem}
   svg text{fill:var(--ink);font-family:"Iowan Old Style",Palatino,Georgia,serif}
   svg .kop{fill:var(--dim);font-style:italic}
   svg .lijn{stroke:var(--ink);stroke-width:1;fill:none}
@@ -141,14 +146,16 @@
   .schuiven label{display:grid;grid-template-columns:8.5em 1fr 2.2em;align-items:center;gap:8px;font-size:15px}
   .schuiven input[type=range]{width:100%;accent-color:var(--accent)}
   .schuiven output{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-  .bordvakken{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;align-items:start}
-  .oordeel{font-size:17px;border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:.8rem 0}
-  .sommen4{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+  .oordeel{font-size:17px;border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:.8rem 0;min-height:3.2em}
+  .sommen4{display:grid;grid-template-columns:auto auto;justify-content:start;gap:0 40px;align-items:start}
+  td.bevat{white-space:nowrap}
 
   /* ===== de kaart ===== */
   table.kaart{width:100%;font-size:15.5px;margin:.5rem 0}
   table.kaart th,table.kaart td{padding:6px 8px;vertical-align:top}
-  table.kaart td[contenteditable]{min-height:2.6em;height:3.2em;background:var(--papier);outline:none}
+  table.kaart td[contenteditable]{min-height:2.6em;height:3.2em;background:var(--papier);outline:none;border-left:5px solid var(--bg)}
+  table.kaart th:nth-child(1){width:9%} table.kaart th:nth-child(2){width:27%}
+  table.kaart th:nth-child(3){width:34%} table.kaart th:nth-child(4){width:30%}
   table.kaart td[contenteditable]:focus{box-shadow:inset 0 0 0 1px var(--accent)}
   table.kaart td:first-child{white-space:nowrap;font-weight:600}
 
@@ -158,7 +165,7 @@
   @media (max-width:700px){
     .wrap{padding:22px 14px 56px}
     h1{font-size:27px}
-    .schuiven,.bordvakken,.sommen4{grid-template-columns:1fr}
+    .schuiven,.sommen4{grid-template-columns:1fr}
     table.data{font-size:15px} table.data th,table.data td{padding:4px 9px 4px 3px}
     table.som{font-size:15.5px}
     table.kaart{font-size:14px} table.kaart th,table.kaart td{padding:5px 4px}
@@ -206,7 +213,15 @@
     gemiddelde score erboven; X is de training. Groep III en IV hebben op de plek van de voormeting niets.</figcaption>
   </figure>
 
-  <h2>Wat je mag aannemen</h2>
+  <h2>De ladder</h2>
+  <p>Eén ding mag je vanaf het begin aannemen: het lot heeft de groepen samengesteld, dus ze begonnen gemiddeld
+  gelijk. De andere aannames komen onderweg, op de plek waar je ze nodig hebt.</p>
+  <p><span id="aantal-stappen"></span> stapjes. Elk stapje vraagt één ding. Weet je het niet, open dan de hint.
+  Wil je zien hoe het gaat, open dan de uitwerking. Alle stapjes gebruiken dezelfde getallen.</p>
+  <div id="ladder"></div>
+
+  <h2 id="aannames-kop">Wat je mag aannemen, op een rij</h2>
+  <p>Dit nam je onderweg aan. Bij elke aanname: waarom dat mag, en of het ontwerp hem regelt of dat je hem meet.</p>
   <div class="tabelvak">
   <table class="data" id="aannames">
     <caption>Vier aannames, en hoe je ze regelt</caption>
@@ -221,30 +236,6 @@
         <td>Een afspraak. Je meet hem niet, je kiest hem.</td></tr>
   </table>
   </div>
-
-  <h2>De ladder</h2>
-  <p><span id="aantal-stappen"></span> stapjes. Elk stapje vraagt één ding. Weet je het niet, open dan de hint.
-  Wil je zien hoe het gaat, open dan de uitwerking. Alle stapjes gebruiken dezelfde getallen.</p>
-  <div id="ladder"></div>
-
-  <h2 id="speelbord">Trek zelf aan de getallen</h2>
-  <p>Zes schuifjes: de twee voormetingen en de vier nametingen. De sommen rekenen mee, in dezelfde volgorde
-  als de ladder: eerst H/M, dan X, dan T, en S als laatste. De knoppen zetten een bekend geval klaar.</p>
-  <div class="presets" id="presets"></div>
-  <div class="schuiven" id="schuiven"></div>
-  <div class="bordvakken">
-    <div>
-      <div class="tabelvak" id="sb-tabel"></div>
-      <div id="sb-sommen"></div>
-    </div>
-    <figure>
-      <svg id="waterval" viewBox="0 0 460 262" role="img" aria-labelledby="wv-cap"></svg>
-      <figcaption id="wv-cap"></figcaption>
-    </figure>
-  </div>
-  <p class="oordeel" id="oordeel" aria-live="polite"></p>
-  <p class="zacht">Zet de voormetingen van I en II eens niet gelijk. Dan leen je voor III en IV een gemiddelde
-  dat bij geen van beide hoort, en schuift er een stukje van dat verschil mee in T en S.</p>
 
   <h2 id="kaart">Je eigen kaart</h2>
   <p>Vul hem in zonder te kijken. Klik in een vakje om te typen, of print de bladzij en gebruik een pen.</p>
@@ -263,7 +254,21 @@
     <div class="tabelvak" id="volle-kaart"></div>
   </details>
 
-  <h2>En in je eigen onderzoek?</h2>
+  <h2 id="speelbord">Trek zelf aan de getallen</h2>
+  <p>Zes schuifjes: de twee voormetingen en de vier nametingen. De sommen rekenen mee, in dezelfde volgorde
+  als de ladder: eerst H/M, dan X, dan T, en S als laatste. De knoppen zetten een bekend geval klaar.</p>
+  <div class="presets" id="presets"></div>
+  <div class="schuiven" id="schuiven"></div>
+  <p class="oordeel" id="oordeel" aria-live="polite"></p>
+  <figure>
+    <svg id="waterval" viewBox="0 0 460 262" role="img" aria-labelledby="wv-cap"></svg>
+    <figcaption id="wv-cap"></figcaption>
+  </figure>
+  <div class="tabelvak" id="sb-tabel"></div>
+  <div id="sb-sommen"></div>
+  <p class="zacht">Probeer ook: de voormetingen van I en II niet gelijk. Kijk wat er dan met T en S gebeurt.</p>
+
+  <h2 id="eigen">En in je eigen onderzoek?</h2>
   <p>Meet je in je eigen onderzoek vóór en na, dan zit in de verandering die je ziet alles tegelijk: de tijd,
   je ingreep, en wat de voormeting zelf deed. Met één groep haal je die stukjes niet meer uit elkaar. Daarvoor
   heb je groepen nodig die op één punt van elkaar verschillen, zoals II en IV hier alleen in de voormeting
@@ -272,18 +277,37 @@
   <p>En S is een verschil in verschil: het effect van de training op de toetsscore mét voormeting, min het
   effect van de training op de toetsscore zonder voormeting. Dat heet een interactie, en daar gaat
   <a href="https://countcamp.org/manuscript/h10.html">hoofdstuk 10, Verschil in verschil</a>, over.</p>
-  <p class="zacht">Dit speeltje rekent met gemiddelden, en zo rekende Solomon het zelf ook (1949), met de
-  geleende voormeting erbij. Als toets wezen Campbell en Stanley (1963) die manier af: groep III en IV hebben
-  geen eigen voormeting, dus ook geen eigen verandering per persoon. Of S echt van nul verschilt, zeg je
-  daarom met een variantieanalyse op de nametingen, met voormeting (ja of nee) en training (ja of nee) als
-  factoren. De interactie in die analyse vergelijkt nameting I min nameting II met nameting III min
-  nameting IV: dezelfde vergelijking als stap 8, maar dan op de nametingen. Zijn de voormetingen van I en II
-  gelijk, dan komt er precies hetzelfde getal uit.</p>
+  <details class="verder">
+    <summary>Andere namen voor dezelfde stukjes, als je ze in een boek tegenkomt</summary>
+    <div class="tabelvak">
+    <table class="data">
+      <caption>Hier en elders</caption>
+      <tr><th>hier</th><th>ook genoemd</th></tr>
+      <tr><td>H/M</td><td><i>history</i> en <i>maturation</i> (rijping)</td></tr>
+      <tr><td>X</td><td>de interventie, de behandeling</td></tr>
+      <tr><td>T</td><td>het testeffect, <i>testing</i>. Let op: sommige boeken noemen dit <i>pretest-sensitisatie</i>, en bedoelen dan niet S.</td></tr>
+      <tr><td>S</td><td>sensitisatie, de interactie van voormeting en training</td></tr>
+    </table>
+    </div>
+    <p>En niet elk boek nummert de groepen zoals hier. Kijk dus altijd eerst wie een voormeting kreeg en wie de training.</p>
+  </details>
+  <details class="verder">
+    <summary>Voor wie verder wil: hoe toets je of S echt van nul verschilt?</summary>
+    <p>Dit speeltje rekent met gemiddelden, met de geleende voormeting erbij. Zo rekende Solomon (1949)
+    het zelf ook, en om S te vinden klopt dat. Wil je ook <em>toetsen</em> of S echt van nul verschilt, dan heb
+    je meer nodig dan gemiddelden: je kijkt naar de scores van alle mensen. Daar loop je vast, want groep III
+    en IV hebben geen eigen voormeting, dus ook geen verandering per persoon. Campbell en Stanley (1963)
+    raadden daarom een andere weg aan: toets op de nametingen, met een variantieanalyse met twee factoren,
+    voormeting (ja of nee) en training (ja of nee). De interactie in die analyse vergelijkt nameting I min
+    nameting II met nameting III min nameting IV. Dat is de som van stap 8, maar dan met nametingen in plaats
+    van veranderingen. Zijn de voormetingen van I en II gelijk, dan komt er hetzelfde getal uit.</p>
+  </details>
 
   <p class="foot">
     De regressieve ruggengraat &middot; <a href="https://countcamp.org/manuscript/h10.html">Hoofdstuk 10 — Verschil in verschil</a> &middot; sensitisatie is een verschil in verschil<br>
-    Getallen: Bens oefentoets Methoden en Technieken, 2015. Het ontwerp en de rekenwijze: Solomon (1949), <i>Psychological Bulletin, 46</i>, 137–150.
-    De toets op de nametingen: Campbell en Stanley (1963), <i>Experimental and quasi-experimental designs for research</i>.
+    Getallen: Bens oefentoets Methoden en Technieken, 2015.<br>
+    Het ontwerp en de rekenwijze: Solomon, R. L. (1949). An extension of control group design. <i>Psychological Bulletin, 46</i>(2), 137–150. https://doi.org/10.1037/h0062958<br>
+    De toets op de nametingen: Campbell, D. T., &amp; Stanley, J. C. (1963). <i>Experimental and quasi-experimental designs for research</i>. Rand McNally.
   </p>
 </div>
 
@@ -317,6 +341,7 @@
   }
   function gh(v){ return v < 0 ? '(' + g(v) + ')' : g(v); }   // achter een min of plus: negatief tussen haakjes
   function gelijk(a, b){ return Math.abs(a - b) < 1e-9; }
+  function pt(v){ return g(v) + (gelijk(Math.abs(v), 1) ? ' punt' : ' punten'); }   // "1 punt", "3 punten"
 
   // de letters van de stukjes krijgen hun vaste streep
   function kl(s){
@@ -339,6 +364,19 @@
   }
   function P(t){ return '<p>' + kl(t) + '</p>'; }
   var WELKE = '<p class="welke">Welke som heb je nodig?</p>';
+  // wat je vergelijkt en wat je aanneemt: precies de kolommen van de kaart
+  function vergelijk(groepen, aanname){
+    return '<p class="kaartregel"><span>Je vergelijkt:</span> ' + kl(groepen) + '<br><span>Je neemt aan:</span> ' + kl(aanname) + '</p>';
+  }
+  // de trap van groep I, met k stukjes ingevuld (wordt na het opbouwen getekend)
+  function trap(k, onderschrift){
+    var rr = los(BEN), namen = ['H/M','X','T','S'], sleutels = ['HM','X','T','S'];
+    var bekend = sleutels.slice(0, k).map(function(s, i){ return namen[i] + ' = ' + g(rr[s]); });
+    var tekst = onderschrift || ('De trap van groep I tot nu toe: ' + bekend.join(', ') +
+      (k < 4 ? '. Het vraagteken is de volgende stap.' : '. Samen ' + g(rr.vI) + ': de hele verandering van groep I.'));
+    return '<figure class="mini"><svg class="mini-wv" data-tot="' + k + '" viewBox="0 0 460 262" role="img" aria-label="' + tekst + '"></svg>' +
+      '<figcaption>' + kl(tekst) + '</figcaption></figure>';
+  }
 
   // ===== de tabel met de vier groepen =====
   function tabel(d, o){
@@ -359,18 +397,21 @@
       h += '<tr' + ((o.licht || []).indexOf(w.g) >= 0 ? ' class="licht"' : '') + '><td>' + w.g + '</td><td class="getal">' + voor +
            '</td><td>' + (w.x ? 'ja' : '–') + '</td><td class="getal">' + g(w.na) + '</td>' +
            (o.verandering ? '<td class="getal">' + g(w.v) + '</td>' : '') +
-           (o.bevat ? '<td>' + kl(w.bevat) + '</td>' : '') + '</tr>';
+           (o.bevat ? '<td class="bevat">' + kl(w.bevat) + '</td>' : '') + '</tr>';
     });
-    return h + '</table>' + (o.leen ? '<p class="zacht" style="font-size:14px;margin-top:0">Tussen haakjes: de geleende voormeting.</p>' : '');
+    var noot = [];
+    if (o.leen) noot.push('Tussen haakjes: de geleende voormeting.');
+    if (o.bevat && !o.geenBevatNoot) noot.push('De kolom <i>bevat</i> is wat je in stap 3 aanvinkte.');
+    return h + '</table>' + (noot.length ? '<p class="zacht" style="font-size:14px;margin-top:0">' + noot.join(' ') + '</p>' : '');
   }
 
   // ===== de vier stukjes =====
   var STUKJES = '<table class="data"><caption>De vier stukjes waar een verandering uit bestaat</caption>' +
-    '<tr><th>stukje</th><th>wat het is</th><th>ook genoemd</th></tr>' +
-    '<tr><td>' + kl('H/M') + '</td><td>wat er verandert doordat er tijd voorbijgaat: in de wereld, en in de mensen zelf</td><td><i>history</i> en <i>maturation</i> (rijping)</td></tr>' +
-    '<tr><td>' + kl('X') + '</td><td>wat de training doet met de toetsscore</td><td>de interventie, de behandeling</td></tr>' +
-    '<tr><td>' + kl('T') + '</td><td>wat de voormeting zelf doet met de toetsscore: wie de toets al eens maakte, kent hem de tweede keer</td><td>het testeffect, <i>testing</i>; let op, sommige boeken noemen dít <i>pretest-sensitisatie</i></td></tr>' +
-    '<tr><td>' + kl('S') + '</td><td>wat voormeting en training samen doen, bovenop elk apart: de voormeting maakt de training sterker of zwakker</td><td>sensitisatie; de interactie van voormeting en training</td></tr></table>';
+    '<tr><th>stukje</th><th>wat het is</th></tr>' +
+    '<tr><td>' + kl('H/M') + '</td><td>de tijd: wat er verandert doordat er tijd voorbijgaat. Twee letters, één stukje: H voor wat er in de wereld gebeurt, M voor wat er in de mensen zelf gebeurt.</td></tr>' +
+    '<tr><td>' + kl('X') + '</td><td>wat de training doet met de toetsscore</td></tr>' +
+    '<tr><td>' + kl('T') + '</td><td>wat de voormeting zelf doet met de toetsscore: wie de toets al eens maakte, kent hem de tweede keer</td></tr>' +
+    '<tr><td>' + kl('S') + '</td><td>wat voormeting en training samen doen, bovenop elk apart: de voormeting maakt de training sterker of zwakker</td></tr></table>';
 
   // ===== de ladder =====
   var r = los(BEN);
@@ -381,17 +422,19 @@
       vraag:'Welke groepen maakten de toets al vóór de training?',
       invoer:{soort:'vink', opties:['I','II','III','IV'], goed:['I','II']},
       hint:'Kijk in de kolom <i>voormeting</i>. Waar staat een getal, en waar een streepje?',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>Nog geen. Hier lees je alleen af: groep I en groep II hebben een voormeting (' +
-        g(BEN.voorI) + ' en ' + g(BEN.voorII) + '). Groep III en IV maakten de toets één keer, aan het eind.</p>'; } },
+      uit:function(){ return WELKE +
+        P('Nog geen. Hier lees je alleen af: groep I en groep II hebben een voormeting (' + g(BEN.voorI) + ' en ' + g(BEN.voorII) +
+          '). Groep III en IV maakten de toets één keer, aan het eind.'); } },
 
     { titel:'Leen een voormeting',
       tabel:{titel:'Gemiddelde toetsscore per groep', licht:['III','IV']},
       vraag:'Groep III en IV hebben geen voormeting. Welk getal neem je als hun score vooraf?',
       invoer:{soort:'getal', goed:r.leen},
       hint:'Het lot heeft de groepen samengesteld. Hoe zullen III en IV dan gemiddeld begonnen zijn, vergeleken met I en II?',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>Het gemiddelde van de twee voormetingen die je wél hebt.</p>' +
-        som('voormeting III en IV', ['(voormeting I + voormeting II) / 2', '(' + g(BEN.voorI) + ' + ' + g(BEN.voorII) + ') / 2', g(r.leen)]) +
-        '<p>Dat mag omdat het lot de groepen samenstelde: gemiddeld begonnen ze gelijk. Je vult een getal in op een plek waar je niets gemeten hebt. Dat heet <i>substitutie</i>.</p>'; } },
+      uit:function(){ return WELKE + P('Het gemiddelde van de twee voormetingen die je wél hebt.') +
+        som('voormeting III en IV', ['(voormeting I + voormeting II) / 2', '(' + g(BEN.voorI) + ' + ' + gh(BEN.voorII) + ') / 2', g(r.leen)]) +
+        P('Dat mag omdat het lot de groepen samenstelde: gemiddeld begonnen ze gelijk. Je vult een getal in op een plek waar je niets gemeten hebt. Dat heet <i>substitutie</i>.') +
+        P('Meten kan hier trouwens niet: geef je groep III een voormeting, dan is het groep I geworden.'); } },
 
     { titel:'Welke stukjes zitten in welke groep?',
       tabel:{titel:'Gemiddelde toetsscore per groep', leen:true},
@@ -399,74 +442,87 @@
       vraag:'Zet in elke rij een vinkje bij de stukjes die in de verandering van die groep zitten.',
       invoer:{soort:'matrix'},
       hint:'De tijd gaat voor iedereen voorbij. X zit waar de training was, T waar een voormeting was. En S? Daarvoor moet een groep allebei gehad hebben.',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>Nog geen. Eerst de boekhouding:</p>' +
-        '<table class="data"><tr><th>groep</th><th>kreeg</th><th>de verandering bevat</th></tr>' +
-        '<tr><td>IV</td><td>niets</td><td>' + kl('H/M') + '</td></tr>' +
-        '<tr><td>III</td><td>training</td><td>' + kl('H/M + X') + '</td></tr>' +
-        '<tr><td>II</td><td>voormeting</td><td>' + kl('T + H/M') + '</td></tr>' +
-        '<tr><td>I</td><td>voormeting en training</td><td>' + kl('S + T + H/M + X') + '</td></tr></table>' +
-        '<p>Van onder naar boven komt er steeds één stukje bij. Daarom los je het ook van onder naar boven op.</p>'; } },
+      uit:function(){ return WELKE + P('Nog geen. Eerst de boekhouding:') +
+        '<table class="data"><caption>Wat elke groep kreeg, en wat er dus in zijn verandering zit</caption><tr><th>groep</th><th>kreeg</th><th>de verandering bevat</th></tr>' +
+        '<tr><td>IV</td><td>niets</td><td class="bevat">' + kl('H/M') + '</td></tr>' +
+        '<tr><td>III</td><td>training</td><td class="bevat">' + kl('H/M + X') + '</td></tr>' +
+        '<tr><td>II</td><td>voormeting</td><td class="bevat">' + kl('T + H/M') + '</td></tr>' +
+        '<tr><td>I</td><td>voormeting en training</td><td class="bevat">' + kl('S + T + H/M + X') + '</td></tr></table>' +
+        P('Van onder naar boven komt er steeds één stukje bij. Daarom los je het ook van onder naar boven op. Samen vormen ze een trap: de verandering van groep I.') +
+        trap(0, 'De trap van groep I, nog leeg. In de volgende stappen vul je hem van links naar rechts.'); } },
 
     { titel:'Groep IV: hoe groot is H/M?',
       tabel:{titel:'Gemiddelde toetsscore per groep', leen:true, bevat:true, licht:['IV']},
       vraag:'Hoe groot is H/M?',
       invoer:{soort:'getal', goed:r.HM},
       hint:'Groep IV kreeg geen voormeting en geen training. Wat er in die groep veranderde, komt dus alleen door de tijd. Gebruik de geleende voormeting uit stap 2.',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>De verandering van groep IV, want daarin zit alleen H/M.</p>' +
+      uit:function(){ return WELKE + P('De verandering van groep IV, want daarin zit alleen H/M.') +
         som('H/M', ['nameting IV − voormeting III en IV', g(BEN.naIV) + ' − ' + gh(r.leen), g(r.HM)]) +
-        (gelijk(r.HM, 0) ? '<p>Nul mag. In deze groep deed de tijd niets met de toetsscore.</p>' : ''); } },
+        (gelijk(r.HM, 0) ? P('Nul mag. In deze groep deed de tijd niets met de toetsscore. Daardoor zie je H/M in de volgende sommen bijna niet (er staat steeds “− 0”). Wil je hem wél zien werken, druk dan bij de schuifjes op <i>Alleen de tijd</i>.') : '') +
+        vergelijk('groep IV, met de geleende voormeting', 'III en IV begonnen gemiddeld zoals I en II (het lot)') +
+        trap(1); } },
 
     { titel:'Groep III: hoe groot is X?',
       tabel:{titel:'Gemiddelde toetsscore per groep', leen:true, bevat:true, licht:['III']},
       vraag:'Hoe groot is X?',
       invoer:{soort:'getal', goed:r.X},
       hint:'In de verandering van groep III zitten twee stukjes: H/M en X. H/M ken je al uit stap 4.',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>De verandering van groep III is H/M + X. Haal H/M eraf, dan blijft X over.</p>' +
+      uit:function(){ return WELKE + P('De verandering van groep III is H/M + X. Haal H/M eraf, dan blijft X over.') +
         som('X', ['verandering III − H/M', '(' + g(BEN.naIII) + ' − ' + gh(r.leen) + ') − ' + gh(r.HM), g(r.vIII) + ' − ' + gh(r.HM), g(r.X)]) +
-        '<p>Zonder voormeting verandert de training de toetsscore met ' + g(r.X) + ' punten.</p>'; } },
+        P('Zonder voormeting verandert de training de toetsscore met ' + g(r.X) + ' punten.') +
+        vergelijk('groep III met groep IV (want H/M is de verandering van IV)', 'de tijd doet in III en IV hetzelfde') +
+        trap(2); } },
 
     { titel:'Groep II: hoe groot is T?',
       tabel:{titel:'Gemiddelde toetsscore per groep', leen:true, bevat:true, licht:['II']},
       vraag:'Hoe groot is T?',
       invoer:{soort:'getal', goed:r.T},
       hint:'Groep II deed de voormeting, maar kreeg geen training. In de verandering zitten T en H/M. Groep II heeft een echte voormeting, dus die hoef je niet te lenen.',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>De verandering van groep II is T + H/M. Haal H/M eraf, dan blijft T over.</p>' +
+      uit:function(){ return WELKE + P('De verandering van groep II is T + H/M. Haal H/M eraf, dan blijft T over.') +
         som('T', ['verandering II − H/M', '(' + g(BEN.naII) + ' − ' + gh(BEN.voorII) + ') − ' + gh(r.HM), g(r.vII) + ' − ' + gh(r.HM), g(r.T)]) +
-        '<p>De voormeting zelf verandert de toetsscore met ' + g(r.T) + ' punten, ook zonder training.</p>'; } },
+        P('De voormeting zelf verandert de toetsscore met ' + g(r.T) + ' punten, ook zonder training.') +
+        vergelijk('groep II met groep IV', 'de tijd doet in II en IV hetzelfde') +
+        trap(3); } },
 
     { titel:'Groep I: hoe groot is S?',
       tabel:{titel:'Gemiddelde toetsscore per groep', leen:true, bevat:true, licht:['I']},
       vraag:'Hoe groot is S?',
-      invoer:{soort:'getal', goed:r.S},
+      invoer:{soort:'getal', goed:r.S, gelijkAanT:true},
       hint:'In groep I zit alles: S + T + H/M + X. Drie van die vier ken je al uit stap 4, 5 en 6. Haal ze eraf.',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>De verandering van groep I is S + T + H/M + X. Haal T, H/M en X eraf, dan blijft S over.</p>' +
+      uit:function(){ return WELKE + P('De verandering van groep I is S + T + H/M + X. Haal T, H/M en X eraf, dan blijft S over.') +
         som('S', ['verandering I − T − H/M − X', '(' + g(BEN.naI) + ' − ' + gh(BEN.voorI) + ') − ' + gh(r.T) + ' − ' + gh(r.HM) + ' − ' + gh(r.X),
                   g(r.vI) + ' − ' + gh(r.T) + ' − ' + gh(r.HM) + ' − ' + gh(r.X), g(r.S)]) +
-        '<p>Met een voormeting vooraf verandert de training de toetsscore met ' + g(r.S + r.X) + ' punten in plaats van ' + g(r.X) + '. Dat verschil van ' + g(r.S) + ' is S.</p>'; } },
+        P('Wat betekent dat? Met voormeting verandert de training de toetsscore met S + X = ' + g(r.S) + ' + ' + gh(r.X) + ' = ' + g(r.S + r.X) +
+          ' punten. Zonder voormeting is dat X = ' + g(r.X) + '. Het verschil tussen die twee is S.') +
+        vergelijk('groep I met de drie andere', 'de stukjes tellen op; wat er in I overblijft, noem je S') +
+        trap(4); } },
 
     { titel:'Een tweede weg: verschil in verschil',
       tabel:{titel:'Gemiddelde toetsscore per groep', leen:true, bevat:true, verandering:true},
-      vraag:'Neem bij elke groep de verandering. Hoe groot is (I − II) − (III − IV)?',
-      invoer:{soort:'getal', goed:(r.vI - r.vII) - (r.vIII - r.vIV)},
+      voor:'<p>Je hebt S al, uit stap 7. Er is een tweede weg naartoe, met alleen de veranderingen uit de tabel. Die weg rekent hier na of je goed zat.</p>',
+      vraag:'Reken eerst verandering I min verandering II uit, dan verandering III min verandering IV. Hoeveel verschillen die twee uitkomsten?',
+      invoer:{soort:'getal', goed:(r.vI - r.vII) - (r.vIII - r.vIV), gelijkAanT:true},
       hint:'Schrijf I − II eerst uit in stukjes: (S + T + H/M + X) − (T + H/M). Wat blijft er over? Doe daarna hetzelfde met III − IV.',
       uit:function(){ var a = r.vI - r.vII, b = r.vIII - r.vIV;
-        return '<p class="welke">Welke som heb je nodig?</p><p>Twee verschillen, en dan het verschil tussen die twee. Eerst in stukjes:</p>' +
-        som('I − II', ['(S + T + H/M + X) − (T + H/M)', 'S + X']) +
-        som('III − IV', ['(H/M + X) − H/M', 'X']) +
-        som('(I − II) − (III − IV)', ['(S + X) − X', 'S']) +
-        '<p>Dan met de getallen:</p>' +
-        som('(I − II) − (III − IV)', ['(' + g(r.vI) + ' − ' + gh(r.vII) + ') − (' + g(r.vIII) + ' − ' + gh(r.vIV) + ')', g(a) + ' − ' + gh(b), g(a - b)]) +
-        '<p>Hetzelfde getal als in stap 7. Met voormeting verandert de training de toetsscore met ' + g(a) + ' punten (S + X), zonder voormeting met ' + g(b) +
-        ' (X). Het verschil tussen die twee effecten van de training is S.</p>'; } },
+        return WELKE + P('Twee verschillen, en dan het verschil tussen die twee. I staat hier voor de verandering van groep I, enzovoort. Eerst in stukjes, daarna met de getallen:') +
+        somBlok([
+          ['I − II', ['(S + T + H/M + X) − (T + H/M)', 'S + X']],
+          ['III − IV', ['(H/M + X) − H/M', 'X']],
+          ['(I − II) − (III − IV)', ['(S + X) − X', 'S']],
+          ['(I − II) − (III − IV)', ['(' + g(r.vI) + ' − ' + gh(r.vII) + ') − (' + g(r.vIII) + ' − ' + gh(r.vIV) + ')', g(a) + ' − ' + gh(b), g(a - b)]]
+        ]) +
+        P('Hetzelfde getal als in stap 7. Met voormeting verandert de training de toetsscore met ' + g(a) + ' punten (S + X), zonder voormeting met ' + g(b) +
+          ' (X). Het verschil tussen die twee effecten van de training is S.'); } },
 
     { titel:'De vraag uit 2015',
       tabel:{titel:'Gemiddelde toetsscore per groep'},
       voor:'<p>Met precies deze getallen stond het Solomon-ontwerp in Bens oefentoets van 2015, als meerkeuzevraag. Zonder geleende voormetingen, zonder kolom <i>bevat</i>: alleen de kale tabel.</p>',
       vraag:'Wat is de beste schatting voor het effect van sensitisatie?',
-      invoer:{soort:'keuze', opties:[2, 3, 4, 5]},
-      hint:'Elk fout antwoord is een stukje dat je vergat eraf te halen, of het verkeerde stukje.',
-      uit:function(){ return '<p class="welke">Welke som heb je nodig?</p><p>Die uit stap 7, of die uit stap 8. Allebei geven ze S = ' + g(r.S) + '. De andere antwoorden:</p>' +
-        '<ul>' + [2, 3, 4, 5].filter(function(o){ return !gelijk(o, r.S); }).map(function(o){ return '<li>' + o + ': ' + duiding(o) + '</li>'; }).join('') + '</ul>'; } }
+      invoer:{soort:'keuze', opties:[2, 3, 4, 5], gelijkAanT:true},
+      hint:'Sensitisatie is S: wat voormeting en training samen extra doen. Elk fout antwoord is een stukje dat je vergat eraf te halen, of het verkeerde stukje.',
+      uit:function(){ return WELKE + P('Die uit stap 7, of die uit stap 8. Allebei geven ze S = ' + g(r.S) + '. De andere antwoorden:') +
+        '<ul>' + [2, 3, 4, 5].filter(function(o){ return !gelijk(o, r.S); }).map(function(o){ return '<li>' + o + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
+        (gelijk(r.S, r.T) ? P('En let op: met deze getallen is T óók ' + g(r.T) + '. Rekende je T uit in plaats van S, dan was je antwoord goed en je som fout. Met andere getallen gaat dat mis. Probeer het bij de schuifjes: zet nameting II op ' + g(BEN.naII + 1) + ', dan wordt T ' + g(los(Object.assign({}, BEN, {naII:BEN.naII + 1})).T) + ' en S ' + g(los(Object.assign({}, BEN, {naII:BEN.naII + 1})).S) + '.') : ''); } }
   ];
 
   // waar komt een fout antwoord op vraag 9 vandaan? alles uitgerekend, niets getypt
@@ -512,14 +568,15 @@
       var aan = [].slice.call(document.querySelectorAll('input[name="v-' + i + '"]:checked')).map(function(e){ return e.value; });
       goed = aan.length === iv.goed.length && iv.goed.every(function(o){ return aan.indexOf(o) >= 0; });
     } else if (iv.soort === 'matrix'){
-      var rijGoed = 0;
+      var mis = [];
       ['I','II','III','IV'].forEach(function(gr){
         var aanR = [].slice.call(document.querySelectorAll('input[name="m-' + i + '"][data-groep="' + gr + '"]:checked')).map(function(e){ return e.value; });
         var moet = MATRIX_GOED[gr];
-        if (aanR.length === moet.length && moet.every(function(c){ return aanR.indexOf(c) >= 0; })) rijGoed++;
+        if (!(aanR.length === moet.length && moet.every(function(c){ return aanR.indexOf(c) >= 0; }))) mis.push(gr);
       });
-      goed = rijGoed === 4;
-      if (!goed) tekst = rijGoed + ' van de 4 rijen kloppen. Open de hint.';
+      goed = mis.length === 0;
+      if (!goed) tekst = (mis.length === 1 ? 'Groep ' + mis[0] + ' klopt nog niet.' :
+        'Groep ' + mis.slice(0, -1).join(', ') + ' en ' + mis[mis.length - 1] + ' kloppen nog niet.') + ' Kijk bij elke groep wat hij kreeg, en open zo nodig de hint.';
     } else if (iv.soort === 'keuze'){
       var gekozen = document.querySelector('input[name="k-' + i + '"]:checked');
       if (!gekozen){ fb.className = 'terugmelding'; fb.textContent = 'Kies eerst een antwoord.'; return; }
@@ -527,8 +584,11 @@
       goed = gelijk(o, r.S);
       if (!goed) tekst = 'Nog niet: ' + duiding(o);
     }
+    // met Bens getallen is T even groot als S: wie T uitrekende, krijgt het goede getal om de verkeerde reden
+    if (goed && iv.gelijkAanT && gelijk(r.S, r.T))
+      tekst = 'Klopt. Let op: T is hier toevallig óók ' + g(r.T) + '. Kijk in de uitwerking of je de som voor S gebruikte.';
     fb.className = 'terugmelding ' + (goed ? 'goed' : 'fout');
-    fb.textContent = goed ? 'Klopt.' : (tekst || 'Nog niet. Open de hint.');
+    fb.textContent = goed ? (tekst || 'Klopt.') : (tekst || 'Nog niet. Open de hint.');
   }
 
   var WOORD = ['nul','één','twee','drie','vier','vijf','zes','zeven','acht','negen','tien','elf','twaalf'];
@@ -601,7 +661,7 @@
   var KLEUR = {HM:'hm', X:'x', T:'t', S:'s'};
   var NAAM = {HM:'H/M', X:'X', T:'T', S:'S'};
   var UITLEG = {HM:'wat de tijd doet', X:'wat de training doet', T:'wat de voormeting zelf doet', S:'wat voormeting en training samen extra doen'};
-  function waterval(svg, rr){
+  function waterval(svg, rr, tot){
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     var W = 460, L = 46, R = W - 10, T = 22, B = 214;
     var cum = 0, segs = ['HM','X','T','S'].map(function(k){ var a = cum; cum += rr[k]; return {k:k, v:rr[k], a:a, b:cum}; });
@@ -621,27 +681,40 @@
     }
     el(svg, 'text', {x:12, y:(T + B) / 2, 'text-anchor':'middle', 'class':'astekst', transform:'rotate(-90 12 ' + ((T + B) / 2) + ')'}, 'verandering (punten)');
     el(svg, 'line', {x1:L, y1:y(0), x2:R, y2:y(0), 'class':'nul'});
+    // tot = hoeveel stukjes al bekend zijn (de ladder kleurt de trap stap voor stap in);
+    // een onbekend stukje krijgt een vraagteken op de hoogte waar het zou beginnen
+    if (tot === undefined) tot = 4;
     segs.forEach(function(s, i){
       var x0 = cx(i) - bw / 2, top = Math.min(y(s.a), y(s.b)), h = Math.abs(y(s.a) - y(s.b));
+      if (i >= tot){
+        if (i === tot) el(svg, 'text', {x:cx(i), y:y(s.a) - 6, 'text-anchor':'middle', 'font-size':16, 'class':'kop'}, '?');
+        return;
+      }
+      if (i === tot - 1 && i < 3) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
       var vorm;
       if (h < 1.5){ vorm = el(svg, 'line', {x1:x0, y1:y(s.a), x2:x0 + bw, y2:y(s.a), 'class':'seg seg-' + KLEUR[s.k], 'stroke-width':2.5}); }
       else { vorm = el(svg, 'rect', {x:x0, y:top, width:bw, height:h, 'class':'seg seg-' + KLEUR[s.k]}); }
       el(vorm, 'title', {}, NAAM[s.k] + ' = ' + g(s.v) + ': ' + UITLEG[s.k]);
       var lab = (s.v > 0 ? '+' : '') + g(s.v);
       el(svg, 'text', {x:cx(i), y:s.v >= 0 ? top - 6 : top + h + 15, 'text-anchor':'middle', 'font-size':14, 'font-weight':600}, lab);
-      if (i < 3) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
+      if (i < 3 && i < tot - 1) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
     });
-    // de hele verandering van groep I
-    var xt = cx(4) - bw / 2, tt = Math.min(y(0), y(rr.vI)), th = Math.abs(y(0) - y(rr.vI));
-    el(svg, 'line', {x1:cx(3) + bw / 2, y1:y(cum), x2:xt, y2:y(cum), 'class':'verbind'});
-    var tv = el(svg, 'rect', {x:xt, y:tt, width:bw, height:Math.max(th, 1), 'class':'totaal'});
-    el(tv, 'title', {}, 'verandering van groep I = ' + g(rr.vI));
-    el(svg, 'text', {x:cx(4), y:rr.vI >= 0 ? tt - 6 : tt + th + 15, 'text-anchor':'middle', 'font-size':14, 'font-weight':600}, g(rr.vI));
+    // de hele verandering van groep I — pas als alle vier de stukjes bekend zijn
+    if (tot === 4){
+      var xt = cx(4) - bw / 2, tt = Math.min(y(0), y(rr.vI)), th = Math.abs(y(0) - y(rr.vI));
+      el(svg, 'line', {x1:cx(3) + bw / 2, y1:y(cum), x2:xt, y2:y(cum), 'class':'verbind'});
+      var tv = el(svg, 'rect', {x:xt, y:tt, width:bw, height:Math.max(th, 1), 'class':'totaal'});
+      el(tv, 'title', {}, 'verandering van groep I = ' + g(rr.vI));
+      el(svg, 'text', {x:cx(4), y:rr.vI >= 0 ? tt - 6 : tt + th + 15, 'text-anchor':'middle', 'font-size':14, 'font-weight':600}, g(rr.vI));
+    }
     ['H/M', '+ X', '+ T', '+ S', '= I'].forEach(function(t, i){
       el(svg, 'text', {x:cx(i), y:B + 24, 'text-anchor':'middle', 'font-size':15}, t);
     });
     el(svg, 'text', {x:cx(4), y:B + 41, 'text-anchor':'middle', 'class':'astekst'}, 'verandering I');
   }
+
+  // de trapjes in de uitwerkingen van de ladder, stap voor stap ingekleurd
+  [].forEach.call(document.querySelectorAll('svg.mini-wv'), function(s){ waterval(s, los(BEN), Number(s.getAttribute('data-tot'))); });
 
   // ===== het speelbord =====
   var SCHUIF = [['voorI','voormeting I'], ['voorII','voormeting II'], ['naI','nameting I'], ['naII','nameting II'], ['naIII','nameting III'], ['naIV','nameting IV']];
@@ -660,18 +733,18 @@
 
   function bord(){
     var rr = los(nu);
-    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Jouw getallen', leen:true, verandering:true, bevat:true});
+    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Jouw getallen', leen:true, verandering:true, bevat:true, geenBevatNoot:true});
     document.getElementById('sb-sommen').innerHTML = '<div class="sommen4">' +
       som('H/M', ['verandering IV', g(nu.naIV) + ' − ' + gh(rr.leen), g(rr.HM)]) +
       som('X', ['verandering III − H/M', g(rr.vIII) + ' − ' + gh(rr.HM), g(rr.X)]) +
       som('T', ['verandering II − H/M', g(rr.vII) + ' − ' + gh(rr.HM), g(rr.T)]) +
       som('S', ['verandering I − T − H/M − X', g(rr.vI) + ' − ' + gh(rr.T) + ' − ' + gh(rr.HM) + ' − ' + gh(rr.X), g(rr.S)]) + '</div>';
     waterval(document.getElementById('waterval'), rr);
-    document.getElementById('wv-cap').textContent = 'De verandering van groep I (' + g(rr.vI) + ' punten), opgebouwd uit de vier stukjes. Elk stukje begint waar het vorige ophield.';
+    document.getElementById('wv-cap').textContent = 'De verandering van groep I (' + pt(rr.vI) + '), opgebouwd uit de vier stukjes. Elk stukje begint waar het vorige ophield.';
     var met = rr.S + rr.X, zonder = rr.X, o;
-    if (gelijk(rr.S, 0)) o = 'Geen sensitisatie: de training verandert de toetsscore met ' + g(zonder) + ' punten, met en zonder voormeting.';
-    else o = 'De voormeting maakt de training ' + (rr.S > 0 ? 'sterker' : 'zwakker') + ': met voormeting verandert de training de toetsscore met ' + g(met) +
-             ' punten, zonder voormeting met ' + g(zonder) + '. Het verschil, ' + g(rr.S) + ', is S.';
+    if (gelijk(rr.S, 0)) o = 'Geen sensitisatie: de training verandert de toetsscore met ' + pt(zonder) + ', met en zonder voormeting.';
+    else o = 'De voormeting maakt de training ' + (rr.S > 0 ? 'sterker' : 'zwakker') + ': met voormeting verandert de training de toetsscore met ' + pt(met) +
+             ', zonder voormeting met ' + pt(zonder) + '. Het verschil, ' + g(rr.S) + ', is S.';
     document.getElementById('oordeel').textContent = o;
   }
   document.getElementById('schuiven').addEventListener('input', function(e){
