@@ -1,4 +1,7 @@
-# Het zwaard van Solomon — ontwerpnotitie (stuk 1 en 1b, 8-10-2026)
+# Het oordeel van Solomon — ontwerpnotitie (stuk 1, 1b en 1c, 8-10-2026)
+
+**De titel** is sinds stuk 1c *Het oordeel van Solomon* (Ben bedoelde het salomonsoordeel: het zwaard dat eerlijk
+verdeelt). Stuk 1b heette *Het zwaard van Solomon*; dat is ingetrokken. Het zwaardje als beeld in stap 7 blijft.
 
 Speeltje: `speeltjes/solomon.html`. Eén zelfstandig HTML-bestand, geen internet nodig.
 Tegel: `speeltjes/index.qmd`, rubriek *Ontleden*. Register: `~/Ben_OS_brain/shared_assets/speeltjes/SPEELTJES_REGISTER.md`.
@@ -89,35 +92,58 @@ interactie schrijven.
 Een interactief hulpmiddel voor dit ontwerp is niet gevonden (twee gerichte zoekrondes in stuk 1; dat bewijst niet
 dat er geen bestaat).
 
-## De ladder
+## De ladder (sinds stuk 1c: Bens ruggengraat)
 
-Elf stapjes. Elke stap: de tabel opnieuw, één vraag, een dichtgeklapte hint en een dichtgeklapte uitwerking die
-begint met *"Welke som heb je nodig?"*. Vanaf stap 4 eindigt elke uitwerking met *Je vergelijkt / Je neemt aan* en
-met de trap van groep I, die per stap een stukje verder is ingekleurd.
+Ben, 8-10, hoe hij het altijd gaf: *"ik begon altijd zo dacht ik voor I: O1 − O0 = X + T + S + HM. En omdat de twee
+metingen bekend zijn weten we ook hoeveel de effecten samen opgeteld zijn, maar alleen dit weet je niks
+afzonderlijks. Om HM te krijgen moet je eerst dat gemiddelde uitrekenen als beste gok voor O0 van III en IV;
+aangezien alleen IV alleen HM bevat, beginnen we daar. Enzovoort, en ik vulde ook gewoon langzaam telkens de eerste
+formule verder in totdat S overbleef. En die rekenden we dan uit."*
+
+Dat is sinds stuk 1c de ruggengraat. De som van groep I staat vooraan als de vraag; elke gevonden trede wordt erin
+ingevuld (`lopend(k)` in de bron), recht onder de vorige regel, tot alleen S overblijft; dan valt het zwaard. De
+treden heten in de bron op naam (`VOLGORDE`, `ST`), en elke verwijzing *"stap N"* in de tekst wordt uitgerekend
+(`stap('leen')`), want in stuk 1b stonden zestien met de hand getikte stapnummers en die zouden nu allemaal liegen.
 
 | stap | vraagt | de som | hint wijst naar |
 |---|---|---|---|
-| 1 Wie deed de voormeting? | welke groepen | geen, aflezen | de kolom voormeting |
-| 2 Leen een voormeting | het startpunt van III en IV | (50 + 50) / 2 = 50 | het lot: gemiddeld gelijk begonnen |
-| 3 Welke stukjes zitten in welke groep? | vinkjes groep × stukje | geen, de boekhouding | vanzelf beter overal; X waar therapie; T waar voormeting; S waar allebei |
-| 4 Groep IV: H/M | H/M | 52 − 50 = 2 | IV kreeg niets |
-| 5 Groep III: X | X | (60 − 50) − 2 = 8 | H/M ken je al |
-| 6 Groep II: T | T | (53 − 50) − 2 = 1 | II heeft een echte voormeting |
-| 7 Groep I: S | S | (65 − 50) − 1 − 2 − 8 = 4 | drie van de vier ken je al; **hier valt het zwaard** |
+| 1 Groep I: de hele som | verbetering I | 65 − 50 = 15, en dan 15 = H/M + X + T + S: totaal bekend, stukjes niet | nameting min voormeting |
+| 2 Welke stukjes zitten in welke groep? | vinkjes groep × stukje | geen, de boekhouding | vanzelf beter overal; X waar therapie; T waar voormeting; S waar allebei |
+| 3 Leen een voormeting | het startpunt van III en IV | (50 + 50) / 2 = 50 | het lot: gemiddeld gelijk begonnen |
+| 4 Groep IV: H/M | H/M | 52 − 50 = 2, dan 15 = 2 + X + T + S | IV kreeg niets |
+| 5 Groep III: X | X | (60 − 50) − 2 = 8, dan 15 = 2 + 8 + T + S | H/M ken je al |
+| 6 Groep II: T | T | (53 − 50) − 2 = 1, dan 15 = 2 + 8 + 1 + S | II heeft een echte voormeting |
+| 7 Groep I: S | S | 15 = 11 + S; S = 15 − 11; S = 4 | de lopende som: wat moet S zijn om op 15 te komen; **hier valt het zwaard** |
 | 8 Verschil in verschil | (I − II) − (III − IV) | (15 − 3) − (10 − 2) = 4 | schrijf I − II uit in stukjes |
-| 9 Tot slot: de kale tabel | meerkeuze 1 / 4 / 8 / 12 / 15 (T, S, X, S + X, alles; uitgerekend en gesorteerd) | stap 7 of 8 | elk fout antwoord is een vergeten stukje |
-| 10 En dit is een regressie: de nameting | *b*₃ | 65 − 52 − 1 − 8 = 4 | nullen en enen invullen, van onder naar boven |
-| 11 En dit is een regressie: de verbetering | *b*₀ | verbetering IV = 2 | groep IV houdt alleen *b*₀ over |
+| 9 De proef op de som: de kale tabel | meerkeuze 1 / 4 / 8 / 12 / 13 / 15 (uitgerekend en gesorteerd) | stap 7 of 8 | elk fout antwoord is een vergeten stukje |
+| 10 Toegift, regressie: de nameting | *b*₀ | nameting IV = 52 = startniveau + H/M | groep IV houdt alleen *b*₀ over |
+| 11 Toegift, regressie: de verbetering | *b*₃ | 15 − 2 − 1 − 8 = 4 | van onder naar boven, net als stap 10 |
 
-**De regressiestappen** (Bens toevoeging c). V = voormeting (0/1), X = therapie (0/1), *Y* = *b*₀ + *b*₁·V +
-*b*₂·X + *b*₃·V·X. Stap 10 neemt de nameting als *Y*: dezelfde vier sommen als stap 4–7, alleen heten de stukjes nu
-*b*; *b*₂ = X, *b*₁ = T, *b*₃ = S (de interactie ís de sensitisatie), maar *b*₀ = 52 = startniveau 50 + H/M 2.
-Stap 11 neemt de verbetering als *Y* (met de geleende voormeting): nu is *b*₀ = H/M, de rest blijft. Een kleine
-APA-tabel zet het naast elkaar (nameting: startniveau + H/M, nee; verbetering: H/M, ja). Op het speelbord rekenen
-beide regressies live mee met de schuifjes; bij ongelijke voormetingen van I en II zegt een noot dat de regressie
-op de nameting dat verschil in *b*₁ en *b*₃ stopt. Bens woord *startgetal* voor het intercept komt uit de Bib
-(`berekening-regressie-aapjes-slope-intercept-voorspellen`, `auteur: Ben`: *"De b0 noem ik vanaf nu het startgetal
-of intercept"*); *startniveau* is zijn woord uit de briefing van 8-10.
+**Volgorde van stap 2 en 3.** Ben noemt lenen vóór de boekhouding; hier staat de boekhouding eerst, omdat die de
+reden levert om bij IV te beginnen (*"alleen IV bevat alleen H/M"*), en IV levert dan de reden om te lenen (IV heeft
+geen voormeting). Zo trekt elke stap de volgende aan. Het oude stapje *"Wie deed de voormeting?"* (aflezen) is in de
+leen-stap opgegaan. De oude ladder (stuk 1b: aflezen, lenen, boekhouding, IV, III, II, I) is daarmee ingetrokken.
+
+**De regressiestappen** (Bens toevoeging c; sinds 1c met de schakelaars voluit). *Y* = *b*₀ + *b*₁·voormeting +
+*b*₂·therapie + *b*₃·voormeting·therapie, met voormeting en therapie elk 0 of 1. Stap 10 neemt de nameting als *Y*:
+dezelfde vier sommen als stap 4–7, alleen heten de stukjes nu *b*; *b*₂ = X, *b*₁ = T, *b*₃ = S (de interactie ís de
+sensitisatie), maar *b*₀ = 52 = startniveau 50 + H/M 2. Stap 11 neemt de verbetering als *Y* (met de geleende
+voormeting): nu is *b*₀ = H/M, de rest blijft. Een kleine APA-tabel zet het naast elkaar (nameting: startniveau +
+H/M, nee; verbetering: H/M, ja). Op het speelbord rekenen beide regressies live mee met de schuifjes; bij ongelijke
+voormetingen van I en II zegt een noot dat de regressie op de nameting dat verschil in *b*₁ en *b*₃ stopt. Bens
+woord *startgetal* voor het intercept komt uit de Bib (`berekening-regressie-aapjes-slope-intercept-voorspellen`,
+`auteur: Ben`: *"De b0 noem ik vanaf nu het startgetal of intercept"*); *startniveau* is zijn woord uit de briefing
+van 8-10.
+
+**De schakelaars in woorden** (Ben, 8-10: *"Bij regressie kunnen we toch ook experiment of manipulatie of therapie
+uitgeschreven?"*). In stuk 1b heetten ze *V* en *X*, en die *X* botste met het stukje X van 8 punten (Jeanne en
+Michelle, allebei). Met woorden is er nog één X: het stukje. De woorden staan rechtop (namen van schakelaars, geen
+symbolen), *b* en *Y* cursief, het product met Bens middenstip. Wat anderen doen (hulpagent, 8-10, 14 zoekvragen):
+Field (2016) schrijft *Attractiveness*ᵢ = (*b*₀ + *b*₁Genderᵢ + *b*₂Alcoholᵢ + *b*₃Interactionᵢ) + εᵢ, de woorden
+rechtop en het product als een benoemde variabele *Interaction*; OpenMenS (OU) schrijft *b*₄(exercise * coffee) en
+elders 0.07 · IQ; Trochim en Statology alleen symbolen; Van Engelenburg (1999, Twente), de enige Solomon-specifieke
+bron met sprekende letters, schrijft *b*<sub>T</sub>*T* + *b*<sub>P</sub>*P* + *b*<sub>TP</sub>*TP*. Niemand schrijft
+*b*₃·voormeting·therapie met middenstippen tussen woorden; dat is dus onze eigen schrijfwijze, en Bens.
 
 **De volgorde: slotvraag vóór de regressie.** Ben schreef "stap 9 wordt een gewone slotvraag" en "voeg de regressie
 toe ná de oplossing van beneden naar boven". Beide passen in twee volgordes; gekozen is 9 = slotvraag (de proef op
@@ -147,12 +173,26 @@ het staat nu op de eerste snede en leunt naar rechts boven X.
   volgt gewoon op de inleiding. Stapkop 20 px halfvet, de vraag 17 px.
 - **Verbindingslijntjes in de trap zijn niet meer gestippeld** (huisstijl: dunne lijnen, geen stippellijnen). In
   stuk 1 stonden ze als `stroke-dasharray 2 3`.
-- **De letters H/M, X, T, S staan rechtop**, ook in de regressievergelijking (V en X zijn daar schakelaars 0/1); *b*
-  en *Y* cursief. De APA-lens van stuk 1 adviseerde rechtop voor de ontwerpletters; zie het APA-oordeel hieronder
-  voor stuk 1b.
-- **De letter X heeft in de regressie twee gezichten**: de schakelaar X (0/1) en het stukje X (*b*₂, wat de therapie
-  doet). Bens briefing schreef het zo (*"b2 = X"*), en Campbell & Stanley noemen de behandeling ook X. De tekst zegt
-  het hardop: "*b*₂ is X, wat de therapie doet". Zie wat Jeanne ervan vond.
+- **De letters H/M, X, T, S staan rechtop**; *b* en *Y* cursief. De APA-lens van stuk 1 adviseerde rechtop voor de
+  ontwerpletters; zie het APA-oordeel hieronder voor stuk 1b.
+- **De letter X heeft in de regressie geen twee gezichten meer** (stuk 1c): de schakelaars heten voormeting en
+  therapie, voluit. In stuk 1b was de schakelaar een cursieve *X* naast het rechtopstaande stukje X, met een
+  onzichtbare woordvoeger (U+2060) om `kl()` tegen te houden; dat is weg. Ingetrokken: de keuze van 1b.
+- **Eén "=" per regel, overal** (Ben, 8-10: *"Liefst vergelijkingen altijd onder elkaar en het liefst maar 1 = teken
+  per regel … Niet doorbreien."*). Elke som op de bladzij, ook wat JavaScript maakt, staat onder elkaar met het
+  =-teken in één kolom en de linkerkant herhaald; de ingevulde kaart heeft per cel twee regels (*H/M = 52 − 50* /
+  *H/M = 2*). Getoetst met `~/Ben_OS_brain/shared_assets/html_tabellen/som_wacht.py` op de gerenderde DOM: 0
+  treffers, en een mutatieproef (één doorgebreide som erin) geeft 1 treffer en afloopcode 1.
+- **De namen staan in de eerste alinea** (Ben, 8-10: *"ook voor zoekmachines, maar ook dat mensen meteen zien wat
+  ze zochten"*): Solomon-vier-groepen-ontwerp, history en maturation (H/M), de interventie (X), het testeffect
+  (testing, T), de sensitisatie (pretest sensitization, S); dezelfde woorden in `<meta name="description">`. De
+  Nederlandse naam: Ben schrijft zelf *"Solomon vier groepen ontwerp"* (Bib, `auteur: Ben`); Quené & Van den Bergh
+  (UU) *Solomon-vier-groepen-ontwerp*, Roose (UGent) *Solomon vier-groepen-ontwerp*, de Open Universiteit *Solomon
+  vier-groependesign* (hulpagent, 8-10). Gekozen: de UU-vorm, het dichtst bij Bens eigen woorden en bij *ontwerp*.
+  *Testeffect* is in alle Nederlandse bronnen het woord; voor S gebruikt de OU-familie *voormetingsensitisatie*
+  (staat nu in de uitklapper *andere namen*). De Bib heeft over H/M, T en S niets in Bens stem (`history`,
+  `testeffect`, `sensitisatie`: AFWEZIG; `maturation`: 4 items, alle over een ander ontwerp of van Leiden), dus de
+  omschrijvingen van de stukjes zijn van ons.
 - **Presets op het speelbord worden teruggerekend uit de stukjes** (`maak()`), niet getypt: "Alleen de tijd" is H/M
   uit de ladder met T, X, S op 0, enzovoort. Verandert GETALLEN, dan veranderen ze mee.
 - **De titel** volgt Ben (*zwaard*); in de tekst staat *ontwerp*, zijn eigen woord en de Germaans-Hollandse keuze.
@@ -238,6 +278,10 @@ Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.ht
 
 ## Open vragen voor Ben
 
-1. De kaart: vier kolommen (opdracht) of vijf (zijn methode)? Nog open sinds stuk 1.
-2. De volgorde slotvraag → regressie, of regressie → slotvraag? Zie *De ladder*.
+1. De kaart: vier kolommen (opdracht, en in 1c bevestigd door de meesterknecht) of vijf (zijn methode)? Open sinds
+   stuk 1; de bladzij heeft er vier.
+2. ~~De volgorde slotvraag → regressie, of regressie → slotvraag?~~ Beslist in 1c (meesterknecht): ladder → slotvraag
+   → regressie als aangekondigde toegift. Ingetrokken als open vraag.
 3. De bron naar `countcamp_lab/boek/04_speeltjes/` en `KIST` in `bouw_speelkist.py`: perswerk.
+4. De volgorde van stap 2 en 3 (boekhouding vóór lenen) wijkt af van Bens eigen volgorde (lenen eerst); zie *De
+   ladder*. Als hij zijn volgorde wil, is het één verwisseling in `VOLGORDE`.

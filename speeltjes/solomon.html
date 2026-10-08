@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Het zwaard van Solomon — ontleed het ontwerp</title>
+<title>Het oordeel van Solomon — ontleed het ontwerp</title>
+<meta name="description" content="Het Solomon-vier-groepen-ontwerp (Solomon four-group design) uit elkaar gehaald: history en maturation (H/M), het testeffect (testing, T), sensitisatie (pretest sensitization, S) en de interventie (X). Stap voor stap, met de getallen erbij, en als toegift dezelfde sommen als regressie.">
 <style>
   /* ===== kleuren: licht, donker, en print =====
      De knop is een verstopt vinkje plus :has() — geen JavaScript (Ben, 6/8-10-2026).
@@ -228,12 +229,18 @@
     <label for="donker" class="thema-knop" title="licht of donker">◐ licht / donker</label>
   </div>
 
-  <h1>Het zwaard van Solomon</h1>
+  <h1>Het oordeel van Solomon</h1>
   <p class="ondertitel">ontleed het ontwerp</p>
-  <p class="lede">Vier groepen, één therapie, en een vragenlijst over kwaliteit van leven. Elke groep ging er een
-  beetje op vooruit, en in elke verbetering zitten andere stukjes: wat vanzelf beter wordt, wat de therapie
-  doet, wat de voormeting zelf doet, en wat voormeting en therapie samen doen. Jij haalt ze eruit. Van beneden
-  naar boven, één som per keer.</p>
+  <!-- De vier namen staan met opzet al in de eerste alinea (Ben, 8-10-2026: "ook voor zoekmachines, maar ook dat
+       mensen meteen zien wat ze zochten"). De Nederlandse naam: Ben schrijft zelf "Solomon vier groepen ontwerp";
+       Quené & Van den Bergh (UU) en Roose (UGent) schrijven "Solomon(-)vier-groepen-ontwerp", de Open Universiteit
+       "Solomon vier-groependesign" (nagezocht 8-10-2026). -->
+  <p class="lede kl">Het Solomon-vier-groepen-ontwerp (<i>Solomon four-group design</i>): vier groepen, één therapie,
+  en een vragenlijst over kwaliteit van leven. Elke groep ging erop vooruit, en in de verbetering van elke groep
+  zitten andere stukjes: wat vanzelf beter wordt (<i>history</i> en <i>maturation</i>, H/M), wat de therapie doet
+  (de interventie, X), wat de voormeting zelf doet (het testeffect, <i>testing</i>, T), en wat voormeting en
+  therapie samen extra doen (de sensitisatie, <i>pretest sensitization</i>, S). Jij haalt ze uit elkaar: eerst
+  de som van groep I, dan één stukje per stap, tot alleen S overblijft.</p>
 
   <h2>Het ontwerp</h2>
   <p>Een groep mensen krijgt een therapie die hun kwaliteit van leven moet verbeteren. Je meet die kwaliteit
@@ -250,9 +257,10 @@
   <h2>De ladder</h2>
   <p>Eén ding mag je vanaf het begin aannemen: het lot heeft de groepen samengesteld, dus ze begonnen gemiddeld
   gelijk. De andere aannames komen onderweg, op de plek waar je ze nodig hebt.</p>
-  <p><span id="aantal-stappen"></span> stapjes, en daarna een toegift van <span id="aantal-toegift"></span>: dan
-  blijkt alles een regressie te zijn. Elk stapje vraagt één ding. Weet je het niet, open dan de hint. Wil je zien
-  hoe het gaat, open dan de uitwerking. Alle stapjes gebruiken dezelfde getallen.</p>
+  <p class="kl"><span id="aantal-stappen"></span> stapjes, en daarna een toegift van <span id="aantal-toegift"></span>: dan
+  blijkt alles een regressie te zijn. Het eerste stapje zet de som van groep I neer, waar alle vier de stukjes in
+  zitten. Elk stapje daarna vindt één stukje en vult het in die som in, tot alleen S overblijft. Weet je het niet,
+  open dan de hint. Wil je zien hoe het gaat, open dan de uitwerking. Alle stapjes gebruiken dezelfde getallen.</p>
   <div id="ladder"></div>
 
   <h2 id="aannames-kop">Wat je mag aannemen, op een rij</h2>
@@ -323,7 +331,7 @@
       <tr><td>H/M</td><td><i>history</i> en <i>maturation</i> (rijping)</td></tr>
       <tr><td>X</td><td>de interventie, de behandeling</td></tr>
       <tr><td>T</td><td>het testeffect, <i>testing</i>. Let op: sommige boeken noemen dit <i>pretest-sensitisatie</i>, en bedoelen dan niet S.</td></tr>
-      <tr><td>S</td><td>sensitisatie, de interactie van voormeting en therapie</td></tr>
+      <tr><td>S</td><td>sensitisatie, <i>pretest sensitization</i>, voormetingsensitisatie: de interactie van voormeting en therapie</td></tr>
     </table>
     </div>
     <p>En niet elk boek nummert de groepen zoals hier. Kijk dus altijd eerst wie een voormeting kreeg en wie de therapie.</p>
@@ -396,21 +404,31 @@
   function gelijk(a, b){ return Math.abs(a - b) < 1e-9; }
   function pt(v){ return g(v) + (gelijk(Math.abs(v), 1) ? ' punt' : ' punten'); }   // "1 punt", "3 punten"
   function b(i){ return '<i>b</i><sub>' + i + '</sub>'; }     // regressiegewicht in APA-zetting: cursieve b, index eronder
-  // De schakelaars V en X (0 of 1) in de regressie staan cursief, als variabelen in een model (APA-lens, 8-10:
-  // Hayes' ω = a(b1 + b3V) is het huis-ijkpunt, alles cursief). Het stukje X staat rechtop met zijn streep.
-  // Zo zijn de schakelaar X en het stukje X ook typografisch twee dingen (Jeanne en Michelle struikelden
-  // allebei over "b2 is X" terwijl X net 1 was). Een onzichtbare woordvoeger achter de schakelaar-X houdt
-  // kl() ervan af er een streep onder te zetten.
-  var SV = '<i>V</i>', SW = '<i>X⁠</i>', VX = SV + '·' + SW;
+  // De twee schakelaars (0 of 1) in de regressie staan voluit in woorden (Ben, 8-10-2026: "Bij regressie
+  // kunnen we toch ook experiment of manipulatie of therapie uitgeschreven?"). In stuk 1b heetten ze V en X,
+  // en die X botste met het stukje X van 8 punten: Jeanne en Michelle lazen allebei "b2 is X" terwijl X net
+  // 1 was. Met woorden is er maar één X over, het stukje. De woorden staan rechtop: het zijn namen van
+  // schakelaars, geen symbolen; b en Y blijven cursief.
+  var SV = 'voormeting', SW = 'therapie', VX = SV + '·' + SW;
   var MODEL = '<i>Y</i> = ' + b(0) + ' + ' + b(1) + '·' + SV + ' + ' + b(2) + '·' + SW + ' + ' + b(3) + '·' + VX;
 
   // de letters van de stukjes krijgen hun vaste streep
+  var KLEUR = {HM:'hm', X:'x', T:'t', S:'s'};
   function kl(s){
-    return s.replace(/H\/M|\b[XTS]\b(?!⁠)/g, function(m){
+    return s.replace(/H\/M|\b[XTS]\b/g, function(m){
       var c = m === 'H/M' ? 'hm' : m.toLowerCase();
       return '<span class="k k-' + c + '">' + m + '</span>';
     });
   }
+
+  // ===== de treden op naam: tekst die naar een stap verwijst, rekent het nummer uit =====
+  // Verschuift er een trede (stuk 1c zette de som van groep I vooraan), dan schuiven de verwijzingen mee.
+  // Met de hand getikte stapnummers stonden in stuk 1b op zestien plekken; die zouden nu allemaal liegen.
+  var VOLGORDE = ['som', 'stukjes', 'leen', 'hm', 'x', 't', 's', 'did', 'kaal', 'regNa', 'regVer'];
+  function nr(k){ var i = VOLGORDE.indexOf(k); if (i < 0) throw new Error('onbekende stap: ' + k); return i + 1; }
+  function stap(k){ return 'stap ' + nr(k); }
+  function stapReeks(ks){ var n = ks.map(nr); return 'stap ' + n.slice(0, -1).join(', ') + ' en ' + n[n.length - 1]; }
+  function stapTotMet(a, z){ return 'stap ' + nr(a) + ' tot en met ' + nr(z); }
   // een som, uitgelijnd op het =-teken, linkerkant elke regel herhaald.
   // somBlok zet meer sommen in één tabel, zodat ook hun =-tekens onder elkaar staan.
   function somRijen(links, rechts){
@@ -445,8 +463,30 @@
     return '<figure class="zwaard"><svg class="zwaard-svg" viewBox="0 0 460 100" role="img" aria-label="De verbetering van groep I, ' +
       pt(rr.vI) + ', als één balk; na het vinden van S in vier stukjes: ' + stukjes + '."></svg>' +
       '<figcaption><span class="voor">De verbetering van groep I, ' + pt(rr.vI) + ', nog in één stuk. Vind S, dan valt hij uiteen.</span>' +
-      '<span class="na">Salomo liet een zwaard halen om eerlijk te verdelen; hier verdeelt het de verbetering van groep I in haar vier stukjes: ' +
+      '<span class="na">Het oordeel van Salomo: een zwaard, om eerlijk te verdelen. Hier verdeelt het de verbetering van groep I in haar vier stukjes: ' +
       kl(stukjes) + '.</span></figcaption></figure>';
+  }
+  // ===== de lopende som van groep I: de ruggengraat van de ladder =====
+  // Ben, 8-10-2026, hoe hij het altijd gaf: "ik begon altijd zo dacht ik voor I: O1 − O0 = X + T + S + HM ...
+  // en ik vulde ook gewoon langzaam telkens de eerste formule verder in totdat S overbleef. En die rekenden we
+  // dan uit." k = hoeveel stukjes al ingevuld zijn (H/M, X, T, S); bij k = 4 wordt S uitgerekend.
+  // Zijn regel voor sommen (8-10): onder elkaar, één "=" per regel, de linkerkant herhaald, elke invulling
+  // recht onder de vorige, de conclusie op een eigen regel ("S = 4", niet "4 = S").
+  function bekend(sl, v){ return '<span class="k k-' + KLEUR[sl] + '">' + gh(v) + '</span>'; }   // een ingevuld stukje houdt zijn streep
+  function lopend(k){
+    var rr = los(GETALLEN), sl = ['HM','X','T','S'], namen = ['H/M','X','T','S'], tot = g(rr.vI), regels = [];
+    function rechts(i){ return sl.map(function(s, j){ return j < i ? bekend(s, rr[s]) : namen[j]; }).join(' + '); }
+    regels.push(['verbetering I', rechts(0)]);
+    regels.push([tot, rechts(0)]);
+    for (var i = 1; i <= Math.min(k, 3); i++) regels.push([tot, rechts(i)]);
+    if (k >= 4){
+      var rest = rr.HM + rr.X + rr.T;
+      regels.push([tot, g(rest) + ' + S']);
+      regels.push(['S', tot + ' − ' + gh(rest)]);
+      regels.push(['S', g(rr.S)]);
+    }
+    return '<div class="somvak"><table class="geen-apa som lopend">' + regels.map(function(p){
+      return '<tr><td class="l">' + kl(p[0]) + '</td><td class="is">=</td><td class="r">' + kl(p[1]) + '</td></tr>'; }).join('') + '</table></div>';
   }
 
   // ===== de tabel met de vier groepen =====
@@ -476,25 +516,25 @@
     var noot = [];
     if (o.leen) noot.push('Tussen haakjes: de geleende voormeting.');
     if (o.verandering) noot.push('Verbetering: nameting min voormeting.');
-    if (o.bevat && !o.geenBevatNoot) noot.push('De kolom <i>bevat</i> is wat je in stap 3 aanvinkte.');
+    if (o.bevat && !o.geenBevatNoot) noot.push('De kolom <i>bevat</i> is wat je in ' + stap('stukjes') + ' aanvinkte.');
     return h + '</table>' + (noot.length ? '<p class="zacht" style="font-size:14px;margin-top:0">' + noot.join(' ') + '</p>' : '');
   }
   // dezelfde groepen als nullen en enen, voor de regressiestappen
   function tabelReg(d, soort){
     var rr = los(d);
     var rijen = [['I',1,1,d.naI,rr.vI], ['II',1,0,d.naII,rr.vII], ['III',0,1,d.naIII,rr.vIII], ['IV',0,0,d.naIV,rr.vIV]];
-    var h = '<table class="data"><caption>Dezelfde groepen, nu als nullen en enen</caption>' +
-      '<tr><th>groep</th><th class="getal">' + SV + ' (voormeting)</th><th class="getal">' + SW + ' (therapie)</th><th class="getal">' +
+    var h = '<table class="data"><caption>Dezelfde groepen, nu als nullen en enen: 1 is ja, 0 is nee</caption>' +
+      '<tr><th>groep</th><th class="getal">' + SV + '</th><th class="getal">' + SW + '</th><th class="getal">' +
       (soort === 'na' ? 'nameting (<i>Y</i>)' : 'verbetering (<i>Y</i>)') + '</th></tr>';
     rijen.forEach(function(w){
       h += '<tr><td>' + w[0] + '</td><td class="getal">' + w[1] + '</td><td class="getal">' + w[2] + '</td><td class="getal">' + g(soort === 'na' ? w[3] : w[4]) + '</td></tr>';
     });
-    return h + '</table>' + (soort === 'na' ? '' : '<p class="zacht" style="font-size:14px;margin-top:0">Verbetering van III en IV: met de geleende voormeting uit stap 2.</p>');
+    return h + '</table>' + (soort === 'na' ? '' : '<p class="zacht" style="font-size:14px;margin-top:0">Verbetering van III en IV: met de geleende voormeting uit ' + stap('leen') + '.</p>');
   }
   // wat het model per groep zegt, als je de nullen en enen invult
-  // de boekhouding van stap 3 ernaast, zodat de paren te zien zijn: b2 bij X, b1 bij T, b3 bij S (Michelle, 8-10)
-  var MODEL_PER_GROEP = '<table class="data"><caption>Wat er per groep van het model overblijft, naast de boekhouding van stap 3</caption>' +
-    '<tr><th>groep</th><th class="getal">' + SV + '</th><th class="getal">' + SW + '</th><th class="getal">' + VX + '</th><th>het model zegt</th><th>in stap 3: de verbetering bevat</th></tr>' +
+  // de boekhouding van de stukjes-stap ernaast, zodat de paren te zien zijn: b2 bij X, b1 bij T, b3 bij S (Michelle, 8-10)
+  var MODEL_PER_GROEP = '<table class="data"><caption>Wat er per groep van het model overblijft, naast de boekhouding van ' + stap('stukjes') + '</caption>' +
+    '<tr><th>groep</th><th class="getal">' + SV + '</th><th class="getal">' + SW + '</th><th class="getal">' + VX + '</th><th>het model zegt</th><th>in ' + stap('stukjes') + ': de verbetering bevat</th></tr>' +
     '<tr><td>IV</td><td class="getal">0</td><td class="getal">0</td><td class="getal">0</td><td><i>Y</i> = ' + b(0) + '</td><td class="bevat">' + kl('H/M') + '</td></tr>' +
     '<tr><td>III</td><td class="getal">0</td><td class="getal">1</td><td class="getal">0</td><td><i>Y</i> = ' + b(0) + ' + ' + b(2) + '</td><td class="bevat">' + kl('H/M + X') + '</td></tr>' +
     '<tr><td>II</td><td class="getal">1</td><td class="getal">0</td><td class="getal">0</td><td><i>Y</i> = ' + b(0) + ' + ' + b(1) + '</td><td class="bevat">' + kl('H/M + T') + '</td></tr>' +
@@ -511,19 +551,41 @@
   // ===== de ladder =====
   var r = los(GETALLEN), rb = regressie(GETALLEN);
   var MATRIX_GOED = {I:['H/M','X','T','S'], II:['H/M','T'], III:['H/M','X'], IV:['H/M']};
-  var stappen = [
-    { titel:'Wie deed de voormeting?',
-      tabel:{titel:TITEL},
-      vraag:'Welke groepen vulden de vragenlijst al vóór de therapie in?',
-      invoer:{soort:'vink', opties:['I','II','III','IV'], goed:['I','II']},
-      hint:'Kijk in de kolom <i>voormeting</i>. Waar staat een getal, en waar een streepje?',
-      uit:function(){ return WELKE +
-        P('Nog geen. Hier lees je alleen af: groep I en groep II hebben een voormeting (' + g(GETALLEN.voorI) + ' en ' + g(GETALLEN.voorII) +
-          '). Groep III en IV vulden de vragenlijst één keer in, aan het eind.'); } },
+  // De treden op naam; VOLGORDE (hierboven) zet ze op een rij. Bens ruggengraat (8-10-2026): eerst de som van
+  // groep I als de vraag, dan lenen, dan IV, III, II, en elk gevonden stukje in die som invullen tot S overblijft.
+  var ST = {
+    som: { titel:'Groep I: de hele som',
+      tabel:{titel:TITEL, licht:['I']},
+      voor:STUKJES,
+      vraag:'Groep I kreeg een voormeting én de therapie. Hoeveel ging de kwaliteit van leven in groep I vooruit?',
+      invoer:{soort:'getal', goed:r.vI},
+      hint:'Nameting min voormeting. Groep I heeft allebei.',
+      uit:function(){ return WELKE + P('Nameting I min voormeting I: de verbetering van groep I.') +
+        som('verbetering I', ['nameting I − voormeting I', g(GETALLEN.naI) + ' − ' + gh(GETALLEN.voorI), g(r.vI)]) +
+        P('In die ' + pt(r.vI) + ' zit alles tegelijk, want groep I kreeg alles: wat vanzelf beter werd, wat de therapie deed, wat de voormeting zelf deed, en wat die twee samen extra deden. Als som:') +
+        lopend(0) +
+        P('Je kent het totaal. Van de vier stukjes apart weet je nog niets. Dat is de vraag die de hele ladder beantwoordt: in de stappen hierna vind je ze één voor één, en elk gevonden stukje vul je in deze som in, tot alleen S overblijft.') +
+        trap(0, 'De trap van groep I, nog leeg: vier treden, samen ' + pt(r.vI) + '. In de volgende stappen vul je hem van links naar rechts.'); } },
 
-    { titel:'Leen een voormeting',
+    stukjes: { titel:'Welke stukjes zitten in welke groep?',
+      tabel:{titel:TITEL},
+      voor:'<p>Groep I heeft alle vier de stukjes. De andere groepen kregen minder, en hebben er dus ook minder.</p>',
+      vraag:'Zet in elke rij een vinkje bij de stukjes die in de verbetering van die groep zitten.',
+      invoer:{soort:'matrix'},
+      hint:'Wat vanzelf beter wordt, wordt in elke groep beter. X zit waar de therapie was, T waar een voormeting was. En S? Daarvoor moet een groep allebei gehad hebben.',
+      uit:function(){ return WELKE + P('Nog geen. Dit is de boekhouding:') +
+        '<table class="data"><caption>Wat elke groep kreeg, en wat er dus in zijn verbetering zit</caption><tr><th>groep</th><th>kreeg</th><th>de verbetering bevat</th></tr>' +
+        '<tr><td>IV</td><td>niets</td><td class="bevat">' + kl('H/M') + '</td></tr>' +
+        '<tr><td>III</td><td>therapie</td><td class="bevat">' + kl('H/M + X') + '</td></tr>' +
+        '<tr><td>II</td><td>voormeting</td><td class="bevat">' + kl('H/M + T') + '</td></tr>' +
+        '<tr><td>I</td><td>voormeting en therapie</td><td class="bevat">' + kl('H/M + X + T + S') + '</td></tr></table>' +
+        P('Groep IV heeft het minst, groep I alles. Daarom los je het van onder naar boven op: groep IV geeft je H/M, en elke groep daarboven één stukje erbij. Elk gevonden stukje vul je in de som van groep I in.') +
+        P('Alleen: groep IV heeft geen voormeting, dus haar verbetering kun je nog niet uitrekenen. Daar gaat de volgende stap over.'); } },
+
+    leen: { titel:'Leen een voormeting',
       tabel:{titel:TITEL, licht:['III','IV']},
-      vraag:'Groep III en IV hebben geen voormeting. Welk getal neem je als hun score vooraf?',
+      voor:'<p>Kijk in de kolom <i>voormeting</i>: groep I en II hebben er een, groep III en IV vulden de vragenlijst één keer in, aan het eind. Zonder voormeting geen verbetering, en zonder de verbetering van groep IV geen ' + kl('H/M') + '.</p>',
+      vraag:'Welk getal neem je voor groep III en IV als hun score vooraf?',
       invoer:{soort:'getal', goed:r.leen},
       hint:'Het lot heeft de groepen samengesteld. Hoe zullen III en IV dan gemiddeld begonnen zijn, vergeleken met I en II?',
       uit:function(){ return WELKE + P('Het gemiddelde van de twee voormetingen die je wél hebt.') +
@@ -531,45 +593,32 @@
         P('Dat mag omdat het lot de groepen samenstelde: gemiddeld begonnen ze gelijk. Je vult een getal in op een plek waar je niets gemeten hebt. Dat heet <i>substitutie</i>.') +
         P('Meten kan hier trouwens niet: geef je groep III een voormeting, dan is het groep I geworden.'); } },
 
-    { titel:'Welke stukjes zitten in welke groep?',
-      tabel:{titel:TITEL, leen:true},
-      voor:STUKJES,
-      vraag:'Zet in elke rij een vinkje bij de stukjes die in de verbetering van die groep zitten.',
-      invoer:{soort:'matrix'},
-      hint:'Wat vanzelf beter wordt, wordt in elke groep beter. X zit waar de therapie was, T waar een voormeting was. En S? Daarvoor moet een groep allebei gehad hebben.',
-      uit:function(){ return WELKE + P('Nog geen. Eerst de boekhouding:') +
-        '<table class="data"><caption>Wat elke groep kreeg, en wat er dus in zijn verbetering zit</caption><tr><th>groep</th><th>kreeg</th><th>de verbetering bevat</th></tr>' +
-        '<tr><td>IV</td><td>niets</td><td class="bevat">' + kl('H/M') + '</td></tr>' +
-        '<tr><td>III</td><td>therapie</td><td class="bevat">' + kl('H/M + X') + '</td></tr>' +
-        '<tr><td>II</td><td>voormeting</td><td class="bevat">' + kl('H/M + T') + '</td></tr>' +
-        '<tr><td>I</td><td>voormeting en therapie</td><td class="bevat">' + kl('H/M + X + T + S') + '</td></tr></table>' +
-        P('Groep IV heeft het minst, groep I alles. Daarom los je het van onder naar boven op: elke groep geeft je één stukje erbij. Samen vormen ze een trap: de verbetering van groep I.') +
-        trap(0, 'De trap van groep I, nog leeg. In de volgende stappen vul je hem van links naar rechts.'); } },
-
-    { titel:'Groep IV: hoe groot is H/M?',
+    hm: { titel:'Groep IV: hoe groot is H/M?',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['IV']},
       vraag:'Hoe groot is H/M?',
       invoer:{soort:'getal', goed:r.HM},
-      hint:'Groep IV kreeg geen voormeting en geen therapie. Wat er in die groep verbeterde, ging dus vanzelf. Gebruik de geleende voormeting uit stap 2.',
+      hint:'Groep IV kreeg geen voormeting en geen therapie. Wat er in die groep verbeterde, ging dus vanzelf. Gebruik de geleende voormeting uit ' + stap('leen') + '.',
       uit:function(){ return WELKE + P('De verbetering van groep IV, want daarin zit alleen H/M.') +
         som('H/M', ['nameting IV − voormeting III en IV', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)]) +
         (gelijk(r.HM, 0) ? P('Nul mag. In deze groep werd er vanzelf niets beter. Daardoor zie je H/M in de volgende sommen bijna niet (er staat steeds “− 0”). Wil je hem wél zien werken, druk dan bij de schuifjes op <i>Alleen de tijd</i>.') :
           P('Zonder voormeting en zonder therapie gaat de kwaliteit van leven in deze groep ' + pt(r.HM) + ' vooruit. Dat is wat vanzelf gebeurt, en dat gebeurt in elke groep.')) +
+        P('Vul H/M in de som van groep I in:') + lopend(1) +
         vergelijk('groep IV, met de geleende voormeting', 'III en IV begonnen gemiddeld zoals I en II (het lot)') +
         trap(1); } },
 
-    { titel:'Groep III: hoe groot is X?',
+    x: { titel:'Groep III: hoe groot is X?',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['III']},
       vraag:'Hoe groot is X?',
       invoer:{soort:'getal', goed:r.X},
-      hint:'In de verbetering van groep III zitten twee stukjes: H/M en X. H/M ken je al uit stap 4.',
+      hint:'In de verbetering van groep III zitten twee stukjes: H/M en X. H/M ken je al uit ' + stap('hm') + '.',
       uit:function(){ return WELKE + P('De verbetering van groep III is H/M + X. Haal H/M eraf, dan blijft X over.') +
         som('X', ['verbetering III − H/M', '(' + g(GETALLEN.naIII) + ' − ' + gh(r.leen) + ') − ' + gh(r.HM), g(r.vIII) + ' − ' + gh(r.HM), g(r.X)]) +
         P('Zonder voormeting verbetert de therapie de kwaliteit van leven met ' + pt(r.X) + '.') +
+        P('Vul ook X in de som van groep I in:') + lopend(2) +
         vergelijk('groep III met groep IV (want H/M is de verbetering van IV)', 'wat vanzelf beter wordt, wordt in III en IV even hard beter') +
         trap(2); } },
 
-    { titel:'Groep II: hoe groot is T?',
+    t: { titel:'Groep II: hoe groot is T?',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['II']},
       vraag:'Hoe groot is T?',
       invoer:{soort:'getal', goed:r.T},
@@ -577,27 +626,28 @@
       uit:function(){ return WELKE + P('De verbetering van groep II is H/M + T. Haal H/M eraf, dan blijft T over.') +
         som('T', ['verbetering II − H/M', '(' + g(GETALLEN.naII) + ' − ' + gh(GETALLEN.voorII) + ') − ' + gh(r.HM), g(r.vII) + ' − ' + gh(r.HM), g(r.T)]) +
         P('De voormeting zelf verbetert de kwaliteit van leven met ' + pt(r.T) + ', ook zonder therapie.') +
+        P('Vul ook T in de som van groep I in. Nu is alleen S nog open:') + lopend(3) +
         vergelijk('groep II met groep IV', 'wat vanzelf beter wordt, wordt in II en IV even hard beter') +
         trap(3); } },
 
-    { titel:'Groep I: hoe groot is S?',
+    s: { titel:'Groep I: hoe groot is S?',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['I']},
       vraag:'Hoe groot is S?',
       invoer:{soort:'getal', goed:r.S, gelijkAanT:true},
       zwaard:true,
-      hint:'In groep I zit alles: H/M + X + T + S. Drie van die vier ken je al uit stap 4, 5 en 6. Haal ze eraf.',
-      uit:function(){ return WELKE + P('De verbetering van groep I is H/M + X + T + S. Haal H/M, X en T eraf, dan blijft S over.') +
-        // één aftrekking per regel (Michelle, 8-10: "15 − 1 − 2 − 8 → 4" was de eerste som die sneller ging dan zij)
-        som('S', ['verbetering I − H/M − X − T', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.voorI) + ') − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T),
-                  g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.vI - r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.vI - r.HM - r.X) + ' − ' + gh(r.T), g(r.S)]) +
-        P('Wat betekent dat? Met voormeting verbetert de therapie de kwaliteit van leven met X + S = ' + g(r.X) + ' + ' + gh(r.S) + ' = ' + pt(r.X + r.S) +
-          '. Zonder voormeting is dat X = ' + g(r.X) + '. Het verschil tussen die twee is S.') +
+      hint:'Kijk naar de som van groep I zoals hij na ' + stap('t') + ' staat: drie van de vier stukjes zijn ingevuld. Hoe groot moet S zijn om op ' + g(r.vI) + ' uit te komen?',
+      uit:function(){ return WELKE + P('Geen nieuwe. De som van groep I uit ' + stap('som') + ', met alles ingevuld wat je nu weet. Tel de drie bekende stukjes op; wat overblijft is S.') +
+        // de ruggengraat: Bens eigen manier (8-10-2026), zie lopend()
+        lopend(4) +
+        P('Wat betekent dat? Zonder voormeting verbetert de therapie de kwaliteit van leven met X, ' + pt(r.X) + '. Met voormeting met X + S:') +
+        som('X + S', [g(r.X) + ' + ' + gh(r.S), g(r.X + r.S)]) +
+        P('Het verschil tussen die twee is S' + (gelijk(r.S, 0) ? '.' : ': de voormeting maakt de therapie ' + (r.S > 0 ? 'sterker' : 'zwakker') + '.')) +
         vergelijk('groep I met de drie andere', 'de stukjes tellen op; wat er in I overblijft, noem je S') +
         trap(4); } },
 
-    { titel:'Een tweede weg: verschil in verschil',
+    did: { titel:'Een tweede weg: verschil in verschil',
       tabel:{titel:TITEL, leen:true, bevat:true, verandering:true},
-      voor:'<p>Je hebt S al, uit stap 7. Er is een tweede weg naartoe, met alleen de verbeteringen uit de tabel. Die weg rekent hier na of je goed zat.</p>',
+      voor:kl('<p>Je hebt S al, uit ' + stap('s') + '. Er is een tweede weg naartoe, met alleen de verbeteringen uit de tabel. Die weg rekent hier na of je goed zat.</p>'),
       vraag:'Reken eerst verbetering I min verbetering II uit, dan verbetering III min verbetering IV. Hoeveel verschillen die twee uitkomsten?',
       invoer:{soort:'getal', goed:(r.vI - r.vII) - (r.vIII - r.vIV), gelijkAanT:true},
       hint:'Schrijf I − II eerst uit in stukjes: (H/M + X + T + S) − (H/M + T). Wat blijft er over? Doe daarna hetzelfde met III − IV.',
@@ -609,39 +659,39 @@
           ['(I − II) − (III − IV)', ['(X + S) − X', 'S']],
           ['(I − II) − (III − IV)', ['(' + g(r.vI) + ' − ' + gh(r.vII) + ') − (' + g(r.vIII) + ' − ' + gh(r.vIV) + ')', g(a) + ' − ' + gh(c), g(a - c)]]
         ]) +
-        P('Hetzelfde getal als in stap 7, langs een andere weg: twee keer het effect van de therapie, en het verschil daartussen. Zo’n verschil in verschil heet een <i>interactie</i>.') +
+        P('Hetzelfde getal als in ' + stap('s') + ', langs een andere weg: twee keer het effect van de therapie, en het verschil daartussen. Zo’n verschil in verschil heet een <i>interactie</i>.') +
         didFiguur(a, c); } },
 
-    // Stap 9 heet niet meer "Tot slot": daarna komen nog twee treden, en Michelle (8-10) las "tot slot" als
-    // "klaar" en stapte uit. De toegift wordt nu aangekondigd, en stap 9 sluit de ladder hardop af.
-    { titel:'De proef op de som: de kale tabel',
+    // De slotvraag heet niet "Tot slot": daarna komen nog twee treden, en Michelle (8-10) las "tot slot" als
+    // "klaar" en stapte uit. De toegift wordt aangekondigd, en de slotvraag sluit de ladder hardop af.
+    kaal: { titel:'De proef op de som: de kale tabel',
       tabel:{titel:TITEL},
       voor:'<p>Nog één keer, maar nu zonder geleende voormetingen en zonder kolom <i>bevat</i>: alleen de kale tabel, zoals je hem in een artikel tegenkomt. Lukt dit, dan is de ladder af.</p>',
       vraag:'Wat is de beste schatting van S, de sensitisatie?',
       // T, S, X, X + S, X + T + S (nameting I − nameting IV: de natuurlijkste fout uit een kale tabel, Jeanne 8-10) en alles
       invoer:{soort:'keuze', opties:[r.T, r.S, r.X, r.X + r.S, r.X + r.T + r.S, r.vI].sort(function(a, c){ return a - c; }), gelijkAanT:true},
-      hint:'Sensitisatie is S: wat voormeting en therapie samen extra doen met de kwaliteit van leven. Elk fout antwoord is een stukje dat je vergat eraf te halen, of het verkeerde stukje. Je mag de voormeting lenen zoals in stap 2; het kan ook zonder, met de som van stap 8 maar dan met nametingen.',
+      hint:'Sensitisatie is S: wat voormeting en therapie samen extra doen met de kwaliteit van leven. Elk fout antwoord is een stukje dat je vergat eraf te halen, of het verkeerde stukje. Je mag de voormeting lenen zoals in ' + stap('leen') + '; het kan ook zonder, met de som van ' + stap('did') + ' maar dan met nametingen.',
       uit:function(){ var a = GETALLEN.naI - GETALLEN.naII, c = GETALLEN.naIII - GETALLEN.naIV;
-        return WELKE + P('Die van stap 7, met de geleende voormeting, geeft S = ' + g(r.S) + '. Het kan ook zonder lenen: de som van stap 8, maar dan met nametingen. De geleende voormeting valt daar weg, want III en IV kregen dezelfde; en I en II hebben dezelfde echte voormeting.') +
+        return WELKE + P('Die van ' + stap('s') + ', met de geleende voormeting, geeft S = ' + g(r.S) + '. Het kan ook zonder lenen: de som van ' + stap('did') + ', maar dan met nametingen. De geleende voormeting valt daar weg, want III en IV kregen dezelfde; en I en II hebben dezelfde echte voormeting.') +
         som('S', ['(nameting I − nameting II) − (nameting III − nameting IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(a - c)]) +
         P('De andere antwoorden:') +
-        '<ul>' + stappen[8].invoer.opties.filter(function(o){ return !gelijk(o, r.S); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
+        '<ul>' + ST.kaal.invoer.opties.filter(function(o){ return !gelijk(o, r.S); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
         (gelijk(r.S, r.T) ? P('En let op: met deze getallen is T óók ' + g(r.T) + '. Rekende je T uit in plaats van S, dan was je antwoord goed en je som fout.') : '') +
         P('Hiermee is de ladder af. Wat volgt is een toegift: dezelfde sommen, maar dan als regressie.'); } },
 
     // De toegift: eerst de makkelijke vraag (b0 aflezen), dan pas de ketting (b3). Michelle (8-10): met b3
     // vooraan was de moeilijkste trede de eerste na de finish, en Jeanne: "elk stapje vraagt één ding" hield
     // negen treden en brak daar.
-    { titel:'En dit is een regressie: de nameting', toegift:true,
+    regNa: { titel:'En dit is een regressie: de nameting', toegift:true,
       tabelReg:'na',
-      voor:'<p>Alles wat je deed, kun je ook als regressie schrijven. Maak van de tabel twee schakelaars: ' + SV + ' is 1 als de groep een voormeting kreeg en anders 0; ' + SW +
-        ' is 1 als de groep de therapie kreeg en anders 0. Let op: die schuine ' + SW + ' is een schakelaar, niet het stukje X van ' + pt(r.X) + '; dat stukje komt zo terug als een gewicht. De nameting is <i>Y</i>, en het model is:</p>' +
+      voor:'<p>Alles wat je deed, kun je ook als regressie schrijven. Maak van de tabel twee schakelaars, en schrijf ze voluit: <i>' + SV + '</i> is 1 als de groep een voormeting kreeg en anders 0; <i>' + SW +
+        '</i> is 1 als de groep de therapie kreeg en anders 0. De nameting is <i>Y</i>, en het model is:</p>' +
         '<p class="model">' + MODEL + '</p>' +
-        '<p>Vul je voor een groep een 0 in, dan valt die term weg; vul je een 1 in, dan blijft het gewicht staan. ' + VX + ' is alleen 1 als allebei 1 zijn. Dat ziet er nieuw uit, maar het zijn dezelfde vier sommen als in stap 4 tot en met 7: alleen heten de stukjes nu <i>b</i>.</p>',
+        '<p>Vul je voor een groep een 0 in, dan valt die term weg; vul je een 1 in, dan blijft het gewicht staan. Het product ' + VX + ' is alleen 1 als allebei 1 zijn. Dat ziet er nieuw uit, maar het zijn dezelfde vier sommen als in ' + stapTotMet('hm', 's') + ': alleen heten de stukjes nu <i>b</i>.</p>',
       vraag:'Hoe groot is ' + b(0) + '?',
       invoer:{soort:'getal', goed:rb.na.b0},
       hint:'Groep IV heeft ' + SV + ' = 0 en ' + SW + ' = 0, dus alles valt weg behalve ' + b(0) + '. Welke nameting is dat?',
-      uit:function(){ return WELKE + P('Eerst wat het model per groep zegt, naast de boekhouding van stap 3:') +
+      uit:function(){ return WELKE + P('Eerst wat het model per groep zegt, naast de boekhouding van ' + stap('stukjes') + ':') +
         MODEL_PER_GROEP +
         P('Dan van onder naar boven, net als de ladder: groep IV geeft ' + b(0) + ', groep III geeft ' + b(2) + ', groep II geeft ' + b(1) + ', en groep I geeft ' + b(3) + '.') +
         somBlok([
@@ -650,20 +700,20 @@
           [b(1), ['nameting II − ' + b(0), g(GETALLEN.naII) + ' − ' + gh(rb.na.b0), g(rb.na.b1)]],
           [b(3), ['nameting I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(GETALLEN.naI) + ' − ' + gh(rb.na.b0) + ' − ' + gh(rb.na.b1) + ' − ' + gh(rb.na.b2), g(rb.na.b3)]]
         ]) +
-        P('Ze zien er iets anders uit dan in stap 5: daar trok je eerst de voormeting ' + g(r.leen) + ' af en dan H/M ' + g(r.HM) + '; hier zitten die twee samen in ' + b(0) + ' = ' + g(rb.na.b0) + ', dus trek je ze in één keer af.') +
-        P(b(2) + ' is X, wat de therapie doet. ' + b(1) + ' is T, wat de voormeting doet. En ' + b(3) + ', het gewicht van de interactie ' + VX + ', is S: de sensitisatie ís de interactie.') +
+        P('Ze zien er iets anders uit dan in ' + stap('x') + ': daar trok je eerst de voormeting ' + g(r.leen) + ' af en dan H/M ' + g(r.HM) + '; hier zitten die twee samen in ' + b(0) + ' = ' + g(rb.na.b0) + ', dus trek je ze in één keer af.') +
+        P(b(2) + ' is X, wat de therapie doet. ' + b(1) + ' is T, wat de voormeting doet. En ' + b(3) + ', het gewicht van het product ' + VX + ', is S: de sensitisatie ís de interactie.') +
         P('Maar kijk naar ' + b(0) + ', de nameting van wie niets kreeg. Daar zit het startniveau in, waar iedereen gemiddeld begon (de geleende voormeting), én H/M:') +
         som(b(0), ['startniveau + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
         P('In deze regressie zie je H/M dus niet los: het zit in ' + b(0) + ' verstopt.') +
         trapReg('na'); } },
 
-    { titel:'En dit is een regressie: de verbetering', toegift:true,
+    regVer: { titel:'En dit is een regressie: de verbetering', toegift:true,
       tabelReg:'ver',
       voor:'<p>Hetzelfde model, maar nu is <i>Y</i> niet de nameting maar de verbetering: nameting min voormeting, voor III en IV met de geleende voormeting.</p>' +
         '<p class="model">' + MODEL + '</p>',
       vraag:'Hoe groot is ' + b(3) + ' nu, het gewicht van ' + VX + '?',
       invoer:{soort:'getal', goed:rb.ver.b3},
-      hint:'Van onder naar boven, net als in stap 10: eerst ' + b(0) + ' uit groep IV, dan ' + b(2) + ' uit III, ' + b(1) + ' uit II, en ' + b(3) + ' uit I.',
+      hint:'Van onder naar boven, net als in ' + stap('regNa') + ': eerst ' + b(0) + ' uit groep IV, dan ' + b(2) + ' uit III, ' + b(1) + ' uit II, en ' + b(3) + ' uit I.',
       uit:function(){ return WELKE + P('Dezelfde vier, nu met de verbeteringen:') +
         somBlok([
           [b(0), ['verbetering IV', g(rb.ver.b0)]],
@@ -671,14 +721,16 @@
           [b(1), ['verbetering II − ' + b(0), g(r.vII) + ' − ' + gh(rb.ver.b0), g(rb.ver.b1)]],
           [b(3), ['verbetering I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(r.vI) + ' − ' + gh(rb.ver.b0) + ' − ' + gh(rb.ver.b1) + ' − ' + gh(rb.ver.b2), g(rb.ver.b3)]]
         ]) +
-        P(b(3) + ' is S, net als in stap 7. En nu is ' + b(0) + ' precies H/M: de verbetering van wie niets kreeg. De andere twee bleven wat ze waren: ' + b(1) + ' is T, ' + b(2) + ' is X.') +
+        P(b(3) + ' is S, net als in ' + stap('s') + '. En nu is ' + b(0) + ' precies H/M: de verbetering van wie niets kreeg. De andere twee bleven wat ze waren: ' + b(1) + ' is T, ' + b(2) + ' is X.') +
         '<table class="data"><caption>Wat het gewicht ' + b(0) + ' betekent, per afhankelijke variabele</caption>' +
         '<tr><th>afhankelijke variabele</th><th>' + b(0) + ' betekent</th><th>' + kl('H/M') + ' los te zien?</th></tr>' +
         '<tr><td>nameting</td><td>startniveau + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>nee</td></tr>' +
         '<tr><td>verbetering</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>ja</td></tr></table>' +
         P('Elk regressiegewicht is een stukje uit de som van het ontwerp, en de interactie ' + VX + ' is de sensitisatie. Of je H/M los ziet, hangt af van wat je als <i>Y</i> kiest.') +
         trapReg('ver'); } }
-  ];
+  };
+  var stappen = VOLGORDE.map(function(k){ if (!ST[k]) throw new Error('VOLGORDE noemt een trede die niet bestaat: ' + k); return ST[k]; });
+  if (stappen.length !== Object.keys(ST).length) throw new Error('niet elke trede staat in VOLGORDE');
 
   // waar komt een fout antwoord op de slotvraag vandaan? Elke som van stukjes wordt geprobeerd, en elke
   // rechttoe-rechtaan weg door de kale tabel (nameting min nameting) die op dat getal uitkomt; niets getypt.
@@ -769,7 +821,7 @@
   document.getElementById('aantal-toegift').textContent = woord(nToegift);
 
   document.getElementById('ladder').innerHTML = stappen.map(function(st, i){
-    return '<section class="trede" id="stap-' + (i + 1) + '"><div class="stapnr">' + (st.toegift ? 'Toegift · ' : '') + 'Stap ' + (i + 1) + ' van ' + stappen.length + '</div>' +
+    return '<section class="trede' + (st.zwaard ? ' heeft-zwaard' : '') + '" id="stap-' + (i + 1) + '"><div class="stapnr">' + (st.toegift ? 'Toegift · ' : '') + 'Stap ' + (i + 1) + ' van ' + stappen.length + '</div>' +
       '<h3>' + kl(st.titel) + '</h3>' + (st.voor || '') +
       '<div class="tabelvak">' + (st.tabelReg ? tabelReg(GETALLEN, st.tabelReg) : tabel(GETALLEN, st.tabel)) + '</div>' +
       '<p class="vraag">' + kl(st.vraag) + '</p>' + invoerHTML(st, i) +
@@ -836,7 +888,6 @@
   tijdlijn(document.getElementById('tijdlijn'), GETALLEN);
 
   // ===== de waterval: de verbetering van groep I, stukje voor stukje =====
-  var KLEUR = {HM:'hm', X:'x', T:'t', S:'s'};
   // een regressiegewicht als svg-tekst: cursieve b met het cijfer er klein onder
   function bTekst(ouder, att, i){
     var t = el(ouder, 'text', att);
@@ -909,8 +960,8 @@
   function trapReg(soort){
     var rr = los(GETALLEN), q = regressie(GETALLEN);
     var tekst = soort === 'na'
-      ? 'Dezelfde trap als in stap 7, maar de vloer ligt op ' + g(rr.leen) + ': de geleende voormeting. De eerste trede, H/M, eindigt op ' + g(q.na.b0) + ', en dat is ' + b(0) + '. Daarom zit H/M erin verstopt.'
-      : 'De trap van stap 7, met de gewichten eronder: ' + b(0) + ' is de eerste trede, H/M; ' + b(3) + ' de laatste, S.';
+      ? 'Dezelfde trap als in ' + stap('s') + ', maar de vloer ligt op ' + g(rr.leen) + ': de geleende voormeting. De eerste trede, H/M, eindigt op ' + g(q.na.b0) + ', en dat is ' + b(0) + '. Daarom zit H/M erin verstopt.'
+      : 'De trap van ' + stap('s') + ', met de gewichten eronder: ' + b(0) + ' is de eerste trede, H/M; ' + b(3) + ' de laatste, S.';
     return '<figure class="mini"><svg class="mini-wv" data-tot="4" data-soort="' + soort + '" viewBox="0 0 460 262" role="img" aria-label="' + tekst.replace(/<[^>]+>/g, '') + '"></svg>' +
       '<figcaption>' + kl(tekst) + '</figcaption></figure>';
   }
@@ -1032,12 +1083,15 @@
   bord();
 
   // ===== de ingevulde kaart =====
+  // Elke som in de kaart staat op twee regels met één "=" per regel (Bens regel van 8-10-2026, "niet doorbreien").
+  // De linkerkant is in een cel steeds hetzelfde woord, dus de =-tekens staan vanzelf onder elkaar.
+  function kaartSom(links, rechts, uitkomst){ return kl(links + ' = ' + rechts) + '<br>' + kl(links + ' = ' + uitkomst); }
   document.getElementById('volle-kaart').innerHTML = '<table class="data kaart"><caption>De Solomon-kaart, ingevuld met de getallen van de ladder</caption>' +
     '<tr><th>effect</th><th>welke groepen vergelijk je?</th><th>de som</th><th>wat je aanneemt</th></tr>' +
-    '<tr><td>' + kl('H/M') + '</td><td>IV, met de geleende voormeting</td><td>' + kl('H/M = ' + g(GETALLEN.naIV) + ' − ' + gh(r.leen) + ' = ' + g(r.HM)) + '</td><td>III en IV begonnen gemiddeld zoals I en II (het lot)</td></tr>' +
-    '<tr><td>' + kl('X') + '</td><td>III tegen IV</td><td>' + kl('X = ' + g(r.vIII) + ' − ' + gh(r.HM) + ' = ' + g(r.X)) + '</td><td>wat vanzelf beter wordt, wordt in III en IV even hard beter</td></tr>' +
-    '<tr><td>' + kl('T') + '</td><td>II tegen IV</td><td>' + kl('T = ' + g(r.vII) + ' − ' + gh(r.HM) + ' = ' + g(r.T)) + '</td><td>wat vanzelf beter wordt, wordt in II en IV even hard beter</td></tr>' +
-    '<tr><td>' + kl('S') + '</td><td>I tegen II, III en IV</td><td>' + kl('S = ' + g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T) + ' = ' + g(r.S)) + '</td><td>de stukjes tellen op; wat overblijft is S</td></tr></table>';
+    '<tr><td>' + kl('H/M') + '</td><td>IV, met de geleende voormeting</td><td class="somcel">' + kaartSom('H/M', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)) + '</td><td>III en IV begonnen gemiddeld zoals I en II (het lot)</td></tr>' +
+    '<tr><td>' + kl('X') + '</td><td>III tegen IV</td><td class="somcel">' + kaartSom('X', g(r.vIII) + ' − ' + gh(r.HM), g(r.X)) + '</td><td>wat vanzelf beter wordt, wordt in III en IV even hard beter</td></tr>' +
+    '<tr><td>' + kl('T') + '</td><td>II tegen IV</td><td class="somcel">' + kaartSom('T', g(r.vII) + ' − ' + gh(r.HM), g(r.T)) + '</td><td>wat vanzelf beter wordt, wordt in II en IV even hard beter</td></tr>' +
+    '<tr><td>' + kl('S') + '</td><td>I tegen II, III en IV</td><td class="somcel">' + kaartSom('S', g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.S)) + '</td><td>de stukjes tellen op; wat overblijft is S</td></tr></table>';
 })();
 </script>
 </body>
