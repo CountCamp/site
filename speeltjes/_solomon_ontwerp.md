@@ -203,6 +203,66 @@ het staat nu op de eerste snede en leunt naar rechts boven X.
 - **De aannametabel staat ná de ladder** en de andere namen staan in een uitklapper onderaan (stuk 1, na Michelle en
   Jeanne).
 
+## Wat de testlezers en de APA-lens zeiden in stuk 1c, en wat er veranderde
+
+Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.quarto/kladje_solomon/dom1c.html`), Jeanne en de
+lens ook de bron. Michelle las tot en met stap 10 zonder uit te vallen (stap 11 gokte ze goed), Jeanne liep nergens
+weg, de lens rekende alle getallen na en vond er geen fout.
+
+- **Alle drie, onafhankelijk: er stond kapotte tekst op de bladzij.** In de uitklapper *"hoe toets je of S echt van
+  nul verschilt"* toonde de browser letterlijk *"en niet de X">8 van b₂"*. Oorzaak: `kl()` liep over de `innerHTML`
+  van elke `.kl`-alinea en ving ook de X in het attribuut `data-r="X"`. Dat zat al in de proefdruk van 1b. Nu loopt
+  de streep-pas alleen over tekstknopen (`createTreeWalker`), en de lens merkte terecht op dat dit een klasse was,
+  geen incident: elke toekomstige attribuutwaarde met een losse X, T of S zou stil hetzelfde doen.
+- **Michelle en Jeanne, allebei: de ruggengraat stond verstopt.** De lopende som stond alleen in de dichtgeklapte
+  uitwerkingen; wie alles goed had en nooit een uitwerking opende, zag de som van groep I na stap 1 nooit meer, en
+  de hint van stap 7 verwees er wél naar. Nu staat de stapel-tot-nu-toe zichtbaar in de trede, tussen de tabel en
+  de vraag (*"Zo staat de som van groep I nu:"*), en toont de uitwerking alleen de vorige regel en de nieuwe
+  (`lopend(k, van)`). Michelle sloeg de herhaalde bovenregels toch al over.
+- **Michelle en Jeanne, allebei: de stukjes-tabel vóór de eerste vraag was een drempel.** Vier omschrijvingen zonder
+  getal, nog voor er iets gerekend was; Michelle zakte weg bij *"H voor wat er in de wereld gebeurt"*, Jeanne gleed
+  eroverheen en moest bij de vinkjes terug. De tabel staat nu in stap 2, waar hij nodig is; stap 1 is alleen
+  65 − 50 (Michelle: *"in drie seconden goed, dus ik ben terug"*).
+- **Michelle: het bijschrift zei "samen 15" en de lege trap liet geen 15 zien.** Het grijze totaalblok staat nu in
+  elke trap, ook als hij nog niet af is, zodat je het gat ziet slinken; het verbindingslijntje komt pas bij de laatste
+  trede.
+- **Michelle: het vinkjesrooster liep I → IV en de boekhouding IV → I.** Jeanne zag hetzelfde in stap 10 (de tabel
+  met nullen en enen I → IV, *"wat het model zegt"* IV → I). Beide tabellen staan nu I → IV, net als elke andere
+  tabel op de bladzij; *"van onder naar boven"* klopt dan letterlijk met de tabel.
+- **Michelle: "Solomon" in de titel, "Salomo" in het bijschrift las als een tikfout**, en in het verhaal snijdt het
+  zwaard juist niet. Het bijschrift noemt nu de twee naamgenoten (Richard Solomon bedacht het ontwerp, koning Salomo
+  liet een zwaard halen). Dat het oordeel eigenlijk is dat de snede uitblijft, staat er niet; de titel is Bens keuze.
+- **Jeanne: "groep IV geeft b₀, groep III geeft b₂, groep II geeft b₁, en groep I geeft b₃" las als een tikfout**
+  (0, 2, 1, 3). Er staat nu bij waarom de nummers de ladder kruisen: in het model staat voormeting vóór therapie,
+  dus T kreeg *b*₁ en X *b*₂, terwijl de ladder eerst X vindt. Bens volgorde van het model is gehouden.
+- **Jeanne: "voormeting = 0" in de hint las als de score 0.** Nu: *"de schakelaar voormeting op 0"*. Haar grotere
+  punt blijft staan: *voormeting* is in stap 10 een schakelaar (0/1), een score (50) én heet ook *startniveau*. De
+  X-botsing is weg; een kleinere voormeting-botsing is ervoor in de plaats gekomen, en de zin die hem uitlegt staat
+  er eerlijk bij.
+- **Jeanne en de lens: de tabelkop "therapie (X)" en het hokje "X" in de tijdlijn droegen nog een tweede X**, de
+  gebeurtenis naast het stukje. De kop heet nu *therapie*, het hokje in de tijdlijn zegt *therapie*. De enige X op
+  de bladzij is nu het stukje.
+- **Jeanne: "voormeting III en IV" als naam van één getal** las als "voormeting III, en IV". Nu heet dat getal
+  overal *geleende voormeting*, en stap 3 zegt dat hardop.
+- **Jeanne: "want groep I kreeg alles" is een bewering, geen reden** waarom de vier optellen. Stap 1 zegt nu dat het
+  een afspraak is: wat er in groep I overblijft als je de andere drie eraf haalt, noem je S.
+- **De lens: de zwaard-etiketten "T 1" lazen als T1, een meetmoment.** Nu *T = 1*, net als het bijschrift; het eerste
+  etiket begint bij de linkerrand, weg van het zwaard. En: een streepje in een tabel zonder noot (de kale tabel van
+  stap 9 *"zoals je hem in een artikel tegenkomt"*); elke tabel zonder geleende voormeting draagt nu *"Een streepje:
+  die groep deed geen voormeting."*
+- **De lens over de woorden in het model: rechtop is goed** (APA 7 §6.44 cursiveert letters als symbool, geen
+  woorden; ISO 80000-2 zet meerletterige namen rechtop), de middenstip is goed en consequent, cursief bij de
+  introductie en daarna rechtop is APA 7 §6.22. Haakjes om het product zijn geen regel; een keuze voor Ben. Een
+  getal links van het =-teken in de lopende som mag en is hier juist, zolang de keten omdraait zodra S wordt
+  opgelost; dat doet hij. Bewust niet veranderd: getalkolommen rechts in plaats van gecentreerd (al in 1b besloten),
+  tabellen zonder nummer (huisconventie in de speeltjes), en de stip in plaats van × als naam van de interactieterm
+  (één teken over de hele bladzij).
+- **Niet veranderd, wel gemeld.** Michelle: stap 8 vraagt drie berekeningen voor één invulvak (bestond al). Michelle:
+  bij de hint van stap 7 zou de zwaardbalk al drie sneden mogen hebben (2 | 8 | 1 | ?) zodat S van het plaatje te
+  lezen is; nu is de balk vóór het antwoord één stuk, zoals Ben het zwaard vroeg. Jeanne: de waarschuwing dat sommige
+  boeken T *pretest-sensitisatie* noemen staat ná de ladder; Michelle wilde hem in stuk 1 juist niet in de ladder.
+  Jeanne: *"15 − 2 − 8 − 1"* (stap 7, kaart) tegen *"15 − 2 − 1 − 8"* (stap 11, in *b*-volgorde).
+
 ## Wat de testlezers en de APA-lens zeiden in stuk 1b, en wat er veranderde
 
 Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.html`), Jeanne en de lens ook de bron.
@@ -285,3 +345,9 @@ Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.ht
 3. De bron naar `countcamp_lab/boek/04_speeltjes/` en `KIST` in `bouw_speelkist.py`: perswerk.
 4. De volgorde van stap 2 en 3 (boekhouding vóór lenen) wijkt af van Bens eigen volgorde (lenen eerst); zie *De
    ladder*. Als hij zijn volgorde wil, is het één verwisseling in `VOLGORDE`.
+5. **De leen-stap valt met 50 en 50 niet te toetsen** (Michelle én Jeanne, 1c): het gemiddelde van 50 en 50 is 50,
+   of je nu middelt of overschrijft, dus "(50 + 50) / 2 = 50" ziet eruit als een som om niets. Ongelijke voormetingen
+   (bijvoorbeeld 48 en 52) zouden het lenen echt laten zien, maar dan klopt de weg zonder lenen in stap 9 niet meer
+   (dat eist `solomon_getallen_test.py` ook). Twee goede dingen die elkaar bijten; aan Ben welke wint. Nu wint stap 9.
+6. Haakjes om het product in het model, *b*₃·(voormeting·therapie)? De lens: geen regel, een keuze; het is één
+   constante (`MODEL`), dus hij geldt dan meteen op alle drie de plekken.
