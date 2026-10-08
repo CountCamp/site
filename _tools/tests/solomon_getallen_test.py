@@ -57,6 +57,10 @@ def main():
     for naam, v in st.items():
         if abs(v) < 1e-9:
             fouten.append("stukje %s is 0: dan zie je het in geen enkele som" % naam)
+    # stap 9 rekent S uit de kale tabel zonder lenen: (naI - naII) - (naIII - naIV). Dat is alleen S als de
+    # twee echte voormetingen gelijk zijn; anders zit hun verschil erin en liegt de uitwerking.
+    if abs(d["voorI"] - d["voorII"]) > 1e-9:
+        fouten.append("voormeting I (%g) en II (%g) verschillen: de som zonder lenen in stap 9 geeft dan niet S" % (d["voorI"], d["voorII"]))
     sommen = {}
     for n in range(1, 5):
         for c in combinations(st, n):
