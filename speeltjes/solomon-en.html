@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The judgement of Solomon — dissect the design</title>
-<meta name="description" content="The Solomon four-group design taken apart: history and maturation (H/M), the testing effect (T), pretest sensitization (S) and the treatment (X). Step by step, with the numbers, and as an encore the same sums as a regression.">
+<meta name="description" content="The Solomon four-group design taken apart: history and maturation (H/M), the testing effect (T), pretest sensitization (S) and the treatment (X). Step by step, with the numbers, and as an encore the same sums as a regression. So you know exactly what you corrected for when someone tries to explain the effect of your therapy away.">
 <!-- This is the English twin of solomon.html (piece 2, 8-10-2026). The code is identical; only the reader-facing
      strings differ. The comments in the CSS and the script are kept in Dutch on purpose, the same as in the
      Dutch page, so that a diff of the two files shows nothing but the translated text. Change the code in both.
@@ -214,10 +214,13 @@
   /* ===== het speelbord ===== */
   .presets{display:flex;flex-wrap:wrap;gap:8px;margin:.6rem 0 .9rem}
   .presets button{font-size:14px}
-  .schuiven{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;margin:.4rem 0 .8rem}
-  .schuiven label{display:grid;grid-template-columns:8.5em 1fr 2.2em;align-items:center;gap:8px;font-size:15px}
-  .schuiven input[type=range]{width:100%;accent-color:var(--accent)}
-  .schuiven output{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  /* de zes schuifjes staan in de vorm van de ontwerptabel (Ben, 8-10-2026: "deze beter zo organiseren als het
+     design zelf, dan is dat lekker herhaling"): een rij per groep, I en II met een voormeting-schuifje, III en IV
+     met de geleende voormeting als uitgerekend getal, en voor alle vier een nameting-schuifje. Tot stuk 2b
+     stonden ze als zes losse regels in een raster van twee kolommen. */
+  td.schuif{white-space:nowrap}
+  td.schuif input[type=range]{width:120px;vertical-align:middle;margin:0 6px 0 0;accent-color:var(--accent)}
+  td.schuif output{display:inline-block;min-width:2em;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
   .oordeel{font-size:17px;border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:.8rem 0;min-height:3.2em}
   .sommen4{display:grid;grid-template-columns:auto auto;justify-content:start;gap:0 40px;align-items:start}
   td.bevat{white-space:nowrap}
@@ -230,6 +233,19 @@
   table.kaart th:nth-child(3){width:34%} table.kaart th:nth-child(4){width:30%}
   table.kaart td[contenteditable]:focus{box-shadow:inset 0 0 0 1px var(--accent)}
   table.kaart td:first-child{white-space:nowrap;font-weight:600}
+  /* de ingevulde kaart heeft een vijfde kolom: welke twijfel elk stukje beantwoordt (Ben, 8-10-2026). Op een smal
+     scherm verdwijnt die kolom en staat dezelfde tekst klein onder de letter, zodat de kaart op 390 px leesbaar
+     blijft; de lege kaart houdt vier kolommen, want daar zijn de vakjes om in te typen al krap. */
+  table.kaart.vijf th:nth-child(1){width:9%} table.kaart.vijf th:nth-child(2){width:22%}
+  table.kaart.vijf th:nth-child(3){width:28%} table.kaart.vijf th:nth-child(4){width:23%} table.kaart.vijf th:nth-child(5){width:18%}
+  .twijfel-klein{display:none}
+
+  /* ===== de twijfelaar: per trede het bezwaar dat die trede beantwoordt (Ben, 8-10-2026: "bij een gevonden
+     verschil kan een kriticus het effect wegverklaren, en dat wil je voor zijn") ===== */
+  .twijfel{font-size:16px;margin:.5rem 0 .7rem;padding:2px 0 2px 12px;border-left:3px solid var(--vaag)}
+  .twijfel .wie{font-weight:600;color:var(--dim)}
+  .twijfel-hm{border-left-color:var(--c-hm)} .twijfel-x{border-left-color:var(--c-x)}
+  .twijfel-t{border-left-color:var(--c-t)} .twijfel-s{border-left-color:var(--c-s)}
 
   .foot{margin-top:34px;color:var(--vaag);font-size:13px;font-style:italic;line-height:1.6}
   .foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
@@ -240,7 +256,10 @@
   @media (max-width:700px){
     .wrap{padding:22px 14px 56px}
     h1{font-size:27px}
-    .schuiven,.sommen4{grid-template-columns:1fr}
+    .sommen4{grid-template-columns:1fr}
+    td.schuif input[type=range]{width:78px}
+    .twijfelkol{display:none}
+    .twijfel-klein{display:block;white-space:normal;font-weight:400;font-size:12.5px;line-height:1.3;color:var(--dim);max-width:6.5em}
     table.data{font-size:15px} table.data th,table.data td{padding:4px 9px 4px 3px}
     table.som{font-size:15.5px}
     table.kaart{font-size:14px} table.kaart th,table.kaart td{padding:5px 4px}
@@ -255,7 +274,7 @@
       --accent:#444; --goed:#222; --fout:#222; --knop:#fff; --knop-hover:#fff;
       --c-hm:#2a78d6; --c-x:#eb6834; --c-t:#1baf7a; --c-s:#4a3aa7; --schaduw:none;
     }
-    .kopregel,details,.invoer,.terugmelding,.presets,.schuiven,.matrix input,.keuzes,.zijmenu,.topmenu{display:none!important}
+    .kopregel,details,.invoer,.terugmelding,.presets,td.schuif input,.matrix input,.keuzes,.zijmenu,.topmenu{display:none!important}
     .trede{margin-top:48px}
     .trede,.kader,figure,table{break-inside:avoid}
     .zwaard *{transition:none!important}
@@ -284,11 +303,18 @@
   <!-- De vier namen staan met opzet al in de eerste alinea (Ben, 8-10-2026: "ook voor zoekmachines, maar ook dat
        mensen meteen zien wat ze zochten"). De Engelse namen volgen Campbell & Stanley (1963): history, maturation,
        testing, en "interaction of testing and X"; de gangbare naam voor die interactie is pretest sensitization. -->
-  <p class="lede kl">The Solomon four-group design (Richard L. Solomon, 1949): four groups, one therapy, and a questionnaire about quality of
-  life. Every group got better, and the improvement of each group is made of different pieces: what gets better by
-  itself (<i>history</i> and <i>maturation</i>, H/M), what the therapy does (the treatment, X), what the pretest
-  itself does (the testing effect, T), and what pretest and therapy do together on top of that (pretest
-  sensitization, S). You take them apart: first the equation for group I, then one piece per step, until only S is left.</p>
+  <!-- Het doel staat vooraan (Ben, 8-10-2026: "Als onderzoeker wil je zo graag bewijzen dat je manipulatie echt
+       gewerkt heeft, maar bij een gevonden verschil kan een kriticus het effect wegverklaren, en dat wil je voor
+       zijn, en hem precies kunnen vertellen waarvoor jij hebt gecorrigeerd, maar dan op een chillere manier").
+       De drie bezwaren in de eerste alinea zijn zijn eigen woorden, vertaald. -->
+  <p class="lede kl">You gave a therapy, and quality of life went up. Now you want to show that the therapy did that. But
+  a sceptic has another explanation ready in no time: it was just the passing of time, it was that questionnaire
+  beforehand, it only worked because they had already been thinking about it. That is what the Solomon four-group
+  design (Richard L. Solomon, 1949) is for: four groups, one therapy, and in the improvement of each group different
+  pieces: what gets better by itself (<i>history</i> and <i>maturation</i>, H/M), what the therapy does (the
+  treatment, X), what the pretest itself does (the testing effect, T), and what pretest and therapy do together on
+  top of that (pretest sensitization, S). You take them apart, one piece per step, until only S is left. That way
+  you get there before the sceptic does: you can say exactly what you corrected for.</p>
 
   <h2 id="ontwerp">The design</h2>
   <p>A group of people gets a therapy that is meant to improve their quality of life. You measure that quality of
@@ -347,10 +373,11 @@
   </details>
 
   <h2 id="speelbord">Play with the numbers yourself</h2>
-  <p class="kl">Six sliders: the two pretests and the four posttests. The calculations follow along, in the same order as the
-  ladder: first H/M, then X, then T, and S last. The buttons set up a known case.</p>
+  <p class="kl">Six sliders, laid out like the design table: the two pretests and the four posttests. Groups III and IV
+  borrow their pretest, just as in the ladder; that number moves along. The calculations follow along, in the same
+  order as the ladder: first H/M, then X, then T, and S last. The buttons set up a known case.</p>
   <div class="presets" id="presets"></div>
-  <div class="schuiven" id="schuiven"></div>
+  <div class="tabelvak" id="schuiven"></div>
   <p class="oordeel" id="oordeel" aria-live="polite"></p>
   <figure>
     <svg id="waterval" viewBox="0 0 460 262" role="img" aria-labelledby="wv-cap"></svg>
@@ -368,6 +395,9 @@
   those pieces apart. For that you need groups that differ in one thing only, the way II and IV here differ only in
   the pretest. So for every effect you want to know, look for the two groups that yield it. If you cannot find them
   in your design, you cannot see that effect on its own either.</p>
+  <p class="kl">And that is what you can tell the sceptic: “it got better by itself” you have answered as soon as you have
+  a group without therapy, “it was the questionnaire” only once you also have a group without a pretest. Whatever
+  your design cannot answer, you say so yourself, before they ask.</p>
   <p class="kl">And S is a difference in differences: the effect of the therapy on quality of life with a pretest, minus
   the effect of the therapy on quality of life without a pretest. That is called an interaction, and that is what
   <a href="https://countcamp.org/manuscript/h10.html" hreflang="nl">chapter 10 of the (Dutch) book, <i lang="nl">Verschil in verschil</i></a>, is about.</p>
@@ -564,14 +594,24 @@
     h += '<tr><th>group</th><th class="getal">pretest</th><th>therapy</th><th class="getal">posttest</th>' +
          (o.verandering ? '<th class="getal">improvement</th>' : '') + (o.bevat ? '<th>contains</th>' : '') + '</tr>';
     rijen.forEach(function(w){
-      var voor = w.voor !== null ? g(w.voor) : (o.leen ? '<span class="geleend">(' + g(r.leen) + ')</span>' : '–');
-      h += '<tr' + ((o.licht || []).indexOf(w.g) >= 0 ? ' class="licht"' : '') + '><td>' + w.g + '</td><td class="getal">' + voor +
-           '</td><td>' + (w.x ? 'yes' : 'no') + '</td><td class="getal">' + g(w.na) + '</td>' +
+      var voor, na, cel = o.schuif ? 'schuif' : 'getal';
+      // o.schuif: dezelfde tabel, maar met een schuifje in elke gemeten cel en de geleende voormeting als getal
+      // dat meeschuift (Ben, 8-10-2026: "deze beter zo organiseren als het design zelf, dan is dat lekker herhaling")
+      if (o.schuif){
+        voor = w.voor !== null ? o.schuif('voor' + w.g) : '<span class="geleend" data-leen>(' + g(r.leen) + ')</span>';
+        na = o.schuif('na' + w.g);
+      } else {
+        voor = w.voor !== null ? g(w.voor) : (o.leen ? '<span class="geleend">(' + g(r.leen) + ')</span>' : '–');
+        na = g(w.na);
+      }
+      h += '<tr' + ((o.licht || []).indexOf(w.g) >= 0 ? ' class="licht"' : '') + '><td>' + w.g + '</td><td class="' + cel + '">' + voor +
+           '</td><td>' + (w.x ? 'yes' : 'no') + '</td><td class="' + cel + '">' + na + '</td>' +
            (o.verandering ? '<td class="getal">' + g(w.v) + '</td>' : '') +
            (o.bevat ? '<td class="bevat">' + kl(w.bevat) + '</td>' : '') + '</tr>';
     });
     var noot = [];
-    if (o.leen) noot.push('In brackets: the borrowed pretest.');
+    if (o.schuif) noot.push('In brackets: the borrowed pretest of III and IV, the mean of pretests I and II. It follows along as soon as you move a pretest.');
+    else if (o.leen) noot.push('In brackets: the borrowed pretest.');
     else if (!o.geenStreepNoot) noot.push('A dash: that group had no pretest.');   // een streepje zonder noot (APA-lens, 8-10)
     if (o.verandering) noot.push('Improvement: posttest minus pretest.');
     if (o.bevat && !o.geenBevatNoot) noot.push('The column <i>contains</i> is what you ticked in ' + stap('stukjes') + '.');
@@ -611,6 +651,33 @@
   // ===== de ladder =====
   var r = los(GETALLEN), rb = regressie(GETALLEN);
   var MATRIX_GOED = {I:['H/M','X','T','S'], II:['H/M','T'], III:['H/M','X'], IV:['H/M']};
+  // ===== de twijfelaar: per stukje het bezwaar dat het beantwoordt =====
+  // Ben, 8-10-2026: "Als onderzoeker wil je zo graag bewijzen dat je manipulatie echt gewerkt heeft, maar bij een
+  // gevonden verschil kan een kriticus het effect wegverklaren, en dat wil je voor zijn, en hem precies kunnen
+  // vertellen waarvoor jij hebt gecorrigeerd, maar dan op een chillere manier." De toon van de twijfelaar is de
+  // zijne ("Ja, vind je het gek, het was in die periode ook wel ontzettend lekker weer, dan zou ik me ook beter
+  // voelen"), als inspiratie ("ik brabbel maar wat"); de zinnen hier zijn van ons, in dezelfde droge toon in het
+  // Engels. Brutaal werkt door schaarste: de twijfelaar mag het, de rest van de bladzij niet. `kort` staat in de
+  // ingevulde kaart; `zegt` en `jij` in de trede die het stukje vindt. Geen getallen in deze zinnen: ze staan vóór
+  // de vraag, als de uitkomst nog onbekend is.
+  var TWIJFEL = {
+    HM: {kort:'it got better by itself',
+         zegt:'Well, no wonder. The weather was gorgeous those weeks; anyone would feel better.',
+         jij:'That is what group IV is for: no pretest, no therapy, only those same weeks. Whatever got better there is H/M, and I take it away everywhere.'},
+    X:  {kort:'what is left once the rest is answered',
+         zegt:'Gorgeous weather, like I said. So what is left for that therapy of yours?',
+         jij:'This. Group III had no questionnaire beforehand, so the weather is all I have to take away. What is left is the therapy: X.'},
+    T:  {kort:'the questionnaire itself did it',
+         zegt:'The same questionnaire twice? The second time round you know perfectly well what they want to hear.',
+         jij:'That is T, and group II measures it: the questionnaire beforehand, but no therapy. Whatever II improved more than IV is what the questionnaire itself does.'},
+    S:  {kort:'the therapy only worked thanks to the questionnaire',
+         zegt:'Of course it worked. First a questionnaire about how you feel and only then the therapy: they were already on it. That is not a therapy, that is a head start.',
+         jij:'That is S, and how big that head start is you work out here: without a questionnaire beforehand the therapy does X, with one X + S.'}
+  };
+  function twijfelHTML(k){
+    var t = TWIJFEL[k];
+    return '<p class="twijfel twijfel-' + KLEUR[k] + '"><span class="wie">The sceptic:</span> “' + kl(t.zegt) + '” <span class="wie">You:</span> ' + kl(t.jij) + '</p>';
+  }
   // De treden op naam; VOLGORDE (hierboven) zet ze op een rij. Bens ruggengraat (8-10-2026): eerst de som van
   // groep I als de vraag, dan lenen, dan IV, III, II, en elk gevonden stukje in die som invullen tot S overblijft.
   var ST = {
@@ -655,7 +722,7 @@
         P('That is allowed because random assignment put the groups together: on average they started out equal. You fill in a number in a place where you measured nothing. That is called <i>substitution</i>.') +
         P('Measuring is impossible here, by the way: give group III a pretest, and it has become group I.'); } },
 
-    hm: { titel:'Group IV: how big is H/M?',
+    hm: { titel:'Group IV: how big is H/M?', twijfel:'HM',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['IV']},
       tussen:somNu(0),
       vraag:'How big is H/M?',
@@ -669,7 +736,7 @@
         vergelijk('group IV, with the borrowed pretest', 'III and IV started out on average like I and II (random assignment)') +
         trap(1); } },
 
-    x: { titel:'Group III: how big is X?',
+    x: { titel:'Group III: how big is X?', twijfel:'X',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['III']},
       tussen:somNu(1),
       vraag:'How big is X?',
@@ -682,7 +749,7 @@
         vergelijk('group III with group IV (because H/M is the improvement of IV)', 'what gets better by itself gets better by the same amount in III and IV') +
         trap(2); } },
 
-    t: { titel:'Group II: how big is T?',
+    t: { titel:'Group II: how big is T?', twijfel:'T',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['II']},
       tussen:somNu(2),
       vraag:'How big is T?',
@@ -695,7 +762,7 @@
         vergelijk('group II with group IV', 'what gets better by itself gets better by the same amount in II and IV') +
         trap(3); } },
 
-    s: { titel:'Group I: how big is S?',
+    s: { titel:'Group I: how big is S?', twijfel:'S',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['I']},
       tussen:somNu(3),
       vraag:'How big is S?',
@@ -890,7 +957,7 @@
 
   document.getElementById('ladder').innerHTML = stappen.map(function(st, i){
     return '<section class="trede' + (st.zwaard ? ' heeft-zwaard' : '') + '" id="stap-' + (i + 1) + '"><div class="stapnr">' + (st.toegift ? 'Encore · ' : '') + 'Step ' + (i + 1) + ' of ' + stappen.length + '</div>' +
-      '<h3>' + kl(st.titel) + '</h3>' + (st.voor || '') +
+      '<h3>' + kl(st.titel) + '</h3>' + (st.twijfel ? twijfelHTML(st.twijfel) : '') + (st.voor || '') +
       '<div class="tabelvak">' + (st.tabelReg ? tabelReg(GETALLEN, st.tabelReg) : tabel(GETALLEN, st.tabel)) + '</div>' + (st.tussen || '') +
       '<p class="vraag">' + kl(st.vraag) + '</p>' + invoerHTML(st, i) +
       (st.zwaard ? zwaardFiguur() : '') +
@@ -1166,14 +1233,18 @@
     ['The pretest weakens the therapy',   maak(GETALLEN.voorI, GETALLEN.voorII, {HM:r.HM, T:r.T, X:r.X, S:-r.S})]
   ];
   var nu = {}; for (var k in GETALLEN) nu[k] = GETALLEN[k];
-  document.getElementById('schuiven').innerHTML = SCHUIF.map(function(s){
-    return '<label><span>' + s[1] + '</span><input type="range" min="0" max="100" step="1" id="s-' + s[0] + '" value="' + nu[s[0]] + '"><output id="o-' + s[0] + '">' + g(nu[s[0]]) + '</output></label>';
-  }).join('');
+  var SCHUIFNAAM = {}; SCHUIF.forEach(function(s){ SCHUIFNAAM[s[0]] = s[1]; });
+  // de schuifjes staan in de ontwerptabel zelf (tabel() met o.schuif), één keer gebouwd; bord() ververst alleen
+  // de geleende voormeting, zodat een schuifje onder je vinger niet opnieuw getekend wordt
+  document.getElementById('schuiven').innerHTML = tabel(nu, {titel:'Six sliders, in the shape of the design table', schuif:function(k){
+    return '<input type="range" min="0" max="100" step="1" id="s-' + k + '" value="' + nu[k] + '" aria-label="' + SCHUIFNAAM[k] + '"><output id="o-' + k + '">' + g(nu[k]) + '</output>';
+  }});
   document.getElementById('presets').innerHTML = PRESETS.map(function(p, i){ return '<button type="button" data-preset="' + i + '">' + p[0] + '</button>'; }).join('');
 
   function bord(){
     var rr = los(nu), q = regressie(nu);
-    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Your numbers', leen:true, verandering:true, bevat:true, geenBevatNoot:true});
+    [].forEach.call(document.querySelectorAll('#schuiven [data-leen]'), function(e){ e.textContent = '(' + g(rr.leen) + ')'; });
+    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Your numbers, with the improvement and the pieces added', leen:true, verandering:true, bevat:true, geenBevatNoot:true});
     document.getElementById('sb-sommen').innerHTML = '<div class="sommen4">' +
       som('H/M', ['improvement IV', g(nu.naIV) + ' − ' + gh(rr.leen), g(rr.HM)]) +
       som('X', ['improvement III − H/M', g(rr.vIII) + ' − ' + gh(rr.HM), g(rr.X)]) +
@@ -1214,12 +1285,17 @@
   // Elke som in de kaart staat op twee regels met één "=" per regel (Bens regel van 8-10-2026, "niet doorbreien").
   // De linkerkant is in een cel steeds hetzelfde woord, dus de =-tekens staan vanzelf onder elkaar.
   function kaartSom(links, rechts, uitkomst){ return kl(links + ' = ' + rechts) + '<br>' + kl(links + ' = ' + uitkomst); }
-  document.getElementById('volle-kaart').innerHTML = '<table class="data kaart"><caption>The Solomon card, filled in with the numbers of the ladder</caption>' +
-    '<tr><th>effect</th><th>which groups do you compare?</th><th>the calculation</th><th>what you assume</th></tr>' +
-    '<tr><td>' + kl('H/M') + '</td><td>IV, with the borrowed pretest</td><td class="somcel">' + kaartSom('H/M', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)) + '</td><td>III and IV started out on average like I and II (random assignment)</td></tr>' +
-    '<tr><td>' + kl('X') + '</td><td>III against IV</td><td class="somcel">' + kaartSom('X', g(r.vIII) + ' − ' + gh(r.HM), g(r.X)) + '</td><td>what gets better by itself gets better by the same amount in III and IV</td></tr>' +
-    '<tr><td>' + kl('T') + '</td><td>II against IV</td><td class="somcel">' + kaartSom('T', g(r.vII) + ' − ' + gh(r.HM), g(r.T)) + '</td><td>what gets better by itself gets better by the same amount in II and IV</td></tr>' +
-    '<tr><td>' + kl('S') + '</td><td>I against II, III and IV</td><td class="somcel">' + kaartSom('S', g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.S)) + '</td><td>the pieces add up; what is left is S</td></tr></table>';
+  // de vijfde kolom: welke twijfel dit stukje beantwoordt (Ben, 8-10-2026). Dezelfde tekst staat klein onder de
+  // letter voor een smal scherm; de CSS laat van die twee er altijd één zien.
+  function kaartRij(k, naam, groepen, somcel, aanname){
+    return '<tr><td>' + kl(naam) + '<span class="twijfel-klein">' + TWIJFEL[k].kort + '</span></td><td>' + groepen + '</td><td class="somcel">' + somcel + '</td><td>' + aanname + '</td><td class="twijfelkol">' + TWIJFEL[k].kort + '</td></tr>';
+  }
+  document.getElementById('volle-kaart').innerHTML = '<table class="data kaart vijf"><caption>The Solomon card, filled in with the numbers of the ladder</caption>' +
+    '<tr><th>effect</th><th>which groups do you compare?</th><th>the calculation</th><th>what you assume</th><th class="twijfelkol">which doubt this answers</th></tr>' +
+    kaartRij('HM', 'H/M', 'IV, with the borrowed pretest', kaartSom('H/M', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)), 'III and IV started out on average like I and II (random assignment)') +
+    kaartRij('X', 'X', 'III against IV', kaartSom('X', g(r.vIII) + ' − ' + gh(r.HM), g(r.X)), 'what gets better by itself gets better by the same amount in III and IV') +
+    kaartRij('T', 'T', 'II against IV', kaartSom('T', g(r.vII) + ' − ' + gh(r.HM), g(r.T)), 'what gets better by itself gets better by the same amount in II and IV') +
+    kaartRij('S', 'S', 'I against II, III and IV', kaartSom('S', g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.S)), 'the pieces add up; what is left is S') + '</table>';
 })();
 </script>
 </body>

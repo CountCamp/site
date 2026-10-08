@@ -53,6 +53,8 @@ SCHUIFSTANDEN = [
     ("vlak onder nul",               [50, 50, 98, 41, 47, 40], {"HM": -10, "X": 7, "T": 1, "S": 50}),
     # een dalend stukje dat precies op nul eindigt: niets zakt onder nul, maar zijn getal hangt eronder
     ("terug tot nul",                [50, 50, 55, 54, 50, 53], {"HM": 3, "X": -3, "T": 1, "S": 4}),
+    # ongelijke voormetingen: de geleende voormeting in de schuiftabel wordt 50.5 en moet meeschuiven (stuk 2b)
+    ("ongelijke voormetingen",       [48, 53, 65, 53, 60, 52], {"HM": 1.5, "X": 8, "T": -1.5, "S": 9}),
 ]
 # andere getypte getallen voor run 2 (zelfde volgorde als GETALLEN in de bladzij)
 SLEUTELS = ["voorI", "voorII", "naI", "naII", "naIII", "naIV"]
@@ -123,11 +125,17 @@ MEETSCRIPT = r"""
     });
   }
   // 1. het speelbord, stand voor stand
+  // sinds stuk 2b staan de schuifjes in de ontwerptabel en draagt die tabel de geleende voormeting van III en IV
+  // als uitgerekend getal; dat getal moet bij elke stand meeschuiven (zelfde opmaak als g() op de bladzij)
+  function fmt(v){ var r = Math.round(v * 100) / 100; var s = Number.isInteger(r) ? String(r) : (Math.abs(r * 10 - Math.round(r * 10)) < 1e-9 ? r.toFixed(1) : r.toFixed(2)); return s.replace('-', '−'); }
   STANDEN.forEach(function(st){
     ['voorI','voorII','naI','naII','naIII','naIV'].forEach(function(k, i){
       var s = document.getElementById('s-' + k); s.value = st[1][i];
       s.dispatchEvent(new Event('input', {bubbles:true}));
     });
+    var leen = document.querySelectorAll('#schuiven [data-leen]'), moet = '(' + fmt((st[1][0] + st[1][1]) / 2) + ')';
+    if (leen.length !== 2) uit.fouten.push('speelbord, ' + st[0] + ': ' + leen.length + ' cellen met de geleende voormeting in de schuiftabel, geen 2');
+    [].forEach.call(leen, function(e){ if (e.textContent !== moet) uit.fouten.push('speelbord, ' + st[0] + ': geleende voormeting in de schuiftabel is ' + e.textContent + ', moet ' + moet + ' zijn'); });
     meet(document.getElementById('waterval'), 'speelbord, ' + st[0]);
   });
   // 2. de ladder, met alle uitwerkingen open

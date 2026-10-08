@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Het oordeel van Solomon — ontleed het ontwerp</title>
-<meta name="description" content="Het Solomon-vier-groepen-ontwerp (Solomon four-group design) uit elkaar gehaald: history en maturation (H/M), het testeffect (testing, T), sensitisatie (pretest sensitization, S) en de interventie (X). Stap voor stap, met de getallen erbij, en als toegift dezelfde sommen als regressie.">
+<meta name="description" content="Het Solomon-vier-groepen-ontwerp (Solomon four-group design) uit elkaar gehaald: history en maturation (H/M), het testeffect (testing, T), sensitisatie (pretest sensitization, S) en de interventie (X). Stap voor stap, met de getallen erbij, en als toegift dezelfde sommen als regressie. Zo weet je precies waarvoor je gecorrigeerd hebt als iemand het effect van je therapie wil wegverklaren.">
 <!-- Twee taalversies van één bladzij (stuk 2, 8-10-2026). Google (Search Central, "Tell Google about localized
      versions of your page"): op elke versie dezelfde set alternate-links, elk met een volledige URL, inclusief
      zichzelf; x-default is de versie voor wie geen van de talen spreekt. Hier is dat de Nederlandse, de
@@ -211,10 +211,13 @@
   /* ===== het speelbord ===== */
   .presets{display:flex;flex-wrap:wrap;gap:8px;margin:.6rem 0 .9rem}
   .presets button{font-size:14px}
-  .schuiven{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;margin:.4rem 0 .8rem}
-  .schuiven label{display:grid;grid-template-columns:8.5em 1fr 2.2em;align-items:center;gap:8px;font-size:15px}
-  .schuiven input[type=range]{width:100%;accent-color:var(--accent)}
-  .schuiven output{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  /* de zes schuifjes staan in de vorm van de ontwerptabel (Ben, 8-10-2026: "deze beter zo organiseren als het
+     design zelf, dan is dat lekker herhaling"): een rij per groep, I en II met een voormeting-schuifje, III en IV
+     met de geleende voormeting als uitgerekend getal, en voor alle vier een nameting-schuifje. Tot stuk 2b
+     stonden ze als zes losse regels in een raster van twee kolommen. */
+  td.schuif{white-space:nowrap}
+  td.schuif input[type=range]{width:120px;vertical-align:middle;margin:0 6px 0 0;accent-color:var(--accent)}
+  td.schuif output{display:inline-block;min-width:2em;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
   .oordeel{font-size:17px;border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:.8rem 0;min-height:3.2em}
   .sommen4{display:grid;grid-template-columns:auto auto;justify-content:start;gap:0 40px;align-items:start}
   td.bevat{white-space:nowrap}
@@ -227,6 +230,19 @@
   table.kaart th:nth-child(3){width:34%} table.kaart th:nth-child(4){width:30%}
   table.kaart td[contenteditable]:focus{box-shadow:inset 0 0 0 1px var(--accent)}
   table.kaart td:first-child{white-space:nowrap;font-weight:600}
+  /* de ingevulde kaart heeft een vijfde kolom: welke twijfel elk stukje beantwoordt (Ben, 8-10-2026). Op een smal
+     scherm verdwijnt die kolom en staat dezelfde tekst klein onder de letter, zodat de kaart op 390 px leesbaar
+     blijft; de lege kaart houdt vier kolommen, want daar zijn de vakjes om in te typen al krap. */
+  table.kaart.vijf th:nth-child(1){width:9%} table.kaart.vijf th:nth-child(2){width:22%}
+  table.kaart.vijf th:nth-child(3){width:28%} table.kaart.vijf th:nth-child(4){width:23%} table.kaart.vijf th:nth-child(5){width:18%}
+  .twijfel-klein{display:none}
+
+  /* ===== de twijfelaar: per trede het bezwaar dat die trede beantwoordt (Ben, 8-10-2026: "bij een gevonden
+     verschil kan een kriticus het effect wegverklaren, en dat wil je voor zijn") ===== */
+  .twijfel{font-size:16px;margin:.5rem 0 .7rem;padding:2px 0 2px 12px;border-left:3px solid var(--vaag)}
+  .twijfel .wie{font-weight:600;color:var(--dim)}
+  .twijfel-hm{border-left-color:var(--c-hm)} .twijfel-x{border-left-color:var(--c-x)}
+  .twijfel-t{border-left-color:var(--c-t)} .twijfel-s{border-left-color:var(--c-s)}
 
   .foot{margin-top:34px;color:var(--vaag);font-size:13px;font-style:italic;line-height:1.6}
   .foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
@@ -237,7 +253,10 @@
   @media (max-width:700px){
     .wrap{padding:22px 14px 56px}
     h1{font-size:27px}
-    .schuiven,.sommen4{grid-template-columns:1fr}
+    .sommen4{grid-template-columns:1fr}
+    td.schuif input[type=range]{width:78px}
+    .twijfelkol{display:none}
+    .twijfel-klein{display:block;white-space:normal;font-weight:400;font-size:12.5px;line-height:1.3;color:var(--dim);max-width:6.5em}
     table.data{font-size:15px} table.data th,table.data td{padding:4px 9px 4px 3px}
     table.som{font-size:15.5px}
     table.kaart{font-size:14px} table.kaart th,table.kaart td{padding:5px 4px}
@@ -252,7 +271,7 @@
       --accent:#444; --goed:#222; --fout:#222; --knop:#fff; --knop-hover:#fff;
       --c-hm:#2a78d6; --c-x:#eb6834; --c-t:#1baf7a; --c-s:#4a3aa7; --schaduw:none;
     }
-    .kopregel,details,.invoer,.terugmelding,.presets,.schuiven,.matrix input,.keuzes,.zijmenu,.topmenu{display:none!important}
+    .kopregel,details,.invoer,.terugmelding,.presets,td.schuif input,.matrix input,.keuzes,.zijmenu,.topmenu{display:none!important}
     .trede{margin-top:48px}
     .trede,.kader,figure,table{break-inside:avoid}
     .zwaard *{transition:none!important}
@@ -282,12 +301,19 @@
        mensen meteen zien wat ze zochten"). De Nederlandse naam: Ben schrijft zelf "Solomon vier groepen ontwerp";
        Quené & Van den Bergh (UU) en Roose (UGent) schrijven "Solomon(-)vier-groepen-ontwerp", de Open Universiteit
        "Solomon vier-groependesign" (nagezocht 8-10-2026). -->
-  <p class="lede kl">Het Solomon-vier-groepen-ontwerp (<i>Solomon four-group design</i>): vier groepen, één therapie,
-  en een vragenlijst over kwaliteit van leven. Elke groep ging erop vooruit, en in de verbetering van elke groep
-  zitten andere stukjes: wat vanzelf beter wordt (<i>history</i> en <i>maturation</i>, H/M), wat de therapie doet
-  (de interventie, X), wat de voormeting zelf doet (het testeffect, <i>testing</i>, T), en wat voormeting en
-  therapie samen extra doen (de sensitisatie, <i>pretest sensitization</i>, S). Jij haalt ze uit elkaar: eerst
-  de som van groep I, dan één stukje per stap, tot alleen S overblijft.</p>
+  <!-- Het doel staat vooraan (Ben, 8-10-2026: "Als onderzoeker wil je zo graag bewijzen dat je manipulatie echt
+       gewerkt heeft, maar bij een gevonden verschil kan een kriticus het effect wegverklaren, en dat wil je voor
+       zijn, en hem precies kunnen vertellen waarvoor jij hebt gecorrigeerd, maar dan op een chillere manier").
+       De drie bezwaren in de eerste alinea zijn zijn eigen woorden. -->
+  <p class="lede kl">Je gaf een therapie, en de kwaliteit van leven ging omhoog. Nu wil je laten zien dat dat door de
+  therapie kwam. Maar wie twijfelt, heeft zo een andere verklaring klaar: het kwam gewoon door de tijd, het kwam door
+  die vragenlijst vooraf, het werkte alleen omdat ze er eerst al over nadachten. Daar is het
+  Solomon-vier-groepen-ontwerp (<i>Solomon four-group design</i>) voor: vier groepen, één therapie, en in de
+  verbetering van elke groep andere stukjes: wat vanzelf beter wordt (<i>history</i> en <i>maturation</i>, H/M),
+  wat de therapie doet (de interventie, X), wat de voormeting zelf doet (het testeffect, <i>testing</i>, T), en wat
+  voormeting en therapie samen extra doen (de sensitisatie, <i>pretest sensitization</i>, S). Jij haalt ze uit
+  elkaar, één stukje per stap, tot alleen S overblijft. Zo ben je de twijfelaar vóór: je kunt precies zeggen
+  waarvoor je gecorrigeerd hebt.</p>
 
   <h2 id="ontwerp">Het ontwerp</h2>
   <p>Een groep mensen krijgt een therapie die hun kwaliteit van leven moet verbeteren. Je meet die kwaliteit
@@ -345,10 +371,11 @@
   </details>
 
   <h2 id="speelbord">Trek zelf aan de getallen</h2>
-  <p class="kl">Zes schuifjes: de twee voormetingen en de vier nametingen. De sommen rekenen mee, in dezelfde volgorde
+  <p class="kl">Zes schuifjes, in de vorm van de ontwerptabel: de twee voormetingen en de vier nametingen. Groep III en
+  IV lenen hun voormeting, net als in de ladder; dat getal schuift mee. De sommen rekenen mee, in dezelfde volgorde
   als de ladder: eerst H/M, dan X, dan T, en S als laatste. De knoppen zetten een bekend geval klaar.</p>
   <div class="presets" id="presets"></div>
-  <div class="schuiven" id="schuiven"></div>
+  <div class="tabelvak" id="schuiven"></div>
   <p class="oordeel" id="oordeel" aria-live="polite"></p>
   <figure>
     <svg id="waterval" viewBox="0 0 460 262" role="img" aria-labelledby="wv-cap"></svg>
@@ -366,6 +393,9 @@
   Daarvoor heb je groepen nodig die op één punt van elkaar verschillen, zoals II en IV hier alleen in de
   voormeting verschillen. Zoek bij elk effect dat je wilt kennen dus de twee groepen die het opleveren. Vind je
   ze niet in je ontwerp, dan kun je dat effect ook niet los zien.</p>
+  <p class="kl">En dat is wat je de twijfelaar kunt vertellen: “het ging vanzelf” heb je beantwoord zodra je een groep
+  zonder therapie hebt, “het kwam door de vragenlijst” pas als je ook een groep zonder voormeting hebt. Wat je ontwerp
+  niet kan beantwoorden, zeg je er zelf bij, vóór hij ernaar vraagt.</p>
   <p class="kl">En S is een verschil in verschil: het effect van de therapie op de kwaliteit van leven mét voormeting, min
   het effect van de therapie op de kwaliteit van leven zonder voormeting. Dat heet een interactie, en daar gaat
   <a href="https://countcamp.org/manuscript/h10.html">hoofdstuk 10, Verschil in verschil</a>, over.</p>
@@ -563,14 +593,24 @@
     h += '<tr><th>groep</th><th class="getal">voormeting</th><th>therapie</th><th class="getal">nameting</th>' +
          (o.verandering ? '<th class="getal">verbetering</th>' : '') + (o.bevat ? '<th>bevat</th>' : '') + '</tr>';
     rijen.forEach(function(w){
-      var voor = w.voor !== null ? g(w.voor) : (o.leen ? '<span class="geleend">(' + g(r.leen) + ')</span>' : '–');
-      h += '<tr' + ((o.licht || []).indexOf(w.g) >= 0 ? ' class="licht"' : '') + '><td>' + w.g + '</td><td class="getal">' + voor +
-           '</td><td>' + (w.x ? 'ja' : 'nee') + '</td><td class="getal">' + g(w.na) + '</td>' +
+      var voor, na, cel = o.schuif ? 'schuif' : 'getal';
+      // o.schuif: dezelfde tabel, maar met een schuifje in elke gemeten cel en de geleende voormeting als getal
+      // dat meeschuift (Ben, 8-10-2026: "deze beter zo organiseren als het design zelf, dan is dat lekker herhaling")
+      if (o.schuif){
+        voor = w.voor !== null ? o.schuif('voor' + w.g) : '<span class="geleend" data-leen>(' + g(r.leen) + ')</span>';
+        na = o.schuif('na' + w.g);
+      } else {
+        voor = w.voor !== null ? g(w.voor) : (o.leen ? '<span class="geleend">(' + g(r.leen) + ')</span>' : '–');
+        na = g(w.na);
+      }
+      h += '<tr' + ((o.licht || []).indexOf(w.g) >= 0 ? ' class="licht"' : '') + '><td>' + w.g + '</td><td class="' + cel + '">' + voor +
+           '</td><td>' + (w.x ? 'ja' : 'nee') + '</td><td class="' + cel + '">' + na + '</td>' +
            (o.verandering ? '<td class="getal">' + g(w.v) + '</td>' : '') +
            (o.bevat ? '<td class="bevat">' + kl(w.bevat) + '</td>' : '') + '</tr>';
     });
     var noot = [];
-    if (o.leen) noot.push('Tussen haakjes: de geleende voormeting.');
+    if (o.schuif) noot.push('Tussen haakjes: de geleende voormeting van III en IV, het gemiddelde van voormeting I en II. Die rekent mee zodra je aan een voormeting schuift.');
+    else if (o.leen) noot.push('Tussen haakjes: de geleende voormeting.');
     else if (!o.geenStreepNoot) noot.push('Een streepje: die groep deed geen voormeting.');   // een streepje zonder noot (APA-lens, 8-10)
     if (o.verandering) noot.push('Verbetering: nameting min voormeting.');
     if (o.bevat && !o.geenBevatNoot) noot.push('De kolom <i>bevat</i> is wat je in ' + stap('stukjes') + ' aanvinkte.');
@@ -610,6 +650,32 @@
   // ===== de ladder =====
   var r = los(GETALLEN), rb = regressie(GETALLEN);
   var MATRIX_GOED = {I:['H/M','X','T','S'], II:['H/M','T'], III:['H/M','X'], IV:['H/M']};
+  // ===== de twijfelaar: per stukje het bezwaar dat het beantwoordt =====
+  // Ben, 8-10-2026: "Als onderzoeker wil je zo graag bewijzen dat je manipulatie echt gewerkt heeft, maar bij een
+  // gevonden verschil kan een kriticus het effect wegverklaren, en dat wil je voor zijn, en hem precies kunnen
+  // vertellen waarvoor jij hebt gecorrigeerd, maar dan op een chillere manier." De toon van de twijfelaar is de
+  // zijne ("Ja, vind je het gek, het was in die periode ook wel ontzettend lekker weer, dan zou ik me ook beter
+  // voelen"), als inspiratie ("ik brabbel maar wat"); de zinnen hier zijn van ons. Brutaal werkt door schaarste:
+  // de twijfelaar mag het, de rest van de bladzij niet. `kort` staat in de ingevulde kaart; `zegt` en `jij` in de
+  // trede die het stukje vindt. Geen getallen in deze zinnen: ze staan vóór de vraag, als de uitkomst nog onbekend is.
+  var TWIJFEL = {
+    HM: {kort:'het ging vanzelf beter',
+         zegt:'Ja, vind je het gek. Het was in die weken ook zúlk lekker weer, dan zou ik me óók beter voelen.',
+         jij:'Daar is groep IV voor: geen voormeting, geen therapie, alleen diezelfde weken. Wat daar beter werd is H/M, en dat haal ik overal af.'},
+    X:  {kort:'wat overblijft als de rest beantwoord is',
+         zegt:'Lekker weer dus, zei ik toch. Wat blijft er dan nog over voor die therapie van je?',
+         jij:'Dit. Groep III deed geen vragenlijst vooraf, dus het weer is het enige wat ik eraf hoef te halen. Wat overblijft is de therapie: X.'},
+    T:  {kort:'de vragenlijst zelf deed het',
+         zegt:'Twee keer dezelfde vragenlijst? De tweede keer weet je onderhand wel wat ze willen horen.',
+         jij:'Dat is T, en groep II meet het: wél de vragenlijst vooraf, géén therapie. Wat II méér vooruitging dan IV, is wat de vragenlijst zelf doet.'},
+    S:  {kort:'de therapie werkte alleen dankzij de vragenlijst',
+         zegt:'Natúúrlijk werkte het. Eerst een lijst over hoe je je voelt en dán pas therapie: ze zaten er al bovenop. Dat is geen therapie, dat is een voorzet.',
+         jij:'Dat is S, en hoe groot die voorzet is reken je hier uit: zonder vragenlijst vooraf doet de therapie X, mét vragenlijst X + S.'}
+  };
+  function twijfelHTML(k){
+    var t = TWIJFEL[k];
+    return '<p class="twijfel twijfel-' + KLEUR[k] + '"><span class="wie">De twijfelaar:</span> “' + kl(t.zegt) + '” <span class="wie">Jij:</span> ' + kl(t.jij) + '</p>';
+  }
   // De treden op naam; VOLGORDE (hierboven) zet ze op een rij. Bens ruggengraat (8-10-2026): eerst de som van
   // groep I als de vraag, dan lenen, dan IV, III, II, en elk gevonden stukje in die som invullen tot S overblijft.
   var ST = {
@@ -654,7 +720,7 @@
         P('Dat mag omdat het lot de groepen samenstelde: gemiddeld begonnen ze gelijk. Je vult een getal in op een plek waar je niets gemeten hebt. Dat heet <i>substitutie</i>.') +
         P('Meten kan hier trouwens niet: geef je groep III een voormeting, dan is het groep I geworden.'); } },
 
-    hm: { titel:'Groep IV: hoe groot is H/M?',
+    hm: { titel:'Groep IV: hoe groot is H/M?', twijfel:'HM',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['IV']},
       tussen:somNu(0),
       vraag:'Hoe groot is H/M?',
@@ -668,7 +734,7 @@
         vergelijk('groep IV, met de geleende voormeting', 'III en IV begonnen gemiddeld zoals I en II (het lot)') +
         trap(1); } },
 
-    x: { titel:'Groep III: hoe groot is X?',
+    x: { titel:'Groep III: hoe groot is X?', twijfel:'X',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['III']},
       tussen:somNu(1),
       vraag:'Hoe groot is X?',
@@ -681,7 +747,7 @@
         vergelijk('groep III met groep IV (want H/M is de verbetering van IV)', 'wat vanzelf beter wordt, wordt in III en IV even hard beter') +
         trap(2); } },
 
-    t: { titel:'Groep II: hoe groot is T?',
+    t: { titel:'Groep II: hoe groot is T?', twijfel:'T',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['II']},
       tussen:somNu(2),
       vraag:'Hoe groot is T?',
@@ -694,7 +760,7 @@
         vergelijk('groep II met groep IV', 'wat vanzelf beter wordt, wordt in II en IV even hard beter') +
         trap(3); } },
 
-    s: { titel:'Groep I: hoe groot is S?',
+    s: { titel:'Groep I: hoe groot is S?', twijfel:'S',
       tabel:{titel:TITEL, leen:true, bevat:true, licht:['I']},
       tussen:somNu(3),
       vraag:'Hoe groot is S?',
@@ -889,7 +955,7 @@
 
   document.getElementById('ladder').innerHTML = stappen.map(function(st, i){
     return '<section class="trede' + (st.zwaard ? ' heeft-zwaard' : '') + '" id="stap-' + (i + 1) + '"><div class="stapnr">' + (st.toegift ? 'Toegift · ' : '') + 'Stap ' + (i + 1) + ' van ' + stappen.length + '</div>' +
-      '<h3>' + kl(st.titel) + '</h3>' + (st.voor || '') +
+      '<h3>' + kl(st.titel) + '</h3>' + (st.twijfel ? twijfelHTML(st.twijfel) : '') + (st.voor || '') +
       '<div class="tabelvak">' + (st.tabelReg ? tabelReg(GETALLEN, st.tabelReg) : tabel(GETALLEN, st.tabel)) + '</div>' + (st.tussen || '') +
       '<p class="vraag">' + kl(st.vraag) + '</p>' + invoerHTML(st, i) +
       (st.zwaard ? zwaardFiguur() : '') +
@@ -1163,14 +1229,18 @@
     ['De voormeting maakt de therapie zwakker', maak(GETALLEN.voorI, GETALLEN.voorII, {HM:r.HM, T:r.T, X:r.X, S:-r.S})]
   ];
   var nu = {}; for (var k in GETALLEN) nu[k] = GETALLEN[k];
-  document.getElementById('schuiven').innerHTML = SCHUIF.map(function(s){
-    return '<label><span>' + s[1] + '</span><input type="range" min="0" max="100" step="1" id="s-' + s[0] + '" value="' + nu[s[0]] + '"><output id="o-' + s[0] + '">' + g(nu[s[0]]) + '</output></label>';
-  }).join('');
+  var SCHUIFNAAM = {}; SCHUIF.forEach(function(s){ SCHUIFNAAM[s[0]] = s[1]; });
+  // de schuifjes staan in de ontwerptabel zelf (tabel() met o.schuif), één keer gebouwd; bord() ververst alleen
+  // de geleende voormeting, zodat een schuifje onder je vinger niet opnieuw getekend wordt
+  document.getElementById('schuiven').innerHTML = tabel(nu, {titel:'Zes schuifjes, in de vorm van de ontwerptabel', schuif:function(k){
+    return '<input type="range" min="0" max="100" step="1" id="s-' + k + '" value="' + nu[k] + '" aria-label="' + SCHUIFNAAM[k] + '"><output id="o-' + k + '">' + g(nu[k]) + '</output>';
+  }});
   document.getElementById('presets').innerHTML = PRESETS.map(function(p, i){ return '<button type="button" data-preset="' + i + '">' + p[0] + '</button>'; }).join('');
 
   function bord(){
     var rr = los(nu), q = regressie(nu);
-    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Jouw getallen', leen:true, verandering:true, bevat:true, geenBevatNoot:true});
+    [].forEach.call(document.querySelectorAll('#schuiven [data-leen]'), function(e){ e.textContent = '(' + g(rr.leen) + ')'; });
+    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Jouw getallen, met de verbetering en de stukjes erbij', leen:true, verandering:true, bevat:true, geenBevatNoot:true});
     document.getElementById('sb-sommen').innerHTML = '<div class="sommen4">' +
       som('H/M', ['verbetering IV', g(nu.naIV) + ' − ' + gh(rr.leen), g(rr.HM)]) +
       som('X', ['verbetering III − H/M', g(rr.vIII) + ' − ' + gh(rr.HM), g(rr.X)]) +
@@ -1211,12 +1281,17 @@
   // Elke som in de kaart staat op twee regels met één "=" per regel (Bens regel van 8-10-2026, "niet doorbreien").
   // De linkerkant is in een cel steeds hetzelfde woord, dus de =-tekens staan vanzelf onder elkaar.
   function kaartSom(links, rechts, uitkomst){ return kl(links + ' = ' + rechts) + '<br>' + kl(links + ' = ' + uitkomst); }
-  document.getElementById('volle-kaart').innerHTML = '<table class="data kaart"><caption>De Solomon-kaart, ingevuld met de getallen van de ladder</caption>' +
-    '<tr><th>effect</th><th>welke groepen vergelijk je?</th><th>de som</th><th>wat je aanneemt</th></tr>' +
-    '<tr><td>' + kl('H/M') + '</td><td>IV, met de geleende voormeting</td><td class="somcel">' + kaartSom('H/M', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)) + '</td><td>III en IV begonnen gemiddeld zoals I en II (het lot)</td></tr>' +
-    '<tr><td>' + kl('X') + '</td><td>III tegen IV</td><td class="somcel">' + kaartSom('X', g(r.vIII) + ' − ' + gh(r.HM), g(r.X)) + '</td><td>wat vanzelf beter wordt, wordt in III en IV even hard beter</td></tr>' +
-    '<tr><td>' + kl('T') + '</td><td>II tegen IV</td><td class="somcel">' + kaartSom('T', g(r.vII) + ' − ' + gh(r.HM), g(r.T)) + '</td><td>wat vanzelf beter wordt, wordt in II en IV even hard beter</td></tr>' +
-    '<tr><td>' + kl('S') + '</td><td>I tegen II, III en IV</td><td class="somcel">' + kaartSom('S', g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.S)) + '</td><td>de stukjes tellen op; wat overblijft is S</td></tr></table>';
+  // de vijfde kolom: welke twijfel dit stukje beantwoordt (Ben, 8-10-2026). Dezelfde tekst staat klein onder de
+  // letter voor een smal scherm; de CSS laat van die twee er altijd één zien.
+  function kaartRij(k, naam, groepen, somcel, aanname){
+    return '<tr><td>' + kl(naam) + '<span class="twijfel-klein">' + TWIJFEL[k].kort + '</span></td><td>' + groepen + '</td><td class="somcel">' + somcel + '</td><td>' + aanname + '</td><td class="twijfelkol">' + TWIJFEL[k].kort + '</td></tr>';
+  }
+  document.getElementById('volle-kaart').innerHTML = '<table class="data kaart vijf"><caption>De Solomon-kaart, ingevuld met de getallen van de ladder</caption>' +
+    '<tr><th>effect</th><th>welke groepen vergelijk je?</th><th>de som</th><th>wat je aanneemt</th><th class="twijfelkol">welke twijfel dit beantwoordt</th></tr>' +
+    kaartRij('HM', 'H/M', 'IV, met de geleende voormeting', kaartSom('H/M', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)), 'III en IV begonnen gemiddeld zoals I en II (het lot)') +
+    kaartRij('X', 'X', 'III tegen IV', kaartSom('X', g(r.vIII) + ' − ' + gh(r.HM), g(r.X)), 'wat vanzelf beter wordt, wordt in III en IV even hard beter') +
+    kaartRij('T', 'T', 'II tegen IV', kaartSom('T', g(r.vII) + ' − ' + gh(r.HM), g(r.T)), 'wat vanzelf beter wordt, wordt in II en IV even hard beter') +
+    kaartRij('S', 'S', 'I tegen II, III en IV', kaartSom('S', g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.S)), 'de stukjes tellen op; wat overblijft is S') + '</table>';
 })();
 </script>
 </body>
