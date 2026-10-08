@@ -51,6 +51,8 @@ SCHUIFSTANDEN = [
     ("wijdste bereik",               [0, 100, 100, 0, 0, 100], {"HM": 50, "X": -100, "T": -150, "S": 300}),
     # een stijgende balk die vlak onder nul eindigt: zijn getal erboven zou op de nullijn vallen
     ("vlak onder nul",               [50, 50, 98, 41, 47, 40], {"HM": -10, "X": 7, "T": 1, "S": 50}),
+    # een dalend stukje dat precies op nul eindigt: niets zakt onder nul, maar zijn getal hangt eronder
+    ("terug tot nul",                [50, 50, 55, 54, 50, 53], {"HM": 3, "X": -3, "T": 1, "S": 4}),
 ]
 # andere getypte getallen voor run 2 (zelfde volgorde als GETALLEN in de bladzij)
 SLEUTELS = ["voorI", "voorII", "naI", "naII", "naIII", "naIV"]

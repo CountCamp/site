@@ -5,12 +5,13 @@ verdeelt). Stuk 1b heette *Het zwaard van Solomon*; dat is ingetrokken. Het zwaa
 
 Speeltje: `speeltjes/solomon.html`. Eén zelfstandig HTML-bestand, geen internet nodig.
 Proefdruk (sinds stuk 1): `QUARTO_PROFILE=spook quarto render` in de werkkopie, de kopie in `_site/` de drie
-merktekens geven (`.quarto/kladje_solomon/spook1c.sh` doet beide), en dan
+merktekens geven (`.quarto/kladje_solomon/spook1d.sh` doet beide), en dan
 `bash ~/Documents/Ben_OS/tools/spook.sh zet solomon <werkkopie>/_site speeltjes/solomon.html`. De spooksite
 (`~/spooksite`, poort 8788) serveert een rsync-kopie, geen koppeling naar `_site/`: zonder `zet` blijft de vorige
 proefdruk staan terwijl `_site/` al nieuw is (zo stond stuk 1b er op 8-10 nog drie kwartier na de render van 1c).
 Tegel: `speeltjes/index.qmd`, rubriek *Ontleden*. Register: `~/Ben_OS_brain/shared_assets/speeltjes/SPEELTJES_REGISTER.md`.
-Toets op de getallen: `_tools/tests/solomon_getallen_test.py` (zie *De getallen*).
+Toets op de getallen: `_tools/tests/solomon_getallen_test.py` (zie *De getallen*). Toets op de figuren (sinds stuk
+1d): `_tools/tests/solomon_figuren_test.py`, headless Chrome, zie *Stuk 1d*.
 
 **Let op, de bron.** Alle andere speeltjes hebben hun bron in `countcamp_lab/boek/04_speeltjes/`; deze kist
 is een kopie (`_tools/bouw_speelkist.py`). Dit speeltje is gebouwd in de kist zelf, omdat de opdracht dat
@@ -207,6 +208,41 @@ het staat nu op de eerste snede en leunt naar rechts boven X.
 - **H/M** is Bens notatie; hij hield hem (8-10) met de kleurstreep en de zin "twee letters, één stukje".
 - **De aannametabel staat ná de ladder** en de andere namen staan in een uitklapper onderaan (stuk 1, na Michelle en
   Jeanne).
+
+## Stuk 1d — de trap met negatieve stukjes (8-10-2026)
+
+**Aanleiding.** Ben, met de schuifjes op H/M = −1: de y-as hield op bij de onderkant van de balk en "−1" stond óp
+het etiket "H/M" eronder. *"kan ook negatief zien, misschien langere y-as aan onderkant."* Zijn schermafdruk was
+van stuk 1 (bijschrift "De verandering van groep I", gestippelde verbindingslijntjes); die lijntjes zijn sinds 1b
+al doorgetrokken (`stroke-width:.8`, kleur `--vaag`). Het overlappen zat er in 1c nog wel in, en erger dan hij zag.
+
+**Wat er veranderde, alles in `waterval()`** (die tekent de trap op het speelbord, de trap per stap in de ladder
+en de twee regressieplaatjes):
+
+- Zakt de trap onder nul (onder de vloer), dan loopt de as minstens één vak verder dan de laagste balk. Hangt er
+  een getal onder een balk, dan loopt hij door tot dat getal 22 eenheden boven de onderkant van de as staat.
+- De as tikt in hoogstens acht vakken (stappen 1, 2, 5, 10, 20, 25, 50, 100). Tot 1c tikte hij bij elk bereik
+  boven 20 per 5: bij de stand met S = 300 liep de as van −200 tot 100, 61 getallen over elkaar. De ladder (bereik 15)
+  houdt stap 2.
+- De as schuift naar rechts als zijn getallen lang worden ("−200" raakte de astitel).
+- Zou het getal van een balk op de nullijn vallen (een stijgende balk die vlak onder nul eindigt), dan staat het
+  aan de andere kant van de balk. Het vraagteken van een nog onbekend stukje staat aan de kant zonder nullijn.
+- *b*₀ in stap 10 stond midden in het verbindingslijntje (ook met de getallen van de ladder); hij staat er nu
+  boven, en onder als H/M daalt.
+
+**Wat bewust niet veranderde.** Het zwaard en de verschil-in-verschil-balken tekenen alleen de zes getypte
+getallen, niet de schuifjes, en kunnen een negatief stukje niet laten zien: een balk die in vier delen valt heeft
+geen negatief deel, en "wat uitsteekt is S" steekt bij een negatieve S niet uit. In plaats van ze om te bouwen
+eist `solomon_getallen_test.py` nu dat elk stukje groter is dan 0, met die reden erbij. Dat was al een stille
+aanname van de ladder (de knop *De voormeting maakt de therapie zwakker* draait S om).
+
+**De toets.** `solomon_figuren_test.py` zet de schuifjes op dertien standen (elk stukje om de beurt negatief, twee
+en vier tegelijk, alles nul, de grootste positieve en negatieve, het wijdste bereik, vlak onder nul, terug tot
+nul) en tekent de ladder ook met vier andere getypte getallen. Hij meet met `getBoundingClientRect` tekst op
+tekst, tekst op een balk of lijn, tekst buiten de figuur, een getal onder de as, en stippellijnen. De stukjes bij
+elke stand rekent hij zelf na uit de zes schuifjes. Zeven mutaties (elke reparatie apart terug, plus gestippelde
+lijntjes) laten hem alle zeven zakken; zonder het extra vak meldt hij letterlijk Bens geval: *getal '−1' staat
+onder de as, bij de etiketten*. Wat hij niet ziet: kleur, contrast, en of een figuur iets zegt dat klopt.
 
 ## Wat de testlezers en de APA-lens zeiden in stuk 1c, en wat er veranderde
 

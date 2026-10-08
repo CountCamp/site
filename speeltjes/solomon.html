@@ -943,18 +943,19 @@
     var lo = Math.floor(Math.min.apply(null, waarden)), hi = Math.ceil(Math.max.apply(null, waarden));
     if (hi - lo < 4){ hi = lo + 4; }
     // hoogstens acht vakken op de as, ook met de schuifjes uiterst: tot stuk 1c tikte de as bij elk bereik
-    // boven de 20 per 5, en bij 300 punten stonden er zestig getallen over elkaar (toets van stuk 1d)
+    // boven de 20 per 5, en van −200 tot 100 stonden er 61 getallen over elkaar (toets van stuk 1d)
     var stap = [1, 2, 5, 10, 20, 25, 50, 100].filter(function(s){ return (hi - lo) / s <= 8; })[0] || 200;
     lo = Math.floor(lo / stap) * stap; hi = Math.ceil(hi / stap) * stap;
     var y = function(v){ return B - (v - lo) / (hi - lo) * (B - T); };
-    // Hangt er een getal onder een balk (een negatief stukje of een negatief geheel), dan loopt de as
-    // onderaan minstens één vak verder door: het getal staat dan binnen de figuur, boven de etiketten.
+    // Zakt de trap onder nul (onder de vloer), dan loopt de as onderaan minstens één vak verder door dan de
+    // laagste balk. En hangt er een getal onder een balk (een dalend stukje of een negatief geheel), dan
+    // loopt hij door tot dat getal binnen de figuur staat, boven de etiketten.
     // Ben, 8-10-2026, bij H/M = −1, toen "−1" óp "H/M" stond: "misschien langere y-as aan onderkant".
     var hangt = segs.filter(function(s){ return s.v < 0; }).map(function(s){ return s.b; });
     if (eind < basis) hangt.push(eind);
+    if (Math.min.apply(null, waarden) < basis) lo -= stap;
     if (hangt.length){
       var laagst = Math.min.apply(null, hangt);
-      lo -= stap;
       for (var n = 0; n < 20 && y(laagst) > B - RUIM; n++) lo -= stap;
     }
     var ticks = []; for (var v = lo; v <= hi + 1e-9; v += stap) ticks.push(v);
