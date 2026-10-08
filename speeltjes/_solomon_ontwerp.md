@@ -4,6 +4,11 @@
 verdeelt). Stuk 1b heette *Het zwaard van Solomon*; dat is ingetrokken. Het zwaardje als beeld in stap 7 blijft.
 
 Speeltje: `speeltjes/solomon.html`. Eén zelfstandig HTML-bestand, geen internet nodig.
+Proefdruk (sinds stuk 1): `QUARTO_PROFILE=spook quarto render` in de werkkopie, de kopie in `_site/` de drie
+merktekens geven (`.quarto/kladje_solomon/spook1c.sh` doet beide), en dan
+`bash ~/Documents/Ben_OS/tools/spook.sh zet solomon <werkkopie>/_site speeltjes/solomon.html`. De spooksite
+(`~/spooksite`, poort 8788) serveert een rsync-kopie, geen koppeling naar `_site/`: zonder `zet` blijft de vorige
+proefdruk staan terwijl `_site/` al nieuw is (zo stond stuk 1b er op 8-10 nog drie kwartier na de render van 1c).
 Tegel: `speeltjes/index.qmd`, rubriek *Ontleden*. Register: `~/Ben_OS_brain/shared_assets/speeltjes/SPEELTJES_REGISTER.md`.
 Toets op de getallen: `_tools/tests/solomon_getallen_test.py` (zie *De getallen*).
 
