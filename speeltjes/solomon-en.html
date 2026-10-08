@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The judgement of Solomon — dissect the design</title>
+<meta name="description" content="The Solomon four-group design taken apart: history and maturation (H/M), the testing effect (T), pretest sensitization (S) and the treatment (X). Step by step, with the numbers, and as an encore the same sums as a regression.">
+<!-- This is the English twin of solomon.html (piece 2, 8-10-2026). The code is identical; only the reader-facing
+     strings differ. The comments in the CSS and the script are kept in Dutch on purpose, the same as in the
+     Dutch page, so that a diff of the two files shows nothing but the translated text. Change the code in both.
+     Linking the two versions: Google (Search Central, "Tell Google about localized versions of your page"): the
+     same set of alternate links on every version, each with a full URL, including itself; x-default is the
+     version for whoever speaks neither language, here the Dutch original. W3C (i18n, "Indicating the language
+     of a link destination"): hreflang on the visible switch for the language of the destination, and lang on
+     the link text when that text is itself in the other language. -->
+<link rel="canonical" href="https://countcamp.org/speeltjes/solomon-en.html">
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/speeltjes/solomon.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/speeltjes/solomon-en.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/speeltjes/solomon.html">
+<style>
+  /* ===== kleuren: licht, donker, en print =====
+     De knop is een verstopt vinkje plus :has() — geen JavaScript (Ben, 6/8-10-2026).
+     Volgt het systeem standaard; de knop draait het om. Print is altijd licht.
+     De vier stukjes (H/M, X, T, S) hebben elk een vaste kleur, nagemeten op
+     kleurenblindheid (OKLab, Machado 2009): licht alle paren >= 8, donker de
+     naburige paren >= 8. Tekst blijft in inkt; de kleur zit in een streep ernaast. */
+  :root{
+    --bg:#f4ecd8; --gloed:rgba(214,166,88,.18); --kaart:#faf6ea; --papier:#fffaf0;
+    --ink:#3b352b; --dim:#6b5f45; --vaag:#8a7d63; --lijn:#d8c69b; --rand:#c9a866;
+    --accent:#a9701f; --goed:#3f7a4c; --fout:#a23f50; --knop:#efe3c4; --knop-hover:#f5ecd3;
+    --c-hm:#2a78d6; --c-x:#eb6834; --c-t:#1baf7a; --c-s:#4a3aa7;
+    --schaduw:0 6px 20px rgba(120,95,45,.16);
+  }
+  :root:has(#donker:checked){
+    --bg:#1d1913; --gloed:rgba(214,166,88,.07); --kaart:#262019; --papier:#2b241c;
+    --ink:#ece2cc; --dim:#c9bb9a; --vaag:#a3957a; --lijn:#4f4535; --rand:#7a6643;
+    --accent:#e0a94f; --goed:#86c493; --fout:#e88e9c; --knop:#3a3125; --knop-hover:#463b2c;
+    --c-hm:#3987e5; --c-x:#d95926; --c-t:#199e70; --c-s:#b366d0;
+    --schaduw:0 6px 20px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#1d1913; --gloed:rgba(214,166,88,.07); --kaart:#262019; --papier:#2b241c;
+      --ink:#ece2cc; --dim:#c9bb9a; --vaag:#a3957a; --lijn:#4f4535; --rand:#7a6643;
+      --accent:#e0a94f; --goed:#86c493; --fout:#e88e9c; --knop:#3a3125; --knop-hover:#463b2c;
+      --c-hm:#3987e5; --c-x:#d95926; --c-t:#199e70; --c-s:#b366d0;
+      --schaduw:0 6px 20px rgba(0,0,0,.35);
+    }
+    :root:has(#donker:checked){
+      --bg:#f4ecd8; --gloed:rgba(214,166,88,.18); --kaart:#faf6ea; --papier:#fffaf0;
+      --ink:#3b352b; --dim:#6b5f45; --vaag:#8a7d63; --lijn:#d8c69b; --rand:#c9a866;
+      --accent:#a9701f; --goed:#3f7a4c; --fout:#a23f50; --knop:#efe3c4; --knop-hover:#f5ecd3;
+      --c-hm:#2a78d6; --c-x:#eb6834; --c-t:#1baf7a; --c-s:#4a3aa7;
+      --schaduw:0 6px 20px rgba(120,95,45,.16);
+    }
+  }
+
+  *{box-sizing:border-box}
+  /* achtergrond alleen op html: stond hij ook op body, dan dekte hij in de proefdruk de onderste helft
+     van de spookbalk af (gemeten 8-10-2026 met kijk.sh, vijf varianten) */
+  html{background:radial-gradient(1100px 560px at 50% -60px,var(--gloed),rgba(0,0,0,0) 68%),var(--bg)}
+  html,body{margin:0;
+    color:var(--ink);font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:860px;margin:0 auto;padding:30px 20px 64px}
+  .kopregel{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:1.3rem}
+  .terugknop{font-size:.95rem;text-decoration:none;color:inherit;opacity:.7}
+  .schakel{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+  .thema-knop{cursor:pointer;font-size:.9rem;color:var(--dim);border:1px solid var(--rand);border-radius:999px;
+    padding:4px 12px;background:var(--kaart);user-select:none;white-space:nowrap}
+  .schakel:focus-visible ~ .wrap .thema-knop{outline:2px solid var(--accent);outline-offset:2px}
+  /* de taalschakelaar: de taal van de bladzij is geen link, de andere wel (stuk 2) */
+  .kop-rechts{display:flex;align-items:center;gap:14px}
+  .taal{font-size:.86rem;letter-spacing:.05em;color:var(--dim);white-space:nowrap}
+  .taal a{color:var(--accent);text-decoration:none}
+  .taal a:hover{text-decoration:underline}
+  .taal [aria-current]{font-weight:600;color:var(--ink)}
+  .taal-sep{margin:0 .45em;color:var(--vaag)}
+
+  /* ===== het menu: links naast de tekst op een breed scherm, een uitklapbalk bovenaan op een smal scherm =====
+     (Ben, 8-10-2026: "moet er een menuutje in ook in de solomon? denk het wel"). Patroon van een andere bladzij
+     van 8-10, met de maten van deze bladzij: de tekst is 860 px breed met 20 px rand, dus de tekst begint op
+     50% − 410 px; het menu van 210 px staat daar 18 px links van zodra het scherm 1300 px breed is. */
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  .trede,h2[id],h1[id]{scroll-margin-top:56px}
+  .zijmenu,.topmenu{font-size:14px}
+  .zijmenu ol,.topmenu ol{list-style:none;margin:0;padding:0}
+  .zijmenu li a,.topmenu li a{display:flex;gap:8px;padding:4px 0;color:var(--dim);text-decoration:none;line-height:1.3}
+  .zijmenu li a:hover,.topmenu li a:hover{color:var(--ink)}
+  .zijmenu li.deel,.topmenu li.deel{margin-top:6px}
+  .mn{min-width:20px;text-align:right;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+  .menu-voet{margin:12px 0 0;font-size:13px}
+  .menu-voet a{color:var(--dim)}
+  .zijmenu{display:none;position:fixed;top:24px;left:max(12px,calc(50% - 410px - 234px));width:210px;max-height:calc(100vh - 48px);overflow-y:auto;padding-right:8px;border-right:1px solid var(--lijn)}
+  .topmenu{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--lijn);padding:8px 16px;margin:0}
+  .topmenu summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:15px}
+  .topmenu nav{padding:6px 0 4px;max-height:70vh;overflow-y:auto}
+  @media (min-width:1300px){.zijmenu{display:block}.topmenu{display:none}.trede,h2[id],h1[id]{scroll-margin-top:24px}}
+
+  h1{font-weight:600;font-size:32px;letter-spacing:.3px;margin:0 0 4px}
+  h1::after{content:"";display:block;width:210px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 192 6 T 208 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:210px 10px}
+  .ondertitel{font-style:italic;color:var(--dim);font-size:19px;margin:8px 0 0}
+  h2{font-weight:600;font-size:23px;margin:2.4rem 0 .5rem}
+  h3{font-weight:600;font-size:18px;margin:0 0 .4rem}
+  p{margin:.55rem 0}
+  .lede{color:var(--dim);font-size:17.5px;line-height:1.6;margin:14px 0 8px;max-width:690px}
+  .zacht{color:var(--dim)}
+  a{color:var(--accent)}
+
+  /* ===== APA-tabellen (tabel_apa.css, Ben 8-10-2026: "altijd vanaf nu") ===== */
+  table:not(.geen-apa){border-collapse:collapse}
+  table:not(.geen-apa) tr:first-child>th,table:not(.geen-apa) tr:first-child>td{border-top:2px solid var(--ink)}
+  table:not(.geen-apa) tr:last-child>td{border-bottom:2px solid var(--ink)!important}
+  table:not(.geen-apa) th{border-bottom:1px solid var(--ink);color:var(--ink);font-weight:600;text-align:left}
+  table:not(.geen-apa) td{border-bottom:1px solid var(--lijn)}
+  /* eigen maten bovenop de huisstijl */
+  table.data{margin:.6rem 0 .3rem;font-variant-numeric:tabular-nums;font-size:16px}
+  table.data th,table.data td{padding:5px 14px 5px 4px;vertical-align:top}
+  table.data caption{caption-side:top;text-align:left;font-style:italic;color:var(--dim);font-size:14px;padding:0 0 6px}
+  table.data td.getal,table.data th.getal{text-align:right}
+  table.data tr.licht td{background:color-mix(in srgb,var(--accent) 13%,transparent)}
+  .geleend{color:var(--vaag);font-style:italic}
+  .tabelvak{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* ===== de som, uitgelijnd op het =-teken, linkerkant elke regel herhaald ===== */
+  table.som{border-collapse:collapse;margin:.5rem 0 .6rem;font-variant-numeric:tabular-nums;font-size:16.5px}
+  table.som td{padding:1px 0;vertical-align:baseline}
+  table.som td.l{text-align:right;padding-right:.45em;white-space:nowrap}
+  table.som td.is{padding:0 .45em;color:var(--dim)}
+  table.som td.r{text-align:left;white-space:nowrap}
+  table.som tr.tussen td{height:.7em}
+  .somvak{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .k{border-bottom:2.5px solid var(--vaag);padding-bottom:0}
+  .k-hm{border-bottom-color:var(--c-hm)} .k-x{border-bottom-color:var(--c-x)}
+  .k-t{border-bottom-color:var(--c-t)} .k-s{border-bottom-color:var(--c-s)}
+  .model{font-size:17.5px;margin:.7rem 0;font-variant-numeric:tabular-nums}
+  sub{font-size:.72em;line-height:0}
+
+  /* ===== kaders ===== */
+  .kader{background:var(--kaart);border:1px solid var(--lijn);border-radius:10px;padding:14px 18px;margin:1rem 0;box-shadow:var(--schaduw)}
+  /* Ben, 8-10-2026: "echt meer witruimte boven een nieuwe trede, ik wil echt het gevoel krijgen dat
+     iets klaar is, die rust wil ik zien" — 130 px boven elke trede na de eerste, 48 px in print. */
+  .trede{background:var(--kaart);border:1px solid var(--lijn);border-radius:10px;padding:16px 18px 12px;margin:130px 0 0;box-shadow:var(--schaduw)}
+  .trede:first-child{margin-top:1.4rem}
+  .trede .stapnr{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--vaag)}
+  .trede h3{font-size:20px;margin:.15rem 0 .5rem}
+  .trede .vraag{font-size:17px;margin:.6rem 0 .5rem}
+  .invoer{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:.4rem 0 .5rem}
+  .invoer input[type=text]{font:inherit;font-size:16px;width:5.5em;padding:5px 8px;border:1px solid var(--rand);border-radius:6px;background:var(--papier);color:var(--ink)}
+  .invoer label{white-space:nowrap}
+  button{font:inherit;font-size:15px;color:var(--ink);background:var(--knop);border:1px solid var(--rand);
+    border-radius:9px;padding:6px 13px;cursor:pointer;min-height:38px}
+  button:hover{background:var(--knop-hover)}
+  .terugmelding{font-style:italic;min-height:1.4em}
+  .terugmelding.goed{color:var(--goed)} .terugmelding.fout{color:var(--fout)}
+  details{margin:.35rem 0;border-top:1px solid var(--lijn);padding-top:.35rem}
+  summary{cursor:pointer;color:var(--accent);font-size:15.5px}
+  details[open] summary{margin-bottom:.3rem}
+  .welke{font-weight:600;margin-top:.2rem}
+  table.matrix{border-collapse:collapse;margin:.3rem 0}
+  table.matrix th,table.matrix td{padding:4px 12px;text-align:center;font-weight:400}
+  table.matrix th{color:var(--dim)}
+  table.matrix td:first-child{text-align:left}
+  .keuzes label{margin-right:14px}
+
+  /* ===== figuren: dunne lijnen, dunne streepjes, geen stippen ===== */
+  figure{margin:.8rem 0}
+  figure svg{width:100%;height:auto;display:block;max-width:560px}
+  /* bijschrift rechtop: in een cursief bijschrift worden R, X en H/M ineens cursief, en elders staan ze rechtop */
+  figcaption{font-size:14px;color:var(--dim);max-width:600px}
+  figure.mini svg{max-width:400px}
+  .kaartregel{font-size:15.5px;border-left:2px solid var(--lijn);padding-left:10px}
+  .kaartregel span{color:var(--dim)}
+  details.verder{margin-top:.8rem}
+  svg text{fill:var(--ink);font-family:"Iowan Old Style",Palatino,Georgia,serif}
+  svg .kop{fill:var(--dim);font-style:italic}
+  svg .lijn{stroke:var(--ink);stroke-width:1;fill:none}
+  svg .streep{stroke:var(--ink);stroke-width:1}
+  svg .xdoos{fill:var(--papier);stroke:var(--ink);stroke-width:1}
+  svg .geleend-t{fill:var(--vaag);font-style:italic}
+  svg .as{stroke:var(--vaag);stroke-width:1}
+  svg .astekst{fill:var(--vaag);font-size:12px}
+  svg .nul{stroke:var(--ink);stroke-width:1}
+  svg .seg{stroke-width:1.5;fill-opacity:.28}
+  svg .seg-hm{fill:var(--c-hm);stroke:var(--c-hm)} svg .seg-x{fill:var(--c-x);stroke:var(--c-x)}
+  svg .seg-t{fill:var(--c-t);stroke:var(--c-t)} svg .seg-s{fill:var(--c-s);stroke:var(--c-s)}
+  svg .totaal{fill:var(--ink);fill-opacity:.06;stroke:var(--ink);stroke-width:1}
+  /* verbindingslijntjes: dun en vaag, niet gestippeld (huisstijl: geen stippellijnen) */
+  svg .verbind{stroke:var(--vaag);stroke-width:.8}
+
+  /* ===== het zwaard: één klein ding. De verbetering van groep I ligt als één balk; vind je S,
+     dan komt het zwaard en valt de balk in vier stukjes. Alleen CSS en SVG. ===== */
+  figure.zwaard{margin:.9rem 0 .4rem}
+  figure.zwaard svg{max-width:520px;overflow:visible}
+  .zwaard .stuk{fill-opacity:0;stroke:none;transition:fill-opacity .6s ease .7s}
+  .zwaard .snede{stroke:var(--ink);stroke-width:1;stroke-dasharray:34;stroke-dashoffset:34;transition:stroke-dashoffset .35s ease}
+  .zwaard .snede:nth-of-type(1){transition-delay:.45s} .zwaard .snede:nth-of-type(2){transition-delay:.6s} .zwaard .snede:nth-of-type(3){transition-delay:.75s}
+  .zwaard .etiket{opacity:0;transition:opacity .5s ease 1s;font-size:15px;font-weight:600}
+  .zwaard .heel{transition:opacity .4s ease}
+  .zwaard .kling{opacity:0;transform:translateY(-26px);transition:opacity .35s ease,transform .45s cubic-bezier(.3,.9,.5,1)}
+  .zwaard .kling line{stroke:var(--ink);stroke-width:1.2;stroke-linecap:round}
+  .zwaard .kling .greep{stroke-width:2.4}
+  .gekliefd .zwaard .stuk{fill-opacity:.28}
+  .gekliefd .zwaard .snede{stroke-dashoffset:0}
+  .gekliefd .zwaard .etiket{opacity:1}
+  .gekliefd .zwaard .heel{opacity:0}
+  .gekliefd .zwaard .kling{opacity:1;transform:translateY(0)}
+  .zwaard .na{display:none} .gekliefd .zwaard .voor{display:none} .gekliefd .zwaard .na{display:inline}
+  @media (prefers-reduced-motion:reduce){ .zwaard *{transition:none!important} }
+
+  /* ===== het speelbord ===== */
+  .presets{display:flex;flex-wrap:wrap;gap:8px;margin:.6rem 0 .9rem}
+  .presets button{font-size:14px}
+  .schuiven{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;margin:.4rem 0 .8rem}
+  .schuiven label{display:grid;grid-template-columns:8.5em 1fr 2.2em;align-items:center;gap:8px;font-size:15px}
+  .schuiven input[type=range]{width:100%;accent-color:var(--accent)}
+  .schuiven output{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  .oordeel{font-size:17px;border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:.8rem 0;min-height:3.2em}
+  .sommen4{display:grid;grid-template-columns:auto auto;justify-content:start;gap:0 40px;align-items:start}
+  td.bevat{white-space:nowrap}
+
+  /* ===== de kaart ===== */
+  table.kaart{width:100%;font-size:15.5px;margin:.5rem 0}
+  table.kaart th,table.kaart td{padding:6px 8px;vertical-align:top}
+  table.kaart td[contenteditable]{min-height:2.6em;height:3.2em;background:var(--papier);outline:none;border-left:5px solid var(--bg)}
+  table.kaart th:nth-child(1){width:9%} table.kaart th:nth-child(2){width:27%}
+  table.kaart th:nth-child(3){width:34%} table.kaart th:nth-child(4){width:30%}
+  table.kaart td[contenteditable]:focus{box-shadow:inset 0 0 0 1px var(--accent)}
+  table.kaart td:first-child{white-space:nowrap;font-weight:600}
+
+  .foot{margin-top:34px;color:var(--vaag);font-size:13px;font-style:italic;line-height:1.6}
+  .foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+  @media (max-width:700px){
+    .wrap{padding:22px 14px 56px}
+    h1{font-size:27px}
+    .schuiven,.sommen4{grid-template-columns:1fr}
+    table.data{font-size:15px} table.data th,table.data td{padding:4px 9px 4px 3px}
+    table.som{font-size:15.5px}
+    table.kaart{font-size:14px} table.kaart th,table.kaart td{padding:5px 4px}
+    .trede,.kader{padding:12px 13px 10px}
+  }
+
+  /* ===== print: werkblad zonder hints, uitwerkingen en knoppen ===== */
+  @media print{
+    :root,:root:has(#donker:checked){
+      --bg:#fff; --gloed:rgba(0,0,0,0); --kaart:#fff; --papier:#fff;
+      --ink:#222; --dim:#444; --vaag:#666; --lijn:#bbb; --rand:#999;
+      --accent:#444; --goed:#222; --fout:#222; --knop:#fff; --knop-hover:#fff;
+      --c-hm:#2a78d6; --c-x:#eb6834; --c-t:#1baf7a; --c-s:#4a3aa7; --schaduw:none;
+    }
+    .kopregel,details,.invoer,.terugmelding,.presets,.schuiven,.matrix input,.keuzes,.zijmenu,.topmenu{display:none!important}
+    .trede{margin-top:48px}
+    .trede,.kader,figure,table{break-inside:avoid}
+    .zwaard *{transition:none!important}
+    table.kaart td[contenteditable]{height:4.2em}
+    .foot a{text-decoration:none}
+  }
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<input type="checkbox" id="donker" class="schakel" aria-label="light or dark">
+<!-- het menu wordt door het script gevuld uit de treden zelf, zodat de titels niet kunnen verlopen -->
+<nav class="zijmenu" aria-label="steps"></nav>
+<details class="topmenu"><summary>Steps</summary><nav aria-label="steps"></nav></details>
+<div class="wrap">
+  <div class="kopregel">
+    <a class="terugknop" href="/speeltjes/" hreflang="nl" title="De speelkist (in Dutch)">← Back to the toy box</a>
+    <div class="kop-rechts">
+      <nav class="taal" aria-label="language"><a href="solomon.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taal-sep">·</span><span aria-current="page">EN</span></nav>
+      <label for="donker" class="thema-knop" title="light or dark">◐ light / dark</label>
+    </div>
+  </div>
+
+  <h1 id="boven">The judgement of Solomon</h1>
+  <p class="ondertitel">dissect the design</p>
+  <!-- De vier namen staan met opzet al in de eerste alinea (Ben, 8-10-2026: "ook voor zoekmachines, maar ook dat
+       mensen meteen zien wat ze zochten"). De Engelse namen volgen Campbell & Stanley (1963): history, maturation,
+       testing, en "interaction of testing and X"; de gangbare naam voor die interactie is pretest sensitization. -->
+  <p class="lede kl">The Solomon four-group design: four groups, one therapy, and a questionnaire about quality of
+  life. Every group got better, and the improvement of each group is made of different pieces: what gets better by
+  itself (<i>history</i> and <i>maturation</i>, H/M), what the therapy does (the treatment, X), what the pretest
+  itself does (the testing effect, T), and what pretest and therapy do together on top of that (pretest
+  sensitization, S). You take them apart: first the sum of group I, then one piece per step, until only S is left.</p>
+
+  <h2 id="ontwerp">The design</h2>
+  <p>A group of people gets a therapy that is meant to improve their quality of life. You measure that quality of
+  life with a questionnaire; the score runs from 0 to 100, and higher is better. Random assignment divides the people
+  over four groups. Two groups also fill in the questionnaire before the therapy: the <i>pretest</i>. All four fill
+  it in at the end: the <i>posttest</i>. The table shows the mean score per group.</p>
+  <div class="tabelvak" id="tabel-ontwerp"></div>
+  <figure>
+    <svg id="tijdlijn" viewBox="0 0 460 222" role="img" aria-labelledby="tijdlijn-cap"></svg>
+    <figcaption id="tijdlijn-cap">The four groups over time. R is random assignment. A tick is a measurement, with
+    the mean score above it; the box is the therapy. Groups III and IV have nothing in the place of the pretest.</figcaption>
+  </figure>
+
+  <h2 id="ladder-kop">The ladder</h2>
+  <p>One thing you may assume from the start: random assignment put the groups together, so on average they started
+  out equal. The other assumptions come along the way, at the place where you need them.</p>
+  <p class="kl"><span id="aantal-stappen"></span> steps, and then an encore of <span id="aantal-toegift"></span>: then
+  everything turns out to be a regression. The first step sets down the sum of group I, where all four pieces sit.
+  Each step after that finds one piece and fills it into that sum, until only S is left. If you do not know, open
+  the hint. If you want to see how it goes, open the worked solution. All steps use the same numbers.</p>
+  <div id="ladder"></div>
+
+  <h2 id="aannames-kop">What you may assume, in one place</h2>
+  <p>This is what you assumed along the way. For each assumption: why that is allowed, and whether the design takes
+  care of it or you measure it.</p>
+  <div class="tabelvak">
+  <table class="data kl" id="aannames">
+    <caption>Four assumptions, and how you take care of them</caption>
+    <tr><th>what you assume</th><th>why that is allowed</th><th>does the design take care of it, or do you measure it?</th></tr>
+    <tr><td>The four groups started out equal on average.</td><td>Random assignment (R) decided who went into which group.</td>
+        <td>The design takes care of it. One bit you can check: the pretests of I and II are <span data-v="voorI"></span> and <span data-v="voorII"></span>.</td></tr>
+    <tr><td>Groups III and IV had the same score beforehand as the mean of the pretests of I and II.</td><td>That follows from the first row. This is called <i>substitution</i>: you fill in a number in a place where you measured nothing.</td>
+        <td>The design. Measuring is impossible here: give group III a pretest, and it has become group I.</td></tr>
+    <tr><td>What gets better by itself gets better by the same amount in all four groups.</td><td>The groups run through the same period, in the same world.</td>
+        <td>The design: all groups at the same time.</td></tr>
+    <tr><td>The pieces add up.</td><td>That is how you agree to it: what is left in group I after you take off the other pieces, you call S.</td>
+        <td>An agreement. You do not measure it, you choose it.</td></tr>
+  </table>
+  </div>
+
+  <h2 id="kaart">Your own card</h2>
+  <p>Fill it in without looking. Click in a cell to type, or print the page and use a pen.</p>
+  <div class="tabelvak">
+  <table class="data kaart kl" id="lege-kaart">
+    <caption>The Solomon card: four effects</caption>
+    <tr><th>effect</th><th>which groups do you compare?</th><th>the sum</th><th>what you assume</th></tr>
+    <tr><td>H/M</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    <tr><td>X</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    <tr><td>T</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    <tr><td>S</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+  </table>
+  </div>
+  <details class="ingevuld">
+    <summary>The filled-in card, to lay beside yours</summary>
+    <div class="tabelvak" id="volle-kaart"></div>
+  </details>
+
+  <h2 id="speelbord">Pull on the numbers yourself</h2>
+  <p class="kl">Six sliders: the two pretests and the four posttests. The sums follow along, in the same order as the
+  ladder: first H/M, then X, then T, and S last. The buttons set up a known case.</p>
+  <div class="presets" id="presets"></div>
+  <div class="schuiven" id="schuiven"></div>
+  <p class="oordeel" id="oordeel" aria-live="polite"></p>
+  <figure>
+    <svg id="waterval" viewBox="0 0 460 262" role="img" aria-labelledby="wv-cap"></svg>
+    <figcaption id="wv-cap"></figcaption>
+  </figure>
+  <div class="tabelvak" id="sb-tabel"></div>
+  <div id="sb-sommen"></div>
+  <div class="tabelvak" id="sb-regressie"></div>
+  <p class="zacht kl">Also try: the pretests of I and II not equal. See what happens to T and S then, and to the
+  regression on the posttest.</p>
+
+  <h2 id="eigen">And in your own research?</h2>
+  <p class="kl">If you measure before and after in your own research, the improvement you see holds everything at once:
+  what gets better by itself, your intervention, and what the pretest itself did. With one group you cannot take
+  those pieces apart. For that you need groups that differ in one thing only, the way II and IV here differ only in
+  the pretest. So for every effect you want to know, look for the two groups that yield it. If you cannot find them
+  in your design, you cannot see that effect on its own either.</p>
+  <p class="kl">And S is a difference in differences: the effect of the therapy on quality of life with a pretest, minus
+  the effect of the therapy on quality of life without a pretest. That is called an interaction, and that is what
+  <a href="https://countcamp.org/manuscript/h10.html" hreflang="nl">chapter 10 of the (Dutch) book, <i lang="nl">Verschil in verschil</i></a>, is about.</p>
+  <details class="verder">
+    <summary>Other names for the same pieces, in case you meet them in a book</summary>
+    <div class="tabelvak">
+    <table class="data kl">
+      <caption>Here and elsewhere</caption>
+      <tr><th>here</th><th>also called</th></tr>
+      <tr><td>H/M</td><td><i>history</i> and <i>maturation</i> (growing up, recovering)</td></tr>
+      <tr><td>X</td><td>the treatment, the intervention</td></tr>
+      <tr><td>T</td><td>the testing effect, <i>testing</i>. Watch out: some books call this <i>pretest sensitization</i>, and then they do not mean S.</td></tr>
+      <tr><td>S</td><td>pretest sensitization, the <i>interaction of testing and treatment</i>: the interaction of pretest and therapy</td></tr>
+    </table>
+    </div>
+    <p>And not every book numbers the groups the way this page does. So always look first at who got a pretest and who got the therapy.</p>
+  </details>
+  <details class="verder">
+    <summary>For those who want more: how do you test whether S really differs from zero?</summary>
+    <p class="kl">This page works with means, with the borrowed pretest added. That is how Solomon (1949) worked it out
+    himself, and to find S that is fine. If you also want to <em>test</em> whether S really differs from zero, you
+    need more than means: you look at the scores of all the people. There you get stuck, because groups III and IV
+    have no pretest of their own, so no improvement per person either. Campbell and Stanley (1963) therefore
+    recommended another route: test on the posttests, with two factors: pretest (yes or no) and therapy (yes or
+    no), the two switches from the encore. That is exactly the regression on the posttest from the encore, and the
+    interaction in it is S. If the pretests of I and II are equal, it gives the same number as the sums.</p>
+    <p class="kl">Mind you: the main effect of therapy in such an analysis is the mean of the effect with and without a
+    pretest, (<span data-r="metS"></span> + <span data-r="zonderS"></span>) / 2 = <span data-r="hoofd"></span>,
+    and not the <span data-r="X"></span> of <i>b</i><sub>2</sub>: that weight is only the effect without a pretest.</p>
+  </details>
+
+  <p class="foot">
+    From the (Dutch) book <i lang="nl">De regressieve ruggengraat</i> &middot; <a href="https://countcamp.org/manuscript/h10.html" hreflang="nl">Chapter 10 — <span lang="nl">Verschil in verschil</span> (difference in differences)</a> &middot; sensitization is a difference in differences<br>
+    The design and the arithmetic: Solomon, R. L. (1949). An extension of control group design. <i>Psychological Bulletin, 46</i>(2), 137–150. https://doi.org/10.1037/h0062958<br>
+    The test on the posttests: Campbell, D. T., &amp; Stanley, J. C. (1963). <i>Experimental and quasi-experimental designs for research</i>. Rand McNally.
+  </p>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ===== de zes gemeten getallen: de enige getypte getallen op deze bladzij =====
+  // Kwaliteit van leven, 0 tot 100. Gekozen zodat elke som van stukjes een eigen getal
+  // geeft (nagerekend in _tools/tests/solomon_getallen_test.py): wie een stukje vergeet,
+  // komt op een getal uit dat precies verraadt wélk stukje. Dezelfde zes als in solomon.html.
+  var GETALLEN = {voorI:50, voorII:50, naI:65, naII:53, naIII:60, naIV:52};
+
+  // ===== de methode, van beneden naar boven =====
+  // Voormeting van III en IV = gemiddelde van I en II. Dan:
+  //   IV : H/M              III: H/M + X
+  //   II : T + H/M          I  : S + T + H/M + X
+  function los(d){
+    var leen = (d.voorI + d.voorII) / 2;
+    var vI = d.naI - d.voorI, vII = d.naII - d.voorII;
+    var vIII = d.naIII - leen, vIV = d.naIV - leen;
+    var HM = vIV;
+    var X = vIII - HM;
+    var T = vII - HM;
+    var S = vI - T - HM - X;
+    return {leen:leen, vI:vI, vII:vII, vIII:vIII, vIV:vIV, HM:HM, X:X, T:T, S:S};
+  }
+  // ===== dezelfde vier groepen als regressie, met V (voormeting 0/1) en X (therapie 0/1) =====
+  //   Y = b0 + b1·V + b2·X + b3·V·X
+  //   IV (0,0): b0        III (0,1): b0 + b2        II (1,0): b0 + b1        I (1,1): b0 + b1 + b2 + b3
+  // Twee keer: met de nameting als Y, en met de verbetering (na − voor, met de geleende voormeting) als Y.
+  function regressie(d){
+    var rr = los(d);
+    return {
+      na:  {b0:d.naIV, b1:d.naII - d.naIV, b2:d.naIII - d.naIV, b3:(d.naI - d.naII) - (d.naIII - d.naIV)},
+      ver: {b0:rr.vIV, b1:rr.vII - rr.vIV, b2:rr.vIII - rr.vIV, b3:(rr.vI - rr.vII) - (rr.vIII - rr.vIV)}
+    };
+  }
+
+  // ===== getallen netjes: punt als decimaalteken, echte min =====
+  function g(v){
+    var r = Math.round(v * 100) / 100;
+    var s = Number.isInteger(r) ? String(r) : (Math.abs(r * 10 - Math.round(r * 10)) < 1e-9 ? r.toFixed(1) : r.toFixed(2));
+    return s.replace('-', '−');
+  }
+  function gh(v){ return v < 0 ? '(' + g(v) + ')' : g(v); }   // achter een min of plus: negatief tussen haakjes
+  function gelijk(a, b){ return Math.abs(a - b) < 1e-9; }
+  function pt(v){ return g(v) + (gelijk(Math.abs(v), 1) ? ' point' : ' points'); }   // "1 point", "3 points"
+  function b(i){ return '<i>b</i><sub>' + i + '</sub>'; }     // regressiegewicht in APA-zetting: cursieve b, index eronder
+  // De twee schakelaars (0 of 1) in de regressie staan voluit in woorden (Ben, 8-10-2026: "Bij regressie
+  // kunnen we toch ook experiment of manipulatie of therapie uitgeschreven?"). In stuk 1b heetten ze V en X,
+  // en die X botste met het stukje X van 8 punten: Jeanne en Michelle lazen allebei "b2 is X" terwijl X net
+  // 1 was. Met woorden is er maar één X over, het stukje. De woorden staan rechtop: het zijn namen van
+  // schakelaars, geen symbolen; b en Y blijven cursief.
+  var SV = 'pretest', SW = 'therapy', VX = SV + '·' + SW;
+  var MODEL = '<i>Y</i> = ' + b(0) + ' + ' + b(1) + '·' + SV + ' + ' + b(2) + '·' + SW + ' + ' + b(3) + '·' + VX;
+
+  // de letters van de stukjes krijgen hun vaste streep
+  var KLEUR = {HM:'hm', X:'x', T:'t', S:'s'};
+  function kl(s){
+    return s.replace(/H\/M|\b[XTS]\b/g, function(m){
+      var c = m === 'H/M' ? 'hm' : m.toLowerCase();
+      return '<span class="k k-' + c + '">' + m + '</span>';
+    });
+  }
+
+  // ===== de treden op naam: tekst die naar een stap verwijst, rekent het nummer uit =====
+  // Verschuift er een trede (stuk 1c zette de som van groep I vooraan), dan schuiven de verwijzingen mee.
+  // Met de hand getikte stapnummers stonden in stuk 1b op zestien plekken; die zouden nu allemaal liegen.
+  var VOLGORDE = ['som', 'stukjes', 'leen', 'hm', 'x', 't', 's', 'did', 'kaal', 'regNa', 'regVer'];
+  function nr(k){ var i = VOLGORDE.indexOf(k); if (i < 0) throw new Error('onbekende stap: ' + k); return i + 1; }
+  function stap(k){ return 'step ' + nr(k); }
+  function stapReeks(ks){ var n = ks.map(nr); return 'steps ' + n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1]; }
+  function stapTotMet(a, z){ return 'steps ' + nr(a) + ' to ' + nr(z); }
+  // een som, uitgelijnd op het =-teken, linkerkant elke regel herhaald.
+  // somBlok zet meer sommen in één tabel, zodat ook hun =-tekens onder elkaar staan.
+  function somRijen(links, rechts){
+    return rechts.map(function(r){
+      return '<tr><td class="l">' + kl(links) + '</td><td class="is">=</td><td class="r">' + kl(r) + '</td></tr>';
+    }).join('');
+  }
+  function som(links, rechts){ return '<div class="somvak"><table class="geen-apa som">' + somRijen(links, rechts) + '</table></div>'; }
+  function somBlok(delen){
+    return '<div class="somvak"><table class="geen-apa som">' + delen.map(function(d){ return somRijen(d[0], d[1]); })
+      .join('<tr class="tussen"><td colspan="3"></td></tr>') + '</table></div>';
+  }
+  function P(t){ return '<p>' + kl(t) + '</p>'; }
+  var WELKE = '<p class="welke">Which sum do you need?</p>';
+  // wat je vergelijkt en wat je aanneemt: precies de kolommen van de kaart
+  function vergelijk(groepen, aanname){
+    return '<p class="kaartregel"><span>You compare:</span> ' + kl(groepen) + '<br><span>You assume:</span> ' + kl(aanname) + '</p>';
+  }
+  // de trap van groep I, met k stukjes ingevuld (wordt na het opbouwen getekend)
+  function trap(k, onderschrift){
+    var rr = los(GETALLEN), namen = ['H/M','X','T','S'], sleutels = ['HM','X','T','S'];
+    var bekend = sleutels.slice(0, k).map(function(s, i){ return namen[i] + ' = ' + g(rr[s]); });
+    var tekst = onderschrift || ('The staircase of group I so far: ' + bekend.join(', ') +
+      (k < 4 ? '. The question mark is the next step; the grey block on the right is the whole, ' + g(rr.vI) + '.' : '. Together ' + g(rr.vI) + ': the whole improvement of group I.'));
+    return '<figure class="mini"><svg class="mini-wv" data-tot="' + k + '" viewBox="0 0 460 262" role="img" aria-label="' + tekst + '"></svg>' +
+      '<figcaption>' + kl(tekst) + '</figcaption></figure>';
+  }
+  // het zwaard: de verbetering van groep I als één balk, die bij het vinden van S in vieren valt
+  function zwaardFiguur(){
+    var rr = los(GETALLEN);
+    var stukjes = ['H/M = ' + g(rr.HM), 'X = ' + g(rr.X), 'T = ' + g(rr.T), 'S = ' + g(rr.S)].join(', ');   // zelfde volgorde als de balk
+    return '<figure class="zwaard"><svg class="zwaard-svg" viewBox="0 0 460 100" role="img" aria-label="The improvement of group I, ' +
+      pt(rr.vI) + ', as one bar; after finding S in four pieces: ' + stukjes + '."></svg>' +
+      '<figcaption><span class="voor">The improvement of group I, ' + pt(rr.vI) + ', still in one piece. Find S, and it falls apart.</span>' +
+      '<span class="na">Two namesakes: Richard Solomon devised the design, King Solomon called for a sword to divide fairly. Here the sword divides the improvement of group I into its four pieces: ' +
+      kl(stukjes) + '.</span></figcaption></figure>';
+  }
+  // ===== de lopende som van groep I: de ruggengraat van de ladder =====
+  // Ben, 8-10-2026, hoe hij het altijd gaf: "ik begon altijd zo dacht ik voor I: O1 − O0 = X + T + S + HM ...
+  // en ik vulde ook gewoon langzaam telkens de eerste formule verder in totdat S overbleef. En die rekenden we
+  // dan uit." k = hoeveel stukjes al ingevuld zijn (H/M, X, T, S); bij k = 4 wordt S uitgerekend.
+  // Zijn regel voor sommen (8-10): onder elkaar, één "=" per regel, de linkerkant herhaald, elke invulling
+  // recht onder de vorige, de conclusie op een eigen regel ("S = 4", niet "4 = S").
+  function bekend(sl, v){ return '<span class="k k-' + KLEUR[sl] + '">' + gh(v) + '</span>'; }   // een ingevuld stukje houdt zijn streep
+  // alle regels van de lopende som, van boven naar beneden: 0 de som in letters, 1 met het totaal links,
+  // 2-4 met één, twee, drie stukjes ingevuld, 5-7 de drie slotregels waarin S uitgerekend wordt
+  function lopendRijen(){
+    var rr = los(GETALLEN), sl = ['HM','X','T','S'], namen = ['H/M','X','T','S'], tot = g(rr.vI), regels = [];
+    function rechts(i){ return sl.map(function(s, j){ return j < i ? bekend(s, rr[s]) : namen[j]; }).join(' + '); }
+    regels.push(['improvement I', rechts(0)]);
+    for (var i = 0; i <= 3; i++) regels.push([tot, rechts(i)]);
+    var rest = rr.HM + rr.X + rr.T;
+    regels.push([tot, g(rest) + ' + S']);
+    regels.push(['S', tot + ' − ' + gh(rest)]);
+    regels.push(['S', g(rr.S)]);
+    return regels;
+  }
+  // k = hoeveel stukjes al ingevuld zijn (bij 4 wordt S uitgerekend); van = de eerste regel die getoond wordt.
+  // De hele stapel staat zichtbaar in de trede, vóór de vraag (Michelle, 8-10: "de ruggengraat is verstopt" zolang
+  // hij alleen in de dichtgeklapte uitwerking stond); de uitwerking toont alleen de vorige regel en de nieuwe.
+  function lopend(k, van){
+    var laatste = k >= 4 ? 7 : k + 1;
+    var regels = lopendRijen().slice(van || 0, laatste + 1);
+    return '<div class="somvak"><table class="geen-apa som lopend">' + regels.map(function(p){
+      return '<tr><td class="l">' + kl(p[0]) + '</td><td class="is">=</td><td class="r">' + kl(p[1]) + '</td></tr>'; }).join('') + '</table></div>';
+  }
+  function somNu(k){ return '<p>This is how the sum of group I stands now:</p>' + lopend(k); }
+
+  // ===== de tabel met de vier groepen =====
+  var TITEL = 'Mean quality of life per group';
+  function tabel(d, o){
+    o = o || {};
+    var r = los(d);
+    // de stukjes staan overal in dezelfde volgorde als de trap en de ladder ze vindt: H/M, X, T, S
+    // (Michelle, 8-10: met "S + T + H/M + X" in de kolom en H/M, X, T, S in de trap kon ze de som niet op het plaatje leggen)
+    var rijen = [
+      {g:'I',   voor:d.voorI,  x:true,  na:d.naI,   bevat:'H/M + X + T + S', v:r.vI},
+      {g:'II',  voor:d.voorII, x:false, na:d.naII,  bevat:'H/M + T',         v:r.vII},
+      {g:'III', voor:null,     x:true,  na:d.naIII, bevat:'H/M + X',         v:r.vIII},
+      {g:'IV',  voor:null,     x:false, na:d.naIV,  bevat:'H/M',             v:r.vIV}
+    ];
+    var h = '<table class="data">';
+    if (o.titel) h += '<caption>' + o.titel + '</caption>';
+    // de kop heet "therapie", niet "therapie (X)": die X was een tweede X naast het stukje X (Jeanne, 8-10)
+    h += '<tr><th>group</th><th class="getal">pretest</th><th>therapy</th><th class="getal">posttest</th>' +
+         (o.verandering ? '<th class="getal">improvement</th>' : '') + (o.bevat ? '<th>contains</th>' : '') + '</tr>';
+    rijen.forEach(function(w){
+      var voor = w.voor !== null ? g(w.voor) : (o.leen ? '<span class="geleend">(' + g(r.leen) + ')</span>' : '–');
+      h += '<tr' + ((o.licht || []).indexOf(w.g) >= 0 ? ' class="licht"' : '') + '><td>' + w.g + '</td><td class="getal">' + voor +
+           '</td><td>' + (w.x ? 'yes' : 'no') + '</td><td class="getal">' + g(w.na) + '</td>' +
+           (o.verandering ? '<td class="getal">' + g(w.v) + '</td>' : '') +
+           (o.bevat ? '<td class="bevat">' + kl(w.bevat) + '</td>' : '') + '</tr>';
+    });
+    var noot = [];
+    if (o.leen) noot.push('In brackets: the borrowed pretest.');
+    else if (!o.geenStreepNoot) noot.push('A dash: that group did no pretest.');   // een streepje zonder noot (APA-lens, 8-10)
+    if (o.verandering) noot.push('Improvement: posttest minus pretest.');
+    if (o.bevat && !o.geenBevatNoot) noot.push('The column <i>contains</i> is what you ticked in ' + stap('stukjes') + '.');
+    return h + '</table>' + (noot.length ? '<p class="zacht" style="font-size:14px;margin-top:0">' + noot.join(' ') + '</p>' : '');
+  }
+  // dezelfde groepen als nullen en enen, voor de regressiestappen
+  function tabelReg(d, soort){
+    var rr = los(d);
+    var rijen = [['I',1,1,d.naI,rr.vI], ['II',1,0,d.naII,rr.vII], ['III',0,1,d.naIII,rr.vIII], ['IV',0,0,d.naIV,rr.vIV]];
+    var h = '<table class="data"><caption>The same groups, now as zeros and ones: 1 is yes, 0 is no</caption>' +
+      '<tr><th>group</th><th class="getal">' + SV + '</th><th class="getal">' + SW + '</th><th class="getal">' +
+      (soort === 'na' ? 'posttest (<i>Y</i>)' : 'improvement (<i>Y</i>)') + '</th></tr>';
+    rijen.forEach(function(w){
+      h += '<tr><td>' + w[0] + '</td><td class="getal">' + w[1] + '</td><td class="getal">' + w[2] + '</td><td class="getal">' + g(soort === 'na' ? w[3] : w[4]) + '</td></tr>';
+    });
+    return h + '</table>' + (soort === 'na' ? '' : '<p class="zacht" style="font-size:14px;margin-top:0">Improvement of III and IV: with the borrowed pretest from ' + stap('leen') + '.</p>');
+  }
+  // wat het model per groep zegt, als je de nullen en enen invult
+  // de boekhouding van de stukjes-stap ernaast, zodat de paren te zien zijn: b2 bij X, b1 bij T, b3 bij S (Michelle, 8-10)
+  // de rijen staan I tot en met IV, net als elke andere tabel op de bladzij (Jeanne, 8-10: twee volgordes in één
+  // stap); "van onder naar boven" klopt dan letterlijk met de tabel
+  var MODEL_PER_GROEP = '<table class="data"><caption>What is left of the model per group, next to the bookkeeping of ' + stap('stukjes') + '</caption>' +
+    '<tr><th>group</th><th class="getal">' + SV + '</th><th class="getal">' + SW + '</th><th class="getal">' + VX + '</th><th>the model says</th><th>in ' + stap('stukjes') + ': the improvement contains</th></tr>' +
+    '<tr><td>I</td><td class="getal">1</td><td class="getal">1</td><td class="getal">1</td><td class="bevat"><i>Y</i> = ' + b(0) + ' + ' + b(1) + ' + ' + b(2) + ' + ' + b(3) + '</td><td class="bevat">' + kl('H/M + X + T + S') + '</td></tr>' +
+    '<tr><td>II</td><td class="getal">1</td><td class="getal">0</td><td class="getal">0</td><td class="bevat"><i>Y</i> = ' + b(0) + ' + ' + b(1) + '</td><td class="bevat">' + kl('H/M + T') + '</td></tr>' +
+    '<tr><td>III</td><td class="getal">0</td><td class="getal">1</td><td class="getal">0</td><td class="bevat"><i>Y</i> = ' + b(0) + ' + ' + b(2) + '</td><td class="bevat">' + kl('H/M + X') + '</td></tr>' +
+    '<tr><td>IV</td><td class="getal">0</td><td class="getal">0</td><td class="getal">0</td><td class="bevat"><i>Y</i> = ' + b(0) + '</td><td class="bevat">' + kl('H/M') + '</td></tr></table>';
+
+  // ===== de vier stukjes =====
+  var STUKJES = '<table class="data"><caption>The four pieces an improvement is made of</caption>' +
+    '<tr><th>piece</th><th>what it is</th></tr>' +
+    '<tr><td>' + kl('H/M') + '</td><td>what gets better by itself, even without therapy: time, recovery, growing up. Two letters, one piece: H for what happens in the world, M for what happens inside the people themselves.</td></tr>' +
+    '<tr><td>' + kl('X') + '</td><td>what the therapy does to quality of life</td></tr>' +
+    '<tr><td>' + kl('T') + '</td><td>what the pretest itself does to quality of life: someone who has filled in the questionnaire once scores differently the second time</td></tr>' +
+    '<tr><td>' + kl('S') + '</td><td>the <i>sensitization</i>: what pretest and therapy do together, on top of each one alone. The pretest makes the therapy stronger or weaker, for instance because you have already thought about your quality of life.</td></tr></table>';
+
+  // ===== de ladder =====
+  var r = los(GETALLEN), rb = regressie(GETALLEN);
+  var MATRIX_GOED = {I:['H/M','X','T','S'], II:['H/M','T'], III:['H/M','X'], IV:['H/M']};
+  // De treden op naam; VOLGORDE (hierboven) zet ze op een rij. Bens ruggengraat (8-10-2026): eerst de som van
+  // groep I als de vraag, dan lenen, dan IV, III, II, en elk gevonden stukje in die som invullen tot S overblijft.
+  var ST = {
+    // Stap 1 heeft geen stukjes-tabel vóór de vraag: Michelle zakte daarin weg en Jeanne gleed eroverheen en moest
+    // bij de vinkjes terug (8-10). De eerste vraag is kort (65 − 50); de tabel staat bij de vinkjes, waar hij nodig is.
+    som: { titel:'Group I: the whole sum',
+      tabel:{titel:TITEL, licht:['I']},
+      vraag:'Group I got a pretest and the therapy. By how much did quality of life in group I improve?',
+      invoer:{soort:'getal', goed:r.vI},
+      hint:'Posttest minus pretest. Group I has both.',
+      uit:function(){ return WELKE + P('Posttest I minus pretest I: the improvement of group I.') +
+        som('improvement I', ['posttest I − pretest I', g(GETALLEN.naI) + ' − ' + gh(GETALLEN.voorI), g(r.vI)]) +
+        P('Everything sits in those ' + pt(r.vI) + ' at once, because group I got everything: what got better by itself (H/M), what the therapy did (X), what the pretest itself did (T), and what those two did together on top (S). As a sum:') +
+        lopend(0) +
+        P('That these four add up to the improvement is an agreement, not a measurement: what is left in group I after you take off the other three, you call S. You know the total; of the four pieces on their own you know nothing yet. That is the question the whole ladder answers: in the steps that follow you find them one by one, and each piece you find you fill into this sum, until only S is left.') +
+        trap(0, 'The staircase of group I, still empty: four steps, together the ' + pt(r.vI) + ' of the grey block on the right. In the next steps you fill it from left to right.'); } },
+
+    stukjes: { titel:'Which pieces sit in which group?',
+      tabel:{titel:TITEL},
+      voor:'<p>Group I has all four pieces. First what they are:</p>' + STUKJES + '<p>The other groups got less, and so they have less.</p>',
+      vraag:'In each row, tick the pieces that sit in the improvement of that group.',
+      invoer:{soort:'matrix'},
+      hint:'What gets better by itself gets better in every group. X sits where the therapy was, T where there was a pretest. And S? For that, a group must have had both.',
+      uit:function(){ return WELKE + P('None yet. This is the bookkeeping:') +
+        // I tot en met IV, dezelfde volgorde als het vinkjesrooster (Michelle, 8-10: "een van de twee op zijn kop lezen")
+        '<table class="data"><caption>What each group got, and so what sits in its improvement</caption><tr><th>group</th><th>got</th><th>the improvement contains</th></tr>' +
+        '<tr><td>I</td><td>pretest and therapy</td><td class="bevat">' + kl('H/M + X + T + S') + '</td></tr>' +
+        '<tr><td>II</td><td>pretest</td><td class="bevat">' + kl('H/M + T') + '</td></tr>' +
+        '<tr><td>III</td><td>therapy</td><td class="bevat">' + kl('H/M + X') + '</td></tr>' +
+        '<tr><td>IV</td><td>nothing</td><td class="bevat">' + kl('H/M') + '</td></tr></table>' +
+        P('Group IV has the least, group I everything. That is why you solve it from the bottom up: group IV gives you H/M, and each group above it one piece more. Each piece you find, you fill into the sum of group I.') +
+        P('Only: group IV has no pretest, so you cannot work out its improvement yet. That is what the next step is about.'); } },
+
+    leen: { titel:'Borrow a pretest',
+      tabel:{titel:TITEL, licht:['III','IV']},
+      voor:'<p>Look in the column <i>pretest</i>: groups I and II have one, groups III and IV filled in the questionnaire once, at the end. No pretest, no improvement; and without the improvement of group IV, no ' + kl('H/M') + '.</p>',
+      vraag:'Which number do you take for groups III and IV as their score beforehand?',
+      invoer:{soort:'getal', goed:r.leen},
+      hint:'Random assignment put the groups together. How will III and IV have started out on average, compared with I and II?',
+      uit:function(){ return WELKE + P('The mean of the two pretests you do have. From here on, that number is called the <i>borrowed pretest</i>.') +
+        som('borrowed pretest', ['(pretest I + pretest II) / 2', '(' + g(GETALLEN.voorI) + ' + ' + gh(GETALLEN.voorII) + ') / 2', g(r.leen)]) +
+        P('That is allowed because random assignment put the groups together: on average they started out equal. You fill in a number in a place where you measured nothing. That is called <i>substitution</i>.') +
+        P('Measuring is impossible here, by the way: give group III a pretest, and it has become group I.'); } },
+
+    hm: { titel:'Group IV: how big is H/M?',
+      tabel:{titel:TITEL, leen:true, bevat:true, licht:['IV']},
+      tussen:somNu(0),
+      vraag:'How big is H/M?',
+      invoer:{soort:'getal', goed:r.HM},
+      hint:'Group IV got no pretest and no therapy. So whatever improved in that group did so by itself. Use the borrowed pretest from ' + stap('leen') + '.',
+      uit:function(){ return WELKE + P('The improvement of group IV, because only H/M sits in it.') +
+        som('H/M', ['posttest IV − borrowed pretest', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)]) +
+        (gelijk(r.HM, 0) ? P('Zero is allowed. In this group, nothing got better by itself. That is why you hardly see H/M in the next sums (it keeps saying “− 0”). If you do want to see it at work, press <i>Time alone</i> at the sliders.') :
+          P('Without a pretest and without therapy, quality of life in this group goes up by ' + pt(r.HM) + '. That is what happens by itself, and it happens in every group.')) +
+        P('Fill H/M into the sum of group I, right under the previous line:') + lopend(1, 1) +
+        vergelijk('group IV, with the borrowed pretest', 'III and IV started out on average like I and II (random assignment)') +
+        trap(1); } },
+
+    x: { titel:'Group III: how big is X?',
+      tabel:{titel:TITEL, leen:true, bevat:true, licht:['III']},
+      tussen:somNu(1),
+      vraag:'How big is X?',
+      invoer:{soort:'getal', goed:r.X},
+      hint:'The improvement of group III holds two pieces: H/M and X. You already know H/M from ' + stap('hm') + '.',
+      uit:function(){ return WELKE + P('The improvement of group III is H/M + X. Take off H/M, and X is left.') +
+        som('X', ['improvement III − H/M', '(' + g(GETALLEN.naIII) + ' − ' + gh(r.leen) + ') − ' + gh(r.HM), g(r.vIII) + ' − ' + gh(r.HM), g(r.X)]) +
+        P('Without a pretest, the therapy improves quality of life by ' + pt(r.X) + '.') +
+        P('Fill X into the sum of group I too:') + lopend(2, 2) +
+        vergelijk('group III with group IV (because H/M is the improvement of IV)', 'what gets better by itself gets better by the same amount in III and IV') +
+        trap(2); } },
+
+    t: { titel:'Group II: how big is T?',
+      tabel:{titel:TITEL, leen:true, bevat:true, licht:['II']},
+      tussen:somNu(2),
+      vraag:'How big is T?',
+      invoer:{soort:'getal', goed:r.T},
+      hint:'Group II did the pretest but got no therapy. Its improvement holds H/M and T. Group II has a real pretest, so you do not need to borrow one.',
+      uit:function(){ return WELKE + P('The improvement of group II is H/M + T. Take off H/M, and T is left.') +
+        som('T', ['improvement II − H/M', '(' + g(GETALLEN.naII) + ' − ' + gh(GETALLEN.voorII) + ') − ' + gh(r.HM), g(r.vII) + ' − ' + gh(r.HM), g(r.T)]) +
+        P('The pretest itself improves quality of life by ' + pt(r.T) + ', even without therapy.') +
+        P('Fill T into the sum of group I too. Now only S is still open:') + lopend(3, 3) +
+        vergelijk('group II with group IV', 'what gets better by itself gets better by the same amount in II and IV') +
+        trap(3); } },
+
+    s: { titel:'Group I: how big is S?',
+      tabel:{titel:TITEL, leen:true, bevat:true, licht:['I']},
+      tussen:somNu(3),
+      vraag:'How big is S?',
+      invoer:{soort:'getal', goed:r.S, gelijkAanT:true},
+      zwaard:true,
+      hint:'Look at the sum of group I above: three of the four pieces are filled in. How big must S be to arrive at ' + g(r.vI) + '?',
+      uit:function(){ return WELKE + P('No new one. The sum of group I from ' + stap('som') + ', with everything filled in that you know by now. Add up the three known pieces; what is left is S.') +
+        // de ruggengraat: Bens eigen manier (8-10-2026), zie lopend()
+        lopend(4, 4) +
+        P('What does that mean? Without a pretest, the therapy improves quality of life by X, ' + pt(r.X) + '. With a pretest, by X + S:') +
+        som('X + S', [g(r.X) + ' + ' + gh(r.S), g(r.X + r.S)]) +
+        P('The difference between those two is S' + (gelijk(r.S, 0) ? '.' : ': the pretest makes the therapy ' + (r.S > 0 ? 'stronger' : 'weaker') + '.')) +
+        vergelijk('group I with the other three', 'the pieces add up; what is left in I, you call S') +
+        trap(4); } },
+
+    did: { titel:'A second route: difference in differences',
+      tabel:{titel:TITEL, leen:true, bevat:true, verandering:true},
+      voor:kl('<p>You already have S, from ' + stap('s') + '. There is a second route to it, with only the improvements from the table. That route checks here whether you were right.</p>'),
+      vraag:'First work out improvement I minus improvement II, then improvement III minus improvement IV. By how much do those two results differ?',
+      invoer:{soort:'getal', goed:(r.vI - r.vII) - (r.vIII - r.vIV), gelijkAanT:true},
+      hint:'First write I − II out in pieces: (H/M + X + T + S) − (H/M + T). What is left? Then do the same with III − IV.',
+      uit:function(){ var a = r.vI - r.vII, c = r.vIII - r.vIV;
+        return WELKE + P('Two differences, and then the difference between those two. Here I stands for the improvement of group I, and so on. First in pieces, then with the numbers:') +
+        somBlok([
+          ['I − II', ['(H/M + X + T + S) − (H/M + T)', 'X + S']],
+          ['III − IV', ['(H/M + X) − H/M', 'X']],
+          ['(I − II) − (III − IV)', ['(X + S) − X', 'S']],
+          ['(I − II) − (III − IV)', ['(' + g(r.vI) + ' − ' + gh(r.vII) + ') − (' + g(r.vIII) + ' − ' + gh(r.vIV) + ')', g(a) + ' − ' + gh(c), g(a - c)]]
+        ]) +
+        P('The same number as in ' + stap('s') + ', by another route: twice the effect of the therapy, and the difference between them. Such a difference in differences is called an <i>interaction</i>.') +
+        didFiguur(a, c); } },
+
+    // De slotvraag heet niet "Tot slot": daarna komen nog twee treden, en Michelle (8-10) las "tot slot" als
+    // "klaar" en stapte uit. De toegift wordt aangekondigd, en de slotvraag sluit de ladder hardop af.
+    kaal: { titel:'The final check: the bare table',
+      tabel:{titel:TITEL},
+      voor:'<p>Once more, but now without borrowed pretests and without the column <i>contains</i>: only the bare table, the way you meet it in a paper. If this works, the ladder is done.</p>',
+      vraag:'What is the best estimate of S, the sensitization?',
+      // T, S, X, X + S, X + T + S (nameting I − nameting IV: de natuurlijkste fout uit een kale tabel, Jeanne 8-10) en alles
+      invoer:{soort:'keuze', opties:[r.T, r.S, r.X, r.X + r.S, r.X + r.T + r.S, r.vI].sort(function(a, c){ return a - c; }), gelijkAanT:true},
+      hint:'Sensitization is S: what pretest and therapy do together, on top, to quality of life. Every wrong answer is a piece you forgot to take off, or the wrong piece. You may borrow the pretest as in ' + stap('leen') + '; it also works without, with the sum of ' + stap('did') + ' but with posttests.',
+      uit:function(){ var a = GETALLEN.naI - GETALLEN.naII, c = GETALLEN.naIII - GETALLEN.naIV;
+        return WELKE + P('The one from ' + stap('s') + ', with the borrowed pretest, gives S = ' + g(r.S) + '. It also works without borrowing: the sum of ' + stap('did') + ', but with posttests. The borrowed pretest drops out there, because III and IV got the same one; and I and II have the same real pretest.') +
+        som('S', ['(posttest I − posttest II) − (posttest III − posttest IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(a - c)]) +
+        P('The other answers:') +
+        '<ul>' + ST.kaal.invoer.opties.filter(function(o){ return !gelijk(o, r.S); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
+        (gelijk(r.S, r.T) ? P('And watch out: with these numbers, T is ' + g(r.T) + ' as well. If you worked out T instead of S, your answer was right and your sum was wrong.') : '') +
+        P('With this, the ladder is done. What follows is an encore: the same sums, but as a regression.'); } },
+
+    // De toegift: eerst de makkelijke vraag (b0 aflezen), dan pas de ketting (b3). Michelle (8-10): met b3
+    // vooraan was de moeilijkste trede de eerste na de finish, en Jeanne: "elk stapje vraagt één ding" hield
+    // negen treden en brak daar.
+    regNa: { titel:'And this is a regression: the posttest', toegift:true,
+      tabelReg:'na',
+      voor:'<p>Everything you did can also be written as a regression. Turn the table into two switches, and write them out in full: <i>' + SV + '</i> is 1 if the group got a pretest and otherwise 0; <i>' + SW +
+        '</i> is 1 if the group got the therapy and otherwise 0. The posttest is <i>Y</i>, and the model is:</p>' +
+        '<p class="model">' + MODEL + '</p>' +
+        '<p>Fill in a 0 for a group and that term drops out; fill in a 1 and the weight stays. The product ' + VX + ' is only 1 if both are 1. That looks new, but these are the same four sums as in ' + stapTotMet('hm', 's') + ': only the pieces are now called <i>b</i>.</p>',
+      vraag:'How big is ' + b(0) + '?',
+      invoer:{soort:'getal', goed:rb.na.b0},
+      hint:'Group IV has the switch ' + SV + ' at 0 and the switch ' + SW + ' at 0, so everything drops out except ' + b(0) + '. Which posttest is that?',
+      uit:function(){ return WELKE + P('First what the model says per group, next to the bookkeeping of ' + stap('stukjes') + ':') +
+        MODEL_PER_GROEP +
+        // de nummers 0, 2, 1, 3 lijken een tikfout (Jeanne, 8-10): zeg waarom ze kruisen met de ladder
+        P('Then from the bottom up, just like the ladder: group IV gives ' + b(0) + ', group III gives ' + b(2) + ', group II gives ' + b(1) + ', and group I gives ' + b(3) +
+          '. The numbers cross the ladder for a moment: in the model, ' + SV + ' comes before ' + SW + ', so the pretest got ' + b(1) + ' and the therapy ' + b(2) + ', while the ladder found X first and then T.') +
+        somBlok([
+          [b(0), ['posttest IV', g(GETALLEN.naIV)]],
+          [b(2), ['posttest III − ' + b(0), g(GETALLEN.naIII) + ' − ' + gh(rb.na.b0), g(rb.na.b2)]],
+          [b(1), ['posttest II − ' + b(0), g(GETALLEN.naII) + ' − ' + gh(rb.na.b0), g(rb.na.b1)]],
+          [b(3), ['posttest I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(GETALLEN.naI) + ' − ' + gh(rb.na.b0) + ' − ' + gh(rb.na.b1) + ' − ' + gh(rb.na.b2), g(rb.na.b3)]]
+        ]) +
+        P('They look a little different from ' + stap('x') + ': there you first took off the pretest ' + g(r.leen) + ' and then H/M ' + g(r.HM) + '; here those two sit together in ' + b(0) + ' = ' + g(rb.na.b0) + ', so you take them off in one go.') +
+        P(b(2) + ' is X, what the therapy does. ' + b(1) + ' is T, what the pretest does. And ' + b(3) + ', the weight of the product ' + VX + ', is S: the sensitization is the interaction.') +
+        P('But look at ' + b(0) + ', the posttest of those who got nothing. The starting level sits in there, where everyone started on average (the borrowed pretest), and so does H/M:') +
+        som(b(0), ['starting level + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
+        P('So in this regression you do not see H/M on its own: it is hidden inside ' + b(0) + '.') +
+        trapReg('na'); } },
+
+    regVer: { titel:'And this is a regression: the improvement', toegift:true,
+      tabelReg:'ver',
+      voor:'<p>The same model, but now <i>Y</i> is not the posttest but the improvement: posttest minus pretest, for III and IV with the borrowed pretest.</p>' +
+        '<p class="model">' + MODEL + '</p>',
+      vraag:'How big is ' + b(3) + ' now, the weight of ' + VX + '?',
+      invoer:{soort:'getal', goed:rb.ver.b3},
+      hint:'From the bottom up, as in ' + stap('regNa') + ': first ' + b(0) + ' from group IV, then ' + b(2) + ' from III, ' + b(1) + ' from II, and ' + b(3) + ' from I.',
+      uit:function(){ return WELKE + P('The same four, now with the improvements:') +
+        somBlok([
+          [b(0), ['improvement IV', g(rb.ver.b0)]],
+          [b(2), ['improvement III − ' + b(0), g(r.vIII) + ' − ' + gh(rb.ver.b0), g(rb.ver.b2)]],
+          [b(1), ['improvement II − ' + b(0), g(r.vII) + ' − ' + gh(rb.ver.b0), g(rb.ver.b1)]],
+          [b(3), ['improvement I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(r.vI) + ' − ' + gh(rb.ver.b0) + ' − ' + gh(rb.ver.b1) + ' − ' + gh(rb.ver.b2), g(rb.ver.b3)]]
+        ]) +
+        P(b(3) + ' is S, just as in ' + stap('s') + '. And now ' + b(0) + ' is exactly H/M: the improvement of those who got nothing. The other two stayed what they were: ' + b(1) + ' is T, ' + b(2) + ' is X.') +
+        '<table class="data"><caption>What the weight ' + b(0) + ' means, per dependent variable</caption>' +
+        '<tr><th>dependent variable</th><th>' + b(0) + ' means</th><th>' + kl('H/M') + ' visible on its own?</th></tr>' +
+        '<tr><td>posttest</td><td>starting level + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>no</td></tr>' +
+        '<tr><td>improvement</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>yes</td></tr></table>' +
+        P('Every regression weight is a piece from the sum of the design, and the interaction ' + VX + ' is the sensitization. Whether you see H/M on its own depends on what you choose as <i>Y</i>.') +
+        trapReg('ver'); } }
+  };
+  var stappen = VOLGORDE.map(function(k){ if (!ST[k]) throw new Error('VOLGORDE noemt een trede die niet bestaat: ' + k); return ST[k]; });
+  if (stappen.length !== Object.keys(ST).length) throw new Error('niet elke trede staat in VOLGORDE');
+
+  // waar komt een fout antwoord op de slotvraag vandaan? Elke som van stukjes wordt geprobeerd, en elke
+  // rechttoe-rechtaan weg door de kale tabel (nameting min nameting) die op dat getal uitkomt; niets getypt.
+  var NAAM = {HM:'H/M', X:'X', T:'T', S:'S'};
+  var UITLEG = {HM:'what gets better by itself', X:'what the therapy does', T:'what the pretest itself does', S:'what pretest and therapy do together on top'};
+  var WEGEN = [
+    ['posttest I − posttest II',  GETALLEN.naI - GETALLEN.naII],  ['posttest I − posttest III',  GETALLEN.naI - GETALLEN.naIII],
+    ['posttest I − posttest IV',  GETALLEN.naI - GETALLEN.naIV],  ['posttest II − posttest IV',  GETALLEN.naII - GETALLEN.naIV],
+    ['posttest III − posttest IV', GETALLEN.naIII - GETALLEN.naIV], ['posttest II − posttest III', GETALLEN.naII - GETALLEN.naIII],
+    ['improvement I − improvement II', r.vI - r.vII], ['improvement I', r.vI], ['posttest I − pretest I', r.vI]
+  ];
+  function duiding(o){
+    var sl = ['HM','X','T','S'], past = [];
+    for (var m = 1; m < 16; m++){
+      var sub = sl.filter(function(k, i){ return m & (1 << i); });
+      if (gelijk(sub.reduce(function(a, k){ return a + r[k]; }, 0), o)) past.push(sub);
+    }
+    var wegen = WEGEN.filter(function(w){ return gelijk(w[1], o); }).map(function(w){ return w[0]; });
+    var via = wegen.length ? ' (for instance ' + wegen.join(', or ') + ')' : '';
+    if (!past.length) return 'that number comes from none of the sums here' + via + '.';
+    return past.map(function(sub){
+      var naam = sub.map(function(k){ return NAAM[k]; }).join(' + ');
+      if (sub.length === 1) return sub[0] === 'S' ? 'that is S.' : 'that is ' + naam + ', ' + UITLEG[sub[0]] + via + '; S is not in it.';
+      if (sub.length === 4) return 'that is ' + naam + ': the whole improvement of group I' + via + '. You took nothing off.';
+      var rest = sub.filter(function(k){ return k !== 'S'; }).map(function(k){ return NAAM[k]; });
+      if (sub.indexOf('S') >= 0) return 'that is ' + naam + via + ': you forgot to take off ' + rest.join(' and ') + '.';
+      return 'that is ' + naam + via + '; S is not in it.';
+    }).join(' Or: ');
+  }
+
+  function invoerHTML(st, i){
+    var iv = st.invoer, h = '<div class="invoer">';
+    if (iv.soort === 'getal'){
+      h += '<label>Your answer: <input type="text" inputmode="decimal" id="in-' + i + '" autocomplete="off"></label>';
+    } else if (iv.soort === 'vink'){
+      h += iv.opties.map(function(o){ return '<label><input type="checkbox" name="v-' + i + '" value="' + o + '"> ' + o + '</label>'; }).join('');
+    } else if (iv.soort === 'keuze'){
+      h += '<span class="keuzes">' + iv.opties.map(function(o){ return '<label><input type="radio" name="k-' + i + '" value="' + o + '"> ' + g(o) + '</label>'; }).join('') + '</span>';
+    } else if (iv.soort === 'matrix'){
+      h += '<table class="geen-apa matrix"><tr><th></th>' + ['H/M','X','T','S'].map(function(c){ return '<th>' + kl(c) + '</th>'; }).join('') + '</tr>' +
+        ['I','II','III','IV'].map(function(gr){
+          return '<tr><td>group ' + gr + '</td>' + ['H/M','X','T','S'].map(function(c){
+            return '<td><input type="checkbox" name="m-' + i + '" data-groep="' + gr + '" value="' + c + '" aria-label="group ' + gr + ', ' + c + '"></td>'; }).join('') + '</tr>';
+        }).join('') + '</table>';
+    }
+    return h + '<button type="button" data-stap="' + i + '">Check</button><span class="terugmelding" id="fb-' + i + '" aria-live="polite"></span></div>';
+  }
+
+  function nakijken(i){
+    var st = stappen[i], iv = st.invoer, fb = document.getElementById('fb-' + i), goed = false, tekst = '';
+    if (iv.soort === 'getal'){
+      var ruw = document.getElementById('in-' + i).value.trim().replace(',', '.').replace('−', '-');
+      if (ruw === '' || isNaN(Number(ruw))){ fb.className = 'terugmelding'; fb.textContent = 'Enter a number first.'; return; }
+      goed = gelijk(Number(ruw), iv.goed);
+    } else if (iv.soort === 'vink'){
+      var aan = [].slice.call(document.querySelectorAll('input[name="v-' + i + '"]:checked')).map(function(e){ return e.value; });
+      goed = aan.length === iv.goed.length && iv.goed.every(function(o){ return aan.indexOf(o) >= 0; });
+    } else if (iv.soort === 'matrix'){
+      var mis = [];
+      ['I','II','III','IV'].forEach(function(gr){
+        var aanR = [].slice.call(document.querySelectorAll('input[name="m-' + i + '"][data-groep="' + gr + '"]:checked')).map(function(e){ return e.value; });
+        var moet = MATRIX_GOED[gr];
+        if (!(aanR.length === moet.length && moet.every(function(c){ return aanR.indexOf(c) >= 0; }))) mis.push(gr);
+      });
+      goed = mis.length === 0;
+      if (!goed) tekst = (mis.length === 1 ? 'Group ' + mis[0] + ' is not right yet.' :
+        'Groups ' + mis.slice(0, -1).join(', ') + ' and ' + mis[mis.length - 1] + ' are not right yet.') + ' Look at what each group got, and open the hint if you need to.';
+    } else if (iv.soort === 'keuze'){
+      var gekozen = document.querySelector('input[name="k-' + i + '"]:checked');
+      if (!gekozen){ fb.className = 'terugmelding'; fb.textContent = 'Choose an answer first.'; return; }
+      var o = Number(gekozen.value);
+      goed = gelijk(o, r.S);
+      if (!goed) tekst = 'Not yet: ' + duiding(o).replace(/<[^>]+>/g, '');
+    }
+    // vallen T en S samen, dan krijgt wie T uitrekende het goede getal om de verkeerde reden
+    if (goed && iv.gelijkAanT && gelijk(r.S, r.T))
+      tekst = 'Correct. Watch out: T happens to be ' + g(r.T) + ' as well. Check in the worked solution whether you used the sum for S.';
+    fb.className = 'terugmelding ' + (goed ? 'goed' : 'fout');
+    fb.textContent = goed ? (tekst || 'Correct.') : (tekst || 'Not yet. Open the hint.');
+    // het zwaard: bij het vinden van S valt de balk van groep I in vieren
+    if (goed && st.zwaard) document.getElementById('stap-' + (i + 1)).classList.add('gekliefd');
+  }
+
+  var WOORD = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+  function woord(n){ return WOORD[n] || String(n); }
+  var nHoofd = stappen.filter(function(s){ return !s.toegift; }).length, nToegift = stappen.length - nHoofd;
+  document.getElementById('aantal-stappen').textContent = woord(nHoofd).charAt(0).toUpperCase() + woord(nHoofd).slice(1);
+  document.getElementById('aantal-toegift').textContent = woord(nToegift);
+
+  document.getElementById('ladder').innerHTML = stappen.map(function(st, i){
+    return '<section class="trede' + (st.zwaard ? ' heeft-zwaard' : '') + '" id="stap-' + (i + 1) + '"><div class="stapnr">' + (st.toegift ? 'Encore · ' : '') + 'Step ' + (i + 1) + ' of ' + stappen.length + '</div>' +
+      '<h3>' + kl(st.titel) + '</h3>' + (st.voor || '') +
+      '<div class="tabelvak">' + (st.tabelReg ? tabelReg(GETALLEN, st.tabelReg) : tabel(GETALLEN, st.tabel)) + '</div>' + (st.tussen || '') +
+      '<p class="vraag">' + kl(st.vraag) + '</p>' + invoerHTML(st, i) +
+      (st.zwaard ? zwaardFiguur() : '') +
+      '<details class="hint"><summary>Hint</summary><p>' + kl(st.hint) + '</p></details>' +
+      '<details class="uitwerking"><summary>Worked solution</summary>' + st.uit() + '</details></section>';
+  }).join('');
+  document.getElementById('ladder').addEventListener('click', function(e){
+    var k = e.target.closest('button[data-stap]'); if (k) nakijken(Number(k.getAttribute('data-stap')));
+  });
+  document.getElementById('ladder').addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && e.target.matches('input[type=text]')) nakijken(Number(e.target.id.split('-')[1]));
+  });
+
+  // ===== het menu: de treden op nummer, de vaste delen eromheen; één lijst op twee plekken =====
+  // De titels komen uit de treden zelf, dus een hernoemde of verschoven trede staat meteen goed in het menu.
+  function menuHTML(){
+    function li(doel, nr, tekst, deel){ return '<li' + (deel ? ' class="deel"' : '') + '><a href="#' + doel + '"><span class="mn">' + (nr || '') + '</span><span>' + tekst + '</span></a></li>'; }
+    return '<ol>' + li('ontwerp', '', 'The design') + li('ladder-kop', '', 'The ladder') +
+      stappen.map(function(st, i){ return li('stap-' + (i + 1), i + 1, st.titel); }).join('') +
+      li('aannames-kop', '', 'What you may assume', true) + li('kaart', '', 'Your own card') +
+      li('speelbord', '', 'Pull on the numbers yourself') + li('eigen', '', 'And in your own research?') +
+      '</ol><p class="menu-voet"><a href="#boven">back to top</a></p>';
+  }
+  [].forEach.call(document.querySelectorAll('nav.zijmenu, .topmenu nav'), function(n){ n.innerHTML = menuHTML(); });
+  // de uitklapbalk klapt dicht zodra je een stap kiest, anders blijft hij over de tekst hangen
+  var topmenu = document.querySelector('details.topmenu');
+  if (topmenu) [].forEach.call(topmenu.querySelectorAll('a'), function(a){ a.addEventListener('click', function(){ topmenu.open = false; }); });
+
+  // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
+  document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
+  [].forEach.call(document.querySelectorAll('[data-v]'), function(e){ e.textContent = g(GETALLEN[e.getAttribute('data-v')]); });
+  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X};
+  [].forEach.call(document.querySelectorAll('[data-r]'), function(e){ e.textContent = g(AFGELEID[e.getAttribute('data-r')]); });
+  // de streep hoort bij elke letter, ook buiten de ladder (APA-lens, 8-10: de lege kaart stond kaal naast de ingevulde).
+  // Alleen in tekstknopen, niet in de innerHTML: daar ving kl() ook de X in het attribuut data-r="X" en brak de
+  // bladzij (Michelle, Jeanne en de APA-lens, 8-10, alle drie: er stond letterlijk 'X">8' in de uitklapper).
+  function ontsmet(s){ return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  [].forEach.call(document.querySelectorAll('.kl'), function(e){
+    var loper = document.createTreeWalker(e, NodeFilter.SHOW_TEXT), knopen = [], n;
+    while ((n = loper.nextNode())) if (/H\/M|\b[XTS]\b/.test(n.nodeValue) && !n.parentNode.closest('.k')) knopen.push(n);
+    knopen.forEach(function(t){
+      var vak = document.createElement('span'); vak.innerHTML = kl(ontsmet(t.nodeValue));
+      var stuk = document.createDocumentFragment(); while (vak.firstChild) stuk.appendChild(vak.firstChild);
+      t.parentNode.replaceChild(stuk, t);
+    });
+  });
+
+  // ===== SVG-hulp =====
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(ouder, naam, att, tekst){
+    var e = document.createElementNS(NS, naam);
+    for (var k in att) e.setAttribute(k, att[k]);
+    if (tekst !== undefined) e.textContent = tekst;
+    ouder.appendChild(e); return e;
+  }
+
+  // ===== de tijdlijn: dunne lijnen, dunne streepjes =====
+  function tijdlijn(svg, d){
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var xs = {lot:52, voor:152, x:258, na:364}, ys = [66, 106, 146, 186];
+    el(svg, 'text', {x:xs.lot, y:24, 'text-anchor':'middle', 'class':'kop', 'font-size':14}, 'random');
+    el(svg, 'text', {x:xs.voor, y:24, 'text-anchor':'middle', 'class':'kop', 'font-size':14}, 'pretest');
+    el(svg, 'text', {x:xs.x, y:24, 'text-anchor':'middle', 'class':'kop', 'font-size':14}, 'therapy');
+    el(svg, 'text', {x:xs.na, y:24, 'text-anchor':'middle', 'class':'kop', 'font-size':14}, 'posttest');
+    var rij = [
+      {g:'I', voor:d.voorI, x:true, na:d.naI}, {g:'II', voor:d.voorII, x:false, na:d.naII},
+      {g:'III', voor:null, x:true, na:d.naIII}, {g:'IV', voor:null, x:false, na:d.naIV}
+    ];
+    rij.forEach(function(w, i){
+      var y = ys[i];
+      el(svg, 'text', {x:8, y:y + 5, 'font-size':15, 'font-weight':600}, w.g);
+      el(svg, 'text', {x:xs.lot, y:y + 5, 'text-anchor':'middle', 'font-size':14}, 'R');
+      el(svg, 'line', {x1:xs.lot + 12, y1:y, x2:xs.na, y2:y, 'class':'lijn'});
+      if (w.voor !== null){
+        el(svg, 'line', {x1:xs.voor, y1:y - 8, x2:xs.voor, y2:y + 8, 'class':'streep'});
+        el(svg, 'text', {x:xs.voor, y:y - 13, 'text-anchor':'middle', 'font-size':14}, g(w.voor));
+      }
+      // het hokje zegt "therapie", niet "X": die X was de laatste tweede X naast het stukje X (Jeanne en de APA-lens, 8-10)
+      if (w.x){
+        el(svg, 'rect', {x:xs.x - 31, y:y - 10, width:62, height:20, rx:2, 'class':'xdoos'});
+        el(svg, 'text', {x:xs.x, y:y + 4, 'text-anchor':'middle', 'font-size':12}, 'therapy');
+      }
+      el(svg, 'line', {x1:xs.na, y1:y - 8, x2:xs.na, y2:y + 8, 'class':'streep'});
+      el(svg, 'text', {x:xs.na, y:y - 13, 'text-anchor':'middle', 'font-size':14}, g(w.na));
+    });
+    el(svg, 'line', {x1:xs.lot, y1:212, x2:430, y2:212, 'class':'as'});
+    el(svg, 'path', {d:'M424 208 L430 212 L424 216', 'class':'as', fill:'none'});
+    el(svg, 'text', {x:400, y:206, 'text-anchor':'end', 'class':'astekst'}, 'time');
+  }
+  tijdlijn(document.getElementById('tijdlijn'), GETALLEN);
+
+  // ===== de waterval: de verbetering van groep I, stukje voor stukje =====
+  // een regressiegewicht als svg-tekst: cursieve b met het cijfer er klein onder
+  function bTekst(ouder, att, i){
+    var t = el(ouder, 'text', att);
+    el(t, 'tspan', {'font-style':'italic'}, 'b');
+    el(t, 'tspan', {dy:'4', 'font-size':'10'}, String(i));
+    return t;
+  }
+  // opt.basis: de vloer (0 voor de verbetering, de geleende voormeting voor de nameting);
+  // opt.b0tik: bij de eerste trede "b0" op de bovenkant zetten; opt.brij: de b's onder de treden;
+  // opt.as en opt.totaalLabel: de teksten langs de as en onder de laatste kolom.
+  function waterval(svg, rr, tot, opt){
+    opt = opt || {};
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var W = 460, R = W - 10, T = 22, B = 214, basis = opt.basis || 0;
+    // een getal staat BOVEN boven een stijgende balk of hangt ONDER onder een dalende; onderaan houdt het
+    // RUIM vrij tot de onderkant van de as, zodat het nooit op de etiketten eronder komt
+    var BOVEN = 6, ONDER = 15, RUIM = 22;
+    var cum = basis, segs = ['HM','X','T','S'].map(function(k){ var a = cum; cum += rr[k]; return {k:k, v:rr[k], a:a, b:cum}; });
+    var eind = basis + rr.vI;
+    var waarden = [basis, eind].concat(segs.map(function(s){ return s.b; }));
+    var lo = Math.floor(Math.min.apply(null, waarden)), hi = Math.ceil(Math.max.apply(null, waarden));
+    if (hi - lo < 4){ hi = lo + 4; }
+    // hoogstens acht vakken op de as, ook met de schuifjes uiterst: tot stuk 1c tikte de as bij elk bereik
+    // boven de 20 per 5, en van −200 tot 100 stonden er 61 getallen over elkaar (toets van stuk 1d)
+    var stap = [1, 2, 5, 10, 20, 25, 50, 100].filter(function(s){ return (hi - lo) / s <= 8; })[0] || 200;
+    lo = Math.floor(lo / stap) * stap; hi = Math.ceil(hi / stap) * stap;
+    var y = function(v){ return B - (v - lo) / (hi - lo) * (B - T); };
+    // Zakt de trap onder nul (onder de vloer), dan loopt de as onderaan minstens één vak verder door dan de
+    // laagste balk. En hangt er een getal onder een balk (een dalend stukje of een negatief geheel), dan
+    // loopt hij door tot dat getal binnen de figuur staat, boven de etiketten.
+    // Ben, 8-10-2026, bij H/M = −1, toen "−1" óp "H/M" stond: "misschien langere y-as aan onderkant".
+    var hangt = segs.filter(function(s){ return s.v < 0; }).map(function(s){ return s.b; });
+    if (eind < basis) hangt.push(eind);
+    if (Math.min.apply(null, waarden) < basis) lo -= stap;
+    if (hangt.length){
+      var laagst = Math.min.apply(null, hangt);
+      for (var n = 0; n < 20 && y(laagst) > B - RUIM; n++) lo -= stap;
+    }
+    var ticks = []; for (var v = lo; v <= hi + 1e-9; v += stap) ticks.push(v);
+    // de as schuift naar rechts als de getallen erlangs lang worden ("−200"), zodat ze de astitel niet raken
+    var L = Math.max(46, 26 + 8 * Math.max.apply(null, ticks.map(function(t){ return g(t).length; })));
+    var kolom = (R - L) / 5, cx = function(i){ return L + kolom * (i + 0.5); }, bw = Math.min(46, kolom * 0.56);
+    // waar het getal van een balk staat: boven een stijgende, onder een dalende. Zou het dan op de nullijn
+    // vallen (een balk die vlak onder nul eindigt), dan gaat het naar de andere kant van de balk.
+    function getalY(a, b){
+      var hoog = Math.max(a, b), laag = Math.min(a, b), omhoog = b >= a, y0 = y(basis);
+      var yb = omhoog ? y(hoog) - BOVEN : y(laag) + ONDER;
+      if (y0 > yb - 13 && y0 < yb + 2) yb = omhoog ? y(laag) + ONDER : y(hoog) - BOVEN;
+      return yb;
+    }
+    // as links: dunne streepjes, recessief
+    el(svg, 'line', {x1:L, y1:y(lo), x2:L, y2:y(hi), 'class':'as as-y'});
+    ticks.forEach(function(t){
+      el(svg, 'line', {x1:L - 4, y1:y(t), x2:L, y2:y(t), 'class':'as'});
+      el(svg, 'text', {x:L - 7, y:y(t) + 4, 'text-anchor':'end', 'class':'astekst'}, g(t));
+    });
+    el(svg, 'text', {x:12, y:(T + B) / 2, 'text-anchor':'middle', 'class':'astekst', transform:'rotate(-90 12 ' + ((T + B) / 2) + ')'}, opt.as || 'improvement (points)');
+    el(svg, 'line', {x1:L, y1:y(basis), x2:R, y2:y(basis), 'class':'nul'});
+    // tot = hoeveel stukjes al bekend zijn (de ladder kleurt de trap stap voor stap in);
+    // een onbekend stukje krijgt een vraagteken op de hoogte waar het zou beginnen, aan de kant van
+    // die hoogte waar de nullijn niet ligt
+    if (tot === undefined) tot = 4;
+    segs.forEach(function(s, i){
+      var x0 = cx(i) - bw / 2, top = Math.min(y(s.a), y(s.b)), h = Math.abs(y(s.a) - y(s.b));
+      if (i >= tot){
+        if (i === tot) el(svg, 'text', {x:cx(i), y:s.a >= basis ? y(s.a) - BOVEN : y(s.a) + ONDER + 3, 'text-anchor':'middle', 'font-size':16, 'class':'kop'}, '?');
+        return;
+      }
+      if (i === tot - 1 && i < 3) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
+      var vorm;
+      if (h < 1.5){ vorm = el(svg, 'line', {x1:x0, y1:y(s.a), x2:x0 + bw, y2:y(s.a), 'class':'seg seg-' + KLEUR[s.k], 'stroke-width':2.5}); }
+      else { vorm = el(svg, 'rect', {x:x0, y:top, width:bw, height:h, 'class':'seg seg-' + KLEUR[s.k]}); }
+      el(vorm, 'title', {}, NAAM[s.k] + ' = ' + g(s.v) + ': ' + UITLEG[s.k]);
+      // op een vloer boven nul krijgt de eerste trede niet "+2" maar waar hij eindigt: dat is b0
+      var lab = (opt.b0tik && i === 0) ? g(s.b) : (s.v > 0 ? '+' : '') + g(s.v);
+      el(svg, 'text', {x:cx(i), y:getalY(s.a, s.b), 'text-anchor':'middle', 'font-size':14, 'font-weight':600, 'class':'waarde'}, lab);
+      // b0 staat op het lijntje naar de volgende trede, want dat lijntje ligt op de hoogte van b0. Tot stuk 1d
+      // stond hij er middenin en liep het lijntje door de b heen (toets van stuk 1d, stap 10, ook met de
+      // getallen van de ladder). Daalt H/M, dan hangt hij eronder, weg van de vloer.
+      if (opt.b0tik && i === 0) bTekst(svg, {x:x0 + bw + 5, y:s.v >= 0 ? y(s.b) - 5 : y(s.b) + ONDER, 'font-size':13}, 0);
+      if (i < 3 && i < tot - 1) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
+    });
+    // de hele verbetering van groep I staat er altijd, ook als de trap nog niet af is: zo zie je het gat
+    // slinken (Michelle, 8-10: "het bijschrift zegt samen 15, maar in de lege trap staat geen 15");
+    // het verbindingslijntje komt pas als de laatste trede erbij staat
+    var xt = cx(4) - bw / 2, tt = Math.min(y(basis), y(eind)), th = Math.abs(y(basis) - y(eind));
+    if (tot === 4) el(svg, 'line', {x1:cx(3) + bw / 2, y1:y(cum), x2:xt, y2:y(cum), 'class':'verbind'});
+    var tv = el(svg, 'rect', {x:xt, y:tt, width:bw, height:Math.max(th, 1), 'class':'totaal'});
+    el(tv, 'title', {}, (opt.totaalLabel || 'improvement I') + ' = ' + g(eind));
+    el(svg, 'text', {x:cx(4), y:getalY(basis, eind), 'text-anchor':'middle', 'font-size':14, 'font-weight':600, 'class':'waarde'}, g(eind));
+    ['H/M', '+ X', '+ T', '+ S', '= I'].forEach(function(t, i){
+      el(svg, 'text', {x:cx(i), y:B + 24, 'text-anchor':'middle', 'font-size':15}, t);
+    });
+    if (opt.brij) [0, 2, 1, 3].forEach(function(bi, i){ bTekst(svg, {x:cx(i) - 5, y:B + 41, 'font-size':13, 'class':'astekst'}, bi); });
+    el(svg, 'text', {x:cx(4), y:B + 41, 'text-anchor':'middle', 'class':'astekst'}, opt.totaalLabel || 'improvement I');
+  }
+  // de trap in de toegift: op de nameting met de vloer op de geleende voormeting, op de verbetering met de b's eronder
+  function trapReg(soort){
+    var rr = los(GETALLEN), q = regressie(GETALLEN);
+    var tekst = soort === 'na'
+      ? 'The same staircase as in ' + stap('s') + ', but the floor lies at ' + g(rr.leen) + ': the borrowed pretest. The first step, H/M, ends at ' + g(q.na.b0) + ', and that is ' + b(0) + '. That is why H/M is hidden inside it.'
+      : 'The staircase of ' + stap('s') + ', with the weights underneath: ' + b(0) + ' is the first step, H/M; ' + b(3) + ' the last, S.';
+    return '<figure class="mini"><svg class="mini-wv" data-tot="4" data-soort="' + soort + '" viewBox="0 0 460 262" role="img" aria-label="' + tekst.replace(/<[^>]+>/g, '') + '"></svg>' +
+      '<figcaption>' + kl(tekst) + '</figcaption></figure>';
+  }
+  // stap 8: twee keer het effect van de therapie, links uitgelijnd; wat uitsteekt is S (Michelle, 8-10)
+  function didFiguur(met, zonder){
+    var rr = los(GETALLEN), L = 196, R = 436, sx = (R - L) / Math.max(met, zonder, 1), y1 = 22, y2 = 62, h = 22;
+    function balk(y, tekst, lengte){
+      return '<text x="' + (L - 8) + '" y="' + (y + 15) + '" text-anchor="end" font-size="14">' + tekst + '</text>' +
+        '<rect x="' + L + '" y="' + y + '" width="' + Math.max(Math.min(lengte, zonder) * sx, 0) + '" height="' + h + '" class="seg seg-x"/>' +
+        (lengte > zonder ? '<rect x="' + (L + zonder * sx) + '" y="' + y + '" width="' + ((lengte - zonder) * sx) + '" height="' + h + '" class="seg seg-s"/>' : '') +
+        '<text x="' + (L + lengte * sx + 6) + '" y="' + (y + 15) + '" font-size="14" font-weight="600">' + g(lengte) + '</text>';
+    }
+    var sTekst = rr.S > 0 ? '<text x="' + (L + (zonder + rr.S / 2) * sx) + '" y="' + (y1 - 6) + '" text-anchor="middle" font-size="13" font-weight="600">S = ' + g(rr.S) + '</text>' : '';
+    return '<figure class="mini"><svg class="did-svg" viewBox="0 0 460 100" role="img" aria-label="Two bars: the effect of the therapy with a pretest, ' + g(met) + ', and without, ' + g(zonder) + '. What sticks out is S, ' + g(rr.S) + '.">' +
+      sTekst + balk(y1, 'with pretest', met) + balk(y2, 'without pretest', zonder) + '</svg>' +
+      // twee losse feiten in één zin; de =-wacht kent alleen Nederlandse voegwoorden ("en" splitst, "and" niet),
+      // dus hier komma's, die hij wél als grens leest
+      '<figcaption>' + kl('Twice the effect of the therapy on quality of life: with a pretest, X + S = ' + g(met) + ', and without, X = ' + g(zonder) + '. What sticks out is S.') + '</figcaption></figure>';
+  }
+
+  // de trapjes in de uitwerkingen van de ladder, stap voor stap ingekleurd; in de toegift met vloer of met b's
+  [].forEach.call(document.querySelectorAll('svg.mini-wv'), function(s){
+    var soort = s.getAttribute('data-soort'), opt = {};
+    if (soort === 'na') opt = {basis:r.leen, b0tik:true, as:'posttest', totaalLabel:'posttest I'};
+    if (soort === 'ver') opt = {brij:true};
+    waterval(s, los(GETALLEN), Number(s.getAttribute('data-tot')), opt);
+  });
+
+  // ===== het zwaard: de balk van groep I, met de sneden erin (zichtbaar zodra S gevonden is) =====
+  function zwaard(svg, rr){
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    // L op 60: zo past het eerste etiket ("H/M = 2") links van de eerste snede, waar het zwaard rust (proefdruk 1c)
+    var L = 60, R = 420, yb = 44, hb = 22, tot = rr.vI;
+    var volgorde = ['HM','X','T','S'];             // dezelfde volgorde als de trap: H/M, X, T, S
+    if (tot <= 0) return;                          // een balk zonder lengte valt niet te klieven
+    var sx = (R - L) / tot, x = L, grens = [];
+    volgorde.forEach(function(k){
+      var w = rr[k] * sx;
+      var rect = el(svg, 'rect', {x:x, y:yb, width:Math.max(w, 0), height:hb, 'class':'stuk seg-' + KLEUR[k]});
+      el(rect, 'title', {}, NAAM[k] + ' = ' + g(rr[k]));
+      // met "=", net als het bijschrift: "T 1" las als T1, een meetmoment (APA-lens, 8-10).
+      // Het eerste etiket eindigt net vóór de eerste snede, waar het zwaard rust; de andere staan midden boven hun stuk.
+      el(svg, 'text', {x:x === L ? x + w - 4 : x + w / 2, y:yb - 7, 'text-anchor':x === L ? 'end' : 'middle', 'class':'etiket'}, NAAM[k] + ' = ' + g(rr[k]));
+      x += w; grens.push(x);
+    });
+    el(svg, 'rect', {x:L, y:yb, width:R - L, height:hb, 'class':'totaal'});
+    el(svg, 'text', {x:(L + R) / 2, y:yb - 7, 'text-anchor':'middle', 'class':'heel', 'font-size':14}, 'improvement of group I: ' + g(tot));
+    grens.slice(0, 3).forEach(function(gx){ el(svg, 'line', {x1:gx, y1:yb - 5, x2:gx, y2:yb + hb + 5, 'class':'snede'}); });
+    // het zwaard, uit lijnen: kling, pareerstang, greep, knop. De punt rust op de eerste snede en het
+    // zwaard leunt naar rechts, boven het brede stuk X, zodat het geen etiket raakt (op de laatste snede
+    // stond het dwars door "T 1"; gezien op de proefdruk van 8-10-2026).
+    // Drie lagen, met opzet: de buitenste zet het op zijn plek (attribuut), de middelste laat de CSS
+    // het laten zakken (een CSS-transform overschrijft een transform-attribuut op hetzelfde element),
+    // de binnenste kantelt het.
+    var plek = el(svg, 'g', {transform:'translate(' + grens[0] + ' ' + (yb - 6) + ')'});
+    var zw = el(plek, 'g', {'class':'kling'});
+    var k2 = el(zw, 'g', {transform:'rotate(22)'});
+    el(k2, 'line', {x1:0, y1:0, x2:0, y2:-30});
+    el(k2, 'line', {x1:-7, y1:-30, x2:7, y2:-30});
+    el(k2, 'line', {x1:0, y1:-30, x2:0, y2:-40, 'class':'greep'});
+    el(k2, 'line', {x1:-3, y1:-41, x2:3, y2:-41});
+    el(svg, 'text', {x:L, y:yb + hb + 20, 'class':'astekst'}, '0');
+    el(svg, 'text', {x:R, y:yb + hb + 20, 'text-anchor':'end', 'class':'astekst'}, g(tot) + ' points');
+  }
+  [].forEach.call(document.querySelectorAll('svg.zwaard-svg'), function(s){ zwaard(s, los(GETALLEN)); });
+
+  // ===== het speelbord =====
+  var SCHUIF = [['voorI','pretest I'], ['voorII','pretest II'], ['naI','posttest I'], ['naII','posttest II'], ['naIII','posttest III'], ['naIV','posttest IV']];
+  // een bekend geval: uit de stukjes worden de zes metingen teruggerekend (niets getypt)
+  function maak(voorI, voorII, st){
+    var leen = (voorI + voorII) / 2;
+    return {voorI:voorI, voorII:voorII, naIV:leen + st.HM, naIII:leen + st.HM + st.X, naII:voorII + st.T + st.HM, naI:voorI + st.S + st.T + st.HM + st.X};
+  }
+  var PRESETS = [
+    ['The numbers of the ladder',         GETALLEN],
+    ['Time alone',                        maak(GETALLEN.voorI, GETALLEN.voorII, {HM:r.HM, T:0, X:0, S:0})],
+    ['Therapy alone',                     maak(GETALLEN.voorI, GETALLEN.voorII, {HM:0, T:0, X:r.X, S:0})],
+    ['No sensitization',                  maak(GETALLEN.voorI, GETALLEN.voorII, {HM:r.HM, T:r.T, X:r.X, S:0})],
+    ['The pretest weakens the therapy',   maak(GETALLEN.voorI, GETALLEN.voorII, {HM:r.HM, T:r.T, X:r.X, S:-r.S})]
+  ];
+  var nu = {}; for (var k in GETALLEN) nu[k] = GETALLEN[k];
+  document.getElementById('schuiven').innerHTML = SCHUIF.map(function(s){
+    return '<label><span>' + s[1] + '</span><input type="range" min="0" max="100" step="1" id="s-' + s[0] + '" value="' + nu[s[0]] + '"><output id="o-' + s[0] + '">' + g(nu[s[0]]) + '</output></label>';
+  }).join('');
+  document.getElementById('presets').innerHTML = PRESETS.map(function(p, i){ return '<button type="button" data-preset="' + i + '">' + p[0] + '</button>'; }).join('');
+
+  function bord(){
+    var rr = los(nu), q = regressie(nu);
+    document.getElementById('sb-tabel').innerHTML = tabel(nu, {titel:'Your numbers', leen:true, verandering:true, bevat:true, geenBevatNoot:true});
+    document.getElementById('sb-sommen').innerHTML = '<div class="sommen4">' +
+      som('H/M', ['improvement IV', g(nu.naIV) + ' − ' + gh(rr.leen), g(rr.HM)]) +
+      som('X', ['improvement III − H/M', g(rr.vIII) + ' − ' + gh(rr.HM), g(rr.X)]) +
+      som('T', ['improvement II − H/M', g(rr.vII) + ' − ' + gh(rr.HM), g(rr.T)]) +
+      som('S', ['improvement I − H/M − X − T', g(rr.vI) + ' − ' + gh(rr.HM) + ' − ' + gh(rr.X) + ' − ' + gh(rr.T), g(rr.S)]) + '</div>';
+    var ongelijk = !gelijk(nu.voorI, nu.voorII);
+    document.getElementById('sb-regressie').innerHTML =
+      '<p class="model" style="margin-top:1rem">And as a regression: ' + MODEL + '</p>' +
+      '<table class="data"><caption>The same six numbers as a regression, twice</caption>' +
+      '<tr><th>dependent variable (<i>Y</i>)</th><th class="getal">' + b(0) + '</th><th class="getal">' + b(1) + ' (' + SV + ')</th><th class="getal">' + b(2) + ' (' + SW + ')</th><th class="getal">' + b(3) + ' (' + VX + ')</th></tr>' +
+      '<tr><td>posttest</td><td class="getal">' + g(q.na.b0) + '</td><td class="getal">' + g(q.na.b1) + '</td><td class="getal">' + g(q.na.b2) + '</td><td class="getal">' + g(q.na.b3) + '</td></tr>' +
+      '<tr><td>improvement</td><td class="getal">' + g(q.ver.b0) + '</td><td class="getal">' + g(q.ver.b1) + '</td><td class="getal">' + g(q.ver.b2) + '</td><td class="getal">' + g(q.ver.b3) + '</td></tr></table>' +
+      '<p class="zacht" style="font-size:14px;margin-top:0">' + kl(ongelijk ?
+        'The pretests of I and II differ (' + g(nu.voorI) + ' and ' + g(nu.voorII) + '). The regression on the posttest does not know that: the difference sits in its ' + b(1) + ' and ' + b(3) + '. The regression on the improvement takes it off first.' :
+        'On the improvement, ' + b(0) + ' is H/M; on the posttest, H/M is hidden inside ' + b(0) + ', together with the starting level ' + g(rr.leen) + '. The other three weights are T, X and S in both.') + '</p>';
+    waterval(document.getElementById('waterval'), rr);
+    document.getElementById('wv-cap').textContent = 'The improvement of group I (' + pt(rr.vI) + '), built from the four pieces. Each piece starts where the previous one ended.';
+    var met = rr.S + rr.X, zonder = rr.X, o;
+    if (gelijk(rr.S, 0)) o = 'No sensitization: the therapy changes quality of life by ' + pt(zonder) + ', with and without a pretest.';
+    else o = 'The pretest makes the therapy ' + (rr.S > 0 ? 'stronger' : 'weaker') + ': with a pretest, the therapy changes quality of life by ' + pt(met) +
+             '; without a pretest, by ' + pt(zonder) + '. The difference, ' + g(rr.S) + ', is S.';
+    document.getElementById('oordeel').innerHTML = kl(o);
+  }
+  document.getElementById('schuiven').addEventListener('input', function(e){
+    if (!e.target.id || e.target.id.indexOf('s-') !== 0) return;
+    var k = e.target.id.slice(2); nu[k] = Number(e.target.value);
+    document.getElementById('o-' + k).textContent = g(nu[k]); bord();
+  });
+  document.getElementById('presets').addEventListener('click', function(e){
+    var p = e.target.closest('button[data-preset]'); if (!p) return;
+    var d = PRESETS[Number(p.getAttribute('data-preset'))][1];
+    SCHUIF.forEach(function(s){ nu[s[0]] = d[s[0]]; document.getElementById('s-' + s[0]).value = d[s[0]]; document.getElementById('o-' + s[0]).textContent = g(d[s[0]]); });
+    bord();
+  });
+  bord();
+
+  // ===== de ingevulde kaart =====
+  // Elke som in de kaart staat op twee regels met één "=" per regel (Bens regel van 8-10-2026, "niet doorbreien").
+  // De linkerkant is in een cel steeds hetzelfde woord, dus de =-tekens staan vanzelf onder elkaar.
+  function kaartSom(links, rechts, uitkomst){ return kl(links + ' = ' + rechts) + '<br>' + kl(links + ' = ' + uitkomst); }
+  document.getElementById('volle-kaart').innerHTML = '<table class="data kaart"><caption>The Solomon card, filled in with the numbers of the ladder</caption>' +
+    '<tr><th>effect</th><th>which groups do you compare?</th><th>the sum</th><th>what you assume</th></tr>' +
+    '<tr><td>' + kl('H/M') + '</td><td>IV, with the borrowed pretest</td><td class="somcel">' + kaartSom('H/M', g(GETALLEN.naIV) + ' − ' + gh(r.leen), g(r.HM)) + '</td><td>III and IV started out on average like I and II (random assignment)</td></tr>' +
+    '<tr><td>' + kl('X') + '</td><td>III against IV</td><td class="somcel">' + kaartSom('X', g(r.vIII) + ' − ' + gh(r.HM), g(r.X)) + '</td><td>what gets better by itself gets better by the same amount in III and IV</td></tr>' +
+    '<tr><td>' + kl('T') + '</td><td>II against IV</td><td class="somcel">' + kaartSom('T', g(r.vII) + ' − ' + gh(r.HM), g(r.T)) + '</td><td>what gets better by itself gets better by the same amount in II and IV</td></tr>' +
+    '<tr><td>' + kl('S') + '</td><td>I against II, III and IV</td><td class="somcel">' + kaartSom('S', g(r.vI) + ' − ' + gh(r.HM) + ' − ' + gh(r.X) + ' − ' + gh(r.T), g(r.S)) + '</td><td>the pieces add up; what is left is S</td></tr></table>';
+})();
+</script>
+</body>
+</html>

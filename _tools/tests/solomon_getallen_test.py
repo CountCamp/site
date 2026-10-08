@@ -17,7 +17,9 @@ from itertools import combinations
 from pathlib import Path
 
 HIER = Path(__file__).resolve().parent
-PAGINA = HIER.parent.parent / "speeltjes" / "solomon.html"
+# De Nederlandse bladzij en haar Engelse tweeling (stuk 2, 8-10-2026). Allebei dragen ze hun eigen GETALLEN,
+# en die moeten gelijk zijn: anders rekent de ene bladzij een andere ladder voor dan de andere.
+PAGINAS = [HIER.parent.parent / "speeltjes" / "solomon.html", HIER.parent.parent / "speeltjes" / "solomon-en.html"]
 
 
 def lees_getallen(tekst):
@@ -42,15 +44,23 @@ def los(d):
 
 
 def main():
-    if not PAGINA.exists():
-        print("KON NIET KIJKEN: %s bestaat niet" % PAGINA)
-        return 3
-    d = lees_getallen(PAGINA.read_text(encoding="utf-8"))
-    if not d or len(d) != 6:
-        print("KON NIET KIJKEN: 'var GETALLEN = {...}' met zes getallen niet gevonden in %s" % PAGINA)
-        return 3
+    gelezen = {}
+    for pagina in PAGINAS:
+        if not pagina.exists():
+            print("KON NIET KIJKEN: %s bestaat niet" % pagina)
+            return 3
+        d = lees_getallen(pagina.read_text(encoding="utf-8"))
+        if not d or len(d) != 6:
+            print("KON NIET KIJKEN: 'var GETALLEN = {...}' met zes getallen niet gevonden in %s" % pagina)
+            return 3
+        gelezen[pagina.name] = d
+    namen = [p.name for p in PAGINAS]
+    d = gelezen[namen[0]]
     st = los(d)
     fouten = []
+    for naam in namen[1:]:
+        if gelezen[naam] != d:
+            fouten.append("%s heeft andere getallen dan %s: %s tegen %s" % (naam, namen[0], gelezen[naam], d))
     for k, v in d.items():
         if not 0 <= v <= 100:
             fouten.append("%s = %g valt buiten de schaal 0-100" % (k, v))
@@ -74,6 +84,7 @@ def main():
     for s, wie in sorted(sommen.items()):
         if len(wie) > 1:
             fouten.append("deelsom %g komt %d keer voor: %s" % (s, len(wie), " en ".join(wie)))
+    print("bladzijden: " + ", ".join(namen) + " (dezelfde zes getallen)" if not any("andere getallen" in f for f in fouten) else "bladzijden: " + ", ".join(namen))
     print("getallen  : " + ", ".join("%s %g" % kv for kv in d.items()))
     print("stukjes   : " + ", ".join("%s %g" % kv for kv in st.items()))
     print("deelsommen: %d, waarvan %d uniek" % (len(sommen), sum(1 for w in sommen.values() if len(w) == 1)))
