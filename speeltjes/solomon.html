@@ -933,31 +933,58 @@
   function waterval(svg, rr, tot, opt){
     opt = opt || {};
     while (svg.firstChild) svg.removeChild(svg.firstChild);
-    var W = 460, L = 46, R = W - 10, T = 22, B = 214, basis = opt.basis || 0;
+    var W = 460, R = W - 10, T = 22, B = 214, basis = opt.basis || 0;
+    // een getal staat BOVEN boven een stijgende balk of hangt ONDER onder een dalende; onderaan houdt het
+    // RUIM vrij tot de onderkant van de as, zodat het nooit op de etiketten eronder komt
+    var BOVEN = 6, ONDER = 15, RUIM = 22;
     var cum = basis, segs = ['HM','X','T','S'].map(function(k){ var a = cum; cum += rr[k]; return {k:k, v:rr[k], a:a, b:cum}; });
-    var waarden = [basis, basis + rr.vI].concat(segs.map(function(s){ return s.b; }));
-    var lo = Math.min.apply(null, waarden), hi = Math.max.apply(null, waarden);
-    lo = Math.floor(lo); hi = Math.ceil(hi);
+    var eind = basis + rr.vI;
+    var waarden = [basis, eind].concat(segs.map(function(s){ return s.b; }));
+    var lo = Math.floor(Math.min.apply(null, waarden)), hi = Math.ceil(Math.max.apply(null, waarden));
     if (hi - lo < 4){ hi = lo + 4; }
-    var bereik = hi - lo, stap = bereik <= 8 ? 1 : bereik <= 20 ? 2 : 5;
+    // hoogstens acht vakken op de as, ook met de schuifjes uiterst: tot stuk 1c tikte de as bij elk bereik
+    // boven de 20 per 5, en bij 300 punten stonden er zestig getallen over elkaar (toets van stuk 1d)
+    var stap = [1, 2, 5, 10, 20, 25, 50, 100].filter(function(s){ return (hi - lo) / s <= 8; })[0] || 200;
     lo = Math.floor(lo / stap) * stap; hi = Math.ceil(hi / stap) * stap;
     var y = function(v){ return B - (v - lo) / (hi - lo) * (B - T); };
-    var kolom = (R - L) / 5, cx = function(i){ return L + kolom * (i + 0.5); }, bw = Math.min(46, kolom * 0.56);
-    // as links: dunne streepjes, recessief
-    el(svg, 'line', {x1:L, y1:y(lo), x2:L, y2:y(hi), 'class':'as'});
-    for (var v = lo; v <= hi + 1e-9; v += stap){
-      el(svg, 'line', {x1:L - 4, y1:y(v), x2:L, y2:y(v), 'class':'as'});
-      el(svg, 'text', {x:L - 7, y:y(v) + 4, 'text-anchor':'end', 'class':'astekst'}, g(v));
+    // Hangt er een getal onder een balk (een negatief stukje of een negatief geheel), dan loopt de as
+    // onderaan minstens één vak verder door: het getal staat dan binnen de figuur, boven de etiketten.
+    // Ben, 8-10-2026, bij H/M = −1, toen "−1" óp "H/M" stond: "misschien langere y-as aan onderkant".
+    var hangt = segs.filter(function(s){ return s.v < 0; }).map(function(s){ return s.b; });
+    if (eind < basis) hangt.push(eind);
+    if (hangt.length){
+      var laagst = Math.min.apply(null, hangt);
+      lo -= stap;
+      for (var n = 0; n < 20 && y(laagst) > B - RUIM; n++) lo -= stap;
     }
+    var ticks = []; for (var v = lo; v <= hi + 1e-9; v += stap) ticks.push(v);
+    // de as schuift naar rechts als de getallen erlangs lang worden ("−200"), zodat ze de astitel niet raken
+    var L = Math.max(46, 26 + 8 * Math.max.apply(null, ticks.map(function(t){ return g(t).length; })));
+    var kolom = (R - L) / 5, cx = function(i){ return L + kolom * (i + 0.5); }, bw = Math.min(46, kolom * 0.56);
+    // waar het getal van een balk staat: boven een stijgende, onder een dalende. Zou het dan op de nullijn
+    // vallen (een balk die vlak onder nul eindigt), dan gaat het naar de andere kant van de balk.
+    function getalY(a, b){
+      var hoog = Math.max(a, b), laag = Math.min(a, b), omhoog = b >= a, y0 = y(basis);
+      var yb = omhoog ? y(hoog) - BOVEN : y(laag) + ONDER;
+      if (y0 > yb - 13 && y0 < yb + 2) yb = omhoog ? y(laag) + ONDER : y(hoog) - BOVEN;
+      return yb;
+    }
+    // as links: dunne streepjes, recessief
+    el(svg, 'line', {x1:L, y1:y(lo), x2:L, y2:y(hi), 'class':'as as-y'});
+    ticks.forEach(function(t){
+      el(svg, 'line', {x1:L - 4, y1:y(t), x2:L, y2:y(t), 'class':'as'});
+      el(svg, 'text', {x:L - 7, y:y(t) + 4, 'text-anchor':'end', 'class':'astekst'}, g(t));
+    });
     el(svg, 'text', {x:12, y:(T + B) / 2, 'text-anchor':'middle', 'class':'astekst', transform:'rotate(-90 12 ' + ((T + B) / 2) + ')'}, opt.as || 'verbetering (punten)');
     el(svg, 'line', {x1:L, y1:y(basis), x2:R, y2:y(basis), 'class':'nul'});
     // tot = hoeveel stukjes al bekend zijn (de ladder kleurt de trap stap voor stap in);
-    // een onbekend stukje krijgt een vraagteken op de hoogte waar het zou beginnen
+    // een onbekend stukje krijgt een vraagteken op de hoogte waar het zou beginnen, aan de kant van
+    // die hoogte waar de nullijn niet ligt
     if (tot === undefined) tot = 4;
     segs.forEach(function(s, i){
       var x0 = cx(i) - bw / 2, top = Math.min(y(s.a), y(s.b)), h = Math.abs(y(s.a) - y(s.b));
       if (i >= tot){
-        if (i === tot) el(svg, 'text', {x:cx(i), y:y(s.a) - 6, 'text-anchor':'middle', 'font-size':16, 'class':'kop'}, '?');
+        if (i === tot) el(svg, 'text', {x:cx(i), y:s.a >= basis ? y(s.a) - BOVEN : y(s.a) + ONDER + 3, 'text-anchor':'middle', 'font-size':16, 'class':'kop'}, '?');
         return;
       }
       if (i === tot - 1 && i < 3) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
@@ -967,21 +994,21 @@
       el(vorm, 'title', {}, NAAM[s.k] + ' = ' + g(s.v) + ': ' + UITLEG[s.k]);
       // op een vloer boven nul krijgt de eerste trede niet "+2" maar waar hij eindigt: dat is b0
       var lab = (opt.b0tik && i === 0) ? g(s.b) : (s.v > 0 ? '+' : '') + g(s.v);
-      el(svg, 'text', {x:cx(i), y:s.v >= 0 ? top - 6 : top + h + 15, 'text-anchor':'middle', 'font-size':14, 'font-weight':600}, lab);
-      if (opt.b0tik && i === 0){
-        el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:x0 + bw + 8, y2:y(s.b), 'class':'as'});
-        bTekst(svg, {x:x0 + bw + 11, y:y(s.b) + 4, 'font-size':13}, 0);
-      }
+      el(svg, 'text', {x:cx(i), y:getalY(s.a, s.b), 'text-anchor':'middle', 'font-size':14, 'font-weight':600, 'class':'waarde'}, lab);
+      // b0 staat op het lijntje naar de volgende trede, want dat lijntje ligt op de hoogte van b0. Tot stuk 1d
+      // stond hij er middenin en liep het lijntje door de b heen (toets van stuk 1d, stap 10, ook met de
+      // getallen van de ladder). Daalt H/M, dan hangt hij eronder, weg van de vloer.
+      if (opt.b0tik && i === 0) bTekst(svg, {x:x0 + bw + 5, y:s.v >= 0 ? y(s.b) - 5 : y(s.b) + ONDER, 'font-size':13}, 0);
       if (i < 3 && i < tot - 1) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
     });
     // de hele verbetering van groep I staat er altijd, ook als de trap nog niet af is: zo zie je het gat
     // slinken (Michelle, 8-10: "het bijschrift zegt samen 15, maar in de lege trap staat geen 15");
     // het verbindingslijntje komt pas als de laatste trede erbij staat
-    var xt = cx(4) - bw / 2, tt = Math.min(y(basis), y(basis + rr.vI)), th = Math.abs(y(basis) - y(basis + rr.vI));
+    var xt = cx(4) - bw / 2, tt = Math.min(y(basis), y(eind)), th = Math.abs(y(basis) - y(eind));
     if (tot === 4) el(svg, 'line', {x1:cx(3) + bw / 2, y1:y(cum), x2:xt, y2:y(cum), 'class':'verbind'});
     var tv = el(svg, 'rect', {x:xt, y:tt, width:bw, height:Math.max(th, 1), 'class':'totaal'});
-    el(tv, 'title', {}, (opt.totaalLabel || 'verbetering I') + ' = ' + g(basis + rr.vI));
-    el(svg, 'text', {x:cx(4), y:rr.vI >= 0 ? tt - 6 : tt + th + 15, 'text-anchor':'middle', 'font-size':14, 'font-weight':600}, g(basis + rr.vI));
+    el(tv, 'title', {}, (opt.totaalLabel || 'verbetering I') + ' = ' + g(eind));
+    el(svg, 'text', {x:cx(4), y:getalY(basis, eind), 'text-anchor':'middle', 'font-size':14, 'font-weight':600, 'class':'waarde'}, g(eind));
     ['H/M', '+ X', '+ T', '+ S', '= I'].forEach(function(t, i){
       el(svg, 'text', {x:cx(i), y:B + 24, 'text-anchor':'middle', 'font-size':15}, t);
     });
@@ -1007,7 +1034,7 @@
         '<text x="' + (L + lengte * sx + 6) + '" y="' + (y + 15) + '" font-size="14" font-weight="600">' + g(lengte) + '</text>';
     }
     var sTekst = rr.S > 0 ? '<text x="' + (L + (zonder + rr.S / 2) * sx) + '" y="' + (y1 - 6) + '" text-anchor="middle" font-size="13" font-weight="600">S = ' + g(rr.S) + '</text>' : '';
-    return '<figure class="mini"><svg viewBox="0 0 460 100" role="img" aria-label="Twee balken: het effect van de therapie met voormeting, ' + g(met) + ', en zonder, ' + g(zonder) + '. Wat uitsteekt is S, ' + g(rr.S) + '.">' +
+    return '<figure class="mini"><svg class="did-svg" viewBox="0 0 460 100" role="img" aria-label="Twee balken: het effect van de therapie met voormeting, ' + g(met) + ', en zonder, ' + g(zonder) + '. Wat uitsteekt is S, ' + g(rr.S) + '.">' +
       sTekst + balk(y1, 'mét voormeting', met) + balk(y2, 'zonder voormeting', zonder) + '</svg>' +
       '<figcaption>' + kl('Twee keer het effect van de therapie op de kwaliteit van leven: met voormeting (X + S = ' + g(met) + ') en zonder (X = ' + g(zonder) + '). Wat uitsteekt is S.') + '</figcaption></figure>';
   }

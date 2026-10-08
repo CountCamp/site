@@ -57,6 +57,12 @@ def main():
     for naam, v in st.items():
         if abs(v) < 1e-9:
             fouten.append("stukje %s is 0: dan zie je het in geen enkele som" % naam)
+        elif v < 0:
+            # De ladder rekent op groei: het zwaard klieft één balk in vier delen, de verschil-in-verschil-
+            # figuur zegt "wat uitsteekt is S", de knop "De voormeting maakt de therapie zwakker" draait S om.
+            # Die tekenen alleen deze getallen, niet de schuifjes; een negatief stukje kunnen ze niet laten
+            # zien (stuk 1d, 8-10-2026). Het speelbord kan het wel: zie solomon_figuren_test.py.
+            fouten.append("stukje %s is %g: het zwaard en de verschil-in-verschil-balken tekenen alleen positieve stukjes" % (naam, v))
     # stap 9 rekent S uit de kale tabel zonder lenen: (naI - naII) - (naIII - naIV). Dat is alleen S als de
     # twee echte voormetingen gelijk zijn; anders zit hun verschil erin en liegt de uitwerking.
     if abs(d["voorI"] - d["voorII"]) > 1e-9:
@@ -75,7 +81,7 @@ def main():
         for f in fouten:
             print("FOUT: " + f)
         return 1
-    print("ok: elke som van stukjes geeft een eigen getal, geen stukje is 0, alles tussen 0 en 100")
+    print("ok: elke som van stukjes geeft een eigen getal, elk stukje is groter dan 0, alles tussen 0 en 100")
     return 0
 
 
