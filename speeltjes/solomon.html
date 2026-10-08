@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Het oordeel van Solomon — ontleed het ontwerp</title>
 <meta name="description" content="Het Solomon-vier-groepen-ontwerp (Solomon four-group design) uit elkaar gehaald: history en maturation (H/M), het testeffect (testing, T), sensitisatie (pretest sensitization, S) en de interventie (X). Stap voor stap, met de getallen erbij, en als toegift dezelfde sommen als regressie.">
+<!-- Twee taalversies van één bladzij (stuk 2, 8-10-2026). Google (Search Central, "Tell Google about localized
+     versions of your page"): op elke versie dezelfde set alternate-links, elk met een volledige URL, inclusief
+     zichzelf; x-default is de versie voor wie geen van de talen spreekt. Hier is dat de Nederlandse, de
+     oorspronkelijke. W3C (i18n, "Indicating the language of a link destination"): op de zichtbare schakelaar
+     hreflang voor de taal van de bestemming, en lang op de linktekst als die zelf in die taal staat. -->
+<link rel="canonical" href="https://countcamp.org/speeltjes/solomon.html">
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/speeltjes/solomon.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/speeltjes/solomon-en.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/speeltjes/solomon.html">
 <style>
   /* ===== kleuren: licht, donker, en print =====
      De knop is een verstopt vinkje plus :has() — geen JavaScript (Ben, 6/8-10-2026).
@@ -57,6 +66,35 @@
   .thema-knop{cursor:pointer;font-size:.9rem;color:var(--dim);border:1px solid var(--rand);border-radius:999px;
     padding:4px 12px;background:var(--kaart);user-select:none;white-space:nowrap}
   .schakel:focus-visible ~ .wrap .thema-knop{outline:2px solid var(--accent);outline-offset:2px}
+  /* de taalschakelaar: de taal van de bladzij is geen link, de andere wel (stuk 2) */
+  .kop-rechts{display:flex;align-items:center;gap:14px}
+  .taal{font-size:.86rem;letter-spacing:.05em;color:var(--dim);white-space:nowrap}
+  .taal a{color:var(--accent);text-decoration:none}
+  .taal a:hover{text-decoration:underline}
+  .taal [aria-current]{font-weight:600;color:var(--ink)}
+  .taal-sep{margin:0 .45em;color:var(--vaag)}
+
+  /* ===== het menu: links naast de tekst op een breed scherm, een uitklapbalk bovenaan op een smal scherm =====
+     (Ben, 8-10-2026: "moet er een menuutje in ook in de solomon? denk het wel"). Patroon van een andere bladzij
+     van 8-10, met de maten van deze bladzij: de tekst is 860 px breed met 20 px rand, dus de tekst begint op
+     50% − 410 px; het menu van 210 px staat daar 18 px links van zodra het scherm 1300 px breed is. */
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  .trede,h2[id],h1[id]{scroll-margin-top:56px}
+  .zijmenu,.topmenu{font-size:14px}
+  .zijmenu ol,.topmenu ol{list-style:none;margin:0;padding:0}
+  .zijmenu li a,.topmenu li a{display:flex;gap:8px;padding:4px 0;color:var(--dim);text-decoration:none;line-height:1.3}
+  .zijmenu li a:hover,.topmenu li a:hover{color:var(--ink)}
+  .zijmenu li.deel,.topmenu li.deel{margin-top:6px}
+  .mn{min-width:20px;text-align:right;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+  .menu-voet{margin:12px 0 0;font-size:13px}
+  .menu-voet a{color:var(--dim)}
+  .zijmenu{display:none;position:fixed;top:24px;left:max(12px,calc(50% - 410px - 234px));width:210px;max-height:calc(100vh - 48px);overflow-y:auto;padding-right:8px;border-right:1px solid var(--lijn)}
+  .topmenu{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--lijn);padding:8px 16px;margin:0}
+  .topmenu summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:15px}
+  .topmenu nav{padding:6px 0 4px;max-height:70vh;overflow-y:auto}
+  @media (min-width:1300px){.zijmenu{display:block}.topmenu{display:none}.trede,h2[id],h1[id]{scroll-margin-top:24px}}
+
   h1{font-weight:600;font-size:32px;letter-spacing:.3px;margin:0 0 4px}
   h1::after{content:"";display:block;width:210px;height:10px;margin-top:5px;
     background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 192 6 T 208 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
@@ -211,7 +249,7 @@
       --accent:#444; --goed:#222; --fout:#222; --knop:#fff; --knop-hover:#fff;
       --c-hm:#2a78d6; --c-x:#eb6834; --c-t:#1baf7a; --c-s:#4a3aa7; --schaduw:none;
     }
-    .kopregel,details,.invoer,.terugmelding,.presets,.schuiven,.matrix input,.keuzes{display:none!important}
+    .kopregel,details,.invoer,.terugmelding,.presets,.schuiven,.matrix input,.keuzes,.zijmenu,.topmenu{display:none!important}
     .trede{margin-top:48px}
     .trede,.kader,figure,table{break-inside:avoid}
     .zwaard *{transition:none!important}
@@ -223,13 +261,19 @@
 </head>
 <body>
 <input type="checkbox" id="donker" class="schakel" aria-label="licht of donker">
+<!-- het menu wordt door het script gevuld uit de treden zelf, zodat de titels niet kunnen verlopen -->
+<nav class="zijmenu" aria-label="stappen"></nav>
+<details class="topmenu"><summary>Stappen</summary><nav aria-label="stappen"></nav></details>
 <div class="wrap">
   <div class="kopregel">
     <a class="terugknop" href="/speeltjes/">← Terug naar de speelkist</a>
-    <label for="donker" class="thema-knop" title="licht of donker">◐ licht / donker</label>
+    <div class="kop-rechts">
+      <nav class="taal" aria-label="taal"><span aria-current="page">NL</span><span class="taal-sep">·</span><a href="solomon-en.html" hreflang="en" lang="en" title="This page in English">EN</a></nav>
+      <label for="donker" class="thema-knop" title="licht of donker">◐ licht / donker</label>
+    </div>
   </div>
 
-  <h1>Het oordeel van Solomon</h1>
+  <h1 id="boven">Het oordeel van Solomon</h1>
   <p class="ondertitel">ontleed het ontwerp</p>
   <!-- De vier namen staan met opzet al in de eerste alinea (Ben, 8-10-2026: "ook voor zoekmachines, maar ook dat
        mensen meteen zien wat ze zochten"). De Nederlandse naam: Ben schrijft zelf "Solomon vier groepen ontwerp";
@@ -242,7 +286,7 @@
   therapie samen extra doen (de sensitisatie, <i>pretest sensitization</i>, S). Jij haalt ze uit elkaar: eerst
   de som van groep I, dan één stukje per stap, tot alleen S overblijft.</p>
 
-  <h2>Het ontwerp</h2>
+  <h2 id="ontwerp">Het ontwerp</h2>
   <p>Een groep mensen krijgt een therapie die hun kwaliteit van leven moet verbeteren. Je meet die kwaliteit
   van leven met een vragenlijst; de score loopt van 0 tot 100, en hoger is beter. Het lot verdeelt de mensen
   over vier groepen. Twee groepen vullen de vragenlijst ook al vóór de therapie in: de <i>voormeting</i>. Alle
@@ -254,7 +298,7 @@
     gemiddelde score erboven; het hokje is de therapie. Groep III en IV hebben op de plek van de voormeting niets.</figcaption>
   </figure>
 
-  <h2>De ladder</h2>
+  <h2 id="ladder-kop">De ladder</h2>
   <p>Eén ding mag je vanaf het begin aannemen: het lot heeft de groepen samengesteld, dus ze begonnen gemiddeld
   gelijk. De andere aannames komen onderweg, op de plek waar je ze nodig hebt.</p>
   <p class="kl"><span id="aantal-stappen"></span> stapjes, en daarna een toegift van <span id="aantal-toegift"></span>: dan
@@ -855,6 +899,21 @@
   document.getElementById('ladder').addEventListener('keydown', function(e){
     if (e.key === 'Enter' && e.target.matches('input[type=text]')) nakijken(Number(e.target.id.split('-')[1]));
   });
+
+  // ===== het menu: de treden op nummer, de vaste delen eromheen; één lijst op twee plekken =====
+  // De titels komen uit de treden zelf, dus een hernoemde of verschoven trede staat meteen goed in het menu.
+  function menuHTML(){
+    function li(doel, nr, tekst, deel){ return '<li' + (deel ? ' class="deel"' : '') + '><a href="#' + doel + '"><span class="mn">' + (nr || '') + '</span><span>' + tekst + '</span></a></li>'; }
+    return '<ol>' + li('ontwerp', '', 'Het ontwerp') + li('ladder-kop', '', 'De ladder') +
+      stappen.map(function(st, i){ return li('stap-' + (i + 1), i + 1, st.titel); }).join('') +
+      li('aannames-kop', '', 'Wat je mag aannemen', true) + li('kaart', '', 'Je eigen kaart') +
+      li('speelbord', '', 'Trek zelf aan de getallen') + li('eigen', '', 'En in je eigen onderzoek?') +
+      '</ol><p class="menu-voet"><a href="#boven">naar boven</a></p>';
+  }
+  [].forEach.call(document.querySelectorAll('nav.zijmenu, .topmenu nav'), function(n){ n.innerHTML = menuHTML(); });
+  // de uitklapbalk klapt dicht zodra je een stap kiest, anders blijft hij over de tekst hangen
+  var topmenu = document.querySelector('details.topmenu');
+  if (topmenu) [].forEach.call(topmenu.querySelectorAll('a'), function(a){ a.addEventListener('click', function(){ topmenu.open = false; }); });
 
   // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
   document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
