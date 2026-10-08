@@ -1,4 +1,4 @@
-# Het oordeel van Solomon — ontwerpnotitie (stuk 1, 1b en 1c, 8-10-2026)
+# Het oordeel van Solomon — ontwerpnotitie (stuk 1, 1b, 1c, 1d en 2, 8-10-2026)
 
 **De titel** is sinds stuk 1c *Het oordeel van Solomon* (Ben bedoelde het salomonsoordeel: het zwaard dat eerlijk
 verdeelt). Stuk 1b heette *Het zwaard van Solomon*; dat is ingetrokken. Het zwaardje als beeld in stap 7 blijft.
@@ -243,6 +243,121 @@ tekst, tekst op een balk of lijn, tekst buiten de figuur, een getal onder de as,
 elke stand rekent hij zelf na uit de zes schuifjes. Zeven mutaties (elke reparatie apart terug, plus gestippelde
 lijntjes) laten hem alle zeven zakken; zonder het extra vak meldt hij letterlijk Bens geval: *getal '−1' staat
 onder de as, bij de etiketten*. Wat hij niet ziet: kleur, contrast, en of een figuur iets zegt dat klopt.
+
+## Stuk 2 — een eigen tegel op de voordeur, en de Engelse tweeling (8-10-2026)
+
+**Aanleiding.** Ben, 8-10: *"ik vind die solomon zo leuk dat ik wil dat er een aparte tegel voor komt op de site. En
+sterker nog, ik wil deze ook in het Engels."* En: *"moet er een menuutje in ook in de solomon? denk het wel."*
+
+**De tegel** (`index.qmd`, in het `.cc-cards`-blok, klasse `.cc-card-solomon` in `styles.css` met dezelfde kleur als de
+rubriek *Ontleden* in de speelkist): titel *Het oordeel van Solomon*, één zin wat je er doet, en `([in English](…))`
+aan het eind, precies zoals de Tabellen-tegel zijn Engelse tweeling noemt. De speelkist-tegel houdt zijn plek en
+kreeg hetzelfde `([in English](solomon-en.html))`; de speelkist telt nog dertien tegels (`bouw_speelkist.py` telt
+het na en vond "Dertien" op beide plekken kloppen).
+
+**De Engelse tweeling** `speeltjes/solomon-en.html`: dezelfde code, dezelfde zes getallen, alleen de lezerstekst
+vertaald. De code-commentaren staan met opzet in het Nederlands, net als in de bron, zodat een diff van de twee
+bestanden alleen vertaalde tekst laat zien (nagemeten: CSS gelijk, script-skelet zonder tekenreeksen 434 regels
+gelijk, html-tags gelijk op de taalschakelaar, drie cursiveringen en `lang="nl"` na). Wie de code in de ene wijzigt,
+wijzigt hem ook in de andere; `solomon_getallen_test.py` leest sindsdien beide bladzijden en eist dezelfde zes
+getallen (mutatieproef: andere getallen in de Engelse → afloop 1).
+
+Woordenlijst NL → EN, met de bron van de Engelse term:
+
+| NL | EN | waarom |
+|---|---|---|
+| Solomon-vier-groepen-ontwerp | Solomon four-group design | Campbell & Stanley (1963), p. 24 |
+| voormeting, nameting | pretest, posttest | APA-spelling zonder streepje |
+| history en maturation (H/M), wat vanzelf beter wordt | history and maturation (H/M), what gets better by itself | C&S |
+| testeffect (T) | testing effect (T) | C&S: *testing* |
+| therapie, de interventie (X) | therapy, the treatment (X) | C&S: X |
+| sensitisatie (S) | pretest sensitization (S); in de tabel *andere namen* ook *interaction of testing and treatment* | Lana (1959); C&S: *interaction of testing and X* |
+| het lot (R) | random assignment (R) | "the lot" bestaat niet in deze betekenis |
+| geleende voormeting | borrowed pretest | eigen term, net als in het Nederlands |
+| substitutie | substitution | Bens woord; de testlezer zou *imputation* verwachten, maar dat is een ander begrip (schatten uit een model) |
+| stukje | piece | |
+| de som (van groep I) | the equation (for group I); "Welke som heb je nodig?" → "Which calculation do you need?" | testlezer: *sum* leest in het Engels als *totaal*, en 15 ís het totaal |
+| de trap, trede | the staircase, bar | testlezer: *step* was al de trede van de ladder |
+| toegift | encore | |
+| uitwerking | worked solution | |
+| Kijk na | Check | |
+| verschil in verschil | difference in differences | de gangbare Engelse term |
+| regressiegewicht | regression weight (één keer: *the regression coefficient*) | Bens woord; de testlezer kent *coefficient* |
+| de schakelaars | the switches (één keer: *dummy variables, in textbook words*) | Bens beeld; de testlezer kent *dummy variables* |
+| eraf halen | take away | testlezer: *take off* is Brits-informeel en leest voor een Amerikaan als *verwijderen* |
+| afspraak | convention | testlezer: *agreement* vraagt *tussen wie* |
+| Het oordeel van Solomon — ontleed het ontwerp | The judgement of Solomon — dissect the design | de opdracht |
+
+Spelling: Brits met Oxford-*ize* (*judgement* uit de opdracht, *sensitization* uit de literatuur). Decimaalteken de punt,
+cursieve *b* en *Y*, rechtop de letters H/M, X, T, S en de schakelaarwoorden, net als in het Nederlands.
+
+**Eén bewuste afwijking van de Nederlandse tekst:** de eerste alinea noemt *Richard L. Solomon, 1949*. De Engelse
+testlezer hield het ontwerp tot stap 7 voor een ontwerp van koning Salomo (de uitleg stond alleen in het bijschrift
+van het zwaard; Michelle las in 1c hetzelfde). In het Nederlands staat het jaartal niet in de eerste alinea; aan Ben
+of dat daar ook moet.
+
+**De koppeling van de twee talen.** Opgezocht (Google Search Central, *Tell Google about localized versions of your
+page*; W3C i18n, *Indicating the language of a link destination*): op elke versie dezelfde set
+`<link rel="alternate" hreflang="…">` met volledige URL's, inclusief zichzelf, en `x-default` voor wie geen van de
+talen spreekt; hier is dat de Nederlandse, de oorspronkelijke. Op de zichtbare schakelaar `hreflang` voor de taal van
+de bestemming en `lang` op de linktekst. Overgenomen, plus een `canonical` zoals de Tabellen-bladzijden al hadden.
+De schakelaar *NL · EN* staat in de kopregel naast de thema-knop; de eigen taal is geen link. Het huis had vóór
+stuk 2 nergens `hreflang` (nagemeten met `command grep -rl hreflang`, buiten `_site`: alleen een meegeleverde
+mermaid-bibliotheek). De Engelse bladzij linkt naar het Nederlandse boek met *(Dutch)* erbij en `lang="nl"` op de
+titel; de terugknop zegt *Back to the toy box (in Dutch)*, want de speelkist is Nederlands.
+
+**Het stappenmenu**, op beide bladzijden, volgens het patroon van 8-10 van een andere bladzij: op een scherm van
+1300 px of breder een vaste lijst links van de tekst (210 px breed; de tekst van 860 px begint op 50% − 410 px, het
+menu staat daar 18 px links van), op een smaller scherm een plakkende uitklapbalk *Stappen* bovenaan die dichtklapt
+zodra je een stap kiest. De lijst wordt uit de treden zelf gevuld (`menuHTML()` leest `stappen`), dus een hernoemde
+of verschoven trede staat meteen goed; eromheen de vaste delen (ontwerp, ladder, aannames, kaart, speelbord, eigen
+onderzoek) en *naar boven*. Vloeiend scrollen met `prefers-reduced-motion` gerespecteerd, `scroll-margin-top` op de
+treden en de koppen, verborgen in print. De id's van de treden (`stap-1` …) bestonden al op de `<section>`; de
+`scroll-margin` staat daar, niet op de `<h3>`.
+
+**Wat de Engelse testlezer zei** (een Engelstalige master-student psychologie die de Nederlandse bladzij nooit zag;
+`general-purpose`-agent, las de gerenderde DOM met alle uitklappers open), en wat er veranderde:
+
+- *Sum* leest als *totaal* — en 15 is het totaal. Overal *equation* / *calculation* (zie de woordenlijst).
+- *An agreement, not a measurement*: "tussen wie?" Nu *convention*.
+- *Twice the effect of the therapy* las als "dubbel"; ze zocht een 16. Nu *taken two times, once with and once without
+  a pretest*.
+- *Only: group IV has no pretest* is geen Engels; nu *But group IV …*. *Did no pretest* → *had no pretest*, *did the
+  pretest* → *took the pretest*, *divides over* → *into*, *the way you meet it in a paper* → *find*, *Pull on the
+  numbers yourself* → *Play with the numbers yourself*, *The numbers cross the ladder for a moment* → *The subscripts
+  do not follow the order of the ladder*, *it also works without, with the sum of step 8 but with posttests* → *the
+  calculation of step 8, but with posttests instead of improvements*.
+- *Switches* zonder *dummy variables*, *weight* zonder *coefficient*: elk één keer genoemd, Bens woorden blijven.
+- *The sensitization* met lidwoord klonk als iets wat iemand overkwam; nu *pretest sensitization*.
+- *Step* betekende twee dingen (trede van de ladder én trede van de trap); de trap heeft nu *bars*.
+- De titel: tot stap 7 dacht ze aan koning Salomo. Zie de afwijking hierboven.
+- *Back to the toy box* zonder dat je weet dat de kist Nederlands is; nu *(in Dutch)* erbij.
+- **Niet veranderd, wel gemeld:** *Nine steps, and then an encore of two* tegen *Step 1 of 11* (ook zo in het
+  Nederlands); *Every group got better* terwijl III en IV een streepje hebben (lost op in stap 3; ook zo in het
+  Nederlands); *H/M* leest als een deling (Ben hield hem in 1b); *substitution* (Bens woord); de tabeltitel *Mean
+  quality of life per group* blijft staan als de tabel kolommen bijkrijgt (ook in het Nederlands); *testing effect*
+  betekent in een geheugencursus iets anders (de waarschuwing staat onderaan in *andere namen*, Jeanne wilde hem in 1c
+  niet midden in de ladder); de regel over het hoofdeffect in de laatste uitklapper is voor een SPSS-student de
+  nuttigste zin van de bladzij en staat op de plek waar ze al gestopt was.
+- Ze rekende twintig getallen na en vond er geen fout; haar twee examenzinnen over sensitisatie klopten.
+
+**Wat de APA-lens zei** (`apa`-agent, dezelfde DOM-dump plus de bron):
+
+- **Strikt, en verholpen in beide talen:** de voetregel is als geheel cursief (`.foot{font-style:italic}`), dus het
+  cursief van *Psychological Bulletin, 46* en van de boektitel was onzichtbaar; een bronvermelding is een voorbeeld dat
+  iemand overneemt. De twee bronregels staan nu rechtop in een `<span class="ref">`. Dezelfde regel staat in alle
+  andere speeltjes van de kist; die zijn niet van dit spoor (zie verrassingen in het verslag).
+- Alle getallen nagerekend, geen fout; 92 echte mintekens, nul koppeltekens tussen cijfers; geen decimale komma's;
+  cursief van *b* en *Y* in tekst, tabel en SVG in orde; de bronvermeldingen kloppen met Crossref en Open Library.
+- Smaak, al in 1b besloten en niet veranderd: geen tabel- en figuurnummers, getalkolommen rechts, de cursieve
+  tabeltitel met *b*₀ erin, de cursieve geleende voormeting, de cursieve terugmelding.
+- Buiten haar bril: *judgement* (Brits) naast *sensitization* (Oxford/Amerikaans) — zie de spellingkeuze hierboven.
+
+**De =-wacht op de Engelse tekst.** `som_wacht.py` kent alleen Nederlandse voegwoorden (*en, of, maar, want, met,
+dan*) en gevolgwoorden (*dus, daarom, zodat*). Op de Engelse bladzij beet hij daardoor op *with a pretest (X + S = 12)
+and without (X = 8)* — twee losse feiten die in het Nederlands door *en* gescheiden worden en in het Engels niet. Het
+bijschrift gebruikt nu komma's, die hij wel als grens leest. De andere kant is ernstiger: een Engelse ketting met *so*
+of *therefore* ziet hij niet. Gemeld als verrassing; de wacht is van het huis, niet van dit spoor.
 
 ## Wat de testlezers en de APA-lens zeiden in stuk 1c, en wat er veranderde
 
