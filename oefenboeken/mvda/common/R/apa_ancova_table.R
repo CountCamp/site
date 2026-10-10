@@ -13,7 +13,8 @@
 # (Dus ANCOVA-model zonder interactie.)
 #
 # Vereiste pakketten: gt, emmeans, car, lsr.
-# Stijl: gt_apa() uit functions/gt_apa.R — alleen horizontale lijnen.
+# Stijl: gt_apa() uit de canonieke KAAPA-helper — alleen horizontale lijnen.
+# Het hoofdstuk laadt die vooraf met source("../_common/R/kaapa.R").
 
 suppressPackageStartupMessages({
   library(gt)
@@ -112,9 +113,10 @@ apa_ancova_table <- function(model,
     stringsAsFactors = FALSE
   )
 
-  source_path <- file.path("functions", "gt_apa.R")
-  if (file.exists(source_path)) source(source_path)
-
+  # Hier stond tot 10-10-2026 een stille terugval: lag er een
+  # functions/gt_apa.R, dan werd die geladen. Die map bestaat sinds de
+  # verbouwing van 15-7 niet meer, en een terugval op een willekeurige kopie
+  # is precies wat kaapa.R uitsluit. gt_apa() komt nu altijd uit kaapa.R.
   tab <- gt(show_df) |>
     cols_label(
       level = .cap_first_anc(factor_label),
