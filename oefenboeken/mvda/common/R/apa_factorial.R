@@ -31,8 +31,9 @@
 # Y ~ A * B.
 #
 # Vereiste pakketten: gt, emmeans, car, dplyr, ggplot2.
-# Stijl: opent met source("functions/gt_apa.R") in het hoofd-document, want
-# we hergebruiken gt_apa(), tab_footnote_apa() en de fmt_*-helpers.
+# Stijl: het hoofd-document laadt eerst source("../_common/R/kaapa.R") (de
+# wegwijzer naar de canonieke KAAPA-helper), want we hergebruiken gt_apa(),
+# tab_footnote_apa() en de fmt_*-helpers.
 
 suppressPackageStartupMessages({
   library(gt)
