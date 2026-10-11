@@ -44,7 +44,8 @@ suppressPackageStartupMessages({
   library(rlang)   # voor !!! splice in cols_label()
 })
 
-# Tol-Vibrant kleuren — synchroon met _thema_checklist.md.
+# Tol-Vibrant kleuren (Paul Tol): een set die ook bij kleurenblindheid uit
+# elkaar te houden is.
 .tol_vibrant <- c(
   "#0077BB", # blue
   "#EE7733", # orange
@@ -146,11 +147,16 @@ suppressPackageStartupMessages({
 }
 
 # Compacte F/p-regel: "F(1, 231) = 4.47, p = .036" met italic.
+# De p komt uit fmt_p_text() van de KAAPA-helper, die zelf "= " of "< " zet.
+# Tot 11-10-2026 stond hier fmt_p(), de tabelvariant zónder operator: in de
+# noot en in de plot stond dan "p   .023", en in de plot "p &lt; .001", want
+# fmt_p() levert in HTML een entiteit en ggplot kent geen HTML.
+# Binnen de regel staan vaste spaties (U+00A0), zodat een noot nooit breekt
+# tussen "p" en "= .46" of tussen "F(1," en "74)" (APA-lens, 11-10-2026).
 .fmt_Fp <- function(F_, df1, df2, p) {
   if (is.na(F_)) return("—")
-  paste0("*F*(", df1, ", ", df2, ") = ",
-         formatC(F_, digits = 2, format = "f"),
-         ", *p* ", fmt_p(p))
+  vast <- function(s) gsub(" ", " ", s, fixed = TRUE)
+  vast(paste0("*F*(", df1, ", ", df2, ") = ", fmt_t(F_), ", *p* ", fmt_p_text(p)))
 }
 
 # ----------------------------------------------------------------
@@ -179,12 +185,15 @@ apa_marginals_table <- function(model,
   add_diff_row <- length(S$levels_A) == 2L
   add_diff_col <- length(S$levels_B) == 2L && length(S$levels_A) > 2L
 
-  # Cel-cellen formatteren als "M (SD, n)".
+  # Cel-cellen formatteren als "M (SD, n)". Elk getal in deze tabel gaat door
+  # fmt_b() van de KAAPA-helper: twee decimalen en een echt minteken. Tot
+  # 11-10-2026 was dat formatC(), en stond er in de verschilrij -1491.04 met
+  # een koppelteken.
   cell_txt <- S$cell_stats |>
     dplyr::mutate(
       txt = paste0(
-        formatC(M,  digits = 2, format = "f"), " (",
-        formatC(SD, digits = 2, format = "f"), ", ",
+        fmt_b(M), " (",
+        fmt_b(SD), ", ",
         n, ")"
       )
     ) |>
@@ -199,7 +208,7 @@ apa_marginals_table <- function(model,
   # Naam zonder spatie zodat make.names() hem niet verminkt; we hernoemen
   # later via cols_label() voor weergave.
   marg_A_lookup <- S$emm_A |>
-    dplyr::mutate(txt = formatC(M, digits = 2, format = "f"))
+    dplyr::mutate(txt = fmt_b(M))
   wide[["margB"]] <- marg_A_lookup$txt[
     match(wide$A, as.character(marg_A_lookup$A))
   ]
@@ -217,7 +226,7 @@ apa_marginals_table <- function(model,
         d = emm[B == b1] - emm[B == b2],
         .groups = "drop"
       ) |>
-      dplyr::mutate(txt = formatC(d, digits = 2, format = "f"))
+      dplyr::mutate(txt = fmt_b(d))
     wide[["diffB"]] <- diff_lookup$txt[
       match(wide$A, as.character(diff_lookup$A))
     ]
@@ -228,14 +237,14 @@ apa_marginals_table <- function(model,
 
   # Marginaal-A rij (kolom-marginaal van B — gemiddeld over A).
   marg_B_lookup <- S$emm_B |>
-    dplyr::mutate(txt = formatC(M, digits = 2, format = "f"))
+    dplyr::mutate(txt = fmt_b(M))
   marg_row <- data.frame(A = "Marginaal A", stringsAsFactors = FALSE)
   for (lvl in S$levels_B) {
     marg_row[[lvl]] <- marg_B_lookup$txt[
       match(lvl, as.character(marg_B_lookup$B))
     ]
   }
-  marg_row[["margB"]] <- formatC(S$grand_mean, digits = 2, format = "f")
+  marg_row[["margB"]] <- fmt_b(S$grand_mean)
   if (add_diff_col) marg_row[["diffB"]] <- "—"
 
   # Verschilrij (A=2): Δ A_1 − A_2 binnen elk B-niveau, uit cel-EMM's.
@@ -253,7 +262,7 @@ apa_marginals_table <- function(model,
         d = emm[A == a1] - emm[A == a2],
         .groups = "drop"
       ) |>
-      dplyr::mutate(txt = formatC(d, digits = 2, format = "f"))
+      dplyr::mutate(txt = fmt_b(d))
     diff_row <- data.frame(A = diff_row_label, stringsAsFactors = FALSE)
     for (lvl in S$levels_B) {
       diff_row[[lvl]] <- diff_lookup_A$txt[
@@ -296,10 +305,12 @@ apa_marginals_table <- function(model,
   marg_row_id <- "Marginaal A"
 
   # gt-tabel.
-  # NB: caption komt als source_note (footnote-stijl) — niet als tab_header.
-  # Reden: gt's tab_header rendert in PDF als \caption*, en \caption* binnen
-  # een callout-omgeving (tcolorbox) crasht xelatex met "Not in outer par mode".
-  # Een source_note werkt veilig in beide outputs.
+  # De caption is de titel, boven de tabel (gt_apa(title = ...)), zoals KAAPA
+  # en APA 7 §7.10 het willen. Tot 11-10-2026 stond hij als eerste zin in de
+  # noot, omdat gt's tab_header in een PDF-render binnen een callout xelatex
+  # liet crashen. Dit oefenboek rendert alleen HTML (_metadata.yml: "Het
+  # pdf-format is er bewust uit"), dus die reden is weg (APA-lens, spoor
+  # mvda_tabellen). Komt PDF ooit terug, kijk dan hier eerst.
   #
   # APA 7-stijl: GEEN verticale lijnen tussen kolommen. De marginal-kolom
   # 'Marginaal B' krijgt visueel onderscheid via vetdruk, een zachte
@@ -323,7 +334,15 @@ apa_marginals_table <- function(model,
       columns = dplyr::all_of(spanner_cols)
     ) |>
     gt::cols_label(!!!col_labels) |>
-    gt_apa() |>
+    # Getallen rechts, en een cel "M (SD, n)" breekt niet midden in de haakjes.
+    # Rechts moet expliciet: gt lijnt een tekstkolom alleen vanzelf rechts uit
+    # als hij op getallen lijkt, en met een echt minteken (fmt_b) herkent hij
+    # dat niet meer -- gemeten 11-10-2026: de kolom met -1491.04 sprong naar
+    # links. Zo vraagt ook gt_apa() het (zie daar, "alignment-policy").
+    gt::cols_align("right", columns = setdiff(names(wide), "A")) |>
+    gt::tab_style(gt::cell_text(whitespace = "nowrap"),
+                  locations = gt::cells_body(columns = setdiff(names(wide), "A"))) |>
+    gt_apa(title = caption) |>
     # PDF-safe: longtable in plaats van table-float, want gt's default
     # \begin{table}-float crasht binnen Quarto's callout (tcolorbox).
     gt::tab_options(latex.use_longtable = TRUE) |>
@@ -398,7 +417,6 @@ apa_marginals_table <- function(model,
   H0_AB <- "*H*~0~: cel-patronen additief (geen interactie)"
 
   note <- paste0(
-    if (!is.null(caption)) paste0(caption, ". ") else "",
     "Cellen tonen *M* (*SD*, *n*) op basis van ", dependent_label,
     "; rij- en kolom-marginalen zijn ongewogen estimated marginal means ",
     "(EMM); rechtsonder de grand mean. ",
@@ -457,9 +475,11 @@ profile_plot_with_marginals <- function(model,
     factor_A_label, " × ", factor_B_label, ": ",
       .fmt_Fp(S$F_AB$F, S$F_AB$df1, S$F_AB$df2, S$F_AB$p)
   ) |>
-    # ggplot toont geen markdown, dus strip italic-* en sub-tildes.
+    # ggplot toont geen markdown en geen HTML: strip italic-* en sub-tildes,
+    # en maak van de entiteit uit fmt_p_text() weer een kleiner-dan-teken.
     gsub("\\*", "", x = _) |>
-    gsub("~", "",  x = _)
+    gsub("~", "",  x = _) |>
+    gsub("&lt;", "<", x = _, fixed = TRUE)
 
   # Caption met marginale B-waarden — kapitaliseer de B-niveau-namen.
   marg_B_txt <- paste(
