@@ -849,52 +849,54 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>means_v <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(kameleon_momenten[, <span class="fu">c</span>(<span class="st">"ochtend"</span>, <span class="st">"middag"</span>, <span class="st">"avond"</span>, <span class="st">"nacht"</span>)])</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sds_v   <span class="ot">&lt;-</span> <span class="fu">apply</span>(kameleon_momenten[, <span class="fu">c</span>(<span class="st">"ochtend"</span>, <span class="st">"middag"</span>, <span class="st">"avond"</span>, <span class="st">"nacht"</span>)], <span class="dv">2</span>, sd)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>tab_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">moment =</span> <span class="fu">c</span>(<span class="st">"Ochtend"</span>, <span class="st">"Middag"</span>, <span class="st">"Avond"</span>, <span class="st">"Nacht"</span>),</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">n      =</span> <span class="fu">nrow</span>(kameleon_momenten),</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">M      =</span> means_v,</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">SD     =</span> sds_v</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>tab_df <span class="sc">|&gt;</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Kameleon — mate-van-zichzelf per moment"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(M, SD), <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># De getallen worden tekst via de fmt_*-functies van de huisstijl (KAAPA).</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>tab_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">moment =</span> <span class="fu">c</span>(<span class="st">"Ochtend"</span>, <span class="st">"Middag"</span>, <span class="st">"Avond"</span>, <span class="st">"Nacht"</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">n      =</span> <span class="fu">nrow</span>(kameleon_momenten),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">M      =</span> <span class="fu">fmt_b</span>(means_v),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">SD     =</span> <span class="fu">fmt_se</span>(sds_v)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>tab_df <span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(<span class="st">"right"</span>, <span class="at">columns =</span> <span class="fu">c</span>(M, SD)) <span class="sc">|&gt;</span></span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">moment =</span> <span class="st">"Moment"</span>,</span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">n      =</span> <span class="fu">md</span>(<span class="st">"*n*"</span>),</span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">M      =</span> <span class="fu">md</span>(<span class="st">"*M*"</span>),</span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD     =</span> <span class="fu">md</span>(<span class="st">"*SD*"</span>)</span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.font.size =</span> <span class="fu">px</span>(<span class="dv">12</span>),</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">table.border.top.style    =</span> <span class="st">"none"</span>,</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>              <span class="at">table.border.bottom.style =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_apa</span>(<span class="at">title =</span> <span class="st">"Hoeveel de kameleons zichzelf zijn, per moment van de dag"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_footnote_apa</span>(<span class="fu">paste0</span>(</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Elke kameleon is op alle vier de momenten gemeten, dus *n* is in elke rij "</span>,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dezelfde "</span>, <span class="fu">nrow</span>(kameleon_momenten), <span class="st">" dieren."</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="enqtlkhcas" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#enqtlkhcas table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+<div id="ustbqwazac" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@charset "UTF-8";
+#ustbqwazac table {
+  font-family: 'Times New Roman', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#enqtlkhcas thead, #enqtlkhcas tbody, #enqtlkhcas tfoot, #enqtlkhcas tr, #enqtlkhcas td, #enqtlkhcas th {
+#ustbqwazac thead, #ustbqwazac tbody, #ustbqwazac tfoot, #ustbqwazac tr, #ustbqwazac td, #ustbqwazac th {
   border-style: none;
 }
 
-#enqtlkhcas p {
+#ustbqwazac p {
   margin: 0;
   padding: 0;
 }
 
-#enqtlkhcas .gt_table {
+#ustbqwazac .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -913,38 +915,38 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_caption {
+#ustbqwazac .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#enqtlkhcas .gt_title {
+#ustbqwazac .gt_title {
   color: #333333;
-  font-size: 125%;
+  font-size: 100%;
   font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#enqtlkhcas .gt_subtitle {
+#ustbqwazac .gt_subtitle {
   color: #333333;
-  font-size: 85%;
+  font-size: 100%;
   font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
+  padding-top: 1px;
+  padding-bottom: 3px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#enqtlkhcas .gt_heading {
+#ustbqwazac .gt_heading {
   background-color: #FFFFFF;
-  text-align: center;
+  text-align: left;
   border-bottom-color: #FFFFFF;
   border-left-style: none;
   border-left-width: 1px;
@@ -954,19 +956,19 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_bottom_border {
+#ustbqwazac .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_col_headings {
+#ustbqwazac .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
-  border-top-color: #D3D3D3;
+  border-top-color: #000000;
   border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
   border-left-style: none;
   border-left-width: 1px;
   border-left-color: #D3D3D3;
@@ -975,7 +977,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_col_heading {
+#ustbqwazac .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -988,14 +990,14 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
+  padding-top: 4px;
+  padding-bottom: 5px;
   padding-left: 5px;
   padding-right: 5px;
   overflow-x: hidden;
 }
 
-#enqtlkhcas .gt_column_spanner_outer {
+#ustbqwazac .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1007,31 +1009,31 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   padding-right: 4px;
 }
 
-#enqtlkhcas .gt_column_spanner_outer:first-child {
+#ustbqwazac .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#enqtlkhcas .gt_column_spanner_outer:last-child {
+#ustbqwazac .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#enqtlkhcas .gt_column_spanner {
+#ustbqwazac .gt_column_spanner {
   border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
   vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   overflow-x: hidden;
   display: inline-block;
   width: 100%;
 }
 
-#enqtlkhcas .gt_spanner_row {
+#ustbqwazac .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#enqtlkhcas .gt_group_heading {
+#ustbqwazac .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1042,9 +1044,9 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   font-weight: initial;
   text-transform: inherit;
   border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   border-left-style: none;
@@ -1057,36 +1059,36 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   text-align: left;
 }
 
-#enqtlkhcas .gt_empty_group_heading {
+#ustbqwazac .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
   font-weight: initial;
   border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
 
-#enqtlkhcas .gt_from_md > :first-child {
+#ustbqwazac .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#enqtlkhcas .gt_from_md > :last-child {
+#ustbqwazac .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#enqtlkhcas .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+#ustbqwazac .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
-  border-top-style: solid;
+  border-top-style: none;
   border-top-width: 1px;
   border-top-color: #D3D3D3;
   border-left-style: none;
@@ -1099,7 +1101,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   overflow-x: hidden;
 }
 
-#enqtlkhcas .gt_stub {
+#ustbqwazac .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1112,7 +1114,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   padding-right: 5px;
 }
 
-#enqtlkhcas .gt_stub_row_group {
+#ustbqwazac .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1126,15 +1128,15 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   vertical-align: top;
 }
 
-#enqtlkhcas .gt_row_group_first td {
-  border-top-width: 2px;
+#ustbqwazac .gt_row_group_first td {
+  border-top-width: 1px;
 }
 
-#enqtlkhcas .gt_row_group_first th {
-  border-top-width: 2px;
+#ustbqwazac .gt_row_group_first th {
+  border-top-width: 1px;
 }
 
-#enqtlkhcas .gt_summary_row {
+#ustbqwazac .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1144,16 +1146,16 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   padding-right: 5px;
 }
 
-#enqtlkhcas .gt_first_summary_row {
+#ustbqwazac .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_first_summary_row.thick {
+#ustbqwazac .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#enqtlkhcas .gt_last_summary_row {
+#ustbqwazac .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1163,7 +1165,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_grand_summary_row {
+#ustbqwazac .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1173,7 +1175,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   padding-right: 5px;
 }
 
-#enqtlkhcas .gt_first_grand_summary_row {
+#ustbqwazac .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1183,7 +1185,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_last_grand_summary_row_top {
+#ustbqwazac .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1193,20 +1195,20 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_striped {
+#ustbqwazac .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#enqtlkhcas .gt_table_body {
-  border-top-style: solid;
+#ustbqwazac .gt_table_body {
+  border-top-style: none;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
   border-bottom-style: solid;
   border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
+  border-bottom-color: #000000;
 }
 
-#enqtlkhcas .gt_footnotes {
+#ustbqwazac .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1220,7 +1222,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_footnote {
+#ustbqwazac .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1229,7 +1231,7 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   padding-right: 5px;
 }
 
-#enqtlkhcas .gt_sourcenotes {
+#ustbqwazac .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1243,88 +1245,175 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#enqtlkhcas .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+#ustbqwazac .gt_sourcenote {
+  font-size: 85%;
+  padding-top: 2px;
+  padding-bottom: 2px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
-#enqtlkhcas .gt_left {
+#ustbqwazac .gt_left {
   text-align: left;
 }
 
-#enqtlkhcas .gt_center {
+#ustbqwazac .gt_center {
   text-align: center;
 }
 
-#enqtlkhcas .gt_right {
+#ustbqwazac .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#enqtlkhcas .gt_font_normal {
+#ustbqwazac .gt_font_normal {
   font-weight: normal;
 }
 
-#enqtlkhcas .gt_font_bold {
+#ustbqwazac .gt_font_bold {
   font-weight: bold;
 }
 
-#enqtlkhcas .gt_font_italic {
+#ustbqwazac .gt_font_italic {
   font-style: italic;
 }
 
-#enqtlkhcas .gt_super {
+#ustbqwazac .gt_super {
   font-size: 65%;
 }
 
-#enqtlkhcas .gt_footnote_marks {
+#ustbqwazac .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#enqtlkhcas .gt_asterisk {
+#ustbqwazac .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#enqtlkhcas .gt_indent_1 {
+#ustbqwazac .gt_indent_1 {
   text-indent: 5px;
 }
 
-#enqtlkhcas .gt_indent_2 {
+#ustbqwazac .gt_indent_2 {
   text-indent: 10px;
 }
 
-#enqtlkhcas .gt_indent_3 {
+#ustbqwazac .gt_indent_3 {
   text-indent: 15px;
 }
 
-#enqtlkhcas .gt_indent_4 {
+#ustbqwazac .gt_indent_4 {
   text-indent: 20px;
 }
 
-#enqtlkhcas .gt_indent_5 {
+#ustbqwazac .gt_indent_5 {
   text-indent: 25px;
 }
 
-#enqtlkhcas .katex-display {
+#ustbqwazac .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#enqtlkhcas div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ustbqwazac div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
+}
+
+/* Container krimpt tot tabel-inhoud — voorkomt dat een lange Note. de
+       tabel breed uitrekt (was visueel slecht leesbaar). Note wrapt dan
+       binnen de natuurlijke tabel-breedte. NB: GEEN width op .gt_table
+       zelf — gt zet daar inline-style 'width:Npx' op via tab_options(),
+       die mogen we niet overrulen anders verliest de title-cell met
+       colspan=ncol zijn volle breedte. */
+.gt_table_container {
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+/* Titel en ondertitel beide italic — elk op eigen regel boven dikke lijn */
+.gt_heading {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* NB: GEEN display: block — dat haalt de cel uit de table-layout
+       waardoor colspan=ncol niet meer werkt en titel krimpt naar
+       eerste-kolom-breedte. Laat het default table-cell-gedrag staan.
+       Cel zelf is non-italic; italic ontstaat alleen waar <em>…</em>
+       staat (via markdown `*...*` of expliciete <em>-tags). Dat maakt
+       de table_number-modus mogelijk: 'Table 1' blijft non-italic, de
+       beschrijvende titel daaronder is wel italic. */
+.gt_title {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 4px !important;
+  padding-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.gt_title em {
+  font-style: italic !important;
+}
+
+.gt_title strong {
+  font-weight: bold !important;
+}
+
+.gt_subtitle {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 1px !important;
+  padding-bottom: 4px !important;
+  border-top: none !important;
+}
+
+.gt_subtitle em {
+  font-style: italic !important;
+}
+
+/* Note. links uitgelijnd; wrapt binnen tabel-breedte i.p.v. deze
+       uit te rekken. APA 7 §7.14: tabel-notes double-spaced. */
+.gt_sourcenotes, .gt_sourcenote {
+  text-align: left !important;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 2 !important;
+  padding-top: 6px !important;
+}
+
+/* Tabular figures voor gelijke cijferbreedte */
+.gt_row {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky kolom-header — bij scrollen blijft de header bovenaan zichtbaar.
+       Plus white-space: nowrap zodat headers nooit op streepjes/spaties
+       wrappen ('BC-SMD' niet als 'BC-/SMD'). auto_width_apa() rekent
+       met ruimere char-breedte voor headers, zodat de kolom breed genoeg is. */
+.gt_col_heading {
+  position: sticky !important;
+  top: 0 !important;
+  background-color: #FFFFFF !important;
+  z-index: 2;
+  white-space: nowrap !important;
 }
 </style>
 
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
-<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border">Kameleon — mate-van-zichzelf per moment</td>
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border"><em>Hoeveel de kameleons zichzelf zijn, per moment van de dag</em></td>
 </tr>
 <tr class="gt_col_headings even">
 <th id="moment" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Moment</th>
@@ -1358,7 +1447,12 @@ nacht      0.37   0.36  0.40  1.00</code></pre>
 <td class="gt_row gt_right" headers="M">73.49</td>
 <td class="gt_row gt_right" headers="SD">15.15</td>
 </tr>
-</tbody>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote"><em>Note.</em> Elke kameleon is op alle vier de momenten gemeten, dus <em>n</em> is in elke rij dezelfde 90 dieren.</td>
+</tr>
+</tfoot>
+
 </table>
 
 </div>
@@ -1669,8 +1763,8 @@ moment 1.008238 5.813392e-71</code></pre>
 <tbody>
 <tr class="odd">
 <td>Within-subjects (binnen-persoon) totaal</td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>f</mi><mi>W</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">df_W = (n-1)(k-1)</annotation></semantics></math></td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>89</mn><mo>⋅</mo><mn>3</mn><mo>=</mo><mn>267</mn></mrow><annotation encoding="application/x-tex">89 \cdot 3 = 267</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><msub><mi>f</mi><mi>W</mi></msub><mo>=</mo><mi>n</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">df_W = n(k-1)</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>90</mn><mo>⋅</mo><mn>3</mn><mo>=</mo><mn>270</mn></mrow><annotation encoding="application/x-tex">90 \cdot 3 = 270</annotation></semantics></math></td>
 </tr>
 <tr class="even">
 <td>Conditie (moment)</td>
@@ -2338,42 +2432,594 @@ mean of x
 </div>
 <div class="callout-body-container callout-body">
 <p>Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> momenten zijn er <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>k</mi><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>k</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>2</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\binom{k}{2} = \dfrac{k(k-1)}{2}</annotation></semantics></math> paarsgewijze vergelijkingen:</p>
-<table class="caption-top table">
+<div class="cell">
+<div class="cell-output-display">
+<div id="qcfgyrdnfo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@charset "UTF-8";
+#qcfgyrdnfo table {
+  font-family: 'Times New Roman', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qcfgyrdnfo thead, #qcfgyrdnfo tbody, #qcfgyrdnfo tfoot, #qcfgyrdnfo tr, #qcfgyrdnfo td, #qcfgyrdnfo th {
+  border-style: none;
+}
+
+#qcfgyrdnfo p {
+  margin: 0;
+  padding: 0;
+}
+
+#qcfgyrdnfo .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qcfgyrdnfo .gt_title {
+  color: #333333;
+  font-size: 100%;
+  font-weight: initial;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qcfgyrdnfo .gt_subtitle {
+  color: #333333;
+  font-size: 100%;
+  font-weight: initial;
+  padding-top: 1px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qcfgyrdnfo .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qcfgyrdnfo .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qcfgyrdnfo .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qcfgyrdnfo .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qcfgyrdnfo .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qcfgyrdnfo .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qcfgyrdnfo .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qcfgyrdnfo .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qcfgyrdnfo .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qcfgyrdnfo .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qcfgyrdnfo .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: none;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qcfgyrdnfo .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qcfgyrdnfo .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qcfgyrdnfo .gt_row_group_first td {
+  border-top-width: 1px;
+}
+
+#qcfgyrdnfo .gt_row_group_first th {
+  border-top-width: 1px;
+}
+
+#qcfgyrdnfo .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qcfgyrdnfo .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qcfgyrdnfo .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qcfgyrdnfo .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qcfgyrdnfo .gt_table_body {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+}
+
+#qcfgyrdnfo .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qcfgyrdnfo .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qcfgyrdnfo .gt_sourcenote {
+  font-size: 85%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qcfgyrdnfo .gt_left {
+  text-align: left;
+}
+
+#qcfgyrdnfo .gt_center {
+  text-align: center;
+}
+
+#qcfgyrdnfo .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qcfgyrdnfo .gt_font_normal {
+  font-weight: normal;
+}
+
+#qcfgyrdnfo .gt_font_bold {
+  font-weight: bold;
+}
+
+#qcfgyrdnfo .gt_font_italic {
+  font-style: italic;
+}
+
+#qcfgyrdnfo .gt_super {
+  font-size: 65%;
+}
+
+#qcfgyrdnfo .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qcfgyrdnfo .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qcfgyrdnfo .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qcfgyrdnfo .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qcfgyrdnfo .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qcfgyrdnfo .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qcfgyrdnfo .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qcfgyrdnfo .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qcfgyrdnfo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+
+/* Container krimpt tot tabel-inhoud — voorkomt dat een lange Note. de
+       tabel breed uitrekt (was visueel slecht leesbaar). Note wrapt dan
+       binnen de natuurlijke tabel-breedte. NB: GEEN width op .gt_table
+       zelf — gt zet daar inline-style 'width:Npx' op via tab_options(),
+       die mogen we niet overrulen anders verliest de title-cell met
+       colspan=ncol zijn volle breedte. */
+.gt_table_container {
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+/* Titel en ondertitel beide italic — elk op eigen regel boven dikke lijn */
+.gt_heading {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* NB: GEEN display: block — dat haalt de cel uit de table-layout
+       waardoor colspan=ncol niet meer werkt en titel krimpt naar
+       eerste-kolom-breedte. Laat het default table-cell-gedrag staan.
+       Cel zelf is non-italic; italic ontstaat alleen waar <em>…</em>
+       staat (via markdown `*...*` of expliciete <em>-tags). Dat maakt
+       de table_number-modus mogelijk: 'Table 1' blijft non-italic, de
+       beschrijvende titel daaronder is wel italic. */
+.gt_title {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 4px !important;
+  padding-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.gt_title em {
+  font-style: italic !important;
+}
+
+.gt_title strong {
+  font-weight: bold !important;
+}
+
+.gt_subtitle {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 1px !important;
+  padding-bottom: 4px !important;
+  border-top: none !important;
+}
+
+.gt_subtitle em {
+  font-style: italic !important;
+}
+
+/* Note. links uitgelijnd; wrapt binnen tabel-breedte i.p.v. deze
+       uit te rekken. APA 7 §7.14: tabel-notes double-spaced. */
+.gt_sourcenotes, .gt_sourcenote {
+  text-align: left !important;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 2 !important;
+  padding-top: 6px !important;
+}
+
+/* Tabular figures voor gelijke cijferbreedte */
+.gt_row {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky kolom-header — bij scrollen blijft de header bovenaan zichtbaar.
+       Plus white-space: nowrap zodat headers nooit op streepjes/spaties
+       wrappen ('BC-SMD' niet als 'BC-/SMD'). auto_width_apa() rekent
+       met ruimere char-breedte voor headers, zodat de kolom breed genoeg is. */
+.gt_col_heading {
+  position: sticky !important;
+  top: 0 !important;
+  background-color: #FFFFFF !important;
+  z-index: 2;
+  white-space: nowrap !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
-<tr class="header">
-<th style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math></th>
-<th style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>k</mi><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\binom{k}{2}</annotation></semantics></math></th>
-<th style="text-align: right;">Bonferroni-drempel (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>)</th>
+<tr class="gt_heading header">
+<td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border"><em>Hoe de drempel per paar krimpt naarmate er meer momenten zijn</em></td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="k" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><em>k</em></th>
+<th id="paren" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>k</mi><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\binom{k}{2}</annotation></semantics></math></th>
+<th id="grens" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Bonferroni-drempel</th>
 </tr>
 </thead>
-<tbody>
+<tbody class="gt_table_body">
 <tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>.050</mn><annotation encoding="application/x-tex">.050</annotation></semantics></math></td>
+<td class="gt_row gt_right" headers="k">2</td>
+<td class="gt_row gt_right" headers="paren">1</td>
+<td class="gt_row gt_right" headers="grens">.0500</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>.0167</mn><annotation encoding="application/x-tex">.0167</annotation></semantics></math></td>
+<td class="gt_row gt_right" headers="k">3</td>
+<td class="gt_row gt_right" headers="paren">3</td>
+<td class="gt_row gt_right" headers="grens">.0167</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;"><strong>6</strong></td>
-<td style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>.0083</mn><annotation encoding="application/x-tex">.0083</annotation></semantics></math></td>
+<td class="gt_row gt_right" headers="k">4</td>
+<td class="gt_row gt_right" headers="paren">6</td>
+<td class="gt_row gt_right" headers="grens">.0083</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>.0050</mn><annotation encoding="application/x-tex">.0050</annotation></semantics></math></td>
+<td class="gt_row gt_right" headers="k">5</td>
+<td class="gt_row gt_right" headers="paren">10</td>
+<td class="gt_row gt_right" headers="grens">.0050</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">15</td>
-<td style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>.0033</mn><annotation encoding="application/x-tex">.0033</annotation></semantics></math></td>
+<td class="gt_row gt_right" headers="k">6</td>
+<td class="gt_row gt_right" headers="paren">15</td>
+<td class="gt_row gt_right" headers="grens">.0033</td>
 </tr>
-</tbody>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="3" class="gt_sourcenote"><em>Note.</em> <em>k</em> = aantal momenten. De drempel per paar is α = .05 gedeeld door het aantal paren. Bij vier momenten, zoals bij de kameleon, zijn het er zes.</td>
+</tr>
+</tfoot>
+
 </table>
+
+</div>
+</div>
+</div>
 <p>Voor onze kameleon met vier momenten zijn dat <strong>zes</strong> paren: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>O</mi><mo>,</mo><mi>M</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>O</mi><mo>,</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>O</mi><mo>,</mo><mi>N</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mo>,</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>M</mi><mo>,</mo><mi>N</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo>,</mo><mi>N</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(O,M), (O,A), (O,N), (M,A), (M,N), (A,N)</annotation></semantics></math>. Bonferroni-corrected <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">α</mi><mtext mathvariant="normal">per paar</mtext></msub><mo>=</mo><mn>.05</mn><mi>/</mi><mn>6</mn><mo>≈</mo><mn>.008</mn></mrow><annotation encoding="application/x-tex">\alpha_{\text{per paar}} = .05 / 6 \approx .008</annotation></semantics></math>.</p>
 </div>
 </div>
@@ -2634,41 +3280,40 @@ mean of x
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>profielen <span class="sc">|&gt;</span></span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Vier kameleon-profielen — gemiddelde mate-van-zichzelf per moment"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">Kameleon =</span> <span class="st">"Kameleon"</span>,</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">ochtend  =</span> <span class="st">"Ochtend"</span>,</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">middag   =</span> <span class="st">"Middag"</span>,</span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">avond    =</span> <span class="st">"Avond"</span>,</span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">nacht    =</span> <span class="st">"Nacht"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(<span class="at">table.font.size =</span> <span class="fu">px</span>(<span class="dv">13</span>),</span>
-<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>              <span class="at">table.border.top.style    =</span> <span class="st">"none"</span>,</span>
-<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">table.border.bottom.style =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">Kameleon =</span> <span class="st">"Kameleon"</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">ochtend  =</span> <span class="st">"Ochtend"</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">middag   =</span> <span class="st">"Middag"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">avond    =</span> <span class="st">"Avond"</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">nacht    =</span> <span class="st">"Nacht"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_apa</span>(<span class="at">title =</span> <span class="st">"Vier dagritmes: de gemiddelde mate-van-zichzelf per moment"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_footnote_apa</span>(<span class="st">"Vier verzonnen kameleons, om contrasten mee te leren rekenen."</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="etdypenxjw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#etdypenxjw table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+<div id="zpmdfwkcgn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@charset "UTF-8";
+#zpmdfwkcgn table {
+  font-family: 'Times New Roman', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#etdypenxjw thead, #etdypenxjw tbody, #etdypenxjw tfoot, #etdypenxjw tr, #etdypenxjw td, #etdypenxjw th {
+#zpmdfwkcgn thead, #zpmdfwkcgn tbody, #zpmdfwkcgn tfoot, #zpmdfwkcgn tr, #zpmdfwkcgn td, #zpmdfwkcgn th {
   border-style: none;
 }
 
-#etdypenxjw p {
+#zpmdfwkcgn p {
   margin: 0;
   padding: 0;
 }
 
-#etdypenxjw .gt_table {
+#zpmdfwkcgn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -2687,38 +3332,38 @@ mean of x
   border-left-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_caption {
+#zpmdfwkcgn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#etdypenxjw .gt_title {
+#zpmdfwkcgn .gt_title {
   color: #333333;
-  font-size: 125%;
+  font-size: 100%;
   font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   padding-left: 5px;
   padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#etdypenxjw .gt_subtitle {
+#zpmdfwkcgn .gt_subtitle {
   color: #333333;
-  font-size: 85%;
+  font-size: 100%;
   font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
+  padding-top: 1px;
+  padding-bottom: 3px;
   padding-left: 5px;
   padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#etdypenxjw .gt_heading {
+#zpmdfwkcgn .gt_heading {
   background-color: #FFFFFF;
-  text-align: center;
+  text-align: left;
   border-bottom-color: #FFFFFF;
   border-left-style: none;
   border-left-width: 1px;
@@ -2728,19 +3373,19 @@ mean of x
   border-right-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_bottom_border {
+#zpmdfwkcgn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_col_headings {
+#zpmdfwkcgn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
-  border-top-color: #D3D3D3;
+  border-top-color: #000000;
   border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
   border-left-style: none;
   border-left-width: 1px;
   border-left-color: #D3D3D3;
@@ -2749,7 +3394,7 @@ mean of x
   border-right-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_col_heading {
+#zpmdfwkcgn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2762,14 +3407,14 @@ mean of x
   border-right-width: 1px;
   border-right-color: #D3D3D3;
   vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
+  padding-top: 4px;
+  padding-bottom: 5px;
   padding-left: 5px;
   padding-right: 5px;
   overflow-x: hidden;
 }
 
-#etdypenxjw .gt_column_spanner_outer {
+#zpmdfwkcgn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2781,31 +3426,31 @@ mean of x
   padding-right: 4px;
 }
 
-#etdypenxjw .gt_column_spanner_outer:first-child {
+#zpmdfwkcgn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#etdypenxjw .gt_column_spanner_outer:last-child {
+#zpmdfwkcgn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#etdypenxjw .gt_column_spanner {
+#zpmdfwkcgn .gt_column_spanner {
   border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
   vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   overflow-x: hidden;
   display: inline-block;
   width: 100%;
 }
 
-#etdypenxjw .gt_spanner_row {
+#zpmdfwkcgn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#etdypenxjw .gt_group_heading {
+#zpmdfwkcgn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2816,9 +3461,9 @@ mean of x
   font-weight: initial;
   text-transform: inherit;
   border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   border-left-style: none;
@@ -2831,36 +3476,36 @@ mean of x
   text-align: left;
 }
 
-#etdypenxjw .gt_empty_group_heading {
+#zpmdfwkcgn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
   font-weight: initial;
   border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
 
-#etdypenxjw .gt_from_md > :first-child {
+#zpmdfwkcgn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#etdypenxjw .gt_from_md > :last-child {
+#zpmdfwkcgn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#etdypenxjw .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+#zpmdfwkcgn .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
-  border-top-style: solid;
+  border-top-style: none;
   border-top-width: 1px;
   border-top-color: #D3D3D3;
   border-left-style: none;
@@ -2873,7 +3518,7 @@ mean of x
   overflow-x: hidden;
 }
 
-#etdypenxjw .gt_stub {
+#zpmdfwkcgn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2886,7 +3531,7 @@ mean of x
   padding-right: 5px;
 }
 
-#etdypenxjw .gt_stub_row_group {
+#zpmdfwkcgn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2900,15 +3545,15 @@ mean of x
   vertical-align: top;
 }
 
-#etdypenxjw .gt_row_group_first td {
-  border-top-width: 2px;
+#zpmdfwkcgn .gt_row_group_first td {
+  border-top-width: 1px;
 }
 
-#etdypenxjw .gt_row_group_first th {
-  border-top-width: 2px;
+#zpmdfwkcgn .gt_row_group_first th {
+  border-top-width: 1px;
 }
 
-#etdypenxjw .gt_summary_row {
+#zpmdfwkcgn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2918,16 +3563,16 @@ mean of x
   padding-right: 5px;
 }
 
-#etdypenxjw .gt_first_summary_row {
+#zpmdfwkcgn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_first_summary_row.thick {
+#zpmdfwkcgn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#etdypenxjw .gt_last_summary_row {
+#zpmdfwkcgn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2937,7 +3582,7 @@ mean of x
   border-bottom-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_grand_summary_row {
+#zpmdfwkcgn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2947,7 +3592,7 @@ mean of x
   padding-right: 5px;
 }
 
-#etdypenxjw .gt_first_grand_summary_row {
+#zpmdfwkcgn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2957,7 +3602,7 @@ mean of x
   border-top-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_last_grand_summary_row_top {
+#zpmdfwkcgn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2967,20 +3612,20 @@ mean of x
   border-bottom-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_striped {
+#zpmdfwkcgn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#etdypenxjw .gt_table_body {
-  border-top-style: solid;
+#zpmdfwkcgn .gt_table_body {
+  border-top-style: none;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
   border-bottom-style: solid;
   border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
+  border-bottom-color: #000000;
 }
 
-#etdypenxjw .gt_footnotes {
+#zpmdfwkcgn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2994,7 +3639,7 @@ mean of x
   border-right-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_footnote {
+#zpmdfwkcgn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3003,7 +3648,7 @@ mean of x
   padding-right: 5px;
 }
 
-#etdypenxjw .gt_sourcenotes {
+#zpmdfwkcgn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3017,88 +3662,175 @@ mean of x
   border-right-color: #D3D3D3;
 }
 
-#etdypenxjw .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
+#zpmdfwkcgn .gt_sourcenote {
+  font-size: 85%;
+  padding-top: 2px;
+  padding-bottom: 2px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
-#etdypenxjw .gt_left {
+#zpmdfwkcgn .gt_left {
   text-align: left;
 }
 
-#etdypenxjw .gt_center {
+#zpmdfwkcgn .gt_center {
   text-align: center;
 }
 
-#etdypenxjw .gt_right {
+#zpmdfwkcgn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#etdypenxjw .gt_font_normal {
+#zpmdfwkcgn .gt_font_normal {
   font-weight: normal;
 }
 
-#etdypenxjw .gt_font_bold {
+#zpmdfwkcgn .gt_font_bold {
   font-weight: bold;
 }
 
-#etdypenxjw .gt_font_italic {
+#zpmdfwkcgn .gt_font_italic {
   font-style: italic;
 }
 
-#etdypenxjw .gt_super {
+#zpmdfwkcgn .gt_super {
   font-size: 65%;
 }
 
-#etdypenxjw .gt_footnote_marks {
+#zpmdfwkcgn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#etdypenxjw .gt_asterisk {
+#zpmdfwkcgn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#etdypenxjw .gt_indent_1 {
+#zpmdfwkcgn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#etdypenxjw .gt_indent_2 {
+#zpmdfwkcgn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#etdypenxjw .gt_indent_3 {
+#zpmdfwkcgn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#etdypenxjw .gt_indent_4 {
+#zpmdfwkcgn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#etdypenxjw .gt_indent_5 {
+#zpmdfwkcgn .gt_indent_5 {
   text-indent: 25px;
 }
 
-#etdypenxjw .katex-display {
+#zpmdfwkcgn .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#etdypenxjw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zpmdfwkcgn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
+}
+
+/* Container krimpt tot tabel-inhoud — voorkomt dat een lange Note. de
+       tabel breed uitrekt (was visueel slecht leesbaar). Note wrapt dan
+       binnen de natuurlijke tabel-breedte. NB: GEEN width op .gt_table
+       zelf — gt zet daar inline-style 'width:Npx' op via tab_options(),
+       die mogen we niet overrulen anders verliest de title-cell met
+       colspan=ncol zijn volle breedte. */
+.gt_table_container {
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+/* Titel en ondertitel beide italic — elk op eigen regel boven dikke lijn */
+.gt_heading {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* NB: GEEN display: block — dat haalt de cel uit de table-layout
+       waardoor colspan=ncol niet meer werkt en titel krimpt naar
+       eerste-kolom-breedte. Laat het default table-cell-gedrag staan.
+       Cel zelf is non-italic; italic ontstaat alleen waar <em>…</em>
+       staat (via markdown `*...*` of expliciete <em>-tags). Dat maakt
+       de table_number-modus mogelijk: 'Table 1' blijft non-italic, de
+       beschrijvende titel daaronder is wel italic. */
+.gt_title {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 4px !important;
+  padding-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.gt_title em {
+  font-style: italic !important;
+}
+
+.gt_title strong {
+  font-weight: bold !important;
+}
+
+.gt_subtitle {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 1px !important;
+  padding-bottom: 4px !important;
+  border-top: none !important;
+}
+
+.gt_subtitle em {
+  font-style: italic !important;
+}
+
+/* Note. links uitgelijnd; wrapt binnen tabel-breedte i.p.v. deze
+       uit te rekken. APA 7 §7.14: tabel-notes double-spaced. */
+.gt_sourcenotes, .gt_sourcenote {
+  text-align: left !important;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 2 !important;
+  padding-top: 6px !important;
+}
+
+/* Tabular figures voor gelijke cijferbreedte */
+.gt_row {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky kolom-header — bij scrollen blijft de header bovenaan zichtbaar.
+       Plus white-space: nowrap zodat headers nooit op streepjes/spaties
+       wrappen ('BC-SMD' niet als 'BC-/SMD'). auto_width_apa() rekent
+       met ruimere char-breedte voor headers, zodat de kolom breed genoeg is. */
+.gt_col_heading {
+  position: sticky !important;
+  top: 0 !important;
+  background-color: #FFFFFF !important;
+  z-index: 2;
+  white-space: nowrap !important;
 }
 </style>
 
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
-<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border">Vier kameleon-profielen — gemiddelde mate-van-zichzelf per moment</td>
+<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border"><em>Vier dagritmes: de gemiddelde mate-van-zichzelf per moment</em></td>
 </tr>
 <tr class="gt_col_headings even">
 <th id="Kameleon" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Kameleon</th>
@@ -3137,7 +3869,12 @@ mean of x
 <td class="gt_row gt_right" headers="avond">5</td>
 <td class="gt_row gt_right" headers="nacht">9</td>
 </tr>
-</tbody>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="5" class="gt_sourcenote"><em>Note.</em> Vier verzonnen kameleons, om contrasten mee te leren rekenen.</td>
+</tr>
+</tfoot>
+
 </table>
 
 </div>

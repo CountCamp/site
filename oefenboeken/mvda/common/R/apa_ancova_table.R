@@ -85,19 +85,22 @@ apa_ancova_table <- function(model,
   rn_an <- rownames(an)
   rn_es <- rownames(es)
 
-  fmt_F  <- function(x) sprintf("%.2f", x)
-  fmt_p  <- function(x) ifelse(x < .001, "< .001", sub("^0\\.", ".", sprintf("%.3f", x)))
-  fmt_es <- function(x) sub("^0\\.", ".", sprintf("%.2f", x))
-  fmt_C  <- function(x) sprintf("%.2f", x)
-
+  # Getallen via de functies van de KAAPA-helper (fmt_t, fmt_p_text, fmt_r2,
+  # fmt_b): echt minteken, geen voorloopnul waar een getal niet boven de 1 kan.
+  # Tot 11-10-2026 stonden hier eigen functies, en in de noot kwam dan
+  # "p = < .001" en "eta^2_p = .17" te staan (spoor mvda_tabellen).
+  # Binnen een statistiek vaste spaties (U+00A0), zodat de noot nooit breekt
+  # tussen "p <" en ".001" of tussen "F(1," en "74)".
+  vast <- function(s) gsub(" ", " ", s, fixed = TRUE)
   row_F <- function(label, term) {
     F_val <- an[term, "F value"]
     p_val <- an[term, "Pr(>F)"]
     df1   <- an[term, "Df"]
     df2   <- an["Residuals", "Df"]
     eta_p <- es[term, "eta.sq.part"]
-    sprintf("%s: F(%d, %d) = %s, p = %s, eta^2_p = %s",
-            label, df1, df2, fmt_F(F_val), fmt_p(p_val), fmt_es(eta_p))
+    paste0(label, ": ",
+           vast(sprintf("*F*(%d, %d) = %s, *p* %s,", df1, df2, fmt_t(F_val), fmt_p_text(p_val))),
+           " $\\eta^2_p$ = ", fmt_r2(eta_p))
   }
 
   cov_row <- row_F(covariate_label, cov)
@@ -107,11 +110,16 @@ apa_ancova_table <- function(model,
   show_df <- data.frame(
     level = per_group$level,
     n     = per_group$n,
-    C     = sprintf("%.2f", per_group$C_bar),
-    Y     = sprintf("%.2f", per_group$Y_bar),
-    Yadj  = sprintf("%.2f", per_group$emmean),
+    C     = fmt_b(per_group$C_bar),
+    Y     = fmt_b(per_group$Y_bar),
+    Yadj  = fmt_b(per_group$emmean),
     stringsAsFactors = FALSE
   )
+
+  # *M* met de naam van de variabele eronder. Met HTML en niet met de
+  # markdown-tilde: pandoc maakt van M~a, b~ geen subscript zodra er een
+  # spatie in staat, en dan stonden de tildes gewoon op de bladzijde.
+  M_sub <- function(label) paste0("*M*<sub>", label, "</sub>")
 
   # Hier stond tot 10-10-2026 een stille terugval: lag er een
   # functions/gt_apa.R, dan werd die geladen. Die map bestaat sinds de
@@ -121,28 +129,28 @@ apa_ancova_table <- function(model,
     cols_label(
       level = .cap_first_anc(factor_label),
       n     = md("*n*"),
-      C     = md(paste0("M~", covariate_label, "~")),
-      Y     = md(paste0("M~", dependent_label, ", ruw~")),
-      Yadj  = md(paste0("M~", dependent_label, ", adjusted~"))
+      C     = md(M_sub(covariate_label)),
+      Y     = md(M_sub(paste0(dependent_label, ", ruw"))),
+      Yadj  = md(M_sub(paste0(dependent_label, ", adjusted")))
     ) |>
-    cols_align(align = "center", columns = c(n, C, Y, Yadj)) |>
-    cols_align(align = "left",   columns = level) |>
-    gt_apa() |>
+    # Getallen rechts, zodat de decimalen onder elkaar staan (KAAPA).
+    cols_align(align = "right", columns = c(n, C, Y, Yadj)) |>
+    cols_align(align = "left",  columns = level) |>
+    # De caption is de titel, boven de tabel, zoals KAAPA en APA 7 §7.10 het
+    # willen. Tot 11-10-2026 stond hij cursief als eerste zin in de noot,
+    # omdat tab_header in een PDF-render binnen een callout xelatex liet
+    # crashen. Dit oefenboek rendert alleen HTML (_metadata.yml), dus die
+    # reden is weg (APA-lens, spoor mvda_tabellen).
+    gt_apa(title = caption) |>
     # PDF-safe: longtable in plaats van table-float, want gt's default
     # \begin{table}-float crasht binnen Quarto's callout (tcolorbox).
     tab_options(latex.use_longtable = TRUE)
 
-  # Caption komt als source_note (footnote-stijl) — niet als tab_header.
-  # Reden: gt's tab_header rendert in PDF als \caption*, en \caption* binnen
-  # een callout-omgeving (tcolorbox) crasht xelatex met "Not in outer par mode".
-  cap_prefix <- if (!is.null(caption)) paste0("*", caption, ".* ") else ""
-
   note_text <- paste0(
-    cap_prefix,
-    "*M*~", dependent_label, ", adjusted~ = estimated marginal mean ",
+    M_sub(paste0(dependent_label, ", adjusted")), " = estimated marginal mean ",
     "voor ", dependent_label, " bij gemiddelde ", covariate_label, " ",
-    "(", sprintf("%.2f", grand_C), "). Pooled-within slope *b*~w~ = ",
-    sprintf("%.2f", b_w), ". ", cov_row, "; ", fac_row, "."
+    "(", fmt_b(grand_C), "). Pooled-within slope *b*~w~ = ",
+    fmt_b(b_w), "; $\\eta^2_p$ = partiële eta-kwadraat. ", cov_row, "; ", fac_row, "."
   )
 
   tab <- tab |>
