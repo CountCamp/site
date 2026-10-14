@@ -4,7 +4,7 @@
 #' (technieken / relaties). Voor consistent overzicht per MVDA-thema:
 #' MRA / ANOVA / ANCOVA / LRA / MANOVA / DDA / RMA / Mediation.
 #'
-#' Gebaseerd op Bens handgeschreven set-pijl-stijl (aantekeningen pagina 9):
+#' Gebaseerd op een handgetekende stijl met sets en pijlen:
 #' meetniveau bovenin het blok, set-naam in vet, variabele-namen daaronder,
 #' aantal als footnote. Pijl met techniek-label tussen blokken.
 #'

@@ -86,9 +86,8 @@ apa_ancova_table <- function(model,
   rn_es <- rownames(es)
 
   # Getallen via de functies van de KAAPA-helper (fmt_t, fmt_p_text, fmt_r2,
-  # fmt_b): echt minteken, geen voorloopnul waar een getal niet boven de 1 kan.
-  # Tot 11-10-2026 stonden hier eigen functies, en in de noot kwam dan
-  # "p = < .001" en "eta^2_p = .17" te staan (spoor mvda_tabellen).
+  # fmt_b): echt minteken, geen voorloopnul waar een getal niet boven de 1 kan,
+  # en fmt_p_text() zet zelf "=" of "<" voor de p, dus nooit "p = < .001".
   # Binnen een statistiek vaste spaties (U+00A0), zodat de noot nooit breekt
   # tussen "p <" en ".001" of tussen "F(1," en "74)".
   vast <- function(s) gsub(" ", " ", s, fixed = TRUE)
@@ -121,10 +120,9 @@ apa_ancova_table <- function(model,
   # spatie in staat, en dan stonden de tildes gewoon op de bladzijde.
   M_sub <- function(label) paste0("*M*<sub>", label, "</sub>")
 
-  # Hier stond tot 10-10-2026 een stille terugval: lag er een
-  # functions/gt_apa.R, dan werd die geladen. Die map bestaat sinds de
-  # verbouwing van 15-7 niet meer, en een terugval op een willekeurige kopie
-  # is precies wat kaapa.R uitsluit. gt_apa() komt nu altijd uit kaapa.R.
+  # gt_apa() komt altijd uit kaapa.R en nooit uit een losse kopie ergens
+  # anders: een kopie die niemand bijhoudt, loopt stilletjes achter (zie de
+  # uitleg bovenin kaapa.R).
   tab <- gt(show_df) |>
     cols_label(
       level = .cap_first_anc(factor_label),
@@ -137,10 +135,9 @@ apa_ancova_table <- function(model,
     cols_align(align = "right", columns = c(n, C, Y, Yadj)) |>
     cols_align(align = "left",  columns = level) |>
     # De caption is de titel, boven de tabel, zoals KAAPA en APA 7 §7.10 het
-    # willen. Tot 11-10-2026 stond hij cursief als eerste zin in de noot,
-    # omdat tab_header in een PDF-render binnen een callout xelatex liet
-    # crashen. Dit oefenboek rendert alleen HTML (_metadata.yml), dus die
-    # reden is weg (APA-lens, spoor mvda_tabellen).
+    # willen. In een PDF-render binnen een callout laat tab_header() xelatex
+    # crashen; dit oefenboek rendert alleen HTML (zie _quarto.yml), dus dat
+    # speelt hier niet.
     gt_apa(title = caption) |>
     # PDF-safe: longtable in plaats van table-float, want gt's default
     # \begin{table}-float crasht binnen Quarto's callout (tcolorbox).

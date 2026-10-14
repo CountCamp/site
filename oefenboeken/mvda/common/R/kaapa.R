@@ -1,5 +1,5 @@
-# KAAPA ("Kick Ass APA") -- de tabelhuisstijl van Ben, de maker van dit
-# oefenboek.
+# KAAPA ("Kick Ass APA") -- de tabelhuisstijl van dit oefenboek en de andere
+# CountCamp-oefenboeken.
 #
 # Dit bestand is geen tabelhelper maar een wegwijzer ernaar. Het laadt
 # gt_apa(), tab_footnote_apa() en de fmt_*-functies. Heb je de ZIP van de
