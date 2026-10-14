@@ -148,11 +148,11 @@ suppressPackageStartupMessages({
 
 # Compacte F/p-regel: "F(1, 231) = 4.47, p = .036" met italic.
 # De p komt uit fmt_p_text() van de KAAPA-helper, die zelf "= " of "< " zet.
-# Tot 11-10-2026 stond hier fmt_p(), de tabelvariant zónder operator: in de
-# noot en in de plot stond dan "p   .023", en in de plot "p &lt; .001", want
-# fmt_p() levert in HTML een entiteit en ggplot kent geen HTML.
+# Niet fmt_p(): dat is de tabelvariant zónder operator (dan staat er
+# "p   .023"), en hij levert in HTML een entiteit, die ggplot letterlijk
+# afdrukt als "p &lt; .001".
 # Binnen de regel staan vaste spaties (U+00A0), zodat een noot nooit breekt
-# tussen "p" en "= .46" of tussen "F(1," en "74)" (APA-lens, 11-10-2026).
+# tussen "p" en "= .46" of tussen "F(1," en "74)".
 .fmt_Fp <- function(F_, df1, df2, p) {
   if (is.na(F_)) return("—")
   vast <- function(s) gsub(" ", " ", s, fixed = TRUE)
@@ -186,9 +186,8 @@ apa_marginals_table <- function(model,
   add_diff_col <- length(S$levels_B) == 2L && length(S$levels_A) > 2L
 
   # Cel-cellen formatteren als "M (SD, n)". Elk getal in deze tabel gaat door
-  # fmt_b() van de KAAPA-helper: twee decimalen en een echt minteken. Tot
-  # 11-10-2026 was dat formatC(), en stond er in de verschilrij -1491.04 met
-  # een koppelteken.
+  # fmt_b() van de KAAPA-helper: twee decimalen en een echt minteken. Met
+  # formatC() stond er in de verschilrij -1491.04 met een koppelteken.
   cell_txt <- S$cell_stats |>
     dplyr::mutate(
       txt = paste0(
@@ -306,11 +305,9 @@ apa_marginals_table <- function(model,
 
   # gt-tabel.
   # De caption is de titel, boven de tabel (gt_apa(title = ...)), zoals KAAPA
-  # en APA 7 §7.10 het willen. Tot 11-10-2026 stond hij als eerste zin in de
-  # noot, omdat gt's tab_header in een PDF-render binnen een callout xelatex
-  # liet crashen. Dit oefenboek rendert alleen HTML (_metadata.yml: "Het
-  # pdf-format is er bewust uit"), dus die reden is weg (APA-lens, spoor
-  # mvda_tabellen). Komt PDF ooit terug, kijk dan hier eerst.
+  # en APA 7 §7.10 het willen. In een PDF-render binnen een callout laat gt's
+  # tab_header() xelatex crashen; dit oefenboek rendert alleen HTML (zie
+  # _quarto.yml). Komt PDF ooit terug, kijk dan hier eerst.
   #
   # APA 7-stijl: GEEN verticale lijnen tussen kolommen. De marginal-kolom
   # 'Marginaal B' krijgt visueel onderscheid via vetdruk, een zachte
@@ -337,8 +334,7 @@ apa_marginals_table <- function(model,
     # Getallen rechts, en een cel "M (SD, n)" breekt niet midden in de haakjes.
     # Rechts moet expliciet: gt lijnt een tekstkolom alleen vanzelf rechts uit
     # als hij op getallen lijkt, en met een echt minteken (fmt_b) herkent hij
-    # dat niet meer -- gemeten 11-10-2026: de kolom met -1491.04 sprong naar
-    # links. Zo vraagt ook gt_apa() het (zie daar, "alignment-policy").
+    # dat niet meer: een kolom met -1491.04 springt dan naar links. Zo vraagt ook gt_apa() het (zie daar, "alignment-policy").
     gt::cols_align("right", columns = setdiff(names(wide), "A")) |>
     gt::tab_style(gt::cell_text(whitespace = "nowrap"),
                   locations = gt::cells_body(columns = setdiff(names(wide), "A"))) |>
