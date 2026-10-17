@@ -6,8 +6,9 @@
 #
 # Waar het voor is: r^2 tussen twee variabelen (één plakje), de communaliteit
 # van een item bij ongecorreleerde componenten (een plakje per component), R^2
-# bij voorspellers die onderling niet correleren. Gebouwd voor het Venn-kader
-# bij de communaliteit in thema 4 (spoor pca_venn, 16-10-2026).
+# bij voorspellers die onderling niet correleren, eta^2 per effect in een
+# gebalanceerde ANOVA. Gebouwd voor het Venn-kader bij de communaliteit in
+# thema 4; het Oefenboek MVDA tekent er in thema 2 eta^2 mee.
 #
 # Waar het NIET voor is, en dat is met opzet: buitencirkels die elkaar
 # overlappen. Correleren de componenten of de voorspellers, dan delen ze ook
@@ -15,10 +16,10 @@
 # van één cirkel is. Zo'n plaatje laat deze functie dus niet toe: hij houdt de
 # buitencirkels uit elkaar en controleert dat.
 #
-# Waarom even grote cirkels en niet "mooi passend". Ben, 16-10-2026, bij zijn
-# bordschets: "IK WEET NIET OF DE TEKENING PRECIES KLOPT". Een Venn-plaatje dat
-# klopt, laat de oppervlakken het werk doen, en dan moet elke variabele even
-# groot zijn: allemaal variantie 1. Dezelfde keuze als het R^2-plaatje in thema
+# Waarom even grote cirkels en niet "mooi passend": een schets op het bord
+# laat je twijfelen of de tekening precies klopt. Een Venn-plaatje dat klopt,
+# laat de oppervlakken het werk doen, en dan moet elke variabele even groot
+# zijn: allemaal variantie 1. Dezelfde keuze als het R^2-plaatje in thema
 # 0 van het MVDA-oefenboek ("Elke cirkel is op 1 gezet, want het gaat hier om
 # aandelen").
 #
@@ -85,9 +86,9 @@ venn_plakjes <- function(plakjes, start = 180, marge = 0.05, n = 180) {
   # De richtingen: het grootste plakje op `start`, en de rest zo dat de
   # KLEINSTE ruimte tussen twee buitencirkels zo groot mogelijk is. Vanaf drie
   # cirkels wordt daar altijd naar gezocht, niet alleen als gelijke hoeken niet
-  # passen. Reden: op de proef van 16-10 pasten gelijke hoeken wel, maar stonden
-  # alertheid en uitstelgedrag zo dicht op elkaar (0.22 straal) dat testlezer
-  # Michelle twee keer moest kijken of ze elkaar raakten -- en dat ze elkaar níét
+  # passen. Reden: in thema 4 pasten gelijke hoeken wel, maar stonden
+  # alertheid en uitstelgedrag zo dicht op elkaar (0.22 straal) dat een lezer
+  # twee keer moest kijken of ze elkaar raakten -- en dat ze elkaar níét
   # raken is de hele pointe van het plaatje. Bij één of twee cirkels is gelijke
   # afstand al het beste.
   ruimte <- function(hoeken) {
@@ -184,8 +185,8 @@ venn_plakjes <- function(plakjes, start = 180, marge = 0.05, n = 180) {
 
   # Eén plek in het witte deel van de doelcirkel: het punt dat het verst van
   # alle randen af ligt -- van de buitencirkels én van de rand van de
-  # doelcirkel zelf. Alleen de buitencirkels meetellen zette het woord op de
-  # proef van 16-10 dwars over de rand van de doelcirkel. Gezocht op een raster,
+  # doelcirkel zelf. Alleen de buitencirkels meetellen zette het woord in
+  # thema 4 dwars over de rand van de doelcirkel. Gezocht op een raster,
   # want het witte deel heeft geen nette vorm.
   raster <- expand.grid(x = seq(-r, r, length.out = 81), y = seq(-r, r, length.out = 81))
   raster <- raster[raster$x^2 + raster$y^2 <= r^2, ]
@@ -195,15 +196,15 @@ venn_plakjes <- function(plakjes, start = 180, marge = 0.05, n = 180) {
   }, numeric(1))
   rest <- raster[which.max(vrij), ]
 
-  # Geen aparte plek voor de naam van de doelcirkel. Die stond hier een ronde
-  # lang ("net buiten de rand, in de grootste opening tussen de buitencirkels"),
-  # en zette op de proef van 16-10 de naam onder de grote buitencirkel: een
+  # Geen aparte plek voor de naam van de doelcirkel. Die stond hier eerst
+  # ("net buiten de rand, in de grootste opening tussen de buitencirkels"),
+  # en zette in thema 4 de naam onder de grote buitencirkel: een
   # cirkel die dicht bij het midden ligt laat een opening die groot lijkt en het
   # niet is. Zet de naam in het wit, bij `rest`.
 
   # `ruimte` bij rest: hoe ver dat punt van de dichtstbijzijnde rand ligt, in
-  # stralen. Een woord dat daar staat mag hooguit zo half-breed zijn. Toegevoegd
-  # op 16-10 na de beeldverteller: het item werd gekozen op zichtbare plakjes,
+  # stralen. Een woord dat daar staat mag hooguit zo half-breed zijn. Waarom:
+  # het item werd gekozen op zichtbare plakjes,
   # en niets toetste of het woord in het wit past -- bij acht van de twaalf items
   # in thema 4 had het over een rand gestaan.
   list(straal = r, cirkels = cirkels, randen = randen, lenzen = lenzen,
