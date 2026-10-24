@@ -59,17 +59,23 @@
 #      de kop `nl_bron: <nederlandse bron>@<commit>` — de commit waarvan je
 #      vertaalde (`git log -1 --format=%h -- <bron>`). Zonder stempel weigert stap 0.
 #   b. Heeft hij een Nederlandse tweeling: één regel in _tools/taalparen.tsv
-#      (nl-pad, en-pad, auto). Dan krijgen BEIDE kanten het knopje en hreflang.
+#      (nl-pad, en-pad, auto). Dan krijgen BEIDE kanten het knopje en hreflang,
+#      en de Nederlandse kant de taalbalk.
 #      Let op: de Nederlandse bladzij verandert daardoor (alleen regels erbij);
 #      dat is de bedoeling, en het gebeurt bij de commit van de tabel, niet bij
-#      een run van dit script — een run verandert nooit iets Nederlands.
+#      een run van dit script — een run verandert nooit iets Nederlands. De
+#      wachtrij laat precies die regels door (nl_negeer, uitgerekend door
+#      `python3 _tools/taalonderdelen.py regels`); niets anders.
 #   c. Hoort hij in het menu: _quarto-en.yml. Het menu toont alleen wat bestaat;
 #      link naar een Nederlandse bladzij als .html, nooit als .qmd.
 #   d. Een losse HTML-bladzij (een speeltje, een hoofdstuk uit het lab): zet hem
 #      ergens onder en/ neer; hij wordt dan als Engelse bladzij gekeurd (links,
 #      lang, teller). Staat hij BUITEN en/ (zoals speeltjes/solomon-en.html), zet
 #      hem dan in ENGELS_BUITEN_EN in _tools/en_bouw.py, anders kijkt niemand naar
-#      zijn links. Zijn knopje en hreflang draagt zo'n bladzij zelf.
+#      zijn links. Heeft hij een Nederlandse tweeling, zet het paar dan in
+#      _tools/taalparen.tsv als `los` (knopje en hreflang komen er dan in via
+#      _tools/taalonderdelen.py, zoals bij tabellen/ ↔ tables/) of `los-eigen`
+#      (hij draagt ze al zelf, zoals solomon; dan alleen de balk).
 #   e. bash _tools/publiceer_en.sh  — en pas bij afloop 0 leveren.
 #
 # WAT DIT NIET DEKT — zodat niemand het denkt.
@@ -138,12 +144,12 @@ schrijf_manifest() {  # $1 status, $2 afloop, $3 reden
   if [ -d "$REPO/en/libs" ]; then libs="$(find "$REPO/en/libs" -type f | wc -l | tr -d ' ')"; else libs="${libs/#0/geen-libs-map}"; fi
   {
     echo "# MANIFEST status=$1 afloop=$2 bladzijden=$bladz libs=$libs machine=$(hostname -s) bron=${EN_BRON:-sessie} wanneer=$(date '+%Y-%m-%dT%H:%M:%S%z')"
-    echo "# bron_commit=$(git rev-parse --short HEAD) bron_schoon=$( [ -z "$(git status --porcelain -- ':(glob)en/**/*.qmd' _quarto.yml ':(glob)_quarto-*.yml' _tools/taalparen.tsv _tools/taalwissel.lua _tools/en_bouw.py)" ] && echo ja || echo nee)"
+    echo "# bron_commit=$(git rev-parse --short HEAD) bron_schoon=$( [ -z "$(git status --porcelain -- ':(glob)en/**/*.qmd' _quarto.yml ':(glob)_quarto-*.yml' _tools/taalparen.tsv _tools/taalwissel.lua _tools/taalwissel _tools/taalonderdelen.py _tools/en_bouw.py)" ] && echo ja || echo nee)"
     echo "# reden=${3:-geen}"
     echo "# Gemaakt door _tools/publiceer_en.sh. Wie en/ levert, kijkt eerst hier:"
     echo "# status=OK met afloop=0 betekent dat stap 1 t/m 5 groen waren voor PRECIES"
     echo "# de bestanden die nu in en/ staan. Elke andere status: niet leveren."
-    echo "# bron_schoon=nee: een bron (en/*.qmd, _quarto*.yml, taalparen, taalwissel, en_bouw.py)"
+    echo "# bron_schoon=nee: een bron (en/*.qmd, _quarto*.yml, taalparen, taalwissel(.lua en /), taalonderdelen.py, en_bouw.py)"
     echo "#   had ongecommit werk tijdens de bouw; dan is bron_commit niet de hele waarheid."
     echo "#   (De gegenereerde en/*.html tellen niet mee: die maakt deze run zelf.)"
     echo

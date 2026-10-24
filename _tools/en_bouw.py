@@ -53,9 +53,9 @@ HIER = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HIER)
 sys.path.insert(0, HIER)
 from tellerregel import tellerstand  # noqa: E402
-
-PAREN = os.path.join(HIER, "taalparen.tsv")
-BASIS = "https://countcamp.org/"
+# De tabel en de stukken van de taalwissel lezen we op één plek, zodat keuring,
+# filter en wachtrij nooit twee lezingen van dezelfde tabel hebben.
+from taalonderdelen import paren, vol_adres, stuk, pas_toe_los, BASIS  # noqa: E402
 LIBS_VAN = "site_libs"      # zo noemt Quarto ze in _site_en/
 LIBS_NAAR = "en/libs"       # zo staan ze op de site; Quarto negeert site_libs als bijlage
 # Engelse bladzijden die NIET onder en/ staan, maar wel bij de Engelse site horen:
@@ -71,23 +71,6 @@ def zeg(regel: str = "") -> None:
 def lees(pad: str) -> str:
     with open(pad, encoding="utf-8", errors="replace") as f:
         return f.read()
-
-
-def paren() -> list[dict]:
-    """De tabel, zoals taalwissel.lua hem leest."""
-    uit = []
-    for nr, regel in enumerate(lees(PAREN).splitlines(), 1):
-        if not regel.strip() or regel.lstrip().startswith("#"):
-            continue
-        v = [x.strip() for x in regel.split("\t")]
-        if len(v) < 3 or v[2] not in ("auto", "eigen"):
-            raise SystemExit(f"FOUT: {PAREN} regel {nr} is geen 'nl<TAB>en<TAB>auto|eigen': {regel!r}")
-        uit.append({"nl": v[0], "en": v[1], "wissel": v[2]})
-    return uit
-
-
-def vol_adres(sitepad: str) -> str:
-    return BASIS + re.sub(r"index\.html$", "", sitepad)
 
 
 # ---------------------------------------------------------------- bouw ----
@@ -353,8 +336,8 @@ def cmd_keur(a) -> int:
             gevonden = set(re.findall(r'<link rel="alternate" hreflang="([^"]+)" href="([^"]+)"', t))
             if gevonden != verwacht:
                 fout_tw.append(f"{p[kant]}: hreflang {sorted(gevonden)} in plaats van {sorted(verwacht)}")
-            if p["wissel"] == "auto":
-                knop = re.search(r'<nav class="taalwissel"[^>]*>.*?</nav>', t, re.S)
+            if p["wissel"] in ("auto", "los"):
+                knop = re.search(r'<nav class="taalwissel[^"]*"[^>]*>.*?</nav>', t, re.S)
                 if not knop:
                     fout_tw.append(f"{p[kant]}: geen taalknopje")
                 else:
@@ -365,6 +348,57 @@ def cmd_keur(a) -> int:
     zeg(f"  tweelingen: {len(tabel)} paar uit taalparen.tsv, {len(fout_tw)} fout"
         + (f" — bv. {tabel[0]['nl']} ↔ {tabel[0]['en']}" if tabel else ""))
     gaten += fout_tw
+
+    # 4b. de taalbalk (24-10-2026): op ELKE Nederlandse bladzij met een tweeling
+    #     precies één keer, en op geen enkele andere bladzij van de site — ook niet
+    #     op een Engelse. Waarom dat tweede: de wachtrij laat de balk, het knopje en
+    #     hreflang op elke Nederlandse bladzij weg voor ze vergelijkt (nl_negeer); ze
+    #     ziet dus niet of ze op een bladzij ZONDER tweeling verschijnen. Dat kan
+    #     alleen hier, waar de tabel bekend is. Op elke .html van de site.
+    balk = stuk("balk.html")
+    merken_taal = ("/* taalbalk:", 'class="taalwissel', 'rel="alternate" hreflang=')
+    nl_kant = {p["nl"] for p in tabel}
+    in_tabel = nl_kant | {p["en"] for p in tabel}
+    fout_b, n_b, n_html = [], 0, 0
+    for dp, _d, fs in os.walk(site):
+        for f in fs:
+            if not f.endswith(".html"):
+                continue
+            rel = os.path.relpath(os.path.join(dp, f), site)
+            if rel.startswith(LIBS_NAAR + os.sep):
+                continue
+            n_html += 1
+            t = lees(os.path.join(dp, f))
+            k = t.count(balk)
+            if rel in nl_kant:
+                n_b += k == 1
+                if k != 1:
+                    fout_b.append(f"{rel}: Nederlandse tweeling met de taalbalk {k} keer (hoort 1)"
+                                  + (" — een ANDERE versie van de balk?" if k == 0 and "/* taalbalk:" in t else ""))
+            elif k or "/* taalbalk:" in t:
+                fout_b.append(f"{rel}: draagt de taalbalk maar is geen Nederlandse bladzij met tweeling")
+            elif rel not in in_tabel and not rel.startswith("en" + os.sep):
+                gevonden = [m for m in merken_taal if m in t]
+                if gevonden:
+                    fout_b.append(f"{rel}: geen tweeling in taalparen.tsv, maar draagt {gevonden[0]!r}")
+    zeg(f"  taalbalk: {n_html} .html-bladzijde(n) nagelopen, {n_b} van de {len(nl_kant)} Nederlandse tweelingen "
+        f"dragen hem, {len(fout_b)} fout" + (f" — bv. {sorted(nl_kant)[0]}" if nl_kant else ""))
+    gaten += fout_b
+
+    # 4c. de losse bladzijden (tabellen/, tables/, solomon) staan in de site zoals
+    #     taalonderdelen.py ze maakt — anders draagt de kopie uit het lab haar
+    #     knopje niet, of een oude versie van de balk.
+    fout_l, n_l = [], 0
+    for p in tabel:
+        if p["wissel"] not in ("los", "los-eigen"):
+            continue
+        n_l += 1
+        for kant in ("nl", "en"):
+            pad = os.path.join(site, p[kant])
+            if os.path.isfile(pad) and pas_toe_los(lees(pad), p[kant]) != lees(pad):
+                fout_l.append(f"{p[kant]}: de taalstukken staan er niet (goed) in — python3 _tools/taalonderdelen.py los")
+    zeg(f"  losse tweelingen: {n_l} paar, {len(fout_l)} fout")
+    gaten += fout_l
 
     # 5. contactgegevens: elk mailadres en elke IBAN op een Engelse bladzij staat
     #    ook op zijn Nederlandse tweeling. Een tikfout in een rekeningnummer is

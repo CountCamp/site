@@ -87,6 +87,19 @@ MUTATIES = [
      lambda t: json.dumps([dict(d, text=("NL·EN\n" + d["text"]) if d.get("href") == "over.html" else d["text"])
                            for d in json.loads(t)]),
      "zoektekst van over.html"),
+    # sinds de tweede ronde (24-10-2026): de taalbalk en de losse tweelingen
+    ("de taalbalk weg op een Nederlandse tweeling", "gebruik.html",
+     lambda t: re.sub(r"<style>\n/\* taalbalk:.*?</script>\n", "", t, count=1, flags=re.S),
+     "gebruik.html: Nederlandse tweeling met de taalbalk 0 keer"),
+    ("de taalbalk op een Engelse bladzij", "en/about.html",
+     lambda t: t.replace("</head>", "<style>\n/* taalbalk: verdwaald */\n</style>\n</head>", 1),
+     "en/about.html: draagt de taalbalk"),
+    ("het knopje weg op tables/ (losse tweeling)", "tables/index.html",
+     lambda t: re.sub(r'<nav class="taalwissel taalwissel-los".*?</nav>\n', "", t, flags=re.S),
+     "tables/index.html: geen taalknopje"),
+    ("een oude versie van de balk op solomon.html", "speeltjes/solomon.html",
+     lambda t: t.replace('"countcamp-taalbalk"', '"countcamp-taalbalk-oud"', 1),
+     "speeltjes/solomon.html"),
 ]
 
 

@@ -3,19 +3,26 @@
 # Eén regel per paar, drie kolommen gescheiden door een TAB:
 #   nl      sitepad van de Nederlandse bladzij (zoals hij in _site staat)
 #   en      sitepad van de Engelse bladzij
-#   wissel  auto  = _tools/taalwissel.lua zet het knopje NL · EN bovenaan
-#           eigen = de bladzij heeft al een eigen knopje; alleen hreflang
+#   wissel  auto      = _tools/taalwissel.lua zet het knopje NL · EN bovenaan
+#           eigen     = de bladzij heeft al een eigen knopje; alleen hreflang
+#           los       = een losse HTML-bladzij die Quarto niet bouwt;
+#                       _tools/taalonderdelen.py zet knopje + hreflang
+#           los-eigen = een losse bladzij met eigen knopje en hreflang in haar
+#                       bron (solomon); taalonderdelen.py zet alleen de balk
+#   Op de NEDERLANDSE kant van elk paar komt ook de taalbalk ("This page is
+#   also in English →", alleen voor een browser zonder Nederlands).
 #
 # Wie leest dit:
-#   _tools/taalwissel.lua   bij elke bouw, nl en en: knopje + hreflang
-#   _tools/en_bouw.py       eist dat beide kanten van elk paar bestaan en dat
-#                           het knopje en de hreflang er ook echt in staan
+#   _tools/taalwissel.lua      bij elke bouw, nl en en: auto en eigen
+#   _tools/taalonderdelen.py   los en los-eigen; bouw_speelkist.py roept het aan
+#                              bij het kopiëren uit het lab, zodat een nieuwe
+#                              kopie zijn knopje niet kwijtraakt
+#   _tools/en_bouw.py          eist dat beide kanten van elk paar bestaan en dat
+#                              het knopje, de hreflang en de balk er ook echt in
+#                              staan, en nergens anders
 #
 # Een regel hier ZONDER dat de Engelse bladzij bestaat, zet op de Nederlandse
 # bladzij een knopje naar niets. Daarom weigert _tools/publiceer_en.sh dan.
-#
-# Alleen bladzijden die Quarto zelf bouwt. Losse HTML-bladzijden (de speeltjes,
-# tabellen/tables) dragen hun eigen knopje en hreflang in hun eigen bron.
 #
 # nl	en	wissel
 index.html	en/index.html	auto
@@ -23,3 +30,5 @@ diensten.html	en/services.html	auto
 over.html	en/about.html	auto
 gebruik.html	en/use.html	auto
 cv.html	cv-en.html	eigen
+tabellen/index.html	tables/index.html	los
+speeltjes/solomon.html	speeltjes/solomon-en.html	los-eigen

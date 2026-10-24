@@ -25,16 +25,30 @@ Op een bladzij die in de tabel staat:
   3. een klein <style>-blok voor dat knopje, ALLEEN op die bladzij. Daarom
      staat het niet in styles.css: dan zou een wijziging aan het knopje elke
      bladzij van de site raken, ook de duizend die er niets mee te maken hebben.
+  4. alleen op de NEDERLANDSE kant: de taalbalk (_tools/taalwissel/balk.html,
+     24-10-2026). Een <style> en een <script>, geen zichtbare tekst in de bron;
+     het script zet "This page is also in English →" bovenaan als de browser
+     geen Nederlands noemt, en onthoudt het wegklikken. Geen doorsturen: Ben
+     nam dat advies over (zie balk.html voor het waarom en de bronnen).
 
 Op een bladzij die NIET in de tabel staat doet het niets. Die bladzij komt
 byte voor byte hetzelfde uit de bouw als zonder dit filter — gemeten, zie
 _tools/publiceer_en.sh, stap "nederlands ongemoeid".
 
 Kolom `wissel` in de tabel:
-  auto   — het filter zet het knopje
-  eigen  — de bladzij heeft al een eigen knopje in de bron (cv.qmd: "English
-           version →"); het filter zet alleen de hreflang-verwijzingen, anders
-           staan er twee knopjes boven elkaar.
+  auto       — het filter zet het knopje
+  eigen      — de bladzij heeft al een eigen knopje in de bron (cv.qmd: "English
+               version →"); het filter zet alleen de hreflang-verwijzingen (en
+               op de Nederlandse kant de balk), anders staan er twee knopjes.
+  los        — een bladzij die Quarto NIET bouwt (tabellen/, tables/): dit
+  los-eigen    filter slaat hem over; _tools/taalonderdelen.py zet daar
+               dezelfde stukken in.
+
+Wat er op een Nederlandse bladzij bij komt, is precies wat de wachtrij mag
+weglaten voor ze vergelijkt (nl_negeer). Die regels rekent
+_tools/taalonderdelen.py uit deze stukken uit; verander je hier iets aan de
+vorm van het knopje of de verwijzingen, draai dan
+_tools/tests/taalwissel_negeer_test.py, en geef de nieuwe regels aan de pers.
 
 Kan het filter de tabel niet lezen, dan breekt het de bouw af. Een site die
 stil zonder taalknopjes uit de bouw komt ziet er precies zo uit als een site
@@ -67,9 +81,10 @@ local function lees_tabel(map)
     nr = nr + 1
     if not regel:match("^%s*#") and regel:match("%S") then
       local v = split_tab(regel)
-      if #v < 3 or (v[3] ~= "auto" and v[3] ~= "eigen") then
+      local soorten = { auto = true, eigen = true, los = true, ["los-eigen"] = true }
+      if #v < 3 or not soorten[v[3]] then
         f:close()
-        error(string.format("taalwissel.lua: %s regel %d is geen 'nl<TAB>en<TAB>auto|eigen': %s", TABEL, nr, regel))
+        error(string.format("taalwissel.lua: %s regel %d is geen 'nl<TAB>en<TAB>auto|eigen|los|los-eigen': %s", TABEL, nr, regel))
       end
       table.insert(paren, { nl = v[1], en = v[2], wissel = v[3] })
     end
@@ -108,16 +123,26 @@ local function deze_bladzij()
   return (rel:gsub("%.qmd$", ".html")), map
 end
 
-local STIJL = [[
-<style>
-/* taalwissel.lua: het taalknopje, alleen op bladzijden met een tweeling */
-#quarto-document-content{position:relative;padding-top:1.9rem;}
-.taalwissel{position:absolute;top:0;right:0;font-size:.86rem;letter-spacing:.05em;line-height:1.9rem;color:#6c757d;}
-.taalwissel a{text-decoration:none;}
-.taalwissel a:hover{text-decoration:underline;}
-.taalwissel [aria-current]{font-weight:600;color:inherit;}
-.taalwissel-sep{margin:0 .45em;}
-</style>]]
+-- DE STUKKEN STAAN IN _tools/taalwissel/, niet hier (sinds 24-10-2026, tweede
+-- ronde en_schil). Drie lezers moeten precies dezelfde bytes zien: dit filter
+-- (de bladzijden die Quarto bouwt), _tools/taalonderdelen.py (de losse
+-- bladzijden: tabellen/, tables/, solomon) en de uitzondering van de wachtrij
+-- (nl_negeer), die elk stuk letterlijk weglaat voor ze Nederlands vergelijkt.
+-- Stond het stijlblok hier als Lua-tekst, dan waren dat drie kopieën.
+--   stijl_knop.html  het knopje op een bladzij van Quarto (nl en en)
+--   balk.html        de taalbalk, alleen op de NEDERLANDSE kant
+-- Witruimte aan het eind van een bestand telt niet mee (een editor zet daar
+-- graag een regel bij); verder komt elk teken onveranderd in de bladzij.
+local function lees_stuk(map, naam)
+  local pad = map .. "/_tools/taalwissel/" .. naam
+  local f = io.open(pad, "r")
+  if not f then
+    error("taalwissel.lua: kan " .. pad .. " niet lezen — zonder dit stuk geen taalknopje of taalbalk, en dat moet hardop")
+  end
+  local t = f:read("a")
+  f:close()
+  return (t:gsub("%s+$", ""))
+end
 
 -- Werkbriefjes in de Engelse bronnen: <!-- MIEKE: ... -->, <!-- BEN: ... --> en de
 -- kop "Vertaling van ...". Ze zijn voor Mieke en Ben, niet voor een bezoeker die
@@ -147,8 +172,12 @@ function Pandoc(doc)
   if engels then doc = zonder_werkbriefjes(doc) end
   local paar, kant
   for _, p in ipairs(lees_tabel(map)) do
-    if p.nl == hier then paar, kant = p, "nl" break end
-    if p.en == hier then paar, kant = p, "en" break end
+    -- `los` en `los-eigen` zijn bladzijden die Quarto niet bouwt; die krijgen
+    -- hun stukken van _tools/taalonderdelen.py, niet van dit filter.
+    if p.wissel == "auto" or p.wissel == "eigen" then
+      if p.nl == hier then paar, kant = p, "nl" break end
+      if p.en == hier then paar, kant = p, "en" break end
+    end
   end
   -- Een Nederlandse bladzij zonder tweeling: nil, dus Quarto houdt het origineel.
   if not paar then return engels and doc or nil end
@@ -159,8 +188,16 @@ function Pandoc(doc)
     '<link rel="alternate" hreflang="x-default" href="' .. vol_adres(paar.nl) .. '">',
   }, "\n"))
 
+  -- DE TAALBALK (Ben, 24-10-2026: geen automatisch doorsturen, wel een zacht
+  -- voorstel). Alleen op de Nederlandse kant, en ook bij `eigen` (cv.html): die
+  -- heeft een tweeling, alleen al een eigen knopje. Het script toont de balk
+  -- pas als de browser geen Nederlands noemt; zie balk.html.
+  if kant == "nl" then
+    quarto.doc.include_text("in-header", lees_stuk(map, "balk.html"))
+  end
+
   if paar.wissel == "auto" then
-    quarto.doc.include_text("in-header", STIJL)
+    quarto.doc.include_text("in-header", lees_stuk(map, "stijl_knop.html"))
     local knop
     if kant == "nl" then
       knop = '<nav class="taalwissel" aria-label="taal"><span aria-current="page">NL</span>'
