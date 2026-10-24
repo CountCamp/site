@@ -130,19 +130,21 @@ def cmd_bouw(a) -> int:
 
 
 # ----------------------------------------------------------------- zet ----
-def gegenereerd_in_repo() -> list[str]:
-    """Welke bestanden in en/ maakt deze bouw? Elke .html met een .qmd ernaast,
-    plus alles onder en/libs/. Niets anders: een losse Engelse HTML die een
-    later spoor in en/ zet (een speeltje, een hoofdstuk), is niet van ons."""
+def gegenereerd_in_repo(wortel: str = REPO) -> list[str]:
+    """Welke bestanden onder <wortel>/en/ maakt deze bouw? Elke .html waarvan in
+    de REPO een .qmd naast staat, plus alles onder en/libs/. Niets anders: een
+    losse Engelse HTML die een later spoor in en/ zet (een speeltje, een
+    hoofdstuk), is niet van ons — die blijft staan, in de repo én in een bouwmap.
+    <wortel> is de repo of een gebouwde site (_site, _site_spook); de bronnen
+    staan altijd in de repo, dus daar wordt gekeken of er een .qmd is."""
     uit = []
-    en = os.path.join(REPO, "en")
-    for dp, _d, fs in os.walk(en):
-        rel_dp = os.path.relpath(dp, REPO)
+    for dp, _d, fs in os.walk(os.path.join(wortel, "en")):
+        rel_dp = os.path.relpath(dp, wortel)
         if rel_dp == LIBS_NAAR or rel_dp.startswith(LIBS_NAAR + os.sep):
             uit += [os.path.join(rel_dp, f) for f in fs]
             continue
         for f in fs:
-            if f.endswith(".html") and os.path.exists(os.path.join(dp, f[:-5] + ".qmd")):
+            if f.endswith(".html") and os.path.exists(os.path.join(REPO, rel_dp, f[:-5] + ".qmd")):
                 uit.append(os.path.join(rel_dp, f))
     return sorted(uit)
 
@@ -162,18 +164,20 @@ def cmd_zet(a) -> int:
         return 2
     doel_en = os.path.join(naar, "en")
 
-    # 1. weg wat de vorige keer door deze bouw gemaakt is, en alleen dat
-    if in_repo:
-        oud = gegenereerd_in_repo()
-        for rel in oud:
-            os.remove(os.path.join(REPO, rel))
-        libs = os.path.join(REPO, LIBS_NAAR)
-        if os.path.isdir(libs):
-            shutil.rmtree(libs)
-        zeg(f"  repo: {len(oud)} oude gegenereerde bestanden onder en/ weggehaald (bronnen .qmd blijven)")
-    else:
-        if os.path.isdir(doel_en):
-            shutil.rmtree(doel_en)  # in een bouwmap: _site/en is altijd vers
+    # 1. weg wat de vorige keer door deze bouw gemaakt is, en alleen dat — in de
+    #    repo en in een bouwmap op dezelfde manier. Eerst werd een bouwmap hier
+    #    helemaal geleegd, en dan verdween een losse Engelse bladzij die een later
+    #    spoor onder en/ zet (hij komt als bijlage uit de repo) uit de site die
+    #    gekeurd werd: zijn links leken dood, of hij werd niet gekeurd.
+    oud = gegenereerd_in_repo(naar)
+    for rel in oud:
+        os.remove(os.path.join(naar, rel))
+    libs = os.path.join(naar, LIBS_NAAR)
+    if os.path.isdir(libs):
+        shutil.rmtree(libs)
+    waar = "repo" if in_repo else os.path.relpath(naar, REPO)
+    zeg(f"  {waar}: {len(oud)} oude gegenereerde bestanden onder en/ weggehaald "
+        f"(bronnen en losse Engelse bladzijden blijven)")
 
     # 2. de bladzijden, met hun verwijzingen naar site_libs omgezet
     n_bladz = n_refs = 0

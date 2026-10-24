@@ -144,9 +144,25 @@ def main() -> int:
     code, _ = keur(KOPIE)
     print(f"{'ok  ' if code == 0 else 'FOUT'}  kopie na het terugzetten: afloop {code} (moet 0 zijn)")
     fout += 0 if code == 0 else 1
+
+    # Een losse Engelse bladzij onder en/ (een speeltje, een hoofdstuk van een later
+    # spoor) moet het neerzetten overleven. Tot 24-10-2026 leegde `zet` een bouwmap
+    # eerst helemaal, en dan verdween zo'n bladzij uit de site die gekeurd werd.
+    los = os.path.join(KOPIE, "en", "los_speeltje.html")
+    with open(los, "w", encoding="utf-8") as f:
+        f.write('<!DOCTYPE html><html lang="en"><head><title>los</title></head><body>los</body></html>')
+    gegen = os.path.join(KOPIE, "en", "index.html")
+    schrijf_los(gegen, lees(gegen) + "\n<!-- oud -->\n")      # een 'oude' gegenereerde bladzij
+    r = subprocess.run([sys.executable, BOUW, "zet", "--naar", KOPIE], capture_output=True, text=True)
+    bleef = os.path.isfile(los)
+    ververst = "<!-- oud -->" not in lees(gegen)
+    goed = r.returncode == 0 and bleef and ververst
+    print(f"{'ok  ' if goed else 'FOUT'}  neerzetten: losse Engelse bladzij blijft staan ({'ja' if bleef else 'NEE'}), "
+          f"gegenereerde bladzij ververst ({'ja' if ververst else 'NEE'}), afloop {r.returncode}")
+    fout += 0 if goed else 1
     shutil.rmtree(KOPIE)
 
-    n = len(MUTATIES) + 3
+    n = len(MUTATIES) + 4
     print(f"\n{n - fout} van {n} toetsen goed" + ("" if fout == 0 else f" — {fout} FOUT"))
     return 0 if fout == 0 else 1
 

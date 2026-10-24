@@ -54,6 +54,24 @@
 #      Nederlands bestand mag anders zijn. Zo de Action het straks ook bouwt.
 #   6. MANIFEST: wat er gekeurd is, hoeveel, waar, door wie, van welke commit.
 #
+# EEN ENGELSE BLADZIJ TOEVOEGEN — voor de volgende sporen (boek, speeltjes, R-oefenboek).
+#   a. Een bladzij die Quarto bouwt: zet en/<naam>.qmd neer (submap mag), met in
+#      de kop `nl_bron: <nederlandse bron>@<commit>` — de commit waarvan je
+#      vertaalde (`git log -1 --format=%h -- <bron>`). Zonder stempel weigert stap 0.
+#   b. Heeft hij een Nederlandse tweeling: één regel in _tools/taalparen.tsv
+#      (nl-pad, en-pad, auto). Dan krijgen BEIDE kanten het knopje en hreflang.
+#      Let op: de Nederlandse bladzij verandert daardoor (alleen regels erbij);
+#      dat is de bedoeling, en het gebeurt bij de commit van de tabel, niet bij
+#      een run van dit script — een run verandert nooit iets Nederlands.
+#   c. Hoort hij in het menu: _quarto-en.yml. Het menu toont alleen wat bestaat;
+#      link naar een Nederlandse bladzij als .html, nooit als .qmd.
+#   d. Een losse HTML-bladzij (een speeltje, een hoofdstuk uit het lab): zet hem
+#      ergens onder en/ neer; hij wordt dan als Engelse bladzij gekeurd (links,
+#      lang, teller). Staat hij BUITEN en/ (zoals speeltjes/solomon-en.html), zet
+#      hem dan in ENGELS_BUITEN_EN in _tools/en_bouw.py, anders kijkt niemand naar
+#      zijn links. Zijn knopje en hreflang draagt zo'n bladzij zelf.
+#   e. bash _tools/publiceer_en.sh  — en pas bij afloop 0 leveren.
+#
 # WAT DIT NIET DEKT — zodat niemand het denkt.
 #   * De PR-proefdruk op countcamp.org/pr-preview/ (proefdruk.yml) kopieert
 #     en/ zoals het in de repo staat: met teller, zonder balk. Dat geldt daar
