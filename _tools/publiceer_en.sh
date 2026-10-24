@@ -113,8 +113,11 @@ MANIFEST="$REPO/_tools/en_manifest.txt"
 schrijf_manifest() {  # $1 status, $2 afloop, $3 reden
   [ "$WEG" = heel ] || return 0   # alleen de hele gang levert een product
   local bladz libs
-  bladz="$(find "$REPO/en" -name '*.html' -not -path '*/libs/*' 2>&1 | wc -l | tr -d ' ')"
-  libs="$(find "$REPO/en/libs" -type f 2>&1 | wc -l | tr -d ' ')"
+  # Een ontbrekende map telt als 0 en wordt hardop gezegd — niet weggegooid
+  # (geen 2>/dev/null in een bewakingspad), want find's foutregel telde anders als bestand.
+  bladz=0; libs=0
+  if [ -d "$REPO/en" ]; then bladz="$(find "$REPO/en" -name '*.html' -not -path '*/libs/*' | wc -l | tr -d ' ')"; else libs="geen-en-map"; fi
+  if [ -d "$REPO/en/libs" ]; then libs="$(find "$REPO/en/libs" -type f | wc -l | tr -d ' ')"; else libs="${libs/#0/geen-libs-map}"; fi
   {
     echo "# MANIFEST status=$1 afloop=$2 bladzijden=$bladz libs=$libs machine=$(hostname -s) bron=${EN_BRON:-sessie} wanneer=$(date '+%Y-%m-%dT%H:%M:%S%z')"
     echo "# bron_commit=$(git rev-parse --short HEAD) bron_schoon=$( [ -z "$(git status --porcelain -- ':(glob)en/**/*.qmd' _quarto.yml ':(glob)_quarto-*.yml' _tools/taalparen.tsv _tools/taalwissel.lua _tools/en_bouw.py)" ] && echo ja || echo nee)"
