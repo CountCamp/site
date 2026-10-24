@@ -1,0 +1,105 @@
+# ============================================================
+# _quarto-nl.yml — de NEDERLANDSE site: welke bronnen, welke bijlagen, welk menu.
+# ------------------------------------------------------------
+# Dit profiel draait vanzelf: het is het eerste van de taalgroep in _quarto.yml,
+# dus `quarto render`, `QUARTO_PROFILE=spook quarto render` en de GitHub Action
+# bouwen er allemaal mee zonder dat iemand iets hoeft te zeggen.
+#
+# Tot 24-10-2026 stond alles hieronder in _quarto.yml, woordelijk zoals het nu
+# hier staat, op twee regels na (allebei gemarkeerd met "en_schil"). Het
+# verhuisde omdat een profiel een LIJST niet vervangt maar aanvult: met het menu
+# in het basisbestand kreeg de Engelse bouw "Thuis, Diensten, ..., Home".
+# Nagemeten na de verhuizing: de Nederlandse _site is byte voor byte gelijk
+# aan die van vóór de verhuizing, op de bladzijden met een Engelse tweeling na
+# (die krijgen het taalknopje). Zie _tools/publiceer_en.sh.
+# ============================================================
+
+project:
+  # Alleen een .qmd wordt een bladzij (1-10-2026, Ben: "4a"). Zonder deze
+  # lijst maakt Quarto van elk .md-bestand zonder _ een openbare bladzij, en
+  # zo stonden DUBBELINGEN.md, LICENSE.md en manuscript/werkplaats/LEESMIJ.md
+  # live én in de sitemap. Een .md is hier een notitie voor onszelf.
+  # Tweede reden, gemeten: zonder deze lijst ziet Quarto in een werkkopie onder
+  # .claude/worktrees/ NUL bronnen en bouwt hij een lege site, met afloopcode 0.
+  render:
+    - "*.qmd"
+    # en_schil: de Engelse bronnen bouwt de Nederlandse ronde NIET. Zonder deze
+    # regel kregen ze het Nederlandse menu en botsten ze met de Engelse bouw.
+    - "!en/"
+  resources:
+    - CNAME
+    - google7b04654a69a0c7b2.html
+    - "oefenboeken/**"
+    - "werkboeken/**"   # doorstuurders van het oude pad
+    - "oefenboeken/ozp1/**"
+    - "oefenboeken/mvda/**"
+    - "oefenboeken/broertjes/**"
+    - "oefenboeken/ggz_vs/**"
+    - "tabellen/**"
+    - "tables/**"
+    - "power/**"
+    - "speeltjes/*.html"
+    - "manuscript/handleiding/**"
+    - "manuscript/h*.html"
+    - "manuscript/dankwoord.html"
+    - "manuscript/verhalen.html"
+    - "manuscript/verhalen_puur.html"
+    - "manuscript/werkplaats/**"
+    # en_schil: de Engelse schil, zoals _tools/publiceer_en.sh hem neerzet en
+    # nakijkt. Gaat als bijlage mee, onveranderd, net als het boek en de
+    # oefenboeken: wat de pers nakeek is wat er live komt.
+    - "en/**"
+    # Bronnen en notities gaan nooit als los bestand mee. De brede globs
+    # hierboven ("oefenboeken/**", "manuscript/werkplaats/**") vingen
+    # oefenboeken/index.qmd (de bron van de plank, met zijn interne
+    # commentaar) en werkplaats/LEESMIJ.md, en zetten die als download online.
+    - "!*.qmd"
+    - "!*.md"
+    # en_schil: de bouwmappen van de Engelse ronde en van de proefdruk. Een glob
+    # zonder schuine streep vooraan geldt op ELKE diepte, dus "en/**", "CNAME" en
+    # "speeltjes/*.html" vingen ook _site_en/en/..., _site_en/CNAME enzovoort, en
+    # zetten die in _site/_site_en/ (gemeten 24-10-2026). In de GitHub Action
+    # bestaan die mappen niet, op broodje wel.
+    - "!_site_en/**"
+    - "!_site_spook/**"
+    - "!_site_en_werk/**"
+    # En _site/ zelf: bij een bouw naar een ANDERE map (publiceer_en.sh bouwt de
+    # proefdruk met --output-dir _site_spook) is _site/ voor Quarto een gewone map,
+    # en vingen dezelfde globs de hele echte site: _site_spook/_site/ met 1323
+    # bestanden, een verouderde kopie van countcamp.org in de proefdruk (gemeten
+    # 24-10-2026, tweede ronde en_schil; gevonden doordat de taalbalk-keuring elke
+    # .html van de site naloopt). Bij de gewone bouw naar _site/ verandert dit
+    # niets: Quarto neemt zijn eigen uitvoermap nooit als bijlage, en er staat
+    # geen enkele map _site* onder de bijlage-mappen (find, 24-10-2026: 0).
+    - "!_site/**"
+    # En de werkkopieën van zetters (25-10-2026). In de gedeelde checkout staat
+    # onder .claude/worktrees/ per zetter een volledige kopie van deze repo, soms
+    # genest (.claude/worktrees/pub_ofb/.claude/worktrees/site_scratch/). Dezelfde
+    # globs op elke diepte vingen daar alles uit: "speeltjes/*.html", "en/**",
+    # "oefenboeken/**" ... — gemeten in een kloon met één nep-werkkopie: 1322
+    # bestanden in _site/.claude/ en evenveel in _site_spook/.claude/. De GitHub
+    # Action bouwt uit een verse kloon en heeft geen .claude/ (er staat niets van
+    # in git), dus live kwam het nooit; wie in de gedeelde checkout bouwt, kreeg
+    # het wel. Met deze regel: 0, ook voor de geneste.
+    # Getoetst door _tools/tests/publiceer_en_werkruimte_test.sh (geval 1).
+    - "!.claude/**"
+
+website:
+  navbar:
+    left:
+      - href: index.qmd
+        text: Thuis
+      - href: manuscript/index.qmd
+        text: Het boek
+      - href: oefenboeken/index.qmd
+        text: Oefenboeken
+      - href: speeltjes/index.qmd
+        text: Speeltjes
+      - href: archief/index.qmd
+        text: Archief
+      - href: diensten.qmd
+        text: Diensten
+      - href: over.qmd
+        text: Over
+      - href: cv.qmd
+        text: CV

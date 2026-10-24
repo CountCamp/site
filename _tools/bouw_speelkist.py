@@ -24,6 +24,8 @@ from pathlib import Path
 
 HIER = Path(__file__).resolve().parent.parent
 BRON = HIER.parent / "countcamp_lab" / "boek" / "04_speeltjes"
+sys.path.insert(0, str(HIER / "_tools"))
+from taalonderdelen import pas_toe_los  # noqa: E402
 
 KIST = {
     "h3_grabbel.html":          "grabbelton.html",
@@ -142,6 +144,11 @@ def main():
         d = HIER / doel
         if not d.parent.is_dir():
             print("   MAP BESTAAT NIET: %s" % d.parent); fout += 1; continue
+        # Het taalknopje, hreflang en (Nederlandse kant) de taalbalk staan niet in
+        # de bron in het lab, maar komen er bij het kopiëren in — anders haalde
+        # elke run ze weer weg (spoor en_schil, 24-10-2026). Alleen voor wat in
+        # _tools/taalparen.tsv als `los` staat; de rest komt onveranderd terug.
+        t = pas_toe_los(t, doel)
         nieuw = schrijf(d, t)
         print("   %-26s -> %-30s %s" % (bron, doel, "BIJGEWERKT" if nieuw else ""))
 
