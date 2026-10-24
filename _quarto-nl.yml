@@ -1,0 +1,77 @@
+# ============================================================
+# _quarto-nl.yml — de NEDERLANDSE site: welke bronnen, welke bijlagen, welk menu.
+# ------------------------------------------------------------
+# Dit profiel draait vanzelf: het is het eerste van de taalgroep in _quarto.yml,
+# dus `quarto render`, `QUARTO_PROFILE=spook quarto render` en de GitHub Action
+# bouwen er allemaal mee zonder dat iemand iets hoeft te zeggen.
+#
+# Tot 24-10-2026 stond alles hieronder in _quarto.yml, woordelijk zoals het nu
+# hier staat, op twee regels na (allebei gemarkeerd met "en_schil"). Het
+# verhuisde omdat een profiel een LIJST niet vervangt maar aanvult: met het menu
+# in het basisbestand kreeg de Engelse bouw "Thuis, Diensten, ..., Home".
+# Nagemeten na de verhuizing: de Nederlandse _site is byte voor byte gelijk
+# aan die van vóór de verhuizing, op de bladzijden met een Engelse tweeling na
+# (die krijgen het taalknopje). Zie _tools/publiceer_en.sh.
+# ============================================================
+
+project:
+  # Alleen een .qmd wordt een bladzij (1-10-2026, Ben: "4a"). Zonder deze
+  # lijst maakt Quarto van elk .md-bestand zonder _ een openbare bladzij, en
+  # zo stonden DUBBELINGEN.md, LICENSE.md en manuscript/werkplaats/LEESMIJ.md
+  # live én in de sitemap. Een .md is hier een notitie voor onszelf.
+  # Tweede reden, gemeten: zonder deze lijst ziet Quarto in een werkkopie onder
+  # .claude/worktrees/ NUL bronnen en bouwt hij een lege site, met afloopcode 0.
+  render:
+    - "*.qmd"
+    # en_schil: de Engelse bronnen bouwt de Nederlandse ronde NIET. Zonder deze
+    # regel kregen ze het Nederlandse menu en botsten ze met de Engelse bouw.
+    - "!en/"
+  resources:
+    - CNAME
+    - google7b04654a69a0c7b2.html
+    - "oefenboeken/**"
+    - "werkboeken/**"   # doorstuurders van het oude pad
+    - "oefenboeken/ozp1/**"
+    - "oefenboeken/mvda/**"
+    - "oefenboeken/broertjes/**"
+    - "oefenboeken/ggz_vs/**"
+    - "tabellen/**"
+    - "tables/**"
+    - "power/**"
+    - "speeltjes/*.html"
+    - "manuscript/handleiding/**"
+    - "manuscript/h*.html"
+    - "manuscript/dankwoord.html"
+    - "manuscript/verhalen.html"
+    - "manuscript/verhalen_puur.html"
+    - "manuscript/werkplaats/**"
+    # en_schil: de Engelse schil, zoals _tools/publiceer_en.sh hem neerzet en
+    # nakijkt. Gaat als bijlage mee, onveranderd, net als het boek en de
+    # oefenboeken: wat de pers nakeek is wat er live komt.
+    - "en/**"
+    # Bronnen en notities gaan nooit als los bestand mee. De brede globs
+    # hierboven ("oefenboeken/**", "manuscript/werkplaats/**") vingen
+    # oefenboeken/index.qmd (de bron van de plank, met zijn interne
+    # commentaar) en werkplaats/LEESMIJ.md, en zetten die als download online.
+    - "!*.qmd"
+    - "!*.md"
+
+website:
+  navbar:
+    left:
+      - href: index.qmd
+        text: Thuis
+      - href: manuscript/index.qmd
+        text: Het boek
+      - href: oefenboeken/index.qmd
+        text: Oefenboeken
+      - href: speeltjes/index.qmd
+        text: Speeltjes
+      - href: archief/index.qmd
+        text: Archief
+      - href: diensten.qmd
+        text: Diensten
+      - href: over.qmd
+        text: Over
+      - href: cv.qmd
+        text: CV

@@ -3,39 +3,9 @@ lang: nl
 project:
   type: website
   output-dir: _site
-  # Alleen een .qmd wordt een bladzij (1-10-2026, Ben: "4a"). Zonder deze
-  # lijst maakt Quarto van elk .md-bestand zonder _ een openbare bladzij, en
-  # zo stonden DUBBELINGEN.md, LICENSE.md en manuscript/werkplaats/LEESMIJ.md
-  # live én in de sitemap. Een .md is hier een notitie voor onszelf.
-  # Tweede reden, gemeten: zonder deze lijst ziet Quarto in een werkkopie onder
-  # .claude/worktrees/ NUL bronnen en bouwt hij een lege site, met afloopcode 0.
-  render:
-    - "*.qmd"
-  resources:
-    - CNAME
-    - google7b04654a69a0c7b2.html
-    - "oefenboeken/**"
-    - "werkboeken/**"   # doorstuurders van het oude pad
-    - "oefenboeken/ozp1/**"
-    - "oefenboeken/mvda/**"
-    - "oefenboeken/broertjes/**"
-    - "oefenboeken/ggz_vs/**"
-    - "tabellen/**"
-    - "tables/**"
-    - "power/**"
-    - "speeltjes/*.html"
-    - "manuscript/handleiding/**"
-    - "manuscript/h*.html"
-    - "manuscript/dankwoord.html"
-    - "manuscript/verhalen.html"
-    - "manuscript/verhalen_puur.html"
-    - "manuscript/werkplaats/**"
-    # Bronnen en notities gaan nooit als los bestand mee. De brede globs
-    # hierboven ("oefenboeken/**", "manuscript/werkplaats/**") vingen
-    # oefenboeken/index.qmd (de bron van de plank, met zijn interne
-    # commentaar) en werkplaats/LEESMIJ.md, en zetten die als download online.
-    - "!*.qmd"
-    - "!*.md"
+  # De bronnenlijst (`render`) en de bijlagen (`resources`) staan sinds
+  # 24-10-2026 in _quarto-nl.yml, en het menu ook. Waarom: zie het blok
+  # "Twee talen" onderaan dit bestand.
 
 website:
   title: "CountCamp"
@@ -45,25 +15,6 @@ website:
   favicon: favicon.svg
   open-graph: true
   twitter-card: true
-
-  navbar:
-    left:
-      - href: index.qmd
-        text: Thuis
-      - href: manuscript/index.qmd
-        text: Het boek
-      - href: oefenboeken/index.qmd
-        text: Oefenboeken
-      - href: speeltjes/index.qmd
-        text: Speeltjes
-      - href: archief/index.qmd
-        text: Archief
-      - href: diensten.qmd
-        text: Diensten
-      - href: over.qmd
-        text: Over
-      - href: cv.qmd
-        text: CV
 
   page-footer:
     left: "© Benjamin Telkamp — CountCamp"
@@ -80,8 +31,34 @@ website:
 # is hier gemeten, niet aangenomen. Zolang de teller in het basisbestand stond,
 # telde elke proefdruk gewoon mee in Bens statistiek. Nu staat hij in het
 # profiel dat een proefdruk nooit gebruikt.
+#
+# Twee talen (24-10-2026, spoor en_schil). Naast echt/spook is er een tweede
+# keuze: welke TAAL er gebouwd wordt.
+#   nl     — de Nederlandse site, zoals altijd. Staat in _quarto-nl.yml.
+#   en     — de Engelse schil onder en/. Staat in _quarto-en.yml en wordt
+#            alleen gebouwd door _tools/publiceer_en.sh, naar _site_en/.
+# Elke groep hieronder kiest er precies één; wie niets zegt krijgt de eerste
+# van elke groep. Gewoon `quarto render` (en dus de GitHub Action) is daarmee
+# echt + nl, precies wat het vóór 24-10 was. QUARTO_PROFILE=spook is spook + nl.
+# `--profile en` is echt + en, dus ook de Engelse bladzijden tellen mee.
+# Gemeten op Quarto 1.9.38 met een proefproject, alle vier de combinaties.
+#
+# WAAROM HET MENU, `render` EN `resources` UIT DIT BESTAND VERHUISDEN. Een
+# profiel vervangt een enkele waarde (de titel, de voet), maar een LIJST plakt
+# het erbij — dezelfde eigenschap als bij de teller hierboven. Gemeten: een
+# Engels menu in een profiel gaf "Thuis, Diensten, Home". Alles wat een lijst
+# is en per taal verschilt, staat dus in het taalprofiel en niet hier.
+# Wat hier staat, lezen allebei de talen.
 profile:
-  default: echt
+  group:
+    - [echt, spook]
+    - [nl, en]
+
+# Het taalknopje (NL · EN) en de hreflang-verwijzingen. Het filter leest
+# _tools/taalparen.tsv en doet op een bladzij zonder tweeling niets — die
+# bladzij komt dus byte voor byte hetzelfde uit de bouw als zonder filter.
+filters:
+  - _tools/taalwissel.lua
 
 format:
   html:
