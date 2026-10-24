@@ -25,22 +25,41 @@
 #        run niets anders dan het manifest gewijzigd, dan is er niets te leveren.
 #     1  er is een gat: een link die nergens uitkomt, een merkteken dat niet
 #        klopt, een tweeling zonder knopje, een Nederlandse bladzij die
-#        veranderde ... De regels erboven zeggen welk. NIET leveren. Bij een gat
-#        in de echte stap is en/ in de repo NIET aangeraakt.
+#        veranderde ... De regels erboven zeggen welk. NIET leveren.
 #     2  verkeerd aangeroepen of een voorwaarde ontbreekt (geen repo, geen
 #        bronnen). NIET leveren.
 #     3  kon niet kijken: quarto ontbreekt, of de Nederlandse bouw liep vast,
-#        zodat niet vast te stellen is dat het Nederlands ongemoeid bleef.
-#        Stilte betekent nooit "goed". NIET leveren.
+#        zodat niet vast te stellen is dat het Nederlands ongemoeid bleef; of
+#        de run werd onderbroken (Ctrl-C, afgeschoten). Stilte betekent nooit
+#        "goed". NIET leveren.
+#
+#   BIJ ELKE AFLOOP ANDERS DAN 0 STAAT DE REPO WEER PRECIES ZOALS VÓÓR DE RUN —
+#   ook bij --alleen-spook, ook als het gat pas na het neerzetten van en/ komt,
+#   ook als de run wordt onderbroken. Vóór stap 1 bewaart de run en/, het
+#   manifest en git status (_site_en_werk/repo_voor_run/); stop() zet en/ en het
+#   manifest terug en meet het na: elk bestand dezelfde sha256, git status
+#   dezelfde regels. Zegt de laatste regel iets anders dan "git status gelijk",
+#   dan klopt dat niet, en staat erbij wat er anders is.
+#   Tot 25-10-2026 beloofde deze kop dit alleen "bij een gat in de echte stap",
+#   en zelfs dat klopte niet: Quarto verplaatst de gecommitte en/*.html bij elke
+#   Engelse bouw naar _site_en/ (zie en_bouw.py, bewaar/herstel), en stop()
+#   schreef het manifest in _tools/. C zag het in de gedeelde checkout: vier
+#   keer " D en/...", één keer " M _tools/en_manifest.txt", na afloop 1.
+#   Getoetst: _tools/tests/publiceer_en_werkruimte_test.sh (gevallen 2 t/m 7).
 #
 #   WAT HET SCRIPT AANRAAKT: _site/, _site_spook/, _site_en/, _site_en_werk/
 #   (bouwmappen, gitignored), _spooksite/banner.html (idem), en — alleen bij afloop 0 en
 #   niet bij --alleen-spook — de gegenereerde bestanden onder en/ (de .html
 #   naast elke en/*.qmd, en en/libs/) plus _tools/en_manifest.txt. Nooit een
 #   Nederlandse bron, nooit iets buiten de repo. Het pusht niet en commit niet.
+#   Het manifest van ELKE run, ook een mislukte, staat in _site_en_werk/en_manifest.txt;
+#   in _tools/ komt het alleen bij afloop 0. Na een mislukte run beschrijft
+#   _tools/en_manifest.txt dus nog steeds de en/ die er staat — die is immers
+#   teruggezet — en niet deze run.
 #
 # DE GANG, en waarom in deze volgorde
 #   0. voorwaarden: quarto, de tabel, de Engelse bronnen, de nl_bron-stempels.
+#      Daarna bewaard: en/, het manifest en git status, voor stop().
 #   1. NULMETING. Nederlandse bouw (echt), vingerafdruk van alles behalve en/.
 #   2. SPOOKSITE EERST. De Nederlandse site als proefdruk (noindex, balk, geen
 #      teller) naar _site_spook/, de Engelse proefdruk erin onder en/, en dan
@@ -110,15 +129,25 @@ case "${1:-}" in
   "") ;;
   --alleen-spook) WEG=spook ;;
   --nakijken) WEG=nakijken ;;
-  -h|--help) sed -n '2,40p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+  -h|--help) sed -n '2,/^# DE GANG/p' "$0" | sed '$d' | sed 's/^# \{0,1\}//'; exit 0 ;;
   *) echo "onbekende schakelaar: $1  (zie: bash $0 --help)"; exit 2 ;;
 esac
 
 stap() { echo; echo "== $*"; }
+# De repo zoals hij vóór deze run was (zie de kop: BIJ ELKE AFLOOP ANDERS DAN 0).
+BEWAARD="$WERK/repo_voor_run"
+BEWAARD_NU=0
 stop() {  # $1 = afloopcode, $2.. = waarom
   local code="$1"; shift
+  trap - INT TERM HUP   # een tweede signaal mag het terugzetten niet halverwege afbreken
   echo; echo "NIET KLAAR (afloop $code): $*"
+  if [ "$BEWAARD_NU" -eq 1 ]; then
+    echo "  de repo terug zoals vóór deze run:"
+    $PY herstel --van "$BEWAARD" \
+      || echo "  LET OP: de repo is NIET (helemaal) terug zoals vóór de run — zie de regels hierboven"
+  fi
   schrijf_manifest "GAT" "$code" "$*"
+  [ "$WEG" = heel ] && echo "  manifest van deze run: ${MANIFEST#"$REPO"/} ($MANIFEST_IN_REPO blijft zoals hij was)"
   exit "$code"
 }
 nlbouw() {  # $1 = profiel (leeg = echt), $2 = uitvoermap (leeg = _site)
@@ -133,7 +162,10 @@ nlbouw() {  # $1 = profiel (leeg = echt), $2 = uitvoermap (leeg = _site)
   fi
   return 0
 }
-MANIFEST="$REPO/_tools/en_manifest.txt"
+# Het manifest van deze run gaat altijd naar de werkmap; pas bij afloop 0 kopieert
+# stap 6 het naar _tools/, naast de en/ die het beschrijft.
+MANIFEST="$WERK/en_manifest.txt"
+MANIFEST_IN_REPO="_tools/en_manifest.txt"
 schrijf_manifest() {  # $1 status, $2 afloop, $3 reden
   [ "$WEG" = heel ] || return 0   # alleen de hele gang levert een product
   local bladz libs
@@ -149,6 +181,8 @@ schrijf_manifest() {  # $1 status, $2 afloop, $3 reden
     echo "# Gemaakt door _tools/publiceer_en.sh. Wie en/ levert, kijkt eerst hier:"
     echo "# status=OK met afloop=0 betekent dat stap 1 t/m 5 groen waren voor PRECIES"
     echo "# de bestanden die nu in en/ staan. Elke andere status: niet leveren."
+    echo "# In _tools/ staat dit bestand alleen na afloop 0; het manifest van elke run,"
+    echo "#   ook een mislukte, staat in _site_en_werk/en_manifest.txt."
     echo "# bron_schoon=nee: een bron (en/*.qmd, _quarto*.yml, taalparen, taalwissel(.lua en /), taalonderdelen.py, en_bouw.py)"
     echo "#   had ongecommit werk tijdens de bouw; dan is bron_commit niet de hele waarheid."
     echo "#   (De gegenereerde en/*.html tellen niet mee: die maakt deze run zelf.)"
@@ -156,6 +190,11 @@ schrijf_manifest() {  # $1 status, $2 afloop, $3 reden
     [ -f "$WERK/keur.txt" ] && cat "$WERK/keur.txt"
   } > "$MANIFEST"
 }
+
+# Onderbroken (Ctrl-C, afgeschoten, terminal dicht) loopt via stop(), dus ook dan
+# gaat de repo terug zoals hij was. Bash voert dit uit zodra de lopende stap
+# terugkomt; een Engelse bouw die op dat moment loopt, zet en/ zelf al terug.
+trap 'stop 3 "onderbroken door een signaal — de run is niet afgemaakt"' INT TERM HUP
 
 # ---------------------------------------------------------------- 0 ----
 stap "0. voorwaarden"
@@ -177,6 +216,12 @@ if [ "$WEG" = nakijken ]; then
   exit "$code"
 fi
 
+# Vanaf hier kan de run en/ en het manifest veranderen: eerst vastleggen hoe de
+# repo erbij stond. Zonder die kopie begint hij niet — dan kan stop() niets terugzetten.
+$PY bewaar --naar "$BEWAARD" || { echo "  niet begonnen: zonder bewaarde kopie kan een mislukte run de repo niet terugzetten"; exit 3; }
+BEWAARD_NU=1
+: > "$WERK/keur.txt"   # de keuring van een vorige run hoort niet in het manifest van deze
+
 # ---------------------------------------------------------------- 1 ----
 stap "1. nulmeting: de Nederlandse site zoals hij nu is"
 nlbouw || stop 3 "de Nederlandse bouw liep vast in de nulmeting"
@@ -192,7 +237,8 @@ $PY zet --naar _site_spook || stop 1 "de Engelse proefdruk kon niet in _site_spo
 $PY keur --site _site_spook --soort spook || stop 1 "de spooksite heeft gaten (zie hierboven)"
 echo "  bekijken: open $REPO/_site_spook/en/index.html"
 if [ "$WEG" = spook ]; then
-  echo; echo "Alleen de spooksite, zoals gevraagd. De repo is niet aangeraakt."
+  echo; echo "Alleen de spooksite, zoals gevraagd. De repo hoort onaangeroerd te zijn — nagemeten:"
+  $PY herstel --van "$BEWAARD" || { echo "  LET OP: de repo was NIET onaangeroerd — zie hierboven"; exit 1; }
   exit 0
 fi
 
@@ -201,7 +247,7 @@ stap "3. echt, eerst in _site/ (nog niet in de repo)"
 $PY bouw --soort echt || stop 1 "de Engelse bouw liep vast of gaf waarschuwingen"
 $PY zet --naar _site || stop 1 "de Engelse bouw kon niet in _site/ gezet worden"
 $PY keur --site _site --soort echt | tee "$WERK/keur.txt"
-[ "${PIPESTATUS[0]}" -eq 0 ] || stop 1 "de echte Engelse site heeft gaten (zie hierboven); en/ in de repo is NIET aangeraakt"
+[ "${PIPESTATUS[0]}" -eq 0 ] || stop 1 "de echte Engelse site heeft gaten (zie hierboven)"
 
 # ---------------------------------------------------------------- 4 ----
 stap "4. in de repo: en/"
@@ -217,7 +263,9 @@ $PY vergelijk "$FOTO_VOOR" "$FOTO_NA" || stop 1 "een Nederlands bestand verander
 # ---------------------------------------------------------------- 6 ----
 stap "6. manifest"
 schrijf_manifest OK 0 "alle stappen groen"
-echo "  $(head -1 "$MANIFEST")"
+cp "$MANIFEST" "$REPO/$MANIFEST_IN_REPO" || stop 3 "het manifest kon niet naar $MANIFEST_IN_REPO"
+trap - INT TERM HUP   # vanaf hier is het af: een signaal zet het geleverde niet meer terug
+echo "  $(head -1 "$REPO/$MANIFEST_IN_REPO")"
 echo
 echo "KLAAR voor de echte site. De pers: git add en _tools/en_manifest.txt, commit,"
 echo "en lever met _tools/naar_buiten.sh --productie."

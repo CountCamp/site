@@ -32,6 +32,11 @@ volgorde kan zetten en een toets ze één voor één kan proeven:
         gecommit wordt)? Zo kan de pers niet iets anders leveren dan er
         gekeurd is.
 
+    python3 _tools/en_bouw.py bewaar --naar <map>
+    python3 _tools/en_bouw.py herstel --van <map>
+        en/, het manifest en git status vóór een run vastleggen, en bij een
+        mislukte run precies zo terugzetten — en nameten dat het klopt.
+
 Afloopcodes, huisafspraak: 0 schoon, 1 er is een gat, 2 verkeerd aangeroepen,
 3 kon niet kijken. Stilte betekent nooit "goed": elke keuring meldt hoeveel
 hij bekeek, met één voorbeeld, ook als alles klopt.
@@ -45,6 +50,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import urllib.parse
@@ -62,6 +68,12 @@ LIBS_NAAR = "en/libs"       # zo staan ze op de site; Quarto negeert site_libs a
 # de cv (staat al lang op /cv-en.html) en de twee Engelse speeltjes uit het menu.
 # Hun links worden net zo streng gekeurd, want het Engelse menu wijst ernaar.
 ENGELS_BUITEN_EN = ["cv-en.html", "tables/index.html", "speeltjes/solomon-en.html"]
+# De werkkopieën van zetters (`claude --worktree`) staan onder .claude/worktrees/,
+# elk een volledige kopie van de repo. Geen bron en nooit site: keuring 0 zegt
+# het hardop als er toch een in een bouwmap staat, en verder loopt geen keuring
+# of vingerafdruk erdoorheen (25-10-2026).
+WERKRUIMTE = ".claude"
+MANIFEST = os.path.join(REPO, "_tools", "en_manifest.txt")
 
 
 def zeg(regel: str = "") -> None:
@@ -73,6 +85,154 @@ def lees(pad: str) -> str:
         return f.read()
 
 
+def loop(wortel: str):
+    """os.walk, maar een map .claude/ gaat hij op geen enkele diepte in. Wie de
+    lijst met mappen verder inkort (zoals foto met en/), doet dat op dezelfde lijst."""
+    for dp, dn, fs in os.walk(wortel):
+        dn[:] = [d for d in dn if d != WERKRUIMTE]
+        yield dp, dn, fs
+
+
+# ---------------------------------------------------- bewaar / herstel ----
+# WAAROM. Quarto bouwt een bladzij NAAST zijn bron en verplaatst hem daarna naar
+# de uitvoermap. Voor en/about.qmd betekent dat: de gecommitte en/about.html wordt
+# overschreven en daarna weggehaald, naar _site_en/en/. Gemeten 25-10-2026:
+# na `quarto render --profile en,spook` gaf git status " D en/about.html" en drie
+# meer. Tot dan zette stap 4 van publiceer_en.sh ze toevallig terug; viel de run
+# eerder om, dan bleven ze weg — en het script beloofde het tegendeel.
+# Daarom bewaart de bouw en/ vooraf en zet hem daarna precies terug, en doet
+# publiceer_en.sh hetzelfde voor de hele run (met het manifest erbij).
+#
+# Wat terugzetten betekent: elk bestand dat er bij het bewaren stond, staat er
+# weer met dezelfde inhoud (en dezelfde tijd); wat er sindsdien bij kwam, gaat
+# weg — dat maakte deze run zelf, want bij het bewaren stond het er niet.
+# Een kopie die niet heel is, wordt NIET gebruikt: dan haalt herstel niets weg en
+# zet niets terug, en zegt dat (afloop 3). Liever een rommelige repo dan een die
+# is "hersteld" vanaf een halve kopie.
+BEWAAR_LIJST = "bewaard.json"
+
+
+def _bestanden(wortel: str) -> dict[str, str]:
+    uit = {}
+    for dp, _dn, fs in os.walk(wortel):
+        for f in fs:
+            p = os.path.join(dp, f)
+            uit[os.path.relpath(p, wortel)] = p
+    return uit
+
+
+def _sha(p: str) -> str:
+    with open(p, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
+def _git_status() -> list[str] | None:
+    r = subprocess.run(["git", "status", "--porcelain=v1", "--untracked-files=all"],
+                       cwd=REPO, capture_output=True, text=True)
+    return r.stdout.splitlines() if r.returncode == 0 else None
+
+
+def bewaar(map_: str, met_run: bool) -> dict:
+    """Een echte kopie van en/ naar <map_>/en — geen harde link, want Quarto
+    schrijft IN het bestand voor hij het verplaatst. Met met_run ook het manifest
+    en git status. De lijst (met sha256) wordt als laatste geschreven: zonder
+    lijst geen herstel."""
+    if os.path.isdir(map_):
+        shutil.rmtree(map_)  # onze eigen werkmap onder _site_en_werk/ (gitignored)
+    os.makedirs(map_)
+    bron = os.path.join(REPO, "en")
+    shutil.copytree(bron, os.path.join(map_, "en"), copy_function=shutil.copy2, symlinks=True)
+    lijst = {"en": {rel: _sha(p) for rel, p in _bestanden(os.path.join(map_, "en")).items()},
+             "manifest": None, "status": None}
+    for rel, p in _bestanden(bron).items():   # is de kopie gelijk aan het origineel?
+        if lijst["en"].get(rel) != _sha(p):
+            raise OSError(f"de kopie van en/{rel} is niet gelijk aan het origineel")
+    if met_run:
+        if os.path.isfile(MANIFEST):
+            shutil.copy2(MANIFEST, os.path.join(map_, "en_manifest.txt"))
+            lijst["manifest"] = _sha(os.path.join(map_, "en_manifest.txt"))
+        lijst["status"] = _git_status()
+    with open(os.path.join(map_, BEWAAR_LIJST), "w", encoding="utf-8") as f:
+        json.dump(lijst, f, indent=0, sort_keys=True)
+    return lijst
+
+
+def herstel(map_: str) -> tuple[int, list[str]]:
+    """Zet en/ (en, als het bewaard is, het manifest) terug zoals in <map_>, en
+    meet na. Geeft (afloop, regels om te zeggen): 0 alles weer zoals het was,
+    1 git status verschilt buiten wat hier teruggezet wordt, 3 kon niet."""
+    lijst_pad = os.path.join(map_, BEWAAR_LIJST)
+    if not os.path.isfile(lijst_pad):
+        return 3, [f"FOUT: geen {BEWAAR_LIJST} in {map_} — er is niets bewaard; niets teruggezet, niets weggehaald"]
+    lijst = json.load(open(lijst_pad, encoding="utf-8"))
+    bewaard, en = os.path.join(map_, "en"), os.path.join(REPO, "en")
+    oud = _bestanden(bewaard)
+    if {r: _sha(p) for r, p in oud.items()} != lijst["en"]:
+        return 3, [f"FOUT: de bewaarde kopie in {map_} is niet heel — niets teruggezet, niets weggehaald"]
+    nu = _bestanden(en)
+    terug, weg = [], []
+    for rel, src in sorted(oud.items()):
+        dst = os.path.join(en, rel)
+        if rel not in nu or _sha(dst) != lijst["en"][rel]:
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copy2(src, dst)
+            terug.append("en/" + rel)
+    for rel in sorted(set(nu) - set(oud)):
+        os.remove(os.path.join(en, rel))
+        weg.append("en/" + rel)
+    for dp, _dn, _fs in os.walk(en, topdown=False):
+        if dp != en and not os.listdir(dp) and not os.path.isdir(os.path.join(bewaard, os.path.relpath(dp, en))):
+            os.rmdir(dp)
+    if lijst["manifest"] and (not os.path.isfile(MANIFEST) or _sha(MANIFEST) != lijst["manifest"]):
+        shutil.copy2(os.path.join(map_, "en_manifest.txt"), MANIFEST)
+        terug.append(os.path.relpath(MANIFEST, REPO))
+    # de nameting: niet geloven dat het gelukt is, kijken
+    na = {r: _sha(p) for r, p in _bestanden(en).items()}
+    anders = ["en/" + r for r in sorted(set(lijst["en"]) ^ set(na))] \
+        + ["en/" + r for r in sorted(set(na) & set(lijst["en"])) if na[r] != lijst["en"][r]]
+    if lijst["manifest"] and _sha(MANIFEST) != lijst["manifest"]:
+        anders.append(os.path.relpath(MANIFEST, REPO))
+    regels = [f"{len(terug)} teruggezet, {len(weg)} weggehaald (die maakte deze run zelf); "
+              f"nagemeten: {len(na)} bestand(en) onder en/"
+              + (" en het manifest" if lijst["manifest"] else "") + f", {len(anders)} anders"]
+    regels += [f"  teruggezet: {r}" for r in terug[:10]] + [f"  weggehaald: {r}" for r in weg[:10]]
+    if anders:
+        return 3, regels + [f"FOUT: na het terugzetten nog anders: {r}" for r in anders[:20]]
+    if lijst["status"] is not None:
+        nu_status = _git_status()
+        if nu_status is None:
+            return 3, regels + ["FOUT: git status liep vast — kon niet nameten of de rest van de repo ongemoeid bleef"]
+        if nu_status != lijst["status"]:
+            bij = [s for s in nu_status if s not in lijst["status"]]
+            af = [s for s in lijst["status"] if s not in nu_status]
+            return 1, regels + ["LET OP: git status is NIET meer zoals vóór de run — buiten en/ en het manifest, "
+                                "dus niet door dit herstel terug te zetten (door deze run, of door iemand anders "
+                                "die tegelijk in deze map werkte):"] \
+                + [f"  nu wel:  {s}" for s in bij[:20]] + [f"  nu niet: {s}" for s in af[:20]]
+        regels.append(f"git status gelijk aan vóór de run ({len(nu_status)} regel(s))")
+    return 0, regels
+
+
+def cmd_bewaar(a) -> int:
+    try:
+        lijst = bewaar(os.path.abspath(a.naar), met_run=True)
+    except OSError as e:
+        zeg(f"  FOUT: kon de repo niet bewaren ({e}) — dan kan een mislukte run hem ook niet terugzetten")
+        return 3
+    zeg(f"  bewaard vóór de run: {len(lijst['en'])} bestand(en) onder en/, "
+        + ("het manifest, " if lijst["manifest"] else "geen manifest, ")
+        + (f"git status ({len(lijst['status'])} regel(s))" if lijst["status"] is not None else "git status: KON NIET KIJKEN")
+        + f" -> {os.path.relpath(os.path.abspath(a.naar), REPO)}")
+    return 0 if lijst["status"] is not None else 3
+
+
+def cmd_herstel(a) -> int:
+    code, regels = herstel(os.path.abspath(a.van))
+    for r in regels:
+        zeg("  " + r)
+    return code
+
+
 # ---------------------------------------------------------------- bouw ----
 def cmd_bouw(a) -> int:
     profiel = "en" if a.soort == "echt" else "en,spook"
@@ -82,9 +242,26 @@ def cmd_bouw(a) -> int:
     doel = os.path.join(REPO, "_site_en")
     if os.path.isdir(doel):
         shutil.rmtree(doel)  # bouw-uitvoer, staat in .gitignore; altijd vers
+    # Quarto verplaatst wat hij naast de bron bouwt (zie bewaar/herstel hierboven):
+    # en/ eerst bewaren, en wat er ook gebeurt daarna precies terugzetten.
+    voor_bouw = os.path.join(REPO, "_site_en_werk", "en_voor_bouw")
+    try:
+        bewaar(voor_bouw, met_run=False)
+    except OSError as e:
+        zeg(f"  FOUT: kon en/ niet bewaren vóór de bouw ({e}) — niet gebouwd, want Quarto zou hem verplaatsen")
+        return 3
     zeg(f"  $ quarto render --profile {profiel}")
-    r = subprocess.run(["quarto", "render", "--profile", profiel], cwd=REPO,
-                       capture_output=True, text=True)
+    try:
+        r = subprocess.run(["quarto", "render", "--profile", profiel], cwd=REPO,
+                           capture_output=True, text=True)
+    finally:
+        h_code, h_regels = herstel(voor_bouw)
+        zeg("  en/ in de repo terug zoals vóór de bouw: " + h_regels[0])
+        for regel in h_regels[1:]:
+            zeg("  " + regel)
+    if h_code != 0:
+        zeg("  FOUT: en/ in de repo is niet terug zoals vóór de bouw (zie hierboven)")
+        return 3
     log = os.path.join(doel, "_bouwlog.txt")
     os.makedirs(doel, exist_ok=True)
     with open(log, "w", encoding="utf-8") as f:
@@ -228,7 +405,7 @@ def los_op(site: str, pagina: str, ref: str) -> tuple[str, str | None]:
 
 def engelse_bladzijden(site: str) -> list[str]:
     uit = []
-    for dp, _d, fs in os.walk(os.path.join(site, "en")):
+    for dp, _d, fs in loop(os.path.join(site, "en")):
         for f in fs:
             if f.endswith(".html"):
                 uit.append(os.path.relpath(os.path.join(dp, f), site))
@@ -289,6 +466,24 @@ def cmd_keur(a) -> int:
         f"{len(nl_tweelingen)} Nederlandse met tweeling")
     if not en_bladz:
         gaten.append("geen enkele Engelse bladzij onder en/")
+
+    # 0. werkruimte: een werkkopie van een zetter (.claude/) hoort nooit in een
+    #    site. Eén gat per map, met een voorbeeld, en verder loopt geen keuring
+    #    erdoorheen. Op 25-10-2026 kwam hij er via de bijlage-globs in, en toen
+    #    leek het op dertien losse taalbalkfouten in bladzijden die niet van deze
+    #    site waren — de echte oorzaak stond nergens.
+    werk = []
+    for dp, dn, _fs in os.walk(site):
+        if WERKRUIMTE in dn:
+            w = os.path.join(dp, WERKRUIMTE)
+            inhoud = sorted(os.path.relpath(os.path.join(a, f), site) for a, _b, fs in os.walk(w) for f in fs)
+            werk.append(f"werkruimte in de site: {os.path.relpath(w, site)}/ met {len(inhoud)} bestand(en)"
+                        + (f", bv. {inhoud[0]}" if inhoud else "")
+                        + ' — werkkopieën van zetters horen in geen enkele bouw (_quarto-nl.yml: "!.claude/**")')
+            dn.remove(WERKRUIMTE)
+    zeg(f"  werkruimte: {len(werk)} map(pen) {WERKRUIMTE}/ in de site"
+        + (f" — {werk[0].split(': ', 1)[1].split(' —')[0]}" if werk else " (moet 0)"))
+    gaten += werk
 
     # 1. links — elke href en src
     te_keuren = sorted(set(en_bladz + buiten + [p for p in nl_tweelingen if os.path.isfile(os.path.join(site, p))]))
@@ -360,7 +555,7 @@ def cmd_keur(a) -> int:
     nl_kant = {p["nl"] for p in tabel}
     in_tabel = nl_kant | {p["en"] for p in tabel}
     fout_b, n_b, n_html = [], 0, 0
-    for dp, _d, fs in os.walk(site):
+    for dp, _d, fs in loop(site):
         for f in fs:
             if not f.endswith(".html"):
                 continue
@@ -519,7 +714,9 @@ def cmd_foto(a) -> int:
         zeg(f"FOUT: {site} is geen gebouwde site — kon niet kijken")
         return 3
     m = {}
-    for dp, dn, fs in os.walk(site):
+    # zonder .claude/: een werkkopie van een ander spoor kan tussen voor en na
+    # veranderen, en keuring 0 houdt hem al tegen
+    for dp, dn, fs in loop(site):
         rel_dp = os.path.relpath(dp, site)
         if rel_dp == "en" or rel_dp.startswith("en" + os.sep):
             dn[:] = []
@@ -578,9 +775,16 @@ def main() -> int:
     f = sub.add_parser("foto"); f.add_argument("--site", required=True); f.add_argument("--uit", required=True)
     v = sub.add_parser("vergelijk"); v.add_argument("voor"); v.add_argument("na")
     g = sub.add_parser("gelijk"); g.add_argument("--site", required=True)
+    bw = sub.add_parser("bewaar"); bw.add_argument("--naar", required=True)
+    hs = sub.add_parser("herstel"); hs.add_argument("--van", required=True)
     a = ap.parse_args()
+    # Afgeschoten (TERM, HUP) wordt een gewone afloop, zodat `finally` in de bouw
+    # en/ nog terugzet. Zonder dit stopt Python meteen en blijft en/ weg.
+    for sig in (signal.SIGTERM, signal.SIGHUP):
+        signal.signal(sig, lambda nr, _f: sys.exit(128 + nr))
     return {"bouw": cmd_bouw, "zet": cmd_zet, "keur": cmd_keur, "bronnen": cmd_bronnen,
-            "foto": cmd_foto, "vergelijk": cmd_vergelijk, "gelijk": cmd_gelijk}[a.cmd](a)
+            "foto": cmd_foto, "vergelijk": cmd_vergelijk, "gelijk": cmd_gelijk,
+            "bewaar": cmd_bewaar, "herstel": cmd_herstel}[a.cmd](a)
 
 
 if __name__ == "__main__":

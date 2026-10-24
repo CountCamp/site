@@ -72,6 +72,17 @@ project:
     # niets: Quarto neemt zijn eigen uitvoermap nooit als bijlage, en er staat
     # geen enkele map _site* onder de bijlage-mappen (find, 24-10-2026: 0).
     - "!_site/**"
+    # En de werkkopieën van zetters (25-10-2026). In de gedeelde checkout staat
+    # onder .claude/worktrees/ per zetter een volledige kopie van deze repo, soms
+    # genest (.claude/worktrees/pub_ofb/.claude/worktrees/site_scratch/). Dezelfde
+    # globs op elke diepte vingen daar alles uit: "speeltjes/*.html", "en/**",
+    # "oefenboeken/**" ... — gemeten in een kloon met één nep-werkkopie: 1322
+    # bestanden in _site/.claude/ en evenveel in _site_spook/.claude/. De GitHub
+    # Action bouwt uit een verse kloon en heeft geen .claude/ (er staat niets van
+    # in git), dus live kwam het nooit; wie in de gedeelde checkout bouwt, kreeg
+    # het wel. Met deze regel: 0, ook voor de geneste.
+    # Getoetst door _tools/tests/publiceer_en_werkruimte_test.sh (geval 1).
+    - "!.claude/**"
 
 website:
   navbar:
