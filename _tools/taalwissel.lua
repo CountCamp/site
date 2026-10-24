@@ -111,23 +111,47 @@ end
 local STIJL = [[
 <style>
 /* taalwissel.lua: het taalknopje, alleen op bladzijden met een tweeling */
-.taalwissel{text-align:right;font-size:.86rem;letter-spacing:.05em;margin:0 0 .6rem 0;color:#6c757d;}
+#quarto-document-content{position:relative;padding-top:1.9rem;}
+.taalwissel{position:absolute;top:0;right:0;font-size:.86rem;letter-spacing:.05em;line-height:1.9rem;color:#6c757d;}
 .taalwissel a{text-decoration:none;}
 .taalwissel a:hover{text-decoration:underline;}
 .taalwissel [aria-current]{font-weight:600;color:inherit;}
 .taalwissel-sep{margin:0 .45em;}
 </style>]]
 
+-- Werkbriefjes in de Engelse bronnen: <!-- MIEKE: ... -->, <!-- BEN: ... --> en de
+-- kop "Vertaling van ...". Ze zijn voor Mieke en Ben, niet voor een bezoeker die
+-- de paginabron opent — een open vraag ("klopt die nog?") hoort niet op de echte
+-- site. In de .qmd blijven ze staan: daar zoekt Mieke ze. Alleen onder en/, en
+-- alleen deze drie soorten; elk ander commentaar blijft staan, net als in
+-- solomon-en.html, waar de redenen in de bron het huisgebruik zijn.
+local function is_werkbriefje(el)
+  return el.format == "html" and (
+    el.text:match("^%s*<!%-%-%s*MIEKE") or
+    el.text:match("^%s*<!%-%-%s*BEN:") or
+    el.text:match("^%s*<!%-%-%s*Vertaling van"))
+end
+
+local function zonder_werkbriefjes(doc)
+  return doc:walk({
+    RawBlock = function(el) if is_werkbriefje(el) then return {} end end,
+    RawInline = function(el) if is_werkbriefje(el) then return {} end end,
+  })
+end
+
 function Pandoc(doc)
   if not quarto.doc.is_format("html") then return nil end
   local hier, map = deze_bladzij()
   if not hier then return nil end
+  local engels = hier:sub(1, 3) == "en/"
+  if engels then doc = zonder_werkbriefjes(doc) end
   local paar, kant
   for _, p in ipairs(lees_tabel(map)) do
     if p.nl == hier then paar, kant = p, "nl" break end
     if p.en == hier then paar, kant = p, "en" break end
   end
-  if not paar then return nil end
+  -- Een Nederlandse bladzij zonder tweeling: nil, dus Quarto houdt het origineel.
+  if not paar then return engels and doc or nil end
 
   quarto.doc.include_text("in-header", table.concat({
     '<link rel="alternate" hreflang="nl" href="' .. vol_adres(paar.nl) .. '">',
@@ -147,7 +171,22 @@ function Pandoc(doc)
         .. '<a href="' .. relatief(hier, paar.nl) .. '" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a>'
         .. '<span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>'
     end
-    table.insert(doc.blocks, 1, pandoc.RawBlock("html", knop))
+    -- WAAR HET KNOPJE IN DE HTML STAAT — en waarom niet bovenaan.
+    -- Gemeten 24-10-2026 in de zoekindex van Quarto 1.9 (updateSearchIndex):
+    -- de samenvatting van een bladzij is de tekst van het EERSTE element binnen
+    -- <main>, plus de alinea's die er direct onder staan. Stond het knopje
+    -- eerst, dan werd de zoektekst van index.html "NL·EN" in plaats van de
+    -- tagline, en op de andere drie kwam "NL·EN" ervoor. (before-body helpt
+    -- niet: Quarto zet dat óók als eerste in <main>.)
+    -- Dus: ná het eerste blok, en dan met css (position:absolute, zie STIJL)
+    -- rechtsboven gezet. Het eerste element blijft wat het was, het knopje is
+    -- geen <p> en staat niet in een sectie, en de zoekindex ziet het niet.
+    -- Is het eerste blok een kop, dan begint er daar een sectie en is er geen
+    -- veilige plek: dan vooraan, en en_bouw.py meldt het als de zoekindex
+    -- daardoor "NL·EN" bevat.
+    local plek = 2
+    if #doc.blocks == 0 or doc.blocks[1].t == "Header" then plek = 1 end
+    table.insert(doc.blocks, plek, pandoc.RawBlock("html", knop))
   end
   return doc
 end

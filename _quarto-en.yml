@@ -1,0 +1,83 @@
+# ============================================================
+# _quarto-en.yml — de ENGELSE schil van countcamp.org, onder /en/.
+# ------------------------------------------------------------
+# Wordt alleen gebouwd door _tools/publiceer_en.sh (via _tools/en_bouw.py):
+#
+#     quarto render --profile en          (echt + en: met bezoekersteller)
+#     quarto render --profile en,spook    (spook + en: de proefdruk)
+#
+# Gewoon `quarto render` en de GitHub Action komen hier NOOIT langs: die
+# bouwen echt + nl (zie de profielgroep in _quarto.yml). De Engelse bladzijden
+# komen op de site als BIJLAGE (`en/**` in _quarto-nl.yml), zoals het boek en
+# de oefenboeken: gebouwd en nagekeken vóór ze in de repo komen, en dan
+# onveranderd gekopieerd. Wat de pers nakeek, is wat er live komt.
+#
+# Waarom niet babelquarto: gemeten op 24-10-2026 (spoor en_schil). Kort: het
+# crasht op Quarto 1.9 met ons menu, haalt omzeild de bezoekersteller stil van
+# de héle site, schrijft hreflang naar adressen die niet bestaan, en vraagt R in
+# de Action. Het volledige verslag staat in de commit die dit bestand invoerde.
+#
+# Waarom de bouw naar _site_en/ gaat en niet naar _site/: de Engelse ronde mag
+# de Nederlandse bouw niet aanraken. Daaruit pakt en_bouw.py alleen en/ en de
+# bibliotheken (site_libs → en/libs); de doorstuurbladzij die Quarto in de wortel
+# van _site_en/ zet ("Redirect to en/index.html") gaat nergens heen.
+#
+# DE REGEL VOOR WIE HIER IETS TOEVOEGT: het menu toont alleen wat er in het
+# Engels bestaat. Een link naar een Nederlandse bladzij schrijf je als .html,
+# niet als .qmd — die .qmd is in deze ronde geen bron en blijft dan als dode
+# link staan (gemeten: "../diensten.qmd"). en_bouw.py weigert elke link die
+# niet uitkomt.
+#
+# MIEKE: de Engelse teksten hieronder (beschrijving, menu, voet) zijn net als de
+# bladzijden een vertaling van C, en staan open voor jouw redactie.
+# ============================================================
+
+# en-GB en NIET en. Gemeten op Quarto 1.9.38: met `lang: en` leest Quarto de
+# waarde als een PAD, omdat er een map en/ in de wortel staat, en zet hij hem
+# om naar "../en" voor elke bladzij in die map — `<html lang="../en">`, met een
+# waarschuwing die niemand leest. "en-GB" is geen map. Brits omdat Ben het
+# register Brits wil (24-10: Fawlty Towers, Ted Lasso); wordt de spelling ooit
+# Amerikaans, dan wordt dit en-US. De hreflang-verwijzingen zeggen gewoon "en".
+lang: en-GB
+
+project:
+  output-dir: _site_en
+  render:
+    - "en/*.qmd"
+
+website:
+  # MIEKE: "Statistiek leren voelen, onderzoek leren lezen" is de ondertitel van
+  # het boek. Gekozen: "Learn to feel statistics. Learn to read research."
+  # Alternatief: "Feeling statistics, reading research."
+  description: "Clear explanations of statistics — regression, correlation and testing — by Benjamin Telkamp. Learn to feel statistics. Learn to read research."
+  # De Engelse zoekfunctie zou de Nederlandse zoekindex lezen (Quarto zoekt
+  # vanaf de wortel van de site). Tot er een eigen Engelse index is: uit.
+  search: false
+  navbar:
+    # Zonder deze regel wijst "CountCamp" linksboven naar de wortel van de site,
+    # en die is Nederlands — gemeten: navbar-brand href="../index.html".
+    logo-href: /en/index.html
+    left:
+      - href: en/index.qmd
+        text: Home
+      # MIEKE: "Speeltjes" is in het Nederlands het menu-woord. Gekozen: "Toys".
+      # Alternatief: "Playthings" (warmer, ouderwetser).
+      - text: Toys
+        menu:
+          - href: tables/index.html
+            text: "Read a p-value"
+          - href: speeltjes/solomon-en.html
+            text: "The judgement of Solomon"
+      - href: en/services.qmd
+        text: Services
+      - href: en/about.qmd
+        text: About
+      - href: cv-en.html
+        text: CV
+
+  page-footer:
+    left: "© Benjamin Telkamp — CountCamp"
+    # MIEKE: "Alles hier is gratis voor eigen gebruik — wat mag je ermee?"
+    # Gekozen: "what you may do with it". Alternatief: "what may you do with it?"
+    center: "Everything here is free for your own use — [what you may do with it](/en/use.html)"
+    right: "Built with [Quarto](https://quarto.org)."
