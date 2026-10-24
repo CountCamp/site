@@ -189,10 +189,14 @@ geval_6() {
   rm -rf "$P/_site/.claude"
   local bijnaam vreemd
   bijnaam="$(grep -c 'werkruimte.*\.claude/worktrees/z/speeltjes/solomon\.html' "$P.uit/g6.log")"
-  vreemd="$(grep -c '\.claude/.*geen tweeling in taalparen' "$P.uit/g6.log")"
+  # Elke andere gatregel over .claude/, wat hij ook zegt. Eerst telde dit alleen
+  # "geen tweeling in taalparen"; het speeltje draagt de balk en geeft dan "draagt
+  # de taalbalk maar ...", dus bleef de toets groen terwijl de taalbalk-keuring
+  # weer door .claude/ liep (gevonden door de mutatieproef, 25-10-2026).
+  vreemd="$(grep '^    - ' "$P.uit/g6.log" | grep '\.claude/' | grep -vc 'werkruimte in de site')"
   goed_6() { [ "$code" -eq 1 ] && [ "$bijnaam" -ge 1 ] && [ "$vreemd" -eq 0 ]; }
   uitslag "$(waar goed_6)" \
-    "geval 6: een .claude/ in de site — afloop $code (moet 1), bij naam genoemd: $bijnaam (moet ≥1), als taalbalk-gat: $vreemd (moet 0)"
+    "geval 6: een .claude/ in de site — afloop $code (moet 1), bij naam genoemd: $bijnaam (moet ≥1), als ander gat: $vreemd (moet 0)"
 }
 
 geval_2() {
@@ -243,7 +247,8 @@ geval_8() {
   (cd "$P" && python3 _tools/en_bouw.py bouw --soort spook) > "$P.uit/g8.log" 2>&1; local code=$?
   zelfde_als "$P.uit/voor_g8" g8; local zelfde=$?
   uitslag "$(waar [ "$code" -eq 0 ])" "geval 8: en_bouw.py bouw los — afloop $code (moet 0)"
-  uitslag "$zelfde" "geval 8: en/ na de Engelse bouw precies als ervoor ($(grep -o '[0-9]* teruggezet' "$P.uit/g8.log" | head -1), zonder publiceer_en.sh eromheen)"
+  local terug; terug="$(grep -o '[0-9]* teruggezet' "$P.uit/g8.log" | head -1)"
+  uitslag "$zelfde" "geval 8: en/ na de Engelse bouw precies als ervoor (${terug:-geen herstelregel in het logboek}, zonder publiceer_en.sh eromheen)"
 }
 
 geval_9() {
