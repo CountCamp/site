@@ -16,8 +16,9 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      Dit is een Quarto-artefact (oorzaak: geneste per-hoofdstuk `_quarto.yml`).
      De echte inhoud staat er los van en overleeft verwijdering volledig.
      → strippen. Zie ROOT-CAUSE-notitie in _HEROPSTART.md.
-  3. De map moet als project-resource in `_quarto.yml` staan, anders kopieert
-     `quarto render` van de site 'm niet naar `_site/`.
+  3. De map moet als project-resource in `_quarto-nl.yml` staan (tot
+     24-10-2026 in `_quarto.yml`; zie daar het blok "Twee talen"), anders
+     kopieert `quarto render` van de site 'm niet naar `_site/`.
      (`resources: - "oefenboeken/<naam>/**"`)
   4. Een werkboek-render brengt zijn eigen `<head>` mee en wordt daarna als
      RESOURCE overgenomen, niet opnieuw gerenderd. De bezoekersteller die de
