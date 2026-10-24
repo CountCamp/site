@@ -161,6 +161,14 @@ EOF
 # ----------------------------------------------------------- gevallen ----
 geval_1() {
   terug_naar_basis
+  # Zoals in de gedeelde checkout: bouwmappen van vroeger, waar .claude/ al in
+  # zit (daar gemeten: _site/.claude/worktrees/pub_ofb/speeltjes/solomon.html).
+  # Ruimt de bouw dat niet op, dan zakt de run daar alsnog.
+  local m
+  for m in _site _site_spook; do
+    mkdir -p "$P/$m/.claude/worktrees/oud/speeltjes"
+    cp "$P/speeltjes/solomon.html" "$P/$m/.claude/worktrees/oud/speeltjes/solomon.html"
+  done
   draai g1; local code=$?
   uitslag "$(waar [ "$code" -eq 0 ])" "geval 1: de hele gang naast werkkopieën — afloop $code (moet 0), stappen: $(stappen g1)"
   [ "$code" -eq 0 ] || grep -E '^ +- |NIET KLAAR' "$P.uit/g1.log" | head -6 | sed 's/^/        /'
