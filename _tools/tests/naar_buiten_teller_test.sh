@@ -89,10 +89,38 @@ echo "naar_buiten_teller_test — bijt de tellerpoort in naar_buiten.sh?"
 echo ""
 
 # --- 1. de echte bladzijden van deze repo: laat door ------------------------
+# HOEVEEL bladzijden er zijn, rekent deze toets zelf uit -- het stond hier tot
+# 24-10-2026 met de hand als 161, en de repo had er toen al 163. Dan zakt de
+# toets niet omdat de wachter iets mist, maar omdat er een bladzij bij kwam, en
+# een toets die rood wordt van groei leer je negeren (spoor en_schil).
+# Met `find` en niet met os.walk zoals de wachter zelf, zodat dit een tweede
+# telling is en geen kopie van de eerste; wat een "bladzij" is (geen
+# doorstuurder, geen fragment) komt uit tellerregel.py, de ene plek die dat weet.
+# Dezelfde mappen als de wachter overslaat: _site, .quarto, .git, site_libs.
+tel_bladzijden() {
+  local mappen=() m
+  for m in oefenboeken werkboeken; do [ -d "$m" ] && mappen+=("$m/"); done
+  [ "${#mappen[@]}" -gt 0 ] || { echo 0; return; }
+  find "${mappen[@]}" \( -name _site -o -name .quarto -o -name .git -o -name site_libs \) -prune \
+       -o -name '*.html' -print0 \
+    | python3 -c '
+import sys
+sys.path.insert(0, "_tools")
+from tellerregel import soort
+paden = [p for p in sys.stdin.buffer.read().decode("utf-8").split("\0") if p]
+print(sum(soort(open(p, encoding="utf-8", errors="ignore").read()) == "bladzij" for p in paden))'
+}
+N_BLADZ="$(tel_bladzijden)"
 ECHT="$(echte_teller_repo)"
 keur     "de echte bladzijden van deze repo: laat door" 0 "$ECHT"
-verwacht "  en de tellerwachter meldt hoeveel hij zag" \
-         "Alle 161 bladzijden dragen de teller."
+if [[ "${N_BLADZ:-}" =~ ^[1-9][0-9]*$ ]]; then
+  verwacht "  en de tellerwachter meldt hoeveel hij zag ($N_BLADZ, met find nageteld)" \
+           "Alle $N_BLADZ bladzijden dragen de teller."
+else
+  getoetst=$((getoetst + 1))
+  echo "  ZAKT  kon het aantal bladzijden niet natellen (find gaf '${N_BLADZ:-}') -- niet gemeten is niet groen"
+  gezakt=$((gezakt + 1))
+fi
 verwacht "  en de uitslag staat er in gewone taal" \
          "Alle poorten staan groen. --productie zou hierop niet struikelen."
 
