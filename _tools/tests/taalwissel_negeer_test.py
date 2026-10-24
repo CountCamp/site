@@ -140,8 +140,21 @@ def laad_wachtrij(pad):
 
 # ------------------------------------------------------------- bouwen ----
 def bouw(commit, doel):
-    subprocess.run(["git", "clone", "--quiet", "--shared", "--no-checkout", REPO, doel], check=True)
-    subprocess.run(["git", "-C", doel, "checkout", "--quiet", "--detach", commit], check=True)
+    # Eerst de commit opzoeken in DEZE repo: in een verse kloon is "main" geen
+    # lokale tak, en `checkout --detach main` faalt daar (gemeten 24-10-2026).
+    r = subprocess.run(["git", "-C", REPO, "rev-parse", "--verify", "--quiet", commit + "^{commit}"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        zeg(f"  {commit} is geen commit in deze repo — kon niet kijken")
+        return None
+    sha = r.stdout.strip()
+    for cmd in (["git", "clone", "--quiet", "--shared", "--no-checkout", REPO, doel],
+                ["git", "-C", doel, "checkout", "--quiet", "--detach", sha]):
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        if r.returncode != 0:
+            zeg(f"  {' '.join(cmd[:4])} gaf {r.returncode}: {r.stderr.strip()[:200]} — kon niet kijken")
+            return None
+    zeg(f"  {commit} = {sha[:8]}")
     env = dict(os.environ)
     env.pop("QUARTO_PROFILE", None)
     r = subprocess.run(["quarto", "render"], cwd=doel, capture_output=True, text=True, env=env)
