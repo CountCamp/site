@@ -32,10 +32,17 @@
 #   6  de keuring noemt een .claude/ in een site bij naam, één keer
 #   2  een gat in de spooksite (stap 2)          -> afloop 1, repo als ervoor
 #   3  een gat alleen in de echte stap (stap 3)  -> afloop 1, repo als ervoor
-#   4  een gat ná het neerzetten in en/ (stap 5) -> afloop 1, repo als ervoor
+#   4  een gat ná het neerzetten in en/ (stap 5) -> afloop 1, repo als ervoor —
+#      ook een bladzij die de run er nieuw neerzette, is weer weg
 #   5  eerst een geslaagde run (niet gecommit), dan een mislukte: terug naar wat
 #      er op de schijf stond, niet naar de laatste commit
 #   7  afgeschoten (SIGTERM) ná het neerzetten   -> repo als ervoor
+#   8  `en_bouw.py bouw` los, zonder het script eromheen: en/ blijft heel
+#   9  een halve bewaarkopie: herstel weigert, en haalt niets weg
+#
+# Twee beschermingen dekken elkaar met opzet: de Engelse bouw zet en/ zelf terug,
+# en stop() zet de hele run terug. Daarom meet geval 8 de eerste los; zonder dat
+# geval bleef een kapotte bouw groen, want stop() ruimde zijn rommel op.
 #
 # Afloop: 0 alle gevallen goed, 1 minstens één fout, 2 de mutatie (zie onder)
 # sloeg niet aan, 3 kon niet kijken.
@@ -48,7 +55,7 @@ case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) PATH="$HOME/.local/bin:$PATH";; 
 export PATH
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 P="${PROEF_KLOON:-$REPO/_site_en_werk/proef_werkruimte}"
-GEVALLEN="${*:-1 6 2 3 4 5 7}"
+GEVALLEN="${*:-1 6 2 3 4 5 7 8 9}"
 ECHTE_QUARTO="$(command -v quarto)" || { echo "KON NIET KIJKEN: quarto staat niet op het pad"; exit 3; }
 GIT=(git -c user.name=proef -c user.email=proef@invalid -c core.hooksPath=/dev/null -c commit.gpgsign=false)
 
@@ -214,7 +221,11 @@ geval_3() {
 
 geval_4() {
   terug_naar_basis
-  printf '\n\nProef: een zin erbij, zodat stap 4 en/use.html echt verandert.\n' >> "$P/en/use.qmd"; zet_vast "zin erbij in en/use.qmd"
+  printf '\n\nProef: een zin erbij, zodat stap 4 en/use.html echt verandert.\n' >> "$P/en/use.qmd"
+  # en een nieuwe bladzij: stap 4 zet dan en/proef.html neer, dat er vóór de run niet stond
+  printf -- '---\ntitle: "Proef"\nnl_bron: gebruik.qmd@%s\n---\n\nA new page, so that step 4 puts down a file that was not there before the run.\n' \
+    "$(git -C "$P" log -1 --format=%h -- gebruik.qmd)" > "$P/en/proef.qmd"
+  "${GIT[@]}" -C "$P" add en/proef.qmd; zet_vast "zin erbij in en/use.qmd, nieuwe bladzij en/proef.qmd"
   afdruk "$P.uit/voor_g4"
   nep_quarto knoei
   draai g4 PATH="$SHIM:$PATH"; local code=$?
@@ -222,7 +233,31 @@ geval_4() {
   goed_4() { [ "$code" -eq 1 ] && grep -q '^== 5' "$P.uit/g4.log" && grep -q 'anders: archief/index.html' "$P.uit/g4.log"; }
   uitslag "$(waar goed_4)" \
     "geval 4: gat ná het neerzetten (een Nederlands bestand veranderde) — afloop $code (moet 1), stappen: $(stappen g4)"
-  uitslag "$zelfde" "geval 4: de repo na het gat precies als ervoor, ook al stond de nieuwe en/ er al"
+  uitslag "$zelfde" "geval 4: de repo na het gat precies als ervoor, ook al stonden en/use.html (anders) en en/proef.html (nieuw) er al"
+}
+
+geval_8() {
+  # de Engelse bouw los, zonder publiceer_en.sh eromheen: ook die laat en/ heel
+  terug_naar_basis
+  afdruk "$P.uit/voor_g8"
+  (cd "$P" && python3 _tools/en_bouw.py bouw --soort spook) > "$P.uit/g8.log" 2>&1; local code=$?
+  zelfde_als "$P.uit/voor_g8" g8; local zelfde=$?
+  uitslag "$(waar [ "$code" -eq 0 ])" "geval 8: en_bouw.py bouw los — afloop $code (moet 0)"
+  uitslag "$zelfde" "geval 8: en/ na de Engelse bouw precies als ervoor ($(grep -o '[0-9]* teruggezet' "$P.uit/g8.log" | head -1), zonder publiceer_en.sh eromheen)"
+}
+
+geval_9() {
+  # een halve bewaarkopie mag niet gebruikt worden: dan zou herstel goede
+  # bestanden weghalen (wat niet in de kopie staat, "maakte de run zelf")
+  terug_naar_basis
+  (cd "$P" && python3 _tools/en_bouw.py bewaar --naar _site_en_werk/proef_half) > "$P.uit/g9.log" 2>&1
+  rm "$P/_site_en_werk/proef_half/en/about.html"                 # de kopie is niet meer heel
+  afdruk "$P.uit/voor_g9"
+  (cd "$P" && python3 _tools/en_bouw.py herstel --van _site_en_werk/proef_half) >> "$P.uit/g9.log" 2>&1; local code=$?
+  zelfde_als "$P.uit/voor_g9" g9; local zelfde=$?
+  goed_9() { [ "$code" -eq 3 ] && grep -q 'niet heel' "$P.uit/g9.log"; }
+  uitslag "$(waar goed_9)" "geval 9: herstel met een halve bewaarkopie — afloop $code (moet 3), weigert hardop"
+  uitslag "$zelfde" "geval 9: en daarbij niets weggehaald en niets teruggezet (en/about.html staat er nog)"
 }
 
 geval_5() {
@@ -255,8 +290,8 @@ geval_7() {
 
 for g in $GEVALLEN; do
   case "$g" in
-    1|2|3|4|5|6|7) echo; echo "-- geval $g"; "geval_$g" ;;
-    *) echo "onbekend geval: $g (kies uit 1 tot en met 7)"; exit 2 ;;
+    1|2|3|4|5|6|7|8|9) echo; echo "-- geval $g"; "geval_$g" ;;
+    *) echo "onbekend geval: $g (kies uit 1 tot en met 9)"; exit 2 ;;
   esac
 done
 
