@@ -400,4 +400,12 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # Een crash is geen rode uitslag maar een blinde: Python eindigt dan óók op 1, en
+    # de mutatieproef zou hem als "gevangen" tellen (zo ging het bij de eerste ronde).
+    try:
+        sys.exit(main())
+    except Exception as e:  # noqa: BLE001
+        import traceback
+        traceback.print_exc()
+        print(f"\nKON NIET KIJKEN: de toets zelf liep vast ({type(e).__name__}: {e}) — dit is geen uitslag")
+        sys.exit(3)

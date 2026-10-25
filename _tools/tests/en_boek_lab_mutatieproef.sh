@@ -29,8 +29,14 @@ proef() {  # $1 = naam, $2 = deel/delen, $3 = "bestand|||oud|||nieuw"
   PROEF_MUTATIE="$3" python3 "$TOETS" $2 > "$log" 2>&1
   case $? in
     0) echo "  ZORGELIJK  $1 -- de toets bleef GROEN (deel $2)"; SLECHT=$((SLECHT + 1)) ;;
-    1) echo "  ok         $1 -- de toets wordt rood (deel $2)"
-       grep '^FOUT' "$log" | head -2 | cut -c1-150 | sed 's/^/             /' ;;
+    1) if grep -q '^FOUT' "$log" && ! grep -q '^Traceback' "$log"; then
+         echo "  ok         $1 -- de toets wordt rood (deel $2)"
+         grep '^FOUT' "$log" | head -2 | cut -c1-150 | sed 's/^/             /'
+       else
+         # Afloop 1 zonder FOUT-regel is een crash, geen beet (zo ging het in de eerste ronde).
+         echo "  MISLUKT    $1 -- afloop 1 maar geen FOUT-regel: de toets crashte; dit is geen uitslag (zie $log)"
+         SLECHT=$((SLECHT + 1))
+       fi ;;
     2) echo "  MISLUKT    $1 -- de mutatie sloeg niet aan; dit is geen uitslag"
        grep 'MUTATIE' "$log" | sed 's/^/             /'; SLECHT=$((SLECHT + 1)) ;;
     *) echo "  MISLUKT    $1 -- de toets kon niet kijken; dit is geen uitslag (zie $log)"; SLECHT=$((SLECHT + 1)) ;;
@@ -49,8 +55,11 @@ proef "een stempel telt overal onder en/" "A" \
   "$EB|||    if os.path.dirname(p) != LAB_MAP:|||    if False:"
 proef "een stempel midden in de bladzij telt ook" "A" \
   "$EB|||    if eind < 0 or not regels or LAB_MERK in tekst[:eind]:|||    if eind < 0 or not regels:"
-proef "rommel na de stempel mag" "A" \
-  "$EB|||        if not LAB_STEMPEL.fullmatch(r):|||        if LAB_MERK in r and not LAB_STEMPEL.fullmatch(r):"
+proef "rommel na de stempel mag (alleen de stempelregels tellen)" "A" \
+  "$EB|||    for r in regels:
+        if not LAB_STEMPEL.fullmatch(r):|||    regels = [r for r in regels if LAB_STEMPEL.fullmatch(r)] or regels
+    for r in regels:
+        if not LAB_STEMPEL.fullmatch(r):"
 proef "een stempel die niet klopt is een gewone bladzij in plaats van een gat" "C" \
   "$EB|||        elif reden:
             fout_st.append(reden)|||        elif False:
