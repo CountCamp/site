@@ -687,11 +687,18 @@ def cmd_keur(a) -> int:
     # korter: "… 1306 05"). Een te krappe vorm zou het staartje missen, en een
     # tikfout zit net zo goed in het staartje.
     iban = re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{1,4}){2,8}\b")
+    # NIET in data:-adressen zoeken (25-10-2026, spoor en_boekpers). Een bladzij uit
+    # het lab sluit zijn figuren en lettertypes in als base64 (embed-resources), en
+    # daarin vond dit patroon op en/book/h0.html vijf "rekeningnummers", alle vijf in
+    # een data:-adres. Drie kwamen door omdat hetzelfde lettertype ook in de
+    # Nederlandse h0 zit; "ZJ11OT" en "JP38UR0" zaten in de Engelse figuur en
+    # werden twee gaten die er niet waren. Een rekeningnummer staat in de tekst.
+    zonder_data = lambda t: re.sub(r"data:[^\"')\s]*", "", t)  # noqa: E731
     for p in tabel:
         en_p, nl_p = os.path.join(site, p["en"]), os.path.join(site, p["nl"])
         if not (os.path.isfile(en_p) and os.path.isfile(nl_p)):
             continue
-        t_en, t_nl = lees(en_p), lees(nl_p)
+        t_en, t_nl = zonder_data(lees(en_p)), zonder_data(lees(nl_p))
         for adres in set(re.findall(r'mailto:([^"?]+)', t_en)):
             n_c += 1
             if adres not in t_nl:
