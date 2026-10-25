@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""controleer_tellers.py — draagt elke oefenboek-bladzij de bezoekersteller?
+"""controleer_tellers.py — draagt elke oefenboek-bladzij, en elke Engelse, de bezoekersteller?
 
     python3 _tools/controleer_tellers.py              # kijken
     python3 _tools/controleer_tellers.py --repareer    # en er meteen in zetten
@@ -18,13 +18,26 @@ per werkboek anders. Vandaar dat de uitvoer PER MAP telt en niet één totaal
 geeft: één getal zou verbergen dat ggz_vs volledig in orde is terwijl
 psychometrie volledig blind is.
 
+En `en/` (25-10-2026, spoor en_voorpagina; Ben: GoatCounter bijhouden). De
+Engelse kant komt op dezelfde manier binnen als de oefenboeken: als bijlage
+(`en/**` in `_quarto-nl.yml`), onveranderd gekopieerd. Wat er in `en/` staat is
+dus precies wat er live komt — de bladzijden die `publiceer_en.sh` bouwt (met de
+teller uit `_quarto-echt.yml`, want `--profile en` is echt + en), de hoofdstukken
+uit de lab-pers onder `en/book/`, en de speeltjes uit het lab onder `en/toys/`.
+Drie bouwwegen, dus hier ook per map geteld. Tot die dag keek deze wachter niet
+in `en/`; de poort in `naar_buiten.sh` zag de Engelse kant dus nooit.
+
 Wat het niet doet
 -----------------
 Het kijkt naar de bestanden in deze repo, niet naar de live site. Wat hier staat
-wordt door `quarto render` als *resource* overgenomen (zie `_quarto.yml`), dus
+wordt door `quarto render` als *resource* overgenomen (zie `_quarto-nl.yml`), dus
 onveranderd — maar een bladzij die de site zélf rendert krijgt zijn teller pas
-bij het bouwen, uit `_quarto-echt.yml`. Die staan niet onder deze twee mappen en
-worden hier dus niet gemeten; `naar_buiten.sh --productie` bewaakt die.
+bij het bouwen, uit `_quarto-echt.yml`. Die staan niet onder deze mappen en
+worden hier dus niet gemeten; `naar_buiten.sh --productie` bewaakt die. Ook niet
+gemeten: de Engelse bladzijden BUITEN `en/` (`cv-en.html`, `tables/`,
+`speeltjes/solomon-en.html`) en de losse Nederlandse speeltjes onder `speeltjes/`,
+`tabellen/` en `power/`; daarvoor kijkt `bouw_speelkist.py` bij het kopiëren
+alleen of het woord "goatcounter" erin staat.
 """
 from __future__ import annotations
 import argparse
@@ -35,7 +48,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tellerregel import tellerstand, soort, met_teller, REGEL  # noqa: E402
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAPPEN = ['oefenboeken', 'werkboeken']
+MAPPEN = ['oefenboeken', 'werkboeken', 'en']
 # `_site/` is de bouw-uitvoer en `.quarto/` de cache: allebei buiten versie, en
 # meetellen zou de telling laten verdubbelen met kopieën van zichzelf.
 OVERSLAAN = {'_site', '.quarto', '.git', 'site_libs'}

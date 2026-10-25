@@ -284,7 +284,14 @@ def main():
         # Sinds 25-10-2026 heeft de speelkist een Engelse tweeling (spoor en_speeltjes).
         eis("speeltjes/index.html, browser en-GB", bezoek("speeltjes/index.html", "en-GB"), "en-GB", True,
             "../en/toys/index.html")
-        eis("archief/index.html (geen tweeling), browser en-GB", bezoek("archief/index.html", "en-GB"), "en-GB", False)
+        # Sinds 25-10-2026 hebben ook de oefenboekenplank en het archief een Engelse tweeling
+        # (spoor en_voorpagina). Een Nederlandse bladzij zonder tweeling is nu de woordenbladzij.
+        eis("oefenboeken/index.html, browser en-GB", bezoek("oefenboeken/index.html", "en-GB"), "en-GB", True,
+            "../en/workbooks/index.html")
+        eis("archief/index.html, browser en-GB", bezoek("archief/index.html", "en-GB"), "en-GB", True,
+            "../en/archive/index.html")
+        eis("manuscript/woorden.html (geen tweeling), browser en-GB", bezoek("manuscript/woorden.html", "en-GB"),
+            "en-GB", False)
         eis("en/index.html (Engels), browser en-GB", bezoek("en/index.html", "en-GB"), "en-GB", False)
 
         zeg()

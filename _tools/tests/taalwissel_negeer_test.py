@@ -326,8 +326,11 @@ def main():
             shutil.rmtree(kopie)
         shutil.copytree(na, kopie)
         # Tot 25-10-2026 speeltjes/index.html; die heeft sindsdien een Engelse tweeling
-        # (en/toys/index.html, spoor en_speeltjes). archief/ heeft er geen.
-        zonder_tweeling = "archief/index.html"
+        # (en/toys/index.html, spoor en_speeltjes). Daarna archief/index.html, en die kreeg
+        # dezelfde dag ook een tweeling (en/archive/, spoor en_voorpagina). De woordenbladzij
+        # van het boek heeft er geen, en het Engelse boek heeft geen eigen inhoudsopgave of
+        # woordenlijst om er een te worden.
+        zonder_tweeling = "manuscript/woorden.html"
         pad = os.path.join(kopie, zonder_tweeling)
         t = open(pad, encoding="utf-8").read()
         with open(pad, "w", encoding="utf-8") as f:

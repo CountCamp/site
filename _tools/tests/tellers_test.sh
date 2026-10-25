@@ -245,6 +245,36 @@ else
   gezakt=$((gezakt + 1))
 fi
 
+# === 9. en/ hoort er zonder --map bij ========================================
+#     Sinds 25-10-2026 (spoor en_voorpagina) kijkt de wachter ook in en/: de
+#     Engelse kant komt net als de oefenboeken als bijlage onveranderd live.
+#     naar_buiten.sh roept hem ZONDER --map aan, dus dit moet in de standaardlijst
+#     staan; met --map zou deze zaak niets bewijzen over wat de poort ziet.
+verse_boom
+bladzij "oefenboeken/a/geteld.html" "$TELLER_EEN_REGEL" ""
+bladzij "en/book/h0.html" "" ""
+getoetst=$((getoetst + 1))
+python3 "$GEREED/controleer_tellers.py" --site "$M/boom" > "$M/uit" 2>&1
+echt=$?
+if [ "$echt" = "1" ] && grep -qF -- "- en/book/h0.html" "$M/uit"; then
+  echo "  ok    een Engelse bladzij zonder teller maakt hem rood, zonder --map (afloopcode $echt)"
+else
+  echo "  ZAKT  een Engelse bladzij zonder teller — verwacht afloopcode 1 en en/book/h0.html bij naam, kreeg $echt"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+bladzij "en/book/h0.html" "$TELLER_TWEE_REGELS" ""
+getoetst=$((getoetst + 1))
+python3 "$GEREED/controleer_tellers.py" --site "$M/boom" > "$M/uit" 2>&1
+echt=$?
+if [ "$echt" = "0" ] && tr -s ' ' < "$M/uit" | sed 's/^ //' | grep -qF "en/book 1 1 0"; then
+  echo "  ok    en mét teller telt hij hem, onder zijn eigen kop (afloopcode $echt)"
+else
+  echo "  ZAKT  een Engelse bladzij mét teller — verwacht afloopcode 0 en de regel 'en/book 1 1 0', kreeg $echt"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."
