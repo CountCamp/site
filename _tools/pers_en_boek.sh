@@ -184,7 +184,13 @@ spook)
       stop 1 "de werkkopie van het lab bevat origin/$hoofd niet: hij loopt achter, en dan zet de pers oude bestanden online"
     fi
   fi
-  rc=0; PUBLICATIE_SITE="$SITE" bash "$LAB/boek/publiceer.sh" --en "${HS[@]}" || rc=$?
+  # Zonder OEFENBOEKEN_SITE: die zet de rij voor publiceer_oefenboeken.sh, en de
+  # boekpers gebruikt hem niet — maar zijn boekpoort geeft hem door aan de
+  # publicatie-zelftest van het lab, en daar wijst hij een zandbak naar deze site.
+  # Gemeten 25-10-2026 in een lab-werkkopie: met de omgeving van de rij zakt T48a
+  # ("BLIND: <zandbak>/oefenboeken/_poort/poort.sh niet gevonden"), zonder deze
+  # ene variabele niet. De boekpoort haalt de PUBLICATIE_*-knoppen al weg, deze nog niet.
+  rc=0; env -u OEFENBOEKEN_SITE PUBLICATIE_SITE="$SITE" bash "$LAB/boek/publiceer.sh" --en "${HS[@]}" || rc=$?
   [ "$rc" -eq 0 ] || stop "$rc" "de lab-pers gaf afloop $rc (zie hierboven) — er is niets gekeurd"
   zeg; zeg "-- 2. de stempels: van de lab-pers, en van deze bronnen"
   rc=0; keur_stempels || rc=$?
