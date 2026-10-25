@@ -67,8 +67,10 @@ proef "een stempel die niet klopt is een gewone bladzij in plaats van een gat" "
 # wat de stempel vrijstelt
 proef "elke bladzij onder en/book/ is vrijgesteld van de wees-keuring" "C" \
   "$EB|||        if p.startswith(LIBS_NAAR + \"/\") or p in lab:|||        if p.startswith(LIBS_NAAR + \"/\") or p.startswith(LAB_MAP + \"/\"):"
+# Sinds de Engelse speelkist (en_speeltjes, toegepast door en_voorpagina 25-10-2026) staat er
+# "or p in lab or p in kist"; de mutatie haalt alleen het lab eruit en laat de kist staan.
 proef "de lab-bladzij in de spooksite krijgt de proefdrukmerken weer (zoals vóór de port)" "C" \
-  "$EB|||        if a.soort == \"echt\" or p in lab:|||        if a.soort == \"echt\":"
+  "$EB|||        if a.soort == \"echt\" or p in lab or p in kist:|||        if a.soort == \"echt\" or p in kist:"
 proef "noindex op de lab-bladzij in de spooksite mag" "C" \
   "$EB|||            if m[\"noindex\"]: fout_merk.append(f\"{p}: draagt noindex {waar}\")|||            if m[\"noindex\"] and a.soort == \"echt\": fout_merk.append(f\"{p}: draagt noindex {waar}\")"
 proef "de teller op de lab-bladzij wordt in de spooksite niet nagekeken (zoals het voorstel)" "C" \

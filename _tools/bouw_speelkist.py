@@ -83,8 +83,9 @@ TERUG_EN = re.compile(
 # bron opent. Dezelfde drie soorten als taalwissel.lua weghaalt en keuring 6 van
 # en_bouw.py weigert. Alleen een commentaar op een eigen regel; staat er daarna nog
 # één, dan stopt de kopie (zie kopieer_en).
-WERKBRIEFJE = re.compile(r"^[ \t]*<!--\s*(?:MIEKE|BEN:|Vertaling van).*?-->[ \t]*\n", re.M | re.S)
-NOG_EEN_BRIEFJE = re.compile(r"<!--\s*(?:MIEKE|BEN:|Vertaling van)")
+# "BEN" gevolgd door ":", witruimte of "(", zoals taalwissel.lua en en_bouw.py (25-10-2026).
+WERKBRIEFJE = re.compile(r"^[ \t]*<!--\s*(?:MIEKE|BEN[:\s(]|Vertaling van).*?-->[ \t]*\n", re.M | re.S)
+NOG_EEN_BRIEFJE = re.compile(r"<!--\s*(?:MIEKE|BEN[:\s(]|Vertaling van)")
 
 fout = 0
 veranderd = []          # welke doelen liepen achter en zijn nu bijgewerkt

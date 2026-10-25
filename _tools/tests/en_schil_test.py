@@ -77,6 +77,11 @@ MUTATIES = [
     ("werkbriefje in de gepubliceerde HTML", "en/index.html",
      lambda t: t.replace("<main", "<!-- MIEKE: vergeten -->\n<main", 1),
      "werkbriefje"),
+    # 25-10-2026 (spoor en_voorpagina): "BEN (spoor, datum):" glipte langs een keuring die
+    # alleen "BEN:" kende; acht zulke notities stonden in de proefdruk en de keuring zei 0.
+    ("werkbriefje BEN met haakje in de gepubliceerde HTML", "en/about.html",
+     lambda t: t.replace("<main", "<!-- BEN (spoor, 25-10-2026): vergeten -->\n<main", 1),
+     "werkbriefje"),
     ("verkeerde taal op een Engelse bladzij", "en/services.html",
      lambda t: re.sub(r'lang="en-GB"', 'lang="nl"', t),
      "zonder lang"),

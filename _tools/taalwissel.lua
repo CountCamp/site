@@ -150,10 +150,14 @@ end
 -- site. In de .qmd blijven ze staan: daar zoekt Mieke ze. Alleen onder en/, en
 -- alleen deze drie soorten; elk ander commentaar blijft staan, net als in
 -- solomon-en.html, waar de redenen in de bron het huisgebruik zijn.
+-- BEN mag gevolgd worden door een dubbele punt, een spatie of een haakje (25-10-2026,
+-- spoor en_voorpagina): "<!-- BEN (en_voorpagina, 25-10-2026): ..." glipte langs de
+-- oude vorm "BEN:", en keuring 6 in en_bouw.py had dezelfde blinde vlek — acht
+-- notities stonden in de proefdruk, en de keuring meldde 0. Gevonden door de APA-lens.
 local function is_werkbriefje(el)
   return el.format == "html" and (
     el.text:match("^%s*<!%-%-%s*MIEKE") or
-    el.text:match("^%s*<!%-%-%s*BEN:") or
+    el.text:match("^%s*<!%-%-%s*BEN[:%s(]") or
     el.text:match("^%s*<!%-%-%s*Vertaling van"))
 end
 

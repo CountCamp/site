@@ -778,7 +778,9 @@ def cmd_keur(a) -> int:
     gaten += fout_c
 
     # 6. werkbriefjes: geen MIEKE:/BEN:-regel op de echte of de proef-site
-    fout_w = [p for p in en_bladz if re.search(r"<!--\s*(MIEKE|BEN:|Vertaling van)", lees(os.path.join(site, p)))]
+    #    "BEN" gevolgd door ":", witruimte of "(" — tot 25-10-2026 alleen "BEN:", en dan
+    #    gingen "<!-- BEN (spoor, datum): ..." de site op terwijl hier 0 stond.
+    fout_w = [p for p in en_bladz if re.search(r"<!--\s*(MIEKE|BEN[:\s(]|Vertaling van)", lees(os.path.join(site, p)))]
     zeg(f"  werkbriefjes: {len(en_bladz)} bladzijde(n), {len(fout_w)} met een MIEKE-/BEN-notitie in de HTML")
     gaten += [f"{p}: werkbriefje in de gepubliceerde HTML" for p in fout_w]
 
