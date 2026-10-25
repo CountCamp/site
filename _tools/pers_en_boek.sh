@@ -166,7 +166,9 @@ r = subprocess.run(["git", "-C", site, "status", "--porcelain=v1", "-z", "--untr
 if r.returncode != 0:
     print(f"  Nederlands: git status liep vast — kon niet kijken: {r.stderr.strip()[:200]}"); sys.exit(3)
 paden = [e[3:] for e in r.stdout.split("\0") if len(e) > 3]
-nl = sorted(p for p in paden if not (p == "en" or p.startswith("en/")))
+# Het manifest is het product van publiceer_en.sh zelf (bij afloop 0), geen Nederlands:
+# zonder deze uitzondering weigerde een tweede ronde van fase echt op de eerste.
+nl = sorted(p for p in paden if not (p == "en" or p.startswith("en/") or p == "_tools/en_manifest.txt"))
 def zonder(t):
     for _n, rx in TO.negeer_regexen():
         t = re.sub(rx, "", t)
