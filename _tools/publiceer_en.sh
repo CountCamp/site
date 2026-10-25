@@ -95,6 +95,12 @@
 #      _tools/taalparen.tsv als `los` (knopje en hreflang komen er dan in via
 #      _tools/taalonderdelen.py, zoals bij tabellen/ ↔ tables/) of `los-eigen`
 #      (hij draagt ze al zelf, zoals solomon; dan alleen de balk).
+#      LET OP, een speeltje uit het lab (spoor en_speeltjes, 25-10-2026): ergens
+#      anders onder en/ zakt het in de spooksite op keuring 2 ("proefdruk met
+#      bezoekersteller"), want het komt kant-en-klaar, met teller. Zet het dus in
+#      en/toys/ via _tools/bouw_speelkist.py (EN_KIST): dan draagt het de herkomst
+#      uit het lab (<meta name="nl_bron" content="boek/04_speeltjes/…">) en keurt
+#      en_bouw.py het als bijlage (KIST_HERKOMST), zoals het boek onder en/book/.
 #   d2. Een boekhoofdstuk: dat drukt het lab (countcamp_lab/boek/publiceer.sh --en H<n>)
 #      naar en/book/h<n>.html, met de stempel van de lab-pers — en_bouw.py keurt hem
 #      dan als bijlage (LAB_STEMPEL). Het paar met manuscript/h<n>.html staat al als

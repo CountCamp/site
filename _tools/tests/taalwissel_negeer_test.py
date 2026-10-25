@@ -325,7 +325,9 @@ def main():
         if os.path.exists(kopie):
             shutil.rmtree(kopie)
         shutil.copytree(na, kopie)
-        zonder_tweeling = "speeltjes/index.html"
+        # Tot 25-10-2026 speeltjes/index.html; die heeft sindsdien een Engelse tweeling
+        # (en/toys/index.html, spoor en_speeltjes). archief/ heeft er geen.
+        zonder_tweeling = "archief/index.html"
         pad = os.path.join(kopie, zonder_tweeling)
         t = open(pad, encoding="utf-8").read()
         with open(pad, "w", encoding="utf-8") as f:

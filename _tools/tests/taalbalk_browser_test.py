@@ -281,7 +281,9 @@ def main():
             "solomon-en.html")
         eis("index.html, browser en-GB,nl", bezoek("index.html", "en-GB,nl"), "en-GB,nl", False)
         eis("index.html, browser de-DE,fr", bezoek("index.html", "de-DE,fr"), "de-DE,fr", True, "en/index.html")
-        eis("speeltjes/index.html (geen tweeling), browser en-GB", bezoek("speeltjes/index.html", "en-GB"), "en-GB", False)
+        # Sinds 25-10-2026 heeft de speelkist een Engelse tweeling (spoor en_speeltjes).
+        eis("speeltjes/index.html, browser en-GB", bezoek("speeltjes/index.html", "en-GB"), "en-GB", True,
+            "../en/toys/index.html")
         eis("archief/index.html (geen tweeling), browser en-GB", bezoek("archief/index.html", "en-GB"), "en-GB", False)
         eis("en/index.html (Engels), browser en-GB", bezoek("en/index.html", "en-GB"), "en-GB", False)
 
