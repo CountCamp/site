@@ -2979,9 +2979,68 @@ max-width: calc(100vw - 2.5rem);
 }
 }
 </style>
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/manuscript/h3.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/book/h3.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/manuscript/h3.html">
+<style>
+/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
+.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
+.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.taalwissel-los [aria-current]{font-weight:600;}
+.taalwissel-los .taalwissel-sep{margin:0 .45em;}
+</style>
+<style>
+/* taalbalk: een voorstel, geen doorsturen (_tools/taalwissel/balk.html) */
+.taalbalk{display:flex;align-items:center;justify-content:center;gap:.9rem;margin:0;padding:.35rem 1rem;background:#dfebf2;border-bottom:1px solid #b9cfdd;color:#1a3a5c;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+.taalbalk a{color:#1a3a5c;text-decoration:underline;text-underline-offset:2px;}
+.taalbalk a:hover{text-decoration-thickness:2px;}
+.taalbalk button{margin:0;padding:0 .45rem;border:1px solid #1a3a5c;border-radius:3px;background:transparent;color:#1a3a5c;font:inherit;line-height:1.4;cursor:pointer;}
+.taalbalk a:focus-visible,.taalbalk button:focus-visible{outline:2px solid #1a3a5c;outline-offset:2px;}
+</style>
+<script>
+/* taalbalk: alleen voor een browser zonder Nederlands, en alleen als er een Engelse tweeling is (_tools/taalwissel/balk.html) */
+(function () {
+  var SLEUTEL = "countcamp-taalbalk";
+  var talen = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language];
+  var bekend = false;
+  for (var i = 0; i < talen.length; i++) {
+    if (!talen[i]) continue;
+    if (/^nl(-|$)/i.test(talen[i])) return;
+    bekend = true;
+  }
+  if (!bekend) return;
+  try { if (window.localStorage.getItem(SLEUTEL) === "weg") return; } catch (e) {}
+  function zet() {
+    var doel = document.querySelector('nav a[hreflang="en"]') || document.querySelector('link[rel="alternate"][hreflang="en"]');
+    if (!doel || !document.body) return;
+    var balk = document.createElement("div");
+    balk.className = "taalbalk";
+    balk.lang = "en";
+    balk.setAttribute("role", "note");
+    var link = document.createElement("a");
+    link.href = doel.getAttribute("href");
+    link.hreflang = "en";
+    link.textContent = "This page is also in English →";
+    var knop = document.createElement("button");
+    knop.type = "button";
+    knop.setAttribute("aria-label", "Close");
+    knop.textContent = "×";
+    knop.addEventListener("click", function () {
+      try { window.localStorage.setItem(SLEUTEL, "weg"); } catch (e) {}
+      if (balk.parentNode) balk.parentNode.removeChild(balk);
+    });
+    balk.appendChild(link);
+    balk.appendChild(knop);
+    var plek = document.getElementById("quarto-header") || document.body;
+    plek.insertBefore(balk, plek.firstChild);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", zet); else zet();
+})();
+</script>
 </head>
 
 <body class="fullcontent quarto-light">
+<nav class="taalwissel taalwissel-los" aria-label="taal"><span aria-current="page">NL</span><span class="taalwissel-sep" aria-hidden="true">·</span><a href="../en/book/h3.html" hreflang="en" lang="en" title="This page in English">EN</a></nav>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
