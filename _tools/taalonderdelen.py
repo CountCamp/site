@@ -59,8 +59,41 @@ def stuk(naam: str) -> str:
     return lees(os.path.join(STUKKEN, naam)).rstrip()
 
 
+# EEN REGEL IN PLAATS VAN EEN PAAR (spoor en_boekpers, 25-10-2026). Een regel in
+# taalparen.tsv met <n> in beide kolommen, zoals
+#     manuscript/h<n>.html	en/book/h<n>.html	los
+# staat voor elk paar waarvan de ENGELSE kant in de repo staat, met <n> een getal:
+# staat er en/book/h0.html, dan is manuscript/h0.html ↔ en/book/h0.html een paar;
+# komt en/book/h1.html erbij, dan dat ook. Waarom: de Engelse hoofdstukken komen één
+# voor één uit het lab, en de wachtrij laat een stap _tools/ niet aanraken
+# ('#: beschermd site _tools/*'). Met een regel per paar moest elk hoofdstuk deze
+# tabel veranderen, en kon geen enkel hoofdstuk door de rij. Met deze regel hoeft
+# dat nooit; wat er bij komt is het Engelse bestand zelf.
+# Alleen `los` en `los-eigen`: taalwissel.lua leest geen regels (hij vergelijkt
+# letterlijk, en "h<n>.html" is nooit een bladzij), dus voor auto/eigen zou zo'n
+# regel stil niets doen. Dat weigeren we hier hardop.
+REGEL_N = "<n>"
+
+
+def _uit_regel(nl: str, en: str, wissel: str, nr: int) -> list[dict]:
+    if wissel not in ("los", "los-eigen"):
+        raise SystemExit(f"FOUT: {PAREN} regel {nr}: een regel met {REGEL_N} kan alleen los of los-eigen zijn "
+                         f"(taalwissel.lua leest geen regels), niet {wissel}")
+    for kol in (nl, en):
+        if kol.count(REGEL_N) != 1 or REGEL_N not in os.path.basename(kol):
+            raise SystemExit(f"FOUT: {PAREN} regel {nr}: {REGEL_N} hoort precies één keer in de bestandsnaam "
+                             f"van beide kolommen: {kol!r}")
+    map_ = os.path.join(REPO, os.path.dirname(en))
+    vorm = re.compile(re.escape(os.path.basename(en)).replace(re.escape(REGEL_N), r"(\d+)") + r"\Z")
+    namen = sorted(os.listdir(map_)) if os.path.isdir(map_) else []
+    getallen = sorted({m.group(1) for m in map(vorm.match, namen) if m}, key=int)
+    return [{"nl": nl.replace(REGEL_N, n), "en": en.replace(REGEL_N, n), "wissel": wissel, "regel": nr}
+            for n in getallen]
+
+
 def paren() -> list[dict]:
-    """taalparen.tsv, zoals taalwissel.lua hem leest."""
+    """taalparen.tsv, zoals taalwissel.lua hem leest — met elke regel (<n>, zie
+    hierboven) uitgeschreven tot de paren die er nu zijn."""
     uit = []
     for nr, regel in enumerate(lees(PAREN).splitlines(), 1):
         if not regel.strip() or regel.lstrip().startswith("#"):
@@ -68,7 +101,18 @@ def paren() -> list[dict]:
         v = [x.strip() for x in regel.split("\t")]
         if len(v) < 3 or v[2] not in SOORTEN:
             raise SystemExit(f"FOUT: {PAREN} regel {nr} is geen 'nl<TAB>en<TAB>{'|'.join(SOORTEN)}': {regel!r}")
-        uit.append({"nl": v[0], "en": v[1], "wissel": v[2]})
+        if REGEL_N in v[0] or REGEL_N in v[1]:
+            uit += _uit_regel(v[0], v[1], v[2], nr)
+        else:
+            uit.append({"nl": v[0], "en": v[1], "wissel": v[2]})
+    # Eén bladzij in twee paren: dan weet geen lezer welk knopje erop hoort.
+    gezien = {}
+    for p in uit:
+        for kant in ("nl", "en"):
+            if p[kant] in gezien:
+                raise SystemExit(f"FOUT: {PAREN}: {p[kant]} staat in twee paren ({gezien[p[kant]]} en "
+                                 f"{p['nl']} ↔ {p['en']})")
+            gezien[p[kant]] = f"{p['nl']} ↔ {p['en']}"
     return uit
 
 
