@@ -15,7 +15,8 @@ volgorde kan zetten en een toets ze één voor één kan proeven:
 
     python3 _tools/en_bouw.py keur --site <map> --soort echt|spook
         alle keuringen op een gebouwde site: links, merktekens, tweelingen,
-        contactgegevens, verweesde bladzijden, werkbriefjes.
+        contactgegevens, verweesde bladzijden, werkbriefjes, en de stempel van
+        de bijlagen uit het lab (en/book/, zie LAB_STEMPEL).
 
     python3 _tools/en_bouw.py bronnen
         de nl_bron-stempels in en/*.qmd: bestaat het pad, bestaat de commit,
@@ -441,6 +442,69 @@ def keur_links(site: str, bladzijden: list[str]) -> tuple[list[str], int, str]:
     return gaten, n, voorbeeld
 
 
+# ------------------------------------------------ bijlagen uit het lab ----
+# De Engelse boekbladzijden worden in countcamp_lab gedrukt (boek/publiceer.sh
+# --en) en komen hier als BIJLAGE onder en/book/, precies zoals de Nederlandse
+# onder manuscript/: een kant-en-klare html, met de bezoekersteller erin en zonder
+# bron in deze repo. Voorgesteld door spoor en_h0 (countcamp_lab/boek/en/
+# VOORSTEL_site_en_bouw.patch), met de hand overgezet door spoor en_boekpers
+# (25-10-2026), want deze code was sindsdien veranderd.
+#
+# Herkenbaar aan de stempel die alleen de pers van het lab zet, als laatste regel
+# (pub_stempel_zet in boek/_tools/publicatie/_gemeenschappelijk.sh):
+#     <!-- countcamp-publicatie H0 bron-hash=<sha256> geleverd=2026-10-25T05:12:00 -->
+# Zo'n bladzij is geen wees (zijn bron staat in het lab), en hij staat in de
+# spooksite ZOALS HIJ LIVE KOMT. Hij krijgt daarom in beide soorten de merken van
+# de echte site: teller, geen noindex, geen balk -- net als manuscript/h0.html in
+# de Nederlandse spooksite. Links, taal, tweelingen en werkbriefjes: gewoon gekeurd.
+#
+# STRENG, met opzet. Een stempel is een bewering, en deze keuring kan de bron niet
+# zien. Wat hij wel kan zien, eist hij allemaal:
+#   * de bladzij staat direct onder en/book/ -- alleen daar zet de lab-pers iets neer;
+#   * na de laatste </html> staan alleen stempelregels, en ervóór geen enkele;
+#   * elke stempelregel heeft precies de vorm hierboven: 64 hextekens en een tijd;
+#   * de laatste is van déze bladzij: H0 hoort bij h0.html, dankwoord bij dankwoord.html.
+# Wie iets draagt dat op een stempel lijkt en niet klopt, is een GAT -- geen
+# gewone bladzij. Anders zou een halve stempel op de echte site alleen de
+# wees-keuring missen, en verder overal doorkomen. Of de hash ook bij de bron in
+# het lab hoort, ziet pas wie het lab erbij heeft: dat rekent
+# _tools/pers_en_boek.sh na, met pub_bron_hash van het lab zelf.
+# Gemeten 25-10-2026 op de veertien gestempelde Nederlandse boekbladzijden onder
+# manuscript/: elk precies één stempel, na </html>, en geen ervóór.
+LAB_MAP = "en/book"
+LAB_MERK = "countcamp-publicatie"
+LAB_STEMPEL = re.compile(r"<!-- countcamp-publicatie (?P<naam>[A-Za-z0-9_]+) bron-hash=[0-9a-f]{64} "
+                         r"geleverd=\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d -->")
+
+
+def lab_doelnaam(naam: str) -> str:
+    """De bladzij bij een stempelnaam: H0 -> h0.html, dankwoord -> dankwoord.html.
+    Dezelfde regel als pub_doelnaam in het lab."""
+    return (naam.lower() if re.fullmatch(r"H\d{1,2}", naam) else naam) + ".html"
+
+
+def uit_het_lab(p: str, tekst: str) -> tuple[bool, str]:
+    """Is <p> (sitepad) een bijlage uit het lab? (True, "") als de stempel klopt;
+    (False, "") als er geen stempel is -- dan is het een gewone bladzij; en
+    (False, reden) als er iets staat dat op een stempel lijkt en niet klopt."""
+    if LAB_MERK not in tekst:
+        return False, ""
+    wat = f"{p}: draagt een stempel van de lab-pers"
+    if os.path.dirname(p) != LAB_MAP:
+        return False, f"{wat}, maar staat niet direct onder {LAB_MAP}/ — alleen daar zet de lab-pers bladzijden neer"
+    eind = tekst.rfind("</html>")
+    regels = [r.strip() for r in tekst[eind + len("</html>"):].splitlines() if r.strip()] if eind >= 0 else []
+    if eind < 0 or not regels or LAB_MERK in tekst[:eind]:
+        return False, f"{wat} die niet (alleen) na de laatste </html> staat, waar de pers hem zet"
+    for r in regels:
+        if not LAB_STEMPEL.fullmatch(r):
+            return False, f"{wat} die niet de vorm van de pers heeft (64 hextekens, een tijd): {r[:100]}"
+    naam = LAB_STEMPEL.fullmatch(regels[-1]).group("naam")
+    if lab_doelnaam(naam) != os.path.basename(p):
+        return False, f"{wat} voor {naam}, en die hoort bij {LAB_MAP}/{lab_doelnaam(naam)}"
+    return True, ""
+
+
 def merken(tekst: str) -> dict:
     return {
         "noindex": bool(re.search(r'name="robots"\s+content="noindex', tekst)),
@@ -492,21 +556,63 @@ def cmd_keur(a) -> int:
         f"{len(lgaten)} komen nergens uit" + (f" — bv. {vb}" if vb else ""))
     gaten += lgaten
 
+    # 1b. bijlagen uit het lab (zie LAB_STEMPEL): welke bladzijden onder en/book/
+    #     komen kant-en-klaar uit de pers van het lab, en draagt iemand een stempel
+    #     die niet klopt?
+    lab, fout_st = [], []
+    for p in en_bladz:
+        ja, reden = uit_het_lab(p, lees(os.path.join(site, p)))
+        if ja:
+            lab.append(p)
+        elif reden:
+            fout_st.append(reden)
+    zeg(f"  uit het lab: {len(lab)} bladzij(den) met de stempel van de lab-pers, {len(fout_st)} met een stempel "
+        f"die niet klopt" + (f" — bv. {lab[0]}" if lab else f" (gezocht onder {LAB_MAP}/)"))
+    gaten += fout_st
+    #     De zijbalk van een lab-bladzij noemt zijn hoofdstukken in JavaScript
+    #     ({ f: "h0.html", ... } in de lijst CH, uit het lab: boek/en/_maak_afterbody_en.py),
+    #     en de linkkeuring hieronder leest alleen href= en src=. Een zijbalk die naar
+    #     een hoofdstuk wijst dat hier (nog) niet staat — het lab heeft H1_en.qmd al,
+    #     de site h1.html nog niet — zou dus zonder één gat live gaan (gemeten
+    #     25-10-2026 op en/book/h0.html: nul statische links naar een ander hoofdstuk).
+    #     Geen enkele regel in de lijst is óók een gat: dan kan niemand het nakijken.
+    fout_zb, n_zb = [], 0
+    for p in lab:
+        doelen = re.findall(r'\{\s*f:\s*"([^"]+)"', lees(os.path.join(site, p)))
+        n_zb += len(doelen)
+        if not doelen:
+            fout_zb.append(f"{p}: de zijbalk noemt geen enkel hoofdstuk ({{ f: \"…\" }}) — niet na te kijken; "
+                           f"veranderde de zijbalk in het lab (boek/en/_maak_afterbody_en.py)?")
+        for f in doelen:
+            if not os.path.isfile(os.path.join(site, os.path.dirname(p), f)):
+                fout_zb.append(f"{p}: de zijbalk wijst naar {f}, en die staat niet in {LAB_MAP}/ — "
+                               f"pers dat hoofdstuk mee, of pers dit opnieuw zonder")
+    if lab:
+        zeg(f"  zijbalk uit het lab: {n_zb} hoofdstukverwijzing(en) op {len(lab)} bladzij(den), "
+            f"{len(fout_zb)} fout")
+    gaten += fout_zb
+
     # 2. merktekens: is een proefdruk een proefdruk en de echte site de echte?
     # Op de Engelse bladzijden onder en/ — die maakt deze bouw. De rest maakt de
     # Nederlandse ronde, en daar kijkt naar_buiten.sh naar.
+    # Een bijlage uit het lab staat in de spooksite zoals hij live komt (zie
+    # LAB_STEMPEL), dus die krijgt in BEIDE soorten de merken van de echte site.
     fout_merk = []
     for p in en_bladz:
         m = merken(lees(os.path.join(site, p)))
-        if a.soort == "echt":
-            if m["noindex"]: fout_merk.append(f"{p}: draagt noindex op de echte site")
-            if m["balk"]: fout_merk.append(f"{p}: draagt de proefdrukbalk op de echte site")
-            if m["teller"] != "geteld": fout_merk.append(f"{p}: bezoekersteller {m['teller']}")
+        if a.soort == "echt" or p in lab:
+            waar = "op de echte site" if a.soort == "echt" else \
+                "in de spooksite, als bijlage uit het lab die er moet staan zoals hij live komt"
+            if m["noindex"]: fout_merk.append(f"{p}: draagt noindex {waar}")
+            if m["balk"]: fout_merk.append(f"{p}: draagt de proefdrukbalk {waar}")
+            if m["teller"] != "geteld": fout_merk.append(f"{p}: bezoekersteller {m['teller']} {waar}")
         else:
             if not m["noindex"]: fout_merk.append(f"{p}: proefdruk zonder noindex")
             if not m["balk"]: fout_merk.append(f"{p}: proefdruk zonder balk")
             if m["teller"] != "geen": fout_merk.append(f"{p}: proefdruk met bezoekersteller ({m['teller']})")
-    zeg(f"  merktekens ({a.soort}): {len(en_bladz)} bladzijde(n), {len(fout_merk)} fout")
+    zeg(f"  merktekens ({a.soort}): {len(en_bladz)} bladzijde(n), {len(fout_merk)} fout"
+        + (f"; {len(lab)} uit het lab gekeurd als echte site, zoals het Nederlandse boek — bv. {lab[0]}"
+           if lab and a.soort == "spook" else ""))
     gaten += fout_merk
 
     # 3. taal: <html lang> op elke Engelse bladzij
@@ -603,11 +709,18 @@ def cmd_keur(a) -> int:
     # korter: "… 1306 05"). Een te krappe vorm zou het staartje missen, en een
     # tikfout zit net zo goed in het staartje.
     iban = re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{1,4}){2,8}\b")
+    # NIET in data:-adressen zoeken (25-10-2026, spoor en_boekpers). Een bladzij uit
+    # het lab sluit zijn figuren en lettertypes in als base64 (embed-resources), en
+    # daarin vond dit patroon op en/book/h0.html vijf "rekeningnummers", alle vijf in
+    # een data:-adres. Drie kwamen door omdat hetzelfde lettertype ook in de
+    # Nederlandse h0 zit; "ZJ11OT" en "JP38UR0" zaten in de Engelse figuur en
+    # werden twee gaten die er niet waren. Een rekeningnummer staat in de tekst.
+    zonder_data = lambda t: re.sub(r"data:[^\"')\s]*", "", t)  # noqa: E731
     for p in tabel:
         en_p, nl_p = os.path.join(site, p["en"]), os.path.join(site, p["nl"])
         if not (os.path.isfile(en_p) and os.path.isfile(nl_p)):
             continue
-        t_en, t_nl = lees(en_p), lees(nl_p)
+        t_en, t_nl = zonder_data(lees(en_p)), zonder_data(lees(nl_p))
         for adres in set(re.findall(r'mailto:([^"?]+)', t_en)):
             n_c += 1
             if adres not in t_nl:
@@ -646,14 +759,16 @@ def cmd_keur(a) -> int:
     # 7. verweesd: een door Quarto gebouwde bladzij onder en/ zonder bron. Die
     #    haalt dit script niet zelf weg (huisregel 9: weghalen is niet aan een
     #    zetter); hij weigert en zegt welke het is.
+    #    Een bijlage uit het lab heeft zijn bron daar, niet hier (zie LAB_STEMPEL).
     wees = []
     for p in en_bladz:
-        if p.startswith(LIBS_NAAR + "/"):
+        if p.startswith(LIBS_NAAR + "/") or p in lab:
             continue
         t = lees(os.path.join(site, p))
         if 'name="generator" content="quarto' in t and not os.path.isfile(os.path.join(REPO, p[:-5] + ".qmd")):
             wees.append(f"{p}: gebouwd door Quarto, maar {p[:-5]}.qmd bestaat niet meer — haal hem weg of zet de bron terug")
-    zeg(f"  verweesd: {len(wees)} Quarto-bladzij(den) onder en/ zonder bron")
+    zeg(f"  verweesd: {len(wees)} Quarto-bladzij(den) onder en/ zonder bron"
+        + (f" ({len(lab)} uit het lab niet meegeteld: hun bron staat daar)" if lab else ""))
     gaten += wees
 
     zeg()

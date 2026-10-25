@@ -95,6 +95,12 @@
 #      _tools/taalparen.tsv als `los` (knopje en hreflang komen er dan in via
 #      _tools/taalonderdelen.py, zoals bij tabellen/ ↔ tables/) of `los-eigen`
 #      (hij draagt ze al zelf, zoals solomon; dan alleen de balk).
+#   d2. Een boekhoofdstuk: dat drukt het lab (countcamp_lab/boek/publiceer.sh --en H<n>)
+#      naar en/book/h<n>.html, met de stempel van de lab-pers — en_bouw.py keurt hem
+#      dan als bijlage (LAB_STEMPEL). Het paar met manuscript/h<n>.html staat al als
+#      regel in _tools/taalparen.tsv, en het menu wijst al naar het boek: per
+#      hoofdstuk verandert hier niets. De hele gang, in de fasen van de wachtrij:
+#      bash _tools/pers_en_boek.sh H<n> spook|links|echt (spoor en_boekpers, 25-10-2026).
 #   e. bash _tools/publiceer_en.sh  — en pas bij afloop 0 leveren.
 #
 # WAT DIT NIET DEKT — zodat niemand het denkt.
