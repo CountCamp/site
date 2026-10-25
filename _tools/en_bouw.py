@@ -569,6 +569,28 @@ def cmd_keur(a) -> int:
     zeg(f"  uit het lab: {len(lab)} bladzij(den) met de stempel van de lab-pers, {len(fout_st)} met een stempel "
         f"die niet klopt" + (f" — bv. {lab[0]}" if lab else f" (gezocht onder {LAB_MAP}/)"))
     gaten += fout_st
+    #     De zijbalk van een lab-bladzij noemt zijn hoofdstukken in JavaScript
+    #     ({ f: "h0.html", ... } in de lijst CH, uit het lab: boek/en/_maak_afterbody_en.py),
+    #     en de linkkeuring hieronder leest alleen href= en src=. Een zijbalk die naar
+    #     een hoofdstuk wijst dat hier (nog) niet staat — het lab heeft H1_en.qmd al,
+    #     de site h1.html nog niet — zou dus zonder één gat live gaan (gemeten
+    #     25-10-2026 op en/book/h0.html: nul statische links naar een ander hoofdstuk).
+    #     Geen enkele regel in de lijst is óók een gat: dan kan niemand het nakijken.
+    fout_zb, n_zb = [], 0
+    for p in lab:
+        doelen = re.findall(r'\{\s*f:\s*"([^"]+)"', lees(os.path.join(site, p)))
+        n_zb += len(doelen)
+        if not doelen:
+            fout_zb.append(f"{p}: de zijbalk noemt geen enkel hoofdstuk ({{ f: \"…\" }}) — niet na te kijken; "
+                           f"veranderde de zijbalk in het lab (boek/en/_maak_afterbody_en.py)?")
+        for f in doelen:
+            if not os.path.isfile(os.path.join(site, os.path.dirname(p), f)):
+                fout_zb.append(f"{p}: de zijbalk wijst naar {f}, en die staat niet in {LAB_MAP}/ — "
+                               f"pers dat hoofdstuk mee, of pers dit opnieuw zonder")
+    if lab:
+        zeg(f"  zijbalk uit het lab: {n_zb} hoofdstukverwijzing(en) op {len(lab)} bladzij(den), "
+            f"{len(fout_zb)} fout")
+    gaten += fout_zb
 
     # 2. merktekens: is een proefdruk een proefdruk en de echte site de echte?
     # Op de Engelse bladzijden onder en/ — die maakt deze bouw. De rest maakt de

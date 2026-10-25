@@ -54,8 +54,31 @@
 # (PUBLICATIE_STIL=1), die dat hardop zegt. Loopt het lab achter, dan weigert het.
 # Buiten de rij gaat de nooddeur nooit open: dan meet de poort van het lab gewoon zelf.
 #
-# Ontstaan: spoor en_boekpers, 25-10-2026. Wat de rij nog tegenhoudt staat in de
-# commit die dit script invoerde, en in het rapport van dat spoor.
+# WAT DE RIJ NU NOG TEGENHOUDT — gemeten 25-10-2026 met de echte functies van
+# wachtrij.py (lees_rij, paden_toets, nl_controle) op wat dit script in een
+# nagebootste rij schreef (lab-werkkopie op 4906f691, site-kloon van en_boekpers).
+# Geen van vier is in dit script op te lossen; het zijn keuzes in de rij of het lab.
+#   1. Het git-netwerk van de rij (protocol.allow=never) sluit ook het lokale
+#      transport, en daarop zakt boek/_tools/publicatie/zelftest.sh in de boekpoort:
+#      37 van 92 ("fatal: transport 'file' not allowed"). Dat raakt de lab-pers hier
+#      én de '#: poort lab' van de rij, dus elke lab-stap. Met alleen
+#      protocol.file.allow=always erbij: 92 van 92, en dan gaan alle drie de fasen groen.
+#   2. publiceer_en.sh schrijft bij afloop 0 _tools/en_manifest.txt, en '_tools/*'
+#      is '#: beschermd' voor de site.
+#   3. manuscript/h<n>.html valt buiten '#: bron_engels site'.
+#   4. En dan zegt nl_controle "1 Nederlands bestand anders" — het rijbestand heeft
+#      geen '#: nl_negeer'. Met de vijf regels van `taalonderdelen.py regels`: door,
+#      0 Nederlands anders, 0 nieuwe kapotte verwijzingen.
+#
+# PER HOOFDSTUK, en wat dat niet dekt. De Engelse zijbalk (in het lab gemaakt)
+# noemt elk hoofdstuk waarvan het lab een H<n>_en.qmd heeft, in JavaScript. Wie H1
+# alleen perst, laat h0.html staan met een zijbalk zonder H1 — dat ziet geen
+# keuring. Wie H0 perst terwijl het lab al een H1 heeft die nog niet op de site
+# staat, zet een dode zijbalk-link neer; die weigert en_bouw.py sinds dit spoor
+# (de linkkeuring zelf leest alleen href= en src=, en zag hem niet). Pers daarom
+# alle Engelse hoofdstukken samen: <pers> H0 H1 <fase>.
+#
+# Ontstaan: spoor en_boekpers, 25-10-2026.
 # ============================================================
 set -uo pipefail
 case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) PATH="$HOME/.local/bin:$PATH";; esac

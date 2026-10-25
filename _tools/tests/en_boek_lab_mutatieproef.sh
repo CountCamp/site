@@ -73,6 +73,12 @@ proef "noindex op de lab-bladzij in de spooksite mag" "C" \
   "$EB|||            if m[\"noindex\"]: fout_merk.append(f\"{p}: draagt noindex {waar}\")|||            if m[\"noindex\"] and a.soort == \"echt\": fout_merk.append(f\"{p}: draagt noindex {waar}\")"
 proef "de teller op de lab-bladzij wordt in de spooksite niet nagekeken (zoals het voorstel)" "C" \
   "$EB|||            if m[\"teller\"] != \"geteld\": fout_merk.append(f\"{p}: bezoekersteller {m['teller']} {waar}\")|||            if m[\"teller\"] != \"geteld\" and a.soort == \"echt\": fout_merk.append(f\"{p}: bezoekersteller {m['teller']} {waar}\")"
+proef "de zijbalk van een lab-bladzij wordt niet nagekeken" "C" \
+  "$EB|||            if not os.path.isfile(os.path.join(site, os.path.dirname(p), f)):|||            if False:"
+proef "een zijbalk zonder hoofdstukken telt als nagekeken" "C" \
+  "$EB|||        if not doelen:
+            fout_zb.append(|||        if False:
+            fout_zb.append("
 proef "rekeningnummers weer in data:-adressen zoeken" "C" \
   "$EB|||    zonder_data = lambda t: re.sub(r\"data:[^\\\"')\\s]*\", \"\", t)  # noqa: E731|||    zonder_data = lambda t: t  # noqa: E731"
 # de regel in taalparen.tsv

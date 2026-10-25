@@ -356,6 +356,12 @@ def deel_c() -> bool:
          orig.replace("gc.zgo.at/count.js", "gc.zgo.at/weg.js"), "bezoekersteller"),
         ("de lab-bladzij met de proefdrukbalk in de spooksite", "spook", doel,
          orig.replace("<body", '<div class="spookbalk">proef</div>\n<body', 1), "proefdrukbalk in de spooksite"),
+        # De zijbalk bouwt zijn links in JavaScript; de linkkeuring ziet ze niet.
+        ("de zijbalk wijst naar een hoofdstuk dat er niet staat", "echt", doel,
+         re.sub(r'(var CH = \[\n)', r'\1    { f: "h97.html", n: "97", t: "x" },\n', orig, count=1),
+         "de zijbalk wijst naar h97.html"),
+        ("de zijbalk noemt geen enkel hoofdstuk", "echt", doel,
+         re.sub(r'\{\s*f:\s*"', '{ bestand: "', orig), "de zijbalk noemt geen enkel hoofdstuk"),
     ]
     for wat, soort, rel, tekst, reden in mutaties:
         site = k_echt if soort == "echt" else k_spook
