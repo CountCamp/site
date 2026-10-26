@@ -13,6 +13,8 @@ ververst — zie DUBBELINGEN.md:
   2. tabellen/ tables/ power/            de losse adressen die al gedeeld zijn
   3. oefenboeken/broertjes/{r,jasp,spss}/speeltjes/
                                          de kopieen die de hoofdstukken aanroepen
+  4. en/toys/                            de Engelse speelkist (terugknop naar /en/toys/);
+                                         bron <naam>_en.html, zonder MIEKE-/BEN-notities
 
 Onderweg wordt gecontroleerd of elk bestand een GoatCounter-teller heeft, en
 gemeld wat er in een doelmap staat zonder bron. De hub (speeltjes/index.qmd) is
@@ -23,7 +25,13 @@ import sys
 from pathlib import Path
 
 HIER = Path(__file__).resolve().parent.parent
-BRON = HIER.parent / "countcamp_lab" / "boek" / "04_speeltjes"
+# Het lab staat naast de site, of waar $PERS_LAB zegt — dezelfde regel als
+# _tools/pers_en_boek.sh. Zonder die uitgang vond dit script in een werkkopie van
+# een zetter (.claude/worktrees/<naam>/) nooit een bron: daar is HIER.parent
+# .claude/worktrees/, en staat er geen countcamp_lab naast (spoor en_voorpagina,
+# 25-10-2026: "bron niet gevonden").
+import os  # noqa: E402
+BRON = Path(os.environ.get("PERS_LAB") or HIER.parent / "countcamp_lab") / "boek" / "04_speeltjes"
 sys.path.insert(0, str(HIER / "_tools"))
 from taalonderdelen import pas_toe_los  # noqa: E402
 
@@ -55,9 +63,29 @@ LOSSE_ADRESSEN = {
 
 BROERTJES = ["r", "jasp", "spss"]
 
+# De Engelse speelkist (spoor en_speeltjes, 25-10-2026). De bron is de Engelse
+# tweeling in het lab, AFGELEID uit de Nederlandse door
+# countcamp_lab/boek/04_speeltjes/_vertaal_speeltjes_en.py. Het paar met de
+# Nederlandse kopie staat in _tools/taalparen.tsv (los), zodat beide kanten hier
+# hun knopje krijgen.
+EN_KIST = {
+    "olifantengeheugen_en.html":   "en/toys/elephants-memory.html",
+    "w4_schud_correlatie_en.html": "en/toys/shuffle-correlation.html",
+}
+
 TERUG = re.compile(
     r'(<a\b[^>]*?)href="[^"]*"([^>]*>)\s*(?:&larr;|←)\s*Terug naar CountCamp\s*</a>'
 )
+TERUG_EN = re.compile(
+    r'(<a\b[^>]*?)href="[^"]*"([^>]*>)\s*(?:&larr;|←)\s*Back to CountCamp\s*</a>'
+)
+# De werkbriefjes van de vertaling: voor Mieke en Ben, niet voor een bezoeker die de
+# bron opent. Dezelfde drie soorten als taalwissel.lua weghaalt en keuring 6 van
+# en_bouw.py weigert. Alleen een commentaar op een eigen regel; staat er daarna nog
+# één, dan stopt de kopie (zie kopieer_en).
+# "BEN" gevolgd door ":", witruimte of "(", zoals taalwissel.lua en en_bouw.py (25-10-2026).
+WERKBRIEFJE = re.compile(r"^[ \t]*<!--\s*(?:MIEKE|BEN[:\s(]|Vertaling van).*?-->[ \t]*\n", re.M | re.S)
+NOG_EEN_BRIEFJE = re.compile(r"<!--\s*(?:MIEKE|BEN[:\s(]|Vertaling van)")
 
 fout = 0
 veranderd = []          # welke doelen liepen achter en zijn nu bijgewerkt
@@ -132,6 +160,10 @@ def main():
         t, n = TERUG.subn(
             lambda m: m.group(1) + 'href="/speeltjes/"' + m.group(2)
                       + "← Terug naar de speelkist</a>", t)
+        # Een speeltje met een Engelse tweeling krijgt hier het knopje NL · EN en
+        # hreflang, en (Nederlandse kant) de taalbalk — net als tabellen/ hieronder.
+        # Zonder tweeling in _tools/taalparen.tsv komt de tekst onveranderd terug.
+        t = pas_toe_los(t, "speeltjes/" + doel)
         nieuw = schrijf(kist / doel, t)
         print("   %-26s -> speeltjes/%-24s %s%s" % (
             bron, doel, "terugknop om" if n else "terugknop ongewijzigd",
@@ -152,6 +184,28 @@ def main():
         nieuw = schrijf(d, t)
         print("   %-26s -> %-30s %s" % (bron, doel, "BIJGEWERKT" if nieuw else ""))
 
+    print("— de Engelse speelkist —")
+    for bron, doel in sorted(EN_KIST.items()):
+        t = lees(bron)
+        if t is None: continue
+        d = HIER / doel
+        if not d.parent.is_dir():
+            print("   MAP BESTAAT NIET: %s (en/toys/index.qmd hoort er te staan)" % d.parent); fout += 1; continue
+        t, n_w = WERKBRIEFJE.subn("", t)
+        if NOG_EEN_BRIEFJE.search(t):
+            print("   WERKBRIEFJE BLEEF STAAN in %s — staat er een MIEKE-/BEN-regel niet op een eigen regel?" % bron)
+            fout += 1; continue
+        t, n = TERUG_EN.subn(
+            lambda m: m.group(1) + 'href="/en/toys/"' + m.group(2)
+                      + "← Back to the toy box</a>", t)
+        t = pas_toe_los(t, doel)
+        nieuw = schrijf(d, t)
+        print("   %-28s -> %-34s %d werkbriefje(s) eruit, %s%s" % (
+            bron, doel, n_w, "terugknop om" if n else "TERUGKNOP NIET GEVONDEN",
+            "  BIJGEWERKT" if nieuw else ""))
+        if not n:
+            fout += 1
+
     print("— de broertjes —")
     for tak in BROERTJES:
         map_ = HIER / "oefenboeken" / "broertjes" / tak / "speeltjes"
@@ -170,10 +224,15 @@ def main():
     verwacht = set(KIST.values()) | {"index.qmd", "_LEESMIJ.md"}
     for o in sorted(p.name for p in kist.iterdir() if p.name not in verwacht):
         print("ONBEKEND IN DE KIST: %s (staat niet in de lijst van dit script)" % o)
+    en_kist = HIER / "en" / "toys"
+    verwacht_en = {Path(d).name for d in EN_KIST.values()} | {"index.qmd", "index.html"}
+    if en_kist.is_dir():
+        for o in sorted(p.name for p in en_kist.iterdir() if p.name not in verwacht_en):
+            print("ONBEKEND IN DE ENGELSE KIST: en/toys/%s (staat niet in EN_KIST)" % o)
 
     if veranderd:
         print("\n%d van de %d kopieën liepen achter en zijn bijgewerkt:" % (
-            len(veranderd), len(KIST) + len(LOSSE_ADRESSEN) + 7 * len(BROERTJES)))
+            len(veranderd), len(KIST) + len(LOSSE_ADRESSEN) + len(EN_KIST) + 7 * len(BROERTJES)))
         for v in veranderd:
             print("   %s" % v)
     else:

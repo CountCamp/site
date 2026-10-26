@@ -20,9 +20,17 @@ kopieën repareer je nooit ter plekke — je verandert de bron en kopieert opnie
 | **kopie 1** | `countcamp_site/speeltjes/*.html` — de speelkist, met een terugknop naar `/speeltjes/` |
 | **kopie 2–4** | `countcamp_site/oefenboeken/broertjes/{r,jasp,spss}/speeltjes/` — zeven per oefenboek, aangeroepen vanuit de hoofdstukken |
 | **kopie 5** | `countcamp_site/manuscript/h3_grabbel.html` — waar hoofdstuk 3 naartoe linkt |
+| **kopie 6** | `countcamp_site/en/toys/*.html` — de Engelse speelkist (25-10-2026), uit `<naam>_en.html` in het lab, zonder MIEKE-/BEN-notities en met een terugknop naar `/en/toys/`. Die `_en.html` is zelf weer **afgeleid** uit het Nederlandse speeltje (`_vertaal_speeltjes_en.py`): verander je het Nederlands, draai dat script dan eerst |
 | **handeling** | bron wijzigen → `python3 countcamp_site/_tools/bouw_speelkist.py` → `python3 countcamp_lab/boek/04_speeltjes/_proef_kopieen.py` → `rm -rf _site && quarto render --to html` → committen en pushen → `curl` op de live-URL |
 
-Het script doet **alle vijf de bestemmingen** in één keer, inclusief de losse
+**Kopie 2–4 hebben een tweede schrijver** (gemeten 25-10-2026, spoor en_speeltjes): de
+broertjes-oefenboeken brengen hun eigen kopie mee uit
+`countcamp_lab/boek/oefenboeken/broertjes/{r,jasp,spss}/speeltjes/`, en die liep op die dag
+achter op `04_speeltjes` — alle 21 bestanden; `bouw_speelkist.py` zou ze dus alle 21
+veranderen. Wie het laatst draait, wint. Dat is niet opgelost; het staat hier zodat niemand
+schrikt van 21 gewijzigde oefenboek-bladzijden na een run die over iets anders ging.
+
+Het script doet **alle zes de bestemmingen** in één keer, inclusief de losse
 adressen hieronder en de drie broertjes-mappen. Het controleert per bestand of de
 teller er nog in zit en meldt wat er in een doelmap staat zonder bron. Ververs je
 er één met de hand, dan lopen de andere vier stil uit de pas — dat is op 9-8-2026

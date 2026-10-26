@@ -77,6 +77,11 @@ MUTATIES = [
     ("werkbriefje in de gepubliceerde HTML", "en/index.html",
      lambda t: t.replace("<main", "<!-- MIEKE: vergeten -->\n<main", 1),
      "werkbriefje"),
+    # 25-10-2026 (spoor en_voorpagina): "BEN (spoor, datum):" glipte langs een keuring die
+    # alleen "BEN:" kende; acht zulke notities stonden in de proefdruk en de keuring zei 0.
+    ("werkbriefje BEN met haakje in de gepubliceerde HTML", "en/about.html",
+     lambda t: t.replace("<main", "<!-- BEN (spoor, 25-10-2026): vergeten -->\n<main", 1),
+     "werkbriefje"),
     ("verkeerde taal op een Engelse bladzij", "en/services.html",
      lambda t: re.sub(r'lang="en-GB"', 'lang="nl"', t),
      "zonder lang"),
@@ -142,15 +147,18 @@ def main() -> int:
     voor = os.path.join(REPO, "_site_en_werk", "toets_voor.json")
     na = os.path.join(REPO, "_site_en_werk", "toets_na.json")
     subprocess.run([sys.executable, BOUW, "foto", "--site", KOPIE, "--uit", voor], capture_output=True)
-    p = os.path.join(KOPIE, "archief", "index.html")
+    # Tot 25-10-2026 archief/index.html; die heeft sindsdien een Engelse tweeling
+    # (en/archive/, spoor en_voorpagina), dus een andere bladzij zonder tweeling.
+    zonder = "manuscript/woorden.html"
+    p = os.path.join(KOPIE, *zonder.split("/"))
     orig = lees(p)
     schrijf_los(p, orig.replace("</body>", " </body>", 1))
     subprocess.run([sys.executable, BOUW, "foto", "--site", KOPIE, "--uit", na], capture_output=True)
     schrijf_los(p, orig)
     r = subprocess.run([sys.executable, BOUW, "vergelijk", voor, na], capture_output=True, text=True)
-    gevangen = r.returncode == 1 and "archief/index.html" in r.stdout
+    gevangen = r.returncode == 1 and zonder in r.stdout
     print(f"{'ok  ' if gevangen else 'FOUT'}  één spatie erbij in een Nederlandse bladzij zonder tweeling: "
-          f"afloop {r.returncode}{', archief/index.html genoemd' if 'archief/index.html' in r.stdout else ''}")
+          f"afloop {r.returncode}{', ' + zonder + ' genoemd' if zonder in r.stdout else ''}")
     fout += 0 if gevangen else 1
 
     # en na alles: is de kopie weer groen? (anders lekte een mutatie door)

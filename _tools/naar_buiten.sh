@@ -125,6 +125,9 @@ plank_nakijken() {   # $1 = blokkerend | melden
 # droegen een teller. Het hele psychometrie-oefenboek was blind, en de
 # bouwcontrole stond groen. Eén bladzij nakijken is geen steekproef maar een
 # blinde vlek.
+# Sinds 25-10-2026 (spoor en_voorpagina) loopt dezelfde wachter ook en/ na: de
+# Engelse kant komt net zo als bijlage binnen, uit drie bouwwegen (publiceer_en.sh,
+# de lab-pers voor en/book/, bouw_speelkist.py voor en/toys/).
 #
 # WAAROM BLOKKEREND OP --productie EN MELDEND OP DE PROEFWEGEN: dit is dezelfde
 # afweging als bij `plank_nakijken`. Rood kan hij alleen worden doordat er een

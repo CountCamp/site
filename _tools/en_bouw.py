@@ -505,6 +505,36 @@ def uit_het_lab(p: str, tekst: str) -> tuple[bool, str]:
     return True, ""
 
 
+# ------------------------------------------- kopieën uit de speelkist ----
+# De Engelse speeltjes (spoor en_speeltjes, 25-10-2026) komen net als het boek uit het
+# lab: _tools/bouw_speelkist.py kopieert countcamp_lab/boek/04_speeltjes/<naam>_en.html
+# naar en/toys/, kant-en-klaar en mét de bezoekersteller, zoals de Nederlandse
+# speeltjes in speeltjes/ staan. Zo'n bladzij gaat als bijlage mee (en/** in
+# _quarto-nl.yml) en staat in de spooksite dus zoals hij live komt: hij krijgt in
+# beide soorten de merken van de echte site, net als een bijlage uit het lab.
+# Zonder deze regel weigerde de spooksite elk Engels speeltje ("proefdruk met
+# bezoekersteller"), terwijl de kop van publiceer_en.sh (d) zegt dat een speeltje
+# onder en/ gewoon gekeurd wordt. Gemeten in een kloon, 25-10-2026.
+# STRENG op twee dingen: de bladzij staat direct onder en/toys/ en is niet door
+# Quarto gebouwd, en hij draagt de herkomst die _vertaal_speeltjes_en.py in het lab
+# zet: <meta name="nl_bron" content="boek/04_speeltjes/<naam>.html@<commit>">.
+# Een losse bladzij onder en/toys/ zonder die herkomst is een GAT, geen speeltje.
+KIST_MAP = "en/toys"
+KIST_HERKOMST = re.compile(r'<meta name="nl_bron" content="boek/04_speeltjes/[A-Za-z0-9_]+\.html@[0-9a-f]{7,40}">')
+
+
+def uit_de_kist(p: str, tekst: str) -> tuple[bool, str]:
+    """(True, "") voor een speeltje uit het lab onder en/toys/; (False, "") voor elke
+    andere bladzij; (False, reden) voor een losse bladzij daar zonder herkomst."""
+    if os.path.dirname(p) != KIST_MAP or 'name="generator" content="quarto' in tekst:
+        return False, ""
+    if not KIST_HERKOMST.search(tekst):
+        return False, (f"{p}: een losse bladzij in de Engelse speelkist zonder herkomst uit het lab "
+                       f"(<meta name=\"nl_bron\" content=\"boek/04_speeltjes/…\">) — zo zet "
+                       f"_tools/bouw_speelkist.py er geen neer")
+    return True, ""
+
+
 def merken(tekst: str) -> dict:
     return {
         "noindex": bool(re.search(r'name="robots"\s+content="noindex', tekst)),
@@ -592,6 +622,20 @@ def cmd_keur(a) -> int:
             f"{len(fout_zb)} fout")
     gaten += fout_zb
 
+    # 1c. kopieën uit de speelkist (zie KIST_HERKOMST): de Engelse speeltjes onder en/toys/.
+    kist, fout_k = [], []
+    for p in en_bladz:
+        if p in lab:
+            continue
+        ja, reden = uit_de_kist(p, lees(os.path.join(site, p)))
+        if ja:
+            kist.append(p)
+        elif reden:
+            fout_k.append(reden)
+    zeg(f"  uit de speelkist: {len(kist)} speeltje(s) uit het lab onder {KIST_MAP}/, {len(fout_k)} zonder herkomst"
+        + (f" — bv. {kist[0]}" if kist else ""))
+    gaten += fout_k
+
     # 2. merktekens: is een proefdruk een proefdruk en de echte site de echte?
     # Op de Engelse bladzijden onder en/ — die maakt deze bouw. De rest maakt de
     # Nederlandse ronde, en daar kijkt naar_buiten.sh naar.
@@ -600,7 +644,7 @@ def cmd_keur(a) -> int:
     fout_merk = []
     for p in en_bladz:
         m = merken(lees(os.path.join(site, p)))
-        if a.soort == "echt" or p in lab:
+        if a.soort == "echt" or p in lab or p in kist:
             waar = "op de echte site" if a.soort == "echt" else \
                 "in de spooksite, als bijlage uit het lab die er moet staan zoals hij live komt"
             if m["noindex"]: fout_merk.append(f"{p}: draagt noindex {waar}")
@@ -612,7 +656,8 @@ def cmd_keur(a) -> int:
             if m["teller"] != "geen": fout_merk.append(f"{p}: proefdruk met bezoekersteller ({m['teller']})")
     zeg(f"  merktekens ({a.soort}): {len(en_bladz)} bladzijde(n), {len(fout_merk)} fout"
         + (f"; {len(lab)} uit het lab gekeurd als echte site, zoals het Nederlandse boek — bv. {lab[0]}"
-           if lab and a.soort == "spook" else ""))
+           if lab and a.soort == "spook" else "")
+        + (f"; {len(kist)} uit de speelkist, idem — bv. {kist[0]}" if kist and a.soort == "spook" else ""))
     gaten += fout_merk
 
     # 3. taal: <html lang> op elke Engelse bladzij
@@ -733,7 +778,9 @@ def cmd_keur(a) -> int:
     gaten += fout_c
 
     # 6. werkbriefjes: geen MIEKE:/BEN:-regel op de echte of de proef-site
-    fout_w = [p for p in en_bladz if re.search(r"<!--\s*(MIEKE|BEN:|Vertaling van)", lees(os.path.join(site, p)))]
+    #    "BEN" gevolgd door ":", witruimte of "(" — tot 25-10-2026 alleen "BEN:", en dan
+    #    gingen "<!-- BEN (spoor, datum): ..." de site op terwijl hier 0 stond.
+    fout_w = [p for p in en_bladz if re.search(r"<!--\s*(MIEKE|BEN[:\s(]|Vertaling van)", lees(os.path.join(site, p)))]
     zeg(f"  werkbriefjes: {len(en_bladz)} bladzijde(n), {len(fout_w)} met een MIEKE-/BEN-notitie in de HTML")
     gaten += [f"{p}: werkbriefje in de gepubliceerde HTML" for p in fout_w]
 

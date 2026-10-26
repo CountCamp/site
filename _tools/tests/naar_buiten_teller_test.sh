@@ -58,6 +58,8 @@ echte_teller_repo() {  # de ECHTE tellerwachter op de ECHTE bladzijden van deze 
   # `grep -r` en `find` zonder -L.
   ln -s "$PWD/oefenboeken" "$r/oefenboeken"
   ln -s "$PWD/werkboeken"  "$r/werkboeken"
+  # Sinds 25-10-2026 kijkt de wachter ook in en/ (spoor en_voorpagina).
+  ln -s "$PWD/en"          "$r/en"
   echo "$r"
 }
 
@@ -99,7 +101,7 @@ echo ""
 # Dezelfde mappen als de wachter overslaat: _site, .quarto, .git, site_libs.
 tel_bladzijden() {
   local mappen=() m
-  for m in oefenboeken werkboeken; do [ -d "$m" ] && mappen+=("$m/"); done
+  for m in oefenboeken werkboeken en; do [ -d "$m" ] && mappen+=("$m/"); done
   [ "${#mappen[@]}" -gt 0 ] || { echo 0; return; }
   find "${mappen[@]}" \( -name _site -o -name .quarto -o -name .git -o -name site_libs \) -prune \
        -o -name '*.html' -print0 \

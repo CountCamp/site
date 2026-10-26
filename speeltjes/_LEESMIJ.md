@@ -11,5 +11,10 @@ Let op: dezelfde speeltjes staan óók in de drie broertjes-oefenboeken
 (`oefenboeken/broertjes/{r,jasp,spss}/speeltjes/`). Dat zijn aparte kopieën, met
 hun eigen terugknop. Verander je een speeltje, ververs dan beide plekken.
 
+Twee speeltjes hebben een Engelse tweeling in `/en/toys/` (25-10-2026): het
+olifantengeheugen en schud-correlatie. Die kopieën krijgen bij het kopiëren het
+knopje NL · EN, en de Nederlandse kant de taalbalk (`_tools/taalparen.tsv`). De
+Engelse kist zelf is `en/toys/index.qmd`.
+
 `/power/`, `/tabellen/` en `/tables/` blijven staan waar ze stonden — die adressen
 zijn eerder gedeeld en worden niet verplaatst. De speelkist linkt ernaartoe.

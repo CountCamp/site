@@ -220,18 +220,32 @@ def main():
         met = {"engels": ENGELS, "gedeeld": GEDEELD, "nl_negeer": regels}
         zonder = dict(met, nl_negeer=[])
         tabel = TO.paren()
-        tweelingen = sorted(p["nl"] for p in tabel)
-        zeg(f"{len(regels)} nl_negeer-regels, {len(tweelingen)} Nederlandse tweelingen in taalparen.tsv, "
+        # NIEUWE tweelingen: die waarvan de Nederlandse bladzij in "voor" haar taalstukken nog
+        # niet draagt. Alleen die horen te veranderen. Tot 25-10-2026 verwachtte deze toets dat
+        # ÉLKE tweeling uit taalparen.tsv veranderde, en dat klopte alleen zolang main er nog
+        # geen had: sinds de eerste tweelingen live staan, zakte hij op main tegen main zelf
+        # (17 van de 31 zaken, gemeten op 242b639 tegen 242b639, spoor en_voorpagina).
+        def al_tweeling(p):
+            pad = os.path.join(voor, p["nl"])
+            if not os.path.isfile(pad):
+                return False
+            c = tel_stukken(open(pad, encoding="utf-8").read())
+            return all(c[k] >= v for k, v in verwacht_per_stuk(p["wissel"]).items())
+        nieuw = {p["nl"] for p in tabel if not al_tweeling(p)}
+        tweelingen = sorted(nieuw)
+        zeg(f"{len(regels)} nl_negeer-regels, {len(tabel)} Nederlandse tweelingen in taalparen.tsv, waarvan "
+            f"{len(tweelingen)} nieuw ten opzichte van voor; "
             f"{len(bestanden(voor))} bestanden voor, {len(bestanden(na))} na")
         zeg()
 
-        # 1. zonder uitzondering: precies de tweelingen
+        # 1. zonder uitzondering: precies de nieuwe tweelingen
         v0, _ = nl_verschil(voor, na, zonder)
         anders0 = sorted(r for r, s in v0)
         if anders0 == tweelingen and all(s == "anders" for _r, s in v0):
-            ok(f"zonder uitzondering veranderen precies de {len(tweelingen)} Nederlandse tweelingen, bv. {tweelingen[0]}")
+            ok(f"zonder uitzondering veranderen precies de {len(tweelingen)} nieuwe Nederlandse tweelingen"
+               + (f", bv. {tweelingen[0]}" if tweelingen else " (er zijn er geen)"))
         else:
-            zakt("zonder uitzondering hoort precies de lijst tweelingen te veranderen",
+            zakt("zonder uitzondering hoort precies de lijst nieuwe tweelingen te veranderen",
                  f"veranderd: {v0[:8]}; verwacht: {tweelingen}")
 
         # 2. met uitzondering: niets
@@ -253,10 +267,13 @@ def main():
             erbij = {k: c_na[k] - c_voor[k] for k in c_na if c_na[k] - c_voor[k]}
             weg = sum(len(m.group(0)) for _n, r in TO.negeer_regexen() for m in re.finditer(r, t_na))
             grootst = max(grootst, (weg, p["nl"]))
-            if erbij == verwacht_per_stuk(p["wissel"]):
-                ok(f"{p['nl']} ({p['wissel']}): erbij {erbij}, {weg} tekens weg te laten")
+            # een bestaande tweeling krijgt niets bij; een nieuwe precies zijn stukken
+            hoort = verwacht_per_stuk(p["wissel"]) if p["nl"] in nieuw else {}
+            soort = "nieuw" if p["nl"] in nieuw else "bestond al"
+            if erbij == hoort:
+                ok(f"{p['nl']} ({p['wissel']}, {soort}): erbij {erbij}, {weg} tekens weg te laten")
             else:
-                zakt(f"{p['nl']} ({p['wissel']})", f"erbij {erbij}, verwacht {verwacht_per_stuk(p['wissel'])}")
+                zakt(f"{p['nl']} ({p['wissel']}, {soort})", f"erbij {erbij}, verwacht {hoort}")
         if grootst[0] <= NEGEER_MAX_TEKENS:
             ok(f"grootste weglating {grootst[0]} tekens ({grootst[1]}), onder de grens van {NEGEER_MAX_TEKENS}")
         else:
@@ -325,7 +342,12 @@ def main():
         if os.path.exists(kopie):
             shutil.rmtree(kopie)
         shutil.copytree(na, kopie)
-        zonder_tweeling = "speeltjes/index.html"
+        # Tot 25-10-2026 speeltjes/index.html; die heeft sindsdien een Engelse tweeling
+        # (en/toys/index.html, spoor en_speeltjes). Daarna archief/index.html, en die kreeg
+        # dezelfde dag ook een tweeling (en/archive/, spoor en_voorpagina). De woordenbladzij
+        # van het boek heeft er geen, en het Engelse boek heeft geen eigen inhoudsopgave of
+        # woordenlijst om er een te worden.
+        zonder_tweeling = "manuscript/woorden.html"
         pad = os.path.join(kopie, zonder_tweeling)
         t = open(pad, encoding="utf-8").read()
         with open(pad, "w", encoding="utf-8") as f:
