@@ -101,5 +101,18 @@ proef "doorstuurmap telt als thema" \
   '        and not alleen_doorstuurders(os.path.join(vol, d))|||'
 proef "elke map telt als doorstuurmap" \
   '            if soort(f.read()) != "doorstuurder":|||            if False:'
+# Hoofdstukken en bijlagen (28-10-2026). Het advies zei "twee bijlagen" waar het
+# boek er drie had; elke verslapping hieronder laat zo'n getal weer onbewaakt.
+proef "hoofdstukken en bijlagen worden nooit vergeleken" \
+  'if len(gevonden) != TELWOORDEN[woord.lower()]:|||if False:'
+proef "een bijlage wordt niet als bijlage herkend" \
+  'if any(t.lower().startswith("bijlage") for t in labels[d])]|||if False]'
+proef "hoofdstukken en bijlagen zijn nooit een belofte" \
+  '            if kaal.group(1).lower() in TELWOORDEN
+        ]|||            if False
+        ]'
+proef "een map telt mee ook als het boek er niet naar linkt" \
+  'mappen = sorted(d for d in labels if os.path.isdir(os.path.join(vol, d)))|||mappen = sorted(d for d in os.listdir(vol) if re.match(r"\d{2}_", d) and os.path.isdir(os.path.join(vol, d)))
+    labels = {d: labels.get(d, []) for d in mappen}'
 rm -rf "$M"
 [ "$SLECHT" -eq 0 ] || { echo "mutatieproef: $SLECHT proef/proeven zonder uitslag of zonder beet"; exit 1; }

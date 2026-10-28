@@ -358,6 +358,60 @@ zaak "14d een commit met alleen een figuur telt wél, zonder om te vallen" 1 \
      "is voor het laatst veranderd op 2026-10-01" "$T14d"
 rm -rf "$T12" "$T13" "$T14" "$T14b" "$T14c" "$T14d"
 
+# ---- zaak 15 t/m 15e: hoofdstukken en bijlagen (OZP 1, 28-10-2026) -------
+# Het advies voor de OZP 1-zin zei "twee bijlagen"; het boek had er drie. En
+# "Dertien hoofdstukken" stond er al maanden zonder dat iets het narekende.
+# Het boek hieronder heeft drie hoofdstukken (00, 01, 02) en twee bijlagen
+# (12, 14). Bijlage 14 krijgt ook een link uit de lopende tekst zónder het
+# woord "Bijlage": één label in de zijbalk is genoeg, net als in het echte boek.
+ozp_boek() {   # $1 = map
+  local B="$1/oefenboeken/ozp1"
+  for n in 01_a 02_b 12_tabellen 14_keuze; do
+    mkdir -p "$B/$n"; echo '<html>x</html>' > "$B/$n/$n.html"
+  done
+  cat > "$B/index.html" <<'HTML'
+<html><body><nav id="quarto-sidebar">
+<a href="./00_fundament/00_fundament.html"><span class="menu-text">Deel 0 · Fundament</span></a>
+<a href="./01_a/01_a.html"><span class="menu-text">Thema 1 · A</span></a>
+<a href="./02_b/02_b.html"><span class="menu-text">Thema 2 · B</span></a>
+<a href="./14_keuze/14_keuze.html"><span class="menu-text">Bijlage · Keuze</span></a>
+<a href="./12_tabellen/12_tabellen.html"><span class="menu-text">Bijlage · Tabellen</span></a>
+</nav><p>Zie <a href="./14_keuze/14_keuze.html">de keuze</a>.</p></body></html>
+HTML
+  op "$1" 2026-09-19 "OZP 1 met twee bijlagen"
+}
+ozp_plank() {   # $1 = map, $2 = hoofdstukken-zin, $3 = bijlagen-zin
+  cat > "$1/oefenboeken/index.qmd" <<QMD
+---
+title: "Oefenboeken"
+---
+::: {.cc-boek .cc-boek-vak}
+### [Oefenboek OZP 1 →](ozp1/index.html) [SPSS]{.cc-chip}
+Een eerstejaarsvak. $2: van fundament naar B. $3: keuze en tabellen.
+:::
+QMD
+}
+T15="$(mktemp -d)"; klaarzetten "$T15"; ozp_boek "$T15"
+ozp_plank "$T15" "Drie hoofdstukken" "Achterin twee bijlagen"
+zaak "15  hoofdstukken en bijlagen die kloppen blijven stil" 0 "2 belofte(s) nagerekend" "$T15"
+ozp_plank "$T15" "Dertien hoofdstukken" "Achterin twee bijlagen"
+zaak "15b een verouderd aantal hoofdstukken vuurt" 1 \
+     "zegt 'Dertien hoofdstukken', maar er staan er 3" "$T15"
+ozp_plank "$T15" "Drie hoofdstukken" "Achterin drie bijlagen"
+zaak "15c een verkeerd aantal bijlagen vuurt (het advies van 28-10)" 1 \
+     "zegt 'drie bijlagen', maar er staan er 2 in oefenboeken/ozp1/: 12_tabellen, 14_keuze" "$T15"
+# 15d: "Alle hoofdstukken" (het R-oefenboek) is geen getal en dus geen belofte;
+# hij mag niet vuren en ook niet als blind tellen.
+ozp_plank "$T15" "Alle hoofdstukken" "Achterin twee bijlagen"
+zaak "15d 'Alle hoofdstukken' is geen belofte" 0 "1 belofte(s) nagerekend" "$T15"
+# 15e: een map waar het boek niet (meer) naar linkt, telt nergens mee -- ook
+# niet als hoofdstuk, al staat hij er nog. Het echte OZP 1 heeft er zo een paar
+# (03_normaalverdeling_z en 04_discrete_kansvariabelen, oude adressen van 19-9).
+sed -i.bak '/12_tabellen/d' "$T15/oefenboeken/ozp1/index.html" && rm -f "$T15/oefenboeken/ozp1/index.html.bak"
+ozp_plank "$T15" "Drie hoofdstukken" "Achterin de bijlagen"
+zaak "15e een map zonder link telt niet als hoofdstuk" 0 "1 belofte(s) nagerekend" "$T15"
+rm -rf "$T15"
+
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op
 # 18-8-2026 gebeurd met zeven mechanismen tegelijk: alle zelftests groen, geen

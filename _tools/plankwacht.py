@@ -31,6 +31,15 @@ Wat hij toetst
      niet op schijf. Wat hier nagerekend wordt is de teller. Zeg dat erbij als
      iemand vraagt hoeveel de wachter dekt -- anders lijkt het kaartje
      helemaal bewaakt.
+  3. "<telwoord> hoofdstukken" en "<telwoord> bijlagen" (OZP 1, sinds
+     28-10-2026), tegen de mappen waar het boek vanaf zijn index naar linkt.
+     Een map is een bijlage als een link ernaar "Bijlage" als label draagt --
+     zo noemt de zijbalk ze zelf ("Bijlage · Je formuleblad"); de rest is een
+     hoofdstuk, `00_` incluis, want het kaartje telt "fundament" mee.
+     Aanleiding: het advies voor die zin zei "twee bijlagen", het boek had er
+     drie, en "Dertien hoofdstukken" stond er al maanden zonder dat iets het
+     narekende. Een woord dat geen telwoord is ("Alle hoofdstukken") is geen
+     belofte en wordt overgeslagen, zoals bij de kale thema-vorm.
 
 Welke boekmap bij welk kaartje hoort, wordt NIET ergens bijgehouden: het staat
 al in het kaartje zelf, in de link van de kop. Een tweede lijstje zou precies
@@ -123,6 +132,10 @@ RE_THEMATELLING = re.compile(
 # Hij wordt pas gezocht nadat de vorm hierboven uit de tekst is geknipt, anders
 # zou "Vier van de zeven thema's" hier als "zeven" tellen en vals alarm geven.
 RE_THEMAS_KAAL = re.compile(r"([A-Za-zé]+)\s+thema[''`]s", re.IGNORECASE)
+
+# "Dertien hoofdstukken: ..." en "Achterin drie bijlagen: ..." (OZP 1).
+RE_HOOFDSTUKKEN = re.compile(r"([A-Za-zé]+)\s+hoofdstukken\b", re.IGNORECASE)
+RE_BIJLAGEN = re.compile(r"([A-Za-zé]+)\s+bijlagen\b", re.IGNORECASE)
 
 # de kop van een kaartje: "### [Oefenboek OZP 1 →](ozp1/index.html) [SPSS]{.cc-chip}"
 RE_KOP_MET_LINK = re.compile(r"^#{2,4}\s*\[(?P<titel>[^\]]*?)\s*→?\s*\]\((?P<href>[^)]+)\)")
@@ -390,6 +403,37 @@ def gepubliceerde_themas(wortel: str, pad: str) -> tuple[list[str], list[str], s
     return gepubliceerd, verweesd, None
 
 
+def hoofdstukken_en_bijlagen(wortel: str, pad: str) -> tuple[list[str], list[str], str | None]:
+    """(hoofdstukken, bijlagen, reden-om-niet-te-kunnen-kijken).
+
+    Telt, net als `gepubliceerde_themas`, alleen mappen die er staan én waar de
+    index naar linkt. Anders dan daar telt `00_` wél mee: "Dertien
+    hoofdstukken: van fundament ..." rekent Deel 0 erbij. Een doorstuurmap
+    wordt hier niet apart weggefilterd: het boek linkt niet naar zijn eigen
+    oude adressen, en doet het dat ooit wel, dan klopt de telling niet meer en
+    zegt de wachter dat hardop -- dat is de goede kant om fout te gaan.
+    Een map is een bijlage zodra één link ernaar een label heeft dat met
+    "Bijlage" begint. Dat label staat in de zijbalk die Quarto uit het boek
+    zelf bouwt -- geen tweede lijstje dat hier kan verouderen.
+    """
+    vol = os.path.join(wortel, pad)
+    if not os.path.isdir(vol):
+        return [], [], f"de map {pad}/ bestaat niet"
+    index = os.path.join(vol, "index.html")
+    if not os.path.isfile(index):
+        return [], [], f"{pad}/index.html bestaat niet, dus er valt niets te tellen"
+    with open(index, encoding="utf-8", errors="ignore") as f:
+        html = f.read()
+    labels: dict[str, list[str]] = {}
+    for m in re.finditer(r'<a\s[^>]*href="\.?/?(\d{2}_[A-Za-z0-9_]+)/[^"]*"[^>]*>(.*?)</a>', html, re.S):
+        tekst = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(2))).strip()
+        labels.setdefault(m.group(1), []).append(tekst)
+    mappen = sorted(d for d in labels if os.path.isdir(os.path.join(vol, d)))
+    bijlagen = [d for d in mappen if any(t.lower().startswith("bijlage") for t in labels[d])]
+    hoofdstukken = [d for d in mappen if d not in bijlagen]
+    return hoofdstukken, bijlagen, None
+
+
 class Bevinding:
     def __init__(self, soort: str, kaartje: Kaartje, regel: str):
         self.soort = soort        # "fout" of "blind"
@@ -427,7 +471,17 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
                     heeft_telling = kaal
                     break
 
-        if not (heeft_datum or heeft_telling):
+        # "Dertien hoofdstukken", "drie bijlagen": alleen waar het woord een
+        # telwoord is. Elk voorkomen telt, niet alleen het eerste.
+        delen = [
+            (soort_deel, kaal.group(1))
+            for soort_deel, patroon in (("hoofdstukken", RE_HOOFDSTUKKEN),
+                                        ("bijlagen", RE_BIJLAGEN))
+            for kaal in patroon.finditer(k.body)
+            if kaal.group(1).lower() in TELWOORDEN
+        ]
+
+        if not (heeft_datum or heeft_telling or delen):
             continue
 
         if not k.href:
@@ -501,6 +555,23 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
                             "fout", k,
                             f"heeft in {pad}/ een thema-map waar het boek zelf niet naar "
                             f"linkt: {', '.join(verweesd)} -- die bereikt geen lezer",
+                        ))
+
+        # ---- 3. hoofdstukken en bijlagen -----------------------------
+        if delen:
+            hoofdstukken, bijlagen, reden = hoofdstukken_en_bijlagen(wortel, pad)
+            if reden:
+                bevindingen.append(Bevinding("blind", k, reden))
+            else:
+                echt = {"hoofdstukken": hoofdstukken, "bijlagen": bijlagen}
+                for soort_deel, woord in delen:
+                    getoetst += 1
+                    gevonden = echt[soort_deel]
+                    if len(gevonden) != TELWOORDEN[woord.lower()]:
+                        bevindingen.append(Bevinding(
+                            "fout", k,
+                            f"zegt '{woord} {soort_deel}', maar er staan er "
+                            f"{len(gevonden)} in {pad}/: {', '.join(gevonden) or 'geen enkele'}",
                         ))
 
     return bevindingen, len(kaartjes), getoetst
