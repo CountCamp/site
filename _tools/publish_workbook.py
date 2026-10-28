@@ -27,7 +27,15 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      het hele psychometrie-oefenboek blind (0 van 6), OZP1 op 2 van 18 en MVDA
      op 1 van 9, en niets zei er iets over. → hier invoegen en anders weigeren.
 
-Dit script doet 1, 2 en 4 deterministisch + valideert dat geen enkele asset
+  5. Een ENGELS oefenboek (`--section en/workbooks`) komt onder en/ te staan, en
+     daar keurt `_tools/en_bouw.py` elke door Quarto gebouwde bladzij zonder .qmd
+     ernaast af als wees -- terecht voor een vergeten bladzij, onterecht voor een
+     oefenboek uit het lab. → elke bladzij krijgt als laatste regel een stempel
+     die het oefenboek en de commit van het lab noemt (WERKBOEK_STEMPEL in
+     en_bouw.py), en alleen als de bron op die commit schoon is. Het Nederlands
+     (`--section oefenboeken`) krijgt geen stempel: dat verandert hier niet.
+
+Dit script doet 1, 2, 4 en 5 deterministisch + valideert dat geen enkele asset
 breekt. Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
 
 Gebruik
@@ -43,10 +51,18 @@ site-repo. Raakt de werkboek-bron NIET aan.
 """
 
 from __future__ import annotations
-import argparse, os, re, shutil, sys, html
+import argparse, os, re, shutil, subprocess, sys, html
+from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tellerregel import met_teller, soort  # noqa: E402
+
+# Waar een Engels oefenboek landt (punt 5). Dezelfde map als WERKBOEK_MAP in
+# en_bouw.py; stap 0 eist dat ze gelijk zijn. De keuring op de stempel staat daar,
+# en wordt pas geladen als er een Engels oefenboek komt: het Nederlandse pad heeft
+# en_bouw.py niet nodig, en publish_teller_test.sh draait dit script in een
+# proefsite met alleen tellerregel.py ernaast.
+EN_WERKBOEKEN = "en/workbooks"
 
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -194,6 +210,66 @@ def zorg_voor_tellers(dst: str) -> tuple[list[str], list[str], list[tuple[str, s
     return al_goed, bij, over
 
 
+def lab_bron(src: str) -> tuple[str | None, str]:
+    """De commit van het lab waaruit <src> gerenderd is: (commit, "") of (None, reden).
+
+    Het project is de map boven _site/. Staat daar ongecommit werk (de render zelf
+    niet meegeteld), dan noemt de stempel een commit waar deze render niet van is,
+    en dan stempelen we niet: een stempel is een bewering.
+    Wat dit NIET ziet: bestanden buiten het project die de render via een wegwijzer
+    leest (mvda_werkboek/en/_common -> ../_common). Die vallen onder dezelfde
+    commit, maar of ze schoon waren, kijkt dit niet na.
+    """
+    project = os.path.dirname(src)
+    r = subprocess.run(["git", "-C", project, "rev-parse", "HEAD"], capture_output=True, text=True)
+    if r.returncode != 0:
+        return None, (f"{project} staat niet in een git-repo ({r.stderr.strip()[:120]}) — "
+                      f"er is geen commit van het lab om in de stempel te zetten")
+    commit = r.stdout.strip()
+    # In een repo staan is niet genoeg: een render in een genegeerde map van een
+    # ándere repo krijgt zo diens commit, en die beschrijft deze render niet.
+    r = subprocess.run(["git", "-C", project, "ls-files", "--", "."], capture_output=True, text=True)
+    if r.returncode != 0 or not r.stdout.strip():
+        return None, (f"geen enkel bestand van {project} staat in git ({r.stderr.strip()[:120] or 'ls-files: leeg'}) "
+                      f"— commit {commit[:7]} zegt dan niets over deze render")
+    r = subprocess.run(["git", "-C", project, "status", "--porcelain", "--", ".",
+                        f":(exclude){os.path.basename(src)}"], capture_output=True, text=True)
+    if r.returncode != 0:
+        return None, f"git status in {project} liep vast ({r.stderr.strip()[:120]}) — kon niet kijken of de bron schoon is"
+    vuil = r.stdout.splitlines()
+    if vuil:
+        return None, (f"ongecommit werk in de bron ({len(vuil)} regel(s) in git status, bv. {vuil[0].strip()}) — "
+                      f"de stempel zou commit {commit[:7]} noemen, en deze render is daar niet (alleen) van; "
+                      f"commit eerst in het lab en render opnieuw")
+    return commit, ""
+
+
+def zet_werkboek_stempels(dst: str, naam: str, commit: str, geleverd: str,
+                          keur) -> tuple[list[str], list[tuple[str, str]]]:
+    """Zet de stempel als laatste regel in elke .html onder `dst`, en keur hem meteen
+    met `keur` (en_bouw.uit_een_werkboek): de vorm staat hier, de keuring daar, en zo
+    kunnen die twee het niet oneens zijn zonder dat deze publicatie stopt.
+    Geeft (gestempeld, (bladzij, reden) die niet door de keuring kwam)."""
+    regel = f"<!-- countcamp-oefenboek {naam} lab-commit={commit} geleverd={geleverd} -->"
+    goed: list[str] = []
+    fout: list[tuple[str, str]] = []
+    for root, _d, files in os.walk(dst):
+        for fn in sorted(files):
+            if not fn.endswith(".html"):
+                continue
+            f = os.path.join(root, fn)
+            s = open(f, encoding="utf-8", errors="ignore").read()
+            s = s + ("" if s.endswith("\n") else "\n") + regel + "\n"
+            open(f, "w", encoding="utf-8").write(s)
+            site_pad = os.path.relpath(f, SITE_ROOT).replace(os.sep, "/")
+            ja, reden = keur(site_pad, s)
+            if ja:
+                goed.append(os.path.relpath(f, dst))
+            else:
+                fout.append((os.path.relpath(f, dst), reden or "de keuring herkent de stempel niet"))
+    return goed, fout
+
+
 def human(n: int) -> str:
     for unit in ("B", "KB", "MB", "GB"):
         if n < 1024:
@@ -216,7 +292,8 @@ def main() -> int:
     ap.add_argument("--src", required=True, help="pad naar gerenderd _site/ of _book/")
     ap.add_argument("--name", required=True, help="doelnaam onder de sectie-map")
     ap.add_argument("--section", default="oefenboeken",
-                    help="sectie-map in de site-repo (default: oefenboeken; bv. manuscript)")
+                    help="sectie-map in de site-repo (default: oefenboeken; bv. manuscript, "
+                         "of en/workbooks voor een Engels oefenboek: dan met stempel)")
     ap.add_argument("--dry-run", action="store_true",
                     help="alleen rapporteren, niets wegschrijven")
     args = ap.parse_args()
@@ -229,6 +306,34 @@ def main() -> int:
     dst = os.path.join(SITE_ROOT, args.section, args.name)
     log(f"bron : {src}  ({human(dirsize(src))})")
     log(f"doel : {dst}")
+
+    # 0) een Engels oefenboek krijgt een stempel (punt 5 hierboven). Eerst kijken of
+    #    dat kan, vóór er iets weggegooid wordt: kan het niet, dan blijft de site
+    #    zoals hij was, in plaats van een oefenboek dat en_bouw.py als wees weigert.
+    lab_commit = keur = None
+    if os.path.normpath(args.section) == EN_WERKBOEKEN:
+        try:
+            import en_bouw  # noqa: E402
+        except Exception as e:  # noqa: BLE001
+            log(f"FOUT: _tools/en_bouw.py niet te laden ({type(e).__name__}: {e}) — zonder die keuring "
+                f"kan de stempel niet nagekeken worden. Niets aangeraakt.")
+            return 3
+        if en_bouw.WERKBOEK_MAP != EN_WERKBOEKEN:
+            log(f"FOUT: en_bouw.py zoekt oefenboeken onder {en_bouw.WERKBOEK_MAP}/, dit script zet ze onder "
+                f"{EN_WERKBOEKEN}/ — maak die twee gelijk. Niets aangeraakt.")
+            return 2
+        keur = en_bouw.uit_een_werkboek
+        if not re.fullmatch(r"[a-z0-9_-]+", args.name):
+            log(f"FOUT: --name {args.name!r} past niet in de stempel van een Engels oefenboek "
+                f"(alleen a-z, 0-9, _ en -) — niets aangeraakt")
+            return 2
+        lab_commit, reden = lab_bron(src)
+        if lab_commit is None:
+            log(f"FOUT: geen stempel mogelijk: {reden}")
+            log(f"  Zonder stempel weigert _tools/en_bouw.py elke bladzij onder {EN_WERKBOEKEN}/{args.name}/ "
+                f"als wees. Niets aangeraakt.")
+            return 1
+        log(f"stempel: countcamp-oefenboek {args.name}, lab-commit {lab_commit[:12]} (bron schoon)")
 
     if args.dry_run:
         log("[dry-run] zou kopiëren + strippen + valideren; stop hier.")
@@ -304,6 +409,17 @@ def main() -> int:
     zonder_teller = [rel for rel, reden in overgeslagen
                      if reden in ("geen_head", "half_gevonden")]
 
+    # 4b) de stempel -- alleen een Engels oefenboek (stap 0). Na de teller en het
+    #     herschrijven, want hij hoort de laatste regel te zijn.
+    stempel_fout: list[tuple[str, str]] = []
+    if lab_commit:
+        gestempeld, stempel_fout = zet_werkboek_stempels(
+            dst, args.name, lab_commit, datetime.now().strftime("%Y-%m-%dT%H:%M:%S"), keur)
+        log(f"  stempel: {len(gestempeld)} bladzij(den) gestempeld en door en_bouw.py herkend, "
+            f"{len(stempel_fout)} niet" + (f" — bv. {gestempeld[0]}" if gestempeld else ""))
+        for rel, reden in stempel_fout:
+            log(f"    NIET HERKEND: {rel} — {reden}")
+
     # 5) validatie
     problems = validate_assets(dst)
     log(f"  ontbrekende assets: {len(problems)}")
@@ -369,6 +485,10 @@ def main() -> int:
             log("    GEEN TELLER: " + rel)
         log("    Een halve teller telt niets en ziet er toch uit als een teller;"
             " een bladzij zonder </head> heeft geen plek om hem te zetten.")
+        fout = True
+    if stempel_fout:
+        log(f"\n⚠️  {len(stempel_fout)} bladzij(den) dragen een stempel die _tools/en_bouw.py "
+            f"niet herkent — NIET publiceren tot opgelost (zie NIET HERKEND hierboven).")
         fout = True
     if fout:
         return 1

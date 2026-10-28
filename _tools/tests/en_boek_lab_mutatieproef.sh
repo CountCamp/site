@@ -66,11 +66,14 @@ proef "een stempel die niet klopt is een gewone bladzij in plaats van een gat" "
             fout_st.append(reden)"
 # wat de stempel vrijstelt
 proef "elke bladzij onder en/book/ is vrijgesteld van de wees-keuring" "C" \
-  "$EB|||        if p.startswith(LIBS_NAAR + \"/\") or p in lab:|||        if p.startswith(LIBS_NAAR + \"/\") or p.startswith(LAB_MAP + \"/\"):"
+  "$EB|||        if p.startswith(LIBS_NAAR + \"/\") or p in lab or p in werkboek:|||        if p.startswith(LIBS_NAAR + \"/\") or p.startswith(LAB_MAP + \"/\") or p in werkboek:"
 # Sinds de Engelse speelkist (en_speeltjes, toegepast door en_voorpagina 25-10-2026) staat er
-# "or p in lab or p in kist"; de mutatie haalt alleen het lab eruit en laat de kist staan.
+# "or p in lab or p in kist", en sinds de oefenboeken uit het lab (vb_site2, 28-10-2026) ook
+# "or p in werkboek"; de mutatie haalt alleen het lab eruit en laat de rest staan. Het
+# oefenboek heeft zijn eigen mutaties (en_werkboek_lab_mutatieproef.sh); de kist heeft er op
+# 28-10-2026 geen (command grep -n kist _tools/tests/*: alleen hier en in taalbalk_browser_test.py).
 proef "de lab-bladzij in de spooksite krijgt de proefdrukmerken weer (zoals vóór de port)" "C" \
-  "$EB|||        if a.soort == \"echt\" or p in lab or p in kist:|||        if a.soort == \"echt\" or p in kist:"
+  "$EB|||        if a.soort == \"echt\" or p in lab or p in kist or p in werkboek:|||        if a.soort == \"echt\" or p in kist or p in werkboek:"
 proef "noindex op de lab-bladzij in de spooksite mag" "C" \
   "$EB|||            if m[\"noindex\"]: fout_merk.append(f\"{p}: draagt noindex {waar}\")|||            if m[\"noindex\"] and a.soort == \"echt\": fout_merk.append(f\"{p}: draagt noindex {waar}\")"
 proef "de teller op de lab-bladzij wordt in de spooksite niet nagekeken (zoals het voorstel)" "C" \

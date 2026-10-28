@@ -16,7 +16,8 @@ volgorde kan zetten en een toets ze één voor één kan proeven:
     python3 _tools/en_bouw.py keur --site <map> --soort echt|spook
         alle keuringen op een gebouwde site: links, merktekens, tweelingen,
         contactgegevens, verweesde bladzijden, werkbriefjes, en de stempel van
-        de bijlagen uit het lab (en/book/, zie LAB_STEMPEL).
+        de bijlagen uit het lab (en/book/, zie LAB_STEMPEL; en/workbooks/<naam>/,
+        zie WERKBOEK_STEMPEL).
 
     python3 _tools/en_bouw.py bronnen
         de nl_bron-stempels in en/*.qmd: bestaat het pad, bestaat de commit,
@@ -535,6 +536,70 @@ def uit_de_kist(p: str, tekst: str) -> tuple[bool, str]:
     return True, ""
 
 
+# ------------------------------------------- oefenboeken uit het lab ----
+# Een Engels oefenboek wordt in het lab gerenderd (bv. mvda_werkboek/en/, eigen
+# Quarto-project) en komt hier als BIJLAGE onder en/workbooks/<naam>/, net als de
+# Nederlandse onder oefenboeken/<naam>/: python3 _tools/publish_workbook.py --src
+# <lab>/…/en/_site --section en/workbooks --name <naam>. Dat zijn door Quarto
+# gebouwde bladzijden zonder .qmd in deze repo, en tot 28-10-2026 keurde de
+# wees-keuring hieronder ze daarom af, met het advies "haal hem weg of zet de bron
+# terug" -- terwijl de bron in het lab staat en het adres en/workbooks/mvda/ al
+# besloten was (spoor vb_site, Verrassing 1; _quarto-en.yml noemde die plek toen al
+# "een kant-en-klare bijlage").
+#
+# Herkenbaar aan de stempel die publish_workbook.py als laatste regel zet, alleen
+# onder en/workbooks/ (spoor vb_site2, 28-10-2026):
+#     <!-- countcamp-oefenboek mvda lab-commit=<40 hextekens> geleverd=2026-10-28T16:40:00 -->
+# De stempel noemt het oefenboek en de commit van het lab waaruit het gerenderd is,
+# en publish_workbook.py zet hem alleen als de bron in het lab op die commit schoon
+# was. Het pad in het lab staat er met opzet NIET in: dat begint met uni_leiden/, en
+# dat woord stond nog in geen enkele bladzij (gemeten 28-10-2026 op de 237 .html
+# onder oefenboeken/, manuscript/, en/ en speeltjes/: 0) -- de oefenboeken zijn
+# neutraal (besluit 12-10-2026).
+# Zo'n bladzij is geen wees, en hij krijgt in beide soorten de merken van de echte
+# site (teller, geen noindex, geen balk), net als een bijlage uit het lab onder
+# en/book/. Links, taal, tweelingen en werkbriefjes: gewoon gekeurd.
+#
+# STRENG, op dezelfde manier als LAB_STEMPEL:
+#   * de bladzij staat IN een oefenboek: en/workbooks/<naam>/…, op elke diepte daaronder;
+#   * na de laatste </html> staat precies één stempelregel, en ervóór geen enkele --
+#     publish_workbook.py gooit de doelmap eerst weg, dus twee stempels zijn twee
+#     publicaties door elkaar;
+#   * de stempelregel heeft precies de vorm hierboven;
+#   * de naam in de stempel is de map waar de bladzij in staat.
+# Wie iets draagt dat op zo'n stempel lijkt en niet klopt, is een GAT.
+# Wat dit NIET dekt: of die commit in het lab bestaat en dit oefenboek oplevert. Dat
+# kan alleen wie het lab erbij heeft; deze keuring draait ook waar dat niet zo is.
+WERKBOEK_MAP = "en/workbooks"
+WERKBOEK_MERK = "countcamp-oefenboek"
+WERKBOEK_STEMPEL = re.compile(r"<!-- countcamp-oefenboek (?P<naam>[a-z0-9_-]+) lab-commit=[0-9a-f]{40} "
+                              r"geleverd=\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d -->")
+
+
+def uit_een_werkboek(p: str, tekst: str) -> tuple[bool, str]:
+    """Is <p> (sitepad) een bladzij van een oefenboek uit het lab? (True, "") als de
+    stempel klopt; (False, "") zonder stempel -- dan is het een gewone bladzij; en
+    (False, reden) als er iets staat dat op die stempel lijkt en niet klopt."""
+    if WERKBOEK_MERK not in tekst:
+        return False, ""
+    wat = f"{p}: draagt de stempel van een oefenboek uit het lab"
+    delen = p.split("/")
+    if len(delen) < 4 or "/".join(delen[:2]) != WERKBOEK_MAP:
+        return False, (f"{wat}, maar staat niet in een oefenboek onder {WERKBOEK_MAP}/<naam>/ — "
+                       f"alleen daar zet publish_workbook.py hem neer")
+    eind = tekst.rfind("</html>")
+    regels = [r.strip() for r in tekst[eind + len("</html>"):].splitlines() if r.strip()] if eind >= 0 else []
+    if eind < 0 or not regels or WERKBOEK_MERK in tekst[:eind]:
+        return False, f"{wat} die niet (alleen) na de laatste </html> staat, waar publish_workbook.py hem zet"
+    if len(regels) != 1 or not WERKBOEK_STEMPEL.fullmatch(regels[0]):
+        return False, (f"{wat} die niet precies één regel in de vorm van publish_workbook.py is "
+                       f"(naam, 40 hextekens, een tijd): {' | '.join(regels)[:120]}")
+    naam = WERKBOEK_STEMPEL.fullmatch(regels[0]).group("naam")
+    if naam != delen[2]:
+        return False, f"{wat} voor {naam}, en die hoort in {WERKBOEK_MAP}/{naam}/"
+    return True, ""
+
+
 def merken(tekst: str) -> dict:
     return {
         "noindex": bool(re.search(r'name="robots"\s+content="noindex', tekst)),
@@ -622,10 +687,27 @@ def cmd_keur(a) -> int:
             f"{len(fout_zb)} fout")
     gaten += fout_zb
 
+    # 1b2. oefenboeken uit het lab (zie WERKBOEK_STEMPEL): welke bladzijden onder
+    #      en/workbooks/<naam>/ zette publish_workbook.py neer, en draagt iemand een
+    #      stempel die niet klopt?
+    werkboek, fout_wb = [], []
+    for p in en_bladz:
+        if p in lab:
+            continue
+        ja, reden = uit_een_werkboek(p, lees(os.path.join(site, p)))
+        if ja:
+            werkboek.append(p)
+        elif reden:
+            fout_wb.append(reden)
+    zeg(f"  uit een oefenboek: {len(werkboek)} bladzij(den) met de stempel van publish_workbook.py, "
+        f"{len(fout_wb)} met een stempel die niet klopt"
+        + (f" — bv. {werkboek[0]}" if werkboek else f" (gezocht onder {WERKBOEK_MAP}/<naam>/)"))
+    gaten += fout_wb
+
     # 1c. kopieën uit de speelkist (zie KIST_HERKOMST): de Engelse speeltjes onder en/toys/.
     kist, fout_k = [], []
     for p in en_bladz:
-        if p in lab:
+        if p in lab or p in werkboek:
             continue
         ja, reden = uit_de_kist(p, lees(os.path.join(site, p)))
         if ja:
@@ -641,10 +723,11 @@ def cmd_keur(a) -> int:
     # Nederlandse ronde, en daar kijkt naar_buiten.sh naar.
     # Een bijlage uit het lab staat in de spooksite zoals hij live komt (zie
     # LAB_STEMPEL), dus die krijgt in BEIDE soorten de merken van de echte site.
+    # Net zo een speeltje uit de kist en een oefenboek uit het lab (WERKBOEK_STEMPEL).
     fout_merk = []
     for p in en_bladz:
         m = merken(lees(os.path.join(site, p)))
-        if a.soort == "echt" or p in lab or p in kist:
+        if a.soort == "echt" or p in lab or p in kist or p in werkboek:
             waar = "op de echte site" if a.soort == "echt" else \
                 "in de spooksite, als bijlage uit het lab die er moet staan zoals hij live komt"
             if m["noindex"]: fout_merk.append(f"{p}: draagt noindex {waar}")
@@ -657,7 +740,8 @@ def cmd_keur(a) -> int:
     zeg(f"  merktekens ({a.soort}): {len(en_bladz)} bladzijde(n), {len(fout_merk)} fout"
         + (f"; {len(lab)} uit het lab gekeurd als echte site, zoals het Nederlandse boek — bv. {lab[0]}"
            if lab and a.soort == "spook" else "")
-        + (f"; {len(kist)} uit de speelkist, idem — bv. {kist[0]}" if kist and a.soort == "spook" else ""))
+        + (f"; {len(kist)} uit de speelkist, idem — bv. {kist[0]}" if kist and a.soort == "spook" else "")
+        + (f"; {len(werkboek)} uit een oefenboek, idem — bv. {werkboek[0]}" if werkboek and a.soort == "spook" else ""))
     gaten += fout_merk
 
     # 3. taal: <html lang> op elke Engelse bladzij
@@ -806,16 +890,25 @@ def cmd_keur(a) -> int:
     # 7. verweesd: een door Quarto gebouwde bladzij onder en/ zonder bron. Die
     #    haalt dit script niet zelf weg (huisregel 9: weghalen is niet aan een
     #    zetter); hij weigert en zegt welke het is.
-    #    Een bijlage uit het lab heeft zijn bron daar, niet hier (zie LAB_STEMPEL).
+    #    Een bijlage uit het lab heeft zijn bron daar, niet hier: een boekbladzij
+    #    (LAB_STEMPEL) en een oefenboekbladzij (WERKBOEK_STEMPEL).
     wees = []
     for p in en_bladz:
-        if p.startswith(LIBS_NAAR + "/") or p in lab:
+        if p.startswith(LIBS_NAAR + "/") or p in lab or p in werkboek:
             continue
         t = lees(os.path.join(site, p))
         if 'name="generator" content="quarto' in t and not os.path.isfile(os.path.join(REPO, p[:-5] + ".qmd")):
-            wees.append(f"{p}: gebouwd door Quarto, maar {p[:-5]}.qmd bestaat niet meer — haal hem weg of zet de bron terug")
+            wees.append(f"{p}: gebouwd door Quarto, maar {p[:-5]}.qmd bestaat niet meer — haal hem weg of zet de bron terug"
+                        # In een oefenboekmap is er nog een derde mogelijkheid, en die is
+                        # daar de waarschijnlijkste: met de hand gekopieerd in plaats van
+                        # gepubliceerd. Het oude advies blijft staan; dit komt erbij.
+                        + (f" (of, als het een oefenboek uit het lab is: publiceer het met "
+                           f"_tools/publish_workbook.py --section {WERKBOEK_MAP}, die zet de stempel)"
+                           if p.startswith(WERKBOEK_MAP + "/") and p.count("/") >= 3 else ""))
+    uit_lab = len(lab) + len(werkboek)
     zeg(f"  verweesd: {len(wees)} Quarto-bladzij(den) onder en/ zonder bron"
-        + (f" ({len(lab)} uit het lab niet meegeteld: hun bron staat daar)" if lab else ""))
+        + (f" ({uit_lab} uit het lab niet meegeteld: {len(lab)} uit het boek, {len(werkboek)} uit een oefenboek; "
+           f"hun bron staat daar)" if uit_lab else ""))
     gaten += wees
 
     zeg()

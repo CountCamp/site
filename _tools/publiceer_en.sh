@@ -107,6 +107,13 @@
 #      regel in _tools/taalparen.tsv, en het menu wijst al naar het boek: per
 #      hoofdstuk verandert hier niets. De hele gang, in de fasen van de wachtrij:
 #      bash _tools/pers_en_boek.sh H<n> spook|links|echt (spoor en_boekpers, 25-10-2026).
+#   d3. Een Engels oefenboek: dat rendert het lab (bv. mvda_werkboek/en/, een eigen
+#      Quarto-project), en het komt hier met
+#      python3 _tools/publish_workbook.py --src <lab>/…/en/_site --section en/workbooks --name <naam>.
+#      Die zet op elke bladzij een stempel (het oefenboek en de commit van het lab, en
+#      alleen als de bron op die commit schoon is), en en_bouw.py keurt zo'n bladzij dan
+#      als bijlage (WERKBOEK_STEMPEL) in plaats van als wees. Met de hand gekopieerd,
+#      zonder stempel, blijft hij een wees (spoor vb_site2, 28-10-2026).
 #   e. bash _tools/publiceer_en.sh  — en pas bij afloop 0 leveren.
 #
 # WAT DIT NIET DEKT — zodat niemand het denkt.
