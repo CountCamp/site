@@ -77,6 +77,11 @@
 #   a. Een bladzij die Quarto bouwt: zet en/<naam>.qmd neer (submap mag), met in
 #      de kop `nl_bron: <nederlandse bron>@<commit>` — de commit waarvan je
 #      vertaalde (`git log -1 --format=%h -- <bron>`). Zonder stempel weigert stap 0.
+#      Vraagt een Nederlandse commit op zo'n bron geen vertaling (een tikfout, een
+#      witregel), zet dan [geen-vertaling] in die commitboodschap; wat de taalnaad
+#      daarmee doet: ~/Ben_OS_brain/drukkerij/taalnaad/LEESMIJ.md (op 28-10-2026 nog
+#      op tak worktree-vb_rem_taalnaad). Stap 0 hieronder kent het merk niet, en
+#      meldt zo'n commit nog als BIJ TE WERKEN.
 #   b. Heeft hij een Nederlandse tweeling: één regel in _tools/taalparen.tsv
 #      (nl-pad, en-pad, auto). Dan krijgen BEIDE kanten het knopje en hreflang,
 #      en de Nederlandse kant de taalbalk.
