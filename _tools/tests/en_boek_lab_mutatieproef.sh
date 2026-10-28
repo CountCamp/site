@@ -71,7 +71,9 @@ proef "elke bladzij onder en/book/ is vrijgesteld van de wees-keuring" "C" \
 # "or p in lab or p in kist", en sinds de oefenboeken uit het lab (vb_site2, 28-10-2026) ook
 # "or p in werkboek"; de mutatie haalt alleen het lab eruit en laat de rest staan. Het
 # oefenboek heeft zijn eigen mutaties (en_werkboek_lab_mutatieproef.sh); de kist heeft er op
-# 28-10-2026 geen (command grep -n kist _tools/tests/*: alleen hier en in taalbalk_browser_test.py).
+# 28-10-2026 geen eigen toets of mutatie (command grep -ln kist _tools/tests/*: alleen dit
+# bestand, en_werkboek_lab_mutatieproef.sh en taalbalk_browser_test.py, en geen van drieën
+# maakt de kist-uitzondering kapot).
 proef "de lab-bladzij in de spooksite krijgt de proefdrukmerken weer (zoals vóór de port)" "C" \
   "$EB|||        if a.soort == \"echt\" or p in lab or p in kist or p in werkboek:|||        if a.soort == \"echt\" or p in kist or p in werkboek:"
 proef "noindex op de lab-bladzij in de spooksite mag" "C" \

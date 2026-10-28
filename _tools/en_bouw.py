@@ -550,12 +550,15 @@ def uit_de_kist(p: str, tekst: str) -> tuple[bool, str]:
 # Herkenbaar aan de stempel die publish_workbook.py als laatste regel zet, alleen
 # onder en/workbooks/ (spoor vb_site2, 28-10-2026):
 #     <!-- countcamp-oefenboek mvda lab-commit=<40 hextekens> geleverd=2026-10-28T16:40:00 -->
-# De stempel noemt het oefenboek en de commit van het lab waaruit het gerenderd is,
-# en publish_workbook.py zet hem alleen als de bron in het lab op die commit schoon
-# was. Het pad in het lab staat er met opzet NIET in: dat begint met uni_leiden/, en
-# dat woord stond nog in geen enkele bladzij (gemeten 28-10-2026 op de 237 .html
-# onder oefenboeken/, manuscript/, en/ en speeltjes/: 0) -- de oefenboeken zijn
-# neutraal (besluit 12-10-2026).
+# De stempel noemt het oefenboek en de commit van het lab waaruit het gerenderd is.
+# publish_workbook.py zet hem alleen als de bron in het lab op die commit schoon was
+# (ook wat de render via een wegwijzer leest, zoals en/_common -> ../_common) en geen
+# bijgehouden bestand van de bron nieuwer is dan de render (zie lab_bron daar).
+# Het pad in het lab staat er met opzet NIET in: dat begint met uni_leiden/, en de
+# oefenboeken zijn neutraal (besluit 12-10-2026). Gemeten 28-10-2026: in geen van de
+# 429 .html van de repo, wél al in het commentaar van vier .css-bestanden
+# (oefenboeken/broertjes/{jasp,r,spss}/werkboek.css, oefenboeken/ggz_vs/werkboek.css)
+# -- een vondst, geen reden om het er in elke bladzij bij te zetten.
 # Zo'n bladzij is geen wees, en hij krijgt in beide soorten de merken van de echte
 # site (teller, geen noindex, geen balk), net als een bijlage uit het lab onder
 # en/book/. Links, taal, tweelingen en werkbriefjes: gewoon gekeurd.
@@ -566,10 +569,14 @@ def uit_de_kist(p: str, tekst: str) -> tuple[bool, str]:
 #     publish_workbook.py gooit de doelmap eerst weg, dus twee stempels zijn twee
 #     publicaties door elkaar;
 #   * de stempelregel heeft precies de vorm hierboven;
-#   * de naam in de stempel is de map waar de bladzij in staat.
+#   * de naam in de stempel is de map waar de bladzij in staat;
+#   * alle bladzijden van één oefenboek dragen dezelfde stempel (zelfde commit, zelfde
+#     tijd) -- anders staan er twee publicaties door elkaar, ook als elke bladzij op
+#     zich klopt.
 # Wie iets draagt dat op zo'n stempel lijkt en niet klopt, is een GAT.
-# Wat dit NIET dekt: of die commit in het lab bestaat en dit oefenboek oplevert. Dat
-# kan alleen wie het lab erbij heeft; deze keuring draait ook waar dat niet zo is.
+# Wat dit NIET dekt: of die commit in het lab bestaat (na een rebase staat hij op geen
+# tak meer) en dit oefenboek oplevert. Dat kan alleen wie het lab erbij heeft; deze
+# keuring draait ook waar dat niet zo is.
 WERKBOEK_MAP = "en/workbooks"
 WERKBOEK_MERK = "countcamp-oefenboek"
 WERKBOEK_STEMPEL = re.compile(r"<!-- countcamp-oefenboek (?P<naam>[a-z0-9_-]+) lab-commit=[0-9a-f]{40} "
@@ -690,15 +697,23 @@ def cmd_keur(a) -> int:
     # 1b2. oefenboeken uit het lab (zie WERKBOEK_STEMPEL): welke bladzijden onder
     #      en/workbooks/<naam>/ zette publish_workbook.py neer, en draagt iemand een
     #      stempel die niet klopt?
-    werkboek, fout_wb = [], []
+    werkboek, fout_wb, per_boek = [], [], {}
     for p in en_bladz:
         if p in lab:
             continue
-        ja, reden = uit_een_werkboek(p, lees(os.path.join(site, p)))
+        tekst = lees(os.path.join(site, p))
+        ja, reden = uit_een_werkboek(p, tekst)
         if ja:
             werkboek.append(p)
+            per_boek.setdefault(p.split("/")[2], {}).setdefault(tekst.rstrip().rsplit("\n", 1)[-1].strip(), []).append(p)
         elif reden:
             fout_wb.append(reden)
+    for naam, stempels in sorted(per_boek.items()):
+        if len(stempels) > 1:
+            vb = [f"{v[0]} ({k.split(' lab-commit=')[1][:7]}…, {k.split('geleverd=')[1][:19]})"
+                  for k, v in sorted(stempels.items())][:2]
+            fout_wb.append(f"{WERKBOEK_MAP}/{naam}/: {len(stempels)} verschillende stempels — twee publicaties "
+                           f"door elkaar, bv. {' en '.join(vb)}; publiceer het oefenboek opnieuw, in zijn geheel")
     zeg(f"  uit een oefenboek: {len(werkboek)} bladzij(den) met de stempel van publish_workbook.py, "
         f"{len(fout_wb)} met een stempel die niet klopt"
         + (f" — bv. {werkboek[0]}" if werkboek else f" (gezocht onder {WERKBOEK_MAP}/<naam>/)"))

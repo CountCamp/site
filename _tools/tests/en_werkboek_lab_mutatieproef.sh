@@ -68,25 +68,49 @@ proef "het oefenboek krijgt in de spooksite de proefdrukmerken (zoals vóór 28-
   "$EB|||        if a.soort == \"echt\" or p in lab or p in kist or p in werkboek:|||        if a.soort == \"echt\" or p in lab or p in kist:"
 proef "het oude advies voor een wees verdwijnt" "C" \
   "$EB|||bestaat niet meer — haal hem weg of zet de bron terug\"|||bestaat niet meer — publiceer hem opnieuw\""
+proef "twee publicaties door elkaar in één oefenboek mogen" "C" \
+  "$EB|||        if len(stempels) > 1:|||        if False:"
 # wie de stempel zet (publish_workbook.py)
+proef "het oordeel van lab_bron telt niet (een verzonnen commit)" "B" \
+  "$PW|||        lab_commit, reden = lab_bron(src)|||        lab_commit, reden = (lab_bron(src)[0] or \"0\" * 40), \"\""
 proef "de stempel ook met ongecommit werk in de bron" "B" \
   "$PW|||    if vuil:
         return None|||    if False:
         return None"
+proef "wat achter een wegwijzer staat, telt niet als bron" "B" \
+  "$PW|||        plekken.append(os.path.relpath(doel, os.path.realpath(project)))|||        pass"
+proef "een wegwijzer naar buiten de repo mag" "B" \
+  "$PW|||        if not top or os.path.commonpath([doel, os.path.realpath(top)]) != os.path.realpath(top):|||        if False:"
+proef "nieuwe bestanden ziet git status alleen als het lab dat wil" "B" \
+  "$PW|||\"--untracked-files=all\", |||"
+proef "de render zelf telt als ongecommit werk" "B" \
+  "$PW|||    spec = [\"--\", *plekken, f\":(exclude){render}\"]|||    spec = [\"--\", *plekken]"
+proef "een commit na de render: schoon is genoeg" "B" \
+  "$PW|||    if nieuwer:
+        t, pad = max(nieuwer)|||    if False:
+        t, pad = max(nieuwer)"
+proef "geen _quarto.yml nodig boven de render" "B" \
+  "$PW|||    if not os.path.isfile(os.path.join(project, \"_quarto.yml\")):|||    if False:"
 proef "een render in een genegeerde map van een andere repo krijgt diens commit" "B" \
-  "$PW|||    if r.returncode != 0 or not r.stdout.strip():|||    if r.returncode != 0:"
-# (lab_commit = "" en niet pass: met None valt de regel erna om, en een crash met
-# afloop 1 leek in de eerste ronde precies op een weigering.)
-proef "zonder stempel toch publiceren (en het oude oefenboek weggooien)" "B" \
-  "$PW|||            return 1
-        log(f\"stempel: countcamp-oefenboek|||            lab_commit = \"\"
-        log(f\"stempel: countcamp-oefenboek"
+  "$PW|||    if r.returncode != 0 or not r.stdout.strip(\"\\0\").strip():|||    if r.returncode != 0:"
+proef "de voorproef keurt niet (pas ná het weggooien merkt iemand het)" "B" \
+  "$PW|||                if not ja:
+                    fout.append((rel, reden or|||                if False:
+                    fout.append((rel, reden or"
+proef "een naam die niet in de stempel past, mag" "B" \
+  "$PW|||        if not re.fullmatch(r\"[a-z0-9_-]+\", args.name):|||        if False:"
 proef "ook het Nederlands krijgt een stempel" "B" \
   "$PW|||    if os.path.normpath(args.section) == EN_WERKBOEKEN:|||    if True:"
 proef "de schrijver zet een andere vorm dan de lezer kent" "B" \
   "$PW|||lab-commit={commit} geleverd|||lab-commit={commit[:12]} geleverd"
-proef "de schrijver keurt zijn eigen stempel niet na" "B" \
-  "$PW|||            ja, reden = keur(site_pad, s)|||            ja, reden = True, \"\""
+proef "de succesmelding stuurt een Engels oefenboek meteen naar push" "B" \
+  "$PW|||    if regel:
+        # Onder en/ keurt|||    if False:
+        # Onder en/ keurt"
+# NIET opgenomen, met reden: de nakeuring ná het kopiëren (keur in zet_werkboek_stempels).
+# Die is een tweede slot achter de voorproef; geen bron komt door de voorproef en zakt
+# daarna, dus een mutatie die alleen dat slot weghaalt kan niet bijten. Wie hem toch
+# kapotmaakt, merkt het pas als de voorproef ook stuk is (zie de mutatie hierboven).
 
 [ "$SLECHT" -eq 0 ] || { echo "mutatieproef: $SLECHT van $N proef/proeven zonder uitslag of zonder beet"; exit 1; }
 echo "mutatieproef: alle $N mutaties gevangen (logboeken: $UIT/)"

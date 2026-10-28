@@ -23,8 +23,10 @@ Engelse kant komt op dezelfde manier binnen als de oefenboeken: als bijlage
 (`en/**` in `_quarto-nl.yml`), onveranderd gekopieerd. Wat er in `en/` staat is
 dus precies wat er live komt — de bladzijden die `publiceer_en.sh` bouwt (met de
 teller uit `_quarto-echt.yml`, want `--profile en` is echt + en), de hoofdstukken
-uit de lab-pers onder `en/book/`, en de speeltjes uit het lab onder `en/toys/`.
-Drie bouwwegen, dus hier ook per map geteld. Tot die dag keek deze wachter niet
+uit de lab-pers onder `en/book/`, de speeltjes uit het lab onder `en/toys/`, en
+(sinds 28-10-2026, spoor vb_site2) de oefenboeken uit het lab onder
+`en/workbooks/<naam>/` via `publish_workbook.py --section en/workbooks`.
+Vier bouwwegen, dus hier ook per map geteld. Tot die dag keek deze wachter niet
 in `en/`; de poort in `naar_buiten.sh` zag de Engelse kant dus nooit.
 
 Wat het niet doet

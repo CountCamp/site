@@ -46,8 +46,13 @@ Gebruik
 
 Daarna in countcamp_site:  quarto render  &&  git add/commit/push.
 
-Veilig: leest alleen uit --src, schrijft alleen naar oefenboeken/<name>/ in de
-site-repo. Raakt de werkboek-bron NIET aan.
+Een Engels oefenboek:
+    python3 _tools/publish_workbook.py --src "<lab>/…/en/_site" --section en/workbooks --name mvda
+Daarna NIET meteen pushen: bash _tools/publiceer_en.sh keurt en/ (stempel, links,
+taal, merken, werkbriefjes) en schrijft het manifest. Zie de kop daarvan, punt d3.
+
+Veilig: leest alleen uit --src (en, voor een Engels oefenboek, git in het lab),
+schrijft alleen naar <section>/<name>/ in de site-repo. Raakt de werkboek-bron NIET aan.
 """
 
 from __future__ import annotations
@@ -210,30 +215,61 @@ def zorg_voor_tellers(dst: str) -> tuple[list[str], list[str], list[tuple[str, s
     return al_goed, bij, over
 
 
+def _git(map_: str, *args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", "-C", map_, *args], capture_output=True, text=True)
+
+
+def _tijd(t: float) -> str:
+    return datetime.fromtimestamp(t).strftime("%d-%m %H:%M:%S")
+
+
 def lab_bron(src: str) -> tuple[str | None, str]:
     """De commit van het lab waaruit <src> gerenderd is: (commit, "") of (None, reden).
 
-    Het project is de map boven _site/. Staat daar ongecommit werk (de render zelf
-    niet meegeteld), dan noemt de stempel een commit waar deze render niet van is,
-    en dan stempelen we niet: een stempel is een bewering.
-    Wat dit NIET ziet: bestanden buiten het project die de render via een wegwijzer
-    leest (mvda_werkboek/en/_common -> ../_common). Die vallen onder dezelfde
-    commit, maar of ze schoon waren, kijkt dit niet na.
+    Een stempel is een bewering: "deze bladzijden zijn de render van commit X". Dat
+    volgt niet uit "de bron is nu schoon" (nagekeken 28-10-2026: renderen op A, een
+    commit B erbij, niet opnieuw renderen -- schoon, en toch niet de render van B).
+    Daarom vier eisen, en anders geen stempel:
+      1. het project (de map boven _site/, met een _quarto.yml) staat in git, met
+         bijgehouden bestanden -- een render in een genegeerde map van een ándere
+         repo kreeg anders diens commit;
+      2. elke wegwijzer (symlink) die git in het project kent, wijst binnen dezelfde
+         repo -- daar leest de render ook uit (mvda_werkboek/en/_common -> ../_common,
+         en/00_opfris/data -> ../../00_opfris/data), en dat telt dus als bron;
+      3. geen ongecommit werk in het project en in die doelen (de render zelf niet
+         meegeteld, nieuwe bestanden wél, wat de git-instellingen van het lab ook zeggen);
+      4. geen bijgehouden bestand van de bron is nieuwer dan de oudste bladzij van de
+         render. Een commit verandert geen wijzigtijd; wie na de render iets aanpast,
+         terugzet (stash, checkout) of een rebase doet, wel.
+    Wat dit NIET ziet: invoer die git niet kent (een genegeerde dataset), een
+    wijzigtijd die met opzet is teruggezet, en of de commit later nog op een tak
+    staat (na een rebase niet meer).
     """
-    project = os.path.dirname(src)
-    r = subprocess.run(["git", "-C", project, "rev-parse", "HEAD"], capture_output=True, text=True)
+    project, render = os.path.dirname(src), os.path.basename(src)
+    r = _git(project, "rev-parse", "HEAD")
     if r.returncode != 0:
         return None, (f"{project} staat niet in een git-repo ({r.stderr.strip()[:120]}) — "
                       f"er is geen commit van het lab om in de stempel te zetten")
     commit = r.stdout.strip()
-    # In een repo staan is niet genoeg: een render in een genegeerde map van een
-    # ándere repo krijgt zo diens commit, en die beschrijft deze render niet.
-    r = subprocess.run(["git", "-C", project, "ls-files", "--", "."], capture_output=True, text=True)
-    if r.returncode != 0 or not r.stdout.strip():
+    if not os.path.isfile(os.path.join(project, "_quarto.yml")):
+        return None, f"{project} heeft geen _quarto.yml — is de map boven {render}/ wel het Quarto-project?"
+    top = _git(project, "rev-parse", "--show-toplevel").stdout.strip()
+    r = _git(project, "ls-files", "-s", "-z", "--", ".", f":(exclude){render}")
+    if r.returncode != 0 or not r.stdout.strip("\0").strip():
         return None, (f"geen enkel bestand van {project} staat in git ({r.stderr.strip()[:120] or 'ls-files: leeg'}) "
                       f"— commit {commit[:7]} zegt dan niets over deze render")
-    r = subprocess.run(["git", "-C", project, "status", "--porcelain", "--", ".",
-                        f":(exclude){os.path.basename(src)}"], capture_output=True, text=True)
+    plekken = ["."]
+    for regel in filter(None, r.stdout.split("\0")):
+        kop, pad = regel.split("\t", 1)
+        if not kop.startswith("120000"):
+            continue
+        doel = os.path.realpath(os.path.join(project, pad))
+        if not top or os.path.commonpath([doel, os.path.realpath(top)]) != os.path.realpath(top):
+            return None, (f"de wegwijzer {pad} wijst buiten de repo ({doel}) — commit {commit[:7]} dekt niet "
+                          f"wat de render daar las")
+        plekken.append(os.path.relpath(doel, os.path.realpath(project)))
+    spec = ["--", *plekken, f":(exclude){render}"]
+    r = _git(project, "status", "--porcelain", "--untracked-files=all", "--ignore-submodules=none", *spec)
     if r.returncode != 0:
         return None, f"git status in {project} liep vast ({r.stderr.strip()[:120]}) — kon niet kijken of de bron schoon is"
     vuil = r.stdout.splitlines()
@@ -241,16 +277,59 @@ def lab_bron(src: str) -> tuple[str | None, str]:
         return None, (f"ongecommit werk in de bron ({len(vuil)} regel(s) in git status, bv. {vuil[0].strip()}) — "
                       f"de stempel zou commit {commit[:7]} noemen, en deze render is daar niet (alleen) van; "
                       f"commit eerst in het lab en render opnieuw")
+    bladz = [os.path.getmtime(os.path.join(dp, f)) for dp, _d, fs in os.walk(src) for f in fs if f.endswith(".html")]
+    if not bladz:
+        return None, f"geen enkele .html in {src} — niets om de tijd van de render aan af te lezen"
+    oudste = min(bladz)
+    r = _git(project, "ls-files", "-z", *spec)
+    if r.returncode != 0:
+        return None, f"git ls-files in {project} liep vast — kon de bron niet naast de render leggen"
+    nieuwer = []
+    for pad in filter(None, r.stdout.split("\0")):
+        p = os.path.join(project, pad)
+        if os.path.lexists(p) and os.lstat(p).st_mtime > oudste:
+            nieuwer.append((os.lstat(p).st_mtime, pad))
+    if nieuwer:
+        t, pad = max(nieuwer)
+        return None, (f"{len(nieuwer)} bestand(en) van de bron zijn nieuwer dan de render (bv. {pad}, {_tijd(t)}; "
+                      f"de oudste bladzij is van {_tijd(oudste)}) — dan is dit niet de render van commit "
+                      f"{commit[:7]}; render het oefenboek opnieuw, helemaal, en publiceer dan")
     return commit, ""
 
 
-def zet_werkboek_stempels(dst: str, naam: str, commit: str, geleverd: str,
-                          keur) -> tuple[list[str], list[tuple[str, str]]]:
+def stempelregel(naam: str, commit: str, geleverd: str) -> str:
+    return f"<!-- countcamp-oefenboek {naam} lab-commit={commit} geleverd={geleverd} -->"
+
+
+def _staart(data: bytes, regel: str) -> bytes:
+    """Wat er achter de bladzij komt: een regelovergang als die er nog niet is, dan de stempel."""
+    return (b"" if data.endswith(b"\n") else b"\n") + regel.encode("utf-8") + b"\n"
+
+
+def voorproef_stempels(src: str, naam: str, regel: str, keur) -> list[tuple[str, str]]:
+    """Zou elke bladzij in <src> met deze stempel door de keuring komen? Vóór er iets
+    wordt weggegooid: een bladzij zonder </html>, of een die al een stempel draagt
+    (--src wijst naar een gepubliceerde kopie), houdt de publicatie dan tegen terwijl
+    het vorige oefenboek er nog staat. Geeft (bladzij, reden) per bladzij die zakt."""
+    fout = []
+    for root, _d, files in os.walk(src):
+        for fn in sorted(files):
+            if fn.endswith(".html"):
+                rel = os.path.relpath(os.path.join(root, fn), src)
+                data = open(os.path.join(root, fn), "rb").read()
+                tekst = (data + _staart(data, regel)).decode("utf-8", errors="replace")
+                ja, reden = keur(f"{EN_WERKBOEKEN}/{naam}/{rel.replace(os.sep, '/')}", tekst)
+                if not ja:
+                    fout.append((rel, reden or "de keuring herkent de stempel niet"))
+    return fout
+
+
+def zet_werkboek_stempels(dst: str, regel: str, keur) -> tuple[list[str], list[tuple[str, str]]]:
     """Zet de stempel als laatste regel in elke .html onder `dst`, en keur hem meteen
     met `keur` (en_bouw.uit_een_werkboek): de vorm staat hier, de keuring daar, en zo
-    kunnen die twee het niet oneens zijn zonder dat deze publicatie stopt.
+    kunnen die twee het niet oneens zijn zonder dat deze publicatie stopt. Erachter
+    geplakt in bytes, zodat de bladzij zelf byte voor byte blijft wat hij was.
     Geeft (gestempeld, (bladzij, reden) die niet door de keuring kwam)."""
-    regel = f"<!-- countcamp-oefenboek {naam} lab-commit={commit} geleverd={geleverd} -->"
     goed: list[str] = []
     fout: list[tuple[str, str]] = []
     for root, _d, files in os.walk(dst):
@@ -258,11 +337,11 @@ def zet_werkboek_stempels(dst: str, naam: str, commit: str, geleverd: str,
             if not fn.endswith(".html"):
                 continue
             f = os.path.join(root, fn)
-            s = open(f, encoding="utf-8", errors="ignore").read()
-            s = s + ("" if s.endswith("\n") else "\n") + regel + "\n"
-            open(f, "w", encoding="utf-8").write(s)
+            data = open(f, "rb").read()
+            with open(f, "ab") as uit:
+                uit.write(_staart(data, regel))
             site_pad = os.path.relpath(f, SITE_ROOT).replace(os.sep, "/")
-            ja, reden = keur(site_pad, s)
+            ja, reden = keur(site_pad, open(f, "rb").read().decode("utf-8", errors="replace"))
             if ja:
                 goed.append(os.path.relpath(f, dst))
             else:
@@ -310,7 +389,7 @@ def main() -> int:
     # 0) een Engels oefenboek krijgt een stempel (punt 5 hierboven). Eerst kijken of
     #    dat kan, vóór er iets weggegooid wordt: kan het niet, dan blijft de site
     #    zoals hij was, in plaats van een oefenboek dat en_bouw.py als wees weigert.
-    lab_commit = keur = None
+    lab_commit = keur = regel = None
     if os.path.normpath(args.section) == EN_WERKBOEKEN:
         try:
             import en_bouw  # noqa: E402
@@ -333,7 +412,15 @@ def main() -> int:
             log(f"  Zonder stempel weigert _tools/en_bouw.py elke bladzij onder {EN_WERKBOEKEN}/{args.name}/ "
                 f"als wees. Niets aangeraakt.")
             return 1
-        log(f"stempel: countcamp-oefenboek {args.name}, lab-commit {lab_commit[:12]} (bron schoon)")
+        regel = stempelregel(args.name, lab_commit, datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
+        zakt = voorproef_stempels(src, args.name, regel, keur)
+        if zakt:
+            log(f"FOUT: {len(zakt)} bladzij(den) in de bron kunnen de stempel niet dragen — niets aangeraakt:")
+            for rel, reden in zakt[:20]:
+                log(f"    {rel} — {reden}")
+            return 1
+        log(f"stempel: countcamp-oefenboek {args.name}, lab-commit {lab_commit[:12]} "
+            f"(bron schoon, niet nieuwer dan de render)")
 
     if args.dry_run:
         log("[dry-run] zou kopiëren + strippen + valideren; stop hier.")
@@ -410,11 +497,11 @@ def main() -> int:
                      if reden in ("geen_head", "half_gevonden")]
 
     # 4b) de stempel -- alleen een Engels oefenboek (stap 0). Na de teller en het
-    #     herschrijven, want hij hoort de laatste regel te zijn.
+    #     herschrijven, want hij hoort de laatste regel te zijn. De voorproef in stap
+    #     0 zag de bron; dit keurt wat er na het kopiëren en herschrijven echt staat.
     stempel_fout: list[tuple[str, str]] = []
-    if lab_commit:
-        gestempeld, stempel_fout = zet_werkboek_stempels(
-            dst, args.name, lab_commit, datetime.now().strftime("%Y-%m-%dT%H:%M:%S"), keur)
+    if regel:
+        gestempeld, stempel_fout = zet_werkboek_stempels(dst, regel, keur)
         log(f"  stempel: {len(gestempeld)} bladzij(den) gestempeld en door en_bouw.py herkend, "
             f"{len(stempel_fout)} niet" + (f" — bv. {gestempeld[0]}" if gestempeld else ""))
         for rel, reden in stempel_fout:
@@ -492,7 +579,14 @@ def main() -> int:
         fout = True
     if fout:
         return 1
-    log("\n✅ Compleet en gevalideerd. Volgende stap: quarto render + git push.")
+    if regel:
+        # Onder en/ keurt alleen publiceer_en.sh (via en_bouw.py keur) de stempel, de
+        # links, de taal, de merken en de werkbriefjes; de Action doet dat niet, en
+        # `quarto render` ook niet: die kopieert en/** gewoon mee als bijlage.
+        log("\n✅ Compleet en gevalideerd. Volgende stap: bash _tools/publiceer_en.sh (keurt en/ en "
+            "schrijft het manifest), en pas bij afloop 0 leveren.")
+    else:
+        log("\n✅ Compleet en gevalideerd. Volgende stap: quarto render + git push.")
     return 0
 
 
