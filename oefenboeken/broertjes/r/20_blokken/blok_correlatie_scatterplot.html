@@ -681,7 +681,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Bij onze twaalf duwen acht steentjes de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel alles op en er staat 54.00 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
+<p>De andere tien hoef je niet met de hand. In het eerste kader hieronder bouw je het rechthoek-deel van de tabel uit het boek bij de rechthoekjes na, als drie kolommen naast de data: de afwijking op karaat, de afwijking op glans, en die twee maal elkaar. Kijk dan in je eigen derde kolom: acht steentjes duwen de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel die kolom op en je krijgt 54 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
 <p>En nu de vraag die je bij élk getal hoort te stellen: 4.91 wát? Reken de eenheid maar gewoon mee — een afwijking in karaat keer een afwijking in glans is… karaat-glanzen. Is 4.91 karaat-glanzen veel samenhang? Weet je niet. Niemand denkt in karaat-glanzen. <strong>Ruw is ruk.</strong> De covariantie zit nog op de schaal van zijn twee variabelen; je kunt er de ríchting aan aflezen — plus, dus zwaarder gaat samen met glanzender — maar niet de sterkte.</p>
 <p>De reparatie is één deling. Deel de covariantie door de twee standaardafwijkingen — 0.3908 karaat en 21.7423 glanspunten — en kijk wat er met de eenheden gebeurt: karaat streept weg tegen karaat, glans tegen glans. Wat overblijft is een kaal getal zonder eenheid, de gestandaardiseerde versie van dezelfde samenhang, en dat getal kan nooit buiten −1 en +1 komen: <em>r</em> = .58. Dát kun je in één keer lezen, bij diamantjes net zo goed als bij pinguïns.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — bouw de correlatie zelf">
@@ -700,38 +700,66 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># de ruwe samenhangsmaat: nog op de schaal van karaat en glans</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 4.91</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># deel door de twee standaardafwijkingen — de eenheid valt weg</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.5777</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans) <span class="sc">/</span> (<span class="fu">sd</span>(d<span class="sc">$</span>karaat) <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>glans))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom 1 en 2: hoe ver ligt elk steentje van het gemiddelde,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># op karaat en op glans?</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>afw_karaat <span class="ot">&lt;-</span> d<span class="sc">$</span>karaat <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>karaat)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>afw_glans  <span class="ot">&lt;-</span> d<span class="sc">$</span>glans  <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>glans)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom 3: die twee maal elkaar, het rechthoekje</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>rechthoek <span class="ot">&lt;-</span> d<span class="sc">$</span>afw_karaat <span class="sc">*</span> d<span class="sc">$</span>afw_glans</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># en dat is precies wat cor() in één keer doet</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># "pearson" is de standaard</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → 0.5777</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans, <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># en welke lijn hoort daarbij</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># lm() → -1.43  32.14</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>model.karaat <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model.karaat)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># de tabel uit het boek, naast de data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>d[, <span class="fu">c</span>(<span class="st">"naam"</span>, <span class="st">"afw_karaat"</span>, <span class="st">"afw_glans"</span>, <span class="st">"rechthoek"</span>)]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># de onderste regel: tel de rechthoekjes op</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 54</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>rechthoek)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># en deel door n − 1 = 11: het gemiddelde rechthoekje</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() / 11 → 4.91</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>rechthoek) <span class="sc">/</span> (<span class="fu">nrow</span>(d) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># de ruwe samenhangsmaat in één keer: hetzelfde getal</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() → 4.91</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># deel door de twee standaardafwijkingen — de eenheid valt weg</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># cov() / sd() → 0.5777</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans) <span class="sc">/</span> (<span class="fu">sd</span>(d<span class="sc">$</span>karaat) <span class="sc">*</span> <span class="fu">sd</span>(d<span class="sc">$</span>glans))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># en dat is precies wat cor() in één keer doet</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># "pearson" is de standaard</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># cor() → 0.5777</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans, <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># en welke lijn hoort daarbij</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># lm() → -1.43  32.14</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>model.karaat <span class="ot">&lt;-</span> <span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>karaat, d<span class="sc">$</span>glans)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(model.karaat)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr); <span class="fu">library</span>(ggplot2)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">S_xy =</span> <span class="fu">cov</span>(karaat, glans),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">r    =</span> <span class="fu">cor</span>(karaat, glans, <span class="at">method =</span> <span class="st">"pearson"</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># in ggplot: eerst de assen, dan de lagen erop</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(karaat, glans)) <span class="sc">+</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># de drie kolommen uit het boek, naast de data</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">afw_karaat =</span> karaat <span class="sc">-</span> <span class="fu">mean</span>(karaat),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">afw_glans  =</span> glans  <span class="sc">-</span> <span class="fu">mean</span>(glans),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rechthoek  =</span> afw_karaat <span class="sc">*</span> afw_glans)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">select</span>(naam, afw_karaat, afw_glans, rechthoek)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># de onderste regel, gedeeld door 11, en wat cov() en cor() ervan maken</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">som  =</span> <span class="fu">sum</span>(rechthoek),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">S_xy =</span> som <span class="sc">/</span> (<span class="fu">n</span>() <span class="sc">-</span> <span class="dv">1</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">cov  =</span> <span class="fu">cov</span>(karaat, glans),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">r    =</span> <span class="fu">cor</span>(karaat, glans, <span class="at">method =</span> <span class="st">"pearson"</span>))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> karaat, <span class="at">data =</span> d)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># in ggplot: eerst de assen, dan de lagen erop</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d, <span class="fu">aes</span>(karaat, glans)) <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>

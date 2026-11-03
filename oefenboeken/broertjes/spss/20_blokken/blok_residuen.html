@@ -687,7 +687,7 @@ RES_1    -10.7   -3.9   -3.9  -10.4    0.0   20.0   26.8    3.6   10.4   20.4  -
 <div class="callout-body-container callout-body">
 <p>Twee vragen voor je verder leest.</p>
 <p><strong>a)</strong> Vraag de standaardafwijking van de glans op, en die van de residuen. (twee getallen, en één zin over wat het verschil tussen die twee betekent)</p>
-<p><strong>b)</strong> Kwadrateer allebei die getallen, tel de twaalf gekwadrateerde afwijkingen van de glans op en doe hetzelfde met de residuen. (In de tabel <strong>ANOVA</strong> van je regressie staan ze allebei.) (twee sommen, en zeg welk deel van de eerste door de tweede wordt opgeslokt)</p>
+<p><strong>b)</strong> Zet twee kolommen naast de data: hoe ver elke glans van het gemiddelde ligt (de kolom <code>afwijking</code> uit Oefening 1.1, in het boek het blauwe streepje), en het residu (het bordeaux streepje). Kwadrateer allebei die kolommen en tel elke kwadraatkolom op. (twee sommen, en zeg welk deel van de eerste door de tweede wordt opgeslokt)</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
@@ -703,6 +703,7 @@ RES_1    -10.7   -3.9   -3.9  -10.4    0.0   20.0   26.8    3.6   10.4   20.4  -
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> De glans zelf spreidt met <em>SD</em> = 21.74 glanspunten, de residuen met <em>SD</em> = 17.75. Zonder lijn is je beste gok voor elk steentje het gemiddelde, en hoe breed de gokfouten om dat gemiddelde heen uitwaaieren vat de standaardafwijking van de glans samen: bijna 22 glanspunten. Gok je mét de lijn, dan waaieren de residuen om de lijn heen uit, en die waaier is smaller: bijna 18. De lijn scheelt je dus wel iets, maar niet veel — bij deze twaalf steentjes is het karaat lang niet alles.</p>
+<p>Verwar die 17.75 niet met de 18.61 uit Oefening 3.2, het getal voor hoe ver de lijn er gemiddeld naast zit. Allebei komen ze uit dezelfde vierkantjes van de residuen, die je in b) optelt. Een standaardafwijking deelt ze door elf, <em>n</em> − 1, want het gemiddelde kost één getal; de 18.61 deelt door tien, <em>n</em> − 2, want de lijn kost er twee (het intercept en de helling). Allebei trekken ze daarna de wortel. In het boek heet die tweede de standaardschattingsfout, <em>S</em><sub>e</sub>. Vraagt iemand hoe ver de lijn er gemiddeld naast zit, dan is het die: 18.61.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -716,6 +717,7 @@ RES_1    -10.7   -3.9   -3.9  -10.4    0.0   20.0   26.8    3.6   10.4   20.4  -
 <pre><code>DESCRIPTIVES VARIABLES = glans RES_1
   /STATISTICS = STDDEV.</code></pre>
 <p><em>Std. Deviation</em> 21.742 en 17.746.</p>
+<p>De 18.61 uit Oefening 3.2 staat in <strong>Model Summary</strong> van de regressie bovenaan dit blok, bij <em>Std. Error of the Estimate</em>: 18.613.</p>
 </div>
 </div>
 <p><strong>b)</strong> De glans om zijn eigen gemiddelde geeft <strong>5200.0</strong>; de glans om de lijn geeft <strong>3464.3</strong>. Van alle verschil in glans blijft er dus tweederde over nadat de lijn zijn deel heeft gehad — en dat ene derde dat hij wél pakt, is precies de <em>R</em>² = .33 die je in Oefening 3.1 en 3.2 zag.</p>
@@ -729,7 +731,15 @@ RES_1    -10.7   -3.9   -3.9  -10.4    0.0   20.0   26.8    3.6   10.4   20.4  -
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In de tabel <strong>ANOVA</strong> staat onder <em>Sum of Squares</em>: <em>Total</em> 5200.000 en <em>Residual</em> 3464.286. De rij ertussen, <em>Regression</em> 1735.714, is het stuk dat de lijn wél pakt.</p>
+<p>Het residu heb je al, als <code>RES_1</code>. Maak er met <strong>Transform → Compute Variable</strong> drie kolommen bij; het gemiddelde van de glans, 50, typ je zelf in:</p>
+<pre><code>COMPUTE afwijking = glans - 50.
+COMPUTE afwijking2 = afwijking**2.
+COMPUTE residu2 = RES_1**2.
+EXECUTE.
+
+DESCRIPTIVES VARIABLES = afwijking2 residu2
+  /STATISTICS = SUM.</code></pre>
+<p>Bij <em>Sum</em> staat 5200.00 en 3464.29. Dezelfde twee staan in de tabel <strong>ANOVA</strong> van de regressie, onder <em>Sum of Squares</em>: <em>Total</em> 5200.000 en <em>Residual</em> 3464.286. De rij ertussen, <em>Regression</em> 1735.714, is het stuk dat de lijn wél pakt.</p>
 </div>
 </div>
 <p>Waaróm dat zo is, staat hieronder.</p>

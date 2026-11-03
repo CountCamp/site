@@ -702,6 +702,81 @@ window.Quarto = {
 </div>
 <p><em><code>lm()</code>, <code>t.test()</code> en <code>aov()</code> zijn in beide talen precies dezelfde functie — daar valt niets te vertalen. Het verschil tussen base R en dplyr zit in het klaarzetten van de data, niet in het model.</em></p>
 <p>Twee groepen, één kolom met nullen en enen: dat is een <strong>dummy</strong>. En kijk nu wat de twee getallen zeggen. Het intercept is 40, en dat is precies de gemiddelde glans van de golfjes. De helling is 20, en dat is precies wat er bij de sterretjes bovenop komt: 40 + 20 = 60, hun gemiddelde. Reken het na met <code>tapply(d$glans, d$merk, mean)</code>.</p>
+<p>Maar waarom is die helling precies dat verschil? Er gebeurt niets nieuws: de helling wordt uitgerekend zoals bij karaat, als de som van de rechthoekjes gedeeld door de som van de vierkantjes. In het boek staat die som als tabel, bij de rechthoekjes op een kolom van nullen en enen. Per steentje vier kolommen: hoe ver <code>D</code> van zijn gemiddelde ligt, die afwijking in het kwadraat (het vierkantje), hoe ver de glans van de gemiddelde glans ligt, en de twee afwijkingen maal elkaar (het rechthoekje). Onderaan de som van elke kolom. Bouw die tabel hier zelf na.</p>
+<div class="rcode callout callout-style-default callout-note callout-titled" title="De tabel uit het boek, zelf gebouwd">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De tabel uit het boek, zelf gebouwd
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Base R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">dplyr</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom 1: hoe ver ligt D van zijn gemiddelde?</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>afwijking_D <span class="ot">&lt;-</span> d<span class="sc">$</span>D <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>D)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom 2: die afwijking in het kwadraat, het vierkantje</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>vierkantje_D <span class="ot">&lt;-</span> d<span class="sc">$</span>afwijking_D<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom 3: hoe ver ligt de glans van de gemiddelde glans?</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>afwijking_glans <span class="ot">&lt;-</span> d<span class="sc">$</span>glans <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>glans)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># kolom 4: de twee afwijkingen maal elkaar, het rechthoekje</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>rechthoekje <span class="ot">&lt;-</span> d<span class="sc">$</span>afwijking_D <span class="sc">*</span> d<span class="sc">$</span>afwijking_glans</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># de tabel, naam erbij</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>d[, <span class="fu">c</span>(<span class="st">"naam"</span>, <span class="st">"D"</span>, <span class="st">"afwijking_D"</span>, <span class="st">"vierkantje_D"</span>, <span class="st">"afwijking_glans"</span>, <span class="st">"rechthoekje"</span>)]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co"># de onderste regel: de som van de rechthoekjes</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 60</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>rechthoekje)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># en de som van de vierkantjes</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 3</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>vierkantje_D)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># de helling: de ene som gedeeld door de andere</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>helling <span class="ot">&lt;-</span> <span class="fu">sum</span>(d<span class="sc">$</span>rechthoekje) <span class="sc">/</span> <span class="fu">sum</span>(d<span class="sc">$</span>vierkantje_D)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># print() → 20</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(helling)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># en wat lm() je daarnet gaf</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), D: coef() → 40  20</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> D, <span class="at">data =</span> d))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diamantjes.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># de vier kolommen erbij</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">afwijking_D     =</span> D <span class="sc">-</span> <span class="fu">mean</span>(D),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">vierkantje_D    =</span> afwijking_D<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">afwijking_glans =</span> glans <span class="sc">-</span> <span class="fu">mean</span>(glans),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rechthoekje     =</span> afwijking_D <span class="sc">*</span> afwijking_glans)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># de tabel, naam erbij</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">select</span>(naam, D, afwijking_D, vierkantje_D, afwijking_glans, rechthoekje)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># de onderste regel, en wat je ermee doet</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>d <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">som_rechthoekjes =</span> <span class="fu">sum</span>(rechthoekje),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">som_vierkantjes  =</span> <span class="fu">sum</span>(vierkantje_D),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">helling          =</span> som_rechthoekjes <span class="sc">/</span> som_vierkantjes)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Leg je tabel naast die in het boek. Anna is een golfje: haar afwijking op <code>D</code> is −0.5, op glans −30, en haar rechthoekje is 15. Kees is een sterretje, maar een doffe: 0.5, −20 en −10. Dezelfde getallen. (Het boek zet een plus voor de positieve getallen, je programma niet; het getal is hetzelfde.)</p>
+<p>Onderaan staan de twee sommen. De rechthoekjes tellen op tot 60. De vierkantjes van <code>D</code> zijn twaalf keer 0.25, samen 3: elk steentje ligt precies een halve stap van het gemiddelde van <code>D</code> af, en een halve stap in het kwadraat is 0.25. Deel de ene som door de andere, 60 / 3 = 20, en daar is de helling: het verschil tussen de twee gemiddelden, 60 − 40. (Twee keer 60, en dat is toeval: de ene is de som van de rechthoekjes, de andere de gemiddelde glans van de sterretjes.)</p>
+<p>Dat de helling het verschil is, hangt niet aan die halve stap. Het geldt voor elke dummy die alleen in het model staat, ook als de twee groepen niet even groot zijn; de halve stap maakt de getallen hier alleen rond.</p>
 <p>Die kolom <code>D</code> hoef je trouwens niet cadeau te krijgen. <code>ifelse(d$merk == "sterretje", 1, 0)</code> maakt hem in één regel na. En je hoeft hem zelfs helemaal niet te máken, want R doet het ook zelf als je hem de woordkolom geeft:</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · geef R de woorden, hij maakt de nullen en enen">
 <div class="callout-header d-flex align-content-center">
@@ -713,9 +788,9 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept): lm() → 40</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># merksterretje: lm() → 20</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept): lm() → 40</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># merksterretje: lm() → 20</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(glans <span class="sc">~</span> merk, <span class="at">data =</span> d)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Dezelfde twee getallen. R heeft in stilte precies dezelfde nul-of-een-kolom gebouwd, en hij zet zijn eigen naam erop: <code>merksterretje</code>, oftewel “de dummy die aanstaat bij sterretje”.</p>
@@ -732,20 +807,20 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># drie soorten, twee dummy's — de Gentoo's laat je weg</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>adelie    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>chinstrap <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Chinstrap"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># kijk of ze staan waar je denkt dat ze staan</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># table() → 151 Adelies op 1, alle andere op 0</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(peng<span class="sc">$</span>adelie, peng<span class="sc">$</span>soort)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>model.dummy <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> adelie <span class="sc">+</span> chinstrap, <span class="at">data =</span> peng)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), adelie, chinstrap: coef() → 5076.02  -1375.35  -1342.93</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.dummy), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># drie soorten, twee dummy's — de Gentoo's laat je weg</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>adelie    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>chinstrap <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Chinstrap"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># kijk of ze staan waar je denkt dat ze staan</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># table() → 151 Adelies op 1, alle andere op 0</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(peng<span class="sc">$</span>adelie, peng<span class="sc">$</span>soort)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>model.dummy <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> adelie <span class="sc">+</span> chinstrap, <span class="at">data =</span> peng)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), adelie, chinstrap: coef() → 5076.02  -1375.35  -1342.93</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.dummy), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p><span class="naslag">Die <code>table()</code>-regel is geen versiering. Een dummy die per ongeluk overal 0 is geeft geen foutmelding — hij geeft een model dat rustig doorrekent en nergens meer over gaat. Zet er dus altijd de kruistabel naast. Meer over factoren, niveaus en welke groep de referentie wordt staat bij <a href="../90_basishandelingen.html#hercoderen">nieuwe variabelen maken en hercoderen</a>.</span></p>
@@ -781,7 +856,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -790,7 +865,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Twee: altijd eentje minder dan het aantal groepen, <em>k</em> − 1. De Gentoo’s heb je weggelaten, dus Gentoo is de referentiecategorie.</p>
 <p><strong>b)</strong> Over de <strong>populatie</strong>, niet over deze 342. Die heb je gewogen; hun gemiddelden kun je gewoon aflezen, dus daar valt niets aan te toetsen.</p>
@@ -819,8 +894,8 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie, Chinstrap, Gentoo: tapply() → 3700.66  3733.09  5076.02</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie, Chinstrap, Gentoo: tapply() → 3700.66  3733.09  5076.02</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Jouw Adélie-som landt dus één honderdste te hoog. Dat is geen rekenfout van jou: de exacte waarden zijn 5076.016 en 1375.354, en R rekent met álle decimalen door. Rond af aan het eind, nooit onderweg.</p>
@@ -850,10 +925,10 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), soortChinstrap, soortGentoo: coef() → 3700.66  32.43  1375.35</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.soort), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), soortChinstrap, soortGentoo: coef() → 3700.66  32.43  1375.35</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.soort), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Andere getallen — en niet zomaar andere. Vijf nieuwe vragen, nu op dit model:</p>
@@ -875,7 +950,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -884,7 +959,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Adélie. Het intercept is 3700.66 en dat is precies het Adélie-gemiddelde; bovendien komt Adélie in geen enkele coëfficiëntnaam voor.</p>
 <p><strong>b)</strong> Adélie = 3700.66; Chinstrap = 3700.66 + 32.43 = 3733.09; Gentoo = 3700.66 + 1375.35 = 5076.01 — terwijl het echte Gentoo-gemiddelde 5076.02 is. Dezelfde drie gemiddelden als in model 1, dezelfde afrondingskruimel, andere rij.</p>
@@ -897,20 +972,20 @@ window.Quarto = {
 </div>
 <p>Twee modellen, dezelfde drie gemiddelden. Het zijn er dus geen twee — het is hetzelfde model, met een ander vertrekpunt.</p>
 <p>Je hebt net zelf uitgerekend dat je handgebouwde model en dat van R op dezelfde drie gemiddelden landen. Je kunt het R ook rechtstreeks vragen:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all.equal() → TRUE</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">fitted</span>(model.dummy), <span class="fu">fitted</span>(model.soort))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># deviance() → 72443483</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(model.dummy)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># deviance() → 72443483</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(model.soort)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># summary()$r.squared → 0.669672</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.dummy)<span class="sc">$</span>r.squared</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># summary()$r.squared → 0.669672</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all.equal() → TRUE</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(<span class="fu">fitted</span>(model.dummy), <span class="fu">fitted</span>(model.soort))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># deviance() → 72443483</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(model.dummy)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># deviance() → 72443483</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">deviance</span>(model.soort)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># summary()$r.squared → 0.669672</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.dummy)<span class="sc">$</span>r.squared</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># summary()$r.squared → 0.669672</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Drie vragen, en ze geven alle drie hetzelfde antwoord. <code>fitted()</code> haalt op wat een model voor elke pinguïn voorspelt, en <code>all.equal()</code> legt die twee rijen naast elkaar: <strong>TRUE</strong>. Elke pinguïn krijgt in allebei de modellen exact hetzelfde voorspelde gewicht. <code>deviance()</code> geeft de restsom — wat het model níét weet te voorspellen: elke gokfout eerst gekwadrateerd en dan opgeteld, want gewoon optellen geeft nul — en die staat allebei de keren op 72443483, tot op de gram gelijk. En het deel van de verschillen in gewicht dat het model wél te pakken krijgt, de <em>R</em>², is in allebei .67.</p>
 <p>Twee modellen die elke pinguïn hetzelfde voorspellen, evenveel laten liggen en even veel van de verschillen in gewicht verklaren, zijn niet twee modellen.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Waarom hier geen `anova()` staat">
@@ -944,18 +1019,18 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model.anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F value en p van soort: summary() → 2  343.6  &lt;2e-16</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.anova)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># jouw eigen dummy's</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># value, numdf, dendf: summary() → 343.6263  2.0000  339.0000</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.dummy)<span class="sc">$</span>fstatistic</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># die van R</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># value, numdf, dendf: summary() → 343.6263  2.0000  339.0000</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>fstatistic</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F value en p van soort: summary() → 2  343.6  &lt;2e-16</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.anova)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># jouw eigen dummy's</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># value, numdf, dendf: summary() → 343.6263  2.0000  339.0000</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.dummy)<span class="sc">$</span>fstatistic</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># die van R</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># value, numdf, dendf: summary() → 343.6263  2.0000  339.0000</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model.soort)<span class="sc">$</span>fstatistic</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Drie keer hetzelfde getal. De ANOVA-tabel drukt het afgerond af als 343.6, <code>$fstatistic</code> geeft het voluit als 343.6263, en netjes op twee decimalen is dat <em>F</em>(2, 339) = 343.63 — één getal, drie schrijfwijzen. Wat die <em>F</em> precies méét, daar gaat de ANOVA-oefening straks over; kijk er nu alleen naar dat je hem drie keer tegenkomt terwijl je drie verschillende dingen leek te doen.</p>
@@ -1019,12 +1094,12 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">ref =</span> <span class="st">"Gentoo"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model.gentoo.ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), soortAdelie, soortChinstrap: coef() → 5076.02  -1375.35  -1342.93</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.gentoo.ref), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">ref =</span> <span class="st">"Gentoo"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>model.gentoo.ref <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept), soortAdelie, soortChinstrap: coef() → 5076.02  -1375.35  -1342.93</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.gentoo.ref), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Precies je handwerk van daarnet, in één regel. Wat je met de hand deed en wat <code>relevel()</code> doet is dezelfde ingreep: iemand moet het vertrekpunt zijn, en jij zegt wie.</p>
@@ -1083,25 +1158,25 @@ window.Quarto = {
 <p>Jouw beurt — dezelfde drie soorten, bekende data, een andere maat: <code>snaveldiepte</code>. Die kolom ken je uit de scatterplot-oefening, waar de soort de derde speler achter het min-teken bleek. Nu mag hij zelf de voorspeller zijn.</p>
 <ol type="1">
 <li><p><strong>Zet eerst het vertrekpunt goed.</strong> Hierboven heb je de referentiecategorie van <code>soort</code> net op de Gentoo’s gezet, en R onthoudt dat. Zet hem met opzet terug — en kijk het na vóór je één getal leest:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># het vertrekpunt terug naar de Adélies</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">ref =</span> <span class="st">"Adelie"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># even checken: de referentie hoort vooraan te staan</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># levels() → "Adelie" eerst</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(peng<span class="sc">$</span>soort)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dezelfde soorten, nu in millimeters</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>model.diepte <span class="ot">&lt;-</span> <span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.diepte), <span class="dv">2</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># en de p's erbij</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(model.diepte)<span class="sc">$</span>coefficients[, <span class="dv">4</span>], <span class="dv">3</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># het vertrekpunt terug naar de Adélies</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(peng<span class="sc">$</span>soort), <span class="at">ref =</span> <span class="st">"Adelie"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># even checken: de referentie hoort vooraan te staan</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># levels() → "Adelie" eerst</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(peng<span class="sc">$</span>soort)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># dezelfde soorten, nu in millimeters</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>model.diepte <span class="ot">&lt;-</span> <span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.diepte), <span class="dv">2</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># en de p's erbij</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(model.diepte)<span class="sc">$</span>coefficients[, <span class="dv">4</span>], <span class="dv">3</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: intercept 18.35, <code>soortGentoo</code> −3.36 en <code>soortChinstrap</code> 0.07, met <em>p</em> &lt; .001 voor de Gentoo en <em>p</em> = .65 voor de Chinstrap. Vraag daarna <code>round(tapply(peng$snaveldiepte, peng$soort, mean), 2)</code> op en wijs aan waar 18.42 in de coëfficiënten verstopt zit. (18.35 + 0.07, en daar is-ie.)</p></li>
 <li><p><strong>Laat de Gentoo’s weg, met de hand.</strong> Je dummy’s <code>adelie</code> en <code>chinstrap</code> staan er nog: draai <code>lm(snaveldiepte ~ adelie + chinstrap, data = peng)</code>. Ter controle: intercept 14.98, en daarbovenop 3.36 en 3.44. Alle drie de gemiddelden komen weer terug, alleen vanaf een ander vertrekpunt.</p>
 <p>Tel de eerste twee op en er staat 14.98 + 3.36 = 18.34, terwijl de Adélies een snaveldiepte van 18.35 millimeter hebben. Dat is geen fout van jou: R rekent met alle decimalen en rondt pas aan het eind af. Dezelfde honderdste als bij de Adélie-som van vraag i) hierboven, die op 3700.67 landde terwijl het echte gemiddelde 3700.66 is.</p></li>
 <li><p><strong>De denk-vraag: is “bijzonder” een eigenschap van de soort?</strong> Twee keer nu was het de Gentoo die eruit sprong — op gewicht 1375 gram bóven de rest, op snaveldiepte 3.36 millimeter eronder. Alleen de kant verschilt. Maar kijk nog één keer, met een andere maat:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model.lengte <span class="ot">&lt;-</span> <span class="fu">lm</span>(snavellengte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.lengte), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model.lengte <span class="ot">&lt;-</span> <span class="fu">lm</span>(snavellengte <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.lengte), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Ter controle: Chinstrap 10.04 en Gentoo 8.71 — allebei fors, en dus ligt hier niet de Gentoo apart maar de <strong>Adélie</strong>.</p>
 <p>De vuistregel hierboven zegt: nooit de meest bijzondere groep. Wie is dat hier dan? En let op wie wij in dit hoofdstuk als vertrekpunt gekozen hebben.</p></li>
 </ol>
@@ -1163,7 +1238,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1172,7 +1247,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>1 b · 2 d · 3 c · 4 a · 5 b</strong></p>
 <p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
@@ -1184,39 +1259,39 @@ window.Quarto = {
 <p><strong>4. a.</strong> Is er een controlegroep, dan is dat ’m — dan lees je de twee regressiegewichten meteen als wat elke behandeling oplevert ten opzichte van niets doen. <strong>c</strong> is een échte regel uit dit blok, alleen staat hij één trede lager: de grootste groep kies je <em>als er geen inhoudelijke reden is</em>, en hier is die er wel. Dat onderscheid tussen <em>fout</em> en <em>op de tweede plaats</em> is wat een tentamen met “geef het beste antwoord” bedoelt. <strong>b</strong> kiest de groep waar het onderzoek over gaat en meet daarmee alles af aan de uitzondering, in plaats van eraan te meten. <strong>d</strong> laat de keuze aan het alfabet; dat mag, maar dan is het geen keuze meer, en bij een controlegroep is het gewoon de verkeerde.</p>
 <p><strong>5. b.</strong> Drie deuren, één kamer: elke pinguïn krijgt in alle drie hetzelfde voorspelde gewicht, er blijft evenveel onverklaard, en dus komt er dezelfde <em>F</em> uit. <strong>a</strong> en <strong>c</strong> zeggen allebei dat de gelijkheid ongeveer of toevallig is, en dat is ze niet — het is algebra, en ze klopt bij elke dataset. <strong>d</strong> zet de <em>F</em> bij één van de drie deuren thuis. Dat is precies andersom: de <em>F</em> hoort bij het model, en ANOVA en regressie zijn twee namen voor dat ene model.</p>
 <p>Wil je de getallen uit deze vijf vragen zelf zien ontstaan — geen ervan is overgetikt:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>adelie    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>chinstrap <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Chinstrap"</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>model.dummy <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> adelie <span class="sc">+</span> chinstrap, <span class="at">data =</span> peng)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>model.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 1 — de regel k - 1, hier op de drie soorten van dit blok → 2</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">levels</span>(peng<span class="sc">$</span>soort)) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 1 — en dezelfde regel op de vier groepen uit de vraag → 3</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 2 — dezelfde drie gemiddelden, wie je ook weglaat → 3700.66  3733.09  5076.02</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean)), <span class="dv">2</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 2a — en dezelfde R², tot op zes decimalen → 0.669672  0.669672</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">summary</span>(model.dummy)<span class="sc">$</span>r.squared, <span class="fu">summary</span>(model.soort)<span class="sc">$</span>r.squared)</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 2b — de -1342.93 wordt geen +1342.93 maar dit → 32.43</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.soort)[[<span class="st">"soortChinstrap"</span>]], <span class="dv">2</span>)</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 3 — de drie gemiddelde snaveldieptes → 18.35  18.42  14.98</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>snaveldiepte, peng<span class="sc">$</span>soort, mean)), <span class="dv">2</span>)</span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 3 — en de Chinstrap uit de coëfficiënten opgeteld → 18.42</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sum</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng))[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]), <span class="dv">2</span>)</span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 5 — dezelfde F uit drie gedaanten → 343.63  343.63  343.63</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">summary</span>(model.dummy)<span class="sc">$</span>fstatistic[[<span class="dv">1</span>]],</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summary</span>(model.soort)<span class="sc">$</span>fstatistic[[<span class="dv">1</span>]],</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summary</span>(<span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng))[[<span class="dv">1</span>]][[<span class="st">"F value"</span>]][<span class="dv">1</span>]), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>peng <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"penguins.csv"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>soort <span class="ot">&lt;-</span> <span class="fu">factor</span>(peng<span class="sc">$</span>soort)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>adelie    <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Adelie"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>peng<span class="sc">$</span>chinstrap <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(peng<span class="sc">$</span>soort <span class="sc">==</span> <span class="st">"Chinstrap"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>model.dummy <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> adelie <span class="sc">+</span> chinstrap, <span class="at">data =</span> peng)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>model.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 1 — de regel k - 1, hier op de drie soorten van dit blok → 2</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">levels</span>(peng<span class="sc">$</span>soort)) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 1 — en dezelfde regel op de vier groepen uit de vraag → 3</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 2 — dezelfde drie gemiddelden, wie je ook weglaat → 3700.66  3733.09  5076.02</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>gewicht, peng<span class="sc">$</span>soort, mean)), <span class="dv">2</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 2a — en dezelfde R², tot op zes decimalen → 0.669672  0.669672</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">summary</span>(model.dummy)<span class="sc">$</span>r.squared, <span class="fu">summary</span>(model.soort)<span class="sc">$</span>r.squared)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 2b — de -1342.93 wordt geen +1342.93 maar dit → 32.43</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(model.soort)[[<span class="st">"soortChinstrap"</span>]], <span class="dv">2</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 3 — de drie gemiddelde snaveldieptes → 18.35  18.42  14.98</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">tapply</span>(peng<span class="sc">$</span>snaveldiepte, peng<span class="sc">$</span>soort, mean)), <span class="dv">2</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 3 — en de Chinstrap uit de coëfficiënten opgeteld → 18.42</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sum</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(snaveldiepte <span class="sc">~</span> soort, <span class="at">data =</span> peng))[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]), <span class="dv">2</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co"># vraag 5 — dezelfde F uit drie gedaanten → 343.63  343.63  343.63</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">summary</span>(model.dummy)<span class="sc">$</span>fstatistic[[<span class="dv">1</span>]],</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summary</span>(model.soort)<span class="sc">$</span>fstatistic[[<span class="dv">1</span>]],</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">summary</span>(<span class="fu">aov</span>(gewicht <span class="sc">~</span> soort, <span class="at">data =</span> peng))[[<span class="dv">1</span>]][[<span class="st">"F value"</span>]][<span class="dv">1</span>]), <span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>

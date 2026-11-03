@@ -646,7 +646,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>Bij onze twaalf duwen acht steentjes de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel alles op en er staat 54.00 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
+<p>De andere tien hoef je niet met de hand. In het eerste kader hieronder bouw je het rechthoek-deel van de tabel uit het boek bij de rechthoekjes na, als drie kolommen naast de data: de afwijking op karaat, de afwijking op glans, en die twee maal elkaar. Kijk dan in je eigen derde kolom: acht steentjes duwen de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel die kolom op en je krijgt 54 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
 <p>En nu de vraag die je bij élk getal hoort te stellen: 4.91 wát? Reken de eenheid maar gewoon mee — een afwijking in karaat keer een afwijking in glans is… karaat-glanzen. Is 4.91 karaat-glanzen veel samenhang? Weet je niet. Niemand denkt in karaat-glanzen. <strong>Ruw is ruk.</strong> De covariantie zit nog op de schaal van zijn twee variabelen; je kunt er de ríchting aan aflezen — plus, dus zwaarder gaat samen met glanzender — maar niet de sterkte.</p>
 <p>De reparatie is één deling. Deel de covariantie door de twee standaardafwijkingen — 0.3908 karaat en 21.7423 glanspunten — en kijk wat er met de eenheden gebeurt: karaat streept weg tegen karaat, glans tegen glans. Wat overblijft is een kaal getal zonder eenheid, de gestandaardiseerde versie van dezelfde samenhang, en dat getal kan nooit buiten −1 en +1 komen: <em>r</em> = .58. Dát kun je in één keer lezen, bij diamantjes net zo goed als bij pinguïns.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — bouw de correlatie zelf">
@@ -665,13 +665,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <ol type="1">
 <li>Open <code>diamantjes.csv</code>: <strong>File → Open → Data</strong>, bestandstype op <strong>CSV</strong>.</li>
+<li>Bouw de tabel uit het boek na, met drie keer <strong>Transform → Compute Variable</strong>: <code>afw_karaat</code> = <code>karaat - 1.6</code>, <code>afw_glans</code> = <code>glans - 50</code>, en <code>rechthoek</code> = <code>afw_karaat * afw_glans</code>. De twee gemiddelden typ je zelf in; ze staan hierboven.</li>
+<li>Tel de rechthoekjes op: <strong>Analyze → Descriptive Statistics → Descriptives</strong>, <code>rechthoek</code> erin, en vink onder <strong>Options</strong> de <strong>Sum</strong> aan.</li>
 <li><strong>Analyze → Correlate → Bivariate</strong>, <code>karaat</code> en <code>glans</code> naar <strong>Variables</strong>, <strong>Pearson</strong> aangevinkt.</li>
 <li>Klik <strong>Options</strong> en vink <strong>Cross-product deviations and covariances</strong> aan. <strong>Continue</strong>, dan <strong>OK</strong>.</li>
 <li>De lijn erbij: <strong>Analyze → Regression → Linear</strong>, <code>glans</code> naar <strong>Dependent</strong>, <code>karaat</code> naar <strong>Independent(s)</strong>. <strong>OK</strong>.</li>
 </ol>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<pre><code>CORRELATIONS
+<pre><code>COMPUTE afw_karaat = karaat - 1.6.
+COMPUTE afw_glans = glans - 50.
+COMPUTE rechthoek = afw_karaat * afw_glans.
+EXECUTE.
+
+DESCRIPTIVES VARIABLES = rechthoek
+  /STATISTICS = SUM.
+
+CORRELATIONS
   /VARIABLES=karaat glans
   /STATISTICS XPROD.
 
@@ -682,7 +692,7 @@ REGRESSION
 </div>
 </div>
 </div>
-<p>In de tabel <strong>Correlations</strong> staan nu drie getallen onder elkaar die je net zelf hebt uitgerekend: <em>Sum of Squares and Cross-products</em> 54.000 — dat is de <em>sum of products</em> —, <em>Covariance</em> 4.909 en <em>Pearson Correlation</em> .578.</p>
+<p>Bij <em>Sum</em> staat 54.00: de onderste regel van jouw rechthoek-kolom. In de tabel <strong>Correlations</strong> staan daarna drie getallen onder elkaar die je net zelf hebt uitgerekend: <em>Sum of Squares and Cross-products</em> 54.000 — dezelfde som, de <em>sum of products</em> —, <em>Covariance</em> 4.909 (54 gedeeld door elf) en <em>Pearson Correlation</em> .578.</p>
 <p>In <strong>Coefficients</strong> staat in de kolom <em>B</em>: <code>(Constant)</code> −1.429 en <code>karaat</code> 32.143.</p>
 </div>
 </div>

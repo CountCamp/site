@@ -646,7 +646,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>Bij onze twaalf duwen acht steentjes de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel alles op en er staat 54.00 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
+<p>De andere tien hoef je niet met de hand. In het eerste kader hieronder bouw je het rechthoek-deel van de tabel uit het boek bij de rechthoekjes na, als drie kolommen naast de data: de afwijking op karaat, de afwijking op glans, en die twee maal elkaar. Kijk dan in je eigen derde kolom: acht steentjes duwen de som omhoog, drie liggen precies op een gemiddelde en tellen dus nul, en alleen Kees telt tegen. Tel die kolom op en je krijgt 54 — die som heet de <em>sum of products</em>. Deel door <em>n</em> − 1 = 11, en daar is hij: de <strong>covariantie</strong> (<em>S<sub>xy</sub></em>), 4.91. Het gemiddelde rechthoekje.</p>
 <p>En nu de vraag die je bij élk getal hoort te stellen: 4.91 wát? Reken de eenheid maar gewoon mee — een afwijking in karaat keer een afwijking in glans is… karaat-glanzen. Is 4.91 karaat-glanzen veel samenhang? Weet je niet. Niemand denkt in karaat-glanzen. <strong>Ruw is ruk.</strong> De covariantie zit nog op de schaal van zijn twee variabelen; je kunt er de ríchting aan aflezen — plus, dus zwaarder gaat samen met glanzender — maar niet de sterkte.</p>
 <p>De reparatie is één deling. Deel de covariantie door de twee standaardafwijkingen — 0.3908 karaat en 21.7423 glanspunten — en kijk wat er met de eenheden gebeurt: karaat streept weg tegen karaat, glans tegen glans. Wat overblijft is een kaal getal zonder eenheid, de gestandaardiseerde versie van dezelfde samenhang, en dat getal kan nooit buiten −1 en +1 komen: <em>r</em> = .58. Dát kun je in één keer lezen, bij diamantjes net zo goed als bij pinguïns.</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="Eerst zoals in het boek — bouw de correlatie zelf · JASP 0.98.1">
@@ -659,10 +659,15 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Open <code>diamantjes.csv</code> en maak twee kolommen: klik op de <strong><code>+</code></strong> rechts van de laatste kolom, geef een naam, kies type <strong>Scale</strong> en het icoon <strong>R</strong>.</p>
+<p>Open <code>diamantjes.csv</code> en bouw de tabel uit het boek na, als drie kolommen: klik op de <strong><code>+</code></strong> rechts van de laatste kolom, geef een naam, kies type <strong>Scale</strong> en het icoon <strong>R</strong>.</p>
+<pre><code>afw_karaat   -&gt;   karaat - mean(karaat)
+afw_glans    -&gt;   glans - mean(glans)
+rechthoek    -&gt;   afw_karaat * afw_glans</code></pre>
+<p>Tel de rechthoekjes op: <strong>Descriptives</strong>, <code>rechthoek</code> bij <strong>Variables</strong>, en onder <em>Statistics</em> het vinkje <strong>Sum</strong>. Er staat 54.000. Deel door elf met je rekenmachine: 54 / 11 = 4.909, de 4.91 uit de tekst hierboven.</p>
+<p>Dan hetzelfde in één keer, en meteen gestandaardiseerd — nog twee kolommen:</p>
 <pre><code>S_xy     -&gt;   cov(karaat, glans)
 r_zelf   -&gt;   cov(karaat, glans) / (sd(karaat) * sd(glans))</code></pre>
-<p>In <code>S_xy</code> staat in elke rij hetzelfde getal: de covariantie, 4.909 — dat is de 4.91 uit de tekst hierboven, met de derde decimaal erbij die JASP standaard toont. In <code>r_zelf</code> staat 0.578; daar is de eenheid uit weggedeeld.</p>
+<p>In <code>S_xy</code> staat in elke rij hetzelfde getal: 4.909, jouw gemiddelde rechthoekje, met de derde decimaal erbij die JASP standaard toont. In <code>r_zelf</code> staat 0.578; daar is de eenheid uit weggedeeld.</p>
 <p>Dan hetzelfde met één klik: <strong>Regression → Correlation</strong>, <code>karaat</code> en <code>glans</code> bij <strong>Variables</strong>, <strong>Pearson’s r</strong> aan (die staat al aan), en onder <strong>Plots</strong> de <strong>Scatter plots</strong>. Bij <em>Pearson’s r</em> staat 0.578.</p>
 <p>En welke lijn daarbij hoort: <strong>Regression → Linear Regression</strong>, <code>glans</code> als <strong>Dependent Variable</strong> en <code>karaat</code> bij <strong>Covariates</strong>. In <strong>Coefficients</strong> staat <code>(Intercept)</code> −1.429 en <code>karaat</code> 32.143.</p>
 </div>

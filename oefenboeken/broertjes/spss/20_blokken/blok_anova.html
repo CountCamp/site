@@ -672,6 +672,63 @@ UNIANOVA glans BY merk.</code></pre>
 </div>
 </div>
 <p>Dezelfde vergelijking nog één keer, nu als eenweg variantieanalyse: <em>F</em> = 3.00, en dat is de <em>t</em> van net in het kwadraat. Niet ongeveer maar precies — al moet je die <em>t</em> dan wel met al zijn decimalen pakken. Kwadrateer je de afgeronde −1.73, dan staat er 2.99 en lijkt het nét mis te gaan. Bij twee groepen zijn de <em>t</em>-toets en de eenweg ANOVA dezelfde toets in een andere jas. Pas bij drie of meer groepen wordt hij zichzelf.</p>
+<p>Maar waar komt die 3.00 vandaan? In het boek staat het antwoord als tabel, bij de tweede jas, de eenweg variantieanalyse: de twaalf steentjes per stapel bij elkaar. Bij elk steentje eerst het gemiddelde van zijn stapel, en dan twee afstanden. <strong>Tussen</strong>: hoe ver ligt zijn stapel van het gemiddelde van alle twaalf? Dat getal is voor alle steentjes van één stapel hetzelfde. <strong>Binnen</strong>: hoe ver ligt het steentje van het gemiddelde van zijn eigen stapel? Allebei in het kwadraat, het vierkantje, en onder elke stapel een subtotaal. Bouw die tabel hier zelf na.</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="De tabel uit het boek, zelf gebouwd">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De tabel uit het boek, zelf gebouwd
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<ol type="1">
+<li>Zet twee gemiddelden als kolom erbij, met twee keer <strong>Data → Aggregate</strong> en telkens onderin <strong>Add aggregated variables to active dataset</strong>.
+<ul>
+<li>De eerste keer laat je <strong>Break Variable(s)</strong> leeg en zet je <code>glans</code> bij <strong>Summaries of Variable(s)</strong>. De functie staat al op <strong>MEAN</strong>, en SPSS noemt hem zelf <code>glans_mean</code>: het gemiddelde van alle twaalf.</li>
+<li>De tweede keer zet je <code>merk</code> bij <strong>Break Variable(s)</strong> en weer <code>glans</code> eronder. Geef hem met <strong>Name &amp; Label</strong> de naam <code>stapelgemiddelde</code>: nu staat bij elk steentje het gemiddelde van zijn eigen stapel.</li>
+</ul></li>
+<li>Maak met <strong>Transform → Compute Variable</strong> vier kolommen, één voor één: <code>tussen</code> = <code>stapelgemiddelde - glans_mean</code>, <code>tussen_vierkantje</code> = <code>tussen**2</code> (twee sterretjes is in SPSS “tot de macht”), <code>binnen</code> = <code>glans - stapelgemiddelde</code> en <code>binnen_vierkantje</code> = <code>binnen**2</code>.</li>
+<li><strong>Data → Sort Cases</strong> op <code>merk</code>, en de stapels staan bij elkaar in de <strong>Data View</strong>: dat is je tabel.</li>
+<li><strong>Analyze → Compare Means → Means</strong>, <code>tussen_vierkantje</code> en <code>binnen_vierkantje</code> bij <strong>Dependent List</strong> en <code>merk</code> bij <strong>Independent List</strong>. Onder <strong>Options</strong> zet je bij <strong>Cell Statistics</strong> alleen <strong>Sum</strong>. <strong>OK</strong>.</li>
+</ol>
+<p>SPSS zet achter elk getal hieronder decimalen; het getal is hetzelfde. In de tabel staan per stapel de subtotalen: 600 en 600 voor tussen, 1200 en 2800 voor binnen. Op de rij <strong>Total</strong> staat de onderste regel: 1200 voor tussen en 4000 voor binnen. Weer een 1200; daarover zo meer. De <em>F</em> doe je met je rekenmachine, hieronder. In <em>Tests of Between-Subjects Effects</em> van daarnet staan dezelfde twee sommen onder <strong>Type III Sum of Squares</strong>, bij <code>merk</code> en bij <strong>Error</strong>, en ernaast onder <strong>Mean Square</strong> al gedeeld door hun vrijheidsgraden: 1200 en 400.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>* twee gemiddelden als kolom: dat van alle twaalf, en dat van de eigen stapel.
+AGGREGATE
+  /OUTFILE=* MODE=ADDVARIABLES
+  /BREAK=
+  /glans_mean = MEAN(glans).
+AGGREGATE
+  /OUTFILE=* MODE=ADDVARIABLES
+  /BREAK=merk
+  /stapelgemiddelde = MEAN(glans).
+
+COMPUTE tussen            = stapelgemiddelde - glans_mean.
+COMPUTE tussen_vierkantje = tussen**2.
+COMPUTE binnen            = glans - stapelgemiddelde.
+COMPUTE binnen_vierkantje = binnen**2.
+EXECUTE.
+
+SORT CASES BY merk.
+
+* de subtotalen per stapel, en op de rij Total de onderste regel.
+MEANS TABLES=tussen_vierkantje binnen_vierkantje BY merk
+  /CELLS=SUM.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Leg je tabel naast die in het boek. Tussen ligt elke stapel 10 glanspunten van het gemiddelde van alle twaalf af, de golfjes eronder en de sterretjes erboven. Dat vierkantje, 10 × 10 = 100, telt voor elk van zijn zes steentjes: 600 per stapel, samen 1200. Binnen de golfjes tel je 1200 op, binnen de sterretjes 2800: samen 4000. En 1200 + 4000 = 5200, de kwadratensom van de glans die je in <a href="../20_blokken/blok_gemiddelde_spreiding.html">Oefening 1.1</a> zelf bouwde. Dat telt altijd op, en dat kun je zelf mee checken.</p>
+<p>Op je scherm staat nu twee keer 1200: tussen de stapels, en binnen de golfjes. Dat is toeval, zo valt het bij deze twaalf steentjes uit. Let er wel even op, want het zijn twee verschillende stukken verschil. De tussen-1200 zegt hoe ver de twee stapelgemiddelden van het gemiddelde van alle twaalf af liggen. De binnen-1200 zegt hoe de zes golfjes rond hun stapelgemiddelde van 40 wiebelen, en die is maar een deel van de binnen-4000.</p>
+<p>En dan de <em>F</em>. Hij zet de twee stukken tegen elkaar, elk gedeeld door zijn vrijheidsgraden. Tussen heeft er één (twee stapels min één), binnen tien (twaalf steentjes min de twee stapels). Tussen wordt dan 1200 / 1 = 1200, binnen 4000 / 10 = 400, en de <em>F</em> is 1200 / 400 = 3.00: de <em>F</em> van hierboven. Je programma rekende met precies deze getallen.</p>
 <p><strong>Nu jij</strong> — en daar heb je de pinguïns weer, maar nu met alle drie de soorten tegelijk op de weegschaal.</p>
 <p>Eén toets, drie groepen. Hij heet <strong>eenweg variantieanalyse</strong> — <em>one-way analysis of variance</em>, kortweg <strong>eenweg ANOVA</strong>. <em>Eenweg</em>, omdat je op één ding groepeert: de soort. Die eerste helft van de naam laat je nooit weg; waaróm niet staat in <a href="../20_blokken/blok_dummy_regressie.html">Oefening 9.1</a>. De naam klinkt als iets anders dan de <em>t</em>-toets, maar de vraag is dezelfde familie: <em>verschillen de gemiddelden van de groepen meer dan je door toeval zou verwachten?</em> Alleen kijkt hij naar alle groepen in één beweging.</p>
 <div class="spss callout callout-style-default callout-note callout-titled" title="In SPSS · trek aan de drie soorten">
@@ -685,9 +742,9 @@ UNIANOVA glans BY merk.</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <ol type="1">
 <li>Open <code>penguins.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype <strong>CSV</strong>.</li>
 <li>Ga naar <strong>Analyze → General Linear Model → Univariate</strong>.</li>
@@ -695,7 +752,7 @@ UNIANOVA glans BY merk.</code></pre>
 <li>Klik <strong>Options</strong> en vink <strong>Descriptive statistics</strong> aan — dan zie je meteen de drie gemiddelden — en <strong>Estimates of effect size</strong>. <strong>Continue</strong>, <strong>OK</strong>.</li>
 </ol>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <pre><code>* de eenweg ANOVA, met de drie gemiddelden en de effectgrootte erbij.
 UNIANOVA gewicht BY soort
   /PRINT = DESCRIPTIVE ETASQ.</code></pre>
@@ -719,14 +776,14 @@ UNIANOVA gewicht BY soort
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <ol start="5" type="1">
 <li>Open <strong>Univariate</strong> nog een keer — SPSS onthoudt wat je erin zette — en klik op <strong>Post Hoc</strong>. Zet <code>soort</code> bij <strong>Post Hoc Tests for</strong> en vink <strong>Tukey</strong> aan. <strong>Continue</strong>, <strong>OK</strong>.</li>
 </ol>
 </div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <pre><code>* dezelfde eenweg ANOVA, nu met alle paren erbij.
 UNIANOVA gewicht BY soort
   /POSTHOC = soort(TUKEY)
@@ -788,15 +845,15 @@ UNIANOVA gewicht BY soort
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <ol type="1">
 <li>Bij negen pinguïns staat er in de sekse-kolom letterlijk <code>NA</code> — twee letters die SPSS als een gewone waarde leest, en dan toets je straks drie groepen in plaats van twee. Zeg dus eerst dat <code>NA</code> hier “niets” betekent: ga in <strong>Variable View</strong> naar de rij <code>sekse</code>, klik in de kolom <strong>Missing</strong> en typ <code>NA</code> bij <strong>Discrete missing values</strong>.</li>
 <li>Het model zelf draai je pas bij c), nadat je bij a) geteld hebt: <strong>Analyze → General Linear Model → Univariate</strong>, <code>gewicht</code> bij <strong>Dependent Variable</strong>, <code>sekse</code> bij <strong>Fixed Factor(s)</strong>, en onder <strong>Options</strong> de <strong>Descriptive statistics</strong> en de <strong>Estimates of effect size</strong> aan. Klik voor Z) meteen ook <strong>Save…</strong> en vink onder <em>Residuals</em> <strong>Unstandardized</strong> aan: dan zet SPSS de residuen als kolom <code>RES_1</code> in je data.</li>
 </ol>
 </div>
-<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <pre><code>* NA is hier geen sekse maar een leeg vakje.
 MISSING VALUES sekse ('NA').
 
@@ -834,7 +891,7 @@ UNIANOVA gewicht BY sekse
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -843,7 +900,7 @@ UNIANOVA gewicht BY sekse
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> 165 vrouwtjes en 168 mannetjes, samen <strong>333</strong> — geen 342. Bij <strong>9</strong> pinguïns is de sekse in het veld nooit vastgesteld; de bladzij over de datasets vertelt het al.&nbsp;Onthoud die negen, ze duiken zo op waar je ze niet verwacht.</p>
 <p><strong>b)</strong> De nulhypothese: de sekse verklaart níéts van de verschillen in gewicht. In symbolen: <span class="math inline">\(H_0:\ \rho^2 = 0\)</span> tegen <span class="math inline">\(H_1:\ \rho^2 &gt; 0\)</span> — Grieks, want het gaat over de populatie en niet over deze 333. Je mag het ook over de twee populatiegemiddelden zeggen, <span class="math inline">\(H_0: \mu_{\text{vrouw}} = \mu_{\text{man}}\)</span>; één van de twee is genoeg.</p>
@@ -955,7 +1012,7 @@ UNIANOVA gewicht BY sekse
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -964,7 +1021,7 @@ UNIANOVA gewicht BY sekse
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>1 b · 2 c · 3 b · 4 c · 5 a</strong></p>
 <p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
