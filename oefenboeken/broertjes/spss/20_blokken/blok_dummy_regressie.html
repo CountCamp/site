@@ -677,6 +677,52 @@ REGRESSION
 </div>
 </div>
 <p>Twee groepen, één kolom met nullen en enen: dat is een <strong>dummy</strong>. En kijk nu wat de twee getallen zeggen. Het intercept is 40, en dat is precies de gemiddelde glans van de golfjes. De helling is 20, en dat is precies wat er bij de sterretjes bovenop komt: 40 + 20 = 60, hun gemiddelde. Reken het na met <strong>Analyze → Compare Means → Means</strong>, <code>glans</code> bij <strong>Dependent List</strong> en <code>merk</code> bij <strong>Independent List</strong>.</p>
+<p>Maar waarom is die helling precies dat verschil? Er gebeurt niets nieuws: de helling wordt uitgerekend zoals bij karaat, als de som van de rechthoekjes gedeeld door de som van de vierkantjes. In het boek staat die som als tabel, bij de rechthoekjes op een kolom van nullen en enen. Per steentje vier kolommen: hoe ver <code>D</code> van zijn gemiddelde ligt, die afwijking in het kwadraat (het vierkantje), hoe ver de glans van de gemiddelde glans ligt, en de twee afwijkingen maal elkaar (het rechthoekje). Onderaan de som van elke kolom. Bouw die tabel hier zelf na.</p>
+<div class="spss callout callout-style-default callout-note callout-titled" title="De tabel uit het boek, zelf gebouwd">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De tabel uit het boek, zelf gebouwd
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<ol type="1">
+<li>Zet de twee gemiddelden als kolom erbij: <strong>Data → Aggregate</strong>. Laat <strong>Break Variable(s)</strong> leeg, dan rekent SPSS over alle twaalf. Zet <code>D</code> en <code>glans</code> bij <strong>Summaries of Variable(s)</strong>; de functie staat al op <strong>MEAN</strong>, en SPSS noemt ze zelf <code>D_mean</code> en <code>glans_mean</code>. Kies onderin <strong>Add aggregated variables to active dataset</strong>. <strong>OK</strong>.</li>
+<li>Maak met <strong>Transform → Compute Variable</strong> vier kolommen, één voor één: <code>afwijking_D</code> = <code>D - D_mean</code>, <code>vierkantje_D</code> = <code>afwijking_D**2</code> (twee sterretjes is in SPSS “tot de macht”), <code>afwijking_glans</code> = <code>glans - glans_mean</code> en <code>rechthoekje</code> = <code>afwijking_D * afwijking_glans</code>. In de <strong>Data View</strong> staan ze nu naast <code>glans</code>: dat is je tabel.</li>
+<li><strong>Analyze → Descriptive Statistics → Descriptives</strong>, <code>rechthoekje</code> en <code>vierkantje_D</code> naar <strong>Variable(s)</strong>, en onder <strong>Options</strong> vink je <strong>Sum</strong> aan. <strong>OK</strong>.</li>
+</ol>
+<p>Bij <strong>Sum</strong> lees je nu 60 voor <code>rechthoekje</code> en 3 voor <code>vierkantje_D</code> (met decimalen erachter). De laatste stap doe je met je rekenmachine: 60 / 3 = 20. Dat is de <strong>20</strong> bij <code>D</code> in de tabel <em>Coefficients</em> van daarnet.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<pre><code>* de twee gemiddelden als kolom, in elke rij hetzelfde getal.
+AGGREGATE
+  /OUTFILE=* MODE=ADDVARIABLES
+  /BREAK=
+  /D_mean = MEAN(D)
+  /glans_mean = MEAN(glans).
+
+COMPUTE afwijking_D     = D - D_mean.
+COMPUTE vierkantje_D    = afwijking_D**2.
+COMPUTE afwijking_glans = glans - glans_mean.
+COMPUTE rechthoekje     = afwijking_D * afwijking_glans.
+EXECUTE.
+
+DESCRIPTIVES VARIABLES=rechthoekje vierkantje_D
+  /STATISTICS=SUM.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Leg je tabel naast die in het boek. Anna is een golfje: haar afwijking op <code>D</code> is −0.5, op glans −30, en haar rechthoekje is 15. Kees is een sterretje, maar een doffe: 0.5, −20 en −10. Dezelfde getallen. (Het boek zet een plus voor de positieve getallen, je programma niet; het getal is hetzelfde.)</p>
+<p>Onderaan staan de twee sommen. De rechthoekjes tellen op tot 60. De vierkantjes van <code>D</code> zijn twaalf keer 0.25, samen 3: elk steentje ligt precies een halve stap van het gemiddelde van <code>D</code> af, en een halve stap in het kwadraat is 0.25. Deel de ene som door de andere, 60 / 3 = 20, en daar is de helling: het verschil tussen de twee gemiddelden, 60 − 40. (Twee keer 60, en dat is toeval: de ene is de som van de rechthoekjes, de andere de gemiddelde glans van de sterretjes.)</p>
+<p>Dat de helling het verschil is, hangt niet aan die halve stap. Het geldt voor elke dummy die alleen in het model staat, ook als de twee groepen niet even groot zijn; de halve stap maakt de getallen hier alleen rond.</p>
 <p>Die kolom <code>D</code> hoef je trouwens niet cadeau te krijgen. <code>COMPUTE D2 = (merk = "sterretje").</code> maakt hem in één regel na — een uitspraak die waar of onwaar is, levert in SPSS een 1 of een 0 op.</p>
 <p>Eén ding om nu al te zien, want je komt het in de volgende oefening tegen. Vraag je diezelfde vergelijking als <em>t</em>-toets op — <strong>Analyze → Compare Means → Independent-Samples T Test</strong>, met <code>golfje</code> als eerste groep — dan staat er <em>t</em>(10) = −1.73. Vraag je ’m als dummy-regressie op, dan staat er <em>t</em>(10) = 1.73, zonder min. Zelfde data, zelfde toets, gespiegeld teken. De <em>t</em>-toets rekent golfje mín sterretje; de dummy rekent sterretje mín golfje. Welke kant het op gaat hangt af van wie je als vertrekpunt neemt — en dáár gaat deze hele oefening over.</p>
 <p>En de vraag die je nu wilt stellen: wélke van de twee schrijf je dan op? Allebei mag, zolang je er maar bij zegt welke kant je op gerekend hebt. Een min-teken zonder die zin erbij is niet fout maar onleesbaar; met die zin erbij is het antwoord af.</p>
@@ -692,9 +738,9 @@ REGRESSION
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <ol type="1">
 <li>Open <code>penguins.csv</code> in SPSS: <strong>File → Open → Data</strong>, bestandstype op <strong>CSV</strong>.</li>
 <li><strong>Transform → Compute Variable</strong>. Doelvariabele <code>adelie</code>, uitdrukking <code>soort = "Adelie"</code>. <strong>OK</strong>.</li>
@@ -703,7 +749,7 @@ REGRESSION
 <li><strong>Analyze → Regression → Linear</strong>: <code>gewicht</code> bij <strong>Dependent</strong>, <code>adelie</code> <strong>en</strong> <code>chinstrap</code> bij <strong>Independent(s)</strong>. <strong>OK</strong>.</li>
 </ol>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <pre><code>COMPUTE adelie    = (soort = "Adelie").
 COMPUTE chinstrap = (soort = "Chinstrap").
 EXECUTE.
@@ -775,7 +821,7 @@ REGRESSION
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -784,7 +830,7 @@ REGRESSION
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Twee: altijd eentje minder dan het aantal groepen, <em>k</em> − 1. De Gentoo’s heb je weggelaten, dus Gentoo is de referentiecategorie.</p>
 <p><strong>b)</strong> Over de <strong>populatie</strong>, niet over deze 342. Die heb je gewogen; hun gemiddelden kun je gewoon aflezen, dus daar valt niets aan te toetsen.</p>
@@ -844,12 +890,12 @@ REGRESSION
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <p><strong>Analyze → General Linear Model → Univariate</strong>: <code>gewicht</code> bij <strong>Dependent Variable</strong>, <code>soort</code> bij <strong>Fixed Factor(s)</strong>. Klik <strong>Options</strong> en vink <strong>Parameter estimates</strong> en <strong>Estimates of effect size</strong> aan. <strong>OK</strong>.</p>
 </div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <pre><code>UNIANOVA gewicht BY soort
   /PRINT = PARAMETER ETASQ.</code></pre>
 </div>
@@ -870,15 +916,15 @@ REGRESSION
 </div>
 <div class="callout-body-container callout-body">
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Via syntax</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">Via het menu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Via syntax</a></li></ul>
 <div class="tab-content">
-<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <ol type="1">
 <li><strong>Transform → Compute Variable</strong>: doelvariabele <code>gentoo</code>, uitdrukking <code>soort = "Gentoo"</code>. <strong>OK</strong>.</li>
 <li><strong>Analyze → Regression → Linear</strong>: <code>gewicht</code> bij <strong>Dependent</strong>, <code>chinstrap</code> <strong>en</strong> <code>gentoo</code> bij <strong>Independent(s)</strong>. <strong>OK</strong>.</li>
 </ol>
 </div>
-<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <pre><code>COMPUTE gentoo = (soort = "Gentoo").
 EXECUTE.
 
@@ -911,7 +957,7 @@ REGRESSION
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -920,7 +966,7 @@ REGRESSION
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Adélie. Het intercept is 3700.66 en dat is precies het Adélie-gemiddelde; bovendien heeft Adélie als enige soort geen eigen kolom gekregen.</p>
 <p><strong>b)</strong> Adélie = 3700.66; Chinstrap = 3700.66 + 32.43 = 3733.09; Gentoo = 3700.66 + 1375.35 = 5076.01 — terwijl het echte Gentoo-gemiddelde 5076.02 is. Dezelfde drie gemiddelden als in model 1, dezelfde afrondingskruimel, andere rij.</p>
@@ -1136,7 +1182,7 @@ REGRESSION
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1145,7 +1191,7 @@ REGRESSION
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>1 b · 2 d · 3 c · 4 a · 5 b</strong></p>
 <p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>

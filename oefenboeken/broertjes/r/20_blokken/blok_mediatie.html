@@ -1035,17 +1035,24 @@ window.Quarto = {
 <section id="de-sobel-toets-op-een-kladje" class="level3">
 <h3 class="anchored" data-anchor-id="de-sobel-toets-op-een-kladje">De Sobel-toets op een kladje</h3>
 <p>Je hebt het indirecte pad: <em>a</em> × <em>b</em> = 31.16. Maar twaalf steentjes is een kleine wereld — kan zo’n omweg-getal ook uit toeval opborrelen? Dat is precies wat de Sobel-toets vraagt. Hij zet het product <em>ab</em> af tegen zijn eigen standaardfout: dat geeft een <em>z</em>, en die <em>z</em> geeft een <em>p</em>. Meer is het niet — één breuk. Je hebt er geen macro voor nodig en geen menu; een kladje en de getallen die je net zelf hebt uitgerekend zijn genoeg. Pak een pen.</p>
-<p><span class="math display">\[ z \;=\; \frac{a \times b}{\sqrt{\,b^2 \cdot SE_a^2 \;+\; a^2 \cdot SE_b^2\,}} \]</span></p>
-<p>Invullen met wat je hebt — <em>a</em> = 3.93 (<em>SE</em> = 1.54) en <em>b</em> = 7.93 (<em>SE</em> = 1.62):</p>
+<p><span class="math display">\[ z \;=\; \frac{a \times b}{\sqrt{\,b^2 \cdot \mathit{SE}_a^2 \;+\; a^2 \cdot \mathit{SE}_b^2\,}} \]</span></p>
+<p>Invullen met wat je hebt, maar op drie decimalen. Op twee, zoals de 3.93 en 7.93 uit de commentaarregels, met de standaardfouten dan als 1.54 en 1.62, wordt de standaardfout van <em>ab</em> 13.77 in plaats van 13.80. De standaardfouten staan in de kolom <code>Std. Error</code>. Haal de twee diamantjes-modellen er daarvoor opnieuw bij, want <code>model.a</code> en <code>model.beide</code> zijn intussen de luchtmetingen:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pad a: de regel karaat</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(gladheid <span class="sc">~</span> karaat, <span class="at">data =</span> d))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pad b: de regel gladheid</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(glans <span class="sc">~</span> karaat <span class="sc">+</span> gladheid, <span class="at">data =</span> d))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Toont R ergens meer decimalen, rond dan af op drie. Dus <em>a</em> = 3.929 (<em>SE</em> = 1.544) en <em>b</em> = 7.932 (<em>SE</em> = 1.617):</p>
 <ul>
-<li>onder het wortelteken: 7.93² × 1.54² = 150.0, plus 3.93² × 1.62² = 40.4, samen 190.4</li>
+<li>onder het wortelteken: 7.932² × 1.544² = 149.99, plus 3.929² × 1.617² = 40.36, samen 190.35</li>
 <li>de wortel daarvan: <em>SE</em> van <em>ab</em> = <strong>13.80</strong></li>
 <li>en dus <em>z</em> = 31.16 / 13.80 = <strong>2.26</strong>, met <em>p</em> = <strong>.024</strong></li>
 </ul>
+<p>Of <em>p</em> onder .05 zit, zie je zonder rekenmachine. Sobel rekent erop dat het toeval je zonder omweg meestal een <em>z</em> dicht bij nul geeft: maar 5% valt verder weg dan 1.96, links en rechts samen. Jouw 2.26 is heftiger dan 1.96, dus <em>p</em> zit onder .05. De precieze .024 hoef je niet met de hand te kunnen; R geeft hem met <code>2 * pnorm(-2.26)</code>. R telt van links af, dus dat is het stukje links van −2.26, en de <code>2 *</code> neemt het even grote stukje rechts van 2.26 erbij.</p>
 </section>
 <section id="van-kladje-naar-process" class="level3">
 <h3 class="anchored" data-anchor-id="van-kladje-naar-process">Van kladje naar PROCESS</h3>
-<p>Daar staat het: <em>z</em> = 2.26, <em>p</em> = .024. Significant, zegt Sobel. En toch is dit het moment waarop Hayes zelf zou ingrijpen. De toets leunt namelijk op een aanname: dat <em>ab</em> netjes normaal verdeeld is. Maar een product van twee geschatte getallen is dat niet — de verdeling trekt scheef, en bij twaalf steentjes al helemaal. Daarom geeft PROCESS voor het indirecte effect geen <em>z</em> en geen <em>p</em>, maar een <strong>bootstrap-betrouwbaarheidsinterval</strong>: duizenden keren opnieuw trekken en kijken waar <em>ab</em> landt. Waarom dan toch eerst dat kladje? Omdat je nu weet wát PROCESS voor je toetst. Een macro die je aanzet voordat je snapt wat hij doet, is een knop. Nu is het een verrekijker.</p>
+<p>Op je kladje staat het: <em>z</em> = 2.26, <em>p</em> = .024. Significant, zegt Sobel. En toch is dit het moment waarop Hayes zelf zou ingrijpen. De toets leunt namelijk op een aanname: dat <em>ab</em> netjes normaal verdeeld is. Maar een product van twee geschatte getallen is dat niet — de verdeling trekt scheef, en bij twaalf steentjes al helemaal. Daarom geeft PROCESS voor het indirecte effect geen <em>z</em> en geen <em>p</em>, maar een <strong>bootstrap-betrouwbaarheidsinterval</strong>: duizenden keren opnieuw trekken en kijken waar <em>ab</em> landt. Waarom dan toch eerst dat kladje? Omdat je nu weet wát PROCESS voor je toetst. Een macro die je aanzet voordat je snapt wat hij doet, is een knop. Nu is het een verrekijker.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="Extra — hetzelfde met PROCESS (model 4)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1057,11 +1064,11 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p>PROCESS bestaat óók voor R: één bestand van Hayes’ site, geen pakketten nodig. Staat het nog niet naast je script, dan haal je het op zoals bij <a href="../installatie.html">PROCESS installeren</a> beschreven staat. Inlezen met <code>source()</code> en dan is het één regel.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eenmalig per sessie inladen</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">process</span>(<span class="at">data =</span> d, <span class="at">y =</span> <span class="st">"glans"</span>, <span class="at">x =</span> <span class="st">"karaat"</span>, <span class="at">m =</span> <span class="st">"gladheid"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="dv">4</span>, <span class="at">boot =</span> <span class="dv">5000</span>, <span class="at">seed =</span> <span class="dv">31216</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eenmalig per sessie inladen</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"process.R"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">process</span>(<span class="at">data =</span> d, <span class="at">y =</span> <span class="st">"glans"</span>, <span class="at">x =</span> <span class="st">"karaat"</span>, <span class="at">m =</span> <span class="st">"gladheid"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="dv">4</span>, <span class="at">boot =</span> <span class="dv">5000</span>, <span class="at">seed =</span> <span class="dv">31216</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Je krijgt terug wat je net met de hand deed — pad <em>a</em>, pad <em>b</em>, het totale en het directe effect — plus het indirecte effect met een <strong>bootstrap-interval</strong> in plaats van een Sobel-<em>z</em>.</p>
 </div>
 </div>

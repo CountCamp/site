@@ -701,7 +701,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <p>Twee vragen voor je verder leest.</p>
 <p><strong>a)</strong> Vraag de standaardafwijking van de glans op, en die van de residuen. (twee getallen, en één zin over wat het verschil tussen die twee betekent)</p>
-<p><strong>b)</strong> Kwadrateer allebei die getallen, tel de twaalf gekwadrateerde afwijkingen van de glans op (<code>sum((d$glans - mean(d$glans))^2)</code>) en doe hetzelfde met de residuen. (twee sommen, en zeg welk deel van de eerste door de tweede wordt opgeslokt)</p>
+<p><strong>b)</strong> Zet twee kolommen naast de data: hoe ver elke glans van het gemiddelde ligt (de kolom <code>afwijking</code> uit Oefening 1.1, in het boek het blauwe streepje), en het residu (het bordeaux streepje). Kwadrateer allebei die kolommen en tel elke kwadraatkolom op. (twee sommen, en zeg welk deel van de eerste door de tweede wordt opgeslokt)</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
@@ -717,17 +717,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> De glans zelf spreidt met <em>SD</em> = 21.74 glanspunten, de residuen met <em>SD</em> = 17.75. Zonder lijn is je beste gok voor elk steentje het gemiddelde, en hoe breed de gokfouten om dat gemiddelde heen uitwaaieren vat de standaardafwijking van de glans samen: bijna 22 glanspunten. Gok je mét de lijn, dan waaieren de residuen om de lijn heen uit, en die waaier is smaller: bijna 18. De lijn scheelt je dus wel iets, maar niet veel — bij deze twaalf steentjes is het karaat lang niet alles.</p>
+<p>Verwar die 17.75 niet met de 18.61 uit Oefening 3.2, het getal voor hoe ver de lijn er gemiddeld naast zit. Allebei komen ze uit dezelfde vierkantjes van de residuen, die je in b) optelt. Een standaardafwijking deelt ze door elf, <em>n</em> − 1, want het gemiddelde kost één getal; de 18.61 deelt door tien, <em>n</em> − 2, want de lijn kost er twee (het intercept en de helling). Allebei trekken ze daarna de wortel. In het boek heet die tweede de standaardschattingsfout, <em>S</em><sub>e</sub>. Vraagt iemand hoe ver de lijn er gemiddeld naast zit, dan is het die: 18.61.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 21.74</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(d<span class="sc">$</span>glans)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sd() → 17.75</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.karaat))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(model.karaat))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dezelfde vierkantjes, door tien in plaats van elf</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># sqrt() → 18.61</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">sum</span>(<span class="fu">resid</span>(model.karaat)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="dv">10</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>b)</strong> De glans om zijn eigen gemiddelde geeft <strong>5200.0</strong>; de glans om de lijn geeft <strong>3464.3</strong>. Van alle verschil in glans blijft er dus tweederde over nadat de lijn zijn deel heeft gehad — en dat ene derde dat hij wél pakt, is precies de <em>R</em>² = .33 die je in Oefening 3.1 en 3.2 zag.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 5200</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((d<span class="sc">$</span>glans <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>glans))<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 3464.3</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">resid</span>(model.karaat)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de twee kolommen uit het boek, en hun kwadraten</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>afwijking  <span class="ot">&lt;-</span> d<span class="sc">$</span>glans <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>glans)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>residu     <span class="ot">&lt;-</span> <span class="fu">resid</span>(model.karaat)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>afwijking2 <span class="ot">&lt;-</span> d<span class="sc">$</span>afwijking<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>residu2    <span class="ot">&lt;-</span> d<span class="sc">$</span>residu<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>d[, <span class="fu">c</span>(<span class="st">"naam"</span>, <span class="st">"afwijking"</span>, <span class="st">"afwijking2"</span>, <span class="st">"residu"</span>, <span class="st">"residu2"</span>)]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># de onderste regel: elke kwadraatkolom opgeteld</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 5200</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>afwijking2)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># sum() → 3464.3</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(d<span class="sc">$</span>residu2)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Waaróm dat zo is, staat hieronder.</p>
 </div>
 </div>

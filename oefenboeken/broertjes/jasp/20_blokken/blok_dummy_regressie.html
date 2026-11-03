@@ -662,6 +662,29 @@ window.Quarto = {
 </div>
 </div>
 <p>Twee groepen, één kolom met nullen en enen: dat is een <strong>dummy</strong>. En kijk nu wat de twee getallen zeggen. Het intercept is 40, en dat is precies de gemiddelde glans van de golfjes. De helling is 20, en dat is precies wat er bij de sterretjes bovenop komt: 40 + 20 = 60, hun gemiddelde. Reken het na met <strong>Descriptives</strong>, <code>glans</code> in <strong>Variables</strong> en <code>merk</code> bij <strong>Split</strong>.</p>
+<p>Maar waarom is die helling precies dat verschil? Er gebeurt niets nieuws: de helling wordt uitgerekend zoals bij karaat, als de som van de rechthoekjes gedeeld door de som van de vierkantjes. In het boek staat die som als tabel, bij de rechthoekjes op een kolom van nullen en enen. Per steentje vier kolommen: hoe ver <code>D</code> van zijn gemiddelde ligt, die afwijking in het kwadraat (het vierkantje), hoe ver de glans van de gemiddelde glans ligt, en de twee afwijkingen maal elkaar (het rechthoekje). Onderaan de som van elke kolom. Bouw die tabel hier zelf na.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="De tabel uit het boek, zelf gebouwd · JASP 0.98.1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De tabel uit het boek, zelf gebouwd · JASP 0.98.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Blijf in <code>diamantjes.csv</code> en maak vier berekende kolommen. Klik telkens in het datavenster op het <strong>+</strong> rechts van de laatste kolom (Compute Columns), kies de <strong>R</strong>-modus en typ de regel: links de naam van de kolom, rechts wat er in het <strong>R</strong>-vak komt. Klik dan <strong>Compute column</strong>.</p>
+<pre><code>afwijking_D       -&gt;   D - mean(D)
+vierkantje_D      -&gt;   afwijking_D^2
+afwijking_glans   -&gt;   glans - mean(glans)
+rechthoekje       -&gt;   afwijking_D * afwijking_glans</code></pre>
+<p>In het datavenster staan je kolommen nu naast <code>glans</code>: dat is je tabel. Dan de onderste regel: <strong>Descriptives</strong>, sleep <code>rechthoekje</code> en <code>vierkantje_D</code> naar <strong>Variables</strong>, en vink onder <strong>Statistics</strong> <strong>Sum</strong> aan.</p>
+<p>Bij <strong>Sum</strong> lees je 60 voor <code>rechthoekje</code> en 3 voor <code>vierkantje_D</code> (JASP zet er nullen achter de punt bij; het getal is hetzelfde). De laatste stap doe je met je rekenmachine: 60 / 3 = 20. Dat is de <strong>20</strong> bij <code>D</code> in de tabel <em>Coefficients</em> van daarnet.</p>
+</div>
+</div>
+<p>Leg je tabel naast die in het boek. Anna is een golfje: haar afwijking op <code>D</code> is −0.5, op glans −30, en haar rechthoekje is 15. Kees is een sterretje, maar een doffe: 0.5, −20 en −10. Dezelfde getallen. (Het boek zet een plus voor de positieve getallen, je programma niet; het getal is hetzelfde.)</p>
+<p>Onderaan staan de twee sommen. De rechthoekjes tellen op tot 60. De vierkantjes van <code>D</code> zijn twaalf keer 0.25, samen 3: elk steentje ligt precies een halve stap van het gemiddelde van <code>D</code> af, en een halve stap in het kwadraat is 0.25. Deel de ene som door de andere, 60 / 3 = 20, en daar is de helling: het verschil tussen de twee gemiddelden, 60 − 40. (Twee keer 60, en dat is toeval: de ene is de som van de rechthoekjes, de andere de gemiddelde glans van de sterretjes.)</p>
+<p>Dat de helling het verschil is, hangt niet aan die halve stap. Het geldt voor elke dummy die alleen in het model staat, ook als de twee groepen niet even groot zijn; de halve stap maakt de getallen hier alleen rond.</p>
 <p>Die kolom <code>D</code> hoef je trouwens niet cadeau te krijgen. Met een berekende kolom (<code>ifelse(merk == "sterretje", 1, 0)</code> in het <strong>R</strong>-vak) maak je hem in één regel na. En je hoeft hem zelfs helemaal niet te máken, want JASP doet het ook zelf als je hem de woordkolom geeft:</p>
 <div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · geef JASP de woorden, hij maakt de nullen en enen">
 <div class="callout-header d-flex align-content-center">
@@ -756,7 +779,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -765,7 +788,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Twee: altijd eentje minder dan het aantal groepen, <em>k</em> − 1. De Gentoo’s heb je weggelaten, dus Gentoo is de referentiecategorie.</p>
 <p><strong>b)</strong> Over de <strong>populatie</strong>, niet over deze 342. Die heb je gewogen; hun gemiddelden kun je gewoon aflezen, dus daar valt niets aan te toetsen.</p>
@@ -848,7 +871,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -857,7 +880,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a)</strong> Adélie. Het intercept is 3700.66 en dat is precies het Adélie-gemiddelde; bovendien komt Adélie in geen enkele rij van de tabel voor.</p>
 <p><strong>b)</strong> Adélie = 3700.66; Chinstrap = 3700.66 + 32.43 = 3733.09; Gentoo = 3700.66 + 1375.35 = 5076.01 — terwijl het echte Gentoo-gemiddelde 5076.02 is. Dezelfde drie gemiddelden als in model 1, dezelfde afrondingskruimel, andere rij.</p>
@@ -1075,7 +1098,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout callout-style-default callout-caution callout-titled" title="Antwoord — open na je eigen poging">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1084,7 +1107,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>1 b · 2 d · 3 c · 4 a · 5 b</strong></p>
 <p>Hieronder staat per vraag waaróm, en waarom de drie andere opties aantrekkelijk zijn. Heb je er een goed, dan kun je die overslaan.</p>
