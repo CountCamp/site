@@ -23,10 +23,25 @@ voorstel waar dat kan staat in `~/Documents/Ben_OS/_logs/dummy_speeltje_2026-11-
 (*Waar het vandaan gelinkt kan worden*). Het heeft geen Engelse tweeling. De rubriek
 *Kiezen* en de kaarttekst zijn van C (spoor site_pers), niet uit de Bib: geen van de
 vijf rubrieken paste, want *Ontleden* begint met *"Eén verandering"*, en dat is
-Solomon. De kaart volgt de lede van het speeltje zelf; *"de groep die op elke dummy
-een 0 krijgt"* leunt op Bens eigen zin in een bijles (*"staat er bij beide dummies een
-nul, dan weet je dat het die weggelaten categorie is"*, Bib-unit
-`uitleg-bij-dummies-is-alles-ten-opzichte-van-de-referentiegroep`, `auteur: Ben`).
+Solomon. *"met op elke dummy een 0"* leunt op Bens eigen zin in een bijles (*"staat
+er bij beide dummies een nul, dan weet je dat het die weggelaten categorie is"*,
+Bib-unit `uitleg-bij-dummies-is-alles-ten-opzichte-van-de-referentiegroep`,
+`auteur: Ben`). Drie rondes met testlezers michelle en jeanne; wat ze vonden en wat er
+daarom staat:
+
+- *"de gewichten springen"* las michelle naast wandelaars als lichaamsgewicht → het woord
+  staat er niet meer.
+- *"Zes groepen"* deed jeanne één factor met zes niveaus verwachten → de zes bij naam
+  (wachtlijst, stappenteller of wandelmaatje × zomer of winter).
+- De kaart gaf eerst het antwoord (*"de voorspellingen blijven staan"*) vóór het speeltje
+  vraagt *"Gok eerst"* — jeanne: *"de gok is er daarmee wel uit"* → de kaart eindigt nu
+  zoals de lede van het speeltje: *"kijk wat er springt, en wat er blijft staan"*. Ronde
+  3, jeanne: *"Ik wil klikken — juist omdat ik nu níét weet wat er springt."*
+- *"nullijn"* in de inleiding was voor jeanne een derde naam naast vertrekpunt en
+  referentiecategorie → *"een ander vertrekpunt"*.
+
+Wat de lezers bij het speeltje zelf vonden (de lede is nu moeilijker dan de kaart) staat
+in het verslag `~/Documents/Ben_OS/_logs/site_pers_2026-11-11.md`; dat is lab-tekst.
 
 `/power/`, `/tabellen/` en `/tables/` blijven staan waar ze stonden — die adressen
 zijn eerder gedeeld en worden niet verplaatst. De speelkist linkt ernaartoe.
