@@ -46,8 +46,12 @@ KIST = {
     "olifantengeheugen.html":   "olifantengeheugen.html",
     "casino_kleine_n.html":     "casino.html",
     # Spoor dummy_speeltje (lab, merge 9a149fcd, 11-11-2026). De naam is de titel
-    # van het speeltje, "Kies je vertrekpunt". Alleen de kist: geen hoofdstuk en
-    # geen oefenboek linkt er (nog) naartoe -- dat is een apart besluit.
+    # van het speeltje, "Kies je vertrekpunt". Sinds spoor speeltje_links (lab,
+    # merge 2228c8f7, 11-11-2026) linken er twee plekken naartoe. H9 §3 linkt
+    # absoluut naar deze kopie (https://countcamp.org/speeltjes/vertrekpunt.html),
+    # dus een manuscript/-kopie zoals bij de grabbelton hoort er niet bij. De drie
+    # broertjes linken hun eigen kopie speeltjes/dummy_speeltje.html; die ververst
+    # de lus over de broertjes hieronder.
     "dummy_speeltje.html":      "vertrekpunt.html",
 }
 
@@ -211,6 +215,10 @@ def main():
             fout += 1
 
     print("— de broertjes —")
+    # Geteld, niet getikt: de eindregel noemde tot 11-11-2026 `7 * len(BROERTJES)`
+    # kopieën. Met het vertrekpunt-speeltje zijn het er 8 per broertje, en dan was
+    # het totaal in "x van de N kopieën" 3 te laag, zonder dat iets het zei.
+    n_broertjes = 0
     for tak in BROERTJES:
         map_ = HIER / "oefenboeken" / "broertjes" / tak / "speeltjes"
         if not map_.is_dir():
@@ -223,6 +231,7 @@ def main():
             if schrijf(f, t):
                 n_bij += 1
         totaal = len(list(map_.glob("*.html")))
+        n_broertjes += totaal
         print("   %-4s %d bestanden, waarvan %d bijgewerkt" % (tak, totaal, n_bij))
 
     verwacht = set(KIST.values()) | {"index.qmd", "_LEESMIJ.md"}
@@ -236,7 +245,7 @@ def main():
 
     if veranderd:
         print("\n%d van de %d kopieën liepen achter en zijn bijgewerkt:" % (
-            len(veranderd), len(KIST) + len(LOSSE_ADRESSEN) + len(EN_KIST) + 7 * len(BROERTJES)))
+            len(veranderd), len(KIST) + len(LOSSE_ADRESSEN) + len(EN_KIST) + n_broertjes))
         for v in veranderd:
             print("   %s" % v)
     else:
