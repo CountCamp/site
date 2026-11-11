@@ -45,6 +45,10 @@ KIST = {
     "w12_schud_odds.html":      "schud-odds.html",
     "olifantengeheugen.html":   "olifantengeheugen.html",
     "casino_kleine_n.html":     "casino.html",
+    # Spoor dummy_speeltje (lab, merge 9a149fcd, 11-11-2026). De naam is de titel
+    # van het speeltje, "Kies je vertrekpunt". Alleen de kist: geen hoofdstuk en
+    # geen oefenboek linkt er (nog) naartoe -- dat is een apart besluit.
+    "dummy_speeltje.html":      "vertrekpunt.html",
 }
 
 LOSSE_ADRESSEN = {

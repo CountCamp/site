@@ -16,7 +16,7 @@ kopieën repareer je nooit ter plekke — je verandert de bron en kopieert opnie
 
 | | |
 |---|---|
-| **bron** | `countcamp_lab/boek/04_speeltjes/*.html` (twaalf stuks) |
+| **bron** | `countcamp_lab/boek/04_speeltjes/*.html` (hoeveel zegt `ls`; hier stond tot 11-11-2026 "twaalf stuks") |
 | **kopie 1** | `countcamp_site/speeltjes/*.html` — de speelkist, met een terugknop naar `/speeltjes/` |
 | **kopie 2–4** | `countcamp_site/oefenboeken/broertjes/{r,jasp,spss}/speeltjes/` — zeven per oefenboek, aangeroepen vanuit de hoofdstukken |
 | **kopie 5** | `countcamp_site/manuscript/h3_grabbel.html` — waar hoofdstuk 3 naartoe linkt |
@@ -43,7 +43,14 @@ de bron. Wie in het boek op *"Open de grabbelton"* klikte, kreeg een oudere
 grabbelton dan wie hem uit de speelkist pakte. Geen 404, geen klacht, geen alarm:
 precies de fout die een register moet vangen en die dit register miste omdat de
 bestemming er niet in stond. Nu wél, en `_proef_kopieen.py` leest alle
-vierendertig kopieën terug en vergelijkt ze teken voor teken met de bron.
+kopieën terug en vergelijkt ze teken voor teken met de bron (het aantal staat in
+zijn laatste regel; hier stond tot 11-11-2026 met de hand "vierendertig").
+
+**Wat 11-11-2026 leerde: twee lijsten, één vergeten.** `bouw_speelkist.py` en
+`_proef_kopieen.py` dragen elk hun eigen `KIST`. Het dummy-speeltje kwam in de eerste
+en niet in de tweede (die staat in het lab), en dan zegt de proef niets over die kopie
+— geen ONTBREEKT, geen WIJKT AF, hij telt hem gewoon niet. Wie een speeltje toevoegt,
+voegt het in beide toe, tot de proef zijn lijst uit het bouwscript leest.
 
 ## 2. Tabellen aflezen — Nederlands en Engels
 

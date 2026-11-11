@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kies je vertrekpunt — dummy's in een 2 × 3-ontwerp</title>
+<style>
+  :root{
+    --bg:#f4ecd8; --ink:#3b352b; --dim:#7a6f57;
+    --amber:#c8913a; --amber-ink:#a9701f;
+    --green:#4d8a5a; --green-ink:#2f6b3c; --paars:#7b5ea7;
+    --line:#d8c69b; --paper:#fffaf0; --bordeaux:#b0495a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;
+    background:
+      radial-gradient(1100px 560px at 50% -60px, rgba(214,166,88,.18), rgba(0,0,0,0) 68%),
+      #f4ecd8;
+    color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:36px 22px 64px}
+  h1{font-weight:600;font-size:34px;letter-spacing:.3px;margin:0 0 4px;color:#3b352b}
+  h1::after{content:"";display:block;width:190px;height:10px;margin-top:5px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='10' viewBox='0 0 190 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 188 5.5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
+    background-size:190px 10px}
+  h2{font-weight:600;font-size:17px;font-style:italic;color:var(--dim);margin:30px 0 8px;letter-spacing:.2px}
+  h3{font-weight:600;font-size:15px;color:#5a4f3a;margin:16px 0 6px}
+  .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 18px;max-width:680px}
+  p{line-height:1.55}
+  .klein{font-size:14.5px;color:#6b5f45}
+
+  /* ---- tabellen ---- */
+  .schuif{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;font-variant-numeric:tabular-nums;background:var(--paper);
+    border:1px solid #e3d3a8;border-radius:6px 9px 7px 10px / 9px 7px 10px 6px;
+    box-shadow:0 3px 12px rgba(120,95,45,.14)}
+  th,td{padding:6px 11px;text-align:right;border-bottom:1px solid #efe4c6;white-space:nowrap}
+  th{font-weight:600;color:#5a4f3a}
+  th.links,td.links{text-align:left}
+  thead th{font-style:italic;font-weight:600;color:var(--dim);border-bottom:1.5px solid #d8c69b}
+  tr:last-child td,tr:last-child th{border-bottom:0}
+  .marg{color:#7a6f57} th.marg{font-style:italic}
+  td.marg,th.marg{background:#f8f0dc}
+  .data td{min-width:64px}
+
+  /* ---- knoppen ---- */
+  .knoppen{margin:22px 0 0;padding:14px 16px 12px;background:#f8efd9;border:1.5px solid #e0cc98;
+    border-radius:12px 9px 13px 10px / 10px 13px 9px 12px;box-shadow:0 4px 14px rgba(120,95,45,.16)}
+  @media (min-width:900px) and (min-height:640px){ .knoppen{position:sticky;top:8px;z-index:5} }
+  .knoprij{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 8px}
+  .knoprij:last-of-type{margin-bottom:0}
+  .knoprij .lab{min-width:170px;color:#5a4f3a;font-size:15px}
+  button{font:inherit;font-size:15px;color:#4a4030;background:#efe3c4;border:1.5px solid #c9a866;
+    border-radius:11px 8px 12px 9px / 9px 12px 8px 11px;padding:7px 13px;cursor:pointer;min-height:40px;
+    box-shadow:0 2px 0 rgba(120,95,45,.28);transition:background .15s,border-color .15s}
+  button:hover{background:#f5ecd3;border-color:#b3843c}
+  button:focus-visible{outline:2.5px solid var(--amber-ink);outline-offset:2px}
+  .toggle{display:inline-flex;flex-wrap:wrap;border:1.5px solid #c9a866;background:#f3e9cd;
+    border-radius:10px 12px 9px 12px / 12px 9px 12px 10px;overflow:hidden}
+  .toggle button{border:0;border-radius:0;background:transparent;box-shadow:none;min-height:40px}
+  .toggle button.on{background:#e3cf9c;color:#6a4c0e;font-weight:600}
+  .status{margin:10px 0 0;padding:10px 14px;min-height:46px;background:var(--paper);border-left:4px solid var(--amber);
+    font-size:15.5px;line-height:1.5;color:#4a4030;border-radius:0 8px 8px 0}
+  .status b{color:var(--amber-ink)}
+  .status .srij{display:block;margin-top:3px}
+  .brug .srij2{display:block;margin-top:8px}
+  .status .nul{color:var(--green-ink);font-weight:600}
+
+  /* ---- de twee kijkwijzen ---- */
+  .twee{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  @media (max-width:880px){ .twee{grid-template-columns:1fr} }
+  /* een rastervak krimpt anders niet onder zijn breedste tabel, en dan loopt op een
+     telefoon de hele kijkwijze buiten beeld; zo scrollt alleen de tabel */
+  .twee>*,.panelen>*{min-width:0}
+  .kijk{background:rgba(255,250,240,.55);border:1px solid #e6d7ae;padding:4px 16px 14px;
+    border-radius:10px 13px 9px 12px / 12px 9px 13px 10px}
+  .kijk h2{margin-top:12px}
+  .dummy td{text-align:center;min-width:44px}
+  .dummy td.een{color:var(--amber-ink);font-weight:700}
+  .dummy td.nul0{color:#b6a988}
+  .dummy tr.ref td,.dummy tr.ref th{background:#fbeed0}
+  .dummy th code{font-size:12.5px;font-weight:600;white-space:normal;font-style:normal}
+  /* past de tabel niet (telefoon, of vijf dummy's met de interactie aan), dan gaan de
+     koppen rechtop: de nullen en enen moeten in beeld blijven, niet achter een scrollbalk */
+  .dummy.rechtop th,.dummy.rechtop td{padding:5px 6px}
+  .dummy.rechtop thead th code{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;display:inline-block}
+  .dummy.rechtop .tag{display:block;margin:3px 0 0;width:max-content}
+  .dummy .sz2,.dummy.rechtop .tag.sz2{display:none} .dummy.compact .sz2{display:inline} .dummy.compact .tag.sz2{display:block}
+  .dummy.compact .sz{display:none} .dummy.compact td .sz2:not(.tag){color:#7a6f57;font-size:13px}
+  .dummy.compact th,.dummy.compact td{white-space:normal;padding:4px 4px}
+  .dummy.compact{font-size:15px} .dummy.compact td{min-width:0}
+  .tag{display:inline-block;font-size:11.5px;font-style:italic;color:#fff;background:var(--amber-ink);
+    padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:1px}
+  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13.5px;color:#4d6a3a}
+
+  /* de vergelijking: symbolen boven, getallen eronder, per term één blokje */
+  .vgl{display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px 0;margin:6px 0 4px;font-size:17px}
+  .term{display:inline-flex;flex-direction:column;align-items:flex-start;padding:0 4px}
+  .term .s{white-space:nowrap}
+  .term .g.lhs{font-weight:400}
+  .term .g{white-space:nowrap;margin-top:4px;font-variant-numeric:tabular-nums;font-weight:600;
+    padding:0 3px;border-radius:4px}
+  .term .j{font-size:11px;color:var(--dim);margin-top:1px;font-family:"SF Mono",Menlo,Consolas,monospace}
+  .op{padding:0 .28em}
+  .dot{padding:0 .3em}
+  .flits{animation:flits 1.6s ease-out}
+  @keyframes flits{0%{background:#f6d48a}100%{background:transparent}}
+  @media (prefers-reduced-motion:reduce){ .flits{animation:none;outline:2px solid #e2b85a} }
+
+  /* hoedjes: één regel voor alle schattingen, ook over twee letters (αβ) */
+  .hat{position:relative;display:inline-block}
+  /* Grieks: rechtop waar het benoemt of naast alleen een getal staat (tabel, plaatje, zin),
+     cursief in een formule met andere symbolen erin — TAALGIDS §2, Ben 14-8 en 11-10-2026 */
+  .gr{font-style:normal;font-family:Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif}
+  .wisk .gr{font-style:italic} .nw{white-space:nowrap}
+  .hat::after{content:"";position:absolute;left:6%;right:6%;top:-.16em;height:.3em;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 4' preserveAspectRatio='none'><path d='M0.6 3.4 L5 0.7 L9.4 3.4' fill='none' stroke='%233b352b' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") no-repeat;
+    background-size:100% 100%}
+  .lat{font-style:italic}
+  sub{font-size:72%;line-height:0}
+
+  .effecten td,.effecten th{text-align:center}
+  .effecten td.uit{color:#b6a988}
+  .effecten .wv{display:block;font-size:13.5px;font-weight:400;font-style:normal;color:#4a4030}
+  .brug{margin:18px 0 0;padding:12px 16px;background:var(--paper);border:1px dashed #d4bf88;border-radius:9px;
+    font-size:15.5px;line-height:1.6;max-width:820px}
+  .waarom{margin:16px 0 0;max-width:760px;font-size:16px;color:#4a4030}
+
+  /* ---- het plaatje ---- */
+  .panelen{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){ .panelen{grid-template-columns:1fr} }
+  .paneel{position:relative;aspect-ratio:400/300;background:#faf6ea;border:1.5px solid #d8c69b;border-radius:12px;
+    box-shadow:0 8px 26px rgba(120,95,45,.16);overflow:hidden}
+  .paneel svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .laag{position:absolute;inset:0;pointer-events:none;font-size:12.5px}
+  .lbl{position:absolute;white-space:nowrap;transform:translateY(-50%);line-height:1.1}
+  @media (max-width:600px){ .laag{font-size:11px} .lbl.titel{font-size:12.5px} }
+  .lbl.stap,.lbl.inter,.lbl.mist{font-weight:600;background:rgba(250,246,234,.88);padding:0 2px;border-radius:3px}
+  .lbl.stap{color:var(--green-ink)}
+  .lbl.inter{color:var(--paars)}
+  .lbl.mist{color:var(--bordeaux)}
+  .lbl.titel{color:var(--dim);font-style:italic;font-weight:600;font-size:14px;transform:none}
+  .lbl.titel.basis2{color:var(--amber-ink);font-style:normal}
+  .lbl .wastxt{font-weight:400;font-style:italic;opacity:.8}
+  .lbl.kol{color:#5a4f3a;font-style:italic;transform:translate(-50%,0);font-size:12.5px}
+  .legenda{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 0;font-size:13.5px;color:#5a4f3a}
+  .legenda span{display:inline-flex;align-items:center;gap:6px}
+  .legenda i.sw{display:inline-block;width:20px;height:0;border-top:3px solid}
+  label.vink{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:#5a4f3a;cursor:pointer;min-height:40px}
+  label.vink input{width:18px;height:18px;accent-color:var(--bordeaux)}
+
+  /* ---- optellen ---- */
+  .som td{text-align:left;vertical-align:top}
+  .som .sy{display:block;font-size:12.5px;color:var(--dim)}
+  .som .gt{display:block;font-weight:600}
+  .som td.mist{color:var(--bordeaux);font-weight:600;text-align:right}
+  .som td.echt{text-align:right}
+  /* op een telefoon: per groep een kaartje, de twee sommen onder elkaar in beeld */
+  @media (max-width:600px){
+    .som thead{display:none}
+    .som,.som tbody{display:block}
+    .som tr{display:grid;grid-template-columns:1fr auto auto;gap:2px 12px;padding:8px 10px;border-bottom:1px solid #efe4c6}
+    .som td{border:0;padding:2px 0;white-space:normal}
+    .som td.groep{grid-column:1;grid-row:1}
+    .som td.echt{grid-column:2;grid-row:1}
+    .som td.mist{grid-column:3;grid-row:1}
+    .som td[data-l^="kijk"]{grid-column:1/-1}
+    .som td[data-l]::before{content:attr(data-l);display:block;font-size:11.5px;font-style:italic;color:#8a7d63;margin-bottom:6px}
+  }
+  .betaald{margin:12px 0 0;max-width:780px;font-size:15.5px}
+  details{margin:22px 0 0;font-size:15px}
+  summary{cursor:pointer;color:#5a4f3a}
+  .waarsch{color:var(--bordeaux);font-weight:600}
+  .foot{margin-top:30px;color:#8a7d63;font-size:13px;font-style:italic;line-height:1.6}
+  .foot a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+</style>
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <a href="/speeltjes/" style="display:inline-block;margin-bottom:1.5rem;font-size:.95rem;text-decoration:none;color:inherit;opacity:.7">← Terug naar de speelkist</a>
+  <h1>Kies je vertrekpunt</h1>
+  <p class="lede">Zes groepen, zes gemiddelden, en één regressievergelijking die ze allemaal moet voorspellen.
+    Daarvoor heeft die vergelijking een <b>vertrekpunt</b> nodig: één groep die op alle dummy's een 0 krijgt.
+    Dat is de referentiecategorie. Kies hieronder zelf welke groep het is, en kijk wat er springt — en wat er blijft staan.</p>
+
+  <h2>De zes groepen — gemiddeld aantal minuten wandelen per dag</h2>
+  <div class="schuif"><table class="data" id="datatabel"></table></div>
+  <p class="klein" id="uitlegData">Verzonnen gegevens van <span id="nTot">30</span> mensen die herstellen van een depressie en
+    meededen aan een beweegproef. Een derde bleef op de wachtlijst, een derde kreeg een stappenteller om de pols,
+    een derde een wandelmaatje dat aanbelt, ook als het regent. De helft liep in de zomer, de andere helft in de
+    winter: <span id="nCel">5</span> mensen per groep. De getallen zijn rond gekozen, zodat je alles kunt narekenen.</p>
+  <p class="klein" id="kruis"></p>
+
+  <div class="knoppen" id="knoppen" role="group" aria-label="Knoppen van het speeltje">
+    <div class="knoprij"><span class="lab">Vertrekpunt <b>programma</b></span><span class="toggle" id="refA"></span></div>
+    <div class="knoprij"><span class="lab">Vertrekpunt <b>seizoen</b></span><span class="toggle" id="refB"></span></div>
+    <div class="knoprij"><span class="lab">Model</span><span class="toggle" id="model">
+      <button data-m="hoofd" class="on" aria-pressed="true">alleen hoofdeffecten</button><button data-m="inter" aria-pressed="false">met interactie</button></span></div>
+    <p class="status" id="status" aria-live="polite"><b>Gok eerst.</b> Als je hierboven een ander vertrekpunt kiest: gaan de zes voorspellingen
+      dan mee, of blijven ze staan? Klik daarna, en lees hier wat er veranderde — en wat niet.</p>
+  </div>
+
+  <div class="twee">
+    <section class="kijk" id="kijkDummy">
+      <h2>Kijkwijze 1 · regressie met dummy's</h2>
+      <h3>Wie krijgt een 1?</h3>
+      <div class="schuif"><table class="dummy" id="dummyTabel"></table></div>
+      <h3>De vergelijking</h3>
+      <div class="vgl" id="vglGetal"></div>
+      <p class="klein" id="uitlegDummy"></p>
+    </section>
+
+    <section class="kijk" id="kijkAB">
+      <h2>Kijkwijze 2 · groot gemiddelde plus afwijkingen</h2>
+      <h3>Elke groep is een som</h3>
+      <div class="vgl wisk" id="vglAB"></div>
+      <p class="klein" style="margin-top:2px"><span class="lat">i</span> is het programma, <span class="lat">j</span> het seizoen.
+        Een dakje betekent: uitgerekend uit deze mensen. Op μ̂, α̂ en β̂
+        is het een schatting, op minuten (links van het =-teken) een voorspelling.</p>
+      <div class="schuif"><table class="effecten" id="effectTabel"></table></div>
+      <p class="klein" id="uitlegAB"></p>
+    </section>
+  </div>
+
+  <p class="waarom"><b>De afstanden veranderen; de zes plekken zelf niet.</b></p>
+  <p class="waarom" style="margin-top:6px">Staat er bij een groep op elke dummy een 0, dan weet je meteen wie het is: het vertrekpunt.
+    Alles wat de regressie je geeft, lees je ten opzichte van die groep — elk gewicht is een verschil mét het vertrekpunt.
+    Kies je een ander vertrekpunt, dan meet je vanaf een andere plek.</p>
+  <p class="waarom" style="margin-top:6px">Kijkwijze 2 heeft geen vertrekpunt. Die meet alles vanaf het gemiddelde van
+    iedereen, en daarom verroert hij zich niet.</p>
+
+  <p class="brug" id="brug"></p>
+
+  <h2>Stapjes stapelen — waar het model uitkomt, per groep</h2>
+  <div class="knoprij" style="margin-top:4px">
+    <span class="toggle" id="beeld">
+      <button data-b="dummy" class="on" aria-pressed="true">stapjes vanaf <i>b</i><sub>0</sub></button><button data-b="ab" aria-pressed="false">stapjes vanaf μ̂</button></span>
+    <label class="vink"><input type="checkbox" id="rood"> rode streepjes: wat het model per persoon mist (tot het dunne groene lijntje, de voorspelling)</label>
+  </div>
+  <div class="panelen" id="panelen"></div>
+  <div class="legenda">
+    <span><i class="sw" style="border-color:#3b352b;opacity:.35;border-top-width:6px;width:6px;border-radius:3px"></i>één persoon</span>
+    <span><i class="sw" style="border-color:#3b352b"></i>echt groepsgemiddelde</span>
+    <span><i class="sw" style="border-color:#c8913a"></i>vertrekpunt</span>
+    <span><i class="sw" style="border-color:#4d8a5a"></i>groen stapje van het model</span>
+    <span><i class="sw" style="border-color:#7b5ea7;border-top-style:double;border-top-width:5px"></i>het interactie-stapje (een ✻-gewicht, of een (<span class="hat">αβ</span>))</span>
+    <span><i class="sw" style="border-color:#2f6b3c;border-top-width:9px;width:9px;border-radius:5px"></i>waar het model landt: de voorspelling</span>
+    <span><i class="sw" style="border-color:#b0495a"></i>wat het model per groep nog mist (+ als het echte gemiddelde hoger ligt)</span>
+  </div>
+  <p class="klein" style="max-width:760px">Elke pijl is één stuk van de som. In kijkwijze 1 staat een pijl alleen in de
+    kolommen waar zijn dummy een 1 heeft. Kies je een ander vertrekpunt, dan verhuist de oranje lijn en lopen de pijlen
+    anders — maar de donkergroene stippen blijven waar ze zijn. <span id="pijlNamen"></span></p>
+
+  <h2>Zes keer optellen — twee wegen, steeds hetzelfde eindgetal</h2>
+  <div class="schuif"><table class="som" id="somTabel"></table></div>
+  <div id="marginaal"></div>
+
+  <details id="deelnemers"><summary>De <span id="nTot2">30</span> deelnemers, één voor één</summary>
+    <div class="schuif" style="margin-top:8px"><table id="ruwTabel"></table></div></details>
+
+  <p class="foot">
+    De regressieve ruggengraat &middot; <a href="https://countcamp.org/manuscript/h9.html">Hoofdstuk 9 — Groepen zijn ook getallen</a> &middot; dummy's, en wie het vertrekpunt is<br>
+    Verzonnen gegevens, gekozen zodat elk gewicht in elke codering een heel getal wordt. Elk getal op deze pagina rekent de pagina zelf uit.
+  </p>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  // ---- de twee factoren; deze volgorde is de volgorde op het scherm ----
+  const A={naam:'programma', niveaus:['wachtlijst','stappenteller','wandelmaatje']};
+  const B={naam:'seizoen',   niveaus:['zomer','winter']};
+  // het lidwoord hoort bij het woord, niet bij de plek in de zin
+  const LW={wachtlijst:'de', stappenteller:'de', wandelmaatje:'het'};
+  const met=nv=>(LW[nv]?LW[nv]+' ':'')+nv;
+  // ---- verzonnen data: [programma, seizoen, minuten wandelen per dag] ----
+  const DATA=[
+    ['wachtlijst','zomer',24],['wachtlijst','zomer',26],['wachtlijst','zomer',31],['wachtlijst','zomer',33],['wachtlijst','zomer',36],
+    ['wachtlijst','winter',6],['wachtlijst','winter',7],['wachtlijst','winter',9],['wachtlijst','winter',12],['wachtlijst','winter',16],
+    ['stappenteller','zomer',33],['stappenteller','zomer',38],['stappenteller','zomer',39],['stappenteller','zomer',45],['stappenteller','zomer',45],
+    ['stappenteller','winter',11],['stappenteller','winter',11],['stappenteller','winter',18],['stappenteller','winter',19],['stappenteller','winter',21],
+    ['wandelmaatje','zomer',26],['wandelmaatje','zomer',34],['wandelmaatje','zomer',37],['wandelmaatje','zomer',38],['wandelmaatje','zomer',40],
+    ['wandelmaatje','winter',17],['wandelmaatje','winter',22],['wandelmaatje','winter',25],['wandelmaatje','winter',29],['wandelmaatje','winter',32]
+  ];
+
+  const nA=A.niveaus.length, nB=B.niveaus.length;
+  const RIJ=DATA.map(r=>({i:A.niveaus.indexOf(r[0]), j:B.niveaus.indexOf(r[1]), y:r[2]}));
+  const N=RIJ.length;
+
+  // ---- beschrijven: cellen, marginalen, groot gemiddelde (alles over personen) ----
+  const CEL=[...Array(nA)].map(()=>[...Array(nB)].map(()=>({n:0,s:0,ys:[]})));
+  RIJ.forEach(r=>{ const c=CEL[r.i][r.j]; c.n++; c.s+=r.y; c.ys.push(r.y); });
+  const M=CEL.map(rw=>rw.map(c=>c.s/c.n));
+  const MU=RIJ.reduce((s,r)=>s+r.y,0)/N;
+  function gem(f){ let s=0,n=0; RIJ.forEach(r=>{ if(f(r)){ s+=r.y; n++; } }); return s/n; }
+  const RIJGEM=A.niveaus.map((_,i)=>gem(r=>r.i===i));
+  const KOLGEM=B.niveaus.map((_,j)=>gem(r=>r.j===j));
+  const GEBALANCEERD=CEL.every(rw=>rw.every(c=>c.n===CEL[0][0].n));
+  // kijkwijze 2: afwijkingen van het grote gemiddelde
+  const ALFA=RIJGEM.map(m=>m-MU), BETA=KOLGEM.map(m=>m-MU);
+  const AB=M.map((rw,i)=>rw.map((m,j)=>m-RIJGEM[i]-KOLGEM[j]+MU));
+
+  // ---- getallen schrijven: punt als decimaalteken, echt minteken ----
+  function rond(x){ const r=Math.round(x*10)/10; return Object.is(r,-0)?0:r; }
+  function abs1(x){ const r=Math.abs(rond(x)); return Number.isInteger(r)?String(r):r.toFixed(1); }
+  function f(x){ return (rond(x)<0?'−':'')+abs1(x); }
+  function sg(x){ return (rond(x)<0?'−':'+')+abs1(x); }        // +8, −18
+  function op(x){ return (rond(x)<0?' − ':' + ')+abs1(x); }      // in een som
+  const b=k=>'<span class="nw"><span class="lat">b</span><sub>'+k+'</sub></span>';
+  const hat=s=>'<span class="hat">'+s+'</span>';
+  // één Griekse letter krijgt een echt dakje (U+0302): dat gaat mee bij kopiëren en bij een
+  // schermlezer, een getekend dakje niet. Alleen (αβ) en minuten houden het getekende, want
+  // één tekentje kan niet over twee letters. Cursief of rechtop regelt .wisk (TAALGIDS §2).
+  const gr=s=>'<span class="gr">'+s+'\u0302</span>';
+  const MUs=gr('μ'), ALs=gr('α'), BEs=gr('β'), ABs='<span class="gr">'+hat('αβ')+'</span>';
+  const sub=s=>'<sub>'+s+'</sub>';
+  const ms=(sym,s)=>'<span class="nw">'+sym+sub(s)+'</span>';   // symbool en subscript breken nooit los
+
+  // ---- kleinste kwadraten: de pagina rekent de regressie echt uit, op alle personen ----
+  function kleinsteKwadraten(X,y){
+    const p=X[0].length, G=[...Array(p)].map(()=>new Array(p+1).fill(0));
+    for(let r=0;r<X.length;r++) for(let a=0;a<p;a++){ G[a][p]+=X[r][a]*y[r]; for(let c=0;c<p;c++) G[a][c]+=X[r][a]*X[r][c]; }
+    for(let c=0;c<p;c++){
+      let piv=c; for(let r=c+1;r<p;r++) if(Math.abs(G[r][c])>Math.abs(G[piv][c])) piv=r;
+      const t=G[c]; G[c]=G[piv]; G[piv]=t;
+      for(let r=0;r<p;r++){ if(r===c) continue; const q=G[r][c]/G[c][c]; for(let k=c;k<=p;k++) G[r][k]-=q*G[c][k]; }
+    }
+    return G.map((row,c)=>row[p]/row[c]);
+  }
+
+  // de kolommen van het model: intercept, dummy's van A, dummy van B, en eventueel hun producten
+  function termen(st){
+    const T=[{soort:'b0', naam:'(Intercept)', x:()=>1}];
+    A.niveaus.forEach((nv,i)=>{ if(i!==st.refA) T.push({soort:'A', i, naam:nv, x:(ii)=>ii===i?1:0}); });
+    B.niveaus.forEach((nv,j)=>{ if(j!==st.refB) T.push({soort:'B', j, naam:nv, x:(ii,jj)=>jj===j?1:0}); });
+    if(st.inter) A.niveaus.forEach((nv,i)=>{ if(i===st.refA) return;
+      B.niveaus.forEach((nw,j)=>{ if(j===st.refB) return;
+        T.push({soort:'AB', i, j, naam:nv+'✻'+nw, x:(ii,jj)=>(ii===i&&jj===j)?1:0}); }); });
+    T.forEach((t,k)=>{ t.k=k; });
+    return T;
+  }
+  function bereken(st){
+    const T=termen(st);
+    const X=RIJ.map(r=>T.map(t=>t.x(r.i,r.j))), y=RIJ.map(r=>r.y);
+    const w=kleinsteKwadraten(X,y); T.forEach((t,k)=>{ t.w=w[k]; });
+    const pred=M.map((rw,i)=>rw.map((_,j)=>T.reduce((s,t)=>s+t.w*t.x(i,j),0)));
+    const predAB=M.map((rw,i)=>rw.map((_,j)=>MU+ALFA[i]+BETA[j]+(st.inter?AB[i][j]:0)));
+    let scheef=0; pred.forEach((rw,i)=>rw.forEach((p,j)=>{ scheef=Math.max(scheef,Math.abs(p-predAB[i][j])); }));
+    return {T, pred, predAB, scheef};
+  }
+  // welke gewichten staan "aan" voor groep (i, j)
+  function aan(R,i,j){ return R.T.filter(t=>t.x(i,j)===1); }
+
+  // ---- toestand ----
+  const st={refA:0, refB:0, inter:false, beeld:'dummy', rood:false};
+  let R=bereken(st), vorige=null;
+  const $=id=>document.getElementById(id);
+
+  // ---- de zes groepen ----
+  (function(){
+    let h='<thead><tr><th class="links"></th>'+B.niveaus.map(n=>'<th>'+n+'</th>').join('')+'<th class="marg">gemiddeld</th></tr></thead><tbody>';
+    A.niveaus.forEach((nv,i)=>{ h+='<tr><th class="links">'+nv+'</th>'+B.niveaus.map((_,j)=>'<td data-w="'+M[i][j]+'">'+f(M[i][j])+'</td>').join('')+
+      '<td class="marg" data-w="'+RIJGEM[i]+'">'+f(RIJGEM[i])+'</td></tr>'; });
+    h+='<tr><th class="links marg">gemiddeld</th>'+B.niveaus.map((_,j)=>'<td class="marg" data-w="'+KOLGEM[j]+'">'+f(KOLGEM[j])+'</td>').join('')+
+      '<td class="marg"><b data-w="'+MU+'">'+f(MU)+'</b></td></tr></tbody>';
+    $('datatabel').innerHTML=h;
+    $('nTot').textContent=N; $('nTot2').textContent=N;
+    $('nCel').textContent=GEBALANCEERD?CEL[0][0].n:'ongelijk veel';
+    // wie wint waar? alleen als de winnaar per seizoen verschilt
+    const winnaar=B.niveaus.map((_,j)=>{ let w=0; for(let i=1;i<nA;i++) if(M[i][j]>M[w][j]) w=i; return w; });
+    if(winnaar[0]!==winnaar[1]){
+      const z=winnaar[0], w=winnaar[1];
+      $('kruis').innerHTML='Kijk even naar '+met(A.niveaus[z])+' en '+met(A.niveaus[w])+'. In de '+B.niveaus[0]+' wint '+met(A.niveaus[z])+
+        ' ('+f(M[z][0])+' tegen '+f(M[w][0])+' minuten), in de '+B.niveaus[1]+' '+met(A.niveaus[w])+' ('+f(M[w][1])+' tegen '+f(M[z][1])+').';
+    }
+    // de deelnemers
+    let r='<thead><tr><th class="links">programma</th><th class="links">seizoen</th><th class="links">minuten per dag</th><th>gemiddeld</th></tr></thead><tbody>';
+    A.niveaus.forEach((nv,i)=>B.niveaus.forEach((nw,j)=>{ r+='<tr><td class="links">'+nv+'</td><td class="links">'+nw+'</td><td class="links">'+
+      CEL[i][j].ys.map(f).join(', ')+'</td><td>'+f(M[i][j])+'</td></tr>'; }));
+    $('ruwTabel').innerHTML=r+'</tbody>';
+  })();
+
+  // ---- knoppen ----
+  function knoppen(id, niveaus, sleutel){
+    $(id).innerHTML=niveaus.map((n,k)=>'<button data-k="'+k+'" aria-pressed="'+(k===st[sleutel])+'"'+(k===st[sleutel]?' class="on"':'')+'>'+n+'</button>').join('');
+    $(id).querySelectorAll('button').forEach(bt=>{ bt.onclick=()=>{ const k=+bt.dataset.k; if(k===st[sleutel]) return; st[sleutel]=k; zetAan(id,bt); werkBij(sleutel); }; });
+  }
+  function zetAan(id,bt){ $(id).querySelectorAll('button').forEach(x=>{ x.classList.toggle('on',x===bt); x.setAttribute('aria-pressed',String(x===bt)); }); }
+  knoppen('refA', A.niveaus, 'refA'); knoppen('refB', B.niveaus, 'refB');
+  $('model').querySelectorAll('button').forEach(bt=>{ bt.onclick=()=>{ const v=bt.dataset.m==='inter'; if(v===st.inter) return; st.inter=v; zetAan('model',bt); werkBij('model'); }; });
+  $('beeld').querySelectorAll('button').forEach(bt=>{ bt.onclick=()=>{ if(bt.dataset.b===st.beeld) return; st.beeld=bt.dataset.b; zetAan('beeld',bt); teken(true); }; });
+  $('rood').onchange=()=>{ st.rood=$('rood').checked; teken(false); };
+
+  // past de dummytabel niet in zijn vak, dan gaan de koppen rechtop (gemeten, niet geraden)
+  // twee stappen, en na elke stap opnieuw gemeten (jeanne, ronde 2: met vijf dummy's op een
+  // telefoon paste hij rechtop nog steeds niet): eerst de koppen rechtop, dan programma en
+  // seizoen in één kolom
+  function pasDummy(){ const t=$('dummyTabel'), past=()=>t.scrollWidth<=t.parentElement.clientWidth+1;
+    t.classList.remove('rechtop','compact');
+    if(!past()) t.classList.add('rechtop');
+    if(!past()) t.classList.add('compact'); }
+  window.addEventListener('resize', pasDummy);
+
+  // ---- kijkwijze 1 ----
+  function toonDummy(){
+    const D=R.T.slice(1);
+    let h='<thead><tr><th class="links">'+A.naam+'<span class="sz2"> en '+B.naam+'</span></th><th class="links sz">'+B.naam+'</th>'+
+      D.map(t=>'<th><code>'+t.naam.replace('✻','<wbr>✻')+'</code></th>').join('')+'</tr></thead><tbody>';
+    A.niveaus.forEach((nv,i)=>B.niveaus.forEach((nw,j)=>{
+      const ref=(i===st.refA&&j===st.refB);
+      h+='<tr'+(ref?' class="ref"':'')+'><td class="links">'+nv+'<span class="sz2"><br>'+nw+'</span>'+(ref?'<span class="tag sz2">vertrekpunt</span>':'')+'</td>'+
+        '<td class="links sz">'+nw+(ref?'<span class="tag">vertrekpunt</span>':'')+'</td>'+
+        D.map(t=>{ const v=t.x(i,j); return '<td class="'+(v?'een':'nul0')+'">'+v+'</td>'; }).join('')+'</tr>';
+    }));
+    $('dummyTabel').innerHTML=h+'</tbody>';
+    pasDummy();
+
+    // één blokje per term: bovenaan in symbolen, eronder ingevuld — breekt de regel af,
+    // dan gaan symbool en getal samen naar de volgende regel
+    const mh='<span class="hat">minuten</span> =';
+    let g='<span class="term"><span class="s">'+mh+'</span><span class="g lhs">'+mh+'</span></span>';
+    R.T.forEach((t,k)=>{
+      const naam=t.soort==='b0'?'':'<span class="dot">·</span><code>'+t.naam+'</code>';
+      const plusS=k===0?'':'<span class="op">+</span>';
+      const plusG=k===0?'':'<span class="op">'+(rond(t.w)<0?'−':'+')+'</span>';
+      const getal=k===0?f(t.w):abs1(t.w);
+      g+='<span class="term"><span class="s">'+plusS+b(k)+naam+'</span>'+
+        '<span class="g" data-sym="b'+k+'" data-naam="'+t.naam+'" data-w="'+t.w+'">'+plusG+getal+naam+'</span>'+
+        (k===0?'<span class="j">(Intercept)</span>':'')+'</span>';
+    });
+    $('vglGetal').innerHTML=g;
+
+    const refA=A.niveaus[st.refA], refB=B.niveaus[st.refB], b0=R.T[0].w, mRef=M[st.refA][st.refB];
+    if(!st.inter){
+      $('uitlegDummy').innerHTML=b(0)+' = '+f(b0)+': wat het model voorspelt voor '+met(refA)+' in de '+refB+'. '+
+        'Elk ander gewicht is een stap vanaf daar: de programma-gewichten zeggen hoeveel minuten een programma scheelt met '+met(refA)+
+        ', het seizoen-gewicht hoeveel de '+B.niveaus[1-st.refB]+' scheelt met de '+refB+'.';
+    } else {
+      // het waarom, uitgerekend op het eerste programma dat niet het vertrekpunt is
+      const tA=R.T.find(t=>t.soort==='A'), tAB=R.T.find(t=>t.soort==='AB'&&t.i===tA.i), ob=1-st.refB;
+      const zonder=RIJGEM[tA.i]-RIJGEM[st.refA], hier=M[tA.i][st.refB]-M[st.refA][st.refB], daar=M[tA.i][ob]-M[st.refA][ob];
+      $('uitlegDummy').innerHTML=b(0)+' = '+f(b0)+': nu precies het gemiddelde van '+met(refA)+' in de '+refB+'. '+
+        'De programma-gewichten gelden nu alléén in de '+refB+', het seizoen-gewicht alléén bij '+met(refA)+'. '+
+        'Neem '+met(A.niveaus[tA.i])+': zonder interactie was '+b(tA.k)+' = '+sg(zonder)+', het gemiddelde verschil met '+met(refA)+
+        ' over beide seizoenen ('+sg(hier)+' in de '+refB+', '+sg(daar)+' in de '+B.niveaus[ob]+'). Nu is '+b(tA.k)+' = '+sg(tA.w)+
+        ': alleen de '+refB+'. En '+b(tAB.k)+' = '+sg(tAB.w)+': zoveel scheelt dat verschil in de '+B.niveaus[ob]+
+        ' ('+sg(daar)+' in plaats van '+sg(hier)+').';
+    }
+    return {b0, mRef};
+  }
+
+  // ---- kijkwijze 2 ----
+  function toonAB(){
+    $('vglAB').innerHTML='<span class="term"><span class="s"><span class="hat">minuten</span><sub><span class="lat">ij</span></sub> =</span></span>'+
+      '<span class="term"><span class="s">'+MUs+'</span></span><span class="op">+</span>'+
+      '<span class="term"><span class="s">'+ms(ALs,'<span class="lat">i</span>')+'</span></span><span class="op">+</span>'+
+      '<span class="term"><span class="s">'+ms(BEs,'<span class="lat">j</span>')+'</span></span>'+
+      (st.inter?'<span class="op">+</span><span class="term"><span class="s">('+ABs+')'+sub('<span class="lat">ij</span>')+'</span></span>':'');
+    let h='<thead><tr><th class="links" style="font-style:normal">'+MUs+' = <span data-sym="mu" data-w="'+MU+'">'+f(MU)+'</span></th>'+
+      B.niveaus.map((nw,j)=>'<th>'+nw+'<span class="wv">'+ms(BEs,nw)+' = <span data-sym="beta_'+nw+'" data-w="'+BETA[j]+'">'+sg(BETA[j])+'</span></span></th>').join('')+'</tr></thead><tbody>';
+    A.niveaus.forEach((nv,i)=>{
+      h+='<tr><th class="links">'+nv+'<span class="wv" style="text-align:left">'+ms(ALs,nv)+' = <span data-sym="alfa_'+nv+'" data-w="'+ALFA[i]+'">'+sg(ALFA[i])+'</span></span></th>'+
+        B.niveaus.map((nw,j)=>'<td class="'+(st.inter?'':'uit')+'">'+
+          '<span data-sym="ab_'+nv+'_'+nw+'" data-w="'+AB[i][j]+'">'+sg(AB[i][j])+'</span></td>').join('')+'</tr>';
+    });
+    $('effectTabel').innerHTML=h+'</tbody><caption style="caption-side:bottom;text-align:left;font-size:13px;color:#7a6f57;padding:6px 4px 0">'+
+      'De binnenste vakjes zijn de ('+ABs+')\'s, één per groep.</caption>';
+    $('uitlegAB').innerHTML=MUs+' is het gemiddelde van alle '+N+'. '+ALs+' zegt hoeveel een programma daarvan afwijkt, '+BEs+
+      ' hoeveel een seizoen afwijkt — '+ms(ALs,A.niveaus[0])+' is '+f(RIJGEM[0])+' − '+f(MU)+' = '+f(ALFA[0])+
+      ', het rijgemiddelde min het grote gemiddelde. Er is geen vertrekpunt: elke groep krijgt zijn eigen afwijking, en per factor tellen ze op tot 0. '+
+      (st.inter?'('+ABs+') is wat een groep er nog bij doet, bovenop zijn rij en zijn kolom.'
+               :'De binnenste vakjes, ('+ABs+'), doen in dit model nog niet mee — zet de interactie aan.');
+  }
+
+  // ---- de brug tussen de twee ----
+  function toonBrug(b0, mRef){
+    const i=st.refA, j=st.refB, nv=A.niveaus[i], nw=B.niveaus[j], mnv=met(nv);
+    let som=MU+ALFA[i]+BETA[j], h='<b>Hoe hangen de twee samen?</b> Het intercept is de som van kijkwijze 2 voor de vertrekgroep: <span class="wisk">'+
+      b(0)+' = '+MUs+' + '+ms(ALs,nv)+' + '+ms(BEs,nw);
+    let getal=f(MU)+op(ALFA[i])+op(BETA[j]);
+    if(st.inter){ h+=' + '+ms('('+ABs+')',nv+', '+nw); getal+=op(AB[i][j]); som+=AB[i][j]; }
+    h+='</span> = '+getal+' = <b>'+f(som)+'</b>.';
+    if(Math.abs(som-b0)>1e-9) h+=' <span class="waarsch">Maar de regressie zegt '+f(b0)+' — de groepen zijn niet even groot, en dan klopt deze brug niet meer.</span>';
+    else if(Math.abs(b0-mRef)>1e-9) h+='<span class="srij2">Zonder interactie is '+b(0)+' dus níét het gemiddelde van '+mnv+' in de '+nw+' (dat is '+f(mRef)+
+      '), maar wat het model voor die groep voorspelt. De regel "het intercept is het gemiddelde van de referentiegroep" klopt pas als het model elke groep apart mag voorspellen, met evenveel gewichten als groepen: met interactie ('+(nA*nB)+' gewichten voor '+(nA*nB)+' groepen), of bij maar één factor.</span>';
+    else h+='<span class="srij2">Met interactie is dat precies het gemiddelde van '+mnv+' in de '+nw+'.</span>';
+    $('brug').innerHTML=h;
+  }
+
+  // ---- zes keer optellen ----
+  function toonSom(){
+    let h='<thead><tr><th class="links">groep</th><th class="links">met dummy\'s</th><th class="links">met '+MUs+', '+ALs+', '+BEs+(st.inter?', ('+ABs+')':'')+'</th>'+
+      '<th>echt</th>'+(st.inter?'':'<th>model mist</th>')+'</tr></thead><tbody>';
+    A.niveaus.forEach((nv,i)=>B.niveaus.forEach((nw,j)=>{
+      const ts=aan(R,i,j), p=R.pred[i][j], q=R.predAB[i][j];
+      const symD=ts.map(t=>b(t.k)).join(' + '), getD=ts.map((t,k)=>k===0?f(t.w):op(t.w)).join('');
+      const symA=MUs+' + '+ms(ALs,nv)+' + '+ms(BEs,nw)+(st.inter?' + '+ms('('+ABs+')',nv+', '+nw):'');
+      const getA=f(MU)+op(ALFA[i])+op(BETA[j])+(st.inter?op(AB[i][j]):'');
+      const mist=M[i][j]-p;
+      h+='<tr><td class="links groep">'+nv+'<br><span class="klein">'+nw+'</span></td>'+
+        '<td data-l="kijkwijze 1"><span class="sy wisk">'+symD+'</span><span class="gt">'+getD+' = <b data-pred="dummy_'+i+'_'+j+'" data-w="'+p+'">'+f(p)+'</b></span></td>'+
+        '<td data-l="kijkwijze 2"><span class="sy wisk">'+symA+'</span><span class="gt">'+getA+' = <b data-pred="ab_'+i+'_'+j+'" data-w="'+q+'">'+f(q)+'</b></span></td>'+
+        '<td class="echt" data-l="echt">'+f(M[i][j])+'</td>'+(st.inter?'':'<td class="mist" data-l="model mist">'+sg(mist)+'</td>')+'</tr>';
+    }));
+    $('somTabel').innerHTML=h+'</tbody>';
+
+    // de marginalen-som, en de belofte van bovenaan
+    let k0=0, k1=0, groot=-1;
+    A.niveaus.forEach((_,i)=>B.niveaus.forEach((_,j)=>{ if(Math.abs(AB[i][j])>groot){ groot=Math.abs(AB[i][j]); k0=i; k1=j; } }));
+    let t;
+    if(!st.inter){
+      t='Zonder interactie is elke voorspelling ook gewoon <b>rij + kolom − totaal</b>, alleen uit de randen van de tabel bovenaan (de marginalen). Neem '+met(A.niveaus[k0])+' in de '+B.niveaus[k1]+': '+
+        f(RIJGEM[k0])+' + '+f(KOLGEM[k1])+' − '+f(MU)+' = '+f(RIJGEM[k0]+KOLGEM[k1]-MU)+'. Het echte gemiddelde is '+f(M[k0][k1])+': het model zit er '+abs1(M[k0][k1]-R.pred[k0][k1])+' minuten '+
+        (M[k0][k1]<R.pred[k0][k1]?'boven':'onder')+' (model mist '+sg(M[k0][k1]-R.pred[k0][k1])+').';
+      // de kolom "model mist" is precies kijkwijze 2's binnenste vakjes — alleen zeggen als het ook zo is
+      let gelijkAB=true; A.niveaus.forEach((_,i)=>B.niveaus.forEach((_,j)=>{ if(Math.abs(M[i][j]-R.pred[i][j]-AB[i][j])>1e-9) gelijkAB=false; }));
+      if(gelijkAB) t+=' Kijk naar de kolom <i>model mist</i>: dat zijn precies de binnenste vakjes van kijkwijze 2, de ('+ABs+')\'s. Wat het model zonder interactie mist, ís de interactie.';
+      // klopt de winnaar per seizoen nog?
+      B.niveaus.forEach((nw,j)=>{
+        let echt=0, mod=0; for(let i=1;i<nA;i++){ if(M[i][j]>M[echt][j]) echt=i; if(R.pred[i][j]>R.pred[mod][j]) mod=i; }
+        if(echt!==mod){
+          const vs=B.niveaus.map((nb,jj)=>f(R.pred[mod][jj])+' − '+f(R.pred[echt][jj])+' = '+f(R.pred[mod][jj]-R.pred[echt][jj])+' in de '+nb);
+          t+='</p><p class="betaald">En weet je nog wie er in de '+nw+' won? Volgens dit model '+met(A.niveaus[mod])+' ('+f(R.pred[mod][j])+' tegen '+f(R.pred[echt][j])+
+          ') — maar in het echt '+met(A.niveaus[echt])+' ('+f(M[echt][j])+' tegen '+f(M[mod][j])+'). Een model zonder interactie móét in elk seizoen hetzelfde verschil tussen twee programma\'s zien: '+
+          vs.join(', en ')+'. Zet de interactie aan.';
+        }
+      });
+    } else {
+      t='Met interactie is elke voorspelling precies het echte gemiddelde. Wat de interactie per groep toevoegt, is wat er na <b>rij + kolom − totaal</b> nog over was: bij '+
+        met(A.niveaus[k0])+' in de '+B.niveaus[k1]+' is dat '+sg(AB[k0][k1])+' minuten.';
+    }
+    $('marginaal').innerHTML='<p class="betaald">'+t+'</p>';
+  }
+
+  // ---- wat veranderde er? ----
+  function foto(){ return {w:R.T.map(t=>({k:t.k, naam:t.naam, w:t.w})), pred:R.pred.flat(), ab:[MU].concat(ALFA,BETA), inter:st.inter}; }
+  const gelijk=(x,y)=>Math.abs(x-y)<1e-9;
+  function zeg(waarom, oud, nu){
+    const nPred=nu.pred.filter((p,k)=>!gelijk(p,oud.pred[k])).length;
+    const nAB=nu.ab.filter((v,k)=>!gelijk(v,oud.ab[k])).length;
+    const vgl=nu.w.filter(t=>t.k<oud.w.length);
+    const anders=vgl.filter(t=>!gelijk(t.w,oud.w[t.k].w));
+    const zelfde=vgl.filter(t=>gelijk(t.w,oud.w[t.k].w));
+    const predTxt='<span class="'+(nPred?'':'nul')+'">'+nPred+' van de '+nu.pred.length+'</span>';
+    const abTxt=nAB?'<b>'+nAB+'</b> getallen veranderden.':MUs+', '+ALs+' en '+BEs+' <span class="nul">bleven allemaal staan</span>.';
+    const rij=(kop,tekst)=>'<span class="srij"><b>'+kop+'</b> '+tekst+'</span>';
+    let h='';
+    if(waarom==='refA'||waarom==='refB'){
+      const fac=waarom==='refA'?A:B, ander=waarom==='refA'?B:A, k=waarom==='refA'?st.refA:st.refB;
+      // b1 kan na de klik bij een andere dummy horen: dan is het geen ander getal maar een ander gewicht
+      const oudN=oud.w.slice(1).map(t=>t.naam), nuN=nu.w.slice(1).map(t=>t.naam);
+      const weg=oudN.filter(n=>nuN.indexOf(n)<0), erbij=nuN.filter(n=>oudN.indexOf(n)<0);
+      const wissel=weg.length?(weg.length>1?'de kolommen ':'de kolom ')+'<code>'+weg.join('</code> en <code>')+'</code> '+(weg.length>1?'verdwenen':'verdween')+
+        ' ('+fac.niveaus[k]+' is nu het vertrekpunt) en <code>'+erbij.join('</code> en <code>')+'</code> '+(erbij.length>1?'kwamen':'kwam')+' erbij; ':'';
+      const waaromZelfde=(zelfde.length && !nu.inter)?', want aan het vertrekpunt van '+ander.naam+' raakte je niet':'';
+      const zelfdeTxt=zelfde.length?' ('+zelfde.map(t=>b(t.k)+' = '+f(t.w)).join(' en ')+(zelfde.length>1?' bleven':' bleef')+' gelijk'+waaromZelfde+')':'';
+      const beeldTxt=st.beeld==='dummy'?' In het plaatje verhuisde de oranje lijn; de groene stippen bleven waar ze waren.'
+                                        :' In het plaatje bleef alles staan: kijkwijze 2 heeft geen vertrekpunt.';
+      // het antwoord op de gok eerst, dan de twee kijkwijzen, dan de volgende gok
+      h='Vertrekpunt '+fac.naam+': nu <b>'+fac.niveaus[k]+'</b>.'+
+        rij('De voorspellingen:', predTxt+' veranderd.'+beeldTxt)+
+        rij('Kijkwijze 1:', wissel+anders.length+' van de '+vgl.length+' gewichten kregen een ander getal'+zelfdeTxt+'.')+
+        rij('Kijkwijze 2:', abTxt)+
+        rij('Gok nu:', waarom==='refA'?'kies een ander vertrekpunt voor '+B.naam+'. Welk gewicht blijft dan staan?'
+                     :(nu.inter?'kies nog een ander vertrekpunt. Blijven de voorspellingen ook mét interactie staan?'
+                               :'zet de interactie aan. Blijven de voorspellingen dan óók staan?'));
+    } else if(nu.inter){
+      h='Interactie <b>aan</b>.'+
+        rij('De voorspellingen:', predTxt+' veranderd — het zijn nu de echte gemiddelden.')+
+        rij('Kijkwijze 1:', (nu.w.length-oud.w.length)+' gewichten erbij, en '+anders.length+' van de '+vgl.length+' oude kregen een ander getal: ze betekenen nu iets anders (zie onder de vergelijking).')+
+        rij('Kijkwijze 2:', abTxt+' Alleen de ('+ABs+')\'s doen nu mee.')+
+        rij('Gok nu:', 'kies een ander vertrekpunt. Blijven de voorspellingen ook mét interactie staan?');
+    } else {
+      h='Interactie <b>uit</b>.'+
+        rij('De voorspellingen:', predTxt+' veranderd — terug naar rij + kolom − totaal.')+
+        rij('Kijkwijze 1:', (oud.w.length-nu.w.length)+' gewichten weg, en '+anders.length+' van de '+vgl.length+' andere kregen een ander getal.')+
+        rij('Kijkwijze 2:', abTxt);
+    }
+    if(R.scheef>1e-9) h+=' <span class="waarsch">Let op: de twee kijkwijzen geven nu niet hetzelfde (ongelijke groepen).</span>';
+    $('status').innerHTML=h;
+    // laat zien wat sprong
+    document.querySelectorAll('#vglGetal .g[data-sym]').forEach(el=>{
+      const k=+el.dataset.sym.slice(1); if(k<oud.w.length && gelijk(+el.dataset.w, oud.w[k].w)) return;
+      el.classList.remove('flits'); void el.offsetWidth; el.classList.add('flits'); });
+  }
+
+  // ---- het plaatje: twee panelen, één per seizoen ----
+  const VB={W:400,H:300,L:30,R:30,T:48,B:30};   // rechts ruimte voor de labels van de laatste kolom
+  const YMAX=Math.ceil(Math.max(...RIJ.map(r=>r.y))/10)*10;
+  const cw=(VB.W-VB.L-VB.R)/nA;
+  const yS=v=>VB.T+(1-v/YMAX)*(VB.H-VB.T-VB.B);
+  const cxS=i=>VB.L+(i+0.5)*cw;
+  const pc=(x,y)=>'left:'+(x/VB.W*100).toFixed(2)+'%;top:'+(y/VB.H*100).toFixed(2)+'%';
+  function jit(a,b2){ const v=Math.sin(a*12.9898+b2*78.233)*43758.5453; return (v-Math.floor(v))-0.5; }
+  function wl(x1,y1,x2,y2,amp){ // een licht wiebelende lijn, steeds dezelfde
+    const d=Math.hypot(x2-x1,y2-y1), n=Math.max(1,Math.round(d/18)); let s='M'+(x1+jit(x1,y1)*amp).toFixed(1)+' '+(y1+jit(y1,x1)*amp).toFixed(1);
+    for(let k=1;k<=n;k++){ const t=k/n, x=x1+(x2-x1)*t, y=y1+(y2-y1)*t, e=(k===n)?0:amp; s+=' L'+(x+jit(x,y)*e).toFixed(1)+' '+(y+jit(y,x)*e).toFixed(1); }
+    return s;
+  }
+  (function(){
+    $('panelen').innerHTML=B.niveaus.map((nw,j)=>'<div class="paneel" id="paneel_'+j+'" aria-label="plaatje voor de '+nw+'">'+
+      '<svg viewBox="0 0 '+VB.W+' '+VB.H+'" preserveAspectRatio="none" id="svg_'+j+'"></svg><div class="laag" id="laag_'+j+'"></div></div>').join('');
+  })();
+
+  // stapjes voor groep (i, j) in de gekozen kijkwijze
+  function stapjes(i,j){
+    if(st.beeld==='dummy'){
+      return {basis:R.T[0].w, basisLbl:'vertrekpunt '+b(0)+' = '+f(R.T[0].w)+' <span style="font-weight:400">('+A.niveaus[st.refA]+', '+B.niveaus[st.refB]+')</span>', st:aan(R,i,j).slice(1).map(t=>({lbl:b(t.k), w:t.w, inter:t.soort==='AB'})), eind:R.pred[i][j]};
+    }
+    const s=[{lbl:ALs, w:ALFA[i], inter:false},{lbl:BEs, w:BETA[j], inter:false}];
+    if(st.inter) s.push({lbl:'('+ABs+')', w:AB[i][j], inter:true});
+    return {basis:MU, basisLbl:'groot gemiddelde '+MUs+' = '+f(MU), st:s, eind:R.predAB[i][j]};
+  }
+
+  // wasBasis: waar de oranje lijn stond vóór de laatste klik (michelle, ronde 2: 'dat hij
+  // verhuisd is zie ik alleen als ik onthoud dat hij op 29 stond'). Alleen binnen één kijkwijze.
+  let oudeBasis=null, anim=null, vang=null, wasBasis=null, oudBeeld=null;
+  const KALM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+
+  function tekenOp(t){
+    B.niveaus.forEach((nw,j)=>{
+      let g='', l='';
+      const plotB=VB.H-VB.B;
+      // hulplijnen, as
+      for(let v=0;v<=YMAX;v+=10){ const y=yS(v); g+='<line x1="'+VB.L+'" x2="'+(VB.W-VB.R)+'" y1="'+y+'" y2="'+y+'" stroke="#e8dcbc" stroke-width="1"/>';
+        l+='<span class="lbl" style="'+pc(VB.L-4,y)+';transform:translate(-100%,-50%);color:#8a7d63;font-size:11px">'+v+'</span>'; }
+      // vertrekpunt: de lijn schuift, de naam staat in de titel (daar botst hij nergens mee)
+      const s0=stapjes(0,j), nieuw=s0.basis, b0=(oudeBasis==null)?nieuw:oudeBasis;
+      const fase1=Math.min(1,t/0.35), basis=b0+(nieuw-b0)*ease(fase1);
+      l+='<span class="lbl titel" style="'+pc(VB.L,5)+'">'+nw+'</span>'+
+         '<span class="lbl titel basis2" style="'+pc(VB.L,22)+'">'+s0.basisLbl+
+         ((wasBasis!=null && Math.abs(wasBasis-nieuw)>1e-9)?' <span class="wastxt">· was '+f(wasBasis)+', de stippellijn</span>':'')+'</span>';
+      if(wasBasis!=null && Math.abs(wasBasis-nieuw)>1e-9){
+        g+='<line x1="'+VB.L+'" x2="'+(VB.W-VB.R)+'" y1="'+yS(wasBasis)+'" y2="'+yS(wasBasis)+'" stroke="#c8913a" stroke-opacity=".45" stroke-width="1.4" stroke-dasharray="2 4"/>';
+      }
+      g+='<path d="'+wl(VB.L,yS(basis),VB.W-VB.R,yS(basis),0.8)+'" stroke="#c8913a" stroke-width="2.2" fill="none"/>';
+      const groei=t<0.35?0:(t-0.35)/0.65;
+      A.niveaus.forEach((nv,i)=>{
+        // de stip staat op een VASTE plek per kolom; de trap loopt ernaartoe. Stond de stip
+        // aan het eind van de trap, dan sprong hij opzij zodra er een stapje bij of af kwam
+        // (de beeldverteller mat het: ~26 px) — precies terwijl hij moest blijven staan.
+        const cx=cxS(i), S=stapjes(i,j), m=M[i][j], n=S.st.length, dx=cw*0.09, xe=cx-cw*0.02, x0=xe-Math.max(0,n-1)*dx, xl=xe+cw*0.11, ye=yS(S.eind);
+        l+='<span class="lbl kol" style="'+pc(cx,plotB+6)+'">'+nv+'</span>';
+        // personen, links in de kolom; met de rode streepjes erbij een dunne groene lijn op de
+        // hoogte van de voorspelling, zodat elk rood streepje ergens op eindigt
+        if(st.rood) g+='<line x1="'+(cx-cw*0.47)+'" x2="'+xe+'" y1="'+ye+'" y2="'+ye+'" stroke="#2f6b3c" stroke-opacity=".55" stroke-width="1.2"/>';
+        CEL[i][j].ys.forEach((y,k)=>{ const px=cx-cw*0.40+jit(i*7+k,j*3+k)*cw*0.10;
+          if(st.rood) g+='<line x1="'+px.toFixed(1)+'" x2="'+px.toFixed(1)+'" y1="'+yS(y)+'" y2="'+ye+'" stroke="#b0495a" stroke-opacity=".6" stroke-width="1.3"/>';
+          g+='<circle cx="'+px.toFixed(1)+'" cy="'+yS(y).toFixed(1)+'" r="3.2" fill="#3b352b" fill-opacity=".30"/>'; });
+        // echt groepsgemiddelde
+        g+='<path d="'+wl(cx-cw*0.47,yS(m),cx+cw*0.40,yS(m),0.5)+'" stroke="#3b352b" stroke-width="2.6" fill="none"/>';
+        // stapjes, één voor één
+        let cur=S.basis; const uit=[];
+        S.st.forEach((s,k)=>{
+          const p=Math.max(0,Math.min(1,groei*n-k)); if(p<=0) return;
+          const x=x0+k*dx, y1=yS(cur), y2=yS(cur+s.w*ease(p)), kl=s.inter?'#7b5ea7':'#4d8a5a';
+          if(k>0) g+='<line x1="'+(x-dx)+'" x2="'+x+'" y1="'+y1+'" y2="'+y1+'" stroke="'+kl+'" stroke-opacity=".6" stroke-width="1.4"/>';
+          g+='<line x1="'+x+'" x2="'+x+'" y1="'+y1+'" y2="'+y2+'" stroke="'+kl+'" stroke-width="'+(s.inter?5:3)+'" stroke-linecap="round"/>';
+          if(s.inter) g+='<line x1="'+x+'" x2="'+x+'" y1="'+y1+'" y2="'+y2+'" stroke="#faf6ea" stroke-width="1.7"/>';
+          if(p>=1 && Math.abs(s.w)>1e-9){ const up=s.w>0?1:-1;
+            g+='<path d="M'+(x-3.2)+' '+(y2+4*up)+' L'+x+' '+y2+' L'+(x+3.2)+' '+(y2+4*up)+'" stroke="'+kl+'" stroke-width="1.8" fill="none"/>';
+            uit.push({y:(y1+y2)/2, x:xl, html:s.lbl+' = '+sg(s.w), kl:s.inter?'inter':'stap'}); }
+          cur+=s.w*ease(p);
+        });
+        // eindpunt: waar het model uitkomt; staat vast, ook terwijl de stapjes groeien
+        g+='<circle cx="'+xe+'" cy="'+ye+'" r="4.6" fill="#2f6b3c" stroke="#faf6ea" stroke-width="2"/>';
+        // wat het model nog mist: van de stip naar de zwarte streep
+        const mist=m-S.eind;
+        if(Math.abs(mist)>1e-9){ const xm=xe+cw*0.06;
+          g+='<line x1="'+xm+'" x2="'+xm+'" y1="'+ye+'" y2="'+yS(m)+'" stroke="#b0495a" stroke-width="2"/>';
+          uit.push({y:(ye+yS(m))/2, x:xl, html:sg(mist), kl:'mist'}); }
+        // labels niet óp een lijn: een label op de zwarte streep of de oranje lijn leest als
+        // label ván die lijn (de beeldverteller zag β −9 bij de streep van het maatje)
+        // Ook de streep van de buurkolom telt: een label loopt tot daar door. Wegduwen en uit
+        // elkaar halen gaan om beurten, een paar rondes, want de tweede stap mag de eerste niet
+        // ongedaan maken (beeldverteller ronde 2: "β̂ = −9" stond zo wéér op de streep).
+        const hinder=[yS(m), yS(S.basis)].concat(i+1<nA?[yS(M[i+1][j])]:[]);
+        const onder=plotB-8;
+        // Past een label niet tussen twee lijnen, dan naar de dichtstbijzijnde vrije plek
+        // erbuiten (het spel meet dit na, in pixels, in alle 24 standen).
+        const vrij=y=>hinder.every(o=>Math.abs(y-o)>=11);
+        const naarVrij=y=>{ if(vrij(y)) return y;
+          const kand=hinder.flatMap(o=>[o-11,o+11]).filter(vrij).sort((a,c)=>Math.abs(a-y)-Math.abs(c-y));
+          return kand.length?kand[0]:y; };
+        for(let ronde=0;ronde<4;ronde++){
+          uit.forEach(u=>{ u.y=naarVrij(u.y); });
+          uit.sort((a,c)=>a.y-c.y);
+          for(let k=1;k<uit.length;k++) if(uit[k].y-uit[k-1].y<16){ uit[k].y=uit[k-1].y+16; let n=0; while(!vrij(uit[k].y)&&n++<40) uit[k].y+=1; }
+          if(uit.length && uit[uit.length-1].y>onder){ const d=uit[uit.length-1].y-onder; uit.forEach(u=>{ u.y-=d; }); }
+        }
+        if(groei>=1) uit.forEach(u=>{ l+='<span class="lbl '+u.kl+'" style="'+pc(u.x,u.y)+'">'+u.html+'</span>'; });
+      });
+      $('svg_'+j).innerHTML=g; $('laag_'+j).innerHTML=l;
+    });
+  }
+  function teken(animeer){
+    // welk gewicht bij welke dummy hoort, ook bij het plaatje (beeldverteller ronde 2)
+    $('pijlNamen').innerHTML=st.beeld==='dummy'?'In deze stand: '+R.T.slice(1).map(t=>b(t.k)+' = <code>'+t.naam+'</code>').join(', ')+'.':'';
+    const nieuw=stapjes(0,0).basis;
+    if(oudeBasis!=null && oudBeeld===st.beeld && Math.abs(oudeBasis-nieuw)>1e-9) wasBasis=oudeBasis;
+    else if(oudBeeld!==st.beeld) wasBasis=null;
+    oudBeeld=st.beeld;
+    if(anim) cancelAnimationFrame(anim); if(vang) clearTimeout(vang);
+    if(!animeer||KALM||oudeBasis==null){ tekenOp(1); oudeBasis=nieuw; return; }
+    const t0=performance.now(), duur=1100;
+    function stap(nu){ const t=Math.min(1,(nu-t0)/duur); tekenOp(t); if(t<1) anim=requestAnimationFrame(stap); else { oudeBasis=nieuw; anim=null; } }
+    anim=requestAnimationFrame(stap);
+    // staat de tijd stil (een tab op de achtergrond), dan toch de eindstand
+    vang=setTimeout(()=>{ if(anim){ cancelAnimationFrame(anim); anim=null; } tekenOp(1); oudeBasis=nieuw; }, duur+250);
+  }
+
+  // ---- alles bijwerken ----
+  function werkBij(waarom){
+    const oud=vorige; R=bereken(st);
+    const k=toonDummy(); toonAB(); toonBrug(k.b0,k.mRef); toonSom();
+    const nu=foto(); if(oud&&waarom) zeg(waarom,oud,nu); vorige=nu;
+    teken(!!waarom);
+  }
+  werkBij(null);
+})();
+</script>
+</body>
+</html>
