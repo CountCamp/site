@@ -1,0 +1,2703 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Week 1 · Steekproevenverdelingen en hypothesetoetsing – Oefenboek Toetsende Statistiek</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../02_een_gemiddelde/02_een_gemiddelde.html" rel="next">
+<link href="../00_voorkennis_z/00_voorkennis_z.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../common/styles/countcamp.css">
+<link rel="stylesheet" href="../_common_ts/ts.css">
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">De zeven weken</a></li><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">Week 1 · Steekproevenverdelingen en hypothesetoetsing</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Oefenboek Toetsende Statistiek</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Schakel leesmodus">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar CountCamp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Start</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00_voorkennis_z/00_voorkennis_z.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 0 · De normaalverdeling en <em>z</em>-scores</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">De zeven weken</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_kapstok/01_kapstok.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Week 1 · Steekproevenverdelingen en hypothesetoetsing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_een_gemiddelde/02_een_gemiddelde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 2 · Hypothesetoetsen voor één gemiddelde</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 3 · Hypothesetoetsen voor twee gemiddelden en betrouwbaarheidsintervallen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04_categorisch/04_categorisch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 4 · Kansen en toetsen voor categorische variabelen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05_effect_power/05_effect_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 5 · Effectmaten en power</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06_assumpties/06_assumpties.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 6 · Assumpties en alternatieve toetsen</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07_toetskeuze/07_toetskeuze.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 7 · Toetskeuze en overzicht</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Op deze pagina</h2>
+   
+  <ul>
+  <li><a href="#de-vraag-onder-alle-zeven-weken" id="toc-de-vraag-onder-alle-zeven-weken" class="nav-link active" data-scroll-target="#de-vraag-onder-alle-zeven-weken">De vraag onder alle zeven weken</a></li>
+  <li><a href="#alleen-god-weet-het-gemiddelde" id="toc-alleen-god-weet-het-gemiddelde" class="nav-link" data-scroll-target="#alleen-god-weet-het-gemiddelde">Alleen God weet het gemiddelde</a></li>
+  <li><a href="#drie-verdelingen-die-bijna-hetzelfde-heten" id="toc-drie-verdelingen-die-bijna-hetzelfde-heten" class="nav-link" data-scroll-target="#drie-verdelingen-die-bijna-hetzelfde-heten">Drie verdelingen die bijna hetzelfde heten</a></li>
+  <li><a href="#twee-hypothesen-niets-aan-de-hand-of-wel" id="toc-twee-hypothesen-niets-aan-de-hand-of-wel" class="nav-link" data-scroll-target="#twee-hypothesen-niets-aan-de-hand-of-wel">Twee hypothesen: niets aan de hand, of wel</a></li>
+  <li><a href="#stippen-tellen" id="toc-stippen-tellen" class="nav-link" data-scroll-target="#stippen-tellen">Stippen tellen</a></li>
+  <li><a href="#de-p-waarde-wat-hij-zegt-en-wat-niet" id="toc-de-p-waarde-wat-hij-zegt-en-wat-niet" class="nav-link" data-scroll-target="#de-p-waarde-wat-hij-zegt-en-wat-niet">De <em>p</em>-waarde: wat hij zegt, en wat niet</a></li>
+  <li><a href="#beslissen" id="toc-beslissen" class="nav-link" data-scroll-target="#beslissen">Beslissen</a>
+  <ul class="collapse">
+  <li><a href="#de-andere-route-de-kritieke-waarde" id="toc-de-andere-route-de-kritieke-waarde" class="nav-link" data-scroll-target="#de-andere-route-de-kritieke-waarde">De andere route: de kritieke waarde</a></li>
+  </ul></li>
+  <li><a href="#twee-manieren-om-ernaast-te-zitten" id="toc-twee-manieren-om-ernaast-te-zitten" class="nav-link" data-scroll-target="#twee-manieren-om-ernaast-te-zitten">Twee manieren om ernaast te zitten</a></li>
+  <li><a href="#niet-significant-is-niet-hetzelfde-als-gelijk" id="toc-niet-significant-is-niet-hetzelfde-als-gelijk" class="nav-link" data-scroll-target="#niet-significant-is-niet-hetzelfde-als-gelijk">Niet significant is niet hetzelfde als gelijk</a></li>
+  <li><a href="#het-stappenplan" id="toc-het-stappenplan" class="nav-link" data-scroll-target="#het-stappenplan">Het stappenplan</a></li>
+  <li><a href="#in-r-rijen-kiezen" id="toc-in-r-rijen-kiezen" class="nav-link" data-scroll-target="#in-r-rijen-kiezen">In R: rijen kiezen</a>
+  <ul class="collapse">
+  <li><a href="#een-rapport-van-je-script" id="toc-een-rapport-van-je-script" class="nav-link" data-scroll-target="#een-rapport-van-je-script">Een rapport van je script</a></li>
+  </ul></li>
+  <li><a href="#oefenen" id="toc-oefenen" class="nav-link" data-scroll-target="#oefenen">Oefenen</a></li>
+  <li><a href="#tentamenblok" id="toc-tentamenblok" class="nav-link" data-scroll-target="#tentamenblok">Tentamenblok</a></li>
+  <li><a href="#de-kapstok-in-één-oogopslag" id="toc-de-kapstok-in-één-oogopslag" class="nav-link" data-scroll-target="#de-kapstok-in-één-oogopslag">De kapstok in één oogopslag</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">De zeven weken</a></li><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">Week 1 · Steekproevenverdelingen en hypothesetoetsing</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Week 1 · Steekproevenverdelingen en hypothesetoetsing</h1>
+<p class="subtitle lead">de kapstok — waar de andere zes weken aan komen te hangen</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Wat je deze week leert</strong></p>
+<ul>
+<li>het verschil tussen populatie en steekproef, en tussen μ en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math></li>
+<li>drie verdelingen die bijna hetzelfde heten</li>
+<li>de nulhypothese en de alternatieve hypothese</li>
+<li>de <em>p</em>-waarde aflezen uit een stippenplot, door te tellen</li>
+<li>beslissen: verwerpen of niet verwerpen</li>
+<li>waarom “niet significant” iets anders is dan “gelijk”</li>
+<li>in R rijen kiezen uit een dataset, en van je script een rapport maken</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="de-vraag-onder-alle-zeven-weken" class="level1">
+<h1>De vraag onder alle zeven weken</h1>
+<p>Je meet iets bij een groepje mensen, en je ziet een verschil. Slechte slapers piekeren in jouw steekproef wat meer dan gemiddeld, zeg. En dan komt de vraag waar dit hele oefenboek om draait:</p>
+<blockquote class="blockquote">
+<p>Zit dat verschil ook in de <strong>populatie</strong>, of had je net zo goed toevallig déze mensen kunnen trekken?</p>
+</blockquote>
+<p>Zeven weken lang stel je die ene vraag, telkens in een ander jasje: bij één gemiddelde, bij twee gemiddelden, bij categorieën, met en zonder klokvorm. Deze eerste week gaat niet diep. Ze hangt de <strong>kapstok</strong> op: de haakjes waar elke volgende week aan komt te hangen. Rekenen doe je hier nauwelijks; je telt stippen. Waar iets later wordt uitgewerkt, staat erbij in welke week.</p>
+</section>
+<section id="alleen-god-weet-het-gemiddelde" class="level1">
+<h1>Alleen God weet het gemiddelde</h1>
+<p>Je wilt iets zeggen over <strong>alle</strong> slechte slapers: de <strong>populatie</strong>. Hun gemiddelde piekerscore heet μ (<em>mu</em>). Dat getal ken je niet, en je gaat het ook nooit kennen. Daarom krijgt het een Griekse letter: vage letters voor vage dingen.</p>
+<p>Wat je wél kent, is je <strong>steekproef</strong>: de 25 mensen die je echt gemeten hebt. Hun gemiddelde heet <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> (<em>x-streep</em>). Dat getal reken je gewoon uit.</p>
+<table class="table-striped caption-top table">
+<caption>Populatie in Griekse letters, steekproef in Latijnse</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>populatie</th>
+<th>steekproef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>wat het is</td>
+<td>iedereen over wie je iets wilt zeggen</td>
+<td>de mensen die je echt gemeten hebt</td>
+</tr>
+<tr class="even">
+<td>gemiddelde</td>
+<td>μ</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math></td>
+</tr>
+<tr class="odd">
+<td>standaarddeviatie</td>
+<td>σ</td>
+<td><em>s</em></td>
+</tr>
+<tr class="even">
+<td>aantal</td>
+<td><em>N</em></td>
+<td><em>n</em></td>
+</tr>
+<tr class="odd">
+<td>ken je het?</td>
+<td>nee — een <strong>parameter</strong></td>
+<td>ja — een <strong>statistiek</strong></td>
+</tr>
+</tbody>
+</table>
+<p>En dan de zin om nooit te vergeten: <strong>alles draait om de populatie.</strong> Niemand schrijft een artikel over de 25 mensen die toevallig meededen. Je gebruikt hun gemiddelde <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> om iets te zeggen over μ. Netjes gezegd: de statistiek <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> <em>schat</em> de parameter μ. Je steekproef zelf schat niets; op je steekproef reken je.</p>
+</section>
+<section id="drie-verdelingen-die-bijna-hetzelfde-heten" class="level1">
+<h1>Drie verdelingen die bijna hetzelfde heten</h1>
+<p>Drie woorden, en twee ervan verschillen maar één lettergreep.</p>
+<ul>
+<li>De <strong>populatieverdeling</strong>: de scores van iedereen in de populatie.</li>
+<li>De <strong>steekproefverdeling</strong>: de scores van de mensen in jouw ene steekproef.</li>
+<li>De <strong>steekproevenverdeling</strong>: de verdeling van een statistiek — bijvoorbeeld <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> — over alle mogelijke steekproeven van dezelfde grootte <em>n</em> uit dezelfde populatie.</li>
+</ul>
+<p>Die derde is het hart van alles wat hierna komt, en hij is het lastigst voor te stellen. Dus een spelletje. Stel, honderd mensen trekken elk een eigen steekproef van 25 slechte slapers. Ieder rekent het gemiddelde uit, schrijft het op een bordje, en hangt het bordje aan een lijn — op volgorde, kleine getallen links, grote rechts. Die rij bordjes is de steekproevenverdeling. Eén bordje is niet één mens; één bordje is één <strong>steekproef</strong>. Eigenlijk horen álle mogelijke steekproeven aan die lijn, maar honderd is genoeg om de vorm te zien.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Steekproef-verdeling of steekproeven-verdeling?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Steekproef-verdeling of steekproeven-verdeling?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kijk naar het meervoud. Steekproev<strong>en</strong>verdeling: veel steekproeven, en van elk één getal. Steekproefverdeling: één steekproef, en daarin veel mensen.</p>
+<p>In het Engels: <em>sample distribution</em> tegenover <em>sampling distribution</em>. Even verraderlijk.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-twee" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Twee stippenplots naast elkaar op dezelfde as van 20 tot 80. Links 25 losse stippen, wijd verspreid van 33 tot 63. Rechts honderd stippen in hoge stapels, dicht opeen tussen 45 en 55.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-twee-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-twee-1.png" class="img-fluid figure-img" alt="Twee stippenplots naast elkaar op dezelfde as van 20 tot 80. Links 25 losse stippen, wijd verspreid van 33 tot 63. Rechts honderd stippen in hoge stapels, dicht opeen tussen 45 en 55." width="691">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twee-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1: Links de steekproefverdeling: de scores van de 25 mensen in één steekproef, van 33 tot 63. Rechts de steekproevenverdeling: de gemiddelden van 100 steekproeven, van 45 tot 55. Zelfde as.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Waarom die bordjes rond het midden een klokvorm maken, en hoe breed die klok is, werken we uit in week 2 (<em>Hypothesetoetsen voor één gemiddelde</em>). Deze week tellen we alleen.</p>
+<p>Wil je de normaalverdeling en <em>z</em>-scores alvast opfrissen? Dat kan in <a href="../00_voorkennis_z/00_voorkennis_z.html">week 0</a>: de voorkennis voor week 2.</p>
+</section>
+<section id="twee-hypothesen-niets-aan-de-hand-of-wel" class="level1">
+<h1>Twee hypothesen: niets aan de hand, of wel</h1>
+<p>Bij elke toets zet je twee uitspraken over de <strong>populatie</strong> tegenover elkaar.</p>
+<ul>
+<li>De <strong>nulhypothese</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: er is niets aan de hand. Geen verschil, geen verandering. Denk bij de nul altijd: <em>afwezig</em>.</li>
+<li>De <strong>alternatieve hypothese</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: er is wél iets aan de hand. Dit is meestal wat de onderzoeker verwacht.</li>
+</ul>
+<p>Voor de slechte slapers, als de piekervragenlijst zo gemaakt is dat het gemiddelde in de algemene bevolking 50 is:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">\mu = 50</annotation></semantics></math> — slechte slapers piekeren gemiddeld net zoveel als iedereen<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">\mu \neq 50</annotation></semantics></math> — slechte slapers piekeren gemiddeld anders</p>
+</div>
+<p>Drie regels, en elk paar dat je ooit opschrijft moet ze alle drie halen:</p>
+<ol type="1">
+<li><strong>Over de populatie, dus over μ.</strong> Nooit over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>: dat getal ken je al, daar valt niets aan te toetsen.</li>
+<li><strong>Het is-gelijkteken staat in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</strong> De nulhypothese noemt één precieze waarde; daar reken je vanuit.</li>
+<li><strong>Samen dekken ze alles.</strong> Wat niet onder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> valt, valt onder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>. Geen gat ertussen.</li>
+</ol>
+<p><strong>Tweezijdig.</strong> In <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> staat ≠, en ongelijk betekent: het kan naar boven of naar beneden. Dat heet <strong>tweezijdig</strong> toetsen, en dat doe je in dit oefenboek standaard. Er zijn vier redenen om dat ook te doen als je wél een richting verwacht:</p>
+<ul>
+<li>Vaak heb je geen richting. Je weet niet of slechte slapers meer of minder piekeren; je wilt weten óf het anders is.</li>
+<li>Heb je wel een verwachting, dan wil je nog steeds zien als het de andere kant op gaat. Een training die het piekeren erger maakt, wil je niet missen.</li>
+<li>Sommige toetsen hebben geen kant. Daar bestaat eenzijdig niet eens; die kom je tegen in week 4 (<em>Kansen en toetsen voor categorische variabelen</em>).</li>
+<li>Wie de richting kiest nádat hij de data zag, speelt vals. Tweezijdig vooraf voorkomt dat.</li>
+</ul>
+<p>Je komt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> ook tegen als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>. Zelfde ding, andere naam.</p>
+</section>
+<section id="stippen-tellen" class="level1">
+<h1>Stippen tellen</h1>
+<p>Nu het hart van de week. Je kunt de vraag <em>“is mijn verschil echt?”</em> niet rechtstreeks beantwoorden. Wat je wél kunt: doen alsof <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, en kijken hoe raar jouw uitkomst dan zou zijn.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Het voorbeeld: piekeren">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Het voorbeeld: piekeren
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker meet bij 25 slechte slapers hoeveel ze piekeren, met een vragenlijst die zo gemaakt is dat het gemiddelde in de algemene bevolking 50 is en de standaarddeviatie 10.</p>
+<p>Stel dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is: slechte slapers piekeren gemiddeld net zoveel als iedereen. Honderd onderzoekers trekken elk 25 slechte slapers en rekenen het gemiddelde uit, afgerond op een heel getal. Elk gemiddelde wordt één stip. Zo ziet dat eruit:</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Een stippenplot met open rondjes, gestapeld boven de getallen 45 tot en met 55. De hoogste stapel staat boven 50; naar beide kanten worden de stapels lager, tot één stip boven 45 en één boven 55.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-vb-1.png" class="img-fluid figure-img" alt="Een stippenplot met open rondjes, gestapeld boven de getallen 45 tot en met 55. De hoogste stapel staat boven 50; naar beide kanten worden de stapels lager, tot één stip boven 45 en één boven 55." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2: Honderd gemiddelden van steekproeven van 25 slechte slapers, als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is (μ = 50). Eén stip is het gemiddelde van één steekproef.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Dit is een steekproevenverdeling: elke stip is een bordje uit het spelletje. Kijk waar de stippen liggen. De meeste zitten dicht bij 50 — logisch, want in deze wereld ís het gemiddelde 50. Maar niet allemaal: puur door toeval komt een steekproef soms op 54 of 46 uit, en heel af en toe op 55 of 45. Zo ver kan het toeval je dus brengen, zelfs als er niets aan de hand is.</p>
+<p><strong>Nu jouw eigen steekproef.</strong> Stel, de echte steekproef van 25 slechte slapers geeft <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>. Hoe raar is dat, áls <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is?</p>
+<p>Tel de stippen die <strong>minstens zo ver van 50 liggen</strong> als jouw 55. Jouw 55 ligt 5 boven 50. Even ver aan de andere kant is 45. Dus:</p>
+<table class="caption-top table">
+<caption>Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> = 55: de stippen die minstens zo ver van 50 liggen</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th>stippen</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>55 of hoger</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>45 of lager</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>samen</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">
+p = \dfrac{2}{100} = .02
+</annotation></semantics></math></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb-staart" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Dezelfde stippenplot. De stippen boven 45 en boven 55 zijn oranje gekleurd; alle andere stippen zijn donker.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-staart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-vb-staart-1.png" class="img-fluid figure-img" alt="Dezelfde stippenplot. De stippen boven 45 en boven 55 zijn oranje gekleurd; alle andere stippen zijn donker." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-staart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;3: Dezelfde honderd stippen. Oranje: de stippen die minstens zo ver van 50 liggen als 55, aan beide kanten. Samen 2 van de 100.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Dat getal is de <strong><em>p</em>-waarde</strong>. In woorden: áls slechte slapers echt gemiddeld 50 scoren, dan kom je maar in 2 van de 100 steekproeven zo ver of verder van 50 uit als jij deed.</p>
+<p><strong>En bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>53</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 53</annotation></semantics></math>?</strong> Zelfde recept. 53 ligt 3 boven 50; aan de andere kant is dat 47. Tel:</p>
+<ul>
+<li>53 of hoger: 11 stippen;</li>
+<li>47 of lager: 11 stippen.</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>11</mn><mo>+</mo><mn>11</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.22</mn></mrow><annotation encoding="application/x-tex">
+p = \dfrac{11 + 11}{100} = .22
+</annotation></semantics></math></p>
+<p>Zo’n gemiddelde komt in deze wereld zonder verschil gewoon regelmatig voor.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Bij een stippenplot: tel altijd beide kanten">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Bij een stippenplot: tel altijd beide kanten
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Tweezijdig betekent: deze kant én de spiegelkant. In een stippenplot tel je die twee dus allebei, en tel je ze op.</p>
+<p>Hier zijn de twee staarten toevallig precies even zwaar, dus één kant maal twee geeft hetzelfde: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>1</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">2 \times \dfrac{1}{100} = .02</annotation></semantics></math>. Maar reken daar niet op. Een stippenplot van honderd steekproeven is zelden zo netjes — in opgave 1.5 is hij dat niet, en dan geeft “maal twee” een verkeerd getal.</p>
+<p>Die kortere weg komt pas terug bij een gladde, symmetrische klok, in week 2. Daar zijn de twee kanten altijd even zwaar.</p>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Controle in R — tellen met sum()">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Controle in R — tellen met sum()
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Je telde met de hand. R telt mee, zodat je ziet dat het klopt. Nieuw in R? Lees dan eerst <em>In R: rijen kiezen</em>, verderop deze week: daar staat wat de blokhaken <code>[ ]</code> doen. Dit kader kan wachten.</p>
+<p>Typ de stapels over uit de figuur, van links naar rechts:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de stapels uit de figuur, van links naar rechts</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>waarde <span class="ot">&lt;-</span> <span class="dv">45</span><span class="sc">:</span><span class="dv">55</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>aantal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">12</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">17</span>, <span class="dv">12</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># zijn het er honderd?</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 55 of hoger, en 45 of lager</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&gt;=</span> <span class="dv">55</span>])</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&lt;=</span> <span class="dv">45</span>])</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># en bij 53: 53 of hoger, en 47 of lager</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&gt;=</span> <span class="dv">53</span>])</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&lt;=</span> <span class="dv">47</span>])</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11</code></pre>
+</div>
+</div>
+<p>Dezelfde tellingen als met de hand: bij 55 samen 2 van de 100, bij 53 samen 22 van de 100.</p>
+</div>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Voor wie verder wil — de stippen zelf maken in R">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Voor wie verder wil — de stippen zelf maken in R
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>De honderd stippen hierboven zijn een gedachte-experiment. In R kun je het gewoon dóen: honderd keer een steekproef van 25 trekken uit een populatie met μ = 50 en σ = 10, en elk gemiddelde opschrijven.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2600</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># één steekproef van 25, en het gemiddelde ervan</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 51.80573</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># honderd keer: honderd bordjes, afgerond op hele getallen</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>bordjes <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">100</span>, <span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>))))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(bordjes)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>bordjes
+46 47 48 49 50 51 52 53 54 55 56 
+ 1 11 13 15 24 12 12  8  2  1  1 </code></pre>
+</div>
+</div>
+<p>Jouw honderd liggen net anders dan die in de figuur — dat is het toeval zelf. De vorm is dezelfde: een berg rond 50, die naar de kanten wegloopt. Hoe breed die berg is, kun je zelfs uitrekenen zonder te trekken; dat is week 2.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="de-p-waarde-wat-hij-zegt-en-wat-niet" class="level1">
+<h1>De <em>p</em>-waarde: wat hij zegt, en wat niet</h1>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="De p-waarde">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>De <em>p</em>-waarde
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De kans op een uitkomst die <strong>minstens zo extreem</strong> is als die van jou, <strong>áls de nulhypothese waar is</strong>.</p>
+<p>Die uitkomst heet de <strong>toetsstatistiek</strong>. Deze week is dat gewoon het steekproefgemiddelde <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>; vanaf week 2 een getal dat ervan is afgeleid.</p>
+</div>
+</div>
+<p>Drie onderdelen, en ze moeten er alle drie in staan:</p>
+<ol type="1">
+<li>het is een <strong>kans</strong> — een getal tussen 0 en 1;</li>
+<li>over <strong>deze of een extremere</strong> uitkomst — bij tweezijdig toetsen aan beide kanten;</li>
+<li><strong>gegeven dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is</strong> — je rekent in de wereld waarin er niets aan de hand is.</li>
+</ol>
+<p>Je kunt de <em>p</em>-waarde zien als je <strong>verrassingswaarde</strong>: hoe verbaasd je moet zijn over je data, als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is. Hoe kleiner <em>p</em>, hoe groter de verbazing.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="De bakker">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>De bakker
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aan het eind van de straat zat altijd een bakker. Je bent er lang niet geweest. Is het nog steeds een bakker? Je mag gaan kijken, maar alleen geblinddoekt en met een knijper op je neus. Je mag niets zeggen behalve: <em>“doet u maar wat.”</em> Dat is je steekproef.</p>
+<p>Onder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> — het is nog steeds de bakker — verwacht je brood in je handen. Een croissantje kan ook. Maar je krijgt een <strong>fiets</strong>. Kan dat onder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>? Ja, ooit, misschien, bij een actie. Maar de kans op een fiets, áls het een bakker is, is zó klein dat je schrikt. <em>When p is low, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> must go.</em> Het zal wel een fietsenmaker geworden zijn.</p>
+</div>
+</div>
+<p>Let nu goed op wat er wel en niet staat. De <em>p</em>-waarde is de kans op een fiets <strong>als het een bakker is</strong>. Het is <strong>niet</strong> de kans dat het een bakker is, nu je een fiets hebt. Die twee lijken op elkaar en zijn heel verschillende kansen.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="De omkering">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Waarschuwing</span>De omkering
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“<em>p</em> = .02, dus de kans dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, is .02.” Fout.</p>
+<p>De <em>p</em>-waarde rekent vanuit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> naar de data, niet terug. Hij zegt hoe raar je data zijn in een wereld zonder verschil. Hoe waarschijnlijk die wereld zelf is, zegt hij niet.</p>
+</div>
+</div>
+</section>
+<section id="beslissen" class="level1">
+<h1>Beslissen</h1>
+<p>Een <em>p</em>-waarde is een getal; een toets eindigt met een beslissing. Daarvoor spreek je vóóraf een grens af: het <strong>significantieniveau</strong> α (<em>alfa</em>). In dit oefenboek is dat altijd α = .05, tenzij een opgave iets anders zegt.</p>
+<ul>
+<li>Is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p \leq \alpha</annotation></semantics></math>, dan <strong>verwerp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math></strong>. Het resultaat is <strong>significant</strong>.</li>
+<li>Is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p &gt; \alpha</annotation></semantics></math>, dan <strong>verwerp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet</strong>.</li>
+</ul>
+<p>Bij de slechte slapers met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">p = .02</annotation></semantics></math>, en .02 ≤ .05. Je verwerpt de nulhypothese dat slechte slapers gemiddeld 50 scoren op de piekervragenlijst. Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>53</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 53</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.22</mn></mrow><annotation encoding="application/x-tex">p = .22</annotation></semantics></math>: die nulhypothese verwerp je niet.</p>
+<p>Zeg altijd wát je verwerpt. Niet <em>“we verwerpen hem”</em>, maar <em>“we verwerpen de nulhypothese dat …”</em>.</p>
+<section id="de-andere-route-de-kritieke-waarde" class="level2">
+<h2 class="anchored" data-anchor-id="de-andere-route-de-kritieke-waarde">De andere route: de kritieke waarde</h2>
+<p>Je kunt ook vooraf in de stippenplot een <strong>grens</strong> trekken. Welke gemiddelden zijn zó ver van 50 dat de <em>p</em>-waarde onder .05 komt?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="yehnwbrseb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@charset "UTF-8";
+#yehnwbrseb table {
+  font-family: 'Times New Roman', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#yehnwbrseb thead, #yehnwbrseb tbody, #yehnwbrseb tfoot, #yehnwbrseb tr, #yehnwbrseb td, #yehnwbrseb th {
+  border-style: none;
+}
+
+#yehnwbrseb p {
+  margin: 0;
+  padding: 0;
+}
+
+#yehnwbrseb .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#yehnwbrseb .gt_title {
+  color: #333333;
+  font-size: 100%;
+  font-weight: initial;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#yehnwbrseb .gt_subtitle {
+  color: #333333;
+  font-size: 100%;
+  font-weight: initial;
+  padding-top: 1px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#yehnwbrseb .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#yehnwbrseb .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#yehnwbrseb .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#yehnwbrseb .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#yehnwbrseb .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#yehnwbrseb .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#yehnwbrseb .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#yehnwbrseb .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#yehnwbrseb .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#yehnwbrseb .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#yehnwbrseb .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: none;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#yehnwbrseb .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#yehnwbrseb .gt_row_group_first td {
+  border-top-width: 1px;
+}
+
+#yehnwbrseb .gt_row_group_first th {
+  border-top-width: 1px;
+}
+
+#yehnwbrseb .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#yehnwbrseb .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#yehnwbrseb .gt_table_body {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+}
+
+#yehnwbrseb .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_sourcenote {
+  font-size: 85%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_left {
+  text-align: left;
+}
+
+#yehnwbrseb .gt_center {
+  text-align: center;
+}
+
+#yehnwbrseb .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#yehnwbrseb .gt_font_normal {
+  font-weight: normal;
+}
+
+#yehnwbrseb .gt_font_bold {
+  font-weight: bold;
+}
+
+#yehnwbrseb .gt_font_italic {
+  font-style: italic;
+}
+
+#yehnwbrseb .gt_super {
+  font-size: 65%;
+}
+
+#yehnwbrseb .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#yehnwbrseb .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#yehnwbrseb .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#yehnwbrseb .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#yehnwbrseb .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#yehnwbrseb .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#yehnwbrseb .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#yehnwbrseb .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yehnwbrseb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+
+/* Container krimpt tot tabel-inhoud — voorkomt dat een lange Note. de
+       tabel breed uitrekt (was visueel slecht leesbaar). Note wrapt dan
+       binnen de natuurlijke tabel-breedte. NB: GEEN width op .gt_table
+       zelf — gt zet daar inline-style 'width:Npx' op via tab_options(),
+       die mogen we niet overrulen anders verliest de title-cell met
+       colspan=ncol zijn volle breedte. */
+.gt_table_container {
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+/* Titel en ondertitel beide italic — elk op eigen regel boven dikke lijn */
+.gt_heading {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* NB: GEEN display: block — dat haalt de cel uit de table-layout
+       waardoor colspan=ncol niet meer werkt en titel krimpt naar
+       eerste-kolom-breedte. Laat het default table-cell-gedrag staan.
+       Cel zelf is non-italic; italic ontstaat alleen waar <em>…</em>
+       staat (via markdown `*...*` of expliciete <em>-tags). Dat maakt
+       de table_number-modus mogelijk: 'Table 1' blijft non-italic, de
+       beschrijvende titel daaronder is wel italic. */
+.gt_title {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 4px !important;
+  padding-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.gt_title em {
+  font-style: italic !important;
+}
+
+.gt_title strong {
+  font-weight: bold !important;
+}
+
+.gt_subtitle {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 1px !important;
+  padding-bottom: 4px !important;
+  border-top: none !important;
+}
+
+.gt_subtitle em {
+  font-style: italic !important;
+}
+
+/* Note. links uitgelijnd; wrapt binnen tabel-breedte i.p.v. deze
+       uit te rekken. APA 7 §7.14: tabel-notes double-spaced. */
+.gt_sourcenotes, .gt_sourcenote {
+  text-align: left !important;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 2 !important;
+  padding-top: 6px !important;
+}
+
+/* Tabular figures voor gelijke cijferbreedte */
+.gt_row {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky kolom-header — bij scrollen blijft de header bovenaan zichtbaar.
+       Plus white-space: nowrap zodat headers nooit op streepjes/spaties
+       wrappen ('BC-SMD' niet als 'BC-/SMD'). auto_width_apa() rekent
+       met ruimere char-breedte voor headers, zodat de kolom breed genoeg is. */
+.gt_col_heading {
+  position: sticky !important;
+  top: 0 !important;
+  background-color: #FFFFFF !important;
+  z-index: 2;
+  white-space: nowrap !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border"><em>Hoe ver van 50 moet een gemiddelde liggen om significant te zijn?</em></td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="afstand" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">afstand tot 50</th>
+<th id="waarden" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">gemiddelden die zo ver liggen</th>
+<th id="p" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><em>p</em></th>
+<th id="beslissing" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">beslissing bij α = .05</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="afstand">3</td>
+<td class="gt_row gt_left" headers="waarden">47 of lager, 53 of hoger</td>
+<td class="gt_row gt_right" headers="p">.22</td>
+<td class="gt_row gt_left" headers="beslissing">niet verwerpen</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="afstand">4</td>
+<td class="gt_row gt_left" headers="waarden">46 of lager, 54 of hoger</td>
+<td class="gt_row gt_right" headers="p">.08</td>
+<td class="gt_row gt_left" headers="beslissing">niet verwerpen</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="afstand">5</td>
+<td class="gt_row gt_left" headers="waarden">45 of lager, 55 of hoger</td>
+<td class="gt_row gt_right" headers="p">.02</td>
+<td class="gt_row gt_left" headers="beslissing">verwerpen</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Vanaf afstand 5 zakt <em>p</em> onder .05. De grenzen zijn dus 45 en 55: dat zijn de <strong>kritieke waarden</strong>. Alles óp of voorbij die grenzen is het <strong>verwerpingsgebied</strong> — dus 55 zelf hoort erbij. Valt jouw <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> in dat gebied, dan verwerp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb-grens" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Dezelfde stippenplot met twee oranje gestippelde verticale lijnen, één bij 45 en één bij 55.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-grens-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-vb-grens-1.png" class="img-fluid figure-img" alt="Dezelfde stippenplot met twee oranje gestippelde verticale lijnen, één bij 45 en één bij 55." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-grens-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;4: De kritieke waarden 45 en 55 (gestippelde lijnen). Het verwerpingsgebied is alles op of voorbij die lijnen.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Het is als koorts. Vanaf 38 graden heb je koorts; die 38 is een kritieke waarde, afgesproken vóórdat iemand de thermometer instak. De lijnen zelf zijn de kritieke waarden; alles óp en voorbij de lijnen is het verwerpingsgebied. Op een tentamen worden die twee graag door elkaar gehaald.</p>
+<p>Twee routes, dezelfde beslissing:</p>
+<ul>
+<li><strong>de <em>p</em>-waarde-route</strong> — tel beide kanten, en leg die <em>p</em> naast α = .05;</li>
+<li><strong>de kritieke-waarde-route</strong> — trek vooraf de grenzen, en kijk of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> op of voorbij een grens ligt.</li>
+</ul>
+<p>Ze komen altijd op hetzelfde uit. Wat misgaat, is halverwege overstappen: een <em>p</em> van maar één kant naast .05 leggen, bijvoorbeeld. Kies per opgave één route en maak die af.</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Voor wie verder wil — waarom de grenzen in week 2 iets verschuiven">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Voor wie verder wil — waarom de grenzen in week 2 iets verschuiven
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>De gemiddelden in de stippenplot zijn afgerond op hele getallen. “53 of hoger” telt dus alles vanaf 52.5 mee. Stippen tellen geeft daardoor een ruwe <em>p</em>, en ruwe grenzen.</p>
+<p>In week 2 reken je hetzelfde voorbeeld precies uit, zonder afronden. Dan wordt de <em>p</em> bij 53 geen .22 maar .13, en liggen de grenzen niet op 45 en 55 maar op 46.08 en 53.92. Bij een gemiddelde van precies 54 slaat de beslissing zelfs om: tellen zegt .08, rekenen .046.</p>
+<p>Dat is geen fout van de stippen. Zo werkt een plaatje van honderd afgeronde getallen: het laat de vorm zien, niet de derde decimaal.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="twee-manieren-om-ernaast-te-zitten" class="level1">
+<h1>Twee manieren om ernaast te zitten</h1>
+<p>Je beslist zonder ooit te weten hoe het echt zit. Je kunt dus fout zitten, op twee manieren.</p>
+<table class="caption-top table">
+<caption>Vier mogelijke afloopjes van één toets</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is in werkelijkheid waar</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is in werkelijkheid niet waar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>je verwerpt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math></td>
+<td><strong>Type I-fout</strong>: vals alarm (kans α)</td>
+<td>goed</td>
+</tr>
+<tr class="even">
+<td>je verwerpt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet</td>
+<td>goed</td>
+<td><strong>Type II-fout</strong>: gemist (kans β)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Een <strong>Type I-fout</strong> is vals positief: je roept <em>“verschil!”</em> en er is niets. De kans daarop spreek je zelf af, met α: hij is hoogstens .05. In de stippenplot van de slechte slapers is hij zelfs maar .02: zoveel stippen (2 van de 100) liggen op of voorbij de grenzen. Eén stap naar binnen was het al .08, en dat mocht niet.</li>
+<li>Een <strong>Type II-fout</strong> is vals negatief: er ís een verschil, maar jouw toets ziet het niet.</li>
+</ul>
+<p>Hoe groot die tweede kans is en hoe je hem kleiner maakt, is week 5 (<em>Effectmaten en power</em>).</p>
+</section>
+<section id="niet-significant-is-niet-hetzelfde-als-gelijk" class="level1">
+<h1>Niet significant is niet hetzelfde als gelijk</h1>
+<p>Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>53</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 53</annotation></semantics></math> verwierp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet. Betekent dit dat slechte slapers gemiddeld precies 50 scoren? <strong>Nee.</strong></p>
+<p>Je mag maar twee dingen zeggen: <em>“<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> verwerpen”</em> of <em>“<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet verwerpen”</em>. Nooit <em>“<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> aannemen”</em> of <em>“<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> behouden”</em>. Niet verwerpen betekent: het bewijs is niet sterk genoeg. Het betekent niet dat er niets is. Het verschil kan er best zijn, alleen te klein om met deze steekproef te zien.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="De klassieke val">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Waarschuwing</span>De klassieke val
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Er was geen significant verschil in X tussen groep A en groep B, dus de groepen zijn gelijk.”</p>
+<p>Afwezigheid van bewijs is geen bewijs van afwezigheid. Met een kleine steekproef mis je zelfs een flink verschil.</p>
+</div>
+</div>
+<p>Welke waarden voor μ je data nog wél toelaten, laat het betrouwbaarheidsinterval zien: week 3 (<em>Hypothesetoetsen voor twee gemiddelden en betrouwbaarheidsintervallen</em>). En dat significant ook weer niet hetzelfde is als <em>groot</em> of <em>belangrijk</em>: week 5.</p>
+</section>
+<section id="het-stappenplan" class="level1">
+<h1>Het stappenplan</h1>
+<p>Elke toets in dit oefenboek loopt langs dezelfde zes stappen. Deze week vul je ze in met stippen; vanaf week 2 met formules.</p>
+<ol type="1">
+<li><strong>Hypothesen.</strong> Schrijf <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> op, over μ. Spreek α af.</li>
+<li><strong>Steekproevenverdeling.</strong> Hoe zien de uitkomsten eruit als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is?</li>
+<li><strong>Toetsstatistiek.</strong> Welk getal uit je steekproef leg je ertegen? Deze week is dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> zelf.</li>
+<li><strong><em>p</em>-waarde.</strong> Hoe extreem is jouw uitkomst? Vergelijk <em>p</em> met α.</li>
+<li><strong>Statistische conclusie.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> verwerpen of niet verwerpen.</li>
+<li><strong>Inhoudelijke conclusie.</strong> Beantwoord de onderzoeksvraag, in gewone woorden.</li>
+</ol>
+<p>Voor de slechte slapers met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>:</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 50; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 50; α = .05.</li>
+<li>De stippenplot van <a href="#fig-vb" class="quarto-xref">Figuur&nbsp;2</a>: honderd gemiddelden onder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">p = .02</annotation></semantics></math>, en dat is ≤ .05.</li>
+<li>Verwerp de nulhypothese dat de gemiddelde piekerscore van slechte slapers 50 is.</li>
+<li>Slechte slapers piekeren gemiddeld anders dan de algemene bevolking — in deze steekproef méér.</li>
+</ol>
+<p>Welke toets je in stap 2 en 3 kiest, hangt af van je vraag: één gemiddelde, twee, of categorieën. Dat overzicht komt aan het eind: week 7 (<em>Toetskeuze en overzicht</em>). En wanneer je die gladde klok in stap 2 eigenlijk mag gebruiken: week 6 (<em>Assumpties en alternatieve toetsen</em>).</p>
+</section>
+<section id="in-r-rijen-kiezen" class="level1">
+<h1>In R: rijen kiezen</h1>
+<p>Deze week doe je in R één ding: uit een dataset de rijen halen die je nodig hebt. De oefendataset <code>slaapstudie</code> heeft 30 eerstejaars die slecht slapen. De helft kreeg een slaaptraining, de andere helft niet (de controlegroep). Van iedereen staan de leeftijd en een piekerscore vóór en ná in de tabel.</p>
+<p>Download <a href="../_common_ts/data/slaapstudie.RData">slaapstudie.RData</a> en zet het in je projectmap. (Nog geen project? In RStudio: <em>File &gt; New Project…</em>, dan <em>New Directory &gt; New Project</em>. De map die je daar kiest, is je projectmap.) Dan:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Inladen ----</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># load() zet het object slaapstudie in je Environment</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de eerste zes rijen</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id    groep leeftijd piekeren_voor piekeren_na
+1  1 training       19            54          51
+2  2 controle       24            49          45
+3  3 training       19            48          47
+4  4 training       26            54          55
+5  5 controle       34            61          58
+6  6 controle       21            54          56</code></pre>
+</div>
+</div>
+<p>Een dataframe heeft rijen en kolommen. Drie dingen heb je nodig:</p>
+<ul>
+<li><code>data[rijen, kolommen]</code> kiest rijen en kolommen; laat je één kant leeg, dan krijg je alles;</li>
+<li><code>data$naam</code> pakt één kolom, bij zijn naam;</li>
+<li><code>==</code> vraagt <em>is dit gelijk aan?</em>, en geeft per rij <code>TRUE</code> of <code>FALSE</code>.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Rijen kiezen op een voorwaarde ----</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># welke rijen horen bij de controlegroep? TRUE of FALSE per rij</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>kies <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># de rijnummers waar het TRUE is</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(kies)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  5  6 10 11 13 14 15 18 19 21 23 26 28 30</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># alleen die rijen, alle kolommen</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> slaapstudie[kies, ]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># hoeveel mensen zijn dat?</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(controle)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de jongste en de oudste</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(controle<span class="sc">$</span>leeftijd)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18 34</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de gemiddelde leeftijd in de controlegroep</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(controle<span class="sc">$</span>leeftijd)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.33333</code></pre>
+</div>
+</div>
+<p>De controlegroep heeft 15 mensen, van 18 tot 34 jaar, gemiddeld 22.33 jaar.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(controle<span class="sc">$</span>leeftijd, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"leeftijd"</span>, <span class="at">ylab =</span> <span class="st">"aantal"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-hist" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Een histogram van de leeftijden in de controlegroep, in klassen van 5 jaar van 15 tot 35. De meesten zitten in de klassen tot 25; erboven staan er nog 2.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-hist-1.png" class="img-fluid figure-img" alt="Een histogram van de leeftijden in de controlegroep, in klassen van 5 jaar van 15 tot 35. De meesten zitten in de klassen tot 25; erboven staan er nog 2." width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;5: Leeftijd in de controlegroep van de slaapstudie.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Voor wie verder wil — hetzelfde met dplyr">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Voor wie verder wil — hetzelfde met dplyr
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filter() kiest rijen, pull() haalt één kolom eruit</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>slaapstudie <span class="sc">|&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(groep <span class="sc">==</span> <span class="st">"controle"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(leeftijd) <span class="sc">|&gt;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>()</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.33333</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="een-rapport-van-je-script" class="level2">
+<h2 class="anchored" data-anchor-id="een-rapport-van-je-script">Een rapport van je script</h2>
+<p>Van een script maak je met één opdracht een rapport: je code, met de uitvoer en de figuren eronder, in één HTML-bestand. Het ziet eruit als dit R-deel hierboven. In RStudio: <em>File &gt; Compile Report…</em> (of Ctrl+Shift+K, op een Mac Cmd+Shift+K), en kies HTML. Het rapport komt naast je script te staan, met dezelfde naam.</p>
+<p>Compile Report draait je hele script opnieuw, van boven naar beneden, en begint met een lege Environment. Wat er in jouw Environment staat omdat je het in de console typte, kent het rapport niet: het kent alleen wat in je script staat. Lukt het niet, kijk dan naar vier dingen:</p>
+<ul>
+<li>staan je script en je data in dezelfde projectmap?</li>
+<li>staan <code>library()</code> en <code>load()</code> bovenaan in je script, vóór de regels die ze nodig hebben?</li>
+<li>staat er <code>View()</code> of <code>install.packages()</code> in? Haal ze eruit: die horen in de console.</li>
+<li>stopt je script zelf ergens met een fout? Draai het eerst van boven naar beneden (<em>Code &gt; Run Region &gt; Run All</em>); waar het daar stopt, stopt het rapport ook.</li>
+</ul>
+</section>
+</section>
+<section id="oefenen" class="level1">
+<h1>Oefenen</h1>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.1 — Begrippen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.1 — Begrippen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>Welk symbool hoort bij het populatiegemiddelde, en welk bij het steekproefgemiddelde?</li>
+<li>Wat is het verschil tussen de populatieverdeling, de steekproefverdeling en de steekproevenverdeling?</li>
+<li>Wat is het verschil tussen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>?</li>
+<li>Geef de definitie van de <em>p</em>-waarde. Noem alle onderdelen.</li>
+<li>Wat is het significantieniveau α?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 1.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord 1.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Populatie: μ. Steekproef: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>.</p></li>
+<li><p>De populatieverdeling: de scores van iedereen in de populatie. De steekproefverdeling: de scores van de mensen in jouw ene steekproef. De steekproevenverdeling: de verdeling van een statistiek (zoals <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>) over alle mogelijke steekproeven van dezelfde grootte uit dezelfde populatie.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> zegt dat er in de populatie niets aan de hand is (geen verschil, bijvoorbeeld μ = 50) en bevat het is-gelijkteken. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> zegt dat er wél iets is (μ ≠ 50). Samen dekken ze alle mogelijkheden.</p></li>
+<li><p>De kans op een uitkomst (een toetsstatistiek) die minstens zo extreem is als de gevonden uitkomst, als de nulhypothese waar is. Drie onderdelen: een kans; deze of extremer, bij tweezijdig aan beide kanten; gegeven <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</p></li>
+<li><p>De grens die je vóóraf afspreekt: is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p \leq \alpha</annotation></semantics></math>, dan verwerp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. Het is ook de kans op een Type I-fout die je bereid bent te nemen. Hier α = .05.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.2 — Kun je hiermee toetsen?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.2 — Kun je hiermee toetsen?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Geef per paar aan of je er een hypothesetoets mee kunt doen. Zo niet: waarom niet?</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 12</annotation></semantics></math> tegenover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>≠</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">\bar{x} \neq 12</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>3.5</mn></mrow><annotation encoding="application/x-tex">\mu = 3.5</annotation></semantics></math> tegenover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>3.5</mn></mrow><annotation encoding="application/x-tex">\mu \neq 3.5</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\mu \neq 20</annotation></semantics></math> tegenover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\mu = 20</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math> tegenover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>110</mn></mrow><annotation encoding="application/x-tex">\mu = 110</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi mathvariant="normal">μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_1 = \mu_2</annotation></semantics></math> tegenover <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">μ</mi><mn>1</mn></msub><mo>≠</mo><msub><mi mathvariant="normal">μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_1 \neq \mu_2</annotation></semantics></math></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 1.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord 1.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Nee.</strong> Dit gaat over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>, en dat getal ken je al.&nbsp;Hypothesen gaan over de populatie.</li>
+<li><strong>Ja.</strong> Over μ, het is-gelijkteken in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, en samen dekken ze alles.</li>
+<li><strong>Nee.</strong> Omgedraaid: het is-gelijkteken hoort in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</li>
+<li><strong>Nee.</strong> Samen dekken ze niet alles: wat als μ = 105? <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> moet alles zijn wat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet is.</li>
+<li><strong>Ja.</strong> Twee populatiegemiddelden, gelijk tegenover ongelijk. Zo’n paar toets je in week 3.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.3 — Wat zegt p = .004?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.3 — Wat zegt <em>p</em> = .004?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Onderzoekers kijken of de gemiddelde reactietijd van mensen die net een nacht hebben doorgehaald afwijkt van 250 milliseconden, het gemiddelde bij uitgeslapen mensen (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 250). Ze vinden <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>262</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 262</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.004</mn></mrow><annotation encoding="application/x-tex">p = .004</annotation></semantics></math>.</p>
+<p>Welke uitspraken kloppen? Er kan meer dan één goed zijn.</p>
+<ol type="1">
+<li>Er is sterk bewijs dat μ = 250.</li>
+<li>Er is bewijs dat μ ≠ 250.</li>
+<li>De kans dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, is .004.</li>
+<li>Als μ = 250, dan is een steekproefgemiddelde dat minstens zo ver van 250 ligt als 262 erg onwaarschijnlijk.</li>
+<li>Het verschil in reactietijd is dus groot en belangrijk.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 1.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord 1.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Goed: 2 en 4.</strong></p>
+<ol type="1">
+<li>Fout. Een kleine <em>p</em> is bewijs <em>tegen</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, niet ervoor.</li>
+<li>Goed. Je verwerpt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> (.004 ≤ .05).</li>
+<li>Fout. Dit is de omkering: <em>p</em> is de kans op zulke data áls <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, niet de kans dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is.</li>
+<li>Goed. Dit is precies de definitie.</li>
+<li>Fout. Significant zegt óf er een verschil is, niet hoe groot of belangrijk.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.4 — Een handige steekproef">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.4 — Een handige steekproef
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Je wilt weten of eerstejaarsstudenten gemiddeld anders slapen dan volwassenen in het algemeen, die gemiddeld 7.2 uur per nacht slapen. Je vraagt het aan de twaalf studenten die om negen uur ’s ochtends al in de bibliotheek zitten. Gemiddeld slapen zij 6.8 uur.</p>
+<ol type="a">
+<li>Schrijf <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> op, in termen van μ.</li>
+<li>Is dit een goede steekproef om <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> te toetsen?</li>
+<li>Denk je dat het verschil significant is? Waar hangt dat van af?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 1.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord 1.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>De hypothesen:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 7.2 — eerstejaars slapen gemiddeld even lang als volwassenen<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 7.2 — eerstejaars slapen gemiddeld anders</p>
+</div></li>
+<li><p>Nee. De steekproef is niet willekeurig getrokken: wie om negen uur al in de bibliotheek zit, is waarschijnlijk vroeg opgestaan. Zo’n groep lijkt niet op alle eerstejaars, en twaalf is ook weinig.</p></li>
+<li><p>Dat weet je nog niet. Het hangt af van:</p>
+<ul>
+<li>hoe groot het verschil is (hier 0.4 uur);</li>
+<li>hoeveel de slaapduur tussen studenten verschilt (de spreiding);</li>
+<li>hoe groot de steekproef is.</li>
+</ul>
+<p>Hoe die drie samen de toets bepalen, werk je uit in week 2.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.5 — Stippen tellen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.5 — Stippen tellen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker denkt dat kinderen die veel gamen anders scoren op een werkgeheugentest dan kinderen in het algemeen. In het algemeen scoren kinderen op die test gemiddeld 30.</p>
+<ol type="a">
+<li>Schrijf <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> op, in termen van μ.</li>
+</ol>
+<p>Hieronder staan de gemiddelden van 100 denkbeeldige steekproeven van 16 kinderen, getrokken uit een populatie waarin <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is. Elk gemiddelde is afgerond op een heel getal.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-oef" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Een stippenplot met open rondjes boven de getallen 25 tot en met 35. De hoogste stapels staan boven 28, 29 en 30; rechts van 30 lopen de stapels geleidelijker af dan links.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-oef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-oef-1.png" class="img-fluid figure-img" alt="Een stippenplot met open rondjes boven de getallen 25 tot en met 35. De hoogste stapels staan boven 28, 29 en 30; rechts van 30 lopen de stapels geleidelijker af dan links." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-oef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;6: Honderd gemiddelden van steekproeven van 16 kinderen, als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is (μ = 30).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="a">
+<li>Wat stelt één stip voor? Is dit een populatieverdeling, een steekproefverdeling of een steekproevenverdeling?</li>
+<li>In de echte steekproef van 16 gamende kinderen is het gemiddelde dat je vindt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 35</annotation></semantics></math>. Hoe groot is in deze figuur de kans op een gemiddelde van 35 of hoger?</li>
+<li>Wat is de <em>p</em>-waarde bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 35</annotation></semantics></math>? (Tweezijdig: deze of een extremere waarde.)</li>
+<li>Verwerp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 35</annotation></semantics></math>? Wat betekent dat?</li>
+<li>Doe c, d en e opnieuw voor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 33</annotation></semantics></math>.</li>
+<li>Vanaf welke gemiddelden verwerp je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>? Hoe heten die grenzen?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord 1.5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Kort antwoord 1.5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 30; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 30.</li>
+<li>Het gemiddelde van één steekproef van 16 kinderen; een steekproevenverdeling.</li>
+<li>.01.</li>
+<li><em>p</em> = .02.</li>
+<li>Ja.</li>
+<li>.11; <em>p</em> = .17; nee.</li>
+<li>Bij 25 of lager en bij 35 of hoger: de kritieke waarden.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking 1.5 — stap voor stap">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Volledige uitwerking 1.5 — stap voor stap
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>De hypothesen:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 30 — gamende kinderen scoren gemiddeld net als alle kinderen<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 30 — gamende kinderen scoren gemiddeld anders</p>
+</div></li>
+<li><p>Eén stip is het gemiddelde van één denkbeeldige steekproef van 16 kinderen, uit een populatie waarin μ = 30. Dus niet de score van één kind. De figuur is een <strong>steekproevenverdeling</strong>: de verdeling van <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> over veel steekproeven.</p></li>
+<li><p>Tel de stippen bij 35 en hoger: 1 stip. De kans is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.01</mn></mrow><annotation encoding="application/x-tex">\dfrac{1}{100} = .01</annotation></semantics></math>. Let op: dit is maar één kant.</p></li>
+<li><p>35 ligt 5 boven 30. Even ver aan de andere kant is 25. Tel beide kanten:</p>
+<ul>
+<li>35 of hoger: 1 stip;</li>
+<li>25 of lager: 1 stip.</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">
+p = \dfrac{1 + 1}{100} = .02
+</annotation></semantics></math></p></li>
+<li><p>Ja: .02 ≤ .05. Je verwerpt de nulhypothese dat gamende kinderen gemiddeld 30 scoren op de werkgeheugentest. Als dat gemiddelde echt 30 was, zou een uitkomst zo ver van 30 maar in 2 van de 100 steekproeven voorkomen.</p></li>
+<li><p>Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 33</annotation></semantics></math>:</p>
+<ul>
+<li>c: 33 of hoger: 11 stippen, dus .11;</li>
+<li>d: 33 ligt 3 boven 30, de andere kant is 27. 27 of lager: dat zijn er 6. Dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>11</mn><mo>+</mo><mn>6</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.17</mn></mrow><annotation encoding="application/x-tex">p = \dfrac{11 + 6}{100} = .17</annotation></semantics></math>;</li>
+<li>e: .17 &gt; .05, dus je verwerpt de nulhypothese niet. Zo’n gemiddelde komt zonder verschil gewoon voor. Dat betekent níét dat gamende kinderen gemiddeld precies 30 scoren.</li>
+</ul>
+<p>Zie je dat de twee kanten hier niet even zwaar zijn? Rechts tel je 11, links 6. Dat is toeval: honderd getrokken steekproeven is veel, maar niet oneindig veel, en dan ligt de berg zelden precies symmetrisch. Daarom tel je beide kanten echt na. Eén kant maal twee had hier .22 gegeven, en dat is fout.</p></li>
+<li><p>Zoek de kleinste afstand tot 30 waarbij <em>p</em> ≤ .05 wordt.</p>
+<ul>
+<li>Afstand 5: 25 of lager is 1 stip, 35 of hoger is 1 stip. Samen 2, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">p = .02</annotation></semantics></math>. Klein genoeg.</li>
+<li>Afstand 4: 26 of lager is 3 stippen, en 34 of hoger is 5 stippen; samen 8, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.08</mn></mrow><annotation encoding="application/x-tex">p = .08</annotation></semantics></math>. Te groot.</li>
+</ul>
+<p>Je verwerpt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> dus bij een gemiddelde van 25 of lager en bij 35 of hoger. Die twee grenzen heten de <strong>kritieke waarden</strong>; alles óp of voorbij die grenzen is het verwerpingsgebied.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.6 — In R">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.6 — In R
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Gebruik de dataset <code>slaapstudie</code>.</p>
+<ol type="a">
+<li>Laad het bestand <code>slaapstudie.RData</code> en bekijk de eerste rijen. Welke variabelen zie je?</li>
+<li>Welke rijnummers horen bij mensen die ouder zijn dan 25? Gebruik <code>which()</code>.</li>
+<li>Maak een histogram van de leeftijd in de controlegroep.</li>
+<li>Wat is de gemiddelde leeftijd in de controlegroep?</li>
+<li>Wat is de gemiddelde piekerscore ná de training, in de trainingsgroep?</li>
+<li>Maak van je script een HTML-rapport.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 1.6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord 1.6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. inladen ----</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. bekijken ----</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id    groep leeftijd piekeren_voor piekeren_na
+1  1 training       19            54          51
+2  2 controle       24            49          45
+3  3 training       19            48          47
+4  4 training       26            54          55
+5  5 controle       34            61          58
+6  6 controle       21            54          56</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## b. ouder dan 25 ----</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(slaapstudie<span class="sc">$</span>leeftijd <span class="sc">&gt;</span> <span class="dv">25</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  4  5 23 29</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## c. de controlegroep, in twee stappen zoals hierboven ----</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>kies <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> slaapstudie[kies, ]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(controle<span class="sc">$</span>leeftijd, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"leeftijd"</span>, <span class="at">ylab =</span> <span class="st">"aantal"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-hist-antwoord" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Een histogram van de leeftijden in de controlegroep, in klassen van 5 jaar van 15 tot 35. De meesten zitten in de klassen tot 25; erboven staan er nog 2.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hist-antwoord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-hist-antwoord-1.png" class="img-fluid figure-img" alt="Een histogram van de leeftijden in de controlegroep, in klassen van 5 jaar van 15 tot 35. De meesten zitten in de klassen tot 25; erboven staan er nog 2." width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-antwoord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;7: Leeftijd in de controlegroep van de slaapstudie (antwoord 1.6c).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## d. de gemiddelde leeftijd in de controlegroep ----</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(controle<span class="sc">$</span>leeftijd)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.33333</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## e. de trainingsgroep, na ----</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>kies <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> slaapstudie[kies, ]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(training<span class="sc">$</span>piekeren_na)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 51.26667</code></pre>
+</div>
+</div>
+<ol type="a">
+<li><p>Vijf variabelen: <code>id</code>, <code>groep</code>, <code>leeftijd</code>, <code>piekeren_voor</code> en <code>piekeren_na</code>.</p></li>
+<li><p>Rij 4, 5, 23 en 29.</p></li>
+<li><p>Zie het histogram hierboven: de meesten zijn tussen de 18 en 24, met een paar uitschieters naar boven.</p></li>
+<li><p>22.33 jaar.</p></li>
+<li><p>51.27.</p></li>
+<li><p><em>File &gt; Compile Report…</em>, en kies HTML. In je projectmap staat daarna een HTML-bestand met dezelfde naam als je script. Krijg je een fout, loop dan de vier vragen onder <em>Een rapport van je script</em> langs, te beginnen bij de eerste: staat <code>slaapstudie.RData</code> in de projectmap?</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Opgave 1.7 — Geen significant verschil">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Opgave 1.7 — Geen significant verschil
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>In een artikel staat: “er was geen significant verschil in slaapduur tussen studenten met en zonder bijbaan (<em>p</em> = .41).” Mag je concluderen dat studenten met en zonder bijbaan in de populatie even lang slapen? Leg uit.</li>
+<li>Leg uit waarom je wel mag zeggen <em>“we verwerpen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet”</em>, maar niet <em>“we nemen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> aan”</em>.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 1.7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord 1.7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Nee. <em>p</em> = .41 betekent dat een verschil zoals dit gewoon voorkomt als er in de populatie geen verschil is. Het betekent niet dat er geen verschil is. Het verschil kan er zijn en te klein zijn voor deze steekproef om het te zien.</p></li>
+<li><p>Een toets kan alleen bewijs <em>tegen</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> verzamelen. Is dat bewijs te zwak, dan weet je nog steeds niet of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> klopt; je hebt alleen niet genoeg om hem weg te strepen. <em>“Aannemen”</em> zou zeggen dat je hebt laten zien dat er geen verschil is, en dat heb je niet.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="tentamenblok" class="level1">
+<h1>Tentamenblok</h1>
+<p>Zo kun je het op een tentamen tegenkomen: meerkeuze met vier opties, een getal invullen, of ja of nee. De vragen 1 tot en met 4 gaan over de figuur van opgave 1.5.</p>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 1 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 1 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wat zie je in de figuur van opgave 1.5?</p>
+<ol type="A">
+<li>de populatieverdeling van de werkgeheugenscores</li>
+<li>de steekproefverdeling van de 16 gamende kinderen</li>
+<li>een steekproevenverdeling</li>
+<li>de scores van 100 kinderen</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> Elke stip is het gemiddelde van een steekproef, en de figuur toont hoe die gemiddelden verdeeld zijn. D is de val: het zijn 100 <em>steekproeven</em>, geen 100 kinderen.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 2 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 2 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wat stelt één stip in die figuur voor?</p>
+<ol type="A">
+<li>de score van één kind dat veel gamet</li>
+<li>het gemiddelde van de 16 gamende kinderen uit het onderzoek</li>
+<li>het gemiddelde van een steekproef van 16 kinderen uit een populatie met μ = 30</li>
+<li>de score van één kind uit een populatie met μ = 30</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> De stippen zijn gemaakt in de wereld van <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. B is de val: het gemiddelde uit het onderzoek is maar één getal, en dat leg je juist tégen deze figuur aan.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 3 — invullen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 3 — invullen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een steekproef van 16 gamende kinderen heeft gemiddeld 25. Wat is de tweezijdige <em>p</em>-waarde volgens de figuur? Geef twee decimalen.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>.02.</strong> 25 ligt 5 onder 30; de andere kant is 35. 25 of lager: 1 stip; 35 of hoger: 1 stip. Samen 2 van de 100.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 4 — ja of nee">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 4 — ja of nee
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Verwerp je bij dat gemiddelde van 25 de nulhypothese (α = .05)?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Ja.</strong> .02 ≤ .05: je verwerpt de nulhypothese dat gamende kinderen gemiddeld 30 scoren. Merk op: dit gemiddelde ligt <em>onder</em> 30. Omdat je tweezijdig toetst, telt die kant net zo hard mee.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 5 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 5 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker vindt <em>p</em> = .012. Welke uitspraak klopt?</p>
+<ol type="A">
+<li>De kans dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, is .012.</li>
+<li>Als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, is de kans op een uitkomst die minstens zo extreem is .012.</li>
+<li>De kans dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> waar is, is .988.</li>
+<li>De kans dat het resultaat door toeval komt, is .012.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> A en C zijn de omkering.</p>
+<p>D is de lastigste, want hij klinkt als B. Let op het kleine woord:</p>
+<ul>
+<li>B: de kans <strong>óp</strong> zo’n uitkomst, <strong>áls</strong> het puur toeval is (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar);</li>
+<li>D: de kans <strong>dát</strong> het toeval is, nu je deze uitkomst hebt.</li>
+</ul>
+<p>D is dus de kans dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, in andere woorden — en dat is A weer. Bij de bakker: de kans op een fiets als het een bakker is, tegenover de kans dat het een bakker is nu je een fiets hebt.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 6 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 6 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De onderzoeker uit opgave 1.5 concludeert dat gamende kinderen anders scoren op de werkgeheugentest, terwijl dat in werkelijkheid niet zo is. Wat heeft hij gemaakt?</p>
+<ol type="A">
+<li>een Type I-fout</li>
+<li>een Type II-fout</li>
+<li>een juiste beslissing</li>
+<li>dat valt niet te zeggen zonder de <em>p</em>-waarde</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>A.</strong> Hij verwierp <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> terwijl <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar was: vals alarm.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 7 — ja of nee">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 7 — ja of nee
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“Er was geen significant verschil in concentratie tussen de ochtend- en de avondgroep (<em>p</em> = .27). De twee groepen concentreren zich dus even goed.” Klopt de tweede zin?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Nee.</strong> Niet verwerpen is niet hetzelfde als gelijk. Je mag alleen zeggen dat je geen verschil hebt kunnen aantonen.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 8 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 8 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker wil weten of de gemiddelde IQ-score van een groep afwijkt van 100. Welk hypothesenpaar hoort daarbij?</p>
+<ol type="A">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>≠</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\bar{x} \neq 100</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu \neq 100</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu \neq 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>&gt;</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu &gt; 100</annotation></semantics></math></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 8">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> A gaat over de steekproef, C is omgedraaid, en D kijkt maar naar één kant terwijl de vraag <em>“afwijkt”</em> zegt.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 9 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 9 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wat stellen de twee gestippelde lijnen in <a href="#fig-vb-grens" class="quarto-xref">Figuur&nbsp;4</a> (bij het piekervoorbeeld) voor?</p>
+<ol type="A">
+<li>de <em>p</em>-waarde</li>
+<li>het verwerpingsgebied</li>
+<li>de kritieke waarden</li>
+<li>het significantieniveau α</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 9">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 9
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> De lijnen zijn de grenzen zelf. Het verwerpingsgebied (B) is wat erop en erachter ligt.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="de-kapstok-in-één-oogopslag" class="level1">
+<h1>De kapstok in één oogopslag</h1>
+<table class="caption-top table">
+<caption>Wat deze week ophangt, en waar het terugkomt</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>haak</th>
+<th>deze week</th>
+<th>komt terug in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>populatie en steekproef</td>
+<td>μ schat je, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> reken je uit</td>
+<td>elke week</td>
+</tr>
+<tr class="even">
+<td>de steekproevenverdeling</td>
+<td>honderd bordjes, stippen tellen</td>
+<td>waarom een klok: week 2</td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>, tweezijdig</td>
+<td>niets aan de hand, of wel; ≠ is twee kanten</td>
+<td>elke week; toetsen zonder kant in week 4</td>
+</tr>
+<tr class="even">
+<td>de <em>p</em>-waarde</td>
+<td>de kans op deze of extremer, áls <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is</td>
+<td>uitrekenen in plaats van tellen: week 2</td>
+</tr>
+<tr class="odd">
+<td>beslissen: α, kritieke waarde</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p \leq .05</annotation></semantics></math>: verwerpen</td>
+<td>elke week</td>
+</tr>
+<tr class="even">
+<td>Type I- en Type II-fout</td>
+<td>vals alarm of gemist</td>
+<td>de kans dat je iets mist: week 5</td>
+</tr>
+<tr class="odd">
+<td>niet significant ≠ gelijk</td>
+<td>niet verwerpen is niet aannemen</td>
+<td>week 3 en week 5</td>
+</tr>
+<tr class="even">
+<td>het stappenplan</td>
+<td>zes stappen, elke week dezelfde</td>
+<td>welke toets wanneer: week 7</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Terug naar boven</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../00_voorkennis_z/00_voorkennis_z.html" class="pagination-link" aria-label="Week 0 · De normaalverdeling en z-scores">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Week 0 · De normaalverdeling en <em>z</em>-scores</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../02_een_gemiddelde/02_een_gemiddelde.html" class="pagination-link" aria-label="Week 2 · Hypothesetoetsen voor één gemiddelde">
+        <span class="nav-page-text">Week 2 · Hypothesetoetsen voor één gemiddelde</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Oefenboek Toetsende Statistiek · CountCamp Lab · wisi.nl</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Vragen, opmerkingen of suggesties? <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
