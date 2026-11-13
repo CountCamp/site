@@ -248,6 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#precies-pnorm" id="toc-precies-pnorm" class="nav-link" data-scroll-target="#precies-pnorm">Precies: <code>pnorm()</code></a></li>
   <li><a href="#de-drie-ankers" id="toc-de-drie-ankers" class="nav-link" data-scroll-target="#de-drie-ankers">De drie ankers</a></li>
   </ul></li>
+  <li><a href="#kans-en-procent" id="toc-kans-en-procent" class="nav-link" data-scroll-target="#kans-en-procent">Kans en procent</a></li>
   <li><a href="#terug-van-een-kans-naar-een-score" id="toc-terug-van-een-kans-naar-een-score" class="nav-link" data-scroll-target="#terug-van-een-kans-naar-een-score">Terug: van een kans naar een score</a></li>
   <li><a href="#in-r-kansen-uit-de-klok" id="toc-in-r-kansen-uit-de-klok" class="nav-link" data-scroll-target="#in-r-kansen-uit-de-klok">In R: kansen uit de klok</a></li>
   <li><a href="#op-naar-week-1" id="toc-op-naar-week-1" class="nav-link" data-scroll-target="#op-naar-week-1">Op naar week 1</a></li>
@@ -280,6 +281,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<div class="verhaal">
+<p>De vleermuis scoorde 65 op een piekervragenlijst en hing de hele nacht ondersteboven naar dat getal te kijken.</p>
+<p>“Jung schreef: <em>wie naar buiten kijkt, droomt; wie naar binnen kijkt, wordt wakker</em>,” zei hij, “en ik kijk al uren naar binnen.”</p>
+<p>“Jij kijkt niet, jij piekert,” zei de zevenslaper, “en piekeren is in herhaling vallen. Bij een getal moet je juist naar buiten kijken: naar wat de anderen scoren.”</p>
+</div>
 <div class="callout callout-style-simple callout-note no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -293,6 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>de 68–95–99.7-regel</li>
 <li>een <em>z</em>-score uitrekenen, en terug naar de score</li>
 <li>van <em>z</em> naar een kans: met de regel, met drie ankers, en precies met <code>pnorm()</code></li>
+<li>van kans naar procent en terug, zonder een nulletje kwijt te raken</li>
 <li>van een kans terug naar een score met <code>qnorm()</code></li>
 </ul>
 </div>
@@ -300,13 +307,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="waarom-een-week-0" class="level1">
 <h1>Waarom een week 0</h1>
-<p>Toetsen staat op één ding: de normaalverdeling, en hoe je een score daarop plaatst met een <em>z</em>-score. Je hebt het eerder gehad. Weet je het niet meer precies, dan is deze bladzijde er precies voor: kort, en zo dat het aansluit op week 1 (<em>Steekproevenverdelingen en hypothesetoetsing</em>).</p>
-<p>Eén ding vooraf: je hebt <strong>geen tabel</strong> nodig. Met de hand werk je met een vuistregel en drie getallen die je uit je hoofd kent; precies wordt het met <code>pnorm()</code> in R.</p>
+<p>Meer dan deze week heb je niet nodig om met toetsende statistiek te beginnen: de normaalverdeling, en de <em>z</em>-score die een score daarop een plek geeft. Weet je het niet meer precies, dan is deze bladzijde er nou net voor. En <strong>geen tabel</strong>: met de hand werk je met een vuistregel en drie ankers die je hier uit je hoofd leert, en precies wordt het met <code>pnorm()</code> in R.</p>
 </section>
 <section id="ruw-is-ruk" class="level1">
 <h1>Ruw is ruk</h1>
 <p>Iemand scoort 65 op een piekervragenlijst. Is dat veel?</p>
-<p>Je hebt geen idee. 65 wát? Als je niet weet waar het midden ligt, en niet hoe ver de scores uit elkaar liggen, zegt 65 helemaal niks. <strong>Ruw is ruk</strong>: een ruwe score, los van zijn groep, is een getal zonder betekenis.</p>
+<p>Je hebt geen idee. 65 wát? Als je niet weet waar het midden ligt, en niet hoe ver de scores uit elkaar liggen, zegt 65 helemaal niks. <strong>Ruw is ruk</strong>: een ruwe score, los van zijn groep, is een getal zonder betekenis. In vaktaal heet een ruwe score een <strong>ongestandaardiseerde score</strong> (in het Engels <em>raw score</em>).</p>
 <p>Dus de groep erbij. In de algemene bevolking zijn de scores op deze vragenlijst <strong>normaal verdeeld</strong>, met gemiddelde μ = 50 en standaarddeviatie σ = 10. (In week 1 kom je dezelfde vragenlijst weer tegen.) Nu kun je er iets mee.</p>
 </section>
 <section id="de-klok-oppervlakte-is-kans" class="level1">
@@ -316,9 +322,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>het <strong>gemiddelde</strong> μ zegt waar het midden ligt;</li>
 <li>de <strong>standaarddeviatie</strong> σ zegt hoe breed de klok is.</li>
 </ul>
-<p>Kort opgeschreven: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">μ</mi><mo>,</mo><mi mathvariant="normal">σ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">X \sim N(\mu, \sigma)</annotation></semantics></math>. Je leest het als: “<em>X</em> is normaal verdeeld met gemiddelde μ en standaarddeviatie σ”. De piekervragenlijst is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>50</mn><mo>,</mo><mn>10</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(50, 10)</annotation></semantics></math>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-klokjes" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Drie kleine klokvormige curves naast elkaar, lichtblauw gevuld. Onder elke klok staat alleen waar zijn midden ligt. Links een klok met het midden bij 50, een maatstreepje van het midden naar rechts met het label σ = 10, en in de klok de tekst 'oppervlakte = 1'. Daarnaast dezelfde klok, opgeschoven naar 70, met de eerste klok gestippeld op zijn oude plek. Rechts een klok met het midden bij 50 en een maatstreepje met σ = 5: twee keer zo smal en twee keer zo hoog als de gestippelde klok erachter. In de twee rechter klokken staat kortweg 1: ook daar is de oppervlakte 1.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-klokjes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="00_voorkennis_z_files/figure-html/fig-klokjes-1.png" class="img-fluid figure-img" alt="Drie kleine klokvormige curves naast elkaar, lichtblauw gevuld. Onder elke klok staat alleen waar zijn midden ligt. Links een klok met het midden bij 50, een maatstreepje van het midden naar rechts met het label σ = 10, en in de klok de tekst 'oppervlakte = 1'. Daarnaast dezelfde klok, opgeschoven naar 70, met de eerste klok gestippeld op zijn oude plek. Rechts een klok met het midden bij 50 en een maatstreepje met σ = 5: twee keer zo smal en twee keer zo hoog als de gestippelde klok erachter. In de twee rechter klokken staat kortweg 1: ook daar is de oppervlakte 1." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-klokjes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1: Drie normaalverdelingen. Links de piekervragenlijst (μ = 50, σ = 10). Daarnaast dezelfde breedte met een ander midden (μ = 70), en rechts hetzelfde midden met σ = 5. In die twee staat de piekervragenlijst gestippeld erachter. Onder elke klok is de oppervlakte 1, dus de klok die twee keer zo smal is, is twee keer zo hoog.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Kort opgeschreven: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>∼</mo><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">μ</mi><mo>,</mo><mi mathvariant="normal">σ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">X \sim N(\mu, \sigma)</annotation></semantics></math>. Je leest het als: “<em>X</em> is normaal verdeeld met gemiddelde μ en standaarddeviatie σ”. De piekervragenlijst is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>50</mn><mo>,</mo><mn>10</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(50, 10)</annotation></semantics></math>: de linker klok hierboven.</p>
 <p>Let op: soms krijg je niet de standaarddeviatie maar de <strong>variantie</strong> σ², het kwadraat ervan. Neem dan eerst de wortel. Variantie 100 betekent <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">σ</mi><mo>=</mo><msqrt><mn>100</mn></msqrt><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\sigma = \sqrt{100} = 10</annotation></semantics></math>.</p>
-<p>Aan zo’n klok lees je geen aantallen af maar <strong>oppervlakte</strong>. De hele oppervlakte tussen de as en de klok is 1. Op de as staat de gebeurtenis: een score. Erboven, tussen de as en de klok, staat de kans: het stuk oppervlakte boven dat deel van de as. Dat is de kans dat een willekeurig gekozen persoon daar scoort.</p>
+<p>Aan zo’n klok lees je geen aantallen af maar <strong>oppervlakte</strong>. De hele oppervlakte tussen de as en de klok is 1, bij elke klok. Daarom is de smalle klok hoger: er moet evenveel onder.</p>
+<p>Op de as staat de gebeurtenis: een score. Erboven, tussen de as en de klok, staat de kans: het stuk oppervlakte boven dat deel van de as. Dat is de kans dat een willekeurig gekozen persoon daar scoort.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-stuk" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Een klok boven een as. Het stuk as van 60 tot 70 is dik getekend, met eronder 'op de as: de gebeurtenis'. Recht daarboven is het stuk onder de klok blauw gekleurd, met een streepje naar de tekst 'erboven: de kans, .14'.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-stuk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="00_voorkennis_z_files/figure-html/fig-stuk-1.png" class="img-fluid figure-img" alt="Een klok boven een as. Het stuk as van 60 tot 70 is dik getekend, met eronder 'op de as: de gebeurtenis'. Recht daarboven is het stuk onder de klok blauw gekleurd, met een streepje naar de tekst 'erboven: de kans, .14'." width="441">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-stuk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2: Op de as de gebeurtenis: een piekerscore tussen 60 en 70. Erboven de kans: het blauwe stuk oppervlakte boven dat deel van de as, .14.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Precies één score heeft kans nul">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -351,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <img src="00_voorkennis_z_files/figure-html/fig-regel-1.png" class="img-fluid figure-img" alt="Een klokvormige curve boven een as van 20 tot 80, met daaronder de z-waarden van −3 tot 3. Het midden ligt bij 50. Drie haken boven de curve: van 40 tot 60 staat .68, van 30 tot 70 staat .95, van 20 tot 80 staat .997." width="633">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;1: De 68–95–99.7-regel bij de piekervragenlijst (μ = 50, σ = 10). Binnen één standaarddeviatie van het midden ligt ongeveer .68 van de oppervlakte, binnen twee ongeveer .95, binnen drie ongeveer .997.
+Figuur&nbsp;3: De 68–95–99.7-regel bij de piekervragenlijst (μ = 50, σ = 10). Binnen één standaarddeviatie van het midden ligt ongeveer .68 van de oppervlakte, binnen twee ongeveer .95, binnen drie ongeveer .997.
 </figcaption>
 </figure>
 </div>
@@ -366,6 +401,20 @@ Figuur&nbsp;1: De 68–95–99.7-regel bij de piekervragenlijst (μ = 50, σ = 1
 \text{voorbij drie:}\quad &amp; \dfrac{1 - .997}{2} = .0015
 \end{aligned}
 </annotation></semantics></math></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-staarten" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Drie kleine klokken naast elkaar. In elke klok staan twee gestippelde lijnen, even ver links en rechts van het midden: bij −1 en 1, bij −2 en 2, en bij −3 en 3 standaarddeviaties. Wat daarbuiten ligt is oranje, met het getal erbij: .16, .025 en .0015 aan elke kant. In het witte midden staat .68, .95 en .997. De oranje staarten worden van links naar rechts smaller; in de rechter klok zijn ze bijna niet te zien.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-staarten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="00_voorkennis_z_files/figure-html/fig-staarten-1.png" class="img-fluid figure-img" alt="Drie kleine klokken naast elkaar. In elke klok staan twee gestippelde lijnen, even ver links en rechts van het midden: bij −1 en 1, bij −2 en 2, en bij −3 en 3 standaarddeviaties. Wat daarbuiten ligt is oranje, met het getal erbij: .16, .025 en .0015 aan elke kant. In het witte midden staat .68, .95 en .997. De oranje staarten worden van links naar rechts smaller; in de rechter klok zijn ze bijna niet te zien." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-staarten-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;4: De staarten uit de regel. Voorbij één standaarddeviatie van het midden ligt aan elke kant ongeveer .16, voorbij twee ongeveer .025, voorbij drie ongeveer .0015. In het midden staat wat de regel binnen de grenzen legt; het midden en de twee staarten samen zijn 1. Voorbij drie is de staart te dun om te zien, maar hij is er nog.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>Rechts van één standaarddeviatie boven het midden ligt dus ongeveer .16, rechts van twee ongeveer .025, rechts van drie ongeveer .0015. Hoe verder weg, hoe kleiner de staart. Op een intelligentietest geldt dus: <strong>Einstein heeft de kleinste staart, omdat hij het verst weg zit.</strong></p>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Controle in R — klopt de regel?">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
@@ -402,7 +451,7 @@ Figuur&nbsp;1: De 68–95–99.7-regel bij de piekervragenlijst (μ = 50, σ = 1
 </section>
 <section id="de-z-score-hoe-vaak-past-het-lineaaltje" class="level1">
 <h1>De <em>z</em>-score: hoe vaak past het lineaaltje?</h1>
-<p>Een <strong><em>z</em>-score</strong> is een telling: <strong>het aantal standaarddeviaties tussen een score en het gemiddelde</strong>, met een min ervoor als de score onder het gemiddelde ligt. Meer is het niet. <em>Gestandaardiseerd</em> klinkt als een definitie, maar zegt niets: een belastingformulier is ook gestandaardiseerd.</p>
+<p>Een <strong><em>z</em>-score</strong> is een telling: <strong>het aantal standaarddeviaties tussen een score en het gemiddelde</strong>, met een min ervoor als de score onder het gemiddelde ligt. Meer is het niet.</p>
 <p>Zie de standaarddeviatie als een <strong>lineaaltje</strong> van 10 piekerpunten. De <em>z</em>-score is de vraag: <em>hoe vaak past dat lineaaltje tussen het midden en deze score?</em></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>x</mi><mo>−</mo><mi mathvariant="normal">μ</mi></mrow><mi mathvariant="normal">σ</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">
 z = \dfrac{x - \mu}{\sigma}
@@ -412,12 +461,13 @@ z = \dfrac{x - \mu}{\sigma}
 z = \dfrac{65 - 50}{10} = 1.50
 </annotation></semantics></math></p>
 <p>Anderhalf lineaaltje boven het midden. Dat zegt al meer dan 65.</p>
+<p>Een score in lineaaltjes heet in vaktaal een <strong>gestandaardiseerde score</strong> (<em>standardized score</em>), de tegenhanger van de ruwe. Dat is een naam, geen uitleg: <em>gestandaardiseerd</em> klinkt als een definitie, maar zegt niets. Een belastingformulier is ook gestandaardiseerd.</p>
 <p><strong>En terug.</strong> Van <em>z</em> naar de score is fietsen: begin bij huis (het midden), en leg het lineaaltje <em>z</em> keer neer.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mi mathvariant="normal">μ</mi><mo>+</mo><mi>z</mi><mo>⋅</mo><mi mathvariant="normal">σ</mi><mo>=</mo><mn>50</mn><mo>+</mo><mn>1.50</mn><mo>⋅</mo><mn>10</mn><mo>=</mo><mn>65</mn></mrow><annotation encoding="application/x-tex">
 x = \mu + z \cdot \sigma = 50 + 1.50 \cdot 10 = 65
 </annotation></semantics></math></p>
 <p>Lees <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.50</mn><mo>⋅</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">1.50 \cdot 10</annotation></semantics></math> als <em>anderhalf keer een lineaaltje van 10</em>. Een formule omvormen hoeft nooit: je loopt gewoon vanaf het midden.</p>
-<p>Je komt <em>z</em> ook tegen als <strong><em>z</em>-waarde</strong>. Bij het toetsen heet hij meestal zo. Dan doe je dezelfde deling, maar meet je niet hoe ver één persoon van het midden ligt: je meet hoe ver het gemiddelde van een steekproef ervan ligt.</p>
+<p>Je komt <em>z</em> ook tegen als <strong><em>z</em>-waarde</strong>. Bij het toetsen heet hij meestal zo. Dan doe je dezelfde soort deling, maar meet je niet hoe ver één persoon van het midden ligt: je meet hoe ver het gemiddelde van een steekproef ervan ligt.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Standaardiseren maakt niets normaal">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -429,6 +479,20 @@ x = \mu + z \cdot \sigma = 50 + 1.50 \cdot 10 = 65
 </div>
 <div class="callout-body-container callout-body">
 <p>Zet je een hele groep scores om in <em>z</em>-scores, met het gemiddelde en de standaarddeviatie van díé groep, dan is het gemiddelde van die <em>z</em>-scores altijd 0 en hun standaarddeviatie altijd 1. Maar de <strong>vorm</strong> blijft. Was de verdeling scheef, dan is hij dat na het omrekenen nog steeds. De klok en alles hieronder werken alleen als de scores zelf (ongeveer) normaal verdeeld zijn.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-scheef" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Twee kleine scheve bulten naast elkaar, met een steile kant links en een lange staart naar rechts. Ze zien er precies hetzelfde uit; alleen de getallen eronder verschillen. Links staan onder de as 0, 12, 24 en 36, met een blauw streepje bij het gemiddelde, 12, rechts van de top, en een lineaaltje van 6. Rechts staan op dezelfde plekken −2, 0, 2 en 4, met het gemiddelde bij 0 en een lineaaltje van 1.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-scheef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="00_voorkennis_z_files/figure-html/fig-scheef-1.png" class="img-fluid figure-img" alt="Twee kleine scheve bulten naast elkaar, met een steile kant links en een lange staart naar rechts. Ze zien er precies hetzelfde uit; alleen de getallen eronder verschillen. Links staan onder de as 0, 12, 24 en 36, met een blauw streepje bij het gemiddelde, 12, rechts van de top, en een lineaaltje van 6. Rechts staan op dezelfde plekken −2, 0, 2 en 4, met het gemiddelde bij 0 en een lineaaltje van 1." width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-scheef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;5: Links scores die scheef verdeeld zijn, met gemiddelde 12 (het blauwe streepje) en standaarddeviatie 6. Het gemiddelde staat niet onder de top: de lange staart rechts trekt het mee. Rechts dezelfde scores als <em>z</em>: het gemiddelde is 0 geworden en het lineaaltje 1, maar de vorm is precies dezelfde. Nog steeds scheef.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -442,6 +506,7 @@ x = \mu + z \cdot \sigma = 50 + 1.50 \cdot 10 = 65
 <li>een <strong>tweedeling</strong>: één grens, een stuk links en een stuk rechts. Die hoort bij <em>lager dan</em> of <em>hoger dan</em>, en je kijkt naar <strong>één staart</strong>;</li>
 <li>een <strong>driedeling</strong>: twee grenzen, even ver van het midden. Die hoort bij <em>minstens zo ver van het midden, aan welke kant ook</em>, en je kijkt naar <strong>twee staarten samen</strong>.</li>
 </ul>
+<p>Toets je later op zo’n klok, dan heet een kans uit één staart <strong>eenzijdig</strong> en een kans uit twee staarten samen <strong>tweezijdig</strong> (in het Engels <em>one-tailed</em> en <em>two-tailed</em>).</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-delingen" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Twee klokken naast elkaar, as van 20 tot 80. In de linker staat een verticale lijn bij 65; het smalle stuk rechts ervan is oranje, met het getal .067, en links staat .933. In de rechter staan lijnen bij 35 en 65; beide buitenste stukken zijn oranje met .067, en in het midden staat .866.">
@@ -450,7 +515,7 @@ x = \mu + z \cdot \sigma = 50 + 1.50 \cdot 10 = 65
 <img src="00_voorkennis_z_files/figure-html/fig-delingen-1.png" class="img-fluid figure-img" alt="Twee klokken naast elkaar, as van 20 tot 80. In de linker staat een verticale lijn bij 65; het smalle stuk rechts ervan is oranje, met het getal .067, en links staat .933. In de rechter staan lijnen bij 35 en 65; beide buitenste stukken zijn oranje met .067, en in het midden staat .866." width="691">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-delingen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;2: Links de tweedeling bij 65: .933 ligt links, .067 rechts; één staart. Rechts de driedeling: twee staarten van .067 en een midden van .866.
+Figuur&nbsp;6: Links de tweedeling bij 65: .933 ligt links, .067 rechts; één staart. Rechts de driedeling: twee staarten van .067 en een midden van .866.
 </figcaption>
 </figure>
 </div>
@@ -468,7 +533,7 @@ Figuur&nbsp;2: Links de tweedeling bij 65: .933 ligt links, .067 rechts; één s
 <img src="00_voorkennis_z_files/figure-html/fig-gebied-1.png" class="img-fluid figure-img" alt="Een klok op een z-as van −3 tot 3. Gestippelde lijnen bij 1 en 2, met erboven 'rechts: .16' en 'rechts: .025'. Een blauwe lijn bij 1.50; het stuk rechts daarvan is oranje." width="576">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gebied-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;3: Met de hand: rechts van z = 1 ligt volgens de regel ongeveer .16, rechts van z = 2 ongeveer .025. De oranje staart rechts van 1.50 zit daar tussenin.
+Figuur&nbsp;7: Met de hand: rechts van z = 1 ligt volgens de regel ongeveer .16, rechts van z = 2 ongeveer .025. De oranje staart rechts van 1.50 zit daar tussenin.
 </figcaption>
 </figure>
 </div>
@@ -559,7 +624,7 @@ Figuur&nbsp;3: Met de hand: rechts van z = 1 ligt volgens de regel ongeveer .16,
 <img src="00_voorkennis_z_files/figure-html/fig-ankers-1.png" class="img-fluid figure-img" alt="Drie klokken naast elkaar op een z-as van −3 tot 3. Links één oranje staart rechts van 1.645, met .05. In het midden twee oranje staarten voorbij −1.96 en 1.96, elk .025, met .95 in het midden. Rechts twee nog smallere staarten voorbij −2.576 en 2.576, elk .005, met .99 in het midden." width="729">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ankers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij ±1.96 ligt aan elke kant .025, samen .05. Voorbij ±2.576 aan elke kant .005, samen .01.
+Figuur&nbsp;8: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij ±1.96 ligt aan elke kant .025, samen .05. Voorbij ±2.576 aan elke kant .005, samen .01.
 </figcaption>
 </figure>
 </div>
@@ -567,13 +632,63 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 </div>
 <p>1.96 is de <strong>heilige <em>z</em>-waarde</strong>. Volgens de vuistregel ligt .95 binnen twee lineaaltjes; preciezer is het binnen 1.96. Bij 1.96 ligt er .025 in <strong>elke</strong> staart, samen .05.</p>
 <p>1.645 is de <strong>andere heilige <em>z</em>-waarde</strong>, en die wordt vaak met de eerste verward. Bij 1.645 ligt er .05 in <strong>één</strong> staart. Teken het, dan zie je het.</p>
+<p>Bij het toetsen heten de ankers <strong>kritieke <em>z</em>-waarden</strong> (in het Engels <em>critical values</em>).</p>
 <p><strong>Redeneren met de ankers.</strong> Elke <em>z</em> kun je tussen de ankers leggen. Kijk wel eerst naar je tekening: één staart of twee?</p>
 <ul>
-<li><strong>Eén staart.</strong> Onze <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1.50</mn></mrow><annotation encoding="application/x-tex">z = 1.50</annotation></semantics></math> ligt onder 1.645, dus rechts ervan ligt méér dan .05. Klopt, het is precies .067 met <code>pnorm()</code>.</li>
+<li><strong>Eén staart.</strong> Onze <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1.50</mn></mrow><annotation encoding="application/x-tex">z = 1.50</annotation></semantics></math> ligt onder 1.645, dus rechts ervan ligt méér dan .05. Klopt: <code>pnorm()</code> geeft afgerond .067.</li>
 <li><strong>Twee staarten samen.</strong> Een <em>z</em> van 2.40 ligt tussen 1.96 en 2.576. Verder dan 1.96, dus samen minder dan .05. Niet zo ver als 2.576, dus samen meer dan .01.</li>
 </ul>
 <p>Je hebt geen exact getal, maar wel genoeg om te beslissen.</p>
 </section>
+</section>
+<section id="kans-en-procent" class="level1">
+<h1>Kans en procent</h1>
+<p>Een kans is een deel van het geheel, en loopt van 0 tot 1. Hoor je <em>proportie</em>, dan is dat hetzelfde. Een <strong>procent</strong> is hetzelfde deel, maar dan per honderd. Hetzelfde getal in een ander jasje:</p>
+<ul>
+<li>van kans naar procent: <strong>keer 100</strong>. Van .025 maak je zo 2.5%.</li>
+<li>van procent naar kans: <strong>gedeeld door 100</strong>. Van 5% maak je zo .05.</li>
+</ul>
+<p>Je deed het eigenlijk al.&nbsp;Rechts van 65 ligt .067, en hierboven stond dat als <em>“ongeveer 7 van de 100 mensen”</em>: dat is 6.7%, afgerond.</p>
+<p>Twijfel je welke kant op? Vraag je af of het getal groter of kleiner moet worden. Het procent is altijd het grote getal van de twee: 0.15% tegen .0015.</p>
+<p>Rekenen doe je in kansen, zoals deze hele week. Procenten zijn gezellig om te vertellen, en je komt ze tegen in artikelen en tentamenvragen. Staat er een procent, deel dan eerst door 100, en reken dan pas.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Tel de nulletjes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Waarschuwing</span>Tel de nulletjes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kleine getallen zijn rotgetalletjes. Eén nul te veel of te weinig, en je kans is tien keer te klein of te groot: .005 is niet .05. Sla je de nulletjes helemaal over, dan wordt .0015 zomaar 15%, terwijl het 0.15% is.</p>
+<p>Tel daarom de <em>nulletjes tussen de punt en het eerste cijfer dat geen nul is</em>. In .05 staat er één, in .005 twee.</p>
+<p>Een 0 vóór de punt telt niet mee. R zet hem er altijd voor; dit boek zet hem alleen bij een procent: .0015 als kans, 0.15% als procent.</p>
+<p>Neem <em>z</em> = 2.40 van hierboven, en de twee staarten samen:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># z = 2.40: de twee staarten samen</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="fl">2.4</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01639507</code></pre>
+</div>
+</div>
+<p>Eén nulletje, dus .016. Leg hem naast .05 en .01, die er ook één hebben: onder .05, niet onder .01. Precies wat de ankers zeiden.</p>
+<ul>
+<li>Eén nul te weinig, .16, en er ligt ineens méér dan .05.</li>
+<li>Eén nul te veel, .0016, en er ligt ineens minder dan .01.</li>
+</ul>
+<p>Twee andere conclusies, allebei door één nul.</p>
+</div>
+</div>
+<p><strong>Tik het in, en lees met een vergrootglas.</strong> Ook als je weet hoe het moet: laat het rekenwerk aan je rekenmachine of aan R, en gebruik je hoofd om te controleren. Is het procent het grote getal? In R hoef je zelfs niets over te nemen:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rechts van z = 1.5: R rekent de kans uit, * 100 maakt er een procent van</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">1.5</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>) <span class="sc">*</span> <span class="dv">100</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.68072</code></pre>
+</div>
+</div>
+<p>Afgerond 6.7%: de .067 van hierboven, per honderd. Moet je een klein getal toch van een scherm aflezen, zoom dan in (Ctrl of Cmd en +) en zet je vinger erbij. Zeg desnoods hardop wat er na de punt staat. Bij <code>0.0668072</code> is dat nul, zes, zes, acht: één nulletje, dus .067.</p>
 </section>
 <section id="terug-van-een-kans-naar-een-score" class="level1">
 <h1>Terug: van een kans naar een score</h1>
@@ -587,13 +702,13 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 <p>Wie hoger scoort dan 66.45, hoort bij die 5 van de 100.</p>
 <p><code>qnorm()</code> doet hetzelfde in één keer: je geeft een oppervlakte <strong>links</strong>, R geeft de <em>z</em> (of de score) die erbij hoort.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># welke z heeft .95 links van zich (en dus .05 rechts)?</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.95</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># welke z heeft .95 links van zich (en dus .05 rechts)?</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.95</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.644854</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># en meteen als piekerscore</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.95</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># en meteen als piekerscore</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.95</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 66.44854</code></pre>
 </div>
@@ -609,17 +724,17 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 </ul>
 <p>Geef je ze alleen een <em>z</em> of een oppervlakte, dan rekenen ze in de klok van <em>z</em>. Geef je <code>mean</code> en <code>sd</code> mee, dan rekenen ze in de schaal zelf, en hoef je <em>z</em> niet eerst uit te rekenen:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hoger dan 65 op de piekervragenlijst: in één keer</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">65</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hoger dan 65 op de piekervragenlijst: in één keer</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">65</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0668072</code></pre>
 </div>
 </div>
-<p>Hetzelfde getal als via <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1.50</mn></mrow><annotation encoding="application/x-tex">z = 1.50</annotation></semantics></math>. Een veelgemaakte fout is beide tegelijk doen: <code>pnorm(1.5, mean = 50, sd = 10)</code>. Dan vraag je R naar een piekerscore van 1.5, en krijg je een getal vlak bij 0.</p>
+<p>Hetzelfde getal als via <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1.50</mn></mrow><annotation encoding="application/x-tex">z = 1.50</annotation></semantics></math>. Een veelgemaakte fout is beide tegelijk doen: <code>pnorm(1.5, mean = 50, sd = 10)</code>. Dan vraag je R naar een piekerscore van 1.5, en krijg je een getal vlak bij 0. R zet het op je scherm als <code>6.173074e-07</code>. Die <code>e-07</code> betekent: de punt zeven plekken naar links. Uitgeschreven is het <code>0.0000006173074</code>: zes nulletjes tussen de punt en de 6, en de 6 zelf op de zevende plek. Voor iemand die anderhalf lineaaltje boven het midden zit, is dat verdacht klein: een teken dat je R iets anders vroeg dan je bedoelde.</p>
 <p><strong>Een hele kolom tegelijk.</strong> De oefendataset <code>slaapstudie</code> gaat het hele boek mee: 30 slechte slapers, met onder meer hun piekerscore vóór een slaaptraining (<code>piekeren_voor</code>). Download <a href="../_common_ts/data/slaapstudie.RData">slaapstudie.RData</a> en zet het in je projectmap. (Nog geen project? In RStudio: <em>File &gt; New Project…</em>, dan <em>New Directory &gt; New Project</em>. De map die je daar kiest, is je projectmap.) Daarna:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Inladen ----</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Inladen ----</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Zo zet je die hele kolom om in <em>z</em>-scores ten opzichte van de algemene bevolking. Twee tekens die je daarvoor nodig hebt:</p>
 <ul>
@@ -627,11 +742,11 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 <li><code>&lt;-</code> bewaart wat rechts staat onder de naam links, hier als nieuwe kolom <code>z_voor</code>.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># z per persoon: (score - 50) / 10</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>z_voor <span class="ot">&lt;-</span> (slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> <span class="dv">10</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># de eerste zes rijen, met de nieuwe kolom</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># z per persoon: (score - 50) / 10</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>z_voor <span class="ot">&lt;-</span> (slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> <span class="dv">10</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># de eerste zes rijen, met de nieuwe kolom</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  id    groep leeftijd piekeren_voor piekeren_na z_voor
 1  1 training       19            54          51    0.4
@@ -647,7 +762,7 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 <section id="op-naar-week-1" class="level1">
 <h1>Op naar week 1</h1>
 <p>Tot nu toe zet je <strong>één score</strong> af tegen een groep, en het lineaaltje is de standaarddeviatie σ. Hier was μ het gemiddelde van de algemene bevolking, en dat was bekend: 50.</p>
-<p>In week 1 draait het om. De populatie is dan alle slechte slapers, en hún μ ken je niet: dat is juist de vraag. En één stip is daar geen persoon meer, maar het <strong>gemiddelde van een hele steekproef</strong>. Zulke gemiddelden liggen veel dichter bij het midden dan losse scores: het lineaaltje wordt korter.</p>
+<p>In week 1 draait het om. De populatie is dan alle slechte slapers, en hún μ ken je niet: dat is juist de vraag. En één stip is daar geen persoon meer, maar het <strong>gemiddelde van een hele steekproef</strong>. Zulke gemiddelden liggen veel dichter bij het midden dan losse scores: het lineaaltje wordt korter. Dat kortere lineaaltje heet de <strong>standaardfout</strong>.</p>
 <p>De wandeling blijft precies dezelfde: score, <em>z</em>, kans, en terug. In week 1 tel je die gemiddelden als stippen. Hoeveel korter het lineaaltje is, en waarom de stippen een klok vormen, werk je uit in week 2 (<em>Hypothesetoetsen voor één gemiddelde</em>).</p>
 </section>
 <section id="oefenen" class="level1">
@@ -671,7 +786,7 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord 0.1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -680,7 +795,7 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><em>z</em> = −1.20</li>
@@ -691,7 +806,7 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking 0.1 — stap voor stap">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -700,7 +815,7 @@ Figuur&nbsp;4: De drie ankers. Rechts van 1.645 ligt .05 (één staart). Voorbij
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Hoe vaak past het lineaaltje van 15 tussen het midden en 82?</p>
@@ -734,7 +849,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord 0.2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -743,7 +858,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li>ongeveer .68</li>
@@ -755,7 +870,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking 0.2 — stap voor stap">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -764,7 +879,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>350 en 450 liggen elk één lineaaltje (50 ms) van het midden. Binnen één lineaaltje ligt ongeveer .68.</p></li>
@@ -795,7 +910,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord 0.3">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -804,7 +919,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li>.212</li>
@@ -816,7 +931,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking 0.3 — stap voor stap">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -825,7 +940,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>42</mn><mo>−</mo><mn>50</mn></mrow><mn>10</mn></mfrac></mstyle><mo>=</mo><mi>−</mi><mn>0.80</mn></mrow><annotation encoding="application/x-tex">z = \dfrac{42 - 50}{10} = -0.80</annotation></semantics></math>. Een tweedeling, en je wilt de linkerkant: dat is .212. In R gaat dat met <code>pnorm(-0.8)</code>.</p></li>
@@ -834,19 +949,19 @@ z = \dfrac{82 - 100}{15} = -1.20
 <li><p>De twee staarten samen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>.212</mn><mo>=</mo><mn>.424</mn></mrow><annotation encoding="application/x-tex">2 \times .212 = .424</annotation></semantics></math>. Samen met c is dat precies 1.</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.8</span>)                     <span class="co"># a</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.8</span>)                     <span class="co"># a</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2118554</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">0.8</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)  <span class="co"># b</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">0.8</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)  <span class="co"># b</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2118554</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">0.8</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.8</span>)        <span class="co"># c: de grote min de kleine</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">0.8</span>) <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.8</span>)        <span class="co"># c: de grote min de kleine</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.5762892</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.8</span>)                 <span class="co"># d: z van 42 is negatief, dus links</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fl">0.8</span>)                 <span class="co"># d: z van 42 is negatief, dus links</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4237108</code></pre>
 </div>
@@ -911,7 +1026,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 0.4">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -920,7 +1035,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <table class="caption-top table">
 <caption>De antwoorden</caption>
@@ -967,12 +1082,12 @@ z = \dfrac{82 - 100}{15} = -1.20
 </ul>
 <p>Kijk naar 1.80: rechts ervan ligt minder dan .05, maar beide staarten samen niet. Dat is het verschil tussen één en twee staarten, en het verschil tussen 1.645 en 1.96.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.2</span>, <span class="fl">1.8</span>, <span class="fl">2.2</span>, <span class="fl">2.7</span>)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(z, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)        <span class="co"># één staart</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.2</span>, <span class="fl">1.8</span>, <span class="fl">2.2</span>, <span class="fl">2.7</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(z, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)        <span class="co"># één staart</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.115069670 0.035930319 0.013903448 0.003466974</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(z, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)    <span class="co"># twee staarten samen</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(z, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)    <span class="co"># twee staarten samen</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.230139340 0.071860638 0.027806895 0.006933948</code></pre>
 </div>
@@ -999,7 +1114,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord 0.5">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1008,7 +1123,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li>69.60</li>
@@ -1019,7 +1134,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking 0.5 — stap voor stap">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1028,7 +1143,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Een staart van .025 rechts hoort bij 1.96. Fiets terug: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>50</mn><mo>+</mo><mn>1.96</mn><mo>⋅</mo><mn>10</mn><mo>=</mo><mn>69.60</mn></mrow><annotation encoding="application/x-tex">x = 50 + 1.96 \cdot 10 = 69.60</annotation></semantics></math>.</p></li>
@@ -1036,15 +1151,15 @@ z = \dfrac{82 - 100}{15} = -1.20
 <li><p><code>qnorm()</code> wil de oppervlakte <strong>links</strong>. Rechts .025 is links .975; de bovengrens van de middelste .99 heeft links .995.</p></li>
 </ol>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)    <span class="co"># a</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.975</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)    <span class="co"># a</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 69.59964</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.005</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)    <span class="co"># b, de ondergrens</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.005</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)    <span class="co"># b, de ondergrens</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 24.24171</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.995</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)    <span class="co"># b, de bovengrens</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qnorm</span>(<span class="fl">0.995</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>)    <span class="co"># b, de bovengrens</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 75.75829</code></pre>
 </div>
@@ -1071,7 +1186,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 0.6">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1080,21 +1195,21 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a. hoeveel boven 1.645?</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(slaapstudie<span class="sc">$</span>z_voor <span class="sc">&gt;</span> <span class="fl">1.645</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a. hoeveel boven 1.645?</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(slaapstudie<span class="sc">$</span>z_voor <span class="sc">&gt;</span> <span class="fl">1.645</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># b. verwacht: 30 keer de staart rechts van 1.645</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="dv">30</span> <span class="sc">*</span> <span class="fl">0.05</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># b. verwacht: 30 keer de staart rechts van 1.645</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="dv">30</span> <span class="sc">*</span> <span class="fl">0.05</span></span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># c. het gemiddelde van z</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaapstudie<span class="sc">$</span>z_voor)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># c. het gemiddelde van z</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaapstudie<span class="sc">$</span>z_voor)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4166667</code></pre>
 </div>
@@ -1132,7 +1247,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1141,9 +1256,9 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>A.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>30</mn><mo>−</mo><mn>40</mn></mrow><mn>8</mn></mfrac></mstyle><mo>=</mo><mi>−</mi><mn>1.25</mn></mrow><annotation encoding="application/x-tex">z = \dfrac{30 - 40}{8} = -1.25</annotation></semantics></math>. B vergeet de min, C is het verschil zonder lineaaltje (ruw is ruk), en D deelt andersom.</p>
+<p><strong>A.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>30</mn><mo>−</mo><mn>40</mn></mrow><mn>8</mn></mfrac></mstyle><mo>=</mo><mi>−</mi><mn>1.25</mn></mrow><annotation encoding="application/x-tex">z = \dfrac{30 - 40}{8} = -1.25</annotation></semantics></math>. B vergeet de min, C is het verschil zonder lineaaltje, nog in ongestandaardiseerde punten: ruw is ruk. D deelt andersom.</p>
 </div>
 </div>
 </div>
@@ -1167,7 +1282,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1176,7 +1291,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>C.</strong> 70 ligt twee lineaaltjes boven het midden. Buiten twee lineaaltjes ligt ongeveer .05, en daarvan de helft rechts. A telt beide staarten, B is alles links van 70, en D is het midden.</p>
 </div>
@@ -1202,7 +1317,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 3">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1211,7 +1326,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> De vraag geeft de variantie, niet de standaarddeviatie. Het lineaaltje is de wortel daarvan: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">σ</mi><mo>=</mo><msqrt><mn>16</mn></msqrt><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\sigma = \sqrt{16} = 4</annotation></semantics></math>. Dan <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>26</mn><mo>−</mo><mn>20</mn></mrow><mn>4</mn></mfrac></mstyle><mo>=</mo><mn>1.50</mn></mrow><annotation encoding="application/x-tex">z = \dfrac{26 - 20}{4} = 1.50</annotation></semantics></math>. A deelt door de variantie, C is het verschil zonder lineaaltje, en D deelt andersom.</p>
 </div>
@@ -1237,7 +1352,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 4">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1246,7 +1361,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>C.</strong> 1.75 ligt tussen 1.645 en 1.96. Buiten ±1.645 ligt samen .10, buiten ±1.96 samen .05. Verder dan 1.645, dus minder dan .10; niet zo ver als 1.96, dus meer dan .05. (Precies: .080.)</p>
 <p>B is de val: rechts van 1.75 ligt wél minder dan .05, maar dat is één staart. De vraag gaat over beide staarten samen. A zou een <em>z</em> voorbij 2.576 vragen, en D een <em>z</em> onder 1.645.</p>
@@ -1273,7 +1388,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 5">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1282,7 +1397,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>D.</strong> B is de val: bij 1.96 ligt er .025 rechts, en .05 in beide staarten samen. Bij C ligt er .005 rechts. A verwart de plek op de as met de oppervlakte.</p>
 </div>
@@ -1308,7 +1423,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 6">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1317,7 +1432,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>A.</strong> Eén staart van .025 rechts hoort bij 1.96: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>100</mn><mo>+</mo><mn>1.96</mn><mo>⋅</mo><mn>15</mn><mo>=</mo><mn>129.40</mn></mrow><annotation encoding="application/x-tex">x = 100 + 1.96 \cdot 15 = 129.40</annotation></semantics></math>. B gebruikt 1.645, het anker voor .05 in één staart. C gebruikt 2.576, het anker voor .005. D is één lineaaltje boven het midden, en daarboven ligt ongeveer .16.</p>
 </div>
@@ -1343,7 +1458,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 7">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1352,7 +1467,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>D.</strong> Omrekenen naar <em>z</em> schuift het midden naar 0 en maakt het lineaaltje 1 lang. De vorm blijft: wat scheef was, blijft scheef. A en B beweren dat de vorm verandert. C vergeet dat het midden naar 0 schuift.</p>
 </div>
@@ -1378,7 +1493,7 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 8">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1387,9 +1502,44 @@ z = \dfrac{82 - 100}{15} = -1.20
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> Een driedeling: twee staarten samen. Rechts van 118 ligt .115, en de klok is symmetrisch, dus links van 82 ligt evenveel. Samen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mn>.115</mn><mo>=</mo><mn>.230</mn></mrow><annotation encoding="application/x-tex">2 \times .115 = .230</annotation></semantics></math>. A is maar één staart, C is het midden, D is alles links van 118.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Vraag 9 — meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vraag 9 — meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In een artikel staat dat 0.5% van de deelnemers voortijdig stopte. Hoe schrijf je dat als kans?</p>
+<ol type="A">
+<li>.5</li>
+<li>.05</li>
+<li>.005</li>
+<li>.0005</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 9">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord vraag 9
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> Van procent naar kans deel je door 100: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>0.5</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.005</mn></mrow><annotation encoding="application/x-tex">\dfrac{0.5}{100} = .005</annotation></semantics></math>. Tel de nulletjes: twee. B is de klassieke vergissing: één nul te weinig, en je kans is tien keer te groot. A vergeet te delen, en D heeft een nul te veel.</p>
 </div>
 </div>
 </div>
@@ -1399,10 +1549,13 @@ z = \dfrac{82 - 100}{15} = -1.20
 <p>Mag je een eigen A4 meenemen, dan hoort dit erop:</p>
 <ul>
 <li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>x</mi><mo>−</mo><mi mathvariant="normal">μ</mi></mrow><mi mathvariant="normal">σ</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">z = \dfrac{x - \mu}{\sigma}</annotation></semantics></math>, en terug: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mi mathvariant="normal">μ</mi><mo>+</mo><mi>z</mi><mo>⋅</mo><mi mathvariant="normal">σ</mi></mrow><annotation encoding="application/x-tex">x = \mu + z \cdot \sigma</annotation></semantics></math>; staat er een variantie, neem dan eerst de wortel;</li>
-<li>de regel: binnen 1, 2 en 3 lineaaltjes ongeveer .68, .95 en .997; voorbij aan één kant ongeveer .16, .025 en .0015;</li>
-<li>de ankers: 1.645 (één staart .05), 1.96 (twee staarten samen .05), 2.576 (twee staarten samen .01);</li>
+<li>een ruwe score is <strong>ongestandaardiseerd</strong> (<em>raw score</em>), een <em>z</em>-score <strong>gestandaardiseerd</strong> (<em>standardized score</em>);</li>
+<li>de regel: binnen 1, 2 en 3 lineaaltjes (standaarddeviaties) ongeveer .68, .95 en .997; voorbij aan één kant ongeveer .16, .025 en .0015;</li>
+<li>de ankers, bij het toetsen <strong>kritieke <em>z</em>-waarden</strong>: 1.645 (één staart .05), 1.96 (twee staarten samen .05), 2.576 (twee staarten samen .01);</li>
 <li>eerst tekenen: tweedeling (één staart) of driedeling (twee staarten samen)?</li>
+<li>kans keer 100 is procent, procent gedeeld door 100 is kans; tel de nulletjes tussen de punt en het eerste cijfer dat geen nul is;</li>
 <li><code>pnorm()</code> geeft een oppervlakte, links tenzij <code>lower.tail = FALSE</code>;</li>
+<li>op de klok (de normaalverdeling) heet een kans uit één staart <strong>eenzijdig</strong>, uit twee staarten samen <strong>tweezijdig</strong>;</li>
 <li>twee staarten in R: is <em>z</em> negatief, dan <code>2 * pnorm(z)</code>; is <em>z</em> positief, dan <code>2 * pnorm(z, lower.tail = FALSE)</code>;</li>
 <li><code>qnorm()</code> wil een oppervlakte links en geeft een plek op de as.</li>
 </ul>
