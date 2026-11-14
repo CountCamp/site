@@ -2,7 +2,7 @@
 #
 # Deze tabel toont per niveau van de factor:
 #   - C-bar_j (covariaat-mean per groep)
-#   - Y-bar_j (raw uitkomst-mean per groep)
+#   - Y-bar_j (gewone uitkomst-mean per groep, unadjusted)
 #   - Y-bar*_j (adjusted mean / EMM, na correctie voor de covariaat)
 #   - n per groep
 #
@@ -128,7 +128,7 @@ apa_ancova_table <- function(model,
       level = .cap_first_anc(factor_label),
       n     = md("*n*"),
       C     = md(M_sub(covariate_label)),
-      Y     = md(M_sub(paste0(dependent_label, ", ruw"))),
+      Y     = md(M_sub(paste0(dependent_label, ", unadjusted"))),
       Yadj  = md(M_sub(paste0(dependent_label, ", adjusted")))
     ) |>
     # Getallen rechts, zodat de decimalen onder elkaar staan (KAAPA).
