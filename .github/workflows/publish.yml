@@ -1,3 +1,55 @@
+# ============================================================
+# publish.yml — de ECHTE site: elke push naar main komt op countcamp.org.
+# ------------------------------------------------------------
+# Drie stappen in plaats van één, met opzet (ontworpen 9-10-2026, spoor
+# teller; op main sinds 14-11-2026, spoor teller2):
+#
+#   1. bouwen     quarto render, met het echt-profiel. De post-render-stap
+#                 (_tools/teller_zetten.py, zie _quarto.yml) zet daarbij in
+#                 elke bladzij precies één bezoekersteller.
+#   2. nalezen    _tools/tellerwacht.py --echt leest de GEBOUWDE _site/ na:
+#                 elke bladzij precies één teller, en het is de ene uit
+#                 _tools/teller.html. Rood = er gaat niets live.
+#   3. publiceren de bouw uit stap 1, ongewijzigd (render: false).
+#
+# Tot 14-11-2026 deed quarto-actions/publish@v2 bouwen en publiceren in één
+# stap, en was er geen plek om ertussen te kijken: main publiceerde zonder
+# enige tellercontrole.
+#
+# WAAROM DIT HIER STAAT EN NIET ALLEEN IN naar_buiten.sh: dit is de enige poort
+# die élke route naar de echte site passeert. `lever.sh` in het lab commit en
+# pusht de site zelf, buiten naar_buiten.sh om, en dan draaien de poorten daar
+# niet. Alles wat main raakt, komt hier wél langs.
+#
+# WAT `render: false` DOET -- nagelezen in de bron, niet aangenomen (9-10 op
+# quarto-cli 1.10.19, 14-11 opnieuw op 1.11.9, de versie die setup@v2 nu
+# installeert):
+#   * quarto-actions/publish@v2 (publish/action.yml) maakt van elke waarde
+#     behalve de letterlijke "true"
+#       quarto publish gh-pages . --no-render --no-browser
+#   * src/publish/publish.ts: zonder render publiceert hij de bestaande
+#     uitvoermap (projectOutputDir) -- en die wordt bepaald door het profiel
+#     van DE PUBLICEERSTAP ZELF, niet door dat van de bouwstap. Daarom staat
+#     QUARTO_PROFILE hieronder in allebei, en niet op de hele job. Komt er ooit
+#     `en` in te staan, dan wijst de uitvoermap naar _site_en (_quarto-en.yml)
+#     en gaat de Engelse bouw live in plaats van de site.
+#   * src/publish/gh-pages/gh-pages.ts, withWorktree(): maakt een worktree van
+#     de gh-pages-tak, gooit ALLES daarin weg (`git rm -r .`), kopieert _site/
+#     erin en pusht met --force. Wat live staat is dus precies _site/, niets
+#     meer -- ook een openstaande proefdruk onder pr-preview/ verdwijnt bij
+#     elke publicatie van main. Dat was met render: true precies zo.
+#   * Een _publish.yml is niet nodig: gh-pages is het bijzondere geval dat
+#     alleen een gh-pages-tak vraagt (src/command/publish/deployment.ts).
+#   * De site-url die publish bij zijn EIGEN render meegaf, kwam uit het
+#     CNAME-bestand: https://countcamp.org, letterlijk de site-url uit
+#     _quarto.yml en _quarto-echt.yml. Er valt dus niets weg.
+# WAT DAARUIT VOLGT: een lege _site/ zou de hele site wissen. De tellerwacht
+# houdt die tegen (afloopcode 3 bij nul .html), en _site/ staat niet in git
+# (.gitignore), dus een verse checkout heeft geen oude bouw die mee kan. Een
+# HALVE bouw houdt hij niet tegen: zolang elke bladzij die er wél staat precies
+# één teller draagt, staat hij groen. Dat risico bestond met render: true net
+# zo; dit verandert het niet, en lost het ook niet op.
+# ============================================================
 name: Publish CountCamp site
 
 on:
@@ -18,9 +70,26 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render and publish to gh-pages
+      - name: Render
+        # QUARTO_PROFILE staat er met opzet bij, al is `echt` ook de standaard
+        # van zijn groep: de echte site mag niet afhangen van een volgorde die
+        # iemand in _quarto.yml kan verzetten. teller_zetten.py leest deze
+        # variabele (Quarto maakt er "echt,nl" van), en weigert -- en stopt
+        # daarmee de bouw -- bij een lijst zonder echt of spook.
+        env:
+          QUARTO_PROFILE: echt
+        run: quarto render
+
+      - name: Tellerwacht
+        run: python3 _tools/tellerwacht.py --echt
+
+      - name: Publish to gh-pages (the build above, not rendered again)
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          render: false
         env:
+          # Hetzelfde profiel als de bouwstap: zonder render kiest publish de
+          # uitvoermap op grond van DIT profiel (zie de kop van dit bestand).
+          QUARTO_PROFILE: echt
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

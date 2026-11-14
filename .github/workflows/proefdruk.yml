@@ -83,11 +83,18 @@ jobs:
           grep -q 'name="robots" content="noindex' "$bladzij" || { echo "FOUT: geen noindex in $bladzij"; exit 1; }
           grep -q 'spookbalk' "$bladzij"                      || { echo "FOUT: geen proefdruk-balk in $bladzij"; exit 1; }
           if grep -q 'goatcounter' "$bladzij"; then echo "FOUT: de bezoekersteller zit in een proefdruk"; exit 1; fi
+          # De drie regels hierboven lezen ÉÉN bladzij, en die was nooit het
+          # probleem: gemeten op 8-10-2026 droeg PR-proefdruk 1 op 201 van de 213
+          # bladzijden een werkende teller, zonder balk en zonder noindex -- alles
+          # wat als bijlage binnenkomt (14-11: 224 van de 243 in een proefdruk).
+          # Sinds 14-11-2026 (spoor teller2) haalt de bouw zelf elke teller eruit
+          # (_tools/teller_zetten.py, post-render); deze regel leest ze allemaal na.
+          python3 _tools/tellerwacht.py --spook
           # De CNAME hoort NIET mee: die stuurt countcamp.org aan en is van de
           # echte site. In een submap doet hij niets, maar meesturen is vragen
           # om een ongeluk als iemand ooit source-dir verzet.
           rm -f _site/CNAME
-          echo "proefdruk gecontroleerd: noindex ja, balk ja, teller nee"
+          echo "proefdruk gecontroleerd: noindex ja, balk ja, teller nee -- op elke bladzij"
 
       - name: Neerzetten en de link in de PR
         uses: rossjrw/pr-preview-action@v1
