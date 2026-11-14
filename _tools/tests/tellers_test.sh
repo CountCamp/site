@@ -275,6 +275,52 @@ else
   gezakt=$((gezakt + 1))
 fi
 
+# === 10. de andere bijlagen horen er ook zonder --map bij ====================
+#     Spoor site_wegen, 14-11-2026. Tot die dag keek de wachter alleen in
+#     oefenboeken/, werkboeken/ en en/. Gemeten op de gebouwde site: 42 bladzijden
+#     die als BIJLAGE binnenkomen (onveranderd gekopieerd, dus zonder de teller uit
+#     _quarto-echt.yml) stonden buiten elke poort -- het hele boek (manuscript/h0
+#     t/m h12, uit lever.sh in het lab), de JASP-handleiding, de speelkist en de
+#     drie gedeelde adressen tabellen/, tables/ en power/. Alle 42 telden die dag;
+#     alleen zou niemand het merken als er één ophield.
+#     Op de wachter van vóór 14-11 zakt deze zaak: hij geeft afloop 0, want hij
+#     ziet de vijf blinde bladzijden niet eens.
+verse_boom
+bladzij "oefenboeken/a/geteld.html" "$TELLER_EEN_REGEL" ""
+for p in manuscript/h5.html manuscript/handleiding/index.html speeltjes/casino.html \
+         tabellen/index.html tables/index.html power/index.html; do
+  bladzij "$p" "" ""
+done
+getoetst=$((getoetst + 1))
+python3 "$GEREED/controleer_tellers.py" --site "$M/boom" > "$M/uit" 2>&1
+echt=$?
+mist=""
+for p in manuscript/h5.html manuscript/handleiding/index.html speeltjes/casino.html \
+         tabellen/index.html tables/index.html power/index.html; do
+  grep -qF -- "- $p" "$M/uit" || mist="$mist $p"
+done
+if [ "$echt" = "1" ] && [ -z "$mist" ]; then
+  echo "  ok    blinde bijlagen buiten oefenboeken/ en en/ maken hem rood, zonder --map (afloopcode $echt)"
+else
+  echo "  ZAKT  blinde bijlagen in manuscript/, speeltjes/, tabellen/, tables/, power/ -- verwacht afloopcode 1 en alle zes bij naam, kreeg $echt${mist:+; niet genoemd:$mist}"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+for p in manuscript/h5.html manuscript/handleiding/index.html speeltjes/casino.html \
+         tabellen/index.html tables/index.html power/index.html; do
+  bladzij "$p" "$TELLER_TWEE_REGELS" ""
+done
+getoetst=$((getoetst + 1))
+python3 "$GEREED/controleer_tellers.py" --site "$M/boom" > "$M/uit" 2>&1
+echt=$?
+if [ "$echt" = "0" ] && grep -qF "Alle 7 bladzijden dragen de teller." "$M/uit"; then
+  echo "  ok    en mét teller telt hij ze alle zeven (afloopcode $echt)"
+else
+  echo "  ZAKT  dezelfde bijlagen mét teller -- verwacht afloopcode 0 en 'Alle 7 bladzijden', kreeg $echt"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."

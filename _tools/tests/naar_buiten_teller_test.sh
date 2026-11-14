@@ -60,6 +60,13 @@ echte_teller_repo() {  # de ECHTE tellerwachter op de ECHTE bladzijden van deze 
   ln -s "$PWD/werkboeken"  "$r/werkboeken"
   # Sinds 25-10-2026 kijkt de wachter ook in en/ (spoor en_voorpagina).
   ln -s "$PWD/en"          "$r/en"
+  # Sinds 14-11-2026 ook in de andere bijlagen (spoor site_wegen). Zonder deze
+  # wegwijzers bleef de toets groen -- een map die er niet is houdt de levering
+  # niet tegen -- maar dan proefde hij een kleinere poort dan de echte.
+  local m
+  for m in manuscript speeltjes tabellen tables power; do
+    ln -s "$PWD/$m" "$r/$m"
+  done
   echo "$r"
 }
 
@@ -101,7 +108,9 @@ echo ""
 # Dezelfde mappen als de wachter overslaat: _site, .quarto, .git, site_libs.
 tel_bladzijden() {
   local mappen=() m
-  for m in oefenboeken werkboeken en; do [ -d "$m" ] && mappen+=("$m/"); done
+  for m in oefenboeken werkboeken en manuscript speeltjes tabellen tables power; do
+    [ -d "$m" ] && mappen+=("$m/")
+  done
   [ "${#mappen[@]}" -gt 0 ] || { echo 0; return; }
   find "${mappen[@]}" \( -name _site -o -name .quarto -o -name .git -o -name site_libs \) -prune \
        -o -name '*.html' -print0 \

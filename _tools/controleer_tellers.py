@@ -29,17 +29,25 @@ uit de lab-pers onder `en/book/`, de speeltjes uit het lab onder `en/toys/`, en
 Vier bouwwegen, dus hier ook per map geteld. Tot die dag keek deze wachter niet
 in `en/`; de poort in `naar_buiten.sh` zag de Engelse kant dus nooit.
 
+En de andere bijlagen (14-11-2026, spoor site_wegen). Tot die dag stonden hier
+nog vijf mappen buiten: `manuscript/` (het hele boek, h0 t/m h12, uit `lever.sh`
+in het lab, plus de JASP-handleiding), `speeltjes/` (de speelkist, uit
+`bouw_speelkist.py`, dat alleen keek of het woord "goatcounter" erin stond) en
+de drie gedeelde adressen `tabellen/`, `tables/` en `power/`. Gemeten op de
+gebouwde site: 42 bladzijden, die allemaal als bijlage binnenkomen en dus níét
+de teller uit `_quarto-echt.yml` krijgen. Ze telden alle 42, maar geen poort zou
+het merken als er één ophield. `manuscript/werkplaats/` bestaat uit doorstuurders
+en wordt, net als `werkboeken/`, bij naam uitgesloten.
+
 Wat het niet doet
 -----------------
 Het kijkt naar de bestanden in deze repo, niet naar de live site. Wat hier staat
 wordt door `quarto render` als *resource* overgenomen (zie `_quarto-nl.yml`), dus
 onveranderd — maar een bladzij die de site zélf rendert krijgt zijn teller pas
-bij het bouwen, uit `_quarto-echt.yml`. Die staan niet onder deze mappen en
-worden hier dus niet gemeten; `naar_buiten.sh --productie` bewaakt die. Ook niet
-gemeten: de Engelse bladzijden BUITEN `en/` (`cv-en.html`, `tables/`,
-`speeltjes/solomon-en.html`) en de losse Nederlandse speeltjes onder `speeltjes/`,
-`tabellen/` en `power/`; daarvoor kijkt `bouw_speelkist.py` bij het kopiëren
-alleen of het woord "goatcounter" erin staat.
+bij het bouwen, uit `_quarto-echt.yml`. Die bestaan in de repo alleen als .qmd
+en worden hier dus niet gemeten; `naar_buiten.sh --productie` bewaakt die, op
+één bladzij (`_site/index.html`) — ze delen één profiel, dus valt hij daar weg,
+dan op allemaal.
 """
 from __future__ import annotations
 import argparse
@@ -50,7 +58,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tellerregel import tellerstand, soort, met_teller, REGEL  # noqa: E402
 
 SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAPPEN = ['oefenboeken', 'werkboeken', 'en']
+MAPPEN = ['oefenboeken', 'werkboeken', 'en',
+          # sinds 14-11-2026 (spoor site_wegen); zie "En de andere bijlagen" hierboven
+          'manuscript', 'speeltjes', 'tabellen', 'tables', 'power']
 # `_site/` is de bouw-uitvoer en `.quarto/` de cache: allebei buiten versie, en
 # meetellen zou de telling laten verdubbelen met kopieën van zichzelf.
 OVERSLAAN = {'_site', '.quarto', '.git', 'site_libs'}
