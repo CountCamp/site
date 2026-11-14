@@ -211,3 +211,22 @@ De drie bladzijden laden hetzelfde scriptje met een relatief pad
 dus voor alle drie tegelijk om. Bouw je een vierde lijst met boeken: gebruik
 `.cc-plank`/`.cc-boek` en laad `vorm.js` — geen eigen variant, anders spreekt de
 site weer twee talen. Zonder JavaScript geldt de rug-vorm.
+
+## 10. De vakken staan op vier plekken
+
+| | |
+|---|---|
+| **bron** | `oefenboeken/index.qmd` — de plank, met "Volg je een vak?" bovenaan (Ben, 14-11-2026: *"Bovenaan de plank"*) |
+| **kopie 1** | `en/workbooks/index.qmd` — de Engelse plank: elk boek met een link, in dezelfde volgorde, met "(in Dutch)" in de titel |
+| **kopie 2** | `index.qmd` — de kaart *Oefenboeken* op de thuispagina linkt elk vak (`.cc-boek-vak` met een link) |
+| **kopie 3** | `en/index.qmd` — de kaart *Practice books* linkt elk vak van de Engelse plank |
+| **bewaakt door** | `python3 _tools/plankwacht.py` (de spiegel), blokkerend in `naar_buiten.sh --productie`; getoetst in `_tools/tests/plankwacht_test.sh`, zaken 16 t/m 16i |
+| **handeling** | een vak erbij → een kaart op beide planken, op dezelfde plek, en een link op beide thuiskaarten → `bash _tools/publiceer_en.sh` → `naar_buiten.sh --nakijken` |
+
+Vergeleken wordt het **doel** van elke link, niet de tekst: de Engelse titel is
+een andere dan de Nederlandse, en hoe een kaart heet is aan Mieke. Wat de
+spiegel dus niet ziet: of de twee planken hetzelfde *zeggen* over een boek.
+Kaarten zonder link (OZP 2, STAT 3) mogen in het Engels wegblijven.
+
+Aanleiding: Toetsende Statistiek kwam op 12-11-2026 op de Nederlandse plank en
+stond twee dagen niet op de Engelse; niets zei het (`_logs/site_wegen_2026-11-14.md`).
