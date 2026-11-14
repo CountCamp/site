@@ -74,12 +74,19 @@ proef "elke bladzij onder en/book/ is vrijgesteld van de wees-keuring" "C" \
 # 28-10-2026 geen eigen toets of mutatie (command grep -ln kist _tools/tests/*: alleen dit
 # bestand, en_werkboek_lab_mutatieproef.sh en taalbalk_browser_test.py, en geen van drieën
 # maakt de kist-uitzondering kapot).
-proef "de lab-bladzij in de spooksite krijgt de proefdrukmerken weer (zoals vóór de port)" "C" \
-  "$EB|||        if a.soort == \"echt\" or p in lab or p in kist or p in werkboek:|||        if a.soort == \"echt\" or p in kist or p in werkboek:"
-proef "noindex op de lab-bladzij in de spooksite mag" "C" \
-  "$EB|||            if m[\"noindex\"]: fout_merk.append(f\"{p}: draagt noindex {waar}\")|||            if m[\"noindex\"] and a.soort == \"echt\": fout_merk.append(f\"{p}: draagt noindex {waar}\")"
-proef "de teller op de lab-bladzij wordt in de spooksite niet nagekeken (zoals het voorstel)" "C" \
-  "$EB|||            if m[\"teller\"] != \"geteld\": fout_merk.append(f\"{p}: bezoekersteller {m['teller']} {waar}\")|||            if m[\"teller\"] != \"geteld\" and a.soort == \"echt\": fout_merk.append(f\"{p}: bezoekersteller {m['teller']} {waar}\")"
+# De merken in de spooksite (14-11-2026, spoor teller2). Tot die dag stonden hier drie
+# mutaties die de UITZONDERING voor de lab-bladzij bewaakten: in de spooksite de merken
+# van de echte site, mét teller. Die uitzondering is weg -- het was het lek waardoor een
+# proefdruk meetelde -- en de mutaties bewaken nu de regel die ervoor in de plaats kwam:
+# ook een bladzij uit het lab is in de spooksite een proefdruk.
+proef "de lab-bladzij wordt in de spooksite weer als echte site gekeurd (het lek van vóór 14-11)" "C" \
+  "$EB|||        if a.soort == \"echt\":|||        if a.soort == \"echt\" or p in lab:"
+proef "een teller in een proefdruk wordt niet nagekeken" "C" \
+  "$EB|||            if m[\"teller\"] != \"geen\": fout_merk.append(|||            if False: fout_merk.append("
+proef "een proefdruk zonder noindex mag" "C" \
+  "$EB|||            if not m[\"noindex\"]: fout_merk.append(f\"{p}: proefdruk zonder noindex\")|||            if False: fout_merk.append(f\"{p}: proefdruk zonder noindex\")"
+proef "een proefdruk zonder balk mag" "C" \
+  "$EB|||            if not m[\"balk\"]: fout_merk.append(f\"{p}: proefdruk zonder balk\")|||            if False: fout_merk.append(f\"{p}: proefdruk zonder balk\")"
 proef "de zijbalk van een lab-bladzij wordt niet nagekeken" "C" \
   "$EB|||            if not os.path.isfile(os.path.join(site, os.path.dirname(p), f)):|||            if False:"
 proef "een zijbalk zonder hoofdstukken telt als nagekeken" "C" \

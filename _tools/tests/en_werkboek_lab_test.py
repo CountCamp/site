@@ -40,7 +40,11 @@ DRIE DELEN
      een losse bladzij zonder stempel in dat oefenboek (één wees, met het oude advies),
      de stempel weg, de naam van een ander oefenboek, een gestempelde bladzij direct
      onder en/workbooks/, twee publicaties door elkaar (elke bladzij klopt, de
-     stempels verschillen), en in de spooksite noindex, de balk of geen teller.
+     stempels verschillen), en in de spooksite een teller, of geen balk of geen
+     noindex (sinds 14-11-2026, spoor teller2; daarvóór precies andersom, toen een
+     bijlage in de spooksite "zoals hij live komt" moest staan, mét teller). Het
+     oefenboek in de spooksite komt daarom uit de gebouwde
+     _site_spook/en/workbooks/index.html, niet uit die van de echte site.
      Zonder zo'n gebouwde site kan C niet kijken, en dan zegt hij dat (afloop 3).
 
 DE MUTATIEPROEF. PROEF_MUTATIE="bestand|||oud|||nieuw" verandert vóór de toets één
@@ -122,6 +126,8 @@ def laad(naam: str, rel: str) -> types.ModuleType:
 
 
 EB = laad("en_bouw", "_tools/en_bouw.py")
+import tellerregel  # noqa: E402  -- het tellerblok, voor de verminking "teller in een proefdruk"
+EB_TELLERBLOK = tellerregel.canoniek
 
 goed = fout = 0
 
@@ -480,20 +486,31 @@ def deel_c() -> bool:
         print("KON NIET KIJKEN: _site/en/workbooks/index.html ontbreekt, of is geen Quarto-bladzij met teller "
               "— daar maakt deze toets zijn oefenboek van")
         return False
+    plank_spook = os.path.join(spook, "en", "workbooks", "index.html")
+    if not os.path.isfile(plank_spook) or EB.tellerstand(lees(plank_spook)) != "geen" \
+            or "spookbalk" not in lees(plank_spook):
+        print("KON NIET KIJKEN: _site_spook/en/workbooks/index.html ontbreekt, of is geen proefdruk (zonder "
+              "teller, met balk) — daar maakt deze toets zijn oefenboek in de spooksite van")
+        return False
     werk = os.path.join(WERK, "keur")
     k_echt, k_spook = os.path.join(werk, "echt"), os.path.join(werk, "spook")
     kopie(echt, k_echt)
     kopie(spook, k_spook)
 
     # Het oefenboek: de echte plank (Quarto, teller, en-GB) één en twee mappen dieper,
-    # gestempeld zoals publish_workbook.py het doet. In de spooksite staat hij net zo:
-    # een bijlage komt kant-en-klaar, met teller.
+    # gestempeld zoals publish_workbook.py het doet. In de spooksite de plank uit de
+    # spooksite, net zo: sinds 14-11-2026 (spoor teller2) haalt de bouw ook uit een
+    # bijlage de teller weg en zet hij er balk en noindex op. Tot die dag stond hier
+    # in beide sites hetzelfde boek, "kant-en-klaar, met teller" -- het lek zelf.
     orig = lees(plank)
+    orig_spook = lees(plank_spook)
     voor = "en/workbooks/proefboek/index.html"
     thema = "en/workbooks/proefboek/00_opfris/00_opfris.html"
     boek = {voor: dieper(orig) + stempel("proefboek"), thema: dieper(dieper(orig)) + stempel("proefboek")}
-    for site in (k_echt, k_spook):
-        for rel, t in boek.items():
+    boek_spook = {voor: dieper(orig_spook) + stempel("proefboek"),
+                  thema: dieper(dieper(orig_spook)) + stempel("proefboek")}
+    for site, b in ((k_echt, boek), (k_spook, boek_spook)):
+        for rel, t in b.items():
             schrijf(os.path.join(site, rel), t)
 
     nul = True
@@ -510,34 +527,35 @@ def deel_c() -> bool:
 
     zwerver = "en/workbooks/proefboek/zwerver.html"
     kaal = boek[voor][:boek[voor].rfind("</html>") + len("</html>")] + "\n"
+    kaal_spook = boek_spook[voor][:boek_spook[voor].rfind("</html>") + len("</html>")] + "\n"
     kaal_thema = boek[thema][:boek[thema].rfind("</html>") + len("</html>")] + "\n"
+    blok = EB_TELLERBLOK()
     mutaties = [
         # (wat, soort, bestand, nieuwe tekst, reden die er moet staan, aantal wezen dat er moet staan of None)
         ("een losse bladzij zonder stempel in het oefenboek (echt): één wees, met het oude advies", "echt",
          zwerver, kaal, "haal hem weg of zet de bron terug", 1),
-        ("diezelfde zwerver in de spooksite: ook daar een wees", "spook", zwerver, kaal,
+        ("diezelfde zwerver in de spooksite: ook daar een wees", "spook", zwerver, kaal_spook,
          "haal hem weg of zet de bron terug", 1),
         ("twee publicaties door elkaar: elke bladzij klopt, maar het thema draagt een andere commit", "echt",
          thema, kaal_thema + stempel("proefboek", c=hashlib.sha1(b"ander").hexdigest(), t="geleverd=2026-10-29T09:00:00"),
          "2 verschillende stempels", 0),
         ("de stempel weg van de voorpagina (echt): dan is hij een wees", "echt", voor, kaal,
          f"{voor}: gebouwd door Quarto", 1),
-        ("de stempel weg in de spooksite: dan gelden de proefdrukmerken", "spook", voor, kaal,
-         f"{voor}: proefdruk zonder noindex", None),
+        ("de stempel weg in de spooksite: ook daar een wees", "spook", voor, kaal_spook,
+         f"{voor}: gebouwd door Quarto", 1),
         ("de stempel van een ander oefenboek", "echt", voor, kaal + stempel("mvda"),
          "hoort in en/workbooks/mvda/", None),
         ("een korte commit", "echt", thema, kaal + stempel("proefboek", c=COMMIT[:7]),
          "vorm van publish_workbook.py", None),
         ("een gestempelde bladzij direct onder en/workbooks/", "echt", "en/workbooks/los.html",
          orig + stempel("proefboek"), "niet in een oefenboek onder en/workbooks/<naam>/", None),
-        ("het oefenboek met noindex in de spooksite", "spook", voor,
-         boek[voor].replace("</head>", '<meta name="robots" content="noindex">\n</head>', 1),
-         "draagt noindex in de spooksite", None),
-        ("het oefenboek zonder teller in de spooksite", "spook", voor,
-         boek[voor].replace("gc.zgo.at/count.js", "gc.zgo.at/weg.js"), "bezoekersteller", None),
-        ("het oefenboek met de proefdrukbalk in de spooksite", "spook", voor,
-         boek[voor].replace("<body", '<div class="spookbalk">proef</div>\n<body', 1),
-         "proefdrukbalk in de spooksite", None),
+        ("het oefenboek mét teller in de spooksite (het lek van vóór 14-11-2026)", "spook", voor,
+         boek_spook[voor].replace("</head>", blok + "</head>", 1), "proefdruk met bezoekersteller", None),
+        ("het oefenboek zonder noindex in de spooksite", "spook", voor,
+         re.sub(r'<meta name="robots" content="noindex[^>]*>\n?', "", boek_spook[voor]),
+         "proefdruk zonder noindex", None),
+        ("het oefenboek zonder proefdrukbalk in de spooksite", "spook", voor,
+         boek_spook[voor].replace("spookbalk", "gewoonbalk"), "proefdruk zonder balk", None),
     ]
     for wat, soort, rel, tekst, reden, n_wees in mutaties:
         site = k_echt if soort == "echt" else k_spook

@@ -454,10 +454,10 @@ def keur_links(site: str, bladzijden: list[str]) -> tuple[list[str], int, str]:
 # Herkenbaar aan de stempel die alleen de pers van het lab zet, als laatste regel
 # (pub_stempel_zet in boek/_tools/publicatie/_gemeenschappelijk.sh):
 #     <!-- countcamp-publicatie H0 bron-hash=<sha256> geleverd=2026-10-25T05:12:00 -->
-# Zo'n bladzij is geen wees (zijn bron staat in het lab), en hij staat in de
-# spooksite ZOALS HIJ LIVE KOMT. Hij krijgt daarom in beide soorten de merken van
-# de echte site: teller, geen noindex, geen balk -- net als manuscript/h0.html in
-# de Nederlandse spooksite. Links, taal, tweelingen en werkbriefjes: gewoon gekeurd.
+# Zo'n bladzij is geen wees (zijn bron staat in het lab). Links, taal, tweelingen
+# en werkbriefjes: gewoon gekeurd. Zijn merken ook: tot 14-11-2026 kreeg hij in de
+# spooksite die van de echte site ("zoals hij live komt", met teller), sindsdien
+# die van een proefdruk, zoals elke bladzij -- zie keuring 2 in cmd_keur.
 #
 # STRENG, met opzet. Een stempel is een bewering, en deze keuring kan de bron niet
 # zien. Wat hij wel kan zien, eist hij allemaal:
@@ -511,11 +511,13 @@ def uit_het_lab(p: str, tekst: str) -> tuple[bool, str]:
 # lab: _tools/bouw_speelkist.py kopieert countcamp_lab/boek/04_speeltjes/<naam>_en.html
 # naar en/toys/, kant-en-klaar en mét de bezoekersteller, zoals de Nederlandse
 # speeltjes in speeltjes/ staan. Zo'n bladzij gaat als bijlage mee (en/** in
-# _quarto-nl.yml) en staat in de spooksite dus zoals hij live komt: hij krijgt in
-# beide soorten de merken van de echte site, net als een bijlage uit het lab.
-# Zonder deze regel weigerde de spooksite elk Engels speeltje ("proefdruk met
-# bezoekersteller"), terwijl de kop van publiceer_en.sh (d) zegt dat een speeltje
-# onder en/ gewoon gekeurd wordt. Gemeten in een kloon, 25-10-2026.
+# _quarto-nl.yml). Tot 14-11-2026 kreeg hij daarom in de spooksite de merken van
+# de echte site ("zoals hij live komt"): zonder die uitzondering weigerde de
+# spooksite elk Engels speeltje ("proefdruk met bezoekersteller"; gemeten in een
+# kloon, 25-10-2026). Sinds 14-11 haalt de bouw die teller in een proefdruk zelf
+# weg en zet hij er balk en noindex op (_tools/teller_zetten.py), en wordt het
+# speeltje gekeurd als elke andere proefdrukbladzij. De herkomst hieronder beslist
+# alleen nog dat het geen wees is.
 # STRENG op twee dingen: de bladzij staat direct onder en/toys/ en is niet door
 # Quarto gebouwd, en hij draagt de herkomst die _vertaal_speeltjes_en.py in het lab
 # zet: <meta name="nl_bron" content="boek/04_speeltjes/<naam>.html@<commit>">.
@@ -559,9 +561,10 @@ def uit_de_kist(p: str, tekst: str) -> tuple[bool, str]:
 # 429 .html van de repo, wél al in het commentaar van vier .css-bestanden
 # (oefenboeken/broertjes/{jasp,r,spss}/werkboek.css, oefenboeken/ggz_vs/werkboek.css)
 # -- een vondst, geen reden om het er in elke bladzij bij te zetten.
-# Zo'n bladzij is geen wees, en hij krijgt in beide soorten de merken van de echte
-# site (teller, geen noindex, geen balk), net als een bijlage uit het lab onder
-# en/book/. Links, taal, tweelingen en werkbriefjes: gewoon gekeurd.
+# Zo'n bladzij is geen wees. Links, taal, tweelingen en werkbriefjes: gewoon
+# gekeurd. Zijn merken ook: tot 14-11-2026 kreeg hij in de spooksite die van de
+# echte site (met teller), sindsdien die van een proefdruk, zoals elke bladzij --
+# zie keuring 2 in cmd_keur.
 #
 # STRENG, op dezelfde manier als LAB_STEMPEL:
 #   * de bladzij staat IN een oefenboek: en/workbooks/<naam>/…, op elke diepte daaronder;
@@ -736,27 +739,32 @@ def cmd_keur(a) -> int:
     # 2. merktekens: is een proefdruk een proefdruk en de echte site de echte?
     # Op de Engelse bladzijden onder en/ — die maakt deze bouw. De rest maakt de
     # Nederlandse ronde, en daar kijkt naar_buiten.sh naar.
-    # Een bijlage uit het lab staat in de spooksite zoals hij live komt (zie
-    # LAB_STEMPEL), dus die krijgt in BEIDE soorten de merken van de echte site.
-    # Net zo een speeltje uit de kist en een oefenboek uit het lab (WERKBOEK_STEMPEL).
+    # ELKE bladzij, ook een bijlage uit het lab, de speelkist of een oefenboek
+    # (14-11-2026, spoor teller2). Tot die dag kregen die drie in de spooksite de
+    # merken van de echte site -- teller, geen noindex, geen balk -- omdat ze daar
+    # "staan zoals ze live komen". Dat was een beschrijving van het lek, geen
+    # keuze: het spookprofiel bereikte alleen wat Quarto zelf rendert, dus elke
+    # bijlage telde in een proefdruk gewoon mee (14-11: 224 van de 243 bladzijden
+    # in _site_spook). Nu haalt de bouw zelf in een proefdruk elke teller weg en zet
+    # balk en noindex op elke bladzij (_tools/teller_zetten.py, post-render), en
+    # deze keuring eist dat dan ook. De stempel (LAB_STEMPEL, KIST_HERKOMST,
+    # WERKBOEK_STEMPEL) beslist nog steeds of een bladzij een wees is, maar niet
+    # meer welke merken hij draagt.
     fout_merk = []
     for p in en_bladz:
         m = merken(lees(os.path.join(site, p)))
-        if a.soort == "echt" or p in lab or p in kist or p in werkboek:
-            waar = "op de echte site" if a.soort == "echt" else \
-                "in de spooksite, als bijlage uit het lab die er moet staan zoals hij live komt"
-            if m["noindex"]: fout_merk.append(f"{p}: draagt noindex {waar}")
-            if m["balk"]: fout_merk.append(f"{p}: draagt de proefdrukbalk {waar}")
-            if m["teller"] != "geteld": fout_merk.append(f"{p}: bezoekersteller {m['teller']} {waar}")
+        if a.soort == "echt":
+            if m["noindex"]: fout_merk.append(f"{p}: draagt noindex op de echte site")
+            if m["balk"]: fout_merk.append(f"{p}: draagt de proefdrukbalk op de echte site")
+            if m["teller"] != "geteld": fout_merk.append(f"{p}: bezoekersteller {m['teller']} op de echte site")
         else:
             if not m["noindex"]: fout_merk.append(f"{p}: proefdruk zonder noindex")
             if not m["balk"]: fout_merk.append(f"{p}: proefdruk zonder balk")
             if m["teller"] != "geen": fout_merk.append(f"{p}: proefdruk met bezoekersteller ({m['teller']})")
+    bijlagen = len(lab) + len(kist) + len(werkboek)
     zeg(f"  merktekens ({a.soort}): {len(en_bladz)} bladzijde(n), {len(fout_merk)} fout"
-        + (f"; {len(lab)} uit het lab gekeurd als echte site, zoals het Nederlandse boek — bv. {lab[0]}"
-           if lab and a.soort == "spook" else "")
-        + (f"; {len(kist)} uit de speelkist, idem — bv. {kist[0]}" if kist and a.soort == "spook" else "")
-        + (f"; {len(werkboek)} uit een oefenboek, idem — bv. {werkboek[0]}" if werkboek and a.soort == "spook" else ""))
+        + (f"; daarvan {bijlagen} bijlage(n) uit het lab, de speelkist of een oefenboek, net zo gekeurd"
+           f" — bv. {(lab + kist + werkboek)[0]}" if bijlagen else ""))
     gaten += fout_merk
 
     # 3. taal: <html lang> op elke Engelse bladzij

@@ -7,9 +7,10 @@
 
 WAAROM (spoor en_boekpers, 25-10-2026). De Engelse boekbladzijden komen kant-en-klaar
 uit het lab (countcamp_lab/boek/publiceer.sh --en) en staan onder en/book/ zonder bron
-in deze repo. en_bouw.py laat ze door als bijlage — geen wees, en in de spooksite
-gekeurd als de echte site — op grond van één ding: de stempel die de lab-pers als
-laatste regel zet. Een uitzondering die op een stempel rust, is zo sterk als de
+in deze repo. en_bouw.py laat ze door als bijlage — geen wees — op grond van één
+ding: de stempel die de lab-pers als laatste regel zet. (Tot 14-11-2026 keurde de
+spooksite ze bovendien als de echte site, mét teller; sindsdien als proefdruk,
+zoals elke bladzij. Spoor teller2.) Een uitzondering die op een stempel rust, is zo sterk als de
 toets op die stempel. Deze toets eist dat een goede stempel doorkomt en dat elke
 halve, verschoven of vreemde stempel een GAT is, met de goede reden.
 
@@ -29,7 +30,8 @@ DRIE DELEN
      publiceer_en.sh ze achterlaat) met een échte bladzij uit het lab erin: groen
      zoals hij is, en rood — met de goede reden — bij een losse Quarto-bladzij zonder
      stempel onder en/book/ (die blijft een wees), een korte of verkeerde stempel, of
-     een lab-bladzij die in de spooksite noindex draagt of zijn teller mist.
+     een lab-bladzij die in de spooksite een teller draagt, of zijn balk of noindex
+     mist (sinds 14-11-2026; daarvóór precies andersom).
      Zonder zo'n gebouwde site kan C niet kijken, en dan zegt hij dat (afloop 3).
 
 DE MUTATIEPROEF. PROEF_MUTATIE="bestand|||oud|||nieuw" verandert vóór de toets één
@@ -98,6 +100,7 @@ if MUT and MUT[0] not in ("_tools/en_bouw.py", "_tools/taalonderdelen.py"):
     sys.exit(2)
 TO = laad("taalonderdelen", "_tools/taalonderdelen.py", MUT)
 EB = laad("en_bouw", "_tools/en_bouw.py", MUT)
+import tellerregel  # noqa: E402  -- het tellerblok, voor de verminking "teller in een proefdruk"
 
 goed = fout = 0
 
@@ -321,8 +324,9 @@ def deel_c() -> bool:
     for soort, site in (("echt", k_echt), ("spook", k_spook)):
         code, uit = keur(site, soort)
         nul = nul and code == 0
-        uitslag(code == 0, f"{soort} zoals hij is" + (", mét de lab-bladzij zonder proefdrukmerken"
-                                                     if soort == "spook" else "") + f": afloop {code} (moet 0)",
+        uitslag(code == 0, f"{soort} zoals hij is" + (", mét de lab-bladzij als proefdruk (geen teller, wel balk"
+                                                     " en noindex)" if soort == "spook" else "")
+                + f": afloop {code} (moet 0)",
                 " | ".join(r.strip() for r in uit.splitlines() if r.strip().startswith("- "))[:400])
     if not nul:
         print("      zonder een groene nulmeting bewijzen de rode uitslagen hieronder niets")
@@ -336,26 +340,33 @@ def deel_c() -> bool:
     # teller, zelfde taal als de lab-bladzij — alleen de stempel weg en een andere naam.
     zwerver = orig[:orig.rfind("</html>") + len("</html>")] + "\n"
     stray = os.path.join(os.path.dirname(doel), "zwerver.html")
+    # Dezelfde bladzij zoals de proefdruk hem draagt: sinds 14-11-2026 (spoor teller2)
+    # haalt de bouw er de teller uit en zet hij balk en noindex erop, ook op een
+    # bijlage uit het lab. Tot die dag stond hij in de spooksite "zoals hij live
+    # komt", met teller -- en telde hij dus mee.
+    orig_spook = lees(os.path.join(k_spook, doel))
+    zwerver_spook = orig_spook[:orig_spook.rfind("</html>") + len("</html>")] + "\n"
+    blok = tellerregel.canoniek()
     mutaties = [
         # (wat, soort, bestand, nieuwe tekst, reden die er moet staan)
         ("een losse Quarto-bladzij zonder stempel onder en/book/ (echt)", "echt", stray, zwerver,
          f"{stray}: gebouwd door Quarto"),
-        ("diezelfde zwerver in de spooksite", "spook", stray, zwerver, f"{stray}: gebouwd door Quarto"),
+        ("diezelfde zwerver in de spooksite", "spook", stray, zwerver_spook, f"{stray}: gebouwd door Quarto"),
         ("de stempel weg van de lab-bladzij (echt): dan is hij een wees", "echt", doel, zwerver,
          f"{doel}: gebouwd door Quarto"),
-        ("de stempel weg in de spooksite: dan gelden de proefdrukmerken", "spook", doel, zwerver,
-         f"{doel}: proefdruk zonder noindex"),
+        ("de stempel weg in de spooksite: ook daar een wees", "spook", doel, zwerver_spook,
+         f"{doel}: gebouwd door Quarto"),
         ("een korte hash (7 tekens)", "echt", doel, orig.replace(m.group(1), m.group(1)[:7]), "vorm van de pers"),
-        ("een korte hash in de spooksite", "spook", doel, orig.replace(m.group(1), m.group(1)[:7]),
+        ("een korte hash in de spooksite", "spook", doel, orig_spook.replace(m.group(1), m.group(1)[:7]),
          "vorm van de pers"),
         (f"de stempel van {ander} op {os.path.basename(doel)}", "echt", doel,
          orig.replace(f"countcamp-publicatie {naam} ", f"countcamp-publicatie {ander} "), "hoort bij"),
-        ("de lab-bladzij met noindex in de spooksite", "spook", doel,
-         orig.replace("</head>", '<meta name="robots" content="noindex">\n</head>', 1), "draagt noindex in de spooksite"),
-        ("de lab-bladzij zonder teller in de spooksite", "spook", doel,
-         orig.replace("gc.zgo.at/count.js", "gc.zgo.at/weg.js"), "bezoekersteller"),
-        ("de lab-bladzij met de proefdrukbalk in de spooksite", "spook", doel,
-         orig.replace("<body", '<div class="spookbalk">proef</div>\n<body', 1), "proefdrukbalk in de spooksite"),
+        ("de lab-bladzij mét teller in de spooksite (het lek van vóór 14-11-2026)", "spook", doel,
+         orig_spook.replace("</head>", blok + "</head>", 1), "proefdruk met bezoekersteller"),
+        ("de lab-bladzij zonder noindex in de spooksite", "spook", doel,
+         re.sub(r'<meta name="robots" content="noindex[^>]*>\n?', "", orig_spook), "proefdruk zonder noindex"),
+        ("de lab-bladzij zonder proefdrukbalk in de spooksite", "spook", doel,
+         orig_spook.replace("spookbalk", "gewoonbalk"), "proefdruk zonder balk"),
         # De zijbalk bouwt zijn links in JavaScript; de linkkeuring ziet ze niet.
         ("de zijbalk wijst naar een hoofdstuk dat er niet staat", "echt", doel,
          re.sub(r'(var CH = \[\n)', r'\1    { f: "h97.html", n: "97", t: "x" },\n', orig, count=1),

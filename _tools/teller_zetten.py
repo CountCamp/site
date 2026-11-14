@@ -14,10 +14,12 @@ Wat het doet, per gebouwde .html
 Eerst gaat ELKE teller eruit, in welke schrijfwijze ook (zie `tellerregel.py`).
 Daarna, afhankelijk van het bouwprofiel:
 
-  echt   elke bladzij krijgt het blok uit `_tools/teller.html`, één keer, vlak
-         voor </head>.
-  spook  geen teller. Wel krijgt elke bladzij de proefdruk-balk en `noindex`,
-         als hij die nog niet had.
+  echt   elke bladzij krijgt het blok uit `_tools/teller.html`, één keer,
+         vooraan in <head> (direct na <meta charset>).
+  spook  geen teller. Wel krijgt elke bladzij de proefdruk-balk (vlak voor
+         </body>) en `noindex` (vooraan in <head>), als hij die nog niet had.
+  Waarom vooraan en achteraan en niet vlak voor </head> en direct na <body>:
+  daar staan de taalstukken van `taalonderdelen.py`; zie `met_balk`.
 
 Een doorstuurder (meta-refresh naar een nieuw adres) krijgt nooit een teller:
 die zou één bezoek twee keer boeken. Een fragment zonder <head> -- het
@@ -63,7 +65,7 @@ import sys
 sys.dont_write_bytecode = True
 HIER = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HIER)
-from tellerregel import canoniek, met_blok, soort, zonder_tellers  # noqa: E402
+from tellerregel import canoniek, kopplek, met_blok, soort, zonder_tellers  # noqa: E402
 
 REPO = os.path.dirname(HIER)
 BALK = os.path.join(REPO, '_spooksite', 'banner.html')
@@ -89,17 +91,33 @@ def profiel_uit_omgeving() -> str | None:
 
 
 def met_balk(tekst: str, balk: str) -> tuple[str, list[str]]:
-    """Balk direct na <body ...>, noindex vlak voor </head> -- alleen wat ontbreekt."""
+    """Noindex vooraan in <head>, balk vlak voor de laatste </body> -- alleen wat
+    ontbreekt.
+
+    Waarom daar (14-11-2026, spoor teller2): vlak voor </head> en direct na
+    <body> zet `taalonderdelen.py` de taalstukken van een losse tweeling, en
+    `en_bouw.py` eist dat opnieuw toepassen daar niets verandert. Met noindex en
+    balk op die plekken zakten 15 van de 16 losse tweelingen in de spooksite.
+    De balk staat met `position:fixed` onderaan het scherm
+    (_spooksite/maak_banner.sh), dus waar hij in de HTML staat zie je niet;
+    alleen op papier komt hij nu achteraan in plaats van vooraan. Een bladzij
+    zonder </body> krijgt hem direct na <body>.
+    """
     import re
     gedaan = []
     if 'name="robots" content="noindex' not in tekst:
-        m = re.search(r'</head\s*>', tekst, re.I)
-        if m:
-            tekst = tekst[:m.start()] + NOINDEX + tekst[m.start():]
+        plek = kopplek(tekst)
+        if plek is not None:
+            tekst = tekst[:plek] + NOINDEX + tekst[plek:]
             gedaan.append('noindex')
     if 'class="spookbalk"' not in tekst:
+        eind = list(re.finditer(r'</body\s*>', tekst, re.I))
         m = re.search(r'<body\b[^>]*>', tekst, re.I)
-        if m:
+        if eind:
+            p = eind[-1].start()
+            tekst = tekst[:p] + balk + tekst[p:]
+            gedaan.append('balk')
+        elif m:
             tekst = tekst[:m.end()] + '\n' + balk + tekst[m.end():]
             gedaan.append('balk')
     return tekst, gedaan

@@ -100,12 +100,14 @@
 #      _tools/taalparen.tsv als `los` (knopje en hreflang komen er dan in via
 #      _tools/taalonderdelen.py, zoals bij tabellen/ ↔ tables/) of `los-eigen`
 #      (hij draagt ze al zelf, zoals solomon; dan alleen de balk).
-#      LET OP, een speeltje uit het lab (spoor en_speeltjes, 25-10-2026): ergens
-#      anders onder en/ zakt het in de spooksite op keuring 2 ("proefdruk met
-#      bezoekersteller"), want het komt kant-en-klaar, met teller. Zet het dus in
-#      en/toys/ via _tools/bouw_speelkist.py (EN_KIST): dan draagt het de herkomst
-#      uit het lab (<meta name="nl_bron" content="boek/04_speeltjes/…">) en keurt
-#      en_bouw.py het als bijlage (KIST_HERKOMST), zoals het boek onder en/book/.
+#      LET OP, een speeltje uit het lab (spoor en_speeltjes, 25-10-2026): zet het
+#      in en/toys/ via _tools/bouw_speelkist.py (EN_KIST): dan draagt het de
+#      herkomst uit het lab (<meta name="nl_bron" content="boek/04_speeltjes/…">)
+#      en keurt en_bouw.py het als bijlage (KIST_HERKOMST), zoals het boek onder
+#      en/book/. (Tot 14-11-2026 zakte het ergens anders onder en/ in de spooksite
+#      op keuring 2, "proefdruk met bezoekersteller", omdat het kant-en-klaar met
+#      teller kwam. Sindsdien haalt de bouw elke teller uit een proefdruk; zie
+#      _tools/teller_zetten.py.)
 #   d2. Een boekhoofdstuk: dat drukt het lab (countcamp_lab/boek/publiceer.sh --en H<n>)
 #      naar en/book/h<n>.html, met de stempel van de lab-pers — en_bouw.py keurt hem
 #      dan als bijlage (LAB_STEMPEL). Het paar met manuscript/h<n>.html staat al als
@@ -123,9 +125,11 @@
 #
 # WAT DIT NIET DEKT — zodat niemand het denkt.
 #   * De PR-proefdruk op countcamp.org/pr-preview/ (proefdruk.yml) kopieert
-#     en/ zoals het in de repo staat: met teller, zonder balk. Dat geldt daar
-#     al voor elke bijlage (oefenboeken, boek), en de spooksite van stap 2 is
-#     waar de Engelse proefdruk wél als proefdruk staat.
+#     en/ zoals het in de repo staat, als ECHTE Engelse bouw (taal, links,
+#     tweelingen zoals live). Wat daar sinds 14-11-2026 wél verandert: de bouw
+#     haalt er elke teller uit en zet balk en noindex erop, net als op elke
+#     andere bijlage (_tools/teller_zetten.py), en proefdruk.yml leest dat na
+#     (tellerwacht.py --spook). Tot die dag telde hij daar gewoon mee.
 #   * Of een tekst goed Engels is: dat is Mieke (MIEKE:-notities in en/*.qmd).
 #   * Of het Nederlands sinds de vertaling bewoog: dat MELDT stap 0 (BIJ TE
 #     WERKEN) maar houdt niet tegen — een vertaling van gisteren is beter dan

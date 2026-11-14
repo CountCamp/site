@@ -240,8 +240,38 @@ def zonder_tellers(tekst: str) -> tuple[str, int]:
     return tekst, n_blok + n_los
 
 
+_HEAD_OPEN = re.compile(r'<head\b[^>]*>[ \t]*\n?', re.I)
+_CHARSET = re.compile(r'[ \t]*<meta\s+charset\s*=\s*["\']?[\w-]+["\']?\s*/?>[ \t]*\n?', re.I)
+
+
+def kopplek(tekst: str) -> int | None:
+    """Waar de bouw iets in <head> zet: VOORAAN, direct na <meta charset> (of na
+    <head> als die er niet is). None als er geen <head> ... </head> is.
+
+    Waarom vooraan en niet vlak voor </head> (14-11-2026, spoor teller2): vlak
+    voor </head> zet `taalonderdelen.py` de hreflang-regels en de taalbalk van
+    een losse tweeling (tabellen/, solomon, de boekhoofdstukken), en
+    `en_bouw.py` eist dat die er "staan zoals taalonderdelen.py ze maakt":
+    opnieuw toepassen mag niets veranderen. Met de teller daar tussen schoof de
+    volgorde, en zakten 15 van de 16 losse tweelingen (gemeten in
+    publiceer_en.sh --alleen-spook). Na <meta charset> en niet ervóór, omdat een
+    browser de tekenset alleen in de eerste 1024 bytes zoekt; het blok is
+    groter dan dat.
+    """
+    m = _HEAD_OPEN.search(tekst)
+    e = _HEAD_EIND.search(tekst)
+    if not m or not e or e.start() < m.end():
+        return None
+    c = _CHARSET.match(tekst, m.end())
+    if not c:
+        # de tekenset staat niet als eerste in <head>: zoek hem in de hele kop
+        c = _CHARSET.search(tekst, m.end(), e.start())
+    return c.end() if c else m.end()
+
+
 def met_blok(tekst: str, blok: str) -> tuple[str, str]:
-    """Haal elke teller eruit en zet het blok er één keer in, vlak voor </head>.
+    """Haal elke teller eruit en zet het blok er één keer in, vooraan in <head>
+    (zie `kopplek`).
 
     Uitslagen: `al_goed` · `gezet` · `geen_head`. Idempotent: een bladzij die
     al precies het ene goede blok draagt, komt byte voor byte terug.
@@ -250,7 +280,7 @@ def met_blok(tekst: str, blok: str) -> tuple[str, str]:
     if t == {'goed': 1, 'verouderd': 0, 'los': 0}:
         return tekst, 'al_goed'
     kaal, _n = zonder_tellers(tekst)
-    m = _HEAD_EIND.search(kaal)
-    if not m:
+    plek = kopplek(kaal)
+    if plek is None:
         return tekst, 'geen_head'
-    return kaal[:m.start()] + blok + kaal[m.start():], 'gezet'
+    return kaal[:plek] + blok + kaal[plek:], 'gezet'

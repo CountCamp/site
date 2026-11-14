@@ -64,8 +64,11 @@ proef "een stempel die niet klopt is een gewone bladzij in plaats van een gat" "
             fout_wb.append(reden)"
 proef "elke bladzij onder en/workbooks/ is vrijgesteld van de wees-keuring" "C" \
   "$EB|||        if p.startswith(LIBS_NAAR + \"/\") or p in lab or p in werkboek:|||        if p.startswith(LIBS_NAAR + \"/\") or p in lab or p.startswith(WERKBOEK_MAP + \"/\"):"
-proef "het oefenboek krijgt in de spooksite de proefdrukmerken (zoals vóór 28-10)" "C" \
-  "$EB|||        if a.soort == \"echt\" or p in lab or p in kist or p in werkboek:|||        if a.soort == \"echt\" or p in lab or p in kist:"
+# Tot 14-11-2026 bewaakte deze mutatie de uitzondering dat een oefenboek in de spooksite
+# de merken van de echte site kreeg, mét teller. Die uitzondering was het lek waardoor een
+# proefdruk meetelde, en is weg (spoor teller2); dit bewaakt de regel die ervoor kwam.
+proef "het oefenboek wordt in de spooksite weer als echte site gekeurd (het lek van vóór 14-11)" "C" \
+  "$EB|||        if a.soort == \"echt\":|||        if a.soort == \"echt\" or p in werkboek:"
 proef "het oude advies voor een wees verdwijnt" "C" \
   "$EB|||bestaat niet meer — haal hem weg of zet de bron terug\"|||bestaat niet meer — publiceer hem opnieuw\""
 proef "twee publicaties door elkaar in één oefenboek mogen" "C" \
