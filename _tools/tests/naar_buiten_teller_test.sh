@@ -8,6 +8,9 @@
 # de tellerwachter. Die weg is niet te proeven -- hij eist dat je op main staat
 # en duwt daarna naar GitHub. Daarom bestaat `--nakijken`: dezelfde twee poorten,
 # even streng, en daarna niets. Dat is wat deze toets aanroept.
+# Zaak 5 (sinds 14-11-2026) proeft de poort die pas NA de bouw draait
+# (`gebouwde_tellers_nakijken`, de tellerwacht op _site/); die zit niet in
+# --nakijken, dus daar haalt de toets de functie letterlijk uit het script.
 #
 # De nagemaakte repo's hieronder bestaan uit niets meer dan `_tools/` met een
 # kopie van `naar_buiten.sh` en twee nagemaakte wachters. Dat werkt omdat
@@ -175,6 +178,116 @@ if grep -qF "Er gaan bladzijden de deur uit" "$M/uit"; then
   gezakt=$((gezakt + 1))
 else
   echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# --- 5. de poort op de GEBOUWDE site (ontworpen 9-10-2026, spoor teller; ----
+#     op main sinds 14-11-2026, spoor teller2)
+#     `gebouwde_tellers_nakijken` draait alleen na een bouw: blokkerend op
+#     --productie, meldend op --lokaal. Geen van beide is hier te proeven -- de
+#     een duwt main, de ander rendert de hele site. Daarom haalt deze toets de
+#     functie LETTERLIJK uit naar_buiten.sh en voert hem een nagemaakte _site/
+#     met de echte tellerwacht. Zaak 5g kijkt daarna of beide wegen hem ook
+#     echt aanroepen; zonder die zaak bewijst de rest alleen dat de functie
+#     bestaat.
+POORT="$(sed -n '/^gebouwde_tellers_nakijken() {/,/^}/p' _tools/naar_buiten.sh)"
+getoetst=$((getoetst + 1))
+if [ "$(printf '%s\n' "$POORT" | wc -l | tr -d ' ')" -gt 5 ]; then
+  echo "  ok    5  de functie staat in naar_buiten.sh ($(printf '%s\n' "$POORT" | wc -l | tr -d ' ') regels)"
+else
+  # Zoeken is niet gevonden: een lege uitsnede zou alle zaken hieronder laten
+  # zakken om de verkeerde reden, of erger, laten slagen.
+  echo "  ZAKT  5  gebouwde_tellers_nakijken niet gevonden in naar_buiten.sh"
+  gezakt=$((gezakt + 1))
+fi
+
+site_repo() {  # $1 = naam -> repo met de echte wachter en een _site/ met één goede bladzij
+  local r="$M/$1"
+  mkdir -p "$r/_tools" "$r/_site"
+  cp _tools/tellerwacht.py _tools/tellerregel.py _tools/teller.html "$r/_tools/"
+  { printf '<!DOCTYPE html>\n<html><head>\n<title>x</title>\n'
+    cat _tools/teller.html
+    printf '</head><body><p>x</p></body></html>\n'
+  } > "$r/_site/index.html"
+  echo "$r"
+}
+
+poort() {  # $1 = naam, $2 = verwachte afloopcode, $3 = reporoot, $4 = echt|spook, $5 = blokkerend|melden
+  getoetst=$((getoetst + 1))
+  ( HIER="$3"; eval "$POORT"; gebouwde_tellers_nakijken "$4" "$5" ) > "$M/uit" 2>&1
+  local echt=$?
+  if [ "$echt" = "$2" ]; then
+    echo "  ok    $1 (afloopcode $echt)"
+  else
+    echo "  ZAKT  $1 — verwacht $2, kreeg $echt"
+    sed 's/^/          /' "$M/uit"
+    gezakt=$((gezakt + 1))
+  fi
+}
+
+GOED="$(site_repo goedesite)"
+poort    "5a een gebouwde site met precies één teller: laat door" 0 "$GOED" echt blokkerend
+verwacht "  en de wachter zegt hoeveel hij las" "alle 1 bladzijden dragen precies één teller"
+
+KAAL="$(site_repo kalesite)"
+printf '<!DOCTYPE html>\n<html><head><title>kaal</title></head><body></body></html>\n' \
+  > "$KAAL/_site/kaal.html"
+poort    "5b een gebouwde bladzij zonder teller: HOUDT TEGEN" 1 "$KAAL" echt blokkerend
+verwacht "  en noemt de bladzij bij naam" "kaal.html  [geen teller]"
+verwacht "  en zegt het in gewone taal" "telt niet precies één keer per bladzij"
+poort    "5c dezelfde site op een proefweg (melden): laat door" 0 "$KAAL" echt melden
+verwacht "  maar zegt het wel hardop" "op een proefweg houdt dit je niet tegen"
+poort    "5d de echte bouw als proefdruk gekeurd: HOUDT TEGEN" 1 "$GOED" spook blokkerend
+verwacht "  want de teller telt dan mee" "teller in een proefdruk"
+
+LEEG="$(site_repo leegsite)"
+rm -f "$LEEG/_site/index.html"
+poort    "5e een lege _site/: HOUDT TEGEN, als blinde" 1 "$LEEG" echt blokkerend
+verwacht "  en noemt dat blindheid" "stilte betekent ongeldig, nooit goed"
+
+ZONDER="$(site_repo zonderwacht)"
+rm -f "$ZONDER/_tools/tellerwacht.py"
+poort    "5f geen tellerwacht: HOUDT TEGEN" 1 "$ZONDER" echt blokkerend
+verwacht "  en zegt dat het ONGEMETEN is" "is dus ONGEMETEN"
+getoetst=$((getoetst + 1))
+if grep -qF "telt niet precies" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# Roepen --productie en --lokaal de poort ook aan, en op --productie NA de bouw?
+# Een poort die bestaat maar nergens hangt, is precies de faalvorm van
+# akkoord_hek.py, dat zes dagen nergens bedraad stond.
+getoetst=$((getoetst + 1))
+BEDRADING="$(python3 - _tools/naar_buiten.sh <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+def tak(naam):
+    m = re.search(r"^%s\)\n(.*?)^  ;;" % re.escape(naam), s, re.S | re.M)
+    return m.group(1) if m else ""
+prod, lok = tak("--productie"), tak("--lokaal")
+fout = []
+r = prod.find("quarto render")
+p = prod.find("gebouwde_tellers_nakijken echt blokkerend")
+if p < 0:
+    fout.append("--productie roept de poort niet blokkerend aan")
+elif r < 0 or p < r:
+    fout.append("--productie roept de poort niet NA quarto render aan")
+elif "Niet geleverd" not in prod[p:p + 120]:
+    fout.append("--productie stopt niet als de poort rood is")
+r = lok.find("quarto render")
+p = lok.find("gebouwde_tellers_nakijken spook melden")
+if p < 0 or r < 0 or p < r:
+    fout.append("--lokaal roept de poort niet na de bouw aan (spook, melden)")
+print("; ".join(fout) if fout else "ok")
+PY
+)"
+if [ "$BEDRADING" = ok ]; then
+  echo "  ok    5g --productie (blokkerend) en --lokaal (meldend) roepen hem na de bouw aan"
+else
+  echo "  ZAKT  5g bedrading: $BEDRADING"
+  gezakt=$((gezakt + 1))
 fi
 
 echo ""

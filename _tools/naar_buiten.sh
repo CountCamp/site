@@ -116,10 +116,14 @@ plank_nakijken() {   # $1 = blokkerend | melden
 # ---- elke oefenboek-bladzij moet geteld worden -------------------------
 # `controleer()` hierboven kijkt naar de bezoekersteller, maar op ÉÉN bladzij:
 # _site/index.html. Daar kon hij de echte blindheid niet zien, want de
-# thuispagina krijgt zijn teller uit `_quarto-echt.yml` en stond dus altijd
+# thuispagina kreeg zijn teller uit `_quarto-echt.yml` en stond dus altijd
 # goed. De oefenboeken komen als RESOURCE binnen -- onveranderd gekopieerd,
 # nooit door de site gerenderd -- dus voor die bladzijden zegt de teller op de
 # thuispagina niets.
+# (Sinds 14-11-2026 zet de bouw de teller in elke bladzij, ook in die bijlagen
+# (_tools/teller_zetten.py, post-render); wat er gebouwd is leest
+# `gebouwde_tellers_nakijken` hieronder. Deze poort leest nog steeds de BRONNEN:
+# hij vangt een bijlage die zonder teller binnenkomt al vóór er gebouwd wordt.)
 #
 # Gemeten op 30-9-2026, vóór dit erin kwam: 112 van de 161 oefenboek-bladzijden
 # droegen een teller. Het hele psychometrie-oefenboek was blind, en de
@@ -188,6 +192,41 @@ doorstuur_nakijken() {   # $1 = blokkerend | melden
   return 0
 }
 
+# ---- de GEBOUWDE site: elke bladzij precies één teller, of geen ---------
+# `tellers_nakijken` hierboven leest de BRONNEN van de bijlagen. Sinds
+# 14-11-2026 (spoor teller2; ontworpen 9-10, spoor teller) zet de bouw zelf de
+# teller erin (_tools/teller_zetten.py, post-render), en dan is de vraag die
+# ertoe doet niet meer "staat hij in de bron" maar "staat hij in wat er de deur
+# uitgaat". Dat leest deze: _site/, elke bladzij, niet alleen index.html.
+#   echt   precies één teller per bladzij, het blok uit _tools/teller.html
+#   spook  geen enkele teller, en overal de balk en noindex
+# Gemeten op 8-10-2026: een spook-bouw droeg op 201 van de 213 bladzijden een
+# werkende teller, en `controleer spook _site/index.html` stond groen --
+# index.html was een van de twaalf die wél goed waren. Op 14-11: 224 van 243.
+# Draait alleen NA een bouw, dus niet bij --nakijken: daar ligt geen verse
+# _site/, en een oordeel over een oude bouw is een oordeel over iets anders.
+# Dezelfde drie redenen als bij `tellers_nakijken`, om dezelfde reden.
+gebouwde_tellers_nakijken() {   # $1 = echt | spook   $2 = blokkerend | melden
+  local profiel="$1" streng="$2" code=0
+  python3 "$HIER/_tools/tellerwacht.py" "--$profiel" --site "$HIER/_site" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) if [ "$profiel" = echt ]; then
+         echo "  De gebouwde site telt niet precies één keer per bladzij."
+       else
+         echo "  Deze proefdruk telt mee in Bens bezoekcijfers, of mist balk of noindex."
+       fi ;;
+    3) echo "  De tellerwacht kon niet kijken. Dat is geen schone uitslag maar"
+       echo "  een blinde: stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De tellerwacht zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
+       echo "  Staat _tools/tellerwacht.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 huidige_tak() { git branch --show-current; }
 
 # ============================================================
@@ -228,6 +267,7 @@ case "$WEG" in
   if [ -z "$DROOG" ]; then
     QUARTO_PROFILE=spook quarto render
     controleer spook _site/index.html
+    gebouwde_tellers_nakijken spook melden
     echo
     echo "klaar. Bekijken:"
     echo "  open $HIER/_site/index.html"
@@ -302,8 +342,10 @@ case "$WEG" in
   if [ -z "$DROOG" ]; then
     quarto render >/dev/null
     controleer echt _site/index.html || { echo "  Niet geleverd."; exit 1; }
+    gebouwde_tellers_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }
   else
     echo "  [droogloop] quarto render && controleer echt _site/index.html"
+    echo "  [droogloop] python3 _tools/tellerwacht.py --echt"
   fi
   echo
   doe git push origin main
