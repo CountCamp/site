@@ -1,30 +1,33 @@
 # ============================================================
 # _quarto-echt.yml — het bouwprofiel van DE ECHTE SITE.
 # ------------------------------------------------------------
-# Dit profiel draait vanzelf (`profile: default: echt` in _quarto.yml), dus
-# `quarto render` en de GitHub Action bouwen hiermee zonder dat er iets
+# Dit profiel draait vanzelf (het is het eerste van zijn groep in _quarto.yml),
+# dus `quarto render` en de GitHub Action bouwen hiermee zonder dat er iets
 # extra's hoeft. Alleen wie expliciet `QUARTO_PROFILE=spook` zegt, krijgt de
 # proefdruk in plaats hiervan.
 #
-# Wat hier hoort: alles wat ALLEEN op de echte site thuishoort. Op dit moment
-# is dat de bezoekersteller. Zet hier niets neer wat een proefdruk ook nodig
-# heeft — dat hoort in _quarto.yml, want dat leest allebei.
+# Wat hier hoort: alles wat ALLEEN op de echte site thuishoort. Zet hier niets
+# neer wat een proefdruk ook nodig heeft — dat hoort in _quarto.yml, want dat
+# leest allebei.
 #
-# De teller stond tot 12-8-2026 in _quarto.yml. Hij is verhuisd omdat een
-# proefdruk anders meetelt in Bens bezoekcijfers: een profiel kan een
-# include-in-header wel AANVULLEN maar niet WEGHALEN.
+# DE BEZOEKERSTELLER STAAT HIER NIET MEER (14-11-2026, spoor teller2; ontworpen
+# 8-10-2026, spoor teller). Hij stond hier van 12-8 tot 14-11 als
+# include-in-header, en bereikte zo alleen de bladzijden die Quarto zelf
+# rendert. Nu staat hij in _tools/teller.html, en zet _tools/teller_zetten.py
+# (post-render, zie _quarto.yml) hem na elke bouw in elke bladzij -- maar alleen
+# als dít profiel actief is. Dat de naam van dit profiel ertoe doet, is dus niet
+# veranderd: het script leest QUARTO_PROFILE.
 #
-# CONTROLE. naar_buiten.sh --productie kijkt na de render of deze teller er
-# echt in zit en weigert te leveren als hij weg is. Zonder die controle zou
-# een tikfout in de profielnaam de teller stilletjes van de site halen, en dat
-# merk je pas maanden later aan een grafiek die op nul staat.
+# CONTROLE. python3 _tools/tellerwacht.py --echt leest de gebouwde _site/ na:
+# precies één teller per bladzij, en het is de ene uit _tools/teller.html. Die
+# draait in publish.yml vóór er iets live gaat, en in naar_buiten.sh --productie.
+#
+# Waarom hieronder toch iets staat: met alleen commentaar weigert Quarto het
+# hele project ("Validation of configuration profile file _quarto-echt.yml
+# failed ... YAML value is missing", afloop 1; gemeten 14-11-2026 op 1.9.38 in
+# een proefproject). De site-url is dezelfde als in _quarto.yml en verandert
+# dus niets; _quarto-spook.yml zet hem juist leeg.
 # ============================================================
 
-format:
-  html:
-    include-in-header:
-      # GoatCounter — privacy-vriendelijke bezoekersstatistiek (cookievrij, AVG-safe).
-      # Sitecode: countcamp.goatcounter.com
-      - text: |
-          <script data-goatcounter="https://countcamp.goatcounter.com/count"
-                  async src="//gc.zgo.at/count.js"></script>
+website:
+  site-url: "https://countcamp.org"

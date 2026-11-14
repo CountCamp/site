@@ -28,9 +28,16 @@
 #    vervangt de bestaande niet. Zolang de teller in het basisbestand stond,
 #    droeg elke proefdruk hem gewoon mee en telde hij mee in Bens cijfers. Hij
 #    is dus verhuisd naar _quarto-echt.yml, het profiel dat een proefdruk
-#    nooit gebruikt. Proef het na een Quarto-upgrade opnieuw:
-#        QUARTO_PROFILE=spook quarto render gebruik.qmd && grep -c goatcounter _site/gebruik.html
-#    Dat hoort 0 te zijn.
+#    nooit gebruikt.
+#    Sinds 14-11-2026 (spoor teller2; ontworpen 8-10, spoor teller) staat hij in
+#    geen enkel profiel meer maar in _tools/teller.html, en beslist
+#    _tools/teller_zetten.py (post-render) op grond van QUARTO_PROFILE of hij
+#    erin komt. Reden: een include bereikt alleen de bladzijden die Quarto zelf
+#    rendert. Gemeten op 8-10: in een spook-render telden 201 van de 213
+#    bladzijden gewoon mee (alles wat als bijlage binnenkomt), zonder balk en
+#    zonder noindex; op 14-11 waren het er 224 van de 243. Het script haalt nu
+#    in een proefdruk elke teller weg en zet balk en noindex op elke bladzij.
+#    Nalezen:  python3 _tools/tellerwacht.py --spook
 #
 # 3. DE BALK. _spooksite/banner.html wordt door de bouw geschreven
 #    (_spooksite/maak_banner.sh), niet met de hand. Ontbreekt hij, dan faalt

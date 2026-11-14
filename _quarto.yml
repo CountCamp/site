@@ -6,6 +6,19 @@ project:
   # De bronnenlijst (`render`) en de bijlagen (`resources`) staan sinds
   # 24-10-2026 in _quarto-nl.yml, en het menu ook. Waarom: zie het blok
   # "Twee talen" onderaan dit bestand.
+  #
+  # De bezoekersteller (ontworpen 8-10-2026, spoor teller; hier sinds
+  # 14-11-2026, spoor teller2). Na ELKE render, in elk profiel en in beide
+  # talen: haalt elke teller uit de uitvoermap en zet in elke bladzij precies
+  # één terug -- het blok uit _tools/teller.html -- of, bij het profiel spook,
+  # géén, plus de balk en noindex. Dit geldt ook voor de bladzijden die als
+  # bijlage binnenkomen (oefenboeken, boek, handleiding, speeltjes, en/); die
+  # zag het spookprofiel tot dan toe niet. De teller veranderen = alleen
+  # _tools/teller.html veranderen. Nalezen: python3 _tools/tellerwacht.py --echt
+  # (of --spook). Staat hier in het basisbestand en niet in een profiel, omdat
+  # elke bouw erlangs moet; het script kiest zelf op grond van QUARTO_PROFILE.
+  post-render:
+    - _tools/teller_zetten.py
 
 website:
   title: "CountCamp"
@@ -26,11 +39,14 @@ website:
 #   spook  — een proefdruk: noindex, een balk erboven, geen bezoekersteller.
 #            Staat in _quarto-spook.yml en komt alleen langs bij
 #            QUARTO_PROFILE=spook.
-# Waarom de bezoekersteller uit _quarto.yml naar _quarto-echt.yml verhuisde:
-# een profiel PLAKT zijn include-in-header ERBIJ, het vervangt hem niet — dat
-# is hier gemeten, niet aangenomen. Zolang de teller in het basisbestand stond,
-# telde elke proefdruk gewoon mee in Bens statistiek. Nu staat hij in het
-# profiel dat een proefdruk nooit gebruikt.
+# De bezoekersteller woont in GEEN van beide profielen meer, maar in
+# _tools/teller.html; de post-render-stap bovenaan kiest op grond van het
+# profiel of hij erin komt. Daarvóór stond hij in _quarto-echt.yml (12-8 tot
+# 14-11-2026), en nog daarvóór hier: een profiel PLAKT zijn include-in-header
+# ERBIJ, het vervangt hem niet -- dat is hier gemeten, niet aangenomen. Maar een
+# include bereikt alleen de bladzijden die Quarto zelf rendert, en het grootste
+# deel van de site komt als bijlage binnen. Die telden in elke proefdruk gewoon
+# mee: 201 van 213 bladzijden op 8-10-2026, 224 van 243 op 14-11-2026.
 #
 # Twee talen (24-10-2026, spoor en_schil). Naast echt/spook is er een tweede
 # keuze: welke TAAL er gebouwd wordt.
