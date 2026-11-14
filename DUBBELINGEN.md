@@ -104,9 +104,19 @@ Verander je de toon of de belofte van een speeltje, loop dan alle drie na.
 
 ## 5. GoatCounter
 
-De teller zit **per bestand** in elk los speeltje (`<script data-goatcounter…>`
-in de `<head>`) én centraal in `_quarto.yml` voor alle Quarto-pagina's. Een nieuw
-speeltje zonder die regel telt niet mee; `bouw_speelkist.py` klaagt erover.
+De teller zit **per bestand** in alles wat als bijlage binnenkomt — de losse
+speeltjes, het boek (`manuscript/h*.html`), de handleiding, de oefenboeken en
+`en/` — én centraal in `_quarto-echt.yml` voor alle bladzijden die de site zelf
+rendert. (Hier stond tot 14-11-2026 "`_quarto.yml`"; daar staat hij sinds
+12-8-2026 niet meer, zodat een proefdruk niet meetelt.) Een nieuw speeltje zonder
+die regel telt niet mee; `bouw_speelkist.py` klaagt erover.
+
+**Wie het nakijkt:** `_tools/controleer_tellers.py` loopt de bijlagen na
+(oefenboeken/, werkboeken/, en/, en sinds 14-11-2026 ook manuscript/, speeltjes/,
+tabellen/, tables/, power/), blokkerend in `naar_buiten.sh --productie`. De
+bladzijden die de site zelf rendert, kijkt `naar_buiten.sh` na op één bladzij
+(`_site/index.html`): ze delen één profiel. Een tak met een wachter die de hele
+gebouwde site naleest (`worktree-teller`, 8-10-2026) is nooit op main beland.
 
 ## 6. Huisstijl van de broertjes
 
