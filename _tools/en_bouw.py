@@ -966,6 +966,22 @@ def cmd_bronnen(a) -> int:
         if r.returncode != 0:
             fout.append(f"{rel}: nl_bron-commit {c} bestaat niet in deze repo")
             continue
+        # Bestaan is niet genoeg (14-11-2026, plank_vakken). Na een rebase -- en
+        # `bord.sh klaar` zet main onder elk spoor -- staat de commit waarnaar een
+        # spoor zijn eigen vertaling stempelde, niet meer op de tak. Hier bestaat
+        # hij nog (het object blijft liggen), in een verse kloon niet: daar gaf de
+        # regel hierboven pas FOUT, op een moment dat niemand het verband nog zag.
+        r = subprocess.run(["git", "merge-base", "--is-ancestor", c, "HEAD"], cwd=REPO, capture_output=True)
+        if r.returncode == 1:
+            nu = subprocess.run(["git", "log", "-1", "--format=%h", "--", pad], cwd=REPO,
+                                capture_output=True, text=True).stdout.strip()
+            fout.append(f"{rel}: nl_bron-commit {c} staat niet in de geschiedenis van HEAD (verweesd, "
+                        f"bv. door een rebase); in een verse kloon bestaat hij niet. De laatste commit "
+                        f"op {pad} is nu {nu or '?'} -- stempel daarop als de vertaling daarbij hoort")
+            continue
+        if r.returncode != 0:
+            fout.append(f"{rel}: git merge-base op nl_bron-commit {c} liep vast -- kon niet kijken")
+            continue
         r = subprocess.run(["git", "log", "--format=%h %ad %s", "--date=short", f"{c}..HEAD", "--", pad],
                            cwd=REPO, capture_output=True, text=True)
         if r.returncode != 0:
@@ -1044,6 +1060,11 @@ def na_manifest(manifest: str = MANIFEST) -> list[str]:
         achter.append(f"{wat}: gebouwd van {rel}@{c} (het manifest), en {rel} veranderde daarna -- {hoe}")
     zeg(f"  na het manifest: {len(bronnen)} Engelse bron(nen) en {', '.join(NA_MANIFEST_OOK)} vergeleken met "
         f"bron_commit={c}, {len(achter)} veranderd sinds die bouw")
+    if subprocess.run(["git", "merge-base", "--is-ancestor", c, "HEAD"], cwd=REPO,
+                      capture_output=True).returncode == 1:
+        zeg(f"    LET OP: bron_commit {c} staat niet in de geschiedenis van HEAD (een rebase sinds de bouw?). "
+            f"Vergeleken is op inhoud, en dat klopt zolang die commit hier bestaat; een verse kloon kan niet "
+            f"kijken. Een nieuwe run van publiceer_en.sh zet het manifest op de tak.")
     if schoon == "nee":
         zeg(f"    LET OP: het manifest zegt bron_schoon=nee -- die bouw had ongecommit werk, dus {c} is niet "
             f"precies wat er gebouwd werd; de vergelijking kan vals alarm geven of iets missen")

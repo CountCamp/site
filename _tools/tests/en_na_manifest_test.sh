@@ -120,6 +120,39 @@ nieuw
 sed -i.bak 's/bron_schoon=ja/bron_schoon=nee/' "$T/_tools/en_manifest.txt" && rm -f "$T/_tools/en_manifest.txt.bak"
 zaak "8  bron_schoon=nee wordt hardop gezegd" "$T" "het manifest zegt bron_schoon=nee"
 
+# ---- 8b en 8c: een stempel op een verweesde commit (na een rebase) ---------
+# `bord.sh klaar` zet main onder elk spoor. Een spoor dat zijn vertaling op zijn
+# EIGEN Nederlandse commit stempelde, wijst daarna naar een commit die niet meer op
+# de tak staat. Hier bestaat het object nog; in een verse kloon niet.
+verweesd_maken() {   # $1 = map: stempel op een nieuwe NL-commit, en die dan wegpletten
+  printf '\nNog een zin.\n' >> "$1/a.qmd"; op "$1" "Nederlands bijgewerkt"
+  local H; H="$(git -C "$1" log -1 --format=%h)"
+  sed -i.bak "s/^nl_bron: a.qmd@.*/nl_bron: a.qmd@$H/" "$1/en/a.qmd" && rm -f "$1/en/a.qmd.bak"
+  op "$1" "vertaling bij"
+  git -C "$1" reset -q --soft HEAD~2
+  git -C "$1" commit -qm "allebei in één, zoals na een rebase een andere commit"
+}
+zaak_fout() {   # $1 = naam, $2 = map, $3 = tekst; eist afloop 1
+  local uit code
+  uit="$(python3 "$2/_tools/en_bouw.py" bronnen 2>&1)"; code=$?
+  if [ "$code" = 1 ] && printf '%s' "$uit" | grep -qF -- "$3"; then
+    GOED=$((GOED + 1)); printf '  ok      %s\n' "$1"
+  else
+    ZAKT=$((ZAKT + 1)); printf '  ZAKT    %s -- wilde afloop 1 en de tekst %s (kreeg %s)\n' "$1" "$3" "$code"
+    printf '%s\n' "$uit" | sed 's/^/            /'
+  fi
+}
+nieuw; verweesd_maken "$T"
+zaak_fout "8b een nl_bron op een verweesde commit is een FOUT" "$T" "staat niet in de geschiedenis van HEAD (verweesd"
+nieuw
+printf '\nmeer\n' >> "$T/en/a.qmd"; op "$T" "na de bouw"
+# drie terug: de Engelse bron (H_BOUW), het manifest en wat erna kwam -- dan staat
+# H_BOUW zelf niet meer op de tak
+git -C "$T" reset -q --soft HEAD~3
+git -C "$T" commit -qm "de bouw en wat erna kwam in één"
+zaak "8c een manifest op een verweesde commit wordt hardop gezegd" "$T" \
+     "staat niet in de geschiedenis van HEAD (een rebase sinds de bouw?)"
+
 # ---- 9: de bedrading -- stap 0 draait vóór de keuze voor --nakijken ---------
 # publiceer_en.sh zelf draaien kost drie quarto-bouwen; dit meet alleen dat
 # `bronnen` (en dus deze wachter) vóór de nakijk-tak staat en daardoor in elke
@@ -168,6 +201,13 @@ kreupel "11 geen manifest telt als niets veranderd" \
   '    if not os.path.isfile(manifest):' '    if False:' geval_6
 kreupel "12 het menu wordt niet meer vergeleken" \
   'NA_MANIFEST_OOK = ["_quarto-en.yml"]' 'NA_MANIFEST_OOK = []' geval_5
+geval_8b() { local T; nieuw "$1"; verweesd_maken "$T"
+             zaak_fout "kreupel: geval 8b" "$T" "staat niet in de geschiedenis van HEAD (verweesd"; }
+kreupel "13 een verweesde nl_bron telt als goed" \
+  '        if r.returncode == 1:
+            nu = ' \
+  '        if False:
+            nu = ' geval_8b
 
 echo
 echo "goed: $GOED   gezakt: $ZAKT"
