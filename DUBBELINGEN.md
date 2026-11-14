@@ -104,19 +104,32 @@ Verander je de toon of de belofte van een speeltje, loop dan alle drie na.
 
 ## 5. GoatCounter
 
-De teller zit **per bestand** in alles wat als bijlage binnenkomt — de losse
-speeltjes, het boek (`manuscript/h*.html`), de handleiding, de oefenboeken en
-`en/` — én centraal in `_quarto-echt.yml` voor alle bladzijden die de site zelf
-rendert. (Hier stond tot 14-11-2026 "`_quarto.yml`"; daar staat hij sinds
-12-8-2026 niet meer, zodat een proefdruk niet meetelt.) Een nieuw speeltje zonder
-die regel telt niet mee; `bouw_speelkist.py` klaagt erover.
+Wat er op de site komt, staat op **één** plek: `_tools/teller.html` (het blok
+met de hostwacht: count.js alleen op countcamp.org, niet onder `/pr-preview/`).
+De bouw zet dat blok na elke render in elke bladzij en haalt elke andere teller
+weg (`_tools/teller_zetten.py`, post-render in `_quarto.yml`); in een proefdruk
+zet hij er geen, wel de balk en noindex. Sinds 14-11-2026 (spoor teller2; het
+ontwerp is van 8-10, spoor teller). De teller veranderen = alleen
+`_tools/teller.html` veranderen.
 
-**Wie het nakijkt:** `_tools/controleer_tellers.py` loopt de bijlagen na
-(oefenboeken/, werkboeken/, en/, en sinds 14-11-2026 ook manuscript/, speeltjes/,
-tabellen/, tables/, power/), blokkerend in `naar_buiten.sh --productie`. De
-bladzijden die de site zelf rendert, kijkt `naar_buiten.sh` na op één bladzij
-(`_site/index.html`): ze delen één profiel. Een tak met een wachter die de hele
-gebouwde site naleest (`worktree-teller`, 8-10-2026) is nooit op main beland.
+Daarnaast staat er nog een **oude regel per bestand** in alles wat als bijlage
+binnenkomt — de losse speeltjes, het boek (`manuscript/h*.html`), de
+handleiding, de oefenboeken en `en/`. Die doet op de site niets meer (de bouw
+vervangt hem), maar hij blijft staan: het lab zet hem er bij elke levering weer
+in, en `controleer_tellers.py` eist hem nog (zie hieronder). Tot 14-11-2026 kwam
+de teller op de bladzijden die de site zelf rendert uit `_quarto-echt.yml`
+(daarvóór, tot 12-8-2026, uit `_quarto.yml`).
+
+**Wie het nakijkt:**
+- `_tools/tellerwacht.py` leest de GEBOUWDE site na, elke bladzij: `--echt`
+  precies één teller en het is die uit `teller.html`; `--spook` geen enkele,
+  wel balk en noindex. Draait in `publish.yml` tussen bouwen en publiceren
+  (rood = er gaat niets live), in `proefdruk.yml`, en in `naar_buiten.sh` na de
+  bouw (blokkerend op `--productie`, meldend op `--lokaal`).
+- `_tools/controleer_tellers.py` loopt de BRONNEN van de bijlagen na
+  (oefenboeken/, werkboeken/, en/, manuscript/, speeltjes/, tabellen/, tables/,
+  power/), blokkerend in `naar_buiten.sh --productie` en `--nakijken`. Hij vangt
+  een bijlage zonder teller al vóór er gebouwd wordt.
 
 ## 6. Huisstijl van de broertjes
 

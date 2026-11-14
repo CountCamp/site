@@ -13,10 +13,12 @@ ze uiteen zonder dat iemand het merkt:
 
 Wat hier gemeten is en waarom het zo moet
 -----------------------------------------
-De teller staat op drie manieren in de site, en dat is geen slordigheid maar
-het gevolg van drie verschillende bouwwegen:
+De teller stond op drie manieren in de BRONNEN, en dat is geen slordigheid maar
+het gevolg van drie verschillende bouwwegen (zo staat hij er nog steeds; op de
+gebouwde site vervangt `teller_zetten.py` ze sinds 14-11-2026 alle drie door
+het ene blok uit `teller.html` -- zie het tweede deel van dit bestand):
 
-  * de site zelf zet hem in `<head>` via `_quarto-echt.yml`
+  * de site zelf zette hem tot 14-11-2026 in `<head>` via `_quarto-echt.yml`
     (`include-in-header`), en Quarto knipt die regel over TWEE regels:
         <script data-goatcounter="https://countcamp.goatcounter.com/count"
                 async src="//gc.zgo.at/count.js"></script>

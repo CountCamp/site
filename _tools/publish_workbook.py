@@ -22,10 +22,13 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      (`resources: - "oefenboeken/<naam>/**"`)
   4. Een werkboek-render brengt zijn eigen `<head>` mee en wordt daarna als
      RESOURCE overgenomen, niet opnieuw gerenderd. De bezoekersteller die de
-     site in `_quarto-echt.yml` heeft, bereikt zo'n bladzij dus nooit: hij moet
-     uit de werkboek-bron komen. Dat gaat stil mis — gemeten op 30-9-2026 was
-     het hele psychometrie-oefenboek blind (0 van 6), OZP1 op 2 van 18 en MVDA
-     op 1 van 9, en niets zei er iets over. → hier invoegen en anders weigeren.
+     site toen in `_quarto-echt.yml` had, bereikte zo'n bladzij dus nooit: hij
+     moest uit de werkboek-bron komen. Dat ging stil mis — gemeten op 30-9-2026
+     was het hele psychometrie-oefenboek blind (0 van 6), OZP1 op 2 van 18 en
+     MVDA op 1 van 9, en niets zei er iets over. → hier invoegen en anders
+     weigeren. (Sinds 14-11-2026 zet de bouw zelf in elke bladzij het blok uit
+     `_tools/teller.html` en vervangt hij deze regel; zie teller_zetten.py.
+     Hij blijft er toch in, omdat controleer_tellers.py hem in de bron eist.)
 
   5. Een ENGELS oefenboek (`--section en/workbooks`) komt onder en/ te staan, en
      daar keurt `_tools/en_bouw.py` elke door Quarto gebouwde bladzij zonder .qmd

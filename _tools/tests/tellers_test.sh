@@ -140,6 +140,22 @@ bladzij "oefenboeken/a/na_body.html"     ""                    "$TELLER_QUARTO"
 zaak "alle drie de schrijfwijzen tellen als geteld" 0
 verwacht_regel "  en de telling zegt 3 van 3" "oefenboeken/a 3 3 0"
 
+# === 2b. het blok uit _tools/teller.html telt ook (14-11-2026, spoor teller2) =
+#     Sinds de bouw de teller zelf zet (teller_zetten.py), staat dat blok in elke
+#     bladzij die uit een gebouwde site komt -- en publiceer_en.sh zet zulke
+#     bladzijden in en/. In het blok staat de sitecode als setAttribute, niet als
+#     attribuut, dus het eerste merk zie je er niet letterlijk in. Zonder deze
+#     uitzondering heette elke Engelse bladzij `half` en zakte de echte keuring.
+#     Een blok zonder count.js blijft half: de uitzondering geldt het eindpunt,
+#     niet het script.
+BLOK="$(cat _tools/teller.html)"
+verse_boom
+bladzij "oefenboeken/a/blok.html"      "$BLOK" ""
+bladzij "oefenboeken/a/blok_half.html" "${BLOK//gc.zgo.at\/count.js/gc.zgo.at\/weg.js}" ""
+zaak "een blok zonder count.js maakt de wachter rood" 1
+verwacht_in_uitvoer "  en wordt apart als half gemeld" "? oefenboeken/a/blok_half.html"
+verwacht_regel      "  en het hele blok telt wel: 1 van 2" "oefenboeken/a 1 2 0"
+
 # === 3. een bladzij zonder teller maakt hem rood ============================
 verse_boom
 bladzij "oefenboeken/a/met.html"    "$TELLER_EEN_REGEL" ""

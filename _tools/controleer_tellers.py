@@ -20,9 +20,11 @@ psychometrie volledig blind is.
 
 En `en/` (25-10-2026, spoor en_voorpagina; Ben: GoatCounter bijhouden). De
 Engelse kant komt op dezelfde manier binnen als de oefenboeken: als bijlage
-(`en/**` in `_quarto-nl.yml`), onveranderd gekopieerd. Wat er in `en/` staat is
-dus precies wat er live komt — de bladzijden die `publiceer_en.sh` bouwt (met de
-teller uit `_quarto-echt.yml`, want `--profile en` is echt + en), de hoofdstukken
+(`en/**` in `_quarto-nl.yml`), onveranderd gekopieerd (op de teller na, sinds
+14-11-2026; zie "Wat het niet doet"). Wat er in `en/` staat — de bladzijden die
+`publiceer_en.sh` bouwt (met de teller van de echte bouw, want `--profile en` is
+echt + en; tot 14-11-2026 uit `_quarto-echt.yml`, sindsdien het blok uit
+`_tools/teller.html`, dat hier als `geteld` telt), de hoofdstukken
 uit de lab-pers onder `en/book/`, de speeltjes uit het lab onder `en/toys/`, en
 (sinds 28-10-2026, spoor vb_site2) de oefenboeken uit het lab onder
 `en/workbooks/<naam>/` via `publish_workbook.py --section en/workbooks`.
@@ -41,13 +43,16 @@ en wordt, net als `werkboeken/`, bij naam uitgesloten.
 
 Wat het niet doet
 -----------------
-Het kijkt naar de bestanden in deze repo, niet naar de live site. Wat hier staat
-wordt door `quarto render` als *resource* overgenomen (zie `_quarto-nl.yml`), dus
-onveranderd — maar een bladzij die de site zélf rendert krijgt zijn teller pas
-bij het bouwen, uit `_quarto-echt.yml`. Die bestaan in de repo alleen als .qmd
-en worden hier dus niet gemeten; `naar_buiten.sh --productie` bewaakt die, op
-één bladzij (`_site/index.html`) — ze delen één profiel, dus valt hij daar weg,
-dan op allemaal.
+Het kijkt naar de bestanden in deze repo, niet naar de gebouwde of de live site.
+Sinds 14-11-2026 (spoor teller2) gaat wat hier staat ook niet meer onveranderd
+live: de bouw haalt na de render elke teller uit elke bladzij en zet er het ene
+blok uit `_tools/teller.html` voor in de plaats (`_tools/teller_zetten.py`). Wat
+er de deur uitgaat, leest `_tools/tellerwacht.py` na, op elke bladzij van
+`_site/` -- in publish.yml vóór er iets live gaat, en in `naar_buiten.sh` na de
+bouw. Deze wachter blijft omdat hij eerder vangt: vóór er gebouwd wordt, en
+precies bij de bouwweg (lab, publish_workbook.py, bouw_speelkist.py) die een
+bladzij zonder teller aanleverde. Dat het blok uit `teller.html` hier als
+`geteld` telt, regelt `tellerregel.tellerstand`.
 """
 from __future__ import annotations
 import argparse

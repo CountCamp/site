@@ -134,6 +134,10 @@ proef "een half merk telt voortaan als hele"  regel \
       'if sitecode and script:|||if sitecode or script:'
 proef "alleen het script-merk wordt nog geëist" regel \
       'sitecode = MERK_SITECODE in tekst|||sitecode = True'
+proef "het blok uit teller.html telt niet meer als teller" regel \
+      'for b in _BLOK.findall(tekst):|||for b in []:'
+proef "binnen het blok volstaat count.js alleen" regel \
+      'script = script or MERK_SCRIPT in b|||script = True'
 proef "een doorstuurder heet voortaan bladzij" regel \
       "return 'doorstuurder'|||return 'bladzij'"
 proef "invoegen gebeurt tweemaal (niet meer idempotent)" regel \
