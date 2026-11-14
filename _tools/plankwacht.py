@@ -40,6 +40,13 @@ Wat hij toetst
      drie, en "Dertien hoofdstukken" stond er al maanden zonder dat iets het
      narekende. Een woord dat geen telwoord is ("Alle hoofdstukken") is geen
      belofte en wordt overgeslagen, zoals bij de kale thema-vorm.
+  4. De spiegel (sinds 14-11-2026, zie `spiegel`): elk kaartje met een link
+     staat ook op de Engelse plank (`en/workbooks/index.qmd`), in dezelfde
+     volgorde, en elk vak-kaartje wordt gelinkt vanaf de kaart "Oefenboeken" op
+     `index.qmd` -- en elk Engels vak-kaartje vanaf "Practice books" op
+     `en/index.qmd`. Dat zijn geen getallen maar plekken die met de plank mee
+     moeten; Ben besliste op 14-11 dat ze dat doen. Ze tellen niet mee in
+     "belofte(s) nagerekend": de spiegel meldt zijn eigen telling.
 
 Welke boekmap bij welk kaartje hoort, wordt NIET ergens bijgehouden: het staat
 al in het kaartje zelf, in de link van de kop. Een tweede lijstje zou precies
@@ -76,6 +83,8 @@ Gebruik
     python3 _tools/plankwacht.py                  # toetst oefenboeken/index.qmd
     python3 _tools/plankwacht.py --plank <pad>    # een andere plank (voor de toets)
     python3 _tools/plankwacht.py --stil           # alleen bij fouten iets zeggen
+    python3 _tools/plankwacht.py --en-plank <pad> --thuis <pad> --en-thuis <pad>
+                                                  # de spiegel tegen andere bestanden
 """
 
 from __future__ import annotations
@@ -157,6 +166,7 @@ class Kaartje:
         self.href = href
         self.regel = regel          # 1-geteld, waar het blok begint
         self.tekst: list[str] = []
+        self.vak = False            # draagt het blok .cc-boek-vak (een kaartje voor één vak)?
 
     @property
     def body(self) -> str:
@@ -174,7 +184,7 @@ def lees_kaartjes(plank_pad: str) -> list[Kaartje]:
     wél in een `::: {.cc-plank}`, maar dragen zelf geen geneste blokken.
     """
     with open(plank_pad, encoding="utf-8") as f:
-        regels = f.read().splitlines()
+        regels = zonder_commentaar(f.read()).splitlines()
 
     kaartjes: list[Kaartje] = []
     i = 0
@@ -203,8 +213,23 @@ def lees_kaartjes(plank_pad: str) -> list[Kaartje]:
 
         k = Kaartje(titel, href, start + 1)
         k.tekst = lijf
+        k.vak = ".cc-boek-vak" in regels[start]
         kaartjes.append(k)
     return kaartjes
+
+
+def zonder_commentaar(tekst: str) -> str:
+    """Elk `<!-- ... -->` leeg, met zijn regelovergangen bewaard.
+
+    Een commentaar is geen kaartje en geen belofte aan een lezer. Op de Engelse
+    plank staat een voorbeeldkaart in een BEN-notitie ("WANNEER EEN ENGELS
+    OEFENBOEK LANDT"), ingesprongen. Gemeten 14-11-2026: zonder dit las de
+    wachter hem als het kaartje "Psychometrics Practice Book" met een link, en
+    omdat de ingesprongen sluitregel niet telt, slikte hij de echte kaart
+    erna ("The R practice book") in. De regelovergangen blijven staan, zodat
+    elk regelnummer in een melding nog klopt.
+    """
+    return re.sub(r"<!--.*?-->", lambda m: "\n" * m.group(0).count("\n"), tekst, flags=re.S)
 
 
 def boekmap(plank_pad: str, href: str) -> str:
@@ -577,12 +602,137 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
     return bevindingen, len(kaartjes), getoetst
 
 
+# ------------------------------------------------------------------
+# De spiegel (14-11-2026): staat elk boek ook waar de lezer het zoekt?
+# ------------------------------------------------------------------
+# Drie plekken lopen met de Nederlandse plank mee, en geen van de drie werd
+# nagerekend. Op 12-11 kwam Toetsende Statistiek op de Nederlandse plank, en
+# twee dagen lang stond hij niet op de Engelse; niets zei het (site_wegen,
+# 14-11). Ben besliste die dag: de vakken bovenaan, Engels in dezelfde
+# volgorde, en de thuiskaart noemt de vakken.
+#   a. elk kaartje met een link op de Nederlandse plank staat ook op de
+#      Engelse, en in dezelfde volgorde -- vergeleken op het DOEL van de link,
+#      niet op de titel, want die is daar Engels;
+#   b. elk vak-kaartje (.cc-boek-vak) met een link op de Nederlandse plank wordt
+#      gelinkt vanaf de kaart "Oefenboeken" op de Nederlandse thuispagina;
+#   c. idem voor de Engelse plank en de kaart "Practice books" op en/index.qmd.
+# Wat hij NIET ziet: of de tekst op de twee planken hetzelfde zegt, en
+# kaartjes zonder link (OZP 2, STAT 3 -- die mogen in het Engels wegblijven).
+# Een Engels kaartje dat naar een Engels boek wijst, is voor (a) geen
+# afwijking: het staat er naast het Nederlandse, niet in plaats ervan.
+EN_PLANK = "en/workbooks/index.qmd"
+THUIS = "index.qmd"
+EN_THUIS = "en/index.qmd"
+THUISKAART = "cc-card-werkboeken"
+RE_MD_LINK = re.compile(r"\]\(([^)\s]+)[^)]*\)")
+
+
+def doel_van(van: str, href: str) -> str | None:
+    """Een link, zoals hij in `van` staat, als pad vanaf de reporoot.
+
+    `ts/index.html` in `oefenboeken/index.qmd` en `../../oefenboeken/ts/index.html`
+    in `en/workbooks/index.qmd` worden allebei `oefenboeken/ts/index.html`. Een
+    link naar een `.qmd` telt als zijn `.html`, en een map als zijn index.
+    Adressen buiten de site (mailto:, https:) geven None.
+    """
+    href = href.split("#", 1)[0].split("?", 1)[0]
+    if not href or re.match(r"^[a-z][a-z0-9+.-]*:", href) or href.startswith("//"):
+        return None
+    if href.endswith("/"):
+        href += "index.html"
+    pad = os.path.normpath(os.path.join(os.path.dirname(van), href))
+    return pad[:-4] + ".html" if pad.endswith(".qmd") else pad
+
+
+def thuiskaart_links(wortel: str, thuis: str) -> tuple[set[str], str | None]:
+    """(doelen van de links in de kaart THUISKAART, reden-om-niet-te-kunnen-kijken)."""
+    vol = os.path.join(wortel, thuis)
+    if not os.path.isfile(vol):
+        return set(), f"{thuis} bestaat niet"
+    with open(vol, encoding="utf-8") as f:
+        regels = zonder_commentaar(f.read()).splitlines()
+    for i, r in enumerate(regels):
+        if r.lstrip().startswith("::: {.cc-card") and THUISKAART in r:
+            blok = []
+            for r2 in regels[i + 1:]:
+                if re.fullmatch(r":{3,}\s*", r2):
+                    break
+                blok.append(r2)
+            doelen = {doel_van(thuis, h) for h in RE_MD_LINK.findall("\n".join(blok))}
+            return doelen - {None}, None
+    return set(), f"{thuis} heeft geen kaart {{.{THUISKAART}}}"
+
+
+def spiegel(wortel: str, plank: str, en_plank: str, thuis: str, en_thuis: str
+            ) -> tuple[list[Bevinding], str]:
+    """(bevindingen, één regel met wat er gemeten is)."""
+    uit: list[Bevinding] = []
+    nl = [k for k in lees_kaartjes(os.path.join(wortel, plank)) if k.href]
+    nl_doel = [doel_van(plank, k.href) for k in nl]
+    if not nl:
+        # Niets om te spiegelen is geen schone spiegel.
+        return [Bevinding("blind", Kaartje(plank, None, 1),
+                          "geen enkel kaartje met een link -- niets om te spiegelen")], ""
+    if not os.path.isfile(os.path.join(wortel, en_plank)):
+        return [Bevinding("blind", Kaartje(en_plank, None, 1),
+                          f"bestaat niet, dus niet na te gaan of de {len(nl)} boeken van {plank} "
+                          f"er ook staan")], ""
+    en = [k for k in lees_kaartjes(os.path.join(wortel, en_plank)) if k.href]
+    en_doel = [doel_van(en_plank, k.href) for k in en]
+
+    # a. elk boek ook op de Engelse plank, en in dezelfde volgorde
+    for k, d in zip(nl, nl_doel):
+        if d not in en_doel:
+            uit.append(Bevinding("fout", k,
+                f"staat niet op {en_plank} -- geen enkel kaartje daar linkt naar {d}. "
+                f"Zet er een kaart bij, met \"(in Dutch)\" in de titel en hreflang=\"nl\""))
+    # Elk doel één keer, op de plek waar het voor het eerst staat.
+    gedeeld_nl = [d for i, d in enumerate(nl_doel) if d in en_doel and d not in nl_doel[:i]]
+    gedeeld_en = [d for i, d in enumerate(en_doel) if d in nl_doel and d not in en_doel[:i]]
+    if gedeeld_nl != gedeeld_en:
+        # Zelfde verzameling, dus zelfde lengte: er is een eerste plek die verschilt.
+        p = next(i for i, (x, y) in enumerate(zip(gedeeld_nl, gedeeld_en)) if x != y)
+        titel_nl = nl[nl_doel.index(gedeeld_nl[p])].titel
+        uit.append(Bevinding("fout", en[en_doel.index(gedeeld_en[p])],
+            f"staat in de verkeerde volgorde: van de {len(gedeeld_nl)} boeken die op allebei "
+            f"staan, is dit nummer {p + 1} op {en_plank}, en op {plank} is nummer {p + 1} "
+            f"'{titel_nl}' -- de Engelse plank volgt de Nederlandse in dezelfde volgorde "
+            f"(Ben, 14-11-2026)"))
+
+    # b en c. elk vak ook op de thuiskaart
+    gemeten = []
+    for plank_pad, kaartjes, doelen, thuispad in ((plank, nl, nl_doel, thuis),
+                                                  (en_plank, en, en_doel, en_thuis)):
+        vakken = [(k, d) for k, d in zip(kaartjes, doelen) if k.vak]
+        links, reden = thuiskaart_links(wortel, thuispad)
+        if reden:
+            uit.append(Bevinding("blind", Kaartje(thuispad, None, 1),
+                                 f"{reden}, dus niet na te gaan of de thuiskaart de "
+                                 f"{len(vakken)} vakken van {plank_pad} noemt"))
+            continue
+        for k, d in vakken:
+            if d not in links:
+                uit.append(Bevinding("fout", k,
+                    f"is een vak op {plank_pad}, maar de kaart {{.{THUISKAART}}} op {thuispad} "
+                    f"linkt niet naar {d} -- de thuiskaart noemt elk vak (Ben, 14-11-2026)"))
+        gemeten.append(f"{len(vakken)} vak(ken) van {plank_pad} op {thuispad}")
+
+    regel = (f"spiegel: {len(nl)} boek(en) met een link op {plank}, "
+             f"{len(gedeeld_nl)} daarvan ook op {en_plank}"
+             + (", in dezelfde volgorde" if gedeeld_nl == gedeeld_en else "")
+             + (f"; nagelopen: {' en '.join(gemeten)}" if gemeten else ""))
+    return uit, regel
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="toetst de beloftes op de plank")
     ap.add_argument("--plank", default="oefenboeken/index.qmd",
                     help="pad naar de plank, relatief aan de reporoot")
     ap.add_argument("--wortel", default=None, help="reporoot (standaard: die van dit script)")
     ap.add_argument("--stil", action="store_true", help="alleen iets zeggen als er iets mis is")
+    ap.add_argument("--en-plank", default=EN_PLANK, help="de Engelse plank (voor de spiegel)")
+    ap.add_argument("--thuis", default=THUIS, help="de Nederlandse thuispagina (voor de spiegel)")
+    ap.add_argument("--en-thuis", default=EN_THUIS, help="de Engelse thuispagina (voor de spiegel)")
     args = ap.parse_args()
 
     wortel = args.wortel or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -592,6 +742,8 @@ def main() -> int:
         return 3
 
     bevindingen, aantal_kaartjes, getoetst = toets(wortel, args.plank)
+    gespiegeld, spiegelregel = spiegel(wortel, args.plank, args.en_plank, args.thuis, args.en_thuis)
+    bevindingen += gespiegeld
     fouten = [b for b in bevindingen if b.soort == "fout"]
     blind = [b for b in bevindingen if b.soort == "blind"]
     overgeslagen = [b for b in bevindingen if b.soort == "overgeslagen"]
@@ -602,6 +754,10 @@ def main() -> int:
         print(f"plankwacht: {aantal_kaartjes} kaartjes, {getoetst} belofte(s) nagerekend "
               f"tegen de bestanden")
 
+    # De spiegel zegt altijd hoeveel hij zag, ook als alles klopt: een spiegel
+    # die nul boeken vergeleek, mag niet lezen als een spiegel die er nul miste.
+    if spiegelregel and (fouten or blind or overgeslagen or not args.stil):
+        print(f"  {spiegelregel}")
     for b in overgeslagen:
         print(f"  NB    {b.kaartje.titel} (regel {b.kaartje.regel}): {b.regel}")
     for b in fouten:

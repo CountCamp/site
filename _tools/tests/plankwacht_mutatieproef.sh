@@ -114,5 +114,23 @@ proef "hoofdstukken en bijlagen zijn nooit een belofte" \
 proef "een map telt mee ook als het boek er niet naar linkt" \
   'mappen = sorted(d for d in labels if os.path.isdir(os.path.join(vol, d)))|||mappen = sorted(d for d in os.listdir(vol) if re.match(r"\d{2}_", d) and os.path.isdir(os.path.join(vol, d)))
     labels = {d: labels.get(d, []) for d in mappen}'
+# De spiegel (14-11-2026). Op 12-11 ontbrak Toetsende Statistiek twee dagen op de
+# Engelse plank zonder dat iets het zei; elke verslapping hieronder laat dat weer toe.
+proef "de spiegel wordt helemaal niet meegeteld" \
+  '    bevindingen += gespiegeld|||    pass'
+proef "een boek dat op de Engelse plank ontbreekt, telt niet" \
+  '        if d not in en_doel:|||        if False:'
+proef "de volgorde telt niet" \
+  '    if gedeeld_nl != gedeeld_en:|||    if False:'
+proef "de thuiskaart wordt niet nagekeken" \
+  '            if d not in links:|||            if False:'
+proef "een kaart in een commentaar telt als kaart" \
+  '        regels = zonder_commentaar(f.read()).splitlines()|||        regels = f.read().splitlines()'
+proef "geen Engelse plank telt als niets ontbreekt" \
+  '    if not os.path.isfile(os.path.join(wortel, en_plank)):|||    if False:'
+proef "geen thuiskaart telt als goed" \
+  '        if reden:
+            uit.append(Bevinding("blind"|||        if reden and False:
+            uit.append(Bevinding("blind"'
 rm -rf "$M"
 [ "$SLECHT" -eq 0 ] || { echo "mutatieproef: $SLECHT proef/proeven zonder uitslag of zonder beet"; exit 1; }

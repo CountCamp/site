@@ -85,9 +85,47 @@ Er is nog niets te lezen.
 QMD
 }
 
+# Sinds 14-11-2026 kijkt de wachter ook of de Engelse plank en de twee
+# thuiskaarten met de Nederlandse plank meelopen (de spiegel). Een proefrepo
+# zonder die drie bestanden is dan blind (afloop 3), en elke zaak hierboven zou
+# om die reden zakken in plaats van om de zijne. Daarom schrijft zaak() vóór
+# elke run een KLOPPENDE spiegel, afgeleid uit de Nederlandse plank zoals hij
+# op dat moment is. De zaken die de spiegel zelf toetsen (16 en verder) zetten
+# SPIEGEL_LATEN=1 en schrijven hem met de hand.
+spiegel_schrijven() {   # $1 = map
+  python3 - "$1" <<'PY'
+import os, re, sys
+T = sys.argv[1]
+regels = open(os.path.join(T, "oefenboeken/index.qmd"), encoding="utf-8").read().splitlines()
+kaarten = []
+for i, r in enumerate(regels):
+    if not r.lstrip().startswith("::: {.cc-boek"):
+        continue
+    for r2 in regels[i + 1:]:
+        if re.fullmatch(r":{3,}\s*", r2):
+            break
+        m = re.match(r"^#{2,4}\s*\[([^\]]*?)\s*→?\s*\]\(([^)]+)\)", r2.strip())
+        if m:
+            kaarten.append((m.group(1), m.group(2), ".cc-boek-vak" in r))
+            break
+os.makedirs(os.path.join(T, "en/workbooks"), exist_ok=True)
+with open(os.path.join(T, "en/workbooks/index.qmd"), "w", encoding="utf-8") as f:
+    f.write('---\ntitle: "Practice books"\n---\n')
+    for titel, href, vak in kaarten:
+        klas = ".cc-boek .cc-boek-vak" if vak else ".cc-boek"
+        f.write(f"\n::: {{{klas}}}\n### [{titel} (in Dutch) →](../../oefenboeken/{href}){{hreflang=\"nl\"}}\n:::\n")
+for pad, plank, voor in (("index.qmd", "oefenboeken/index.qmd", "oefenboeken/"),
+                         ("en/index.qmd", "workbooks/index.qmd", "../oefenboeken/")):
+    with open(os.path.join(T, pad), "w", encoding="utf-8") as f:
+        f.write(f"---\ntitle: thuis\n---\n\n::: {{.cc-card .cc-card-werkboeken}}\n### [Oefenboeken]({plank})\n")
+        f.write("Volg je een vak? " + ", ".join(f"[{t}]({voor}{h})" for t, h, v in kaarten if v) + ".\n:::\n")
+PY
+}
+
 zaak() {   # $1 = naam, $2 = verwachte afloopcode, $3 = tekst die erin moet staan, $4 = map
   local naam="$1" wil="$2" moet="$3" T="$4"
   local uit code
+  [ -n "${SPIEGEL_LATEN:-}" ] || spiegel_schrijven "$T"
   uit="$(python3 "$WACHT" --wortel "$T" 2>&1)"; code=$?
   local oordeel="goed"
   [ "$code" = "$wil" ] || oordeel="fout"
@@ -412,6 +450,88 @@ ozp_plank "$T15" "Drie hoofdstukken" "Achterin de bijlagen"
 zaak "15e een map zonder link telt niet als hoofdstuk" 0 "1 belofte(s) nagerekend" "$T15"
 rm -rf "$T15"
 
+# ---- zaak 16 t/m 16h: de spiegel (14-11-2026) ----------------------------
+# Op 12-11 kwam Toetsende Statistiek op de Nederlandse plank en twee dagen lang
+# niet op de Engelse; niets zei het. Ben besliste op 14-11: Engels in dezelfde
+# volgorde, en de thuiskaart noemt de vakken. plank_schrijven geeft twee boeken
+# met een link, allebei een vak: Psychometrie en OZP 1 (OZP 2 heeft er geen).
+T16="$(mktemp -d)"; klaarzetten "$T16"
+plank_schrijven "$T16" "19 september 2026" "Vier"
+zaak "16  een kloppende spiegel blijft stil, en zegt wat hij zag" 0 \
+     "spiegel: 2 boek(en) met een link op oefenboeken/index.qmd, 2 daarvan ook op en/workbooks/index.qmd, in dezelfde volgorde" "$T16"
+EN16="$T16/en/workbooks/index.qmd"
+cp "$EN16" "$T16/en_goed.qmd"
+
+# 16b: het geval van 12-11 -- een boek ontbreekt op de Engelse plank
+python3 - "$EN16" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+s = re.sub(r"\n::: \{[^}]*\}\n### \[Oefenboek Psychometrie[^\n]*\n:::\n", "\n", s)
+open(sys.argv[1], "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "16b een boek dat op de Engelse plank ontbreekt, vuurt (TS, 12-11)" 1 \
+     "staat niet op en/workbooks/index.qmd -- geen enkel kaartje daar linkt naar oefenboeken/psychometrie/index.html" "$T16"
+SPIEGEL_LATEN=1 zaak "16c en hij noemt het Nederlandse kaartje bij naam" 1 "FOUT  Oefenboek Psychometrie" "$T16"
+
+# 16d: alle boeken staan er, maar in een andere volgorde
+python3 - "$T16/en_goed.qmd" "$EN16" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+kop, *kaarten = re.split(r"\n(?=::: \{)", s)
+open(sys.argv[2], "w", encoding="utf-8").write("\n".join([kop] + kaarten[::-1]))
+PY
+SPIEGEL_LATEN=1 zaak "16d de Engelse plank in een andere volgorde vuurt" 1 "staat in de verkeerde volgorde" "$T16"
+
+# 16e: een Engels boek NAAST het Nederlandse is geen afwijking
+cp "$T16/en_goed.qmd" "$EN16"
+printf '\n::: {.cc-boek .cc-boek-vak}\n### [Psychometrics Practice Book →](psychometrics/index.html) [R]{.cc-chip}\n:::\n' >> "$EN16"
+printf 'Volg je een vak? [Psychometrics](workbooks/psychometrics/index.html).\n' > "$T16/regel"
+python3 - "$T16/en/index.qmd" "$T16/regel" <<'PY'
+import sys
+s = open(sys.argv[1], encoding="utf-8").read()
+s = s.replace("\n:::\n", "\n" + open(sys.argv[2], encoding="utf-8").read() + ":::\n", 1)
+open(sys.argv[1], "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "16e een Engels boek naast het Nederlandse is geen afwijking" 0 \
+     "2 daarvan ook op en/workbooks/index.qmd, in dezelfde volgorde" "$T16"
+
+# 16f: een voorbeeldkaart in een commentaar is geen kaart. Gemeten 14-11-2026 op
+# de echte Engelse plank: de BEN-notitie "WANNEER EEN ENGELS OEFENBOEK LANDT"
+# draagt er een, ingesprongen. Hier wijst hij naar het ontbrekende boek, zodat
+# een wachter die commentaar leest de spiegel ten onrechte kloppend noemt.
+python3 - "$T16/en_goed.qmd" "$EN16" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+s = re.sub(r"\n::: \{[^}]*\}\n### \[Oefenboek Psychometrie[^\n]*\n:::\n", "\n", s)
+s += ("\n<!-- BEN: zo ziet hij eruit als hij terugkomt:\n"
+      "         ::: {.cc-boek .cc-boek-vak}\n"
+      "         ### [Psychometrie (in Dutch) →](../../oefenboeken/psychometrie/index.html)\n"
+      "         ::: -->\n")
+open(sys.argv[2], "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "16f een kaart in een commentaar telt niet als kaart" 1 \
+     "linkt naar oefenboeken/psychometrie/index.html" "$T16"
+
+# 16g en 16h: de thuiskaarten
+cp "$T16/en_goed.qmd" "$EN16"
+spiegel_schrijven "$T16"
+python3 - "$T16/index.qmd" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+s = re.sub(r",? ?\[Oefenboek OZP 1\]\([^)]*\)", "", s)
+open(sys.argv[1], "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "16g een vak dat de thuiskaart niet noemt, vuurt" 1 \
+     "op index.qmd linkt niet naar oefenboeken/ozp1/index.html" "$T16"
+spiegel_schrijven "$T16"; rm "$T16/en/index.qmd"
+SPIEGEL_LATEN=1 zaak "16h geen Engelse thuispagina heet blind, niet goed" 3 "en/index.qmd bestaat niet" "$T16"
+
+# 16i: geen Engelse plank heet blind, niet goed
+spiegel_schrijven "$T16"; rm "$EN16"
+SPIEGEL_LATEN=1 zaak "16i geen Engelse plank heet blind, niet goed" 3 \
+     "en/workbooks/index.qmd (regel 1): bestaat niet" "$T16"
+rm -rf "$T16"
+
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op
 # 18-8-2026 gebeurd met zeven mechanismen tegelijk: alle zelftests groen, geen
@@ -442,6 +562,9 @@ cat > "$T7/oefenboeken/geteld/index.html" <<'HTML'
 </head><body><p>een bladzij die geteld wordt</p></body></html>
 HTML
 plank_schrijven "$T7" "19 september 2026" "Vier"
+# De spiegel (14-11-2026) hoort er gecommit bij: --productie stopt bij
+# ongecommit werk, en zonder spiegel staat de wachter blind.
+spiegel_schrijven "$T7"
 git -C "$T7" add -A
 git -C "$T7" commit -qm "de plank en het gereedschap"
 git -C "$BLOOT" init -q --bare
