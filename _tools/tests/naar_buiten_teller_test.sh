@@ -21,6 +21,10 @@
 # ============================================================
 set -uo pipefail
 cd "$(dirname "$0")/../.."
+# Welk naar_buiten.sh er geproefd wordt. Standaard het echte; de mutatieproef
+# (naar_buiten_poort_mutatieproef.sh) geeft een verminkte kopie mee, zodat hij
+# het echte bestand nooit hoeft aan te raken.
+NAAR_BUITEN="${NAAR_BUITEN:-_tools/naar_buiten.sh}"
 M="$(mktemp -d)"
 trap 'rm -rf "$M"' EXIT
 gezakt=0
@@ -35,7 +39,7 @@ getoetst=0
 nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
   local r="$M/$1"
   mkdir -p "$r/_tools"
-  cp _tools/naar_buiten.sh "$r/_tools/"
+  cp "$NAAR_BUITEN" "$r/_tools/naar_buiten.sh"
   printf 'print("plankwacht - nagemaakt, alles in orde")\n' > "$r/_tools/plankwacht.py"
   # Sinds 1-10-2026 draait er een DERDE poort: de doorstuurwachter. Zelfde
   # reden als bij de plankwacht hierboven -- deze toets meet de tellerpoort, en
@@ -189,7 +193,7 @@ fi
 #     met de echte tellerwacht. Zaak 5g kijkt daarna of beide wegen hem ook
 #     echt aanroepen; zonder die zaak bewijst de rest alleen dat de functie
 #     bestaat.
-POORT="$(sed -n '/^gebouwde_tellers_nakijken() {/,/^}/p' _tools/naar_buiten.sh)"
+POORT="$(sed -n '/^gebouwde_tellers_nakijken() {/,/^}/p' "$NAAR_BUITEN")"
 getoetst=$((getoetst + 1))
 if [ "$(printf '%s\n' "$POORT" | wc -l | tr -d ' ')" -gt 5 ]; then
   echo "  ok    5  de functie staat in naar_buiten.sh ($(printf '%s\n' "$POORT" | wc -l | tr -d ' ') regels)"
@@ -260,7 +264,7 @@ fi
 # Een poort die bestaat maar nergens hangt, is precies de faalvorm van
 # akkoord_hek.py, dat zes dagen nergens bedraad stond.
 getoetst=$((getoetst + 1))
-BEDRADING="$(python3 - _tools/naar_buiten.sh <<'PY'
+BEDRADING="$(python3 - "$NAAR_BUITEN" <<'PY'
 import re, sys
 s = open(sys.argv[1], encoding="utf-8").read()
 def tak(naam):
