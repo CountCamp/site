@@ -982,7 +982,78 @@ def cmd_bronnen(a) -> int:
         # Geen weigering: een vertaling van gisteren is beter dan geen. Wel hardop,
         # want de lezer van de Engelse bladzij leest dan iets wat het Nederlands niet meer zegt.
         zeg("    BIJ TE WERKEN: " + v)
+    na_manifest()
     return 1 if fout else 0
+
+
+# Naast zijn eigen .qmd bepaalt dit bestand elke Engelse bladzij die Quarto bouwt:
+# het menu en de voet staan erin. Verandert het na het manifest, dan loopt elke
+# gecommitte en/*.html achter, net als bij een eigen .qmd.
+NA_MANIFEST_OOK = ["_quarto-en.yml"]
+
+
+def na_manifest(manifest: str = MANIFEST) -> list[str]:
+    """Is een Engelse bron veranderd NA de bouw die het manifest beschrijft?
+
+    WAAROM (14-11-2026). De pers van die dag (bd2ff08) veranderde en/index.qmd en
+    bouwde en/index.html niet opnieuw. Live stond een zin die de bron al kwijt
+    was, een dag lang, en `publiceer_en.sh --nakijken` zei "in orde": die keurt
+    de HTML die er staat, niet of die nog bij zijn bron hoort. Het manifest wist
+    het wel -- bron_commit=0c3a896, en de .qmd veranderde daarna.
+
+    Vergeleken op INHOUD (git diff tegen bron_commit, de werkkopie meegerekend),
+    niet op de klok: een checkout zet elke bestandstijd op nu. Alleen een
+    waarschuwing, zoals BIJ TE WERKEN: wat er in en/ staat, is wel gekeurd, het
+    is alleen ouder dan zijn bron. Een volle run van publiceer_en.sh bouwt het
+    opnieuw. Een commentaar dat alleen een MIEKE-notitie verandert, laat hem ook
+    afgaan -- de HTML verandert dan niet, maar dat zie je pas na het bouwen.
+    """
+    rel_m = os.path.relpath(manifest, REPO)
+    dekt_niet = ("dekt niet: _quarto.yml, styles.css, taalparen.tsv, taalwissel en de bijlagen uit het lab "
+                 "(en/book/, en/toys/, en/workbooks/<naam>/) -- die kunnen een Engelse bladzij ook veranderen")
+    if not os.path.isfile(manifest):
+        zeg(f"  na het manifest: KON NIET KIJKEN -- {rel_m} bestaat niet, dus niet na te gaan of en/ bij zijn bronnen hoort")
+        return []
+    kop = lees(manifest)
+    m = re.search(r"bron_commit=([0-9a-f]{7,40}) bron_schoon=(ja|nee)", kop)
+    if not m:
+        zeg(f"  na het manifest: KON NIET KIJKEN -- {rel_m} noemt geen bron_commit")
+        return []
+    c, schoon = m.groups()
+    if subprocess.run(["git", "cat-file", "-e", f"{c}^{{commit}}"], cwd=REPO, capture_output=True).returncode != 0:
+        zeg(f"  na het manifest: KON NIET KIJKEN -- bron_commit {c} bestaat niet in deze repo (ondiepe kloon?)")
+        return []
+    bronnen = sorted(os.path.relpath(os.path.join(dp, f), REPO)
+                     for dp, _d, fs in os.walk(os.path.join(REPO, "en")) for f in fs if f.endswith(".qmd"))
+    achter = []
+    for rel in bronnen + [p for p in NA_MANIFEST_OOK if os.path.isfile(os.path.join(REPO, p))]:
+        wat = f"{rel[:-4]}.html" if rel.endswith(".qmd") else "elke Quarto-bladzij onder en/ (menu en voet)"
+        if subprocess.run(["git", "cat-file", "-e", f"{c}:{rel}"], cwd=REPO, capture_output=True).returncode != 0:
+            achter.append(f"{wat}: {rel} is nieuw sinds het manifest ({c}) en is nog nooit gekeurd gebouwd")
+            continue
+        r = subprocess.run(["git", "diff", "--quiet", c, "--", rel], cwd=REPO, capture_output=True)
+        if r.returncode == 0:
+            continue
+        if r.returncode != 1:
+            achter.append(f"{wat}: git diff {c} -- {rel} liep vast -- kon niet kijken")
+            continue
+        log = subprocess.run(["git", "log", "--format=%h %ad %s", "--date=short", f"{c}..HEAD", "--", rel],
+                             cwd=REPO, capture_output=True, text=True).stdout.strip().splitlines()
+        hoe = (f"{len(log)} keer gecommit na {c}, laatst: {log[0][:90]}" if log
+               else f"ongecommit veranderd sinds {c}")
+        achter.append(f"{wat}: gebouwd van {rel}@{c} (het manifest), en {rel} veranderde daarna -- {hoe}")
+    zeg(f"  na het manifest: {len(bronnen)} Engelse bron(nen) en {', '.join(NA_MANIFEST_OOK)} vergeleken met "
+        f"bron_commit={c}, {len(achter)} veranderd sinds die bouw")
+    if schoon == "nee":
+        zeg(f"    LET OP: het manifest zegt bron_schoon=nee -- die bouw had ongecommit werk, dus {c} is niet "
+            f"precies wat er gebouwd werd; de vergelijking kan vals alarm geven of iets missen")
+    for a in achter:
+        zeg("    ACHTER OP ZIJN BRON: " + a)
+    if achter:
+        zeg("    -> bash _tools/publiceer_en.sh bouwt ze opnieuw. Geen weigering: wat er in en/ staat, is gekeurd, "
+            "alleen ouder dan zijn bron.")
+    zeg(f"    ({dekt_niet})")
+    return achter
 
 
 # ---------------------------------------------------- foto / vergelijk ----

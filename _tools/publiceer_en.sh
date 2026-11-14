@@ -134,6 +134,12 @@
 #   * Of het Nederlands sinds de vertaling bewoog: dat MELDT stap 0 (BIJ TE
 #     WERKEN) maar houdt niet tegen — een vertaling van gisteren is beter dan
 #     geen, en de keus om haar te vervangen is aan een mens.
+#   * Of de gecommitte en/*.html nog bij hun .qmd horen: dat MELDT stap 0 ook
+#     (ACHTER OP ZIJN BRON, sinds 14-11-2026), door elke en/*.qmd en
+#     _quarto-en.yml te vergelijken met bron_commit uit het manifest. Ook dat
+#     houdt niet tegen. Aanleiding: en/index.html stond een dag live op een
+#     tekst die en/index.qmd al kwijt was, en --nakijken zei "in orde".
+#     Getoetst: _tools/tests/en_na_manifest_test.sh.
 #   * Hangende bouw: er is geen tijdslimiet; quarto zelf breekt af bij fouten.
 #
 # Ontstaan: spoor en_schil, 24-10-2026. Het waarom van de opzet (eigen en/-boom
