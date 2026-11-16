@@ -1028,8 +1028,8 @@ window.Quarto = {
 <p>Teken twee cirkels die elkaar deels overlappen. De ene is alles wat <code>sekse</code> van het gewicht kan verklaren, de andere alles wat <code>soort</code> kan verklaren. In het overlapstuk zit variantie waar ze allebei aanspraak op maken — en iemand moet beslissen wie hem krijgt.</p>
 <p><strong>Type I geeft hem aan wie het eerst genoemd wordt.</strong> Schrijf je <code>sekse * soort</code>, dan pakt sekse het overlapstuk en houdt soort alleen wat overblijft; schrijf je <code>soort * sekse</code>, dan is het andersom. Je uitkomst hangt dus af van je typvolgorde.</p>
 <p><strong>Type III geeft hem aan niemand.</strong> Elke factor krijgt alleen wat híj als enige kan verklaren. Dat is onafhankelijk van de volgorde, en dat is wat we hier aanhouden — het is ook wat je bij de meeste opleidingen en in de meeste tijdschriften tegenkomt.</p>
-<p>Dan de tweede regel, die met <code>contr.sum</code>. Die gaat <strong>niet over je data</strong> maar over hoe R je groepen in getallen omzet. Standaard neemt R één groep als ijkpunt en legt de andere daarnaast — precies de nul-of-één-codering die je bij <code>gentoo</code> zelf met de hand maakte. Type III heeft een andere codering nodig: eentje waarin de groepen symmetrisch om nul liggen in plaats van allemaal ten opzichte van één ijkgroep. <code>contr.sum</code> is die codering. (<code>contr.poly</code> hoort er in dezelfde regel bij voor geordende factoren; die heb je hier niet, maar R wil dat je allebei noemt.)</p>
-<p><strong>Je hoeft niet te snappen hóé die codering werkt.</strong> Wat je moet onthouden is de volgorde van drie handelingen: aanzetten, rekenen, terugzetten.</p>
+<p>Dan de tweede regel, die met <code>contr.sum</code>. Die gaat <strong>niet over je data</strong> maar over hoe R je groepen in getallen omzet — en <strong>je hoeft niet te snappen hóé die omzetting werkt</strong>; de rest van deze alinea is achtergrond. Standaard neemt R één groep als ijkpunt en legt de andere daarnaast — precies de nul-of-één-codering die je bij <code>gentoo</code> zelf met de hand maakte. Type III heeft een andere codering nodig: eentje waarin de groepen symmetrisch om nul liggen in plaats van allemaal ten opzichte van één ijkgroep. <code>contr.sum</code> is die codering. (<code>contr.poly</code> hoort er in dezelfde regel bij voor geordende factoren; die heb je hier niet, maar R wil dat je allebei noemt.)</p>
+<p>Wat je moet onthouden is de volgorde van drie handelingen: aanzetten, rekenen, terugzetten. En één verschil met 9.4: daar las je de toets af met <code>summary(aov(...))</code>, en dat geeft altijd type I. Voor type III maak je het model met <code>lm()</code> en geef je het aan <code>car::Anova()</code>.</p>
 <div class="rcode callout callout-style-default callout-note callout-titled" title="In R · de tweeweg-ANOVA">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1043,23 +1043,28 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. aanzetten -- de codering die type III nodig heeft</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts =</span> <span class="fu">c</span>(<span class="st">"contr.sum"</span>, <span class="st">"contr.poly"</span>))</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. rekenen</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>model.sekse.x.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> sekse <span class="sc">*</span> soort, <span class="at">data =</span> ps)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F en p van sekse: car::Anova() → 1  311.838  &lt; 2.2e-16</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F en p van soort: car::Anova() → 2  746.924  &lt; 2.2e-16</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F en p van sekse:soort: car::Anova() → 2  8.757  0.0001973</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Df van Residuals: car::Anova() → 327</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(model.sekse.x.soort, <span class="at">type =</span> <span class="dv">3</span>)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># eta.sq van sekse, soort en sekse:soort: lsr::etaSquared() → 0.138675401  0.664319630  0.007788532</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>lsr<span class="sc">::</span><span class="fu">etaSquared</span>(model.sekse.x.soort, <span class="at">type =</span> <span class="dv">3</span>)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. terugzetten voor de volgende analyse</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts =</span> <span class="fu">c</span>(<span class="st">"contr.treatment"</span>, <span class="st">"contr.poly"</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. rekenen -- car en lsr zijn losse pakketten; heb je ze nog niet:</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    install.packages(c("car", "lsr")), eenmalig</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>model.sekse.x.soort <span class="ot">&lt;-</span> <span class="fu">lm</span>(gewicht <span class="sc">~</span> sekse <span class="sc">*</span> soort, <span class="at">data =</span> ps)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F en p van sekse: car::Anova() → 1  311.838  &lt; 2.2e-16</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F en p van soort: car::Anova() → 2  746.924  &lt; 2.2e-16</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Df, F en p van sekse:soort: car::Anova() → 2  8.757  0.0001973</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Df van Residuals: car::Anova() → 327</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(model.sekse.x.soort, <span class="at">type =</span> <span class="dv">3</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># twee kolommen: eta.sq is de gewone η² (de maat uit 9.4), eta.sq.part de</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># partiële. Wat het verschil is, staat onderaan deze sectie.</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co"># eta.sq van sekse, soort en sekse:soort: lsr::etaSquared() → 0.138675401  0.664319630  0.007788532</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># eta.sq.part van sekse, soort en sekse:soort: lsr::etaSquared() → 0.48813314  0.82041344  0.05083682</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>lsr<span class="sc">::</span><span class="fu">etaSquared</span>(model.sekse.x.soort, <span class="at">type =</span> <span class="dv">3</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. terugzetten voor de volgende analyse</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">contrasts =</span> <span class="fu">c</span>(<span class="st">"contr.treatment"</span>, <span class="st">"contr.poly"</span>))</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
-<p>Vergeet je die eerste regel, dan rekent R gewoon door en geeft je andere getallen, zonder een kik. Kijk maar wat er met de <em>F</em> voor sekse gebeurt onder vier varianten van dezelfde data:</p>
+<p>Met die drie handelingen krijg je in R precies wat SPSS en JASP uit zichzelf geven: dezelfde <em>F</em>-waarden voor sekse, soort en de interactie (311.838, 746.924 en 8.757) en dezelfde partiële η² — R zet er alleen meer decimalen achter.</p>
+<p>Vergeet je de regel met <code>contr.sum</code>, dan rekent R gewoon door en geeft je andere getallen, zonder een kik. Kijk maar wat er met de <em>F</em> voor sekse gebeurt onder vier varianten van dezelfde data:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1113,6 +1118,46 @@ window.Quarto = {
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de eerste moet "contr.sum" zijn, niet "contr.treatment"</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"contrasts"</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <p>En vergelijk je je uitkomst ooit met die van een medestudent, kijk dan éérst naar de interactie. Komt die overeen terwijl de hoofdeffecten verschillen, dan heeft niemand zich verrekend — dan heeft een van jullie tweeën een andere kwadratensom gebruikt. Wélke van de twee, zegt die vergelijking je niet; daarvoor moeten jullie allebei opschrijven wat je gedaan hebt. Vandaar dat het in de rapportage hoort.</p>
+<p><strong>En de effectgrootte?</strong> Een η² is een breuk. Bovenin staat hier het stuk van het gewicht dat alleen sekse verklaart: het type III-stuk, zonder de overlap met soort. Voor wat er ónderin hoort, bestaan twee antwoorden — en daarom twee maten.</p>
+<p>In <a href="../20_blokken/blok_anova.html">Oefening 9.4</a> stond sekse alleen in het model, op dezelfde 333 pinguïns, en kwam op η² = .18: zijn stuk, overlap inbegrepen, gedeeld door álle spreiding in gewicht. Deel je hier het kleinere type III-stuk ook door alles, dan krijg je de <strong>gewone η²</strong>: .14. Zeg dat eens hardop: <em>“sekse verklaart 14% van het verschil in gewicht.”</em> Dan vraagt iemand: en de andere 86%, is dat onverklaard? Nee — daar zitten de soort en de interactie ook nog in. Soms wil je alleen weten hoe groot een effect is naast wat níémand verklaart. Dat is de <strong>partiële η²</strong>: het stuk van sekse, gedeeld door dat stuk plus het onverklaarde. Dan komt sekse op .49.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>boven de streep</th>
+<th>onder de streep</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9.4, sekse alleen</td>
+<td>het stuk van sekse, overlap inbegrepen</td>
+<td>alle spreiding in gewicht</td>
+<td>.18</td>
+</tr>
+<tr class="even">
+<td>hier, de gewone η²</td>
+<td>het stuk dat alléén sekse verklaart</td>
+<td>alle spreiding in gewicht</td>
+<td>.14</td>
+</tr>
+<tr class="odd">
+<td>hier, de partiële η²</td>
+<td>het stuk dat alléén sekse verklaart</td>
+<td>dat stuk plus het onverklaarde</td>
+<td>.49</td>
+</tr>
+</tbody>
+</table>
+<p>Van .18 naar .14 krimpt dus de teller, en van .14 naar .49 de noemer. Bij één groepering, zoals in 9.4, vallen de twee samen: daar ís het stuk van de groepering plus het onverklaarde alle spreiding, dus de twee noemers zijn hetzelfde getal. Bij twee groeperingen of meer is de partiële altijd groter,<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> en nu zie je waarom: zijn noemer laat weg wat de andere groeperingen verklaren.</p>
+<p>Je moet ze dus allebei kennen, want je komt ze allebei tegen. SPSS drukt alleen de partiële af, JASP heeft voor elk een eigen vinkje, en R zet ze in twee kolommen naast elkaar. Bij een tweeweg-ANOVA is de partiële de gewoonte, en die staat ook in de modelzin verderop. Eén ding moet je daarvoor loslaten: de partiële tellen niet op tot 1, want elk heeft zijn eigen noemer. En de gewone hier ook niet helemaal: .14 + .66 + .01 = .81, plus .15 die niemand verklaart, is .96. De 4% die ontbreekt is het overlapstuk dat type III aan niemand geeft.</p>
 <div class="kicker">
 <p>schud het</p>
 </div>
@@ -1227,8 +1272,8 @@ window.Quarto = {
 <p><strong>d)</strong> Schrijf de nulhypothese voor de <strong>interactie</strong> voluit op, in woorden én in symbolen. (één zin, en die ook in symbolen)</p>
 <p><strong>e)</strong> Toets de interactie. (rapporteer <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>)</p>
 <p><strong>f)</strong> Rapporteer nu ook de twee hoofdeffecten. (per hoofdeffect <em>F</em>(<em>df</em><sub>1</sub>, <em>df</em><sub>2</sub>) en <em>p</em>)</p>
-<p><strong>g)</strong> Reken de drie effectgroottes uit met <code>lsr::etaSquared(model.snavel, type = 3)</code>. Welke van de drie doet het meeste werk? (drie η²’s)</p>
-<p><strong>h)</strong> Laat de contrast-regel nu eens weg en draai <code>car::Anova(..., type = 3)</code> opnieuw. Welke <em>F</em> verandert er, en welke niet? (twee getallen voor sekse, één voor de interactie, en één zin over waaróm de interactie stilstaat)</p>
+<p><strong>g)</strong> Reken de drie effectgroottes uit met <code>lsr::etaSquared(model.snavel, type = 3)</code> en lees allebei de kolommen. Welke van de drie doet het meeste werk? En in welke kolom staan de grootste getallen? (drie gewone en drie partiële, op twee decimalen, en één zin)</p>
+<p><strong>h)</strong> Laat de contrast-regel nu eens weg: maak het model opnieuw met <code>lm()</code> — de codering wordt vastgelegd op het moment dat je het model maakt — en draai <code>car::Anova(..., type = 3)</code> opnieuw. Welke <em>F</em> verandert er, en welke niet? (twee getallen voor sekse, één voor de interactie, en één zin over waaróm de interactie stilstaat)</p>
 <p><strong>i)</strong> Teken het met <code>interaction.plot(ps$soort, ps$sekse, ps$snavellengte, xlab = "soort", ylab = "gemiddelde snavellengte (mm)", trace.label = "sekse")</code> en leg het naast het eerdere plaatje van het gewicht. (twee plaatjes, en wat je aan de lijnen ziet)</p>
 <p><strong>j)</strong> Waarom moet je in je rapportagezin schrijven dát het type III-kwadratensommen zijn? (één zin, met het getal uit h) erin)</p>
 <p><strong>k)</strong> Bij het gewicht wás er een interactie, bij de snavellengte niet — op precies dezelfde 333 pinguïns, met precies dezelfde twee groeperingen. Wat zegt dat over waar een interactie in zit?</p>
@@ -1277,7 +1322,34 @@ window.Quarto = {
 <p><strong>d)</strong> De nulhypothese: het sekseverschil in snavellengte is bij alle drie de soorten even groot. In symbolen: <span class="math inline">\(H_0:\ \mu_{\text{man},j} - \mu_{\text{vrouw},j}\)</span> is hetzelfde voor elke <span class="math inline">\(j\)</span>, waarin <span class="math inline">\(j\)</span> een aftelnummer voor de soort is. Je mag het ook schrijven als <em>alle interactietermen in de populatie zijn nul</em>; één van de twee is genoeg.</p>
 <p><strong>e)</strong> <em>F</em>(2, 327) = 2.28, <em>p</em> = .103. Niet significant: deze keer lopen de lijnen zo goed als parallel.</p>
 <p><strong>f)</strong> Sekse <em>F</em>(1, 327) = 208.06, <em>p</em> &lt; .001. Soort <em>F</em>(2, 327) = 650.21, <em>p</em> &lt; .001. Allebei ruimschoots.</p>
-<p><strong>g)</strong> η² = .11 voor sekse, <strong>.70</strong> voor soort en .00 voor de interactie. De soort doet vrijwel al het werk; dat mannetjes langere snavels hebben komt daar als een keurig parallelle laag bovenop.</p>
+<p><strong>g)</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>gewone η²</th>
+<th>partiële η²</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sekse</td>
+<td>.11</td>
+<td>.39</td>
+</tr>
+<tr class="even">
+<td>soort</td>
+<td><strong>.70</strong></td>
+<td><strong>.80</strong></td>
+</tr>
+<tr class="odd">
+<td>interactie</td>
+<td>.00</td>
+<td>.01</td>
+</tr>
+</tbody>
+</table>
+<p>De soort doet in allebei de kolommen veruit het meeste werk; dat mannetjes langere snavels hebben komt daar als een keurig parallelle laag bovenop. En in elke rij is de partiële groter dan de gewone, want zijn noemer laat weg wat de andere twee termen verklaren. Tel de partiële maar eens op: .39 + .80 + .01 = 1.20. Boven de 1 — want elk heeft zijn eigen noemer.</p>
 <p><strong>h)</strong> Voor sekse: <strong>208.06</strong> mét de contrast-regel en <strong>66.81</strong> zonder — minder dan een derde. Voor de interactie in allebei de gevallen <strong>2.28</strong>. De interactie staat stil omdat hij als laatste komt, wat je ook doet: er valt voor hem niets meer te verdelen. Precies wat je bij het gewicht in de vier-varianten-tabel zag.</p>
 <p><strong>i)</strong> Bij de snavellengte lopen de twee lijnen zo goed als parallel: overal ongeveer vier millimeter tussen de vrouwtjes en de mannetjes. Bij het gewicht liepen ze zichtbaar uiteen — bij de Gentoo’s stond het sekseverschil veel wijder open dan bij de Chinstraps. Hoogte tegenover steilheid, en hier is het alleen hoogte.</p>
 <p><strong>j)</strong> Omdat dezelfde data zonder die vermelding niet na te rekenen is: je kreeg bij h) 208.06 en 66.81 op precies dezelfde 333 pinguïns. Wie niet weet welke van de twee je gebruikte, kan je <em>F</em> niet reproduceren en dus ook niet controleren.</p>
@@ -1316,11 +1388,12 @@ window.Quarto = {
 </blockquote>
 <p><strong>Twee groeperingen tegelijk:</strong></p>
 <blockquote class="blockquote">
-<p>Om te onderzoeken of het effect van sekse op gewicht afhangt van de soort, voerden we bij 333 pinguïns een tweeweg-variantieanalyse uit met sekse en soort als factoren (type III-kwadratensommen). De interactie was significant, <em>F</em>(2, 327) = 8.76, <em>p</em> &lt; .001, η² = .01: het sekseverschil was groter bij de Gentoo’s (805.09 g) dan bij de Chinstraps (411.76 g). Beide hoofdeffecten waren eveneens significant, voor sekse <em>F</em>(1, 327) = 311.84, <em>p</em> &lt; .001, η² = .14, en voor soort <em>F</em>(2, 327) = 746.92, <em>p</em> &lt; .001, η² = .66.</p>
+<p>Om te onderzoeken of het effect van sekse op gewicht afhangt van de soort, voerden we bij 333 pinguïns een tweeweg-variantieanalyse uit met sekse en soort als factoren (type III-kwadratensommen). De interactie was significant, <em>F</em>(2, 327) = 8.76, <em>p</em> &lt; .001, partiële η² = .05: het sekseverschil was groter bij de Gentoo’s (805.09 g) dan bij de Chinstraps (411.76 g). Beide hoofdeffecten waren eveneens significant, voor sekse <em>F</em>(1, 327) = 311.84, <em>p</em> &lt; .001, partiële η² = .49, en voor soort <em>F</em>(2, 327) = 746.92, <em>p</em> &lt; .001, partiële η² = .82.</p>
 </blockquote>
 <p>Kijk wat er cursief staat en wat niet. Alléén de symbolen <em>F</em> en <em>p</em> hellen; η² is een Griekse letter en blijft rechtop, en de gewone woorden en de gewichtsgetallen ook. De statistieken krijgen <strong>twee decimalen</strong>, APA-precies, terwijl de lopende tekst hierboven gerust rondde (“ruim zeshonderd gram”) voor de intuïtie. Een <em>p</em> die kleiner is dan .001 schrijf je niet uit maar als <em>p</em> &lt; .001, en zonder nul ervoor. Alles staat in de verleden tijd, want je vertelt wat er gevónden werd, en beide zinnen staan op eigen benen: wie er één uit dit blok tilt, weet nog steeds wie er gemeten werd, wat er gemeten werd, en waar de interactie zat.</p>
 <p>In geen van beide zinnen staat welk programma je gebruikt hebt. Dat is met opzet: een methodezin zegt wát je gedaan hebt, niet welke knop je hebt aangeklikt of welke regel je hebt getypt. Zag jij zelf maar één tabel in plaats van twee modellen? Dan legde je programma die twee voor je naast elkaar, en het getal is hetzelfde. Twee onderzoekers die dezelfde pinguïns dezelfde vraag stellen, hebben niet twee verschillende methoden gebruikt — en precies díé verwarring hoort een methodesectie weg te nemen.</p>
 <p>Merk ook op dat de tweede zin zégt dat het type III-kwadratensommen zijn. Dat is geen pronken met vaktaal — je zag hierboven dat dezelfde data vier verschillende <em>F</em>-waarden kan opleveren, dus zonder die vermelding kan niemand jouw getal narekenen.</p>
+<p>Om dezelfde reden staat het woord partiële erbij: zonder dat woord weet je lezer niet of je met sekse de .49 bedoelt of de gewone .14.</p>
 <p>Jouw beurt: schrijf zelf de rapportage-zin voor de taak hierboven — de snavellengte. Die interactie was juist níét significant (<em>F</em>(2, 327) = 2.28, <em>p</em> = .10), en ook een nul-vondst rapporteer je netjes op: dat het sekseverschil in snavellengte bij alle drie de soorten ongeveer even groot was, is een echt resultaat. De modelzinnen hierboven mag je lenen; hardop voorlezen mag ook.</p>
 </div>
 </div>
@@ -1506,6 +1579,7 @@ window.Quarto = {
 
 <ol>
 <li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via het R-pakket <code>palmerpenguins</code> (CC0). Alle getallen in dit blok zijn op die échte data nagerekend.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Voor de volledigheid, precies gezegd: groter óf gelijk. Gelijk zijn ze alleen als de andere termen in het model samen niets van het gewicht verklaren — dan valt er uit de noemer niets weg. Met echte data kom je dat zo goed als nooit tegen.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
