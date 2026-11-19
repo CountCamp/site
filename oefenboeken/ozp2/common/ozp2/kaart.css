@@ -1,0 +1,98 @@
+/* De kaart: twaalf toetsen bij zeven stappen (index.qmd) en de toetsentabel
+   in thema 11. Zo'n tabel past op geen enkele telefoon; de wrapper laat hem
+   zijdelings schuiven en houdt de eerste kolom (de naam van de toets) en de
+   kopregel op hun plek. Geladen via _metadata.yml, ná countcamp.css en
+   ozp2.css. Spoor ozp2_kaart, 18-11-2026. */
+
+.kaart-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.8rem 0 1.6rem;
+  border: 1px solid #d5d9e0;
+  border-radius: 6px;
+  background: #fff;
+}
+.kaart-scroll table {
+  min-width: 96rem;          /* zeven stappen krijgen elk ruimte; smaller = schuiven */
+  width: max-content;
+  max-width: none;
+  font-size: 0.82rem;
+  border-collapse: collapse;
+  margin: 0;
+  line-height: 1.35;
+}
+.kaart-scroll th,
+.kaart-scroll td {
+  vertical-align: top;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid #e3e6eb;
+  min-width: 11rem;
+  max-width: 17rem;
+}
+.kaart-scroll thead th {
+  position: sticky;
+  top: 0;
+  background: #eef1f6;
+  color: #1f2a3a;
+  font-weight: 600;
+  z-index: 2;
+  border-bottom: 2px solid #c3c8d2;
+}
+.kaart-scroll th:first-child,
+.kaart-scroll td:first-child {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 1;
+  min-width: 10rem;
+  max-width: 12rem;
+  font-weight: 600;
+  box-shadow: 2px 0 0 #e3e6eb;
+}
+.kaart-scroll thead th:first-child {
+  z-index: 3;
+  background: #eef1f6;
+}
+.kaart-scroll tbody tr:nth-child(even) td { background: #fafbfc; }
+.kaart-scroll tbody tr:nth-child(even) td:first-child { background: #fafbfc; }
+
+/* De verwijzing naar het formuleblad of de SPSS-cel: klein en grijs, zodat de
+   stap zelf vooraan blijft staan. */
+.kaart-scroll .eq {
+  display: block;
+  color: #6b7280;
+  font-size: 0.74rem;
+  margin-top: 0.2rem;
+}
+.kaart-scroll code {
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+/* Op een smal scherm één regel boven de tabel die zegt dat er meer is. */
+.kaart-scroll::before {
+  content: "Schuif opzij voor de rest van de kaart →";
+  display: none;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.78rem;
+  color: #4b5566;
+  background: #f6f7fa;
+  border-bottom: 1px solid #e3e6eb;
+}
+@media (max-width: 1100px) {
+  .kaart-scroll::before { display: block; }
+}
+
+/* De keuzetabel in thema 11: rij = de onafhankelijke kant, kolom = mooi of
+   lelijk. De rijnaam mag gewoon afbreken; hij staat vet. */
+.ladder table { font-size: 0.9rem; width: 100%; }
+.ladder td:first-child { font-weight: 600; }
+.ladder th { vertical-align: bottom; }
+/* Een toetsnaam als "Wilcoxon-rangtekentoets" breekt anders niet, en op 390 px
+   duwt hij de tabel 13 px uit beeld (telefoon_meet.py, 18-11-2026). */
+.ladder td, .ladder th { overflow-wrap: anywhere; }
+
+/* Het raster van Quarto laat een blok met overflow soms de kolom oprekken in
+   plaats van scrollen (grid-item min-width: auto). Nul erop, dan scrollt de
+   kaart binnen zijn kolom. */
+#quarto-document-content, main.content { min-width: 0; }
