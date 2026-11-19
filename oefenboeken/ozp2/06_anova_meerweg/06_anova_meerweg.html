@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Thema 6 · Meerweg-ANOVA: twee factoren tegelijk – Oefenboek OZP 2</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../07_regressie_enkelvoudig/07_regressie_enkelvoudig.html" rel="next">
+<link href="../05_kruskal_wallis/05_kruskal_wallis.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../common/styles/countcamp.css">
+<link rel="stylesheet" href="../common/ozp2/ozp2.css">
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../06_anova_meerweg/06_anova_meerweg.html">Deel 3 · Twee factoren</a></li><li class="breadcrumb-item"><a href="../06_anova_meerweg/06_anova_meerweg.html">Thema 6 · Meerweg-ANOVA: twee factoren tegelijk</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Oefenboek bij Onderzoekspracticum 2</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Schakel leesmodus">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar CountCamp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Start</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 0 · Fundament</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00_fundament/00_fundament.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het ritueel en de toetskeuze</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 1 · Twee groepen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_t_toetsen/01_t_toetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 1 · <em>t</em>-toetsen: gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_rangtoetsen/02_rangtoetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 2 · Rangtoetsen: Wilcoxon</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 2 · Meer dan twee groepen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03_anova_eenweg/03_anova_eenweg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 3 · Eenweg-ANOVA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04_anova_vergelijken/04_anova_vergelijken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 4 · Eenweg-ANOVA: welke groepen verschillen?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05_kruskal_wallis/05_kruskal_wallis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 5 · Kruskal-Wallis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 3 · Twee factoren</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06_anova_meerweg/06_anova_meerweg.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Thema 6 · Meerweg-ANOVA: twee factoren tegelijk</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 4 · Regressie</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07_regressie_enkelvoudig/07_regressie_enkelvoudig.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 7 · Correlatie en enkelvoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../08_regressie_meervoudig/08_regressie_meervoudig.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 8 · Meervoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../09_ancova/09_ancova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 9 · ANCOVA</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 5 · Designs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../10_methodenleer/10_methodenleer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 10 · Methodenleer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 6 · Alles door elkaar</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../11_welke_toets/11_welke_toets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 11 · Welke toets?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Naslag</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../woordenlijst.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Woordenlijst</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Op deze pagina</h2>
+   
+  <ul>
+  <li><a href="#zwemles-in-het-meertje-zwemles-in-de-beek" id="toc-zwemles-in-het-meertje-zwemles-in-de-beek" class="nav-link active" data-scroll-target="#zwemles-in-het-meertje-zwemles-in-de-beek">Zwemles in het meertje, zwemles in de beek</a></li>
+  <li><a href="#al-bekend" id="toc-al-bekend" class="nav-link" data-scroll-target="#al-bekend">Wat je al kent</a></li>
+  <li><a href="#twee-factoren" id="toc-twee-factoren" class="nav-link" data-scroll-target="#twee-factoren">Twee vragen tegelijk, en een derde cadeau</a>
+  <ul class="collapse">
+  <li><a href="#celtabel" id="toc-celtabel" class="nav-link" data-scroll-target="#celtabel">De celtabel</a></li>
+  <li><a href="#hoofdeffecten" id="toc-hoofdeffecten" class="nav-link" data-scroll-target="#hoofdeffecten">Hoofdeffecten: kijk naar de rand</a></li>
+  <li><a href="#simpele-effecten" id="toc-simpele-effecten" class="nav-link" data-scroll-target="#simpele-effecten">Simpele effecten: kijk naar één rij</a></li>
+  <li><a href="#interactie" id="toc-interactie" class="nav-link" data-scroll-target="#interactie">Interactie: verschil in verschil</a></li>
+  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot">De plot: niet evenwijdig</a></li>
+  <li><a href="#patronen" id="toc-patronen" class="nav-link" data-scroll-target="#patronen">Vier patronen om te herkennen</a></li>
+  </ul></li>
+  <li><a href="#met-de-hand" id="toc-met-de-hand" class="nav-link" data-scroll-target="#met-de-hand">De tweeweg-ANOVA met de hand</a>
+  <ul class="collapse">
+  <li><a href="#schema" id="toc-schema" class="nav-link" data-scroll-target="#schema">Het toetsingsschema in zeven stappen</a></li>
+  <li><a href="#kwadratensommen" id="toc-kwadratensommen" class="nav-link" data-scroll-target="#kwadratensommen">De kwadratensommen: wat je krijgt en wat je zelf doet</a></li>
+  <li><a href="#tabel-invullen" id="toc-tabel-invullen" class="nav-link" data-scroll-target="#tabel-invullen">De tabel invullen</a></li>
+  <li><a href="#partial-eta" id="toc-partial-eta" class="nav-link" data-scroll-target="#partial-eta">Hoe groot is het effect? Partial eta-kwadraat</a></li>
+  <li><a href="#conclusie" id="toc-conclusie" class="nav-link" data-scroll-target="#conclusie">Stap 7: de conclusie</a></li>
+  </ul></li>
+  <li><a href="#uitvoer" id="toc-uitvoer" class="nav-link" data-scroll-target="#uitvoer">Zo lees je de uitvoer</a></li>
+  <li><a href="#keuzeboom" id="toc-keuzeboom" class="nav-link" data-scroll-target="#keuzeboom">Waar staat deze toets in de keuzeboom?</a></li>
+  <li><a href="#oefenen" id="toc-oefenen" class="nav-link" data-scroll-target="#oefenen">Oefenen</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen" class="nav-link" data-scroll-target="#tentamenvragen">Tentamenvragen</a></li>
+  <li><a href="#wat-blijft-liggen" id="toc-wat-blijft-liggen" class="nav-link" data-scroll-target="#wat-blijft-liggen">Wat blijft liggen</a></li>
+  <li><a href="#tot-slot" id="toc-tot-slot" class="nav-link" data-scroll-target="#tot-slot">Tot slot</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../06_anova_meerweg/06_anova_meerweg.html">Deel 3 · Twee factoren</a></li><li class="breadcrumb-item"><a href="../06_anova_meerweg/06_anova_meerweg.html">Thema 6 · Meerweg-ANOVA: twee factoren tegelijk</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Thema 6 · Meerweg-ANOVA: twee factoren tegelijk</h1>
+<p class="subtitle lead">Deel 3 · Twee factoren · <em>verschil in verschil</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Hoort bij college 6 en werkgroep 6</strong> (factoriële designs: onderwijsvorm × moeilijkheid). Wat je na dit thema kunt: een factorieel design herkennen en beschrijven (factoren, niveaus, cellen), hoofdeffecten en een interactie-effect aflezen uit een tabel met gemiddelden en uit een plot, de ANOVA-tabel van een tweeweg-ANOVA aanvullen met het formuleblad (<em>df</em>, <em>MS</em>, <em>F</em>, partial η²), de SPSS-uitvoer lezen, en het resultaat opschrijven.</p>
+<p>Hier reken je bijna nooit van A tot Z: de kwadratensommen krijg je bijna altijd, van SPSS of van de opgave. Wat je zelf doet is aanvullen, aflezen en uitleggen. De ene uitzondering, de interactie-kwadratensom uit celgemiddelden, staat bij T6.4.</p>
+</div>
+</div>
+</div>
+<section id="zwemles-in-het-meertje-zwemles-in-de-beek" class="level1">
+<h1>Zwemles in het meertje, zwemles in de beek</h1>
+<p>In het otterbos is er al jaren gedoe over zwemles. De ene helft van de ouders zegt: onzin, een otter kan zwemmen als hij geboren wordt. De andere helft heeft wel eens een jong in de beek zien tollen. Dus wordt het eindelijk uitgezocht. Twintig jonge otters, en de helft krijgt een week zwemles van een oude otter die alles weet van stroming. Daarna vissen ze allemaal een uur: tien in het kalme meertje, tien in de snelle beek. Geteld wordt hoeveel visjes elke otter vangt.</p>
+<p>De uitkomst zou je zo kunnen opschrijven: <em>zwemles helpt.</em> Maar dat is niet wat je ziet als je goed kijkt. Zwemles helpt een beetje in het meertje en een heleboel in de beek. En dát, het verschil tussen die twee <em>helpen</em>, is waar dit thema over gaat.</p>
+</section>
+<section id="al-bekend" class="level1">
+<h1>Wat je al kent</h1>
+<p>Uit thema 3 ken je de eenweg-ANOVA: één factor, een paar groepen, en de vraag of de gemiddelden in de populatie gelijk zijn. De toetsingsgrootheid is een breuk:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>=</mo><mfrac><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐺</mi></mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow></mfrac><mo>=</mo><mfrac><mtext mathvariant="normal">verschillen tussen de groepen</mtext><mtext mathvariant="normal">verschillen binnen de groepen</mtext></mfrac></mrow><annotation encoding="application/x-tex">F = \frac{\mathit{MSG}}{\mathit{MSE}} = \frac{\text{verschillen tussen de groepen}}{\text{verschillen binnen de groepen}}</annotation></semantics></math></p>
+<p>Signaal gedeeld door ruis. Boven de streep staat wat de groepen van elkaar verschillen, onder de streep hoe ver otters normaal al uit elkaar liggen. Is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> rond 1, dan is het signaal niet groter dan de ruis en verwerp je de nulhypothese niet.</p>
+<p>Dat verandert in dit thema niet. Er komt alleen een tweede factor bij, en die brengt iets mee wat je bij één factor nooit kon zien.</p>
+</section>
+<section id="twee-factoren" class="level1">
+<h1>Twee vragen tegelijk, en een derde cadeau</h1>
+<p>De otters zijn verdeeld langs twee lijnen tegelijk. Elke lijn heet een <strong>factor</strong>: een onafhankelijke variabele met een paar categorieën, en die categorieën heten <strong>niveaus</strong>.</p>
+<ul>
+<li>factor A: <strong>water</strong>, met twee niveaus, kalm meertje en snelle beek;</li>
+<li>factor B: <strong>zwemles</strong>, met twee niveaus, geen les en wel les.</li>
+</ul>
+<p>Elke otter zit in precies één combinatie: meertje zonder les, meertje met les, beek zonder les, beek met les. Zo’n combinatie heet een <strong>cel</strong>, en dit is een <strong>2 × 2-design</strong>: twee niveaus keer twee niveaus, vier cellen. Zit er in elke cel iemand anders, zoals hier, dan is het een between-subjects design, net als bij de onafhankelijke <em>t</em>-toets. Het aantal cellen reken je uit door de niveaus te vermenigvuldigen: een 2 × 3-design heeft zes cellen, een 2 × 2 × 2-design acht.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Factorieel, meerweg, tweeweg: drie namen, één ding">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Factorieel, meerweg, tweeweg: drie namen, één ding
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een ANOVA met twee factoren heet een <strong>tweeweg-ANOVA</strong> (<em>two-way ANOVA</em>). Met drie factoren een drieweg-ANOVA, en in het algemeen een <strong>meerweg-ANOVA</strong>. Een ander woord voor hetzelfde is <strong>factoriële ANOVA</strong> (<em>factorial ANOVA</em>): een analyse van een factorieel design. Op het tentamen kun je alle drie tegenkomen.</p>
+</div>
+</div>
+<p>Met twee factoren stel je als het ware twee vragen tegelijk: doet het water ertoe, en doet de zwemles ertoe? Maar bij twee factoren krijg je er altijd een derde vraag gratis bij: <em>is het effect van de zwemles hetzelfde in het meertje als in de beek?</em> Dus bij twee factoren heb je altijd twee <strong>hoofdeffecten</strong> en hun <strong>interactie</strong>: drie effecten, drie toetsen, drie <em>F</em>-waarden in één tabel.</p>
+<section id="celtabel" class="level2">
+<h2 class="anchored" data-anchor-id="celtabel">De celtabel</h2>
+<p>Alles begint bij een tabel met de gemiddelden per cel, en de randen eromheen:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">geen les</th>
+<th style="text-align: center;">wel les</th>
+<th style="text-align: center;"><strong>rand</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>kalm meertje</strong></td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;"><strong>13</strong></td>
+</tr>
+<tr class="even">
+<td><strong>snelle beek</strong></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;"><strong>7</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>rand</strong></td>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: center;"><strong>12</strong></td>
+<td style="text-align: center;">10</td>
+</tr>
+</tbody>
+</table>
+<p><em>Gemiddeld aantal visjes per uur, 5 otters per cel.</em></p>
+<p>In de vier binnenste vakjes staan de <strong>celgemiddelden</strong>. In de rand staan de <strong>marginale gemiddelden</strong> (<em>marginal means</em>): het gemiddelde van een hele rij of een hele kolom. De 13 rechts van de bovenste rij is het gemiddelde van álle otters in het meertje, met en zonder les door elkaar. Rechtsonder staat het <strong>grote gemiddelde</strong>, van alle 20 otters samen. Bij gelijke cellen is dat gewoon het gemiddelde van de vier celgemiddelden; dat is handig om te controleren.</p>
+<p>Deze tabel is het hele thema. Alle drie de effecten lees je eruit af, en elk effect kijkt naar een ander deel van de tabel:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-tegels" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tegels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-tegels-1.png" class="img-fluid figure-img" width="729">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tegels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1: Dezelfde celtabel drie keer, en steeds een ander stuk gekleurd. Links de randen: daar lees je de hoofdeffecten. In het midden één rij: het simpele effect van zwemles in de beek. Rechts de vier cellen: de interactie vergelijkt de ene rij met de andere.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="hoofdeffecten" class="level2">
+<h2 class="anchored" data-anchor-id="hoofdeffecten">Hoofdeffecten: kijk naar de rand</h2>
+<p>Speel het spel uit OZP 1 nog eens: er komt iemand binnen en jij roept je beste gok voor zijn score. Er komt een otter binnen, en het enige wat ik je vertel is: <em>hij komt uit de beek.</em> Wat roep je als beste gok voor zijn vangst? Niet een celgemiddelde, want je weet niet of hij les had. Je roept het randgemiddelde van de beek: 7. Komt er een otter uit het meertje binnen, dan roep je 13.</p>
+<p>Het <strong>hoofdeffect van water op de vangst</strong> is het verschil tussen die twee randgemiddelden: 13 tegenover 7, dus 6 visjes minder in de beek. Het hoofdeffect van zwemles lees je uit de andere rand: 8 zonder les, 12 met, dus 4 visjes meer met les.</p>
+<p>Een hoofdeffect is dus het effect van één factor, gemiddeld over de niveaus van de andere factor. Je doet alsof die andere factor niet bestaat. Dat is precies wat een eenweg-ANOVA ook doet, en daarom zegt het college: een tweeweg-ANOVA is eigenlijk twee eenweg-ANOVA’s tegelijk, een over de rijen en een over de kolommen.</p>
+</section>
+<section id="simpele-effecten" class="level2">
+<h2 class="anchored" data-anchor-id="simpele-effecten">Simpele effecten: kijk naar één rij</h2>
+<p>Een <strong>simpel effect</strong> is het effect van de ene factor <em>binnen één niveau</em> van de andere. Niet gemiddeld over de rijen, maar per rij:</p>
+<ul>
+<li>in het meertje: met les 14, zonder les 12, dus de zwemles levert 2 visjes op;</li>
+<li>in de beek: met les 10, zonder les 4, dus de zwemles levert 6 visjes op.</li>
+</ul>
+<p>Twee simpele effecten van zwemles, één per soort water. Je kunt het ook andersom doen, twee simpele effecten van water, één per zwemlesgroep: zonder les scheelt de beek 8 visjes, met les 4. Welke kant je kiest, hangt af van je onderzoeksvraag. Hier is de vraag of zwemles helpt, dus kijk je naar het effect van zwemles per soort water.</p>
+<p>Het college telt ze zo: in een 2 × 2 zijn er vier simpele effecten, twee van elke factor (één per rij, één per kolom). Je hoeft er geen aparte toets voor te doen in dit vak; je leest ze af en gebruikt ze om de interactie uit te leggen.</p>
+</section>
+<section id="interactie" class="level2">
+<h2 class="anchored" data-anchor-id="interactie">Interactie: verschil in verschil</h2>
+<p>Nu het cadeau. Zet de twee simpele effecten van zwemles naast elkaar: 2 in het meertje, 6 in de beek. Dat zijn twee verschillen, en ze verschillen van elkaar. Het verschil tussen die verschillen is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn><mo>−</mo><mn>2</mn><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">6 - 2 = 4</annotation></semantics></math></p>
+<p>Dat getal is de <strong>interactie</strong>. Meer is het niet: interactie is verschil in verschil. Het klinkt op heel veel moeilijke manieren, maar het ís zo flauw. Het effect van zwemles op de vangst is in de beek 4 visjes groter dan in het meertje.</p>
+<p>Voluit gezegd, en zo wil je het ook opschrijven: <strong>het effect van factor A op de uitkomst hangt af van het niveau van factor B, in grootte of in richting.</strong> Hier: het effect van zwemles op het aantal gevangen visjes is groter in de beek dan in het meertje.</p>
+<p>Drie dingen om vast te houden:</p>
+<ul>
+<li><strong>Interactie kan pas als je drie variabelen hebt.</strong> Twee factoren en een uitkomst. Met één factor is er niets om het effect van af te laten hangen.</li>
+<li><strong>Het maakt niet uit van welke kant je kijkt.</strong> Neem de simpele effecten van water: zonder les −8, met les −4. Verschil in verschil: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>4</mn><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mn>8</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">−4 - (−8) = 4</annotation></semantics></math>. Hetzelfde getal. De interactie is van allebei de factoren tegelijk; de vraag “zwemles × water” is dezelfde als “water × zwemles”.</li>
+<li><strong>Houd je aftrekvolgorde vast.</strong> Als ik zeg dat het verschil tussen mijn vader en moeder 10 centimeter is, weet jij dan wie langer is? Nee. Dus spreek met jezelf af: altijd de tweede min de eerste, of altijd wel min geen, en schrijf het erbij. Draai je halverwege om, dan verandert het teken van je interactie en snap je je eigen tabel niet meer.</li>
+</ul>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="Een hoofdeffect is geen interactie">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Belangrijk</span>Een hoofdeffect is geen interactie
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een <strong>hoofdeffect</strong> gaat over een verschil tussen gemiddelden: de ene rand tegenover de andere. Een <strong>interactie</strong> gaat over een verschil tussen verschillen: het ene simpele effect tegenover het andere. Je leest ze op andere plekken in de tabel af: het hoofdeffect in de rand, de interactie in de cellen.</p>
+<p>Daarom kan alles los van elkaar voorkomen: twee hoofdeffecten zonder interactie, een interactie zonder hoofdeffecten, en elke mix. Straks zie je er vier getekend.</p>
+</div>
+</div>
+</section>
+<section id="plot" class="level2">
+<h2 class="anchored" data-anchor-id="plot">De plot: niet evenwijdig</h2>
+<p>Dezelfde tabel kun je tekenen. Zet de ene factor op de horizontale as, geef elk niveau van de andere factor een eigen lijn, en zet de celgemiddelden als punten. SPSS noemt dit een <em>profile plot</em> of <em>plot van estimated marginal means</em>; wij zeggen gewoon interactieplot.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-interactieplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-interactieplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-interactieplot-1.png" class="img-fluid figure-img" width="729">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-interactieplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2: Dezelfde vier celgemiddelden, twee keer getekend. Links staat het water op de horizontale as en is elke lijn een zwemles-groep; rechts andersom. Allebei laten ze hetzelfde zien: de lijnen lopen niet evenwijdig. Links: de lijn zonder les zakt 8 visjes van meertje naar beek, de lijn met les maar 4.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>De regel is kort: <strong>lopen de lijnen evenwijdig, dan is er geen interactie. Lopen ze niet evenwijdig, dan wel.</strong> Twee evenwijdige lijnen betekenen dat het verschil tussen de lijnen overal even groot is, en dat is precies “geen verschil in verschil”.</p>
+<p>Eén woord wil je hier niet als maatstaf gebruiken: <em>kruisen</em>. De meest gemaakte fout is om naar een plot te kijken en te zeggen “ze kruisen niet, dus geen interactie”. Kijk nog eens naar de linkerplot: de lijnen kruisen nergens, en toch is er een interactie, want ze lopen niet evenwijdig. Niet-evenwijdige lijnen kruisen áltijd ergens, misschien pas buiten het plaatje. Of lijnen elkaar in het plaatje kruisen mag je best beschrijven, maar het criterium is: <em>evenwijdig of niet</em>.</p>
+<p>En de hoofdeffecten in de plot? Die zie je ook, maar minder direct. Liggen de lijnen als geheel boven elkaar, dan is er een hoofdeffect van de lijnen-factor. Gaan de lijnen samen omhoog of omlaag, dan is er een hoofdeffect van de factor op de horizontale as. De tabel met randen blijft de betrouwbaarste plek om hoofdeffecten af te lezen; de plot is de betrouwbaarste plek voor de interactie.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Kijk eerst naar de as">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Waarschuwing</span>Kijk eerst naar de as
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een plot kan je voor de gek houden. Dezelfde vier gemiddelden zien er anders uit als de verticale as niet bij 0 begint.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-assen" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-assen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-assen-1.png" class="img-fluid figure-img" width="691">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-assen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;3: Dezelfde getallen, twee verticale assen. Links begint de as bij 0, rechts is hij ingezoomd: daar lijkt het verschil in verschil reusachtig, terwijl het 4 visjes is. Kijk altijd eerst naar de as.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Het verschil in verschil is in beide plots 4 visjes. Alleen de as is anders. Lees dus eerst de as, dan pas de lijnen.</p>
+</div>
+</div>
+</section>
+<section id="patronen" class="level2">
+<h2 class="anchored" data-anchor-id="patronen">Vier patronen om te herkennen</h2>
+<p>Op het tentamen krijg je een tabel of een plot en de vraag: welke effecten zijn hier? Oefen het aan deze vier. Ze zijn verzonnen, met ronde getallen, zodat je het patroon ziet en niet gaat rekenen.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-patronen" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-patronen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-patronen-1.png" class="img-fluid figure-img" width="729">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-patronen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;4: Vier 2 × 2-patronen. (1) Twee hoofdeffecten en geen interactie: de lijnen lopen evenwijdig, liggen apart en gaan samen omhoog. (2) Alleen een interactie: alle randgemiddelden zijn gelijk, maar de lijnen lopen niet evenwijdig. (3) Een hoofdeffect van B én een interactie: de lijnen liggen apart maar lopen naar elkaar toe, en de randen van A zijn gelijk, want wat de ene lijn stijgt, daalt de andere. (4) Niets: alles vlak en op elkaar.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Bij elk patroon hoort een tabel, en in de tabel zie je het aan twee dingen: zijn de randen verschillend (hoofdeffect), en is het verschil in verschil nul (geen interactie)? In patroon 2 zijn alle vier de randgemiddelden 15: er is geen enkel hoofdeffect, en toch gebeurt er van alles. Wie alleen naar de randen kijkt, mist het helemaal. Dat is waarom het college zegt dat een interactie vaak meer vertelt dan een hoofdeffect. En de otters? Die zijn een vijfde patroon: twee hoofdeffecten én een interactie, de lijnen apart, samen omlaag, en niet evenwijdig.</p>
+</section>
+</section>
+<section id="met-de-hand" class="level1">
+<h1>De tweeweg-ANOVA met de hand</h1>
+<p>Tot nu toe keek je alleen naar de steekproef. Een verschil in verschil van 4 visjes: is dat genoeg om te zeggen dat er in de populatie van jonge otters een interactie is, of is dat gewoon wat je krijgt als je twintig otters een uurtje laat vissen? Daar is de toets voor. Drie toetsen, eigenlijk, in één tabel.</p>
+<section id="schema" class="level2">
+<h2 class="anchored" data-anchor-id="schema">Het toetsingsschema in zeven stappen</h2>
+<p><strong>Stap 1 · Onderzoeksvragen.</strong> Drie tegelijk. Verschilt het gemiddeld aantal gevangen visjes tussen meertje en beek? Tussen otters met en zonder zwemles? En is het effect van zwemles op de vangst anders in het meertje dan in de beek?</p>
+<p><strong>Stap 2 · Hypothesen.</strong> Voor elk effect een paar. De collegesheets schrijven de alternatieve hypothese als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>a</mi></msub><annotation encoding="application/x-tex">H_a</annotation></semantics></math>; in thema 1 heette die <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>. Zelfde hypothese.</p>
+<ul>
+<li>hoofdeffect water: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo>:</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">kalm</mtext></msub><mo>=</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">beek</mtext></msub></mrow><annotation encoding="application/x-tex">H_0: \mu_{\text{kalm}} = \mu_{\text{beek}}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>a</mi></msub><mo>:</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">kalm</mtext></msub><mo>≠</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">beek</mtext></msub></mrow><annotation encoding="application/x-tex">H_a: \mu_{\text{kalm}} \neq \mu_{\text{beek}}</annotation></semantics></math>. Hier is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">kalm</mtext></msub><annotation encoding="application/x-tex">\mu_{\text{kalm}}</annotation></semantics></math> het randgemiddelde in de populatie: de gemiddelde vangst van álle jonge otters in kalm water, met en zonder les door elkaar. Bij een factor met drie of meer niveaus wordt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>a</mi></msub><annotation encoding="application/x-tex">H_a</annotation></semantics></math>: niet alle gemiddelden zijn gelijk;</li>
+<li>hoofdeffect zwemles: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>0</mn></msub><mo>:</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">geen</mtext></msub><mo>=</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">wel</mtext></msub></mrow><annotation encoding="application/x-tex">H_0: \mu_{\text{geen}} = \mu_{\text{wel}}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mi>a</mi></msub><mo>:</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">geen</mtext></msub><mo>≠</mo><msub><mi mathvariant="normal">μ</mi><mtext mathvariant="normal">wel</mtext></msub></mrow><annotation encoding="application/x-tex">H_a: \mu_{\text{geen}} \neq \mu_{\text{wel}}</annotation></semantics></math>;</li>
+<li>interactie: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: het effect van zwemles op de vangst is in de populatie even groot in het meertje als in de beek (het verschil in verschil is 0), en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>a</mi></msub><annotation encoding="application/x-tex">H_a</annotation></semantics></math>: dat is het niet.</li>
+</ul>
+<p>Het college schrijft de nulhypothese van de interactie als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: alle <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi mathvariant="normal">μ</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mi mathvariant="normal">μ</mi><mrow><mi>i</mi><mo>⋅</mo></mrow></msub><mo>−</mo><msub><mi mathvariant="normal">μ</mi><mrow><mi>⋅</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\mu_{ij} - \mu_{i\cdot} - \mu_{\cdot j})</annotation></semantics></math> zijn gelijk, met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">μ</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mu_{ij}</annotation></semantics></math> het celgemiddelde in rij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> en kolom <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">μ</mi><mrow><mi>i</mi><mo>⋅</mo></mrow></msub><annotation encoding="application/x-tex">\mu_{i\cdot}</annotation></semantics></math> het randgemiddelde van rij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">μ</mi><mrow><mi>⋅</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mu_{\cdot j}</annotation></semantics></math> dat van kolom <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>. Dat is dezelfde gedachte in symbolen: van elk celgemiddelde haal je de twee randen af, en wat overblijft moet overal hetzelfde zijn. Op het tentamen mag je hem in woorden geven, zolang er <em>verschil in verschil</em> in doorklinkt.</p>
+<p><strong>Stap 3 · Toetskeuze.</strong> Twee categorische onafhankelijke variabelen, één uitkomst van minstens intervalniveau, andere otters in elke cel: de <strong>tweeweg-ANOVA</strong>, met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math> voor elk van de drie toetsen. Aannamen: dezelfde als bij de eenweg-ANOVA, maar nu per cel: in elke cel ongeveer normaal verdeeld, en in elke cel ongeveer dezelfde spreiding. Met 5 otters per cel is dat nauwelijks te controleren; in dit thema nemen we het aan.</p>
+<p><strong>Stap 4 · Toetsingsgrootheden.</strong> Drie <em>F</em>-waarden, en daar komt het formuleblad bij.</p>
+</section>
+<section id="kwadratensommen" class="level2">
+<h2 class="anchored" data-anchor-id="kwadratensommen">De kwadratensommen: wat je krijgt en wat je zelf doet</h2>
+<p>Bij de eenweg-ANOVA was de tuin in tweeën: een strak stuk met bloemen in rijtjes (tussen de groepen, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐺</mi></mrow><annotation encoding="application/x-tex">\mathit{SSG}</annotation></semantics></math>) en een stuk onkruid (binnen de groepen, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><annotation encoding="application/x-tex">\mathit{SSE}</annotation></semantics></math>). Bij twee factoren is het strakke stuk in drie bedden verdeeld: een bed voor water, een bed voor zwemles en een bed voor hun interactie.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝑇</mi></mrow><mo>=</mo><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mo>+</mo><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mo>+</mo><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>+</mo><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow></mrow><annotation encoding="application/x-tex">\mathit{SST} = \mathit{SSA} + \mathit{SSB} + \mathit{SSAB} + \mathit{SSE}</annotation></semantics></math></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-tuin" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tuin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-tuin-1.png" class="img-fluid figure-img" width="691">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tuin-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;5: De tuin van de otters: de totale kwadratensom (320) in vier bedden. Zonder overlap, want elke cel heeft evenveel otters. Het onkruid is de error: wat de otters binnen een cel van elkaar verschillen.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Hoe groot elk bed is, rekent SPSS uit; het college zegt dat ook: <em>de berekening van de ANOVA zelf laten we door SPSS doen.</em> Voor de otters zijn de vier kwadratensommen 180 (water), 80 (zwemles), 20 (interactie) en 40 (error). Samen 320, en dat klopt: bij evenveel otters per cel overlappen de bedden niet en tellen ze precies op tot het totaal. Dat is bij regressie vaak anders, maar hier niet.</p>
+<p>Wat je zelf doet, is de rest van de tabel: de vrijheidsgraden, de gemiddelde kwadratensommen en de drie breuken. Alles wat daarvoor nodig is, staat op je formuleblad onder <em>Two-way ANOVA</em>. Hier is het, met elk symbool benoemd:</p>
+<div style="overflow-x: auto;">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>op het formuleblad</th>
+<th>wat er staat</th>
+<th>wat de letters zijn</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Eq. 37</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi></mrow><mo>=</mo><mi>I</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFA} = I - 1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐵</mi></mrow><mo>=</mo><mi>J</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFB} = J - 1</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math> is het aantal niveaus van factor A, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>J</mi><annotation encoding="application/x-tex">J</annotation></semantics></math> dat van factor B. Vrijheidsgraden van de twee hoofdeffecten.</td>
+</tr>
+<tr class="even">
+<td>Eq. 38</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>I</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>J</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{DFAB} = (I - 1)(J - 1)</annotation></semantics></math></td>
+<td>Vrijheidsgraden van de interactie: de twee hoofdeffect-<em>df</em>’s met elkaar vermenigvuldigd.</td>
+</tr>
+<tr class="odd">
+<td>Eq. 39</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mi>N</mi><mo>−</mo><mi>I</mi><mi>J</mi></mrow><annotation encoding="application/x-tex">\mathit{DFE} = N - IJ</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> is het totaal aantal deelnemers, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mi>J</mi></mrow><annotation encoding="application/x-tex">IJ</annotation></semantics></math> het aantal cellen. Elke cel kost één vrijheidsgraad, net als elke groep bij de eenweg.</td>
+</tr>
+<tr class="even">
+<td>Eq. 40</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\mathit{MSA} = \dfrac{\mathit{SSA}}{\mathit{DFA}}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐵</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\mathit{MSB} = \dfrac{\mathit{SSB}}{\mathit{DFB}}</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><annotation encoding="application/x-tex">\mathit{SSA}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSB}</annotation></semantics></math> zijn de kwadratensommen van de twee hoofdeffecten, uit de uitvoer of de opgave.</td>
+</tr>
+<tr class="odd">
+<td>Eq. 41</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\mathit{MSAB} = \dfrac{\mathit{SSAB}}{\mathit{DFAB}}</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSAB}</annotation></semantics></math> is de kwadratensom van de interactie.</td>
+</tr>
+<tr class="even">
+<td>Eq. 42</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\mathit{MSE} = \dfrac{\mathit{SSE}}{\mathit{DFE}}</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><annotation encoding="application/x-tex">\mathit{SSE}</annotation></semantics></math> is de kwadratensom van de error, de rij <em>Error</em> in SPSS.</td>
+</tr>
+<tr class="odd">
+<td>Eq. 43</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">F_{\text{A}}= \dfrac{\mathit{MSA}}{\mathit{MSE}}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">B</mtext></msub><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">F_{\text{B}}= \dfrac{\mathit{MSB}}{\mathit{MSE}}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = \dfrac{\mathit{MSAB}}{\mathit{MSE}}</annotation></semantics></math></td>
+<td>Drie breuken met dezelfde noemer. Elke <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> heeft zijn eigen teller-<em>df</em> en dezelfde noemer-<em>df</em>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><annotation encoding="application/x-tex">\mathit{DFE}</annotation></semantics></math>.</td>
+</tr>
+<tr class="even">
+<td>Eq. 44</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="normal">η</mi><mtext mathvariant="normal">part</mtext><mn>2</mn></msubsup><mo>=</mo><mstyle displaystyle="true"><mfrac><msub><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><mtext mathvariant="normal">effect</mtext></msub><mrow><msub><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><mtext mathvariant="normal">effect</mtext></msub><mo>+</mo><msub><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><mtext mathvariant="normal">error</mtext></msub></mrow></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\eta^2_{\text{part}} = \dfrac{\mathit{SS}_{\text{effect}}}{\mathit{SS}_{\text{effect}} + \mathit{SS}_{\text{error}}}</annotation></semantics></math></td>
+<td>Partial eta-kwadraat, de effectgrootte van dit thema; verderop.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Wat er níét op staat: een formule voor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><annotation encoding="application/x-tex">\mathit{SSA}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSB}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSAB}</annotation></semantics></math> uit de celgemiddelden. Die krijg je dus bijna altijd. Eén uitzondering: op het tentamen van 2023 (opgave 4) moest de interactie-kwadratensom wél uit de celgemiddelden komen. Daarom staat de korte weg daarvoor in <em>Voor wie verder wil</em> hieronder, en oefen je hem in T6.4. Leer die ene regel uit je hoofd; de rest van de kwadratensommen krijg je.</p>
+</section>
+<section id="tabel-invullen" class="level2">
+<h2 class="anchored" data-anchor-id="tabel-invullen">De tabel invullen</h2>
+<p>Bij de otters is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">I = 2</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">J = 2</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">N = 20</annotation></semantics></math>. Eerst de vrijheidsgraden:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi></mrow><mo>=</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFA} = 2 - 1 = 1</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFB} = 2 - 1 = 1</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>1</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFAB} = 1 \times 1 = 1</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>20</mn><mo>−</mo><mn>4</mn><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = 20 - 4 = 16</annotation></semantics></math></p>
+<p>Controle: de vier tellen op tot <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>1</mn><mo>=</mo><mn>19</mn></mrow><annotation encoding="application/x-tex">N - 1 = 19</annotation></semantics></math>. Dan de gemiddelde kwadratensommen, elk bed gedeeld door zijn vrijheidsgraden:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mo>=</mo><mfrac><mn>180</mn><mn>1</mn></mfrac><mo>=</mo><mn>180.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSA} = \frac{180}{1} = 180.00</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mo>=</mo><mfrac><mn>80</mn><mn>1</mn></mfrac><mo>=</mo><mn>80.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSB} = \frac{80}{1} = 80.00</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mfrac><mn>20</mn><mn>1</mn></mfrac><mo>=</mo><mn>20.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSAB} = \frac{20}{1} = 20.00</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mfrac><mn>40</mn><mn>16</mn></mfrac><mo>=</mo><mn>2.50</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = \frac{40}{16} = 2.50</annotation></semantics></math></p>
+<p>En de drie breuken, alle drie met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>2.50</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 2.50</annotation></semantics></math> onder de streep:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mfrac><mn>180.00</mn><mn>2.50</mn></mfrac><mo>=</mo><mn>72.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}}= \frac{180.00}{2.50} = 72.00</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">B</mtext></msub><mo>=</mo><mfrac><mn>80.00</mn><mn>2.50</mn></mfrac><mo>=</mo><mn>32.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{B}}= \frac{80.00}{2.50} = 32.00</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mfrac><mn>20.00</mn><mn>2.50</mn></mfrac><mo>=</mo><mn>8.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = \frac{20.00}{2.50} = 8.00</annotation></semantics></math></p>
+<p>Alles bij elkaar in één tabel, in de volgorde waarin SPSS hem straks ook geeft:</p>
+<div style="overflow-x: auto;">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Source</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{SS}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><annotation encoding="application/x-tex">\mathit{df}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{MS}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>water (A)</td>
+<td style="text-align: center;">180</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">180.00</td>
+<td style="text-align: center;">72.00</td>
+</tr>
+<tr class="even">
+<td>zwemles (B)</td>
+<td style="text-align: center;">80</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">80.00</td>
+<td style="text-align: center;">32.00</td>
+</tr>
+<tr class="odd">
+<td>water × zwemles (AB)</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">20.00</td>
+<td style="text-align: center;">8.00</td>
+</tr>
+<tr class="even">
+<td>Error</td>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">2.50</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td style="text-align: center;">320</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Stap 5 · <em>p</em>-waarden.</strong> Nu de <em>F</em>-tabel (Tabel E). Je zoekt de rij van de noemer-vrijheidsgraden, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = 16</annotation></semantics></math>, en de kolom van de teller-vrijheidsgraden, hier bij alle drie <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>. Voor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>16</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{df} = (1, 16)</annotation></semantics></math> staat er:</p>
+<div style="overflow-x: auto;">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>staartkans</th>
+<th style="text-align: center;">.100</th>
+<th style="text-align: center;">.050</th>
+<th style="text-align: center;">.025</th>
+<th style="text-align: center;">.010</th>
+<th style="text-align: center;">.001</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>F</mi><mo>*</mo></msup><annotation encoding="application/x-tex">F^*</annotation></semantics></math> bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>16</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{df} = (1, 16)</annotation></semantics></math></td>
+<td style="text-align: center;">3.05</td>
+<td style="text-align: center;">4.49</td>
+<td style="text-align: center;">6.12</td>
+<td style="text-align: center;">8.53</td>
+<td style="text-align: center;">16.12</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> is er maar één staart, rechts. Een grote <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> betekent veel signaal ten opzichte van de ruis, en dat is altijd de kant waar je naar kijkt. Geen twee staarten zoals bij de tweezijdige <em>t</em>-toets, dus geen ×2: de staartkans uit de tabel is meteen je <em>p</em>.</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mn>8.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = 8.00</annotation></semantics></math> ligt tussen 6.12 (kolom .025) en 8.53 (kolom .010), dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.01</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.025</mn></mrow><annotation encoding="application/x-tex">.01 &lt; p &lt; .025</annotation></semantics></math>. Exact, dat geeft SPSS straks: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.012</mn></mrow><annotation encoding="application/x-tex">p = .012</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mn>72.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}}= 72.00</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">B</mtext></msub><mo>=</mo><mn>32.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{B}}= 32.00</annotation></semantics></math> liggen allebei voorbij 16.12, de laatste kolom: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">p &lt; .001</annotation></semantics></math>.</li>
+</ul>
+<p><strong>Stap 6 · Beslissing.</strong> Alle drie: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &lt; .05</annotation></semantics></math>. Verwerp de nulhypothese dat meertje en beek gemiddeld evenveel visjes opleveren. Verwerp de nulhypothese dat otters met en zonder zwemles gemiddeld evenveel vangen. En verwerp de nulhypothese dat het effect van zwemles op de vangst in het meertje even groot is als in de beek.</p>
+<p>Die laatste beslissing bepaalt hoe je de eerste twee leest. <strong>Kijk altijd eerst naar de interactie.</strong> Is die significant, dan is “zwemles helpt” een halve waarheid: hoevéél hij helpt hangt van het water af, en dat zeg je erbij. Is de interactie niet significant, dan mag je de twee hoofdeffecten los van elkaar bespreken.</p>
+<p><strong>Stap 7 · Conclusie.</strong> Die staat verderop, met de effectgrootte erbij. Eerst die effectgrootte.</p>
+</section>
+<section id="partial-eta" class="level2">
+<h2 class="anchored" data-anchor-id="partial-eta">Hoe groot is het effect? Partial eta-kwadraat</h2>
+<p>Bij de eenweg-ANOVA was η² het stuk van de tuin dat bezaaid was met bloemen van één factor, gedeeld door de hele tuin. Bij een factorieel design gebruikt het college een andere maat, <strong>partial η²</strong>, en SPSS drukt die af:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="normal">η</mi><mtext mathvariant="normal">part</mtext><mn>2</mn></msubsup><mo>=</mo><mfrac><msub><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><mtext mathvariant="normal">effect</mtext></msub><mrow><msub><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><mtext mathvariant="normal">effect</mtext></msub><mo>+</mo><msub><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><mtext mathvariant="normal">error</mtext></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\eta^2_{\text{part}} = \frac{\mathit{SS}_{\text{effect}}}{\mathit{SS}_{\text{effect}} + \mathit{SS}_{\text{error}}}</annotation></semantics></math></p>
+<p>Lees de noemer goed. Er staat niet de hele tuin, maar alleen het bed van dit ene effect plus het onkruid. De bedden van de andere effecten worden afgedekt. Partial η² vraagt dus: van wat er overblijft als je de andere factoren wegdenkt, welk deel verklaart dít effect?</p>
+<p>Voor de otters, met het onkruid van 40 steeds in de noemer:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="normal">η</mi><mtext mathvariant="normal">part, water</mtext><mn>2</mn></msubsup><mo>=</mo><mfrac><mn>180</mn><mrow><mn>180</mn><mo>+</mo><mn>40</mn></mrow></mfrac><mo>=</mo><mn>.818</mn></mrow><annotation encoding="application/x-tex">\eta^2_{\text{part, water}} = \frac{180}{180 + 40} = .818</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="normal">η</mi><mtext mathvariant="normal">part, zwemles</mtext><mn>2</mn></msubsup><mo>=</mo><mfrac><mn>80</mn><mrow><mn>80</mn><mo>+</mo><mn>40</mn></mrow></mfrac><mo>=</mo><mn>.667</mn></mrow><annotation encoding="application/x-tex">\eta^2_{\text{part, zwemles}} = \frac{80}{80 + 40} = .667</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi mathvariant="normal">η</mi><mtext mathvariant="normal">part, interactie</mtext><mn>2</mn></msubsup><mo>=</mo><mfrac><mn>20</mn><mrow><mn>20</mn><mo>+</mo><mn>40</mn></mrow></mfrac><mo>=</mo><mn>.333</mn></mrow><annotation encoding="application/x-tex">\eta^2_{\text{part, interactie}} = \frac{20}{20 + 40} = .333</annotation></semantics></math></p>
+<p>Vergelijk de interactie met de gewone η², die de hele tuin in de noemer heeft: 20 gedeeld door 320 is .063. Partial η² is altijd minstens zo groot als η², want de noemer is kleiner. Daarom tellen de drie partial η²’s ook niet op tot de verklaarde variantie van het model: .818 + .667 + .333 is 1.82, meer dan 1. Ze delen elk door iets anders.</p>
+<p>Hoe groot is groot? Het college geeft vuistregels voor η²: vanaf .01 klein, vanaf .06 middelgroot, vanaf .14 groot (ondergrenzen). Voor partial η² zijn er in dit vak geen aparte grenzen, dus gebruik je dezelfde en zeg je erbij dat het partial η² is. Bij de otters is alles groot; dat komt doordat de getallen zijn gekozen om het patroon te laten zien, niet omdat zwemles in het echt zo sterk werkt.</p>
+</section>
+<section id="conclusie" class="level2">
+<h2 class="anchored" data-anchor-id="conclusie">Stap 7: de conclusie</h2>
+<p>Met alleen Tabel E schrijf je de <em>p</em> als range, net als in thema 1; de exacte <em>p</em> komt straks uit SPSS.</p>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+Zo rapporteer je het met alleen de tabel
+</div>
+<div class="rapportage-lijf">
+<p>Een 2 × 2 tweeweg-ANOVA met water (kalm meertje, snelle beek) en zwemles (geen, wel) als factoren liet een significant hoofdeffect zien van water op het aantal gevangen visjes per uur (<em>M</em> = 13.00 in het meertje tegenover 7.00 in de beek), <em>F</em>(1, 16) = 72.00, <em>p</em> &lt; .001, partial η² = .82, en van zwemles (<em>M</em> = 12.00 met les tegenover 8.00 zonder), <em>F</em>(1, 16) = 32.00, <em>p</em> &lt; .001, partial η² = .67. Daarbij was de interactie tussen water en zwemles significant, <em>F</em>(1, 16) = 8.00, .01 &lt; <em>p</em> &lt; .025, partial η² = .33: zwemles leverde in de beek meer extra visjes op (met les <em>M</em> = 10.00, zonder <em>M</em> = 4.00) dan in het meertje (met les <em>M</em> = 14.00, zonder <em>M</em> = 12.00).</p>
+</div>
+</div>
+<p>In gewone woorden: in de beek vang je sowieso minder, zwemles helpt sowieso, en zwemles helpt het meest waar het water lastig is. Dat laatste is de interactie, en het is de zin die de otterouders het liefst willen horen: niet “zwemles helpt”, maar “zwemles helpt vooral in de beek”.</p>
+<p>Let op wat er in die zin staat. Elk effect met zijn object (<em>op het aantal gevangen visjes</em>) en met de gemiddelden die de richting laten zien, bij elke <em>F</em> de twee vrijheidsgraden, de <em>p</em> en de effectgrootte, en bij de interactie de celgemiddelden mét hun label (met les, zonder les). Zonder die gemiddelden is “significante interactie” een lege zin.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Waarom niet gewoon twee losse ANOVA’s?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Waarom niet gewoon twee losse ANOVA’s?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Je had ook een eenweg-ANOVA kunnen doen met alleen zwemles. Dan zit alles wat met het water te maken heeft in de ruis: het bed van water en het bed van de interactie schuiven bij het onkruid. Nagerekend op dezelfde otters, in stapjes:</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>40</mn><mo>+</mo><mn>180</mn><mo>+</mo><mn>20</mn><mo>=</mo><mn>240</mn></mrow><annotation encoding="application/x-tex">\mathit{SSE} = 40 + 180 + 20 = 240</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>16</mn><mo>+</mo><mn>1</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>18</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = 16 + 1 + 1 = 18</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>240</mn><mn>18</mn></mfrac></mstyle><mo>=</mo><mn>13.333</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = \dfrac{240}{18} = 13.333</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>80.00</mn><mn>13.333</mn></mfrac></mstyle><mo>=</mo><mn>6.00</mn></mrow><annotation encoding="application/x-tex">F = \dfrac{80.00}{13.333} = 6.00</annotation></semantics></math>, in plaats van 32.00</li>
+</ol>
+<p>De <em>p</em> stijgt van &lt; .001 naar .025. Nog steeds significant, maar de <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> is ruim vijf keer zo klein geworden, alleen doordat je het water niet meekneep in het model.</p>
+<p>Dat is de reden uit het college om het in één keer te doen: minder ruis, dus meer power, en je ziet de interactie, die een losse ANOVA nooit kan laten zien.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Voor T6.4, en voor wie verder wil: de kwadratensommen uit de celgemiddelden">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Voor T6.4, en voor wie verder wil: de kwadratensommen uit de celgemiddelden
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Het formuleblad geeft geen formule voor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><annotation encoding="application/x-tex">\mathit{SSA}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSB}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSAB}</annotation></semantics></math>. Toch kun je ze uit de celtabel halen, en op het tentamen van 2023 (opgave 4) is dat voor de interactie gevraagd. De hoofdeffecten gaan precies als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐺</mi></mrow><annotation encoding="application/x-tex">\mathit{SSG}</annotation></semantics></math> bij de eenweg-ANOVA, maar dan met de randgemiddelden: elke rand min het grote gemiddelde, in het kwadraat, keer het aantal otters in die rand.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mo>=</mo><mi>n</mi><mi>J</mi><munder><mo>∑</mo><mi>i</mi></munder><mo stretchy="false" form="prefix">(</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>i</mi><mo>⋅</mo></mrow></msub><mo>−</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>=</mo><mn>5</mn><mo>⋅</mo><mn>2</mn><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">[</mo><mo stretchy="false" form="prefix">(</mo><mn>13</mn><mo>−</mo><mn>10</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>7</mn><mo>−</mo><mn>10</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>180</mn></mrow><annotation encoding="application/x-tex">\mathit{SSA} = n J \sum_i (\bar{x}_{i\cdot} - \bar{x})^2 = 5 \cdot 2 \cdot \left[(13 - 10)^2 + (7 - 10)^2\right] = 180</annotation></semantics></math></p>
+<p>Hier is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> het aantal per cel, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>i</mi><mo>⋅</mo></mrow></msub><annotation encoding="application/x-tex">\bar{x}_{i\cdot}</annotation></semantics></math> het randgemiddelde van rij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> (de punt staat op de plek van de kolom: daarover is gemiddeld) en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> het grote gemiddelde. Voor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSB}</annotation></semantics></math> hetzelfde met de kolomranden <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>⋅</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\bar{x}_{\cdot j}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>I</mi></mrow><annotation encoding="application/x-tex">n I</annotation></semantics></math> ervoor: 80.</p>
+<p>De interactie is de kwadratensom van wat er in elke cel overblijft als je beide randen eraf haalt (dat is wat het college in de nulhypothese opschrijft):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mi>n</mi><munder><mo>∑</mo><mi>i</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><mo stretchy="false" form="prefix">(</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>i</mi><mo>⋅</mo></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>⋅</mi><mi>j</mi></mrow></msub><mo>+</mo><mover><mi>x</mi><mo accent="true">‾</mo></mover><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathit{SSAB} = n \sum_i \sum_j (\bar{x}_{ij} - \bar{x}_{i\cdot} - \bar{x}_{\cdot j} + \bar{x})^2</annotation></semantics></math></p>
+<p>In een 2 × 2 met evenveel per cel is er een kortere weg, en die is van ons, niet van het formuleblad: het verschil in verschil <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> in het kwadraat, keer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>, gedeeld door 4.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mfrac><mrow><mi>n</mi><msup><mi>D</mi><mn>2</mn></msup></mrow><mn>4</mn></mfrac><mo>=</mo><mfrac><mrow><mn>5</mn><mo>⋅</mo><msup><mn>4</mn><mn>2</mn></msup></mrow><mn>4</mn></mfrac><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\mathit{SSAB} = \frac{n D^2}{4} = \frac{5 \cdot 4^2}{4} = 20</annotation></semantics></math></p>
+<p>Precies de 20 uit de tabel. Het laat ook zien wat de interactietoets eigenlijk toetst: is het verschil in verschil groot genoeg ten opzichte van de ruis?</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="uitvoer" class="level1">
+<h1>Zo lees je de uitvoer</h1>
+<p>In SPSS: <strong>Analyze → General Linear Model → Univariate</strong>, <code>visjes</code> bij <em>Dependent Variable</em>, <code>water</code> en <code>zwemles</code> bij <em>Fixed Factor(s)</em>, bij <em>Options</em> de vinkjes <em>Descriptive statistics</em> en <em>Estimates of effect size</em>, en bij <em>Plots</em> het water op de horizontale as en de zwemles als aparte lijnen. Je krijgt drie tabellen en een plot.</p>
+<div class="spss-uitvoer"><div class="spss-titel">Between-Subjects Factors</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Value Label</th>
+<th data-quarto-table-cell-role="th">N</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">water</td>
+<td class="spss-rij">1</td>
+<td class="spss-rij">kalm</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">2</td>
+<td class="spss-rij">beek</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">zwemles</td>
+<td class="spss-rij">1</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">2</td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Between-Subjects Factors.</strong> De factoren, hun codes, de labels en hoeveel otters er per niveau zijn. Hier controleer je of SPSS je factoren goed heeft begrepen: twee niveaus elk, 10 per niveau.</p>
+<div class="spss-uitvoer"><div class="spss-titel">Descriptive Statistics</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th colspan="5" data-quarto-table-cell-role="th">Dependent Variable: visjes</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">water</th>
+<th data-quarto-table-cell-role="th">zwemles</th>
+<th data-quarto-table-cell-role="th">Mean</th>
+<th data-quarto-table-cell-role="th">Std. Deviation</th>
+<th data-quarto-table-cell-role="th">N</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">kalm</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">12.0000</td>
+<td class="spss-getal">1.41421</td>
+<td class="spss-getal">5</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">14.0000</td>
+<td class="spss-getal">1.41421</td>
+<td class="spss-getal">5</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">13.0000</td>
+<td class="spss-getal">1.69967</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">beek</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">4.0000</td>
+<td class="spss-getal">1.73205</td>
+<td class="spss-getal">5</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">10.0000</td>
+<td class="spss-getal">1.73205</td>
+<td class="spss-getal">5</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">7.0000</td>
+<td class="spss-getal">3.55903</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">Total</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">8.0000</td>
+<td class="spss-getal">4.47214</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">12.0000</td>
+<td class="spss-getal">2.58199</td>
+<td class="spss-getal">10</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">10.0000</td>
+<td class="spss-getal">4.10391</td>
+<td class="spss-getal">20</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Descriptive Statistics.</strong> Dit is je celtabel, maar dan uitgerold. Elke rij <em>Total</em> is een rand: de <em>Total</em> onder <em>kalm</em> is het randgemiddelde van het meertje (13.0000), het blok <em>Total</em> onderaan geeft de randen van zwemles, en de allerlaatste rij is het grote gemiddelde. De gemiddelden hier gebruik je in je conclusiezin; de standaardafwijkingen laten zien of de spreiding per cel ongeveer gelijk is.</p>
+<div class="spss-uitvoer"><div class="spss-titel">Tests of Between-Subjects Effects</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th colspan="7" data-quarto-table-cell-role="th">Dependent Variable: visjes</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Source</th>
+<th data-quarto-table-cell-role="th">Type III Sum of Squares</th>
+<th data-quarto-table-cell-role="th">df</th>
+<th data-quarto-table-cell-role="th">Mean Square</th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">Sig.</th>
+<th data-quarto-table-cell-role="th">Partial Eta Squared</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">Corrected Model</td>
+<td class="spss-getal">280.000ᵃ</td>
+<td class="spss-getal">3</td>
+<td class="spss-getal">93.333</td>
+<td class="spss-getal">37.333</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.875</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Intercept</td>
+<td class="spss-getal">2000.000</td>
+<td class="spss-getal">1</td>
+<td class="spss-getal">2000.000</td>
+<td class="spss-getal">800.000</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.980</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">water</td>
+<td class="spss-getal">180.000</td>
+<td class="spss-getal">1</td>
+<td class="spss-getal">180.000</td>
+<td class="spss-getal">72.000</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.818</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">zwemles</td>
+<td class="spss-getal">80.000</td>
+<td class="spss-getal">1</td>
+<td class="spss-getal">80.000</td>
+<td class="spss-getal">32.000</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.667</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">water * zwemles</td>
+<td class="spss-getal">20.000</td>
+<td class="spss-getal">1</td>
+<td class="spss-getal">20.000</td>
+<td class="spss-getal">8.000</td>
+<td class="spss-getal">.012</td>
+<td class="spss-getal">.333</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Error</td>
+<td class="spss-getal">40.000</td>
+<td class="spss-getal">16</td>
+<td class="spss-getal">2.500</td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">Total</td>
+<td class="spss-getal">2320.000</td>
+<td class="spss-getal">20</td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Corrected Total</td>
+<td class="spss-getal">320.000</td>
+<td class="spss-getal">19</td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">a. R Squared = .875 (Adjusted R Squared = .852)</div></div><p class="spss-nagebouwd">Nagebouwd in R met dezelfde data; in SPSS ziet de uitvoer er zo uit.</p>
+<p><strong>Tests of Between-Subjects Effects.</strong> Dit is de toets, en de tabel die je net met de hand maakte zit erin. Rij voor rij:</p>
+<ol type="1">
+<li><code>Corrected Model</code> is het hele strakke stuk van de tuin: de drie effecten samen. De voetnoot geeft <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math>, het deel van de totale variantie dat die drie samen verklaren (.875). Interessant, maar het is niet een van je drie toetsen.</li>
+<li><code>Intercept</code> toetst of het grote gemiddelde nul is. Dat is hier nooit de vraag; sla hem over.</li>
+<li><code>water</code>, <code>zwemles</code> en <code>water * zwemles</code> zijn je drie effecten. In de kolom <code>Type III Sum of Squares</code> staan de 180, 80 en 20 van je handwerk (<em>Type III</em> is SPSS’ manier om de kwadratensom te verdelen; bij evenveel per cel is het gewoon dé kwadratensom, dus laat dat woord staan), bij <code>df</code> de vrijheidsgraden, bij <code>Mean Square</code> de gemiddelde kwadratensommen en bij <code>F</code> de drie breuken. <code>Sig.</code> is de <em>p</em>-waarde: .012 bij de interactie.</li>
+<li><code>Error</code> is het onkruid: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">\mathit{SSE} = 40</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = 16</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>2.500</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 2.500</annotation></semantics></math>. De noemer van alle drie je breuken.</li>
+<li><code>Total</code> en <code>Corrected Total</code>: alleen de laatste is je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝑇</mi></mrow><annotation encoding="application/x-tex">\mathit{SST}</annotation></semantics></math> (320). De rij <code>Total</code> erboven telt de intercept mee en heb je nooit nodig.</li>
+<li><code>Partial Eta Squared</code> is de kolom die verschijnt als je <em>Estimates of effect size</em> aanvinkt: .333 bij de interactie, precies je breuk 20 gedeeld door 60.</li>
+</ol>
+<p>Controle die je altijd kunt doen: tel de drie effect-rijen en de error op. 180 + 80 + 20 + 40 = 320, de <em>Corrected Total</em>. En de vrijheidsgraden: 1 + 1 + 1 + 16 = 19. Klopt dat niet, dan zitten er ongelijke cellen in je design, en dan tellen de Type III-kwadratensommen niet meer netjes op. Dat is geen fout van SPSS, maar wel iets om te weten.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="F is een breuk, geen kwadratensom">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Waarschuwing</span><em>F</em> is een breuk, geen kwadratensom
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>De drukste fout bij het overschrijven van deze tabel: het getal uit de kolom <em>Sum of Squares</em> rapporteren als <em>F</em>. Je ziet het meteen: een grote <em>F</em> en een grote <em>p</em> gaan niet samen. Staat er in je zin een flinke <em>F</em> met een niet-significante <em>p</em> erachter, kijk dan of je niet de kwadratensom hebt overgeschreven.</p>
+<p>Controleer het altijd met de breuk: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> = <em>Mean Square</em> van het effect gedeeld door <em>Mean Square</em> van <em>Error</em>. Hier: 20.00 gedeeld door 2.50 is 8.00, en dat staat in de kolom <code>F</code>. Niet de 20 uit de eerste kolom.</p>
+</div>
+</div>
+<p>De plot die SPSS maakt heet <em>Estimated Marginal Means of visjes</em> en is de interactieplot van hierboven: de celgemiddelden als punten, een lijn per niveau van de lijnen-factor. Kies in SPSS een lijndiagram, geen staafdiagram: een gevulde staaf suggereert dat er ook otters met een halve vangst zijn, en de lijn laat zien waar het om gaat, of hij evenwijdig loopt of niet. Wil je de interactie ook van de andere kant zien, maak dan een tweede plot met de factoren omgewisseld.</p>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+Zo rapporteer je het uit de uitvoer
+</div>
+<div class="rapportage-lijf">
+<p>Een 2 × 2 tweeweg-ANOVA met water (kalm meertje, snelle beek) en zwemles (geen, wel) als factoren liet een significant hoofdeffect zien van water op het aantal gevangen visjes per uur (<em>M</em> = 13.00 in het meertje tegenover 7.00 in de beek), <em>F</em>(1, 16) = 72.00, <em>p</em> &lt; .001, partial η² = .82, en van zwemles (<em>M</em> = 12.00 met les tegenover 8.00 zonder), <em>F</em>(1, 16) = 32.00, <em>p</em> &lt; .001, partial η² = .67. Daarbij was de interactie tussen water en zwemles significant, <em>F</em>(1, 16) = 8.00, <em>p</em> = .012, partial η² = .33: zwemles leverde in de beek meer extra visjes op (met les <em>M</em> = 10.00, <em>SD</em> = 1.73; zonder <em>M</em> = 4.00, <em>SD</em> = 1.73) dan in het meertje (met les <em>M</em> = 14.00, <em>SD</em> = 1.41; zonder <em>M</em> = 12.00, <em>SD</em> = 1.41).</p>
+</div>
+</div>
+<p>Dezelfde zin als bij het handwerk, met twee verschillen: de exacte <em>p</em> uit de kolom <code>Sig.</code> in plaats van de range uit Tabel E, en de standaardafwijkingen uit <em>Descriptive Statistics</em> erbij.</p>
+<div class="spss-syntax callout callout-style-default callout-note no-icon callout-titled" title="In SPSS — klikpad en data">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In SPSS — klikpad en data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Data:</strong> <a href="../common/data/otters_zwemles.sav"><code>otters_zwemles.sav</code></a> — twintig otters, kolommen <code>water</code> (1 = kalm, 2 = beek), <code>zwemles</code> (1 = geen, 2 = wel) en <code>visjes</code>.</p>
+<p><strong>Analyze → General Linear Model → Univariate</strong> → <code>visjes</code> bij <em>Dependent Variable</em> → <code>water</code> en <code>zwemles</code> bij <em>Fixed Factor(s)</em> → <em>Options</em>: vink <em>Descriptive statistics</em> en <em>Estimates of effect size</em> aan → <em>Continue</em> → <em>Plots</em>: <code>water</code> bij <em>Horizontal Axis</em>, <code>zwemles</code> bij <em>Separate Lines</em>, <em>Add</em>, kies <em>Line Chart</em> → <em>Continue</em> → <em>OK</em>.</p>
+<p><strong>Aflezen:</strong> de drie effecten in <em>Tests of Between-Subjects Effects</em> (kolommen <code>F</code>, <code>Sig.</code>, <code>Partial Eta Squared</code>), de gemiddelden in <em>Descriptive Statistics</em>, het patroon in de plot. De getallen zijn precies die van dit thema.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="keuzeboom" class="level1">
+<h1>Waar staat deze toets in de keuzeboom?</h1>
+<p>De tweeweg-ANOVA zit in de tak <em>verschillen tussen groepen</em> van de keuzeboom, naast de eenweg-ANOVA. Je neemt de tweeweg zodra er <strong>twee categorische onafhankelijke variabelen</strong> zijn met elk een paar niveaus, <strong>één uitkomst</strong> van intervalniveau, en <strong>andere mensen in elke cel</strong>. Zijn buren, elk met het ene verschil dat de keuze maakt:</p>
+<ul>
+<li>één factor, twee groepen → onafhankelijke <em>t</em>-toets (thema 1);</li>
+<li>één factor, drie of meer groepen → eenweg-ANOVA (thema 3);</li>
+<li>twee factoren → <strong>tweeweg-ANOVA</strong>, dit thema;</li>
+<li>een factor én een gemeten getal als extra onafhankelijke variabele → ANCOVA (thema 9);</li>
+<li>twee gemeten getallen als onafhankelijke variabelen → meervoudige regressie (thema 8);</li>
+<li>één factor, maar een scheve of ordinale uitkomst → Kruskal-Wallis (thema 5); voor twee factoren tegelijk is er in dit vak geen rangtoets;</li>
+<li>dezelfde mensen in elke cel → een within-design, en een toets die in dit vak niet behandeld wordt.</li>
+</ul>
+<p>Let op de woorden in de vraag. <em>Verschil</em> en <em>vergelijken</em> wijzen naar de hele ANOVA-tak; <em>verband</em> en <em>samenhang</em> naar correlatie, <em>voorspellen</em> naar regressie, <em>corrigeren voor</em> naar ANCOVA. Het woord dat déze toets verraadt, is wat erna komt: <em>is het verschil anders voor … dan voor …</em>, <em>hangt het effect van X af van Y</em>, <em>twee factoren</em>, <em>2 × 3-design</em>, <em>interactie</em>, <em>gecombineerd effect</em>. Lees je zo’n zin, dan staat er een tweeweg-ANOVA.</p>
+</section>
+<section id="oefenen" class="level1">
+<h1>Oefenen</h1>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.1 — De woorden">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.1 — De woorden
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker kijkt bij jonge dassen naar het effect van de soort burcht (zand, klei, leem) en van het seizoen (voorjaar, najaar) op het aantal minuten dat ze per nacht buiten zijn. Elke das is in één burcht in één seizoen gemeten.</p>
+<ol type="a">
+<li><p>Wat zijn de factoren, en hoeveel niveaus heeft elk?</p></li>
+<li><p>Hoeveel cellen heeft dit design, en hoe noem je het?</p></li>
+<li><p>Hoeveel hoofdeffecten en hoeveel interacties toetst de tweeweg-ANOVA hier?</p></li>
+<li><p>En als er een derde factor bij komt, bijvoorbeeld wel of geen jongen in de burcht: hoeveel hoofdeffecten en hoeveel interacties dan?</p></li>
+<li><p>Wat is het verschil tussen een hoofdeffect van seizoen en een simpel effect van seizoen?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T6.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T6.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Burcht, met drie niveaus (zand, klei, leem), en seizoen, met twee (voorjaar, najaar).</p></li>
+<li><p>3 × 2 = 6 cellen. Een 3 × 2-design, between-subjects, want in elke cel zitten andere dassen.</p></li>
+<li><p>Twee hoofdeffecten (burcht, seizoen) en één interactie (burcht × seizoen).</p></li>
+<li><p>Drie hoofdeffecten, en vier interacties: drie tweeweg-interacties (burcht × seizoen, burcht × jongen, seizoen × jongen) en één drieweg-interactie (burcht × seizoen × jongen). Dat loopt snel op, en daarom blijft het in dit vak bij tweeweg.</p></li>
+<li><p>Het hoofdeffect van seizoen is het verschil tussen de randgemiddelden van voorjaar en najaar, gemiddeld over alle burchten. Een simpel effect van seizoen is dat verschil binnen één soort burcht, bijvoorbeeld alleen bij de zandburchten. Er zijn hier drie simpele effecten van seizoen, één per burcht.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.2 — Tabel lezen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.2 — Tabel lezen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Drie tabellen met celgemiddelden, evenveel dieren per cel. Zeg bij elke tabel of er een hoofdeffect van A lijkt te zijn, een hoofdeffect van B, en een interactie. Reken daarvoor de randen uit en het verschil in verschil. Schets daarna de interactieplot in je hoofd: evenwijdig of niet?</p>
+<p>Tabel 1</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">B1</th>
+<th style="text-align: center;">B2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A1</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">15</td>
+</tr>
+<tr class="even">
+<td>A2</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">25</td>
+</tr>
+</tbody>
+</table>
+<p>Tabel 2</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">B1</th>
+<th style="text-align: center;">B2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A1</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr class="even">
+<td>A2</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">20</td>
+</tr>
+</tbody>
+</table>
+<p>Tabel 3</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">B1</th>
+<th style="text-align: center;">B2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A1</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">12</td>
+</tr>
+<tr class="even">
+<td>A2</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T6.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T6.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Aftrekvolgorde, steeds dezelfde: per rij B2 min B1, en dan rij A1 min rij A2. Draai je het om, dan krijg je hetzelfde getal met het andere teken; dat is goed, zolang je erbij zegt wat je van wat aftrok.</p>
+<p><strong>Tabel 1.</strong> Randen van A: 12.5 en 22.5, dus een hoofdeffect van A. Randen van B: 15 en 20, dus een hoofdeffect van B. Verschil in verschil: (15 − 10) − (25 − 20) = 5 − 5 = 0, dus geen interactie. In de plot: twee evenwijdige lijnen die apart liggen. Dit is patroon 1 van hierboven.</p>
+<p><strong>Tabel 2.</strong> Alle randen zijn 15: geen hoofdeffect van A en geen van B. Verschil in verschil: (10 − 20) − (20 − 10) = −20, dus een interactie, en een grote. In de plot: twee lijnen die niet evenwijdig lopen; ze gaan hier zelfs dwars door elkaar heen. Dit is patroon 2, en het laat zien waarom je nooit alleen naar de randen mag kijken.</p>
+<p><strong>Tabel 3.</strong> Randen van A: 11 en 15, een hoofdeffect van A. Randen van B: 10 en 16, een hoofdeffect van B. Verschil in verschil: (12 − 10) − (20 − 10) = 2 − 10 = −8, dus ook een interactie: het effect van B is bij A2 veel groter dan bij A1. In de plot: twee lijnen die apart liggen en niet evenwijdig lopen. Net als bij de otters: twee hoofdeffecten én een interactie. Dit is níét patroon 3 van hierboven, want daar had A geen hoofdeffect.</p>
+<p>Of de effecten ook significant zijn, weet je uit een tabel met gemiddelden alleen niet; daar heb je de kwadratensommen en de spreiding voor nodig. “Lijkt er sprake van” is dus het goede woord.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.3 — De tabel als sudoku">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.3 — De tabel als sudoku
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>36 jonge vossen zijn verdeeld over een speelgroep (geen, klein, groot) en een tijd van voeren (ochtend, avond); in elke cel zitten evenveel vossen. Gemeten is hoeveel minuten een vos daarna buiten blijft spelen. SPSS geeft de kwadratensommen; de rest van de tabel is weg.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Source</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{SS}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><annotation encoding="application/x-tex">\mathit{df}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{MS}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>speelgroep (A)</td>
+<td style="text-align: center;">120</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>voedertijd (B)</td>
+<td style="text-align: center;">54</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td>speelgroep × voedertijd (AB)</td>
+<td style="text-align: center;">24</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td>Error</td>
+<td style="text-align: center;">180</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Vul de vrijheidsgraden in.</p></li>
+<li><p>Vul <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{MS}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> in.</p></li>
+<li><p>Welke effecten zijn significant bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>? Gebruik Tabel E.</p></li>
+<li><p>Bereken partial η² voor de interactie.</p></li>
+<li><p>Stel dat je alleen een eenweg-ANOVA met speelgroep had gedaan. Hoe groot is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><annotation encoding="application/x-tex">\mathit{MSE}</annotation></semantics></math> dan, en wat gebeurt er met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mi>A</mi></msub><annotation encoding="application/x-tex">F_A</annotation></semantics></math>? Tip: de kwadratensommen en vrijheidsgraden van wat je weglaat, schuiven naar de error.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord T6.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Kort antwoord T6.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><annotation encoding="application/x-tex">\mathit{df}</annotation></semantics></math>: 2, 1, 2, 30</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{MS}</annotation></semantics></math>: 60.00, 54.00, 12.00, 6.00</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>: 10.00, 9.00, 2.00</li>
+<li>significant: speelgroep en voedertijd; de interactie niet</li>
+<li>partial η² interactie: .118</li>
+<li>eenweg: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>7.818</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 7.818</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mn>7.67</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}} = 7.67</annotation></semantics></math> (kleiner)</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking T6.3 — stap voor stap">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Volledige uitwerking T6.3 — stap voor stap
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Vrijheidsgraden.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">I = 3</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">J = 2</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">N = 36</annotation></semantics></math>. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi></mrow><mo>=</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\mathit{DFA} = 3 - 1 = 2</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFB} = 2 - 1 = 1</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>2</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\mathit{DFAB} = 2 \times 1 = 2</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>36</mn><mo>−</mo><mn>6</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = 36 - 6 = 30</annotation></semantics></math>. Controle: samen 35, en dat is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N - 1</annotation></semantics></math>.</li>
+<li><strong>Gemiddelde kwadratensommen.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mo>=</mo><mn>120</mn><mi>/</mi><mn>2</mn><mo>=</mo><mn>60.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSA} = 120 / 2 = 60.00</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>54</mn><mi>/</mi><mn>1</mn><mo>=</mo><mn>54.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSB} = 54 / 1 = 54.00</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>24</mn><mi>/</mi><mn>2</mn><mo>=</mo><mn>12.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSAB} = 24 / 2 = 12.00</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>180</mn><mi>/</mi><mn>30</mn><mo>=</mo><mn>6.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 180 / 30 = 6.00</annotation></semantics></math>.</li>
+<li><strong><em>F</em>-waarden.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mn>60.00</mn><mi>/</mi><mn>6.00</mn><mo>=</mo><mn>10.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}}= 60.00 / 6.00 = 10.00</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">B</mtext></msub><mo>=</mo><mn>54.00</mn><mi>/</mi><mn>6.00</mn><mo>=</mo><mn>9.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{B}}= 54.00 / 6.00 = 9.00</annotation></semantics></math>; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mn>12.00</mn><mi>/</mi><mn>6.00</mn><mo>=</mo><mn>2.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = 12.00 / 6.00 = 2.00</annotation></semantics></math>.</li>
+<li><strong>Tabel E.</strong> Voor speelgroep en de interactie zoek je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>,</mo><mn>30</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{df} = (2, 30)</annotation></semantics></math>: kolom .050 geeft 3.32. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mn>10.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}}= 10.00</annotation></semantics></math> ligt daar ruim voorbij, zelfs voorbij de kolom .001 (8.77): <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.001</mn></mrow><annotation encoding="application/x-tex">p &lt; .001</annotation></semantics></math>, significant. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mn>2.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = 2.00</annotation></semantics></math> haalt niet eens de kolom .100 (2.49): <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mn>.10</mn></mrow><annotation encoding="application/x-tex">p &gt; .10</annotation></semantics></math>, niet significant. Voor voedertijd zoek je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>30</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{df} = (1, 30)</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">B</mtext></msub><mo>=</mo><mn>9.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{B}}= 9.00</annotation></semantics></math> ligt tussen 7.56 (kolom .010) en 13.29 (kolom .001), dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.001</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.01</mn></mrow><annotation encoding="application/x-tex">.001 &lt; p &lt; .01</annotation></semantics></math>, significant. Exact: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.005</mn></mrow><annotation encoding="application/x-tex">p = .005</annotation></semantics></math>.</li>
+<li><strong>Beslissing.</strong> Verwerp de nulhypothese van gelijke gemiddelden voor speelgroep en voor voedertijd. Verwerp de nulhypothese van geen interactie <strong>niet</strong>. Omdat de interactie niet significant is, mag je de twee hoofdeffecten los van elkaar bespreken: de speelgroep doet ertoe voor de speeltijd, en de voedertijd ook, en het effect van het een hangt niet aantoonbaar af van het ander.</li>
+<li><strong>Partial η².</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>24</mn><mo>+</mo><mn>180</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.118</mn></mrow><annotation encoding="application/x-tex">24 / (24 + 180) = .118</annotation></semantics></math>: tussen .06 en .14, dus middelgroot volgens de vuistregels, al is de interactie niet significant. Voor de volledigheid: speelgroep .400, voedertijd .231, allebei groot.</li>
+<li><strong>Eenweg met alleen speelgroep.</strong> Alles van voedertijd en van de interactie gaat naar de error: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>54</mn><mo>+</mo><mn>24</mn><mo>+</mo><mn>180</mn><mo>=</mo><mn>258</mn></mrow><annotation encoding="application/x-tex">\mathit{SSE} = 54 + 24 + 180 = 258</annotation></semantics></math> bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>30</mn><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">\mathit{df} = 1 + 2 + 30 = 33</annotation></semantics></math>, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>7.818</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 7.818</annotation></semantics></math>. Dan is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mn>60.00</mn><mi>/</mi><mn>7.818</mn><mo>=</mo><mn>7.67</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}}= 60.00 / 7.818 = 7.67</annotation></semantics></math>, lager dan de 10.00 van de tweeweg. Meer ruis, minder signaal per eenheid ruis. Hier blijft het significant, maar dat is niet altijd zo.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.4 — Verschil in verschil met de hand (verder dan het formuleblad)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.4 — Verschil in verschil met de hand (verder dan het formuleblad)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dit is de vorm van opgave 4 van het tentamen van 2023: alleen celgemiddelden, en toch de interactie toetsen. Jonge mollen graven gangen. Bij 20 mollen is gekeken naar de grondsoort (zand, klei) en naar een korte voorlichting over graven (geen, wel), 5 mollen per cel. Geteld is hoeveel gangen een mol in één nacht graaft. De celgemiddelden:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">geen voorlichting</th>
+<th style="text-align: center;">wel voorlichting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>zand</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">10</td>
+</tr>
+<tr class="even">
+<td>klei</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">11</td>
+</tr>
+</tbody>
+</table>
+<p>Gegeven: de gepoolde standaardafwijking binnen de cellen is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mtext mathvariant="normal">p</mtext></msub><mo>=</mo><mn>2.0</mn></mrow><annotation encoding="application/x-tex">s_{\text{p}} = 2.0</annotation></semantics></math>. Net als bij de eenweg-ANOVA (formuleblad, Eq. 28) is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><msubsup><mi>s</mi><mtext mathvariant="normal">p</mtext><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">\mathit{MSE} = s_{\text{p}}^2</annotation></semantics></math>, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>4.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 4.00</annotation></semantics></math>.</p>
+<ol type="a">
+<li><p>Bereken de twee simpele effecten van voorlichting (wel min geen), en daaruit het verschil in verschil.</p></li>
+<li><p>Bereken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{SSAB}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><annotation encoding="application/x-tex">\mathit{MSAB}</annotation></semantics></math>. Gebruik de korte weg voor een 2 × 2 uit het kader <em>Voor T6.4, en voor wie verder wil</em>, of de lange formule.</p></li>
+<li><p>Bereken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><annotation encoding="application/x-tex">F_{\text{AB}}</annotation></semantics></math> en de vrijheidsgraden, en beslis met Tabel E bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>.</p></li>
+<li><p>Zeg in één zin wat de interactie betekent voor de mollen.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord T6.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Kort antwoord T6.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>simpele effecten: zand 2, klei 8; verschil in verschil 6</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">\mathit{SSAB} = 45</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">\mathit{MSAB} = 45</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mn>11.25</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = 11.25</annotation></semantics></math> bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>16</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{df} = (1, 16)</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.001</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.01</mn></mrow><annotation encoding="application/x-tex">.001 &lt; p &lt; .01</annotation></semantics></math> → verwerpen</li>
+<li>de voorlichting helpt in klei meer dan in zand</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking T6.4 — stap voor stap">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Volledige uitwerking T6.4 — stap voor stap
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Simpele effecten.</strong> Zand: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn><mo>−</mo><mn>8</mn><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">10 - 8 = 2</annotation></semantics></math>. Klei: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>11</mn><mo>−</mo><mn>3</mn><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">11 - 3 = 8</annotation></semantics></math>. Verschil in verschil, klei min zand: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8</mn><mo>−</mo><mn>2</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">8 - 2 = 6</annotation></semantics></math>. Had je zand min klei genomen, dan was het <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>6</mn></mrow><annotation encoding="application/x-tex">-6</annotation></semantics></math>; dat maakt voor de kwadratensom niet uit, want die gaat in het kwadraat.</li>
+<li><strong>Kwadratensom van de interactie.</strong> Korte weg: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑆</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>n</mi><msup><mi>D</mi><mn>2</mn></msup></mrow><mn>4</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>5</mn><mo>⋅</mo><msup><mn>6</mn><mn>2</mn></msup></mrow><mn>4</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>180</mn><mn>4</mn></mfrac></mstyle><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">\mathit{SSAB} = \dfrac{n D^2}{4} = \dfrac{5 \cdot 6^2}{4} = \dfrac{180}{4} = 45</annotation></semantics></math>. Met de lange formule: grote gemiddelde 8, randen 9 en 7 (grond), 5.5 en 10.5 (voorlichting); elke cel min zijn twee randen plus het grote gemiddelde geeft steeds <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>±</mi><mn>1.5</mn></mrow><annotation encoding="application/x-tex">\pm 1.5</annotation></semantics></math>, en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mo>⋅</mo><mn>4</mn><mo>⋅</mo><msup><mn>1.5</mn><mn>2</mn></msup><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">5 \cdot 4 \cdot 1.5^2 = 45</annotation></semantics></math>. Hetzelfde.</li>
+<li><strong>Gemiddelde kwadratensom.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFAB} = (2 - 1)(2 - 1) = 1</annotation></semantics></math>, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>45</mn><mi>/</mi><mn>1</mn><mo>=</mo><mn>45</mn></mrow><annotation encoding="application/x-tex">\mathit{MSAB} = 45 / 1 = 45</annotation></semantics></math>.</li>
+<li><strong><em>F</em> en <em>df</em>.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>45</mn><mn>4.00</mn></mfrac></mstyle><mo>=</mo><mn>11.25</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = \dfrac{\mathit{MSAB}}{\mathit{MSE}} = \dfrac{45}{4.00} = 11.25</annotation></semantics></math>, met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑑</mi><mi>𝑓</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>20</mn><mo>−</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>16</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathit{df} = (1, 20 - 4) = (1, 16)</annotation></semantics></math>.</li>
+<li><strong>Tabel E.</strong> Rij 16, kolom 1: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>11.25</mn><annotation encoding="application/x-tex">11.25</annotation></semantics></math> ligt tussen 8.53 (kolom .010) en 16.12 (kolom .001), dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.001</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.01</mn></mrow><annotation encoding="application/x-tex">.001 &lt; p &lt; .01</annotation></semantics></math>. Exact <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.004</mn></mrow><annotation encoding="application/x-tex">p = .004</annotation></semantics></math>.</li>
+<li><strong>Beslissing.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &lt; .05</annotation></semantics></math>: verwerp de nulhypothese dat het effect van voorlichting op het aantal gangen in zand even groot is als in klei.</li>
+<li><strong>In woorden.</strong> De voorlichting helpt mollen in klei meer (8 gangen extra) dan mollen in zand (2 extra). Wie zand graaft, kan het kennelijk al; wie klei graaft, heeft wat aan uitleg.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.5 — De uitvoer lezen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.5 — De uitvoer lezen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>36 jonge eekhoorns, 6 per cel. Factor A is de boomsoort in hun territorium (eik, beuk, den), factor B is of ze een winterles hadden (geen, wel). Geteld is hoeveel noten een eekhoorn op één dag verstopt. SPSS geeft:</p>
+<div class="spss-uitvoer"><div class="spss-titel">Descriptive Statistics</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th colspan="5" data-quarto-table-cell-role="th">Dependent Variable: noten</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">boom</th>
+<th data-quarto-table-cell-role="th">winterles</th>
+<th data-quarto-table-cell-role="th">Mean</th>
+<th data-quarto-table-cell-role="th">Std. Deviation</th>
+<th data-quarto-table-cell-role="th">N</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">eik</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">21.0000</td>
+<td class="spss-getal">3.09839</td>
+<td class="spss-getal">6</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">30.0000</td>
+<td class="spss-getal">3.89872</td>
+<td class="spss-getal">6</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">25.5000</td>
+<td class="spss-getal">5.77613</td>
+<td class="spss-getal">12</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">beuk</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">11.0000</td>
+<td class="spss-getal">2.19089</td>
+<td class="spss-getal">6</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">41.0000</td>
+<td class="spss-getal">2.82843</td>
+<td class="spss-getal">6</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">26.0000</td>
+<td class="spss-getal">15.85158</td>
+<td class="spss-getal">12</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">den</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">19.0000</td>
+<td class="spss-getal">2.09762</td>
+<td class="spss-getal">6</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">31.0000</td>
+<td class="spss-getal">2.09762</td>
+<td class="spss-getal">6</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">25.0000</td>
+<td class="spss-getal">6.57820</td>
+<td class="spss-getal">12</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Total</td>
+<td class="spss-rij">geen</td>
+<td class="spss-getal">17.0000</td>
+<td class="spss-getal">5.02933</td>
+<td class="spss-getal">18</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij"></td>
+<td class="spss-rij">wel</td>
+<td class="spss-getal">34.0000</td>
+<td class="spss-getal">5.85109</td>
+<td class="spss-getal">18</td>
+</tr>
+<tr class="even">
+<td class="spss-rij"></td>
+<td class="spss-rij">Total</td>
+<td class="spss-getal">25.5000</td>
+<td class="spss-getal">10.16015</td>
+<td class="spss-getal">36</td>
+</tr>
+</tbody>
+</table>
+</div><div class="spss-uitvoer"><div class="spss-titel">Tests of Between-Subjects Effects</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th colspan="7" data-quarto-table-cell-role="th">Dependent Variable: noten</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Source</th>
+<th data-quarto-table-cell-role="th">Type III Sum of Squares</th>
+<th data-quarto-table-cell-role="th">df</th>
+<th data-quarto-table-cell-role="th">Mean Square</th>
+<th data-quarto-table-cell-role="th">F</th>
+<th data-quarto-table-cell-role="th">Sig.</th>
+<th data-quarto-table-cell-role="th">Partial Eta Squared</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">Corrected Model</td>
+<td class="spss-getal">3381.000ᵃ</td>
+<td class="spss-getal">5</td>
+<td class="spss-getal">676.200</td>
+<td class="spss-getal">87.440</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.936</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Intercept</td>
+<td class="spss-getal">23409.000</td>
+<td class="spss-getal">1</td>
+<td class="spss-getal">23409.000</td>
+<td class="spss-getal">3027.026</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.990</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">boom</td>
+<td class="spss-getal">6.000</td>
+<td class="spss-getal">2</td>
+<td class="spss-getal">3.000</td>
+<td class="spss-getal">.388</td>
+<td class="spss-getal">.682</td>
+<td class="spss-getal">.025</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">winterles</td>
+<td class="spss-getal">2601.000</td>
+<td class="spss-getal">1</td>
+<td class="spss-getal">2601.000</td>
+<td class="spss-getal">336.336</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.918</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">boom * winterles</td>
+<td class="spss-getal">774.000</td>
+<td class="spss-getal">2</td>
+<td class="spss-getal">387.000</td>
+<td class="spss-getal">50.043</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">.769</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Error</td>
+<td class="spss-getal">232.000</td>
+<td class="spss-getal">30</td>
+<td class="spss-getal">7.733</td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">Total</td>
+<td class="spss-getal">27022.000</td>
+<td class="spss-getal">36</td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Corrected Total</td>
+<td class="spss-getal">3613.000</td>
+<td class="spss-getal">35</td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+<td class="spss-getal"></td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">a. R Squared = .936 (Adjusted R Squared = .925)</div></div><p class="spss-nagebouwd">Nagebouwd in R met dezelfde data; in SPSS ziet de uitvoer er zo uit.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-eekhoorns" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-eekhoorns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-eekhoorns-1.png" class="img-fluid figure-img" width="537">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-eekhoorns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;6: De interactieplot bij de uitvoer van T6.5: boomsoort op de horizontale as, een lijn per winterles-groep.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ol type="a">
+<li><p>Is er een hoofdeffect van boomsoort op het aantal verstopte noten? Geef <em>F</em>, de vrijheidsgraden en <em>p</em>.</p></li>
+<li><p>Is er een hoofdeffect van winterles? Geef <em>F</em>, de vrijheidsgraden en <em>p</em>.</p></li>
+<li><p>Is er een interactie? Geef <em>F</em>, de vrijheidsgraden, <em>p</em> en partial η².</p></li>
+<li><p>Hoe zie je de interactie in de plot, en hoe in de tabel met gemiddelden?</p></li>
+<li><p>Beschrijf het patroon in woorden: wat doet de winterles bij welke boom?</p></li>
+<li><p>Waarom is het hoofdeffect van boomsoort hier een misleidend antwoord op de vraag “doet de boomsoort ertoe”?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T6.5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T6.5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Nee. Rij <code>boom</code>: <em>F</em>(2, 30) = 0.39, <em>p</em> = .68. De randgemiddelden van de drie bomen liggen vlak bij elkaar: in het blok <em>Total</em> van <em>Descriptive Statistics</em> staat 25.5000, 26.0000 en 25.0000.</p></li>
+<li><p>Ja. Rij <code>winterles</code>: <em>F</em>(1, 30) = 336.34, <em>p</em> &lt; .001. Met les gemiddeld 34.00 noten, zonder 17.00.</p></li>
+<li><p>Ja. Rij <code>boom * winterles</code>: <em>F</em>(2, 30) = 50.04, <em>p</em> &lt; .001, partial η² = .77.</p></li>
+<li><p>In de plot lopen de twee lijnen niet evenwijdig: de lijn mét les gaat bij de beuk omhoog, de lijn zonder les gaat daar juist omlaag. In de tabel zie je het aan de simpele effecten van de les per boom: eik 9, beuk 30, den 12 noten extra. Drie verschillende verschillen.</p></li>
+<li><p>De winterles helpt bij elke boom, maar bij de beuk veel meer dan bij de eik en de den: zonder les verstoppen beuk-eekhoorns het minst (11), met les het meest (41).</p></li>
+<li><p>Gemiddeld over les en geen les doet de boom niets: de randen zijn bijna gelijk. Maar dat komt doordat de beuk zonder les slecht is en met les juist goed, en die twee heffen elkaar in de rand op. De boomsoort doet er dus wel degelijk toe, alleen niet op zichzelf: het hangt van de les af. Dat is precies wat een interactie zegt, en waarom je bij een significante interactie de hoofdeffecten niet kaal mag lezen.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.6 — Welk plaatje hoort bij deze tabel?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.6 — Welk plaatje hoort bij deze tabel?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Op het tentamen van 2023 stond een plaatje met de vraag welke effecten erin zitten (opgave 7). De omgekeerde vorm komt ook voor: je krijgt een ANOVA-tabel en een paar plaatjes, en je moet zeggen welk plaatje bij de tabel past. Neem de tabel van de eekhoorns uit T6.5: geen significant hoofdeffect van boom, wel van winterles, en een significante interactie. Welk van deze vier plaatjes past erbij? En welk plaatje past bij een tabel met twee significante hoofdeffecten en géén interactie?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vier-plaatjes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vier-plaatjes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-vier-plaatjes-1.png" class="img-fluid figure-img" width="729">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vier-plaatjes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;7: Vier mogelijke interactieplots bij een 3 × 2-design, alle vier met dezelfde assen.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T6.6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T6.6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Plaatje (c)</strong> hoort bij de eekhoorns. Redeneer vanuit de tabel: de interactie is significant, dus je zoekt niet-evenwijdige lijnen; dat zijn (b) en (c). Winterles heeft een hoofdeffect, dus de ene lijn ligt als geheel boven de andere; dat is wel zo in (c) en niet in (b), waar de lijnen dwars door elkaar gaan en de randen gelijk zijn. En boom heeft geen hoofdeffect: de gemiddelden van de twee lijnen samen zijn bij eik, beuk en den ongeveer gelijk. In (c) klopt dat, want waar de ene lijn omhoog gaat, gaat de andere omlaag.</p>
+<p><strong>Plaatje (a)</strong> hoort bij twee hoofdeffecten zonder interactie: evenwijdige lijnen (geen interactie), de ene boven de andere (hoofdeffect winterles), en samen omhoog en omlaag over de bomen (hoofdeffect boom). Plaatje (d) heeft alleen een hoofdeffect van winterles; plaatje (b) alleen een interactie.</p>
+<p>Oefen dit allebei de kanten op: van de tabel naar het plaatje, en van het plaatje naar wat er in de tabel significant moet zijn.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.7 — Schrijf het op">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.7 — Schrijf het op
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Schrijf het resultaat van T6.5 op zoals in de resultatensectie van een verslag: alle drie de effecten met <em>F</em>, vrijheidsgraden, <em>p</em> en partial η², en bij de interactie de gemiddelden die het patroon laten zien. Schrijf daaronder in twee zinnen gewoon Nederlands wat een eekhoornouder hieraan heeft.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T6.7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T6.7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Bijvoorbeeld:</p>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+Zo rapporteer je het
+</div>
+<div class="rapportage-lijf">
+<p>Een 3 × 2 tweeweg-ANOVA met boomsoort (eik, beuk, den) en winterles (geen, wel) als factoren liet geen significant hoofdeffect zien van boomsoort op het aantal verstopte noten per dag (<em>M</em> = 25.50, 26.00 en 25.00), <em>F</em>(2, 30) = 0.39, <em>p</em> = .68, partial η² = .03, maar wel van winterles (<em>M</em> = 34.00 met les tegenover 17.00 zonder), <em>F</em>(1, 30) = 336.34, <em>p</em> &lt; .001, partial η² = .92. De interactie tussen boomsoort en winterles was significant, <em>F</em>(2, 30) = 50.04, <em>p</em> &lt; .001, partial η² = .77: de winterles leverde bij de beuk de meeste extra noten op (met les <em>M</em> = 41.00, zonder <em>M</em> = 11.00), bij de eik (met les <em>M</em> = 30.00, zonder <em>M</em> = 21.00) en de den (met les <em>M</em> = 31.00, zonder <em>M</em> = 19.00) minder.</p>
+</div>
+</div>
+<p>In gewone woorden: de winterles helpt elke jonge eekhoorn meer noten te verstoppen, en het meest als hij in een beuk woont. Zonder les zijn de beuk-eekhoorns juist het slechtst af, dus daar is de les het hardst nodig.</p>
+<p>Controleer je eigen zinnen op vijf dingen: <strong>welke toets</strong> en welk design, elk effect <strong>mét zijn object</strong> (op het aantal verstopte noten) en met de gemiddelden die de richting laten zien, bij elke <em>F</em> <strong>twee vrijheidsgraden</strong>, een <strong>effectgrootte</strong> per effect, en bij de interactie <strong>de celgemiddelden mét hun label</strong> (met les, zonder les), zodat je ziet welke kant het op gaat.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T6.8 — Welke toets?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T6.8 — Welke toets?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Welke analyse past bij elke vraag? Kies uit: onafhankelijke <em>t</em>-toets, eenweg-ANOVA, tweeweg-ANOVA, correlatie, ANCOVA. Noem het woord in de vraag dat je keuze verraadt.</p>
+<ol type="a">
+<li><p>Verschilt de leesscore van kinderen tussen drie leesmethodes?</p></li>
+<li><p>Hangt het effect van de leesmethode op de leesscore af van of een kind thuis voorgelezen wordt?</p></li>
+<li><p>Is er een verband tussen het aantal boeken thuis en de leesscore?</p></li>
+<li><p>Verschilt de leesscore tussen drie leesmethodes, als je corrigeert voor de woordenschat vooraf?</p></li>
+<li><p>Verschilt de leesscore tussen kinderen in groep 4 en groep 5?</p></li>
+<li><p>Is het verschil in leesscore tussen jongens en meisjes even groot bij elke leesmethode?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T6.8">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T6.8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Eenweg-ANOVA: <em>verschilt</em> tussen <em>drie</em> groepen, één factor.</p></li>
+<li><p>Tweeweg-ANOVA: <em>hangt het effect van … af van …</em>, twee factoren (leesmethode en voorlezen), en de vraag is de interactie.</p></li>
+<li><p>Correlatie: <em>verband</em> tussen twee gemeten variabelen.</p></li>
+<li><p>ANCOVA: <em>corrigeert voor</em> een gemeten variabele, met een factor.</p></li>
+<li><p>Onafhankelijke <em>t</em>-toets: <em>verschilt</em> tussen <em>twee</em> groepen, andere kinderen.</p></li>
+<li><p>Tweeweg-ANOVA: <em>is het verschil even groot bij elke …</em>, dat is verschil in verschil, de interactie van geslacht en leesmethode.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="tentamenvragen" class="level1">
+<h1>Tentamenvragen</h1>
+<p>Op het tentamen krijg je een meerkeuzedeel en een open deel. Op het tentamen van 2023 gingen vier van de dertig meerkeuzevragen over dit thema, onder meer twee keer een kwadratensom of gemiddelde kwadratensom uitrekenen (uit celgemiddelden, en uit een SPSS-tabel) en één keer een plaatje lezen. In het open deel krijg je kwadratensommen en vul je de tabel aan.</p>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E6.1 — Meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E6.1 — Meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Kijk nog eens naar de uitvoer van de eekhoorns bij T6.5. Welke zin rapporteert het hoofdeffect van winterles op het aantal verstopte noten correct?</p>
+<ol type="a">
+<li><p><em>F</em>(1, 30) = 2601.00, <em>p</em> &lt; .001</p></li>
+<li><p><em>F</em>(30, 1) = 336.34, <em>p</em> &lt; .001</p></li>
+<li><p><em>F</em>(1, 30) = 336.34, <em>p</em> &lt; .001</p></li>
+<li><p><em>F</em>(1, 30) = 7.73, <em>p</em> &lt; .001</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E6.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E6.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(c)</strong> De <em>F</em> is de breuk <em>Mean Square</em> van winterles gedeeld door <em>Mean Square</em> van <em>Error</em>, en dat is het getal in de kolom <code>F</code>. Bij (a) staat de kwadratensom op de plek van <em>F</em>, bij (d) de <em>Mean Square</em> van de error, en bij (b) staan de vrijheidsgraden in de verkeerde volgorde: eerst die van het effect, dan die van de error.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E6.2 — Meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E6.2 — Meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hieronder staat de interactieplot van een tweeweg-ANOVA met factor A en factor B als onafhankelijke variabelen en <em>Y</em> als afhankelijke variabele.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-e62" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-e62-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_anova_meerweg_files/figure-html/fig-e62-1.png" class="img-fluid figure-img" width="441">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-e62-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;8: Interactieplot bij E6.2.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Wat kun je op basis van dit plaatje zeggen? In dit plaatje is er</p>
+<ol type="a">
+<li><p>een hoofdeffect van A, een hoofdeffect van B, en een interactie van A en B.</p></li>
+<li><p>geen hoofdeffect van A, wel een hoofdeffect van B, en geen interactie van A en B.</p></li>
+<li><p>een hoofdeffect van A, geen hoofdeffect van B, en geen interactie van A en B.</p></li>
+<li><p>geen hoofdeffect van A, geen hoofdeffect van B, en wel een interactie van A en B.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E6.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E6.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(b)</strong> De lijnen lopen vlak: van A1 naar A2 verandert er niets, dus geen hoofdeffect van A. De lijnen liggen boven elkaar: B1 scoort overal hoger dan B2, dus een hoofdeffect van B. En ze lopen evenwijdig, dus geen interactie.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E6.3 — Meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E6.3 — Meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker doet een tweeweg-ANOVA met een factor met 3 niveaus en een factor met 4 niveaus, bij 60 deelnemers. Wat zijn de vrijheidsgraden van de interactie en van de error?</p>
+<ol type="a">
+<li><p>6 en 48</p></li>
+<li><p>12 en 48</p></li>
+<li><p>6 en 54</p></li>
+<li><p>5 en 59</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E6.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E6.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(a)</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>I</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><mi>J</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">\mathit{DFAB} = (I - 1)(J - 1) = 2 \times 3 = 6</annotation></semantics></math>, en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mi>N</mi><mo>−</mo><mi>I</mi><mi>J</mi><mo>=</mo><mn>60</mn><mo>−</mo><mn>12</mn><mo>=</mo><mn>48</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = N - IJ = 60 - 12 = 48</annotation></semantics></math>. Bij (b) staat het aantal cellen, bij (c) is de error-<em>df</em> uitgerekend alsof de interactie niet in het model zit, en bij (d) zijn de twee hoofdeffect-<em>df</em>’s opgeteld in plaats van vermenigvuldigd.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E6.4 — Open vraag">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E6.4 — Open vraag
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jonge spechten hakken gaten. Bij 24 spechten is gekeken naar de boom (zacht hout, hard hout) en naar hun leeftijd (jong, ouder), 6 per cel. Geteld is het aantal gaten op een dag. De celgemiddelden en de kwadratensommen:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">jong</th>
+<th style="text-align: center;">ouder</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>zacht hout</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">15</td>
+</tr>
+<tr class="even">
+<td>hard hout</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">14</td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Source</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑆</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{SS}</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>boom (A)</td>
+<td style="text-align: center;">54</td>
+</tr>
+<tr class="even">
+<td>leeftijd (B)</td>
+<td style="text-align: center;">150</td>
+</tr>
+<tr class="odd">
+<td>boom × leeftijd (AB)</td>
+<td style="text-align: center;">24</td>
+</tr>
+<tr class="even">
+<td>Error</td>
+<td style="text-align: center;">80</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Formuleer de nulhypothese en de alternatieve hypothese van de interactie, in woorden.</p></li>
+<li><p>Geef de vrijheidsgraden van alle vier de rijen.</p></li>
+<li><p>Bereken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝑀</mi><mi>𝑆</mi></mrow><annotation encoding="application/x-tex">\mathit{MS}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> voor de drie effecten.</p></li>
+<li><p>Bepaal met Tabel E tussen welke waarden de <em>p</em>-waarde van de interactie ligt.</p></li>
+<li><p>Wat is je beslissing over de interactie bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>?</p></li>
+<li><p>Bereken partial η² voor de interactie.</p></li>
+<li><p>Formuleer de conclusie over de interactie: eerst als rapportagezin (met <em>F</em>, vrijheidsgraden, <em>p</em> en partial η²), dan in één zin gewone woorden.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E6.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E6.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: het effect van leeftijd op het aantal gaten is in de populatie even groot bij zacht hout als bij hard hout (het verschil in verschil is 0). <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>a</mi></msub><annotation encoding="application/x-tex">H_a</annotation></semantics></math>: dat is het niet.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi></mrow><mo>=</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFA} = 2 - 1 = 1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFB} = 2 - 1 = 1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>1</mn><mo>×</mo><mn>1</mn><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathit{DFAB} = 1 \times 1 = 1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝐷</mi><mi>𝐹</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>24</mn><mo>−</mo><mn>4</mn><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\mathit{DFE} = 24 - 4 = 20</annotation></semantics></math>. Controle: samen 23, en dat is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N - 1</annotation></semantics></math>.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐸</mi></mrow><mo>=</mo><mn>80</mn><mi>/</mi><mn>20</mn><mo>=</mo><mn>4.00</mn></mrow><annotation encoding="application/x-tex">\mathit{MSE} = 80 / 20 = 4.00</annotation></semantics></math>. Boom: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi></mrow><mo>=</mo><mn>54</mn></mrow><annotation encoding="application/x-tex">\mathit{MSA} = 54</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">A</mtext></msub><mo>=</mo><mn>54</mn><mi>/</mi><mn>4.00</mn><mo>=</mo><mn>13.50</mn></mrow><annotation encoding="application/x-tex">F_{\text{A}}= 54 / 4.00 = 13.50</annotation></semantics></math>. Leeftijd: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>150</mn></mrow><annotation encoding="application/x-tex">\mathit{MSB} = 150</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">B</mtext></msub><mo>=</mo><mn>150</mn><mi>/</mi><mn>4.00</mn><mo>=</mo><mn>37.50</mn></mrow><annotation encoding="application/x-tex">F_{\text{B}}= 150 / 4.00 = 37.50</annotation></semantics></math>. Interactie: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi>𝑀</mi><mi>𝑆</mi><mi>𝐴</mi><mi>𝐵</mi></mrow><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">\mathit{MSAB} = 24</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mtext mathvariant="normal">AB</mtext></msub><mo>=</mo><mn>24</mn><mi>/</mi><mn>4.00</mn><mo>=</mo><mn>6.00</mn></mrow><annotation encoding="application/x-tex">F_{\text{AB}} = 24 / 4.00 = 6.00</annotation></semantics></math>.</p></li>
+<li><p>Rij 20, kolom 1: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>6.00</mn><annotation encoding="application/x-tex">6.00</annotation></semantics></math> ligt tussen 5.87 (kolom .025) en 8.10 (kolom .010), dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.01</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.025</mn></mrow><annotation encoding="application/x-tex">.01 &lt; p &lt; .025</annotation></semantics></math>.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &lt; .05</annotation></semantics></math>: verwerp de nulhypothese dat het effect van leeftijd op het aantal gaten bij zacht en hard hout even groot is.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>24</mn><mo>+</mo><mn>80</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.231</mn></mrow><annotation encoding="application/x-tex">24 / (24 + 80) = .231</annotation></semantics></math>: groot.</p></li>
+<li><p>De rapportagezin:</p></li>
+</ol>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+Zo rapporteer je het met alleen de tabel
+</div>
+<div class="rapportage-lijf">
+<p>De interactie tussen boom en leeftijd was significant, <em>F</em>(1, 20) = 6.00, .01 &lt; <em>p</em> &lt; .025, partial η² = .23: oudere spechten hakten meer gaten dan jonge, en dat verschil was bij hard hout groter (ouder <em>M</em> = 14.00, jong <em>M</em> = 7.00) dan bij zacht hout (ouder <em>M</em> = 15.00, jong <em>M</em> = 12.00).</p>
+</div>
+</div>
+<p>En in gewone woorden: leeftijd telt vooral waar het hout lastig is. Schrijf op een open vraag allebei op; de rapportagezin draagt de getallen, de gewone zin laat zien dat je snapt wat ze betekenen.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="wat-blijft-liggen" class="level1">
+<h1>Wat blijft liggen</h1>
+<ul>
+<li><strong>Welke niveaus verschillen?</strong> Bij een factor met drie of meer niveaus zegt een significant hoofdeffect alleen dát de gemiddelden verschillen, niet wélke. Daarvoor gebruik je de post-hoc-toetsen uit thema 4 (LSD, Bonferroni), ook na een tweeweg-ANOVA. Bij een significante interactie is de vraag “welke cellen verschillen” lastiger; in dit vak beschrijf je het patroon dan met de celgemiddelden en de plot.</li>
+<li><strong>Dezelfde dieren in elke cel.</strong> Werkgroep 6 begint met een opzet waarin elke student álle combinaties doet (within-subjects) en stapt voor de SPSS-data over op een between-opzet. De toets voor de within-variant, de repeated-measures-ANOVA, zit niet in dit vak.</li>
+<li><strong>Een gemeten variabele erbij.</strong> Wil je het effect van een factor zien terwijl je corrigeert voor een gemeten variabele, dan is dat ANCOVA, thema 9. Daar komt de interactie terug als controle: de regressielijnen per groep moeten evenwijdig lopen.</li>
+<li><strong>Ongelijke cellen.</strong> Bij ongelijke cellen tellen de Type III-kwadratensommen niet meer op tot het totaal en kunnen de bedden overlappen. SPSS rekent gewoon door; de tuin is dan alleen geen nette optelsom meer.</li>
+</ul>
+</section>
+<section id="tot-slot" class="level1">
+<h1>Tot slot</h1>
+<p>Eén ding om mee te nemen. Een tweeweg-ANOVA is geen nieuwe toets; het is de ANOVA die je al kende, drie keer in één tabel, met dezelfde noemer. Wat nieuw is, is de derde rij: de interactie. En die is niet ingewikkeld, hoeveel moeilijke manieren er ook zijn om het te zeggen. Het is verschil in verschil. Helpt zwemles? Ja. Hoeveel? Dat hangt van het water af.</p>
+<hr>
+<p><em>Oefenboek OZP 2 · Thema 6, eerste versie. Doorlopend voorbeeld: de otters, de zwemles en het water.</em></p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Terug naar boven</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../05_kruskal_wallis/05_kruskal_wallis.html" class="pagination-link" aria-label="Thema 5 · Kruskal-Wallis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Thema 5 · Kruskal-Wallis</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../07_regressie_enkelvoudig/07_regressie_enkelvoudig.html" class="pagination-link" aria-label="Thema 7 · Correlatie en enkelvoudige regressie">
+        <span class="nav-page-text">Thema 7 · Correlatie en enkelvoudige regressie</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Oefenboek OZP 2 · CountCamp Lab · wisi.nl</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Vragen, opmerkingen of suggesties? <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

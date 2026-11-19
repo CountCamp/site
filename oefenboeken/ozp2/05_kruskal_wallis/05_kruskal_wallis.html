@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Thema 5 · Kruskal-Wallis – Oefenboek OZP 2</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../06_anova_meerweg/06_anova_meerweg.html" rel="next">
+<link href="../04_anova_vergelijken/04_anova_vergelijken.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../common/styles/countcamp.css">
+<link rel="stylesheet" href="../common/ozp2/ozp2.css">
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../03_anova_eenweg/03_anova_eenweg.html">Deel 2 · Meer dan twee groepen</a></li><li class="breadcrumb-item"><a href="../05_kruskal_wallis/05_kruskal_wallis.html">Thema 5 · Kruskal-Wallis</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Oefenboek bij Onderzoekspracticum 2</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Schakel leesmodus">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Zoeken"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Terug naar CountCamp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Start</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 0 · Fundament</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00_fundament/00_fundament.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Het ritueel en de toetskeuze</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 1 · Twee groepen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_t_toetsen/01_t_toetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 1 · <em>t</em>-toetsen: gepaard en onafhankelijk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_rangtoetsen/02_rangtoetsen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 2 · Rangtoetsen: Wilcoxon</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 2 · Meer dan twee groepen</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03_anova_eenweg/03_anova_eenweg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 3 · Eenweg-ANOVA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04_anova_vergelijken/04_anova_vergelijken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 4 · Eenweg-ANOVA: welke groepen verschillen?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05_kruskal_wallis/05_kruskal_wallis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Thema 5 · Kruskal-Wallis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 3 · Twee factoren</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06_anova_meerweg/06_anova_meerweg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 6 · Meerweg-ANOVA: twee factoren tegelijk</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 4 · Regressie</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07_regressie_enkelvoudig/07_regressie_enkelvoudig.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 7 · Correlatie en enkelvoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../08_regressie_meervoudig/08_regressie_meervoudig.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 8 · Meervoudige regressie</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../09_ancova/09_ancova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 9 · ANCOVA</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 5 · Designs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../10_methodenleer/10_methodenleer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 10 · Methodenleer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Deel 6 · Alles door elkaar</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../11_welke_toets/11_welke_toets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Thema 11 · Welke toets?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Naslag</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Schakel sectie">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../woordenlijst.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Woordenlijst</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Op deze pagina</h2>
+   
+  <ul>
+  <li><a href="#vijftien-jonge-otters" id="toc-vijftien-jonge-otters" class="nav-link active" data-scroll-target="#vijftien-jonge-otters">Vijftien jonge otters</a></li>
+  <li><a href="#al-bekend" id="toc-al-bekend" class="nav-link" data-scroll-target="#al-bekend">Wat je al kent</a></li>
+  <li><a href="#aannames" id="toc-aannames" class="nav-link" data-scroll-target="#aannames">Wanneer je de ANOVA laat staan</a></li>
+  <li><a href="#rangen" id="toc-rangen" class="nav-link" data-scroll-target="#rangen">Van scores naar rangen</a></li>
+  <li><a href="#met-de-hand" id="toc-met-de-hand" class="nav-link" data-scroll-target="#met-de-hand">Kruskal-Wallis met de hand</a>
+  <ul class="collapse">
+  <li><a href="#epsilon" id="toc-epsilon" class="nav-link" data-scroll-target="#epsilon">Hoe groot is het effect? ε²</a></li>
+  <li><a href="#dunn" id="toc-dunn" class="nav-link" data-scroll-target="#dunn">Welke groepen verschillen? Dunns toets</a></li>
+  </ul></li>
+  <li><a href="#uitvoer" id="toc-uitvoer" class="nav-link" data-scroll-target="#uitvoer">Zo lees je de uitvoer</a></li>
+  <li><a href="#keuzeboom" id="toc-keuzeboom" class="nav-link" data-scroll-target="#keuzeboom">Waar staat deze toets in de keuzeboom?</a></li>
+  <li><a href="#oefenen" id="toc-oefenen" class="nav-link" data-scroll-target="#oefenen">Oefenen</a></li>
+  <li><a href="#tentamenvragen" id="toc-tentamenvragen" class="nav-link" data-scroll-target="#tentamenvragen">Tentamenvragen</a></li>
+  <li><a href="#wat-blijft-liggen" id="toc-wat-blijft-liggen" class="nav-link" data-scroll-target="#wat-blijft-liggen">Wat blijft liggen</a></li>
+  <li><a href="#tot-slot" id="toc-tot-slot" class="nav-link" data-scroll-target="#tot-slot">Tot slot</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../03_anova_eenweg/03_anova_eenweg.html">Deel 2 · Meer dan twee groepen</a></li><li class="breadcrumb-item"><a href="../05_kruskal_wallis/05_kruskal_wallis.html">Thema 5 · Kruskal-Wallis</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Thema 5 · Kruskal-Wallis</h1>
+<p class="subtitle lead">Deel 2 · Meer dan twee groepen · <em>rangen, maar dan met drie</em></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Hoort bij college 5 en werkgroep 5.</strong> Wat je na dit thema kunt: de aannames van de eenweg-ANOVA nalopen en zeggen wanneer je overstapt, de Kruskal-Wallis-toets met de hand doen (rangen, rangsommen, <em>H</em> en Tabel F), de effectgrootte ε² uitrekenen, met Dunns toets uitzoeken welke groepen verschillen, en de SPSS-uitvoer van dat alles lezen.</p>
+<p>Op het tentamen krijg je vaak tussenantwoorden cadeau, bijvoorbeeld de rangsommen. En met alleen Tabel F schrijf je een <em>p</em> als range (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.01</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">.01 &lt; p &lt; .02</annotation></semantics></math>), niet als één getal.</p>
+</div>
+</div>
+</div>
+<section id="vijftien-jonge-otters" class="level1">
+<h1>Vijftien jonge otters</h1>
+<p>Aan de beek wonen drie otterfamilies, en alle drie hebben ze deze zomer jongen. Elk jong moet leren zwemmen, en elke familie doet dat anders. Bij de eerste mogen de jongen het zelf uitzoeken: het water in, kijken wat er gebeurt. Bij de tweede zwemt moeder ernaast. Bij de derde springt de hele familie erin: broers, zussen, een oom.</p>
+<p>De oude otter aan de overkant houdt de tijd bij. Hoeveel minuten duurt het tot een jong voor het eerst op eigen kracht de beek overzwemt? Vijftien jongen, drie families, één vraag: maakt het uit hoe je het leert?</p>
+</section>
+<section id="al-bekend" class="level1">
+<h1>Wat je al kent</h1>
+<p>Twee dingen, uit twee thema’s, en dit thema zet ze op elkaar.</p>
+<p>Uit thema 3 ken je de <strong>eenweg-ANOVA</strong>: drie of meer groepen met verschillende deelnemers, en de vraag of hun gemiddelden in de populatie gelijk zijn. De toetsingsgrootheid <em>F</em> is signaal gedeeld door ruis: de spreiding tússen de groepsgemiddelden, gedeeld door de spreiding bínnen de groepen. En de ANOVA vraagt wat terug: in elke populatie een ongeveer normale verdeling, en in alle populaties dezelfde spreiding.</p>
+<p>Uit thema 2 ken je <strong>rangen</strong>. Je zet alle scores, van alle groepen door elkaar, op één rij van klein naar groot. De kleinste krijgt rangnummer 1, de volgende 2, enzovoort. Twee gelijke scores delen: allebei het gemiddelde van de rangnummers die ze samen bezetten. Daarna reken je niet meer met de scores, maar met de rangnummers. Je gooit de afstanden weg en houdt de volgorde.</p>
+<p>De <strong>Kruskal-Wallis-toets</strong> is de vraag van de ANOVA met het gereedschap van de rangtoets: verschillen drie of meer groepen, uitgerekend op rangen. Het college noemt hem daarom de non-parametrische eenweg-ANOVA.</p>
+</section>
+<section id="aannames" class="level1">
+<h1>Wanneer je de ANOVA laat staan</h1>
+<p>Eerst kijken. Altijd eerst kijken.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-otters" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Puntenwolk per groep. Zelf uitzoeken: zes stippen tussen 17 en 47 minuten. Met moeder: vier stippen tussen 9 en 22 en één bij 95. Met de familie: vier stippen tussen 4 en 10. Per groep een blauw streepje op de mediaan en een open oranje ruit op het gemiddelde; alleen bij met moeder liggen die ver uit elkaar, de ruit op 30.40, het streepje op 14.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-otters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05_kruskal_wallis_files/figure-html/fig-otters-1.png" class="img-fluid figure-img" alt="Puntenwolk per groep. Zelf uitzoeken: zes stippen tussen 17 en 47 minuten. Met moeder: vier stippen tussen 9 en 22 en één bij 95. Met de familie: vier stippen tussen 4 en 10. Per groep een blauw streepje op de mediaan en een open oranje ruit op het gemiddelde; alleen bij met moeder liggen die ver uit elkaar, de ruit op 30.40, het streepje op 14." width="652">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-otters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;1: Vijftien jonge otters, drie manieren om te leren zwemmen. Elke stip is één jong. De oranje ruit is het gemiddelde van de groep, het blauwe streepje de mediaan. Kijk naar <em>met moeder</em>: één jong van 95 minuten tilt het gemiddelde tot boven dat van <em>zelf uitzoeken</em>; de mediaan blijft gewoon in het midden zitten.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Drie dingen vallen op, en alle drie zijn ze een aanname van de ANOVA die hier wankelt.</p>
+<p><strong>1. Normaliteit per groep.</strong> De ANOVA gaat ervan uit dat de uitkomst in elke populatie ongeveer normaal verdeeld is. Bij grote groepen hoef je daar niet wakker van te liggen: vanaf zo’n dertig per groep komt de centrale limietstelling je te hulp (bij grote groepen gedraagt een gemiddelde zich netjes, ook als de losse scores dat niet doen; meer hoef je hier niet te weten). Dat is een richtlijn, geen gouden regel.</p>
+<p>Maar hier heb je 6, 5 en 4 otters. En de scores zijn scheef: de meeste jongen zwemmen binnen een halfuur, en dan is er één die 95 minuten op de kant blijft zitten. In de figuur wijst die staart omhoog, één stip ver boven de rest. Een tijdsduur is bijna altijd zo verdeeld: je kunt niet sneller dan nul, maar wel eindeloos langzamer.</p>
+<p><strong>2. Gelijke spreiding in alle groepen</strong> (homogeniteit van variantie). Daar zijn twee manieren om naar te kijken:</p>
+<ul>
+<li><strong>Levene’s toets.</strong> Zijn nulhypothese is dat de varianties in de populaties gelijk zijn. Is hij significant, dan verwerp je die gelijkheid, en dat is slecht nieuws voor de ANOVA. Bij de otters: <em>F</em>(2, 12) = 3.98, <em>p</em> = .047. Significant.</li>
+<li><strong>De vuistregel.</strong> De grootste standaardafwijking mag niet meer dan twee keer zo groot zijn als de kleinste. Hier: 11.5, 36.4 en 2.5. De grootste is 14.6 keer de kleinste. Die spreiding zie je in de figuur als de hoogte van elk wolkje: bij <em>met de familie</em> passen alle vier de stippen in zes minuten, bij <em>met moeder</em> lopen ze van 9 tot 95. Ook dit is een richtlijn, geen wet, maar hier is het geen twijfelgeval.</li>
+</ul>
+<p><strong>3. Ze komen samen.</strong> Eén schending kan de ANOVA vaak dragen, zeker bij groepen van gelijke grootte: hij is <em>robuust</em>. Maar scheve verdelingen en ongelijke spreiding komen meestal samen, en tegen die combinatie is hij een stuk minder bestand. Bij kleine groepen al helemaal.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Aanbellen of op de deur bonken">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Aanbellen of op de deur bonken
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Aannames nalopen is aanbellen: je kijkt of je gewoon naar binnen kunt. Doet er niemand open, dan ga je niet weg. Dan bonk je op de deur. Je stelt dezelfde vraag, langs een andere weg. Dat is wat een non-parametrische toets is: een toets die niets aanneemt over de vorm van de verdeling in de populatie. Niet beter, niet slechter, wel een andere ingang.</p>
+<p>Andere wegen bestaan ook, zoals een uitschieter weglaten (en dan moet je wel kunnen uitleggen waarom), de scores transformeren, of een bootstrap. In dit vak neem je bij drie of meer groepen de rangtoets: Kruskal-Wallis.</p>
+</div>
+</div>
+<p>En kijk wat de ANOVA hier gezegd zóú hebben, als je hem toch had gedraaid: <em>F</em>(2, 12) = 1.59, <em>p</em> = .24. Niets te zien. Dat ene jong van 95 minuten blaast de ruis in de noemer zo op dat het signaal erin verdwijnt. Het trekt ook het gemiddelde van zijn hele groep omhoog:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math></th>
+<th style="text-align: center;">gemiddelde</th>
+<th style="text-align: center;">mediaan</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>zelf uitzoeken</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">29.67</td>
+<td style="text-align: center;">28.5</td>
+</tr>
+<tr class="even">
+<td>met moeder</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">30.40</td>
+<td style="text-align: center;">14</td>
+</tr>
+<tr class="odd">
+<td>met de familie</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">6.75</td>
+<td style="text-align: center;">6.5</td>
+</tr>
+</tbody>
+</table>
+<p>Op het gemiddelde lijkt zwemmen met moeder niets te helpen: 30.40 tegen 29.67 minuten. De mediaan vertelt een ander verhaal: 14 tegen 28.5. Eén otter, en het gemiddelde laat zich meeslepen. De mediaan haalt zijn schouders op. Daarom hoort bij een rangtoets de mediaan, en niet het gemiddelde.</p>
+</section>
+<section id="rangen" class="level1">
+<h1>Van scores naar rangen</h1>
+<p>Zet alle vijftien tijden op één rij, van snel naar traag, en nummer ze. De familie waar een jong uit komt, nemen we gewoon mee:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">rang</th>
+<th style="text-align: center;">minuten</th>
+<th>geleerd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4</td>
+<td>met de familie</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">6</td>
+<td>met de familie</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">7</td>
+<td>met de familie</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">9</td>
+<td>met moeder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">10</td>
+<td>met de familie</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">12</td>
+<td>met moeder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">14</td>
+<td>met moeder</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">17</td>
+<td>zelf uitzoeken</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">19</td>
+<td>zelf uitzoeken</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">22</td>
+<td>met moeder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">26</td>
+<td>zelf uitzoeken</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">31</td>
+<td>zelf uitzoeken</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">38</td>
+<td>zelf uitzoeken</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">47</td>
+<td>zelf uitzoeken</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">95</td>
+<td>met moeder</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rangen" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Eén lijn met de plekken 1 tot en met 15. Paarse vierkantjes (met de familie) op 1, 2, 3 en 5; oranje driehoekjes (met moeder) op 4, 6, 7, 10 en 15; blauwe rondjes (zelf uitzoeken) op 8, 9, 11, 12, 13 en 14. Boven elk symbool de minuten; de stappen in minuten worden steeds groter, op de lijn blijft elke stap even breed. Een stippellijn markeert het midden, plek 8.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rangen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05_kruskal_wallis_files/figure-html/fig-rangen-1.png" class="img-fluid figure-img" alt="Eén lijn met de plekken 1 tot en met 15. Paarse vierkantjes (met de familie) op 1, 2, 3 en 5; oranje driehoekjes (met moeder) op 4, 6, 7, 10 en 15; blauwe rondjes (zelf uitzoeken) op 8, 9, 11, 12, 13 en 14. Boven elk symbool de minuten; de stappen in minuten worden steeds groter, op de lijn blijft elke stap even breed. Een stippellijn markeert het midden, plek 8." width="710">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rangen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;2: Dezelfde vijftien otters, nu alleen op volgorde. Het rangnummer staat op de as, de minuten erboven. De groep <em>met de familie</em> zit helemaal links, <em>zelf uitzoeken</em> rechts; <em>met moeder</em> zit ertussenin, met één jong helemaal rechts op rang 15.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Kijk naar het jong van 95 minuten. Had hij er 950 over gedaan, dan was hij nog steeds de laatste geweest: rang 15, klaar. De afstand tussen 47 en 95 doet er niet meer toe, alleen wie vóór wie zit. Dat is precies waarom één uitschieter een rangtoets niet omver blaast. En dat is tegelijk de prijs: je gooit informatie weg. Of die informatie iets waard was, is de vraag die je bij de aannames beantwoordde.</p>
+<p>Nu per groep de rangnummers optellen. Dat heet de <strong>rangsom</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mi>i</mi></msub><annotation encoding="application/x-tex">R_i</annotation></semantics></math> van groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, en gedeeld door de groepsgrootte <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>i</mi></msub><annotation encoding="application/x-tex">n_i</annotation></semantics></math> krijg je de <strong>gemiddelde rang</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\bar{R}_i</annotation></semantics></math>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>i</mi></msub><annotation encoding="application/x-tex">n_i</annotation></semantics></math></th>
+<th>rangnummers</th>
+<th style="text-align: center;">rangsom <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mi>i</mi></msub><annotation encoding="application/x-tex">R_i</annotation></semantics></math></th>
+<th style="text-align: center;">gemiddelde rang <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\bar{R}_i</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>zelf uitzoeken</td>
+<td style="text-align: center;">6</td>
+<td>8, 9, 11, 12, 13, 14</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;">11.17</td>
+</tr>
+<tr class="even">
+<td>met moeder</td>
+<td style="text-align: center;">5</td>
+<td>4, 6, 7, 10, 15</td>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">8.40</td>
+</tr>
+<tr class="odd">
+<td>met de familie</td>
+<td style="text-align: center;">4</td>
+<td>1, 2, 3, 5</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">2.75</td>
+</tr>
+<tr class="even">
+<td><strong>samen</strong></td>
+<td style="text-align: center;">15</td>
+<td></td>
+<td style="text-align: center;">120</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Controle, altijd.</strong> De rangnummers 1 tot en met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> tellen op tot <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{N(N+1)}{2}</annotation></semantics></math>, hier <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mn>15</mn><mo>⋅</mo><mn>16</mn></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{15 \cdot 16}{2}</annotation></semantics></math>, dus 120. Komen je rangsommen samen niet op dat getal uit, dan is er ergens een rangnummer zoek. Dat is een controle van tien seconden die een hele toets redt.</p>
+<p>En kijk naar de gemiddelde rangen: 11.17, 8.40 en 2.75. Als de drie manieren niets uitmaken, dan zijn de rangnummers eerlijk over de groepen verdeeld en zit elke groep gemiddeld rond het midden, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{N+1}{2}</annotation></semantics></math>, dus rond 8. Dat midden staat als stippellijn in de figuur hierboven: de vierkantjes van <em>met de familie</em> hangen er links van, de rondjes van <em>zelf uitzoeken</em> rechts, en de driehoekjes van <em>met moeder</em> zitten aan beide kanten. De toets vraagt: is dat nog toeval?</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Knopen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Knopen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Twee otters met precies dezelfde tijd? Dan delen ze. Bezetten ze samen de plekken 4 en 5, dan krijgen ze allebei rangnummer 4.5; bezetten drie jongen de plekken 7, 8 en 9, dan krijgen alle drie een 8. Zo’n groepje gelijke scores heet een <strong>knoop</strong> (SPSS zegt <em>tie</em>). Bij de otters komt het niet voor, in opgave T5.3 wel. De controlesom blijft bij knopen gewoon kloppen: 4.5 + 4.5 is evenveel als 4 + 5. Let op de keerzijde: vergeet je een knoop en geef je de twee gewoon 4 en 5, dan klopt de som óók. De controle vangt een zoekgeraakt rangnummer, geen vergeten knoop. Daar helpt maar één ding: eerst de gelijke scores aanstrepen, dan pas nummeren.</p>
+</div>
+</div>
+</section>
+<section id="met-de-hand" class="level1">
+<h1>Kruskal-Wallis met de hand</h1>
+<p>Het toetsingsschema in zeven stappen, zoals bij elke toets in dit boek.</p>
+<p><strong>Stap 1 · Onderzoeksvraag.</strong> Verschilt de tijd tot de eerste overtocht tussen jonge otters die het zelf uitzoeken, met moeder leren zwemmen, of met de hele familie?</p>
+<p><strong>Stap 2 · Hypothesen.</strong> Let op: niet over gemiddelden. De Kruskal-Wallis-toets gaat over de hele verdeling.</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: de verdelingen van de zwemtijd zijn in de drie populaties gelijk.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>: de verdelingen van de zwemtijd zijn in de drie populaties niet allemaal gelijk.</li>
+</ul>
+<p>Zo schrijf je het op, ook op het tentamen: <em>verdelingen</em>. Vind je dat abstract, denk dan voor jezelf bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> aan <em>de medianen zijn gelijk</em>; de medianen zijn ook wat je straks rapporteert. <em>(Op de collegesheets heet die tweede <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mi>a</mi></msub><annotation encoding="application/x-tex">H_a</annotation></semantics></math> en staat hij ook als “verdelingen zijn niet gelijk”. Zelfde hypothese.)</em></p>
+<p><strong>Stap 3 · Toetskeuze.</strong> Between-subjects: elk jong zit in één groep, en er zijn drie groepen. De uitkomst is een tijdsduur, dus minstens intervalniveau. De eenweg-ANOVA zou de eerste keus zijn, maar de aannames wankelen (klein, scheef, ongelijke spreiding). Dus: de <strong>Kruskal-Wallis-toets</strong>, met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>.</p>
+<p><strong>Stap 4 · Toetsingsgrootheid.</strong> Die heet hier <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mfrac><mn>12</mn><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>∑</mo><mfrac><msubsup><mi>R</mi><mi>i</mi><mn>2</mn></msubsup><msub><mi>n</mi><mi>i</mi></msub></mfrac><mo>−</mo><mn>3</mn><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">H = \frac{12}{N(N+1)} \sum \frac{R_i^2}{n_i} - 3(N+1)</annotation></semantics></math></p>
+<p>Lees hem van binnen naar buiten. Per groep kwadrateer je de rangsom en deel je door de groepsgrootte. Die drie getallen tel je op. Daar komt een vaste factor voor en een vaste aftrek achter, en allebei hangen ze alleen van <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> af.</p>
+<p>Eerst het stuk per groep:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><msubsup><mi>R</mi><mn>1</mn><mn>2</mn></msubsup><msub><mi>n</mi><mn>1</mn></msub></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><msup><mn>67</mn><mn>2</mn></msup><mn>6</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>4489</mn><mn>6</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>748.17</mn></mtd></mtr></mtable><mspace width="2.0em"></mspace><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><msubsup><mi>R</mi><mn>2</mn><mn>2</mn></msubsup><msub><mi>n</mi><mn>2</mn></msub></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><msup><mn>42</mn><mn>2</mn></msup><mn>5</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>1764</mn><mn>5</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>352.80</mn></mtd></mtr></mtable><mspace width="2.0em"></mspace><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><msubsup><mi>R</mi><mn>3</mn><mn>2</mn></msubsup><msub><mi>n</mi><mn>3</mn></msub></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><msup><mn>11</mn><mn>2</mn></msup><mn>4</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>121</mn><mn>4</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>30.25</mn></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">
+\begin{aligned}
+\frac{R_1^2}{n_1} &amp;= \frac{67^2}{6} \\[2pt]
+&amp;= \frac{4489}{6} \\[2pt]
+&amp;= 748.17
+\end{aligned}
+\qquad
+\begin{aligned}
+\frac{R_2^2}{n_2} &amp;= \frac{42^2}{5} \\[2pt]
+&amp;= \frac{1764}{5} \\[2pt]
+&amp;= 352.80
+\end{aligned}
+\qquad
+\begin{aligned}
+\frac{R_3^2}{n_3} &amp;= \frac{11^2}{4} \\[2pt]
+&amp;= \frac{121}{4} \\[2pt]
+&amp;= 30.25
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Dan de hele formule, met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">N = 15</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>H</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>12</mn><mrow><mn>15</mn><mo>⋅</mo><mn>16</mn></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mn>748.17</mn><mo>+</mo><mn>352.80</mn><mo>+</mo><mn>30.25</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>3</mn><mo>⋅</mo><mn>16</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>12</mn><mn>240</mn></mfrac><mo>⋅</mo><mn>1131.22</mn><mo>−</mo><mn>48</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>0.05</mn><mo>⋅</mo><mn>1131.22</mn><mo>−</mo><mn>48</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>56.56</mn><mo>−</mo><mn>48</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>8.56</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+H &amp;= \frac{12}{15 \cdot 16} \left( 748.17 + 352.80 + 30.25 \right) - 3 \cdot 16 \\[4pt]
+&amp;= \frac{12}{240} \cdot 1131.22 - 48 \\[4pt]
+&amp;= 0.05 \cdot 1131.22 - 48 \\[4pt]
+&amp;= 56.56 - 48 \\[4pt]
+&amp;= 8.56
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mi>I</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = I - 1</annotation></semantics></math>, en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math> is het aantal groepen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>.</p>
+<p>Twee dingen om op te letten. Die 0.05 is toeval: 12 gedeeld door 240, omdat hier <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">N = 15</annotation></semantics></math>. Het heeft niets met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math> te maken, en bij een andere <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> wordt het een ander getal (bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">N = 12</annotation></semantics></math> is het 12 gedeeld door 156). En het antwoord voelt klein na zo’n grote tussenstap; dat is normaal, want bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> zit het hele verschil in wat er overblijft nadat je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">3(N+1)</annotation></semantics></math> eraf haalt. Reken daarom met twee decimalen in de tussenstappen, anders verdwijnt je antwoord in de afronding.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Je formuleblad, ontcijferd">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Je formuleblad, ontcijferd
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Op het formuleblad staan vijf regels voor deze toets: de formules voor <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">df</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">z_{ij}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mathit{SE}_{ij}</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi mathvariant="normal">ε</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\varepsilon^2</annotation></semantics></math>. Elk symbool dat erin voorkomt, met wat het is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>op het blad</th>
+<th>wat het is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
+<td>de toetsingsgrootheid; gedraagt zich onder <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> als chi-kwadraat</td>
+</tr>
+<tr class="even">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math></td>
+<td>alle deelnemers samen, over alle groepen (hier 15)</td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>i</mi></msub><annotation encoding="application/x-tex">n_i</annotation></semantics></math></td>
+<td>het aantal deelnemers in groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> (hier 6, 5 en 4)</td>
+</tr>
+<tr class="even">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mi>i</mi></msub><annotation encoding="application/x-tex">R_i</annotation></semantics></math></td>
+<td>de rangsom van groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>: alle rangnummers van die groep opgeteld</td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mstyle displaystyle="true"><mfrac><msubsup><mi>R</mi><mi>i</mi><mn>2</mn></msubsup><msub><mi>n</mi><mi>i</mi></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\sum \dfrac{R_i^2}{n_i}</annotation></semantics></math></td>
+<td>per groep de rangsom kwadrateren en delen door de groepsgrootte, en dat optellen over de groepen</td>
+</tr>
+<tr class="even">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>12</mn><annotation encoding="application/x-tex">12</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">3(N+1)</annotation></semantics></math></td>
+<td>vaste getallen uit de formule; ze zorgen dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> zich als chi-kwadraat gedraagt</td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math></td>
+<td>het aantal groepen (hier 3); <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mi>I</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = I - 1</annotation></semantics></math></td>
+</tr>
+<tr class="even">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\bar{R}_i</annotation></semantics></math></td>
+<td>de gemiddelde rang van groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mi>i</mi></msub><annotation encoding="application/x-tex">R_i</annotation></semantics></math> gedeeld door <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>i</mi></msub><annotation encoding="application/x-tex">n_i</annotation></semantics></math></td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">z_{ij}</annotation></semantics></math></td>
+<td>de toetsingsgrootheid van Dunns toets voor groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> tegen groep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> (verderop)</td>
+</tr>
+<tr class="even">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mathit{SE}_{ij}</annotation></semantics></math></td>
+<td>de standaardfout van het verschil tussen twee gemiddelde rangen (verderop)</td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi mathvariant="normal">ε</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\varepsilon^2</annotation></semantics></math></td>
+<td>de effectgrootte (verderop)</td>
+</tr>
+</tbody>
+</table>
+<p>Let op: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> wijst hier steeds een groep aan, niet een deelnemer.</p>
+</div>
+</div>
+<p><strong>Stap 5 · <em>p</em>-waarde aflezen.</strong> Als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, gedraagt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> zich als een <strong>chi-kwadraatverdeling</strong> met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>. Bij veel vrijheidsgraden ziet die verdeling eruit als een walvis: een bult links en een lange staart naar rechts. Bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math> is de bult weg en blijft alleen de staart over: hij begint hoog bij nul en zakt naar rechts. Wat blijft, bij elke <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">df</annotation></semantics></math>: er is maar één staart. Hoe groter <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>, hoe verder in die staart, hoe kleiner de <em>p</em>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-chi" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Een kromme die links hoog begint en naar rechts steeds vlakker daalt, zonder bult. Vanaf 5.99 is het dunne strookje onder de kromme oranje: vijf procent van het oppervlak. Een blauwe lijn bij 8.56 staat daar rechts van, met het nog dunnere blauwe strookje erachter als p. Een grijze stippellijn bij 2.34 staat ver links, met bijna de hele verdeling rechts ervan.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-chi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05_kruskal_wallis_files/figure-html/fig-chi-1.png" class="img-fluid figure-img" alt="Een kromme die links hoog begint en naar rechts steeds vlakker daalt, zonder bult. Vanaf 5.99 is het dunne strookje onder de kromme oranje: vijf procent van het oppervlak. Een blauwe lijn bij 8.56 staat daar rechts van, met het nog dunnere blauwe strookje erachter als p. Een grijze stippellijn bij 2.34 staat ver links, met bijna de hele verdeling rechts ervan." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-chi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figuur&nbsp;3: De chi-kwadraatverdeling met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>, zoals <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> zich gedraagt als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, ingezoomd op de staart (links loopt de kromme boven uit beeld). Eén staart, rechts. Het oranje gebied is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>, alles voorbij 5.99. De gevonden <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>8.56</mn></mrow><annotation encoding="application/x-tex">H = 8.56</annotation></semantics></math> (blauwe lijn) ligt daar voorbij; het blauwe stukje erachter is jouw <em>p</em>. De grijze streep is een <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> van 2.34 (uit opgave T5.3): vóór de eerste kolom van de tabel, met bijna de hele verdeling nog rechts ervan.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Het oranje strookje in de figuur is dun, en dat hoort zo: het is vijf procent van het oppervlak onder de kromme. De <em>p</em> is het oppervlak rechts van de blauwe lijn, een deel van dat strookje, dus kleiner dan .05. Hoeveel kleiner, lees je uit de tabel.</p>
+<p>De tabel die je nodig hebt heet bij Moore &amp; McCabe <strong>Tabel F</strong>. Die letter heeft niets met de <em>F</em>-toets te maken; het is de letter die dat boek aan de chi-kwadraattabel gaf. Hij heeft één rij per <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">df</annotation></semantics></math> en één kolom per rechterstaartkans, en hij werkt net als Tabel D: hij geeft je grenzen, en jij zegt waar je kans tussen ligt. De grenzen heten <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><msup><mo stretchy="false" form="postfix">)</mo><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">(\chi^2)^*</annotation></semantics></math>, met een sterretje, net als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>t</mi><mo>*</mo></msup><annotation encoding="application/x-tex">t^*</annotation></semantics></math> in thema 1: <em>opgezocht in de tabel</em>, de kritische waarde. Een stukje van de rij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>, met jouw <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> ertussen:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>rechterstaartkans</th>
+<th style="text-align: center;">.025</th>
+<th style="text-align: center;">.02</th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">.01</th>
+<th style="text-align: center;">.005</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><msup><mo stretchy="false" form="postfix">)</mo><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">(\chi^2)^*</annotation></semantics></math> bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math></td>
+<td style="text-align: center;">7.38</td>
+<td style="text-align: center;">7.82</td>
+<td style="text-align: center;"><strong>8.56</strong> ← jouw <em>H</em></td>
+<td style="text-align: center;">9.21</td>
+<td style="text-align: center;">10.60</td>
+</tr>
+</tbody>
+</table>
+<p>Jouw <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>8.56</mn></mrow><annotation encoding="application/x-tex">H = 8.56</annotation></semantics></math> ligt tussen 7.82 (kolom .02) en 9.21 (kolom .01). Verder naar rechts is minder staart, dus een kleinere kans:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.01</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">.01 &lt; p &lt; .02</annotation></semantics></math></p>
+<p>(Als één getal is het <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.014</mn></mrow><annotation encoding="application/x-tex">p = .014</annotation></semantics></math>; dat geeft SPSS je straks.)</p>
+<p>En het andere geval, dat je net zo vaak tegenkomt: valt je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> vóór de eerste kolom, dus onder de 2.77 van kolom .25, dan blijft er méér staart over dan .25. Dan schrijf je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mn>.25</mn></mrow><annotation encoding="application/x-tex">p &gt; .25</annotation></semantics></math>, en verder zegt de tabel het niet. De grijze streep in de figuur, bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>2.34</mn></mrow><annotation encoding="application/x-tex">H = 2.34</annotation></semantics></math>, is zo’n geval; je komt hem tegen in opgave T5.3.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Geen twee staarten bij H">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Waarschuwing</span>Geen twee staarten bij <em>H</em>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bij een <em>t</em>-toets deed je bij tweezijdig toetsen ×2: twee staarten, twee vlechten, het ezelsbruggetje uit thema 1. <strong>Hier niet.</strong> De chi-kwadraatverdeling heeft één staart, rechts, en het kwadraat in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> heeft beide kanten al in zich: een groep die veel te hoog zit en een groep die veel te laag zit maken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> allebei groot. Je leest Tabel F één keer af en je bent klaar. Hetzelfde geldt voor de <em>F</em>-toets van de ANOVA.</p>
+<p>Verderop, bij Dunns toets, komt er wél een <em>z</em> langs. En bij een <em>z</em> doe je weer gewoon ×2.</p>
+</div>
+</div>
+<p><strong>Stap 6 · Beslissing.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &lt; .05</annotation></semantics></math>. Verwerp de nulhypothese dat de verdelingen van de zwemtijd in de drie populaties gelijk zijn.</p>
+<p><strong>Stap 7 · Inhoudelijke conclusie.</strong> Met alleen de tabel:</p>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+Zo rapporteer je het met alleen de tabel
+</div>
+<div class="rapportage-lijf">
+<p>Een Kruskal-Wallis-toets liet zien dat de tijd tot de eerste overtocht verschilde tussen de drie manieren van leren zwemmen, <em>H</em>(2) = 8.56, .01 &lt; <em>p</em> &lt; .02. Jongen die het zelf uitzochten deden er het langst over (<em>Mdn</em> = 28.5 minuten), jongen die met moeder leerden zwemmen zaten ertussenin (<em>Mdn</em> = 14) en jongen die met de hele familie leerden waren het snelst (<em>Mdn</em> = 6.5).</p>
+</div>
+</div>
+<p>Twee dingen aan die zin. Je rapporteert <strong>medianen</strong>, geen gemiddelden: de toets rekent op rangen, en de mediaan is de rang in het midden. En er staat nog niet bij hoe groot het effect is, en ook niet wélke groepen van elkaar verschillen. Dat zijn de volgende twee stukken.</p>
+<section id="epsilon" class="level2">
+<h2 class="anchored" data-anchor-id="epsilon">Hoe groot is het effect? ε²</h2>
+<p>Een significante <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> zegt dát er iets is. Hoe groot het is, zegt de effectgrootte <strong>epsilon-kwadraat</strong> (ε²). Het formuleblad:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">ε</mi><mn>2</mn></msup><mo>=</mo><mfrac><mrow><mi>H</mi><mo>−</mo><mi>I</mi><mo>+</mo><mn>1</mn></mrow><mrow><mi>N</mi><mo>−</mo><mi>I</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\varepsilon^2 = \frac{H - I + 1}{N - I}</annotation></semantics></math></p>
+<p>Ingevuld:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msup><mi mathvariant="normal">ε</mi><mn>2</mn></msup></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mn>8.56</mn><mo>−</mo><mn>3</mn><mo>+</mo><mn>1</mn></mrow><mrow><mn>15</mn><mo>−</mo><mn>3</mn></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>6.56</mn><mn>12</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.55</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\varepsilon^2 &amp;= \frac{8.56 - 3 + 1}{15 - 3} \\[4pt]
+&amp;= \frac{6.56}{12} \\[4pt]
+&amp;= .55
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Lees het zoals η² bij de ANOVA: het deel van de variatie in de rangen dat samenhangt met de groep. Hier 55% van de variatie in zwemtijd (op rangen) hangt samen met de manier van leren. Dezelfde ijkpunten als voor η²: vanaf .01 klein, vanaf .06 middelgroot, vanaf .14 groot. Dit is een <strong>groot</strong> effect. Zo’n ijkpunt is een grenswaarde, een etiket bij het getal, niet een oordeel over hoe belangrijk het verschil voor de otters is.</p>
+<p>Je rapporteert ε² alleen bij een significante <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>. Is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> niet significant, dan is er geen effect om groot of klein te noemen en laat je ε² weg; de formule kan dan zelfs onder nul uitkomen.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Dezelfde formule, een andere naam">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Dezelfde formule, een andere naam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Voor het tentamen geldt wat op je formuleblad staat: deze formule, en de naam ε². Meer hoef je niet te weten. Alleen als je hem ooit buiten dit vak opzoekt: sommige programma’s noemen precies deze formule anders, en hangen de naam <em>epsilon-kwadraat</em> aan een iets andere breuk. Laat je daar dan niet door van de wijs brengen.</p>
+</div>
+</div>
+</section>
+<section id="dunn" class="level2">
+<h2 class="anchored" data-anchor-id="dunn">Welke groepen verschillen? Dunns toets</h2>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> is een <strong>omnibustoets</strong>: hij zegt dat de drie groepen niet allemaal gelijk zijn, maar niet wélke twee van elkaar verschillen. Dat is dezelfde situatie als bij de ANOVA in thema 4. Daar deed je paarsgewijze <em>t</em>-toetsen; hier doe je paarsgewijze <em>z</em>-toetsen op de gemiddelde rangen. Dat heet <strong>Dunns toets</strong>, en je doet hem alleen als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> significant was: is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> dat niet, dan is er niets om uit te splitsen. Het formuleblad:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><mo>−</mo><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub></mrow><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub></mfrac><mspace width="2.0em"></mspace><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msqrt><mrow><mfrac><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>12</mn></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><msub><mi>n</mi><mi>i</mi></msub></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>n</mi><mi>j</mi></msub></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">z_{ij} = \frac{\bar{R}_i - \bar{R}_j}{\mathit{SE}_{ij}} \qquad \mathit{SE}_{ij} = \sqrt{\frac{N(N+1)}{12}\left(\frac{1}{n_i} + \frac{1}{n_j}\right)}</annotation></semantics></math></p>
+<p>Een verschil gedeeld door een lineaaltje. In de teller twee gemiddelde rangen: gemiddeld, want zo corrigeer je voor groepen van verschillende grootte. In de noemer een standaardfout die alleen van <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> en de twee groepsgroottes afhangt.</p>
+<p>Drie groepen geven drie paren. Eerst de standaardfout per paar, met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>12</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>15</mn><mo>⋅</mo><mn>16</mn></mrow><mn>12</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{N(N+1)}{12} = \dfrac{15 \cdot 16}{12}</annotation></semantics></math>, dus 20:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mtext mathvariant="normal">zelf, familie</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mn>0.1667</mn><mo>+</mo><mn>0.2500</mn><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mo>⋅</mo><mn>0.4167</mn></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mn>8.334</mn></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>2.887</mn></mtd></mtr></mtable><mspace width="2.0em"></mspace><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mtext mathvariant="normal">zelf, moeder</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>5</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mn>0.1667</mn><mo>+</mo><mn>0.2000</mn><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mo>⋅</mo><mn>0.3667</mn></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mn>7.334</mn></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>2.708</mn></mtd></mtr></mtable></mrow><annotation encoding="application/x-tex">
+\begin{aligned}
+\mathit{SE}_{\text{zelf, familie}} &amp;= \sqrt{20 \left(\frac{1}{6} + \frac{1}{4}\right)} \\[2pt]
+&amp;= \sqrt{20 \cdot (0.1667 + 0.2500)} \\[2pt]
+&amp;= \sqrt{20 \cdot 0.4167} \\[2pt]
+&amp;= \sqrt{8.334} \\[2pt]
+&amp;= 2.887
+\end{aligned}
+\qquad
+\begin{aligned}
+\mathit{SE}_{\text{zelf, moeder}} &amp;= \sqrt{20 \left(\frac{1}{6} + \frac{1}{5}\right)} \\[2pt]
+&amp;= \sqrt{20 \cdot (0.1667 + 0.2000)} \\[2pt]
+&amp;= \sqrt{20 \cdot 0.3667} \\[2pt]
+&amp;= \sqrt{7.334} \\[2pt]
+&amp;= 2.708
+\end{aligned}
+</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mtext mathvariant="normal">moeder, familie</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mn>5</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mo>⋅</mo><mo stretchy="false" form="prefix">(</mo><mn>0.2000</mn><mo>+</mo><mn>0.2500</mn><mo stretchy="false" form="postfix">)</mo></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>20</mn><mo>⋅</mo><mn>0.4500</mn></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mn>9.000</mn></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>3.000</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\mathit{SE}_{\text{moeder, familie}} &amp;= \sqrt{20 \left(\frac{1}{5} + \frac{1}{4}\right)} \\[2pt]
+&amp;= \sqrt{20 \cdot (0.2000 + 0.2500)} \\[2pt]
+&amp;= \sqrt{20 \cdot 0.4500} \\[2pt]
+&amp;= \sqrt{9.000} \\[2pt]
+&amp;= 3.000
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Dan per paar het verschil in gemiddelde rang delen door zijn standaardfout. Het grootste verschil eerst, <em>zelf</em> tegenover <em>familie</em>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>z</mi><mtext mathvariant="normal">zelf, familie</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mn>11.17</mn><mo>−</mo><mn>2.75</mn></mrow><mn>2.887</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>8.42</mn><mn>2.887</mn></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>2.92</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+z_{\text{zelf, familie}} &amp;= \frac{11.17 - 2.75}{2.887} \\[4pt]
+&amp;= \frac{8.42}{2.887} \\[4pt]
+&amp;= 2.92
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Een <em>z</em>, dus nu wél Tabel A, en wél tweezijdig. In drie handelingen, zoals je het in thema 1 ook deed:</p>
+<ol type="1">
+<li>Opzoeken: bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>2.92</mn></mrow><annotation encoding="application/x-tex">z = 2.92</annotation></semantics></math> staat in Tabel A .9982, de kans links van die <em>z</em>.</li>
+<li>De staart rechts: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>.9982</mn></mrow><annotation encoding="application/x-tex">1 - .9982</annotation></semantics></math>, dus .0018.</li>
+<li>Tweezijdig, dus ×2: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.0036</mn></mrow><annotation encoding="application/x-tex">p = .0036</annotation></semantics></math>.</li>
+</ol>
+<p>Houd die <em>p</em> even op vier decimalen, want je rekent er zo mee door.</p>
+<p><strong>Maar: drie toetsen op dezelfde data.</strong> Wie drie keer vist in dezelfde vijver, vangt vaker per ongeluk iets; dat heet kanskapitalisatie, en je kent het van de ANOVA in thema 4. Je doet dus een <strong>Bonferroni-correctie</strong>, en in dit boek altijd op dezelfde manier: <strong>vermenigvuldig elke <em>p</em> met het aantal paren, en vergelijk die met .05.</strong> Bij drie groepen zijn dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">k = 3</annotation></semantics></math> paren. (Let op: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> is het aantal paren, niet het aantal groepen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>; bij drie groepen zijn ze toevallig allebei 3, bij vier groepen zijn het 6 paren.) Zo doet SPSS het ook, en zo komt het straks in de uitvoer terug als <code>Adj. Sig.</code></p>
+<p>Je ziet soms de andere weg: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math> delen door <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>, dus toetsen tegen .017. Dat geeft altijd dezelfde beslissing. Maar doe nooit allebei: een <em>p</em> die je al met 3 vermenigvuldigd hebt, vergelijk je met .05, nooit met .017.</p>
+<p>De drie paren bij elkaar, met de <em>p</em> uit Tabel A op vier decimalen:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>paar</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><mo>−</mo><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\bar{R}_i - \bar{R}_j</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mathit{SE}_{ij}</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">z_{ij}</annotation></semantics></math></th>
+<th style="text-align: center;"><em>p</em> (Tabel A, tweezijdig)</th>
+<th style="text-align: center;"><em>p</em> × 3</th>
+<th>bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>zelf tegenover familie</td>
+<td style="text-align: center;">8.42</td>
+<td style="text-align: center;">2.887</td>
+<td style="text-align: center;">2.92</td>
+<td style="text-align: center;">.0036</td>
+<td style="text-align: center;">.011</td>
+<td><strong>significant</strong></td>
+</tr>
+<tr class="even">
+<td>zelf tegenover moeder</td>
+<td style="text-align: center;">2.77</td>
+<td style="text-align: center;">2.708</td>
+<td style="text-align: center;">1.02</td>
+<td style="text-align: center;">.3078</td>
+<td style="text-align: center;">.92</td>
+<td>niet significant</td>
+</tr>
+<tr class="odd">
+<td>moeder tegenover familie</td>
+<td style="text-align: center;">5.65</td>
+<td style="text-align: center;">3.000</td>
+<td style="text-align: center;">1.88</td>
+<td style="text-align: center;">.0602</td>
+<td style="text-align: center;">.18</td>
+<td>niet significant</td>
+</tr>
+</tbody>
+</table>
+<p>Eén paar verschilt: jongen die het zelf uitzoeken doen er langer over dan jongen die met de hele familie leren. De twee andere paren kun je met vijftien otters niet van toeval onderscheiden. Let op het derde paar: zonder correctie zat het al net boven .05, en met correctie is het er ver vandaan.</p>
+<p>En let op de afronding: .0036 × 3 is .0108, dus .011. Had je de <em>p</em> eerst op .004 afgerond, dan kwam je op .012 uit. Dat is geen fout van jou en geen fout van SPSS; het is afronding. Rond pas af aan het eind.</p>
+<p>Nu is de conclusie compleet:</p>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+Zo rapporteer je het
+</div>
+<div class="rapportage-lijf">
+<p>Een Kruskal-Wallis-toets liet zien dat de tijd tot de eerste overtocht verschilde tussen de drie manieren van leren zwemmen, <em>H</em>(2) = 8.56, <em>p</em> = .014, ε² = .55. Jongen die het zelf uitzochten deden er het langst over (<em>Mdn</em> = 28.5 minuten), jongen die met moeder leerden zwemmen zaten ertussenin (<em>Mdn</em> = 14) en jongen die met de hele familie leerden waren het snelst (<em>Mdn</em> = 6.5). Dunns toets met Bonferroni-correctie liet alleen een verschil zien tussen zelf uitzoeken en leren met de hele familie, <em>z</em> = 2.92, <em>p</em> = .011 (gecorrigeerd); de andere twee paren verschilden niet significant.</p>
+</div>
+</div>
+<p>Die <em>p</em> bij de <em>z</em> is de gecorrigeerde, en dat zeg je erbij. Dan weet je lezer wat hij leest.</p>
+</section>
+</section>
+<section id="uitvoer" class="level1">
+<h1>Zo lees je de uitvoer</h1>
+<p>In SPSS: <strong>Analyze → Nonparametric Tests → Independent Samples</strong>. Het klikpad staat onderaan deze sectie. Je krijgt eerst een samenvatting:</p>
+<div class="spss-uitvoer"><div class="spss-titel">Independent-Samples Kruskal-Wallis Test Summary</div>
+<table class="spss-tabel caption-top table">
+<tbody>
+<tr class="odd">
+<td class="spss-rij">Total N</td>
+<td class="spss-getal">15</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Test Statistic</td>
+<td class="spss-getal">8.561ᵃ</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">Degree Of Freedom</td>
+<td class="spss-getal">2</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Asymptotic Sig.(2-sided test)</td>
+<td class="spss-getal">.014</td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">a. The test statistic is adjusted for ties.</div></div>
+<p><strong>Kruskal-Wallis Test Summary.</strong> Vier regels, en je kent ze alle vier:</p>
+<ol type="1">
+<li><code>Total N</code> = 15, je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>.</li>
+<li><code>Test Statistic</code> = 8.561, je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>. De voetnoot <em>adjusted for ties</em> betekent: gecorrigeerd voor knopen. De otters hebben geen knopen, dus staat hier precies je eigen getal. Mét knopen geeft SPSS een iets grotere <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> dan het formuleblad; daarover zo meer.</li>
+<li><code>Degree Of Freedom</code> = 2, je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">df</annotation></semantics></math>.</li>
+<li><code>Asymptotic Sig.(2-sided test)</code> = .014, je <em>p</em>, nu als één getal in plaats van een range. <em>Asymptotic</em> betekent: via de chi-kwadraatverdeling, die bij grotere groepen steeds beter klopt; je doet er niets mee. En <em>2-sided</em> staat er omdat SPSS dat bij elke toets zet; ook daar doe je niets mee, want je hebt al gelezen dat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> maar één staart heeft.</li>
+</ol>
+<p>Dubbelklik je op die uitvoer, dan opent SPSS een venster met meer, en daar staan de paarsgewijze vergelijkingen:</p>
+<div class="spss-uitvoer"><div class="spss-titel">Pairwise Comparisons of les</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Sample 1-Sample 2</th>
+<th data-quarto-table-cell-role="th">Test Statistic</th>
+<th data-quarto-table-cell-role="th">Std. Error</th>
+<th data-quarto-table-cell-role="th">Std. Test Statistic</th>
+<th data-quarto-table-cell-role="th">Sig.</th>
+<th data-quarto-table-cell-role="th">Adj. Sig.ᵃ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">met de familie-met moeder</td>
+<td class="spss-getal">-5.650</td>
+<td class="spss-getal">3.000</td>
+<td class="spss-getal">-1.883</td>
+<td class="spss-getal">.060</td>
+<td class="spss-getal">.179</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">met de familie-zelf uitzoeken</td>
+<td class="spss-getal">-8.417</td>
+<td class="spss-getal">2.887</td>
+<td class="spss-getal">-2.916</td>
+<td class="spss-getal">.004</td>
+<td class="spss-getal">.011</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">met moeder-zelf uitzoeken</td>
+<td class="spss-getal">-2.767</td>
+<td class="spss-getal">2.708</td>
+<td class="spss-getal">-1.022</td>
+<td class="spss-getal">.307</td>
+<td class="spss-getal">.921</td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">Each row tests the null hypothesis that the Sample 1 and Sample 2 distributions are the same.<br>Asymptotic significances (2-sided tests) are displayed. The significance level is .050.<br>a. Significance values have been adjusted by the Bonferroni correction for multiple tests.</div></div><p class="spss-nagebouwd">Nagebouwd in R met dezelfde data; in SPSS ziet de uitvoer er zo uit.</p>
+<p><strong>Pairwise Comparisons.</strong> Lees één rij, bijvoorbeeld <em>met de familie</em> tegenover <em>zelf uitzoeken</em>:</p>
+<ol type="1">
+<li><code>Test Statistic</code> = -8.417: het verschil in gemiddelde rang, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><mo>−</mo><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\bar{R}_i - \bar{R}_j</annotation></semantics></math>. Negatief, omdat SPSS de groep met de laagste gemiddelde rang vooraan zet. Jij rekende <em>zelf</em> min <em>familie</em> en vond +8.42. Zelfde getal, ander teken. Voor de vraag óf het paar verschilt telt alleen de grootte; welke van de twee hoger zit, lees je aan de volgorde van de namen: de groep die vooraan staat, is de laagste.</li>
+<li><code>Std. Error</code> = 2.887: je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mathit{SE}_{ij}</annotation></semantics></math>.</li>
+<li><code>Std. Test Statistic</code> = -2.916: je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">z_{ij}</annotation></semantics></math>, met hetzelfde omgekeerde teken.</li>
+<li><code>Sig.</code> = .004: de tweezijdige <em>p</em> van die <em>z</em>, zonder correctie. Dat is wat jij uit Tabel A haalde.</li>
+<li><code>Adj. Sig.</code> = .011: diezelfde <em>p</em> maal 3, de Bonferroni-correctie uit de voetnoot. SPSS vermenigvuldigt de onafgeronde <em>p</em>, dus .004 × 3 lijkt hier .012 maar is .011. <strong>Dit is de kolom waar je naar kijkt.</strong> Kleiner dan .05: dat paar verschilt.</li>
+</ol>
+<p>Kijk dus naar de namen, kijk naar <code>Adj. Sig.</code>, en zeg welke paren verschillen en welke kant op. Hoevéél ze verschillen, zegt deze tabel niet; daarvoor heb je de medianen nodig.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled" title="Waarom SPSS soms een ander getal geeft dan je formuleblad">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Belangrijk</span>Waarom SPSS soms een ander getal geeft dan je formuleblad
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hebben je data <strong>knopen</strong>, dan rekent SPSS een correctie in: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> wordt iets groter, en de standaardfout van Dunn iets kleiner. Het formuleblad doet dat niet. Bij een paar knopen scheelt het hooguit een paar honderdsten, en de beslissing verandert er vrijwel nooit door. Zie je in SPSS dus een <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> van 2.35 waar jij 2.34 had: je zit niet fout, en SPSS ook niet. In opgave T5.3 en T5.5 zie je het gebeuren.</p>
+<p>Op het tentamen met de hand: het formuleblad. Krijg je de uitvoer: de getallen van de uitvoer.</p>
+</div>
+</div>
+<p><strong>Medianen staan er niet bij.</strong> Deze uitvoer geeft geen gemiddelde rangen en geen medianen, en die laatste heb je voor je conclusie wel nodig. Haal ze apart op: <strong>Analyze → Descriptive Statistics → Explore</strong> met <code>minuten</code> bij <em>Dependent List</em> en <code>les</code> bij <em>Factor List</em>, of <strong>Analyze → Compare Means → Means</strong> met <em>Median</em> aangevinkt bij <em>Options</em>.</p>
+<div class="spss-syntax callout callout-style-default callout-note no-icon callout-titled" title="In SPSS — klikpad en data">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>In SPSS — klikpad en data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Data:</strong> <a href="../common/data/t5_otters.sav"><code>t5_otters.sav</code></a> — vijftien otters, kolommen <code>les</code> (1 = zelf uitzoeken, 2 = met moeder, 3 = met de familie) en <code>minuten</code>.</p>
+<p>Zet eerst in <em>Variable View</em> het meetniveau van <code>les</code> op <em>Nominal</em>. De nieuwe non-parametrische toetsen van SPSS zien een variabele die op <em>Scale</em> staat niet als groepen.</p>
+<p><strong>Analyze → Nonparametric Tests → Independent Samples</strong> → tabblad <em>Objective</em>: <em>Customize analysis</em> → tabblad <em>Fields</em>: <code>minuten</code> bij <em>Test Fields</em>, <code>les</code> bij <em>Groups</em> → tabblad <em>Settings</em>: <em>Customize tests</em>, vink <em>Kruskal-Wallis 1-way ANOVA (k samples)</em> aan, en kies bij <em>Multiple comparisons</em> voor <em>All pairwise</em> → <em>Run</em>.</p>
+<p>In het uitvoervenster zie je eerst een korte <em>Hypothesis Test Summary</em>. Dubbelklik erop: dan opent de <em>Model Viewer</em> met de <em>Kruskal-Wallis Test Summary</em> en, via het menu <em>View</em> onderaan, de <em>Pairwise Comparisons</em>.</p>
+<p><strong>De oude route</strong> (<em>Analyze → Nonparametric Tests → Legacy Dialogs → K Independent Samples</em>) geeft twee tabellen in de oude stijl: <em>Ranks</em>, met per groep <em>N</em> en <em>Mean Rank</em>, en <em>Test Statistics</em>, met <em>Kruskal-Wallis H</em>, <em>df</em> en <em>Asymp. Sig.</em> Handig om je gemiddelde rangen te controleren, maar zonder paarsgewijze vergelijkingen.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="keuzeboom" class="level1">
+<h1>Waar staat deze toets in de keuzeboom?</h1>
+<p>De Kruskal-Wallis-toets heeft twee buren. Rechts naast hem staat de <strong>eenweg-ANOVA</strong>: dezelfde vraag (verschillen drie of meer groepen met verschillende deelnemers?), maar op gemiddelden, en alleen als de aannames het toelaten. Links staat de <strong>Wilcoxon-rangsomtoets</strong> uit thema 2: dezelfde rangen, maar voor twee groepen. Kruskal-Wallis is de rangsomtoets voor drie of meer groepen, zoals de ANOVA de onafhankelijke <em>t</em>-toets voor drie of meer groepen is. Een rangtoets voor dezelfde deelnemers die drie keer gemeten zijn bestaat ook, maar die zit niet in dit vak.</p>
+<p>Je herkent hem aan de woorden in de vraag:</p>
+<ul>
+<li><em>verschil</em> of <em>vergelijken</em> → een toets op groepen;</li>
+<li><em>drie groepen</em> (of meer) en <em>verschillende deelnemers per groep</em> → ANOVA of Kruskal-Wallis;</li>
+<li><em>scheef</em>, <em>uitschieters</em>, <em>kleine groepen</em>, <em>ordinaal</em>, <em>medianen</em> of <em>rangen</em> → de doorslag naar Kruskal-Wallis.</li>
+</ul>
+<p>En de woorden die je ergens anders heen sturen:</p>
+<ul>
+<li><em>verband</em> of <em>samenhang</em> → correlatie (thema 7);</li>
+<li><em>voorspellen</em> → regressie (thema 7 en 8);</li>
+<li><em>corrigeren voor</em> → ANCOVA (thema 9);</li>
+<li><em>dezelfde deelnemers twee keer</em> → een gepaarde toets (thema 1 en 2).</li>
+</ul>
+</section>
+<section id="oefenen" class="level1">
+<h1>Oefenen</h1>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.1 — Welke toets?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.1 — Welke toets?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Welke toets kies je, en waarom? Noem ook de ene aanwijzing in de tekst die de doorslag geeft.</p>
+<ol type="a">
+<li><p>Veertig jonge vossen zijn over drie soorten speelgroep verdeeld. Je meet na een seizoen een score op een deeltaak. De histogrammen per groep zien er ongeveer normaal uit; de standaardafwijkingen zijn 4.1, 3.8 en 4.5.</p></li>
+<li><p>Achttien jonge uilen zitten in drie soorten nest, zes per nest. Je telt hoe vaak ze per nacht roepen. Twee uilen roepen vrijwel onophoudelijk, de rest zelden.</p></li>
+<li><p>Twaalf dassen krijgen voer A, twaalf andere voer B. De uitkomst, hoeveel ze per nacht uitsluipen, is sterk scheef.</p></li>
+<li><p>Twintig egels worden drie keer gemeten: in de lente, de zomer en de herfst. Je wilt weten of hun schrikkerigheid door het jaar verandert.</p></li>
+<li><p>Onderzoekers willen weten of de zwemtijd van jonge otters samenhangt met hun gewicht.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p><strong>Eenweg-ANOVA.</strong> Drie groepen, verschillende vossen, en de aannames zijn in orde: ongeveer normaal, en de grootste standaardafwijking (4.5) is lang geen twee keer de kleinste (3.8).</p></li>
+<li><p><strong>Kruskal-Wallis.</strong> Drie groepen, verschillende uilen, kleine groepen, en een uitkomst met uitschieters (<em>twee roepen onophoudelijk</em>). Tellingen zijn bovendien vaak scheef.</p></li>
+<li><p><strong>Wilcoxon-rangsomtoets</strong> (thema 2). Twee groepen met verschillende dassen en een scheve uitkomst. Kruskal-Wallis zou hetzelfde zeggen, maar bij twee groepen is dit de naam.</p></li>
+<li><p><strong>Geen van de toetsen uit dit thema.</strong> Dezelfde egels drie keer: een within-subjects design. Kruskal-Wallis is voor verschillende deelnemers per groep. De rangtoets voor dit geval zit niet in dit vak.</p></li>
+<li><p><strong>Correlatie</strong> (thema 7). <em>Samenhangen</em> tussen twee gemeten variabelen is geen groepsvergelijking.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.2 — De aannames nalopen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.2 — De aannames nalopen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Drie groepen jonge bevers, elk met een andere bouwmeester, en je telt hoeveel takken elk jong per dag aansleept. Je krijgt:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math></th>
+<th style="text-align: center;"><em>M</em></th>
+<th style="text-align: center;"><em>SD</em></th>
+<th style="text-align: center;"><em>Mdn</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>bouwmeester 1</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">14.30</td>
+<td style="text-align: center;">2.10</td>
+<td style="text-align: center;">14</td>
+</tr>
+<tr class="even">
+<td>bouwmeester 2</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">15.10</td>
+<td style="text-align: center;">2.40</td>
+<td style="text-align: center;">15</td>
+</tr>
+<tr class="odd">
+<td>bouwmeester 3</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">19.80</td>
+<td style="text-align: center;">9.80</td>
+<td style="text-align: center;">15.5</td>
+</tr>
+</tbody>
+</table>
+<p>Levene’s toets geeft <em>p</em> = .003. Het histogram van groep 3 is scheef naar rechts, met twee bevers die ver boven de rest zitten.</p>
+<ol type="a">
+<li><p>Welke aanname toetst Levene’s toets, en wat zegt de uitkomst?</p></li>
+<li><p>Wat zegt de vuistregel met de standaardafwijkingen?</p></li>
+<li><p>Welke toets kies je?</p></li>
+<li><p>Stel dat de groepen elk 35 bevers hadden, de standaardafwijkingen 2.10, 2.40 en 2.60 waren en Levene <em>p</em> = .41 gaf. Wat kies je dan?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Of de varianties in de drie populaties gelijk zijn. Zijn nulhypothese is <em>gelijk</em>; <em>p</em> = .003 is kleiner dan .05, dus die verwerp je. De spreiding verschilt tussen de groepen.</p></li>
+<li><p>De grootste standaardafwijking (9.80) is 4.7 keer de kleinste (2.10): ruim meer dan twee. Dezelfde conclusie.</p></li>
+<li><p><strong>Kruskal-Wallis.</strong> Kleine groepen, ongelijke spreiding én een scheve groep: samen te veel voor de ANOVA. Kijk ook naar groep 3: het gemiddelde (19.80) ligt ver boven de mediaan (15.5), het werk van die twee bevers.</p></li>
+<li><p><strong>Eenweg-ANOVA.</strong> Grote groepen, Levene niet significant, en de grootste standaardafwijking is 1.2 keer de kleinste. Dan is er geen reden om af te wijken, en de ANOVA heeft meer power.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.3 — Kruskal-Wallis met de hand, mét knopen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.3 — Kruskal-Wallis met de hand, mét knopen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Twaalf jonge kraaien, drie soorten nest: hoog in de boom, halverwege, laag. Je telt per jong hoeveel van veertien nachten het om hulp riep:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">hoog</th>
+<th style="text-align: center;">halverwege</th>
+<th style="text-align: center;">laag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">6</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Geef alle twaalf scores een rangnummer. Let op de knopen.</p></li>
+<li><p>Bereken de rangsom per groep, en controleer de som.</p></li>
+<li><p>Bereken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> en de vrijheidsgraden.</p></li>
+<li><p>Zoek <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> op in Tabel F. Wat weet je over <em>p</em>?</p></li>
+<li><p>Wat is je beslissing bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>?</p></li>
+<li><p>Zou je nu een post-hoc analyse doen? Leg uit waarom wel of niet.</p></li>
+<li><p>SPSS geeft op deze data <em>Test Statistic</em> 2.353. Waarom niet jouw getal, en is dat erg?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord T5.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Kort antwoord T5.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>rangsommen: hoog 30.5, halverwege 30.5, laag 17.0; samen 78</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>2.34</mn></mrow><annotation encoding="application/x-tex">H = 2.34</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mn>.25</mn></mrow><annotation encoding="application/x-tex">p &gt; .25</annotation></semantics></math> → niet verwerpen</li>
+<li>geen post-hoc</li>
+<li>SPSS corrigeert voor de twee knopen; het scheelt een honderdste</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking T5.3 — stap voor stap">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Volledige uitwerking T5.3 — stap voor stap
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Rangnummers.</strong> Alle twaalf scores op één rij, van klein naar groot:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>score</th>
+<th style="text-align: center;">1</th>
+<th style="text-align: center;">2</th>
+<th style="text-align: center;">3</th>
+<th style="text-align: center;">3</th>
+<th style="text-align: center;">4</th>
+<th style="text-align: center;">5</th>
+<th style="text-align: center;">6</th>
+<th style="text-align: center;">6</th>
+<th style="text-align: center;">7</th>
+<th style="text-align: center;">8</th>
+<th style="text-align: center;">9</th>
+<th style="text-align: center;">11</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>rang</td>
+<td style="text-align: center;">1.0</td>
+<td style="text-align: center;">2.0</td>
+<td style="text-align: center;">3.5</td>
+<td style="text-align: center;">3.5</td>
+<td style="text-align: center;">5.0</td>
+<td style="text-align: center;">6.0</td>
+<td style="text-align: center;">7.5</td>
+<td style="text-align: center;">7.5</td>
+<td style="text-align: center;">9.0</td>
+<td style="text-align: center;">10.0</td>
+<td style="text-align: center;">11.0</td>
+<td style="text-align: center;">12.0</td>
+</tr>
+<tr class="even">
+<td>nest</td>
+<td style="text-align: center;">laag</td>
+<td style="text-align: center;">hoog</td>
+<td style="text-align: center;">halverwege</td>
+<td style="text-align: center;">laag</td>
+<td style="text-align: center;">laag</td>
+<td style="text-align: center;">halverwege</td>
+<td style="text-align: center;">hoog</td>
+<td style="text-align: center;">laag</td>
+<td style="text-align: center;">halverwege</td>
+<td style="text-align: center;">hoog</td>
+<td style="text-align: center;">hoog</td>
+<td style="text-align: center;">halverwege</td>
+</tr>
+</tbody>
+</table>
+<p>Twee knopen: de score 3 komt twee keer voor en bezet de plekken 3 en 4, dus allebei 3.5; de score 6 ook, op de plekken 7 en 8, dus allebei 7.5.</p></li>
+<li><p><strong>Rangsommen.</strong> Hoog: 2.0 + 7.5 + 10.0 + 11.0, dat is 30.5. Halverwege: 3.5 + 6.0 + 9.0 + 12.0, dat is 30.5. Laag: 1.0 + 3.5 + 5.0 + 7.5, dat is 17.0. Controle: samen 78, en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mo>⋅</mo><mn>13</mn></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{12 \cdot 13}{2}</annotation></semantics></math> is ook 78.</p></li>
+<li><p><strong><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>.</strong> Met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">N = 12</annotation></semantics></math> en elke groep 4 groot:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>H</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>12</mn><mrow><mn>12</mn><mo>⋅</mo><mn>13</mn></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msup><mn>30.5</mn><mn>2</mn></msup><mn>4</mn></mfrac><mo>+</mo><mfrac><msup><mn>30.5</mn><mn>2</mn></msup><mn>4</mn></mfrac><mo>+</mo><mfrac><msup><mn>17.0</mn><mn>2</mn></msup><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>3</mn><mo>⋅</mo><mn>13</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>12</mn><mn>156</mn></mfrac><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>232.56</mn><mo>+</mo><mn>232.56</mn><mo>+</mo><mn>72.25</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mn>12</mn><mo>⋅</mo><mn>537.37</mn></mrow><mn>156</mn></mfrac><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>6448.44</mn><mn>156</mn></mfrac><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>41.34</mn><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>2.34</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+H &amp;= \frac{12}{12 \cdot 13} \left( \frac{30.5^2}{4} + \frac{30.5^2}{4} + \frac{17.0^2}{4} \right) - 3 \cdot 13 \\[4pt]
+&amp;= \frac{12}{156} \cdot \left( 232.56 + 232.56 + 72.25 \right) - 39 \\[4pt]
+&amp;= \frac{12 \cdot 537.37}{156} - 39 \\[4pt]
+&amp;= \frac{6448.44}{156} - 39 \\[4pt]
+&amp;= 41.34 - 39 \\[4pt]
+&amp;= 2.34
+\end{aligned}
+</annotation></semantics></math></p>
+<p>En <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>3</mn><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = 3 - 1</annotation></semantics></math>, dus 2.</p></li>
+<li><p><strong>Tabel F</strong>, rij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>. De eerste kolom (.25) heeft als grens 2.77, en jouw 2.34 ligt daar nog vóór. Dan blijft er méér staart over dan .25: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mn>.25</mn></mrow><annotation encoding="application/x-tex">p &gt; .25</annotation></semantics></math>. Verder dan dat zegt de tabel het niet. (Exact: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.31</mn></mrow><annotation encoding="application/x-tex">p = .31</annotation></semantics></math>.)</p></li>
+<li><p><strong>Beslissing.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &gt; .05</annotation></semantics></math>. Verwerp de nulhypothese dat de verdelingen van het aantal hulproepen in de drie populaties gelijk zijn <strong>niet</strong>.</p></li>
+<li><p><strong>Post-hoc?</strong> Nee. Een paarsgewijze vergelijking doe je pas als de omnibustoets significant is. Is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> dat niet, dan heb je niets gevonden om uit te splitsen, en ga je met drie extra toetsen alleen maar vissen. Om dezelfde reden rapporteer je hier geen ε².</p></li>
+<li><p><strong>SPSS.</strong> Jouw data hebben twee knopen, en SPSS corrigeert daarvoor: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> wordt iets groter, 2.35 in plaats van 2.34. Het formuleblad kent die correctie niet. Een honderdste, dezelfde beslissing. Niet erg, wel goed om te weten, want anders denk je dat je gerekend hebt wat niet klopt.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.4 — Effectgrootte en post-hoc met gegeven rangen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.4 — Effectgrootte en post-hoc met gegeven rangen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Achttien jonge dassen leren op drie manieren een hol graven, 6 per manier. De uitkomst is hoe lang het eerste hol wordt. De Kruskal-Wallis-toets was significant: <em>H</em>(2) = 8.32, <em>p</em> = .016. De gemiddelde rangen zijn:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>manier</th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mi>i</mi></msub><annotation encoding="application/x-tex">n_i</annotation></semantics></math></th>
+<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>R</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\bar{R}_i</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 · alleen</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">13.0</td>
+</tr>
+<tr class="even">
+<td>2 · met een ouder</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">11.0</td>
+</tr>
+<tr class="odd">
+<td>3 · met een oudere broer of zus</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">4.5</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li><p>Bereken ε² en zeg hoe groot het effect is.</p></li>
+<li><p>Bereken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\mathit{SE}_{ij}</annotation></semantics></math>. Waarom is die hier voor alle paren gelijk?</p></li>
+<li><p>Bereken <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">z_{ij}</annotation></semantics></math> voor de drie paren.</p></li>
+<li><p>Zoek de <em>p</em>-waarden op in Tabel A, pas Bonferroni toe en zeg welke paren verschillen.</p></li>
+<li><p>Zeg in twee zinnen wat je gevonden hebt.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>ε² = (8.32 − 3 + 1) / (18 − 3). Teller 6.32, noemer 15, dus ε² = .42. Vanaf .14 heet dat groot.</p></li>
+<li><p>Alle groepen zijn even groot, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><msub><mi>n</mi><mi>i</mi></msub></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><mn>1</mn><msub><mi>n</mi><mi>j</mi></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{n_i} + \dfrac{1}{n_j}</annotation></semantics></math> is overal <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><mn>1</mn><mn>6</mn></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\dfrac{1}{6} + \dfrac{1}{6}</annotation></semantics></math>. Met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mn>18</mn><mo>⋅</mo><mn>19</mn></mrow><mn>12</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{18 \cdot 19}{12}</annotation></semantics></math> is 28.5:</p></li>
+</ol>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mrow><mi>𝑆</mi><mi>𝐸</mi></mrow><mrow><mi>i</mi><mi>j</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mrow><mn>28.5</mn><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo>+</mo><mfrac><mn>1</mn><mn>6</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msqrt><mn>9.500</mn></msqrt></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>3.082</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\mathit{SE}_{ij} &amp;= \sqrt{28.5 \cdot \left(\frac{1}{6} + \frac{1}{6}\right)} \\[2pt]
+&amp;= \sqrt{9.500} \\[2pt]
+&amp;= 3.082
+\end{aligned}
+</annotation></semantics></math></p>
+<ol start="3" type="a">
+<li>Verschil in gemiddelde rang, gedeeld door 3.082:</li>
+</ol>
+<ul>
+<li>1 tegenover 2: 2.0 / 3.082, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>0.65</mn></mrow><annotation encoding="application/x-tex">z = 0.65</annotation></semantics></math></li>
+<li>1 tegenover 3: 8.5 / 3.082, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>2.76</mn></mrow><annotation encoding="application/x-tex">z = 2.76</annotation></semantics></math></li>
+<li>2 tegenover 3: 6.5 / 3.082, dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>2.11</mn></mrow><annotation encoding="application/x-tex">z = 2.11</annotation></semantics></math></li>
+</ul>
+<ol start="4" type="a">
+<li>Tabel A, tweezijdig, en de <em>p</em> op vier decimalen:</li>
+</ol>
+<ul>
+<li>1 tegenover 2: bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>0.65</mn></mrow><annotation encoding="application/x-tex">z = 0.65</annotation></semantics></math> staat .7422, dus <em>p</em> = 2 × (1 − .7422) = .5156</li>
+<li>1 tegenover 3: bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>2.76</mn></mrow><annotation encoding="application/x-tex">z = 2.76</annotation></semantics></math> staat .9971, dus <em>p</em> = .0058</li>
+<li>2 tegenover 3: bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>2.11</mn></mrow><annotation encoding="application/x-tex">z = 2.11</annotation></semantics></math> staat .9826, dus <em>p</em> = .0348</li>
+</ul>
+<p>Bonferroni bij drie paren: elke <em>p</em> × 3, en dan tegen .05: 1.00, .017 en .10. Alleen <strong>1 tegenover 3</strong> verschilt.</p>
+<p>Twee dingen om te zien. Paar 2 tegenover 3 was zónder correctie significant (.035) en is het mét correctie niet (.10): precies waarvoor Bonferroni bestaat. En bij paar 1 tegenover 2 komt .5156 × 3 boven de 1 uit; een kans kan niet groter zijn dan 1, dus SPSS zet er dan 1.000.</p>
+<ol start="5" type="a">
+<li>Dassen die alleen graven, maken een langer eerste hol dan dassen die met een oudere broer of zus graven, <em>z</em> = 2.76, <em>p</em> = .017 (gecorrigeerd). De dassen met een ouder verschillen van geen van beide groepen significant.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.5 — De uitvoer lezen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.5 — De uitvoer lezen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dertig jonge hazen, drie trainingsvormen (geen, met de ouders, met de hele groep). Je meet hoeveel seconden een jong stil blijft zitten als er een schaduw overheen glijdt. SPSS geeft:</p>
+<div class="spss-uitvoer"><div class="spss-titel">Independent-Samples Kruskal-Wallis Test Summary</div>
+<table class="spss-tabel caption-top table">
+<tbody>
+<tr class="odd">
+<td class="spss-rij">Total N</td>
+<td class="spss-getal">30</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Test Statistic</td>
+<td class="spss-getal">16.798ᵃ</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">Degree Of Freedom</td>
+<td class="spss-getal">2</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Asymptotic Sig.(2-sided test)</td>
+<td class="spss-getal">&lt;.001</td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">a. The test statistic is adjusted for ties.</div></div><div class="spss-uitvoer"><div class="spss-titel">Pairwise Comparisons of training</div>
+<table class="spss-tabel caption-top table">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Sample 1-Sample 2</th>
+<th data-quarto-table-cell-role="th">Test Statistic</th>
+<th data-quarto-table-cell-role="th">Std. Error</th>
+<th data-quarto-table-cell-role="th">Std. Test Statistic</th>
+<th data-quarto-table-cell-role="th">Sig.</th>
+<th data-quarto-table-cell-role="th">Adj. Sig.ᵃ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="spss-rij">geen-met de ouders</td>
+<td class="spss-getal">-3.650</td>
+<td class="spss-getal">3.927</td>
+<td class="spss-getal">-.929</td>
+<td class="spss-getal">.353</td>
+<td class="spss-getal">1.000</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">geen-met de groep</td>
+<td class="spss-getal">-15.400</td>
+<td class="spss-getal">3.927</td>
+<td class="spss-getal">-3.922</td>
+<td class="spss-getal">&lt;.001</td>
+<td class="spss-getal">&lt;.001</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">met de ouders-met de groep</td>
+<td class="spss-getal">-11.750</td>
+<td class="spss-getal">3.927</td>
+<td class="spss-getal">-2.992</td>
+<td class="spss-getal">.003</td>
+<td class="spss-getal">.008</td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">Each row tests the null hypothesis that the Sample 1 and Sample 2 distributions are the same.<br>Asymptotic significances (2-sided tests) are displayed. The significance level is .050.<br>a. Significance values have been adjusted by the Bonferroni correction for multiple tests.</div></div><p class="spss-nagebouwd">Nagebouwd in R met dezelfde data; in SPSS ziet de uitvoer er zo uit.</p>
+<ol type="a">
+<li><p>Wat zijn de toetsingsgrootheid, de vrijheidsgraden en de <em>p</em>-waarde?</p></li>
+<li><p>Wat is de statistische conclusie bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>?</p></li>
+<li><p>Bereken ε² uit deze uitvoer.</p></li>
+<li><p>Welke paren verschillen? Welke kolom gebruik je daarvoor?</p></li>
+<li><p>Wat weet je op grond van deze uitvoer nog niet, en wat heb je nodig om het te weten?</p></li>
+<li><p>Waar komt die voetnoot <em>adjusted for ties</em> vandaan?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>16.798</mn></mrow><annotation encoding="application/x-tex">H = 16.798</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>, <em>p</em> &lt; .001.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &lt; .05</annotation></semantics></math>: verwerp de nulhypothese dat de verdelingen van de stilzittijd in de drie populaties gelijk zijn.</p></li>
+<li><p>ε² = (16.80 − 3 + 1) / (30 − 3). Teller 14.80, noemer 27, dus .55: een groot effect.</p></li>
+<li><p>Kolom <code>Adj. Sig.</code>, de <em>p</em> na Bonferroni-correctie. Twee paren zijn kleiner dan .05: <em>geen</em> tegenover <em>met de groep</em> en <em>met de ouders</em> tegenover <em>met de groep</em>. <em>Geen</em> tegenover <em>met de ouders</em> verschilt niet (<code>Adj. Sig.</code> = 1.000). Wil je <code>Adj. Sig.</code> narekenen uit <code>Sig.</code>, bedenk dan dat SPSS met de onafgeronde <em>p</em> vermenigvuldigt: .003 × 3 lijkt .009, maar het is .008.</p></li>
+<li><p>Hoevéél de groepen verschillen: de uitvoer geeft geen medianen en geen gemiddelde rangen. Welke van een paar hoger zit, zie je wel: SPSS zet de laagste vooraan, en <em>met de groep</em> staat in elke rij achteraan. Voor een conclusie heb je de medianen nodig, uit <em>Explore</em> of <em>Means</em>. (Ze zijn 11.5, 14 en 50 seconden: de groep die met de hele groep traint, zit het langst stil.)</p></li>
+<li><p>Hele seconden, dertig hazen: dan hebben meerdere hazen dezelfde score. Dat zijn knopen, en SPSS corrigeert daarvoor. Met het formuleblad zou je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>16.71</mn></mrow><annotation encoding="application/x-tex">H = 16.71</annotation></semantics></math> vinden in plaats van 16.80. Zelfde beslissing.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.6 — Zeg het in woorden">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.6 — Zeg het in woorden
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Schrijf de uitkomst van de Kruskal-Wallis-toets bij de otters op zoals in de resultatensectie van een verslag, mét de post-hoc uitkomst. Doe het eerst zelf, kijk dan pas naar het grijze blok hierboven.</p></li>
+<li><p>Een beleidsmedewerker van het otterbestuur vraagt waarom de onderzoekers geen ANOVA hebben gedaan. Leg in hooguit vier zinnen uit: waarom een ANOVA hier niet geschikt was, welke toets wel is gedaan, en wat de belangrijkste conclusie is. Geen symbolen, geen <em>p</em>.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Controleer je zin op vijf dingen: welke toets (de Kruskal-Wallis-toets, en daarna Dunns toets), de toetsingsgrootheid met vrijheidsgraden en <em>p</em>, de effectgrootte, <strong>medianen</strong> (geen gemiddelden) per groep, en welke paren verschilden na correctie. Het blok onder <em>Dunns toets</em> heeft ze alle vijf; kijk na welke jij miste.</p></li>
+<li><p>Bijvoorbeeld: <em>Een ANOVA vergelijkt gemiddelden, en die gaan hier mank: de groepen zijn klein, de tijden zijn scheef verdeeld en één jong deed er anderhalf uur over, wat het gemiddelde van zijn hele groep omhoogtrekt. Daarom hebben we de Kruskal-Wallis-toets gebruikt, die niet op de tijden zelf rekent maar op hun volgorde. Die laat zien dat de manier van leren uitmaakt: jongen die met de hele familie leren zwemmen, zijn duidelijk sneller dan jongen die het zelf uitzoeken. Of zwemmen met alleen moeder helpt, kunnen we met vijftien otters niet zeggen.</em></p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.7 — Gemiddelde of mediaan?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.7 — Gemiddelde of mediaan?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bij de otters was het gemiddelde van <em>met moeder</em> (30.40 minuten) hoger dan dat van <em>zelf uitzoeken</em> (29.67), terwijl de mediaan (14 tegen 28.5) juist lager was.</p>
+<ol type="a">
+<li><p>Hoe kan dat?</p></li>
+<li><p>Waarom rapporteer je bij een Kruskal-Wallis-toets medianen en geen gemiddelden?</p></li>
+<li><p>Een medestudent zegt: “Kruskal-Wallis toetst of de medianen gelijk zijn.” Klopt dat helemaal?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Eén jong van 95 minuten. Een gemiddelde telt elke minuut mee, dus dat ene jong tilt de hele groep. De mediaan kijkt alleen wie in het midden zit; of de laatste 95 of 950 minuten nodig had, maakt voor de mediaan niets uit.</p></li>
+<li><p>Omdat de toets op rangen rekent, en de mediaan de score met de middelste rang is. Gemiddelden horen bij een toets op gemiddelden. Rapporteer je bij Kruskal-Wallis toch gemiddelden, dan laat je je lezer kijken naar precies het getal dat de toets om goede redenen links liet liggen.</p></li>
+<li><p>Bijna. De nulhypothese zegt dat de verdelingen gelijk zijn; dat is strenger dan alleen de medianen. Hebben de groepen ongeveer dezelfde vorm, dan komt het op hetzelfde neer, en zo mag je het voor jezelf denken. Op het tentamen schrijf je <em>verdelingen</em>, zoals in stap 2 hierboven.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="T5.8 — Wat verlies je?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>T5.8 — Wat verlies je?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Stel dat de aannames van de ANOVA wél in orde zijn en je doet tóch een Kruskal-Wallis-toets. Wat geef je dan op?</p></li>
+<li><p>Kan <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> negatief worden? Wat zou <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">H = 0</annotation></semantics></math> betekenen?</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord T5.8">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord T5.8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p><strong>Power.</strong> De rangtoets gooit de afstanden tussen de scores weg, en in die afstanden zit informatie. Is de wereld netjes (normaal, gelijke spreiding), dan ziet de ANOVA een echt verschil iets eerder dan de rangtoets. Daarom is de ANOVA de eerste keus, en de rangtoets de uitwijk.</p></li>
+<li><p>Nee. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> is op zijn kleinst, namelijk 0, als elke groep precies de gemiddelde rang <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{N+1}{2}</annotation></semantics></math> heeft: de rangnummers zijn dan volmaakt eerlijk verdeeld. Elk verschil tussen de groepen, naar boven of naar beneden, maakt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> groter. Daarom heeft <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> maar één staart.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="tentamenvragen" class="level1">
+<h1>Tentamenvragen</h1>
+<p>Op het tentamen krijg je een meerkeuzedeel en een open deel. In het open deel loop je het toetsingsschema door, vaak met tussenantwoorden die al gegeven zijn.</p>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E5.1 — Meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E5.1 — Meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een onderzoeker vergelijkt het aantal driftbuien per week bij peuters in drie soorten opvang. In elke groep zitten andere kinderen, de groepen zijn klein en de verdeling is sterk scheef naar rechts. Welke toets past het best?</p>
+<ol type="a">
+<li><p>eenweg-ANOVA</p></li>
+<li><p>Wilcoxon-rangsomtoets</p></li>
+<li><p>Kruskal-Wallis-toets</p></li>
+<li><p>gepaarde <em>t</em>-toets</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E5.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E5.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(c)</strong> Drie groepen, verschillende kinderen, en een scheve uitkomst bij kleine groepen: de rangtoets voor drie of meer groepen. De rangsomtoets (b) is voor twee groepen; de gepaarde toets (d) voor dezelfde kinderen twee keer.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E5.2 — Meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E5.2 — Meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Een Kruskal-Wallis-toets op drie groepen geeft:</p>
+<div class="spss-uitvoer"><div class="spss-titel">Independent-Samples Kruskal-Wallis Test Summary</div>
+<table class="spss-tabel caption-top table">
+<tbody>
+<tr class="odd">
+<td class="spss-rij">Total N</td>
+<td class="spss-getal">24</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Test Statistic</td>
+<td class="spss-getal">.160ᵃ</td>
+</tr>
+<tr class="odd">
+<td class="spss-rij">Degree Of Freedom</td>
+<td class="spss-getal">2</td>
+</tr>
+<tr class="even">
+<td class="spss-rij">Asymptotic Sig.(2-sided test)</td>
+<td class="spss-getal">.923</td>
+</tr>
+</tbody>
+</table>
+<div class="spss-voetnoot">a. The test statistic is adjusted for ties.</div></div><p class="spss-nagebouwd">Nagebouwd in R met dezelfde data; in SPSS ziet de uitvoer er zo uit.</p>
+<p>Wat is de juiste conclusie bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>?</p>
+<ol type="a">
+<li><p>Verwerp <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, want .923 is groter dan .05.</p></li>
+<li><p>Verwerp <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> niet, want <em>p</em> is groter dan .05.</p></li>
+<li><p>De medianen zijn bewezen gelijk.</p></li>
+<li><p>Doe eerst een post-hoc toets om te zien welke groepen verschillen.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E5.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E5.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(b)</strong> <em>p</em> = .92, groter dan .05: niet verwerpen. (a) draait de beslisregel om: een gróte <em>p</em> is juist de reden om níét te verwerpen. (c) zegt te veel: niet verwerpen is niet hetzelfde als bewijzen dat ze gelijk zijn. (d) is de verkeerde volgorde: zonder significante omnibustoets geen post-hoc.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E5.3 — Meerkeuze">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E5.3 — Meerkeuze
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In de paarsgewijze vergelijkingen na een Kruskal-Wallis-toets op drie groepen staat bij één paar <code>Sig.</code> = .020. Wat staat er bij dat paar in de kolom <code>Adj. Sig.</code>, en is het paar significant bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>?</p>
+<ol type="a">
+<li><p>.020, significant</p></li>
+<li><p>.060, niet significant</p></li>
+<li><p>.007, significant</p></li>
+<li><p>.010, significant</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E5.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E5.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>(b)</strong> Drie groepen geven drie paren, en SPSS vermenigvuldigt elke <em>p</em> met 3 (Bonferroni): .020 × 3 is .060, groter dan .05. Je kunt het ook andersom doen, .020 tegen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn><mi>/</mi><mn>3</mn></mrow><annotation encoding="application/x-tex">\alpha = .05 / 3</annotation></semantics></math>, dus .017: ook niet significant. Twee wegen, één antwoord.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="E5.4 — Open vraag">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>E5.4 — Open vraag
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Twaalf jonge eekhoorns zijn verdeeld over drie soorten bos, vier per bos. Je meet per eekhoorn hoeveel noten hij in de herfst verstopt. De verdeling is scheef en de groepen zijn klein. Gegeven: de rangsommen zijn 38 (bos 1), 28 (bos 2) en 12 (bos 3).</p>
+<ol type="a">
+<li><p>Formuleer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>.</p></li>
+<li><p>Welke toets gebruik je, en waarom?</p></li>
+<li><p>Controleer de rangsommen en bereken de toetsingsgrootheid en de vrijheidsgraden.</p></li>
+<li><p>Bepaal met Tabel F tussen welke waarden de <em>p</em>-waarde ligt.</p></li>
+<li><p>Wat is je beslissing bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">α</mi><mo>=</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">\alpha = .05</annotation></semantics></math>?</p></li>
+<li><p>Formuleer de conclusie in één zin, en zeg wat je daarna nog zou doen.</p></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord E5.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opgelet</span>Antwoord E5.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: de verdelingen van het aantal verstopte noten zijn in de drie populaties gelijk. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>: niet alle drie gelijk.</p></li>
+<li><p>De Kruskal-Wallis-toets: drie groepen met verschillende eekhoorns, kleine groepen en een scheve uitkomst, dus geen ANOVA.</p></li>
+<li><p>Controle: 38 + 28 + 12 is 78, en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mn>12</mn><mo>⋅</mo><mn>13</mn></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{12 \cdot 13}{2}</annotation></semantics></math> is ook 78. Dan:</p></li>
+</ol>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>H</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>12</mn><mrow><mn>12</mn><mo>⋅</mo><mn>13</mn></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msup><mn>38</mn><mn>2</mn></msup><mn>4</mn></mfrac><mo>+</mo><mfrac><msup><mn>28</mn><mn>2</mn></msup><mn>4</mn></mfrac><mo>+</mo><mfrac><msup><mn>12</mn><mn>2</mn></msup><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>3</mn><mo>⋅</mo><mn>13</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>12</mn><mn>156</mn></mfrac><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>361</mn><mo>+</mo><mn>196</mn><mo>+</mo><mn>36</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mn>12</mn><mo>⋅</mo><mn>593</mn></mrow><mn>156</mn></mfrac><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mn>7116</mn><mn>156</mn></mfrac><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>45.62</mn><mo>−</mo><mn>39</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>6.62</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+H &amp;= \frac{12}{12 \cdot 13} \left( \frac{38^2}{4} + \frac{28^2}{4} + \frac{12^2}{4} \right) - 3 \cdot 13 \\[4pt]
+&amp;= \frac{12}{156} \cdot \left( 361 + 196 + 36 \right) - 39 \\[4pt]
+&amp;= \frac{12 \cdot 593}{156} - 39 \\[4pt]
+&amp;= \frac{7116}{156} - 39 \\[4pt]
+&amp;= 45.62 - 39 \\[4pt]
+&amp;= 6.62
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Met <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>3</mn><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = 3 - 1</annotation></semantics></math>, dus 2.</p>
+<ol start="4" type="a">
+<li><p>Rij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math>: 6.62 ligt tussen 5.99 (kolom .05) en 7.38 (kolom .025), dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.025</mn><mo>&lt;</mo><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">.025 &lt; p &lt; .05</annotation></semantics></math>. Eén staart, geen ×2.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p &lt; .05</annotation></semantics></math>: verwerp de nulhypothese dat de verdelingen van het aantal verstopte noten in de drie populaties gelijk zijn.</p></li>
+<li><p>Het aantal noten dat jonge eekhoorns verstoppen, verschilt tussen de drie soorten bos. Daarna: ε² uitrekenen, en met Dunns toets (met Bonferroni-correctie) uitzoeken welke bossen van elkaar verschillen, en de medianen per bos erbij.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="wat-blijft-liggen" class="level1">
+<h1>Wat blijft liggen</h1>
+<ul>
+<li><strong>Dezelfde deelnemers, drie of meer keer gemeten.</strong> Daar bestaat een rangtoets voor (de within-variant van Kruskal-Wallis), maar die zit niet in dit vak.</li>
+<li><strong>Heel kleine groepen.</strong> Bij een handvol per groep is de chi-kwadraatverdeling een benadering van wat <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> echt doet. Er bestaan exacte tabellen; in dit vak gebruik je Tabel F.</li>
+<li><strong>De naam van de buurman.</strong> De Wilcoxon-rangsomtoets uit thema 2 heet elders Mann-Whitney-<em>U</em>-toets. Zelfde toets, andere optelsom.</li>
+</ul>
+</section>
+<section id="tot-slot" class="level1">
+<h1>Tot slot</h1>
+<p>Eén ding om mee te nemen. Een rangtoets is geen noodgreep en geen mindere toets. Het is dezelfde vraag, gesteld aan de volgorde in plaats van aan de getallen, en de volgorde laat zich niet meeslepen door één otter die anderhalf uur op de kant blijft zitten. Je belt aan; doet er niemand open, dan bonk je op de deur. Je komt gewoon binnen.</p>
+<hr>
+<p><em>Oefenboek OZP 2 · Thema 5, eerste versie. Doorlopend voorbeeld: vijftien jonge otters en drie manieren om te leren zwemmen.</em></p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Terug naar boven</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Gekopieerd!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Gekopieerd!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../04_anova_vergelijken/04_anova_vergelijken.html" class="pagination-link" aria-label="Thema 4 · Eenweg-ANOVA: welke groepen verschillen?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Thema 4 · Eenweg-ANOVA: welke groepen verschillen?</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../06_anova_meerweg/06_anova_meerweg.html" class="pagination-link" aria-label="Thema 6 · Meerweg-ANOVA: twee factoren tegelijk">
+        <span class="nav-page-text">Thema 6 · Meerweg-ANOVA: twee factoren tegelijk</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Oefenboek OZP 2 · CountCamp Lab · wisi.nl</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Vragen, opmerkingen of suggesties? <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
