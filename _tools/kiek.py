@@ -118,8 +118,11 @@ def main() -> int:
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     basis = f"http://127.0.0.1:{srv.server_address[1]}"
     uit = os.path.abspath(a.uit)
-    if os.path.exists(uit):
-        os.remove(uit)          # anders telt een oude afdruk als gelukt
+    # Een oude afdruk weg, anders telt hij als gelukt. Met --stuk niet: dan maakt
+    # het script <uit>_1.png enz. en blijft <uit> zelf onaangeroerd (21-11-2026:
+    # de eerste versie gooide hier zo een gecommitte afdruk weg).
+    if not a.stuk and os.path.exists(uit):
+        os.remove(uit)
     hulsel = os.path.join(wortel, OMHULSEL)
     try:
         with tempfile.TemporaryDirectory(prefix="kiek_") as werk:
