@@ -17,6 +17,9 @@
 # DRIE DEUREN, DRIE WEGEN — ze delen geen enkele stap.
 #
 #   --lokaal      quarto render met QUARTO_PROFILE=spook, naar _site/, klaar.
+#                 (Elke bouw hier gaat via _tools/schone_bouw.py: in een kopie
+#                 zonder .claude/, zodat Quarto de werkkopieën van zetters niet
+#                 afloopt. Zie de kop van dat script.)
 #                 Raakt geen tak, geen remote, niets buiten deze map.
 #   --proefdruk   duwt je tak naar GitHub en maakt/ververst een pull request.
 #                 De Action .github/workflows/proefdruk.yml bouwt hem met het
@@ -307,7 +310,9 @@ case "$WEG" in
   taalstukken_nakijken melden
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
-    QUARTO_PROFILE=spook quarto render
+    # Niet ter plaatse: Quarto loopt dan de hele map af, ook .claude/worktrees/
+    # van andere zetters (22-11-2026, zie de kop van _tools/schone_bouw.py).
+    QUARTO_PROFILE=spook python3 _tools/schone_bouw.py --uit _site -- render
     controleer spook _site/index.html
     gebouwde_tellers_nakijken spook melden
     echo
@@ -316,9 +321,9 @@ case "$WEG" in
     echo "  of:  quarto preview   (dan ververst hij mee)"
     echo
     echo "LET OP: _site/ is nu een PROEFDRUK. Wil je hem weer als de echte site"
-    echo "bekijken, draai dan gewoon: quarto render"
+    echo "bekijken, draai dan: python3 _tools/schone_bouw.py --uit _site -- render"
   else
-    echo "  [droogloop] QUARTO_PROFILE=spook quarto render"
+    echo "  [droogloop] QUARTO_PROFILE=spook python3 _tools/schone_bouw.py --uit _site -- render"
   fi
   ;;
 
@@ -384,11 +389,14 @@ case "$WEG" in
   echo
   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
   if [ -z "$DROOG" ]; then
-    quarto render >/dev/null
+    # In een kopie zonder .claude/: hier, in de gedeelde checkout, liep een bouw
+    # ter plaatse twee keer vast op de werkkopie van een andere zetter
+    # (22-11-2026, spoor pers_nacht; zie de kop van _tools/schone_bouw.py).
+    python3 _tools/schone_bouw.py --uit _site -- render >/dev/null
     controleer echt _site/index.html || { echo "  Niet geleverd."; exit 1; }
     gebouwde_tellers_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }
   else
-    echo "  [droogloop] quarto render && controleer echt _site/index.html"
+    echo "  [droogloop] python3 _tools/schone_bouw.py --uit _site -- render && controleer echt _site/index.html"
     echo "  [droogloop] python3 _tools/tellerwacht.py --echt"
   fi
   echo

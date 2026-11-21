@@ -196,9 +196,11 @@ nlbouw() {  # $1 = profiel (leeg = echt), $2 = uitvoermap (leeg = _site)
   local args=(render)
   [ -n "${1:-}" ] && args+=(--profile "$1")
   [ -n "${2:-}" ] && args+=(--output-dir "$2")
-  echo "  \$ quarto ${args[*]}"
+  echo "  \$ quarto ${args[*]}   (via _tools/schone_bouw.py: in een kopie zonder .claude/)"
   local log="$WERK/nlbouw.log"
-  if ! quarto "${args[@]}" >"$log" 2>&1; then
+  # Niet ter plaatse: Quarto loopt de hele projectmap af, ook de werkkopieën van
+  # andere zetters onder .claude/worktrees/ (22-11-2026, spoor pers_nacht).
+  if ! python3 "$REPO/_tools/schone_bouw.py" --uit "${2:-_site}" -- "${args[@]}" >"$log" 2>&1; then
     tail -15 "$log" | sed 's/^/    /'
     return 1
   fi
