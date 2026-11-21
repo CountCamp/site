@@ -167,6 +167,7 @@ class Kaartje:
         self.regel = regel          # 1-geteld, waar het blok begint
         self.tekst: list[str] = []
         self.vak = False            # draagt het blok .cc-boek-vak (een kaartje voor één vak)?
+        self.kop = ""               # de kopregel met de link, zoals hij in de .qmd staat
 
     @property
     def body(self) -> str:
@@ -200,11 +201,11 @@ def lees_kaartjes(plank_pad: str) -> list[Kaartje]:
             i += 1
         i += 1  # de sluitregel zelf
 
-        titel, href = "(kop niet gevonden)", None
+        titel, href, kop = "(kop niet gevonden)", None, ""
         for r in lijf:
             m = RE_KOP_MET_LINK.match(r.strip())
             if m:
-                titel, href = m.group("titel").strip(), m.group("href").strip()
+                titel, href, kop = m.group("titel").strip(), m.group("href").strip(), r.strip()
                 break
             m = RE_KOP_KAAL.match(r.strip()) if r.strip().startswith("#") else None
             if m:
@@ -212,6 +213,7 @@ def lees_kaartjes(plank_pad: str) -> list[Kaartje]:
                 break
 
         k = Kaartje(titel, href, start + 1)
+        k.kop = kop
         k.tekst = lijf
         k.vak = ".cc-boek-vak" in regels[start]
         kaartjes.append(k)
@@ -615,7 +617,15 @@ def toets(wortel: str, plank_pad: str) -> tuple[list[Bevinding], int, int]:
 #      niet op de titel, want die is daar Engels;
 #   b. elk vak-kaartje (.cc-boek-vak) met een link op de Nederlandse plank wordt
 #      gelinkt vanaf de kaart "Oefenboeken" op de Nederlandse thuispagina;
-#   c. idem voor de Engelse plank en de kaart "Practice books" op en/index.qmd.
+#   c. idem voor de Engelse plank en de kaart "Practice books" op en/index.qmd;
+#   d. het taalmerk (21-11-2026, Ben: "Ja, taalmerk erop"). Het EN- of NL-merk
+#      vóór een titel staat niet in de tekst; styles.css maakt het uit het
+#      hreflang van de link. Een link zonder hreflang verliest zijn merk dus
+#      zonder dat iemand het ziet, en een verkeerd hreflang laat het merk
+#      liegen. Daarom: elk kaartje met een link op de Engelse plank, en elke link
+#      naar een boek op de Engelse thuiskaart, draagt hreflang; dat is "en" als
+#      de link in en/ uitkomt en anders "nl"; en "(in Dutch)" staat in de titel
+#      als en alleen als het "nl" is.
 # Wat hij NIET ziet: of de tekst op de twee planken hetzelfde zegt, en
 # kaartjes zonder link (OZP 2, STAT 3 -- die mogen in het Engels wegblijven).
 # Een Engels kaartje dat naar een Engels boek wijst, is voor (a) geen
@@ -661,6 +671,50 @@ def thuiskaart_links(wortel: str, thuis: str) -> tuple[set[str], str | None]:
             doelen = {doel_van(thuis, h) for h in RE_MD_LINK.findall("\n".join(blok))}
             return doelen - {None}, None
     return set(), f"{thuis} heeft geen kaart {{.{THUISKAART}}}"
+
+
+# een link met wat erachter staat: "[titel](href){hreflang="nl"}"
+RE_MD_LINK_VOL = re.compile(r"\[(?P<tekst>[^\]]*)\]\((?P<href>[^)\s]+)[^)]*\)(?P<attr>\{[^}]*\})?")
+RE_HREFLANG = re.compile(r'\bhreflang="([^"]*)"')
+
+
+def taal_van(doel: str) -> str:
+    """De taal van een bladzij op de site, uit haar pad: alles onder en/ is Engels."""
+    return "en" if doel.startswith("en/") else "nl"
+
+
+def taalmerk_fouten(titel: str, attr: str, doel: str) -> str | None:
+    """Wat er mis is met het taalmerk van één link, of None."""
+    m = RE_HREFLANG.search(attr or "")
+    wil = taal_van(doel)
+    if not m:
+        return (f"heeft geen hreflang, dus geen taalmerk vóór de titel (styles.css maakt het "
+                f"daaruit). Zet {{hreflang=\"{wil}\"}} direct achter de link")
+    if m.group(1) != wil:
+        return (f"draagt hreflang=\"{m.group(1)}\", maar wijst naar {doel}, en dat is \"{wil}\": "
+                f"het taalmerk zou dan liegen")
+    if wil == "nl" and "(in Dutch)" not in titel:
+        return (f"wijst naar een Nederlandse bladzij ({doel}), maar de titel zegt geen "
+                f"\"(in Dutch)\" (Ben, 21-11-2026: \"Ja, taalmerk erop\")")
+    if wil == "en" and "(in Dutch)" in titel:
+        return f"zegt \"(in Dutch)\", maar wijst naar een Engelse bladzij ({doel})"
+    return None
+
+
+def thuiskaart_taal(wortel: str, thuis: str) -> list[tuple[str, str, str, int]]:
+    """(linktekst, href, attributen, regelnummer) van elke link in de kaart THUISKAART."""
+    with open(os.path.join(wortel, thuis), encoding="utf-8") as f:
+        regels = zonder_commentaar(f.read()).splitlines()
+    uit = []
+    for i, r in enumerate(regels):
+        if r.lstrip().startswith("::: {.cc-card") and THUISKAART in r:
+            for j, r2 in enumerate(regels[i + 1:], i + 2):
+                if re.fullmatch(r":{3,}\s*", r2):
+                    break
+                for m in RE_MD_LINK_VOL.finditer(r2):
+                    uit.append((m.group("tekst"), m.group("href"), m.group("attr") or "", j))
+            break
+    return uit
 
 
 def spiegel(wortel: str, plank: str, en_plank: str, thuis: str, en_thuis: str
@@ -717,10 +771,36 @@ def spiegel(wortel: str, plank: str, en_plank: str, thuis: str, en_thuis: str
                     f"linkt niet naar {d} -- de thuiskaart noemt elk vak (Ben, 14-11-2026)"))
         gemeten.append(f"{len(vakken)} vak(ken) van {plank_pad} op {thuispad}")
 
+    # d. het taalmerk: op de Engelse plank elk kaartje met een link, op de
+    #    Engelse thuiskaart elke link die naar een boek van een van de planken wijst
+    #    (de kop "Practice books" en een link naar de plank zelf zijn geen boek).
+    merk_plank = 0
+    for k, d in zip(en, en_doel):
+        m = RE_MD_LINK_VOL.search(k.kop)
+        attr = (m.group("attr") or "") if m else ""
+        fout = taalmerk_fouten(k.titel, attr, d)
+        merk_plank += 1
+        if fout:
+            uit.append(Bevinding("fout", k, f"{fout} (taalmerk)"))
+    boeken = set(nl_doel) | set(en_doel)
+    merk_thuis = 0
+    if os.path.isfile(os.path.join(wortel, en_thuis)):
+        for tekst, href, attr, regelnr in thuiskaart_taal(wortel, en_thuis):
+            d = doel_van(en_thuis, href)
+            if d not in boeken:
+                continue
+            merk_thuis += 1
+            fout = taalmerk_fouten(tekst, attr, d)
+            if fout:
+                uit.append(Bevinding("fout", Kaartje(f"{en_thuis}: [{tekst}]", href, regelnr),
+                                     f"{fout} (taalmerk)"))
+    merkregel = f"taalmerk nagelopen: {merk_plank} titel(s) op {en_plank}, {merk_thuis} op {en_thuis}"
+
     regel = (f"spiegel: {len(nl)} boek(en) met een link op {plank}, "
              f"{len(gedeeld_nl)} daarvan ook op {en_plank}"
              + (", in dezelfde volgorde" if gedeeld_nl == gedeeld_en else "")
-             + (f"; nagelopen: {' en '.join(gemeten)}" if gemeten else ""))
+             + (f"; nagelopen: {' en '.join(gemeten)}" if gemeten else "")
+             + f"; {merkregel}")
     return uit, regel
 
 

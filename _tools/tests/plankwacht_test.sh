@@ -118,7 +118,13 @@ for pad, plank, voor in (("index.qmd", "oefenboeken/index.qmd", "oefenboeken/"),
                          ("en/index.qmd", "workbooks/index.qmd", "../oefenboeken/")):
     with open(os.path.join(T, pad), "w", encoding="utf-8") as f:
         f.write(f"---\ntitle: thuis\n---\n\n::: {{.cc-card .cc-card-werkboeken}}\n### [Oefenboeken]({plank})\n")
-        f.write("Volg je een vak? " + ", ".join(f"[{t}]({voor}{h})" for t, h, v in kaarten if v) + ".\n:::\n")
+        # Op de Engelse thuiskaart draagt elke boeklink sinds 21-11-2026 hreflang en
+        # "(in Dutch)" (het taalmerk); op de Nederlandse niet.
+        if pad == "en/index.qmd":
+            links = [f"[{t} (in Dutch)]({voor}{h}){{hreflang=\"nl\"}}" for t, h, v in kaarten if v]
+        else:
+            links = [f"[{t}]({voor}{h})" for t, h, v in kaarten if v]
+        f.write("Volg je een vak? " + ", ".join(links) + ".\n:::\n")
 PY
 }
 
@@ -484,8 +490,8 @@ SPIEGEL_LATEN=1 zaak "16d de Engelse plank in een andere volgorde vuurt" 1 "staa
 
 # 16e: een Engels boek NAAST het Nederlandse is geen afwijking
 cp "$T16/en_goed.qmd" "$EN16"
-printf '\n::: {.cc-boek .cc-boek-vak}\n### [Psychometrics Practice Book →](psychometrics/index.html) [R]{.cc-chip}\n:::\n' >> "$EN16"
-printf 'Volg je een vak? [Psychometrics](workbooks/psychometrics/index.html).\n' > "$T16/regel"
+printf '\n::: {.cc-boek .cc-boek-vak}\n### [Psychometrics Practice Book →](psychometrics/index.html){hreflang="en"} [R]{.cc-chip}\n:::\n' >> "$EN16"
+printf 'Volg je een vak? [Psychometrics](workbooks/psychometrics/index.html){hreflang="en"}.\n' > "$T16/regel"
 python3 - "$T16/en/index.qmd" "$T16/regel" <<'PY'
 import sys
 s = open(sys.argv[1], encoding="utf-8").read()
@@ -530,6 +536,70 @@ SPIEGEL_LATEN=1 zaak "16h geen Engelse thuispagina heet blind, niet goed" 3 "en/
 spiegel_schrijven "$T16"; rm "$EN16"
 SPIEGEL_LATEN=1 zaak "16i geen Engelse plank heet blind, niet goed" 3 \
      "en/workbooks/index.qmd (regel 1): bestaat niet" "$T16"
+
+# ---- zaak 17 t/m 17f: het taalmerk (21-11-2026) ---------------------------
+# Ben, 21-11-2026: "Ja, taalmerk erop". Het EN- of NL-merk vóór een titel staat
+# niet in de tekst; styles.css maakt het uit het hreflang van de link. Zonder
+# hreflang verdwijnt het merk zonder één foutmelding, met een verkeerd hreflang
+# liegt het. De kloppende spiegel van spiegel_schrijven heeft twee boeken op de
+# Engelse plank en twee vakken op de Engelse thuiskaart, allemaal Nederlands.
+spiegel_schrijven "$T16"
+SPIEGEL_LATEN=1 zaak "17  een kloppend taalmerk blijft stil, en zegt hoeveel hij nakeek" 0 \
+     "taalmerk nagelopen: 2 titel(s) op en/workbooks/index.qmd, 2 op en/index.qmd" "$T16"
+cp "$EN16" "$T16/en_goed.qmd"; cp "$T16/en/index.qmd" "$T16/thuis_goed.qmd"
+
+# 17b: een kaart op de plank zonder hreflang -- het merk is dan stil weg
+python3 - "$EN16" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = s.replace('{hreflang="nl"}', "", 1)
+open(p, "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "17b een plankkaart zonder hreflang vuurt" 1 "heeft geen hreflang, dus geen taalmerk" "$T16"
+
+# 17c: hreflang="en" op een link naar een Nederlandse bladzij -- het merk liegt
+cp "$T16/en_goed.qmd" "$EN16"
+python3 - "$EN16" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = s.replace('{hreflang="nl"}', '{hreflang="en"}', 1)
+open(p, "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "17c een hreflang dat niet bij de bestemming past, vuurt" 1 "het taalmerk zou dan liegen" "$T16"
+
+# 17d: een Nederlands boek zonder "(in Dutch)" in de titel
+cp "$T16/en_goed.qmd" "$EN16"
+python3 - "$EN16" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = s.replace(" (in Dutch)", "", 1)
+open(p, "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "17d een Nederlands boek zonder (in Dutch) vuurt" 1 'de titel zegt geen "(in Dutch)"' "$T16"
+
+# 17e: een vak op de Engelse thuiskaart zonder hreflang (de MIEKE-noot van 14-11)
+cp "$T16/en_goed.qmd" "$EN16"
+python3 - "$T16/en/index.qmd" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = s.replace('{hreflang="nl"}', "", 1)
+open(p, "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "17e een vak op de Engelse thuiskaart zonder hreflang vuurt" 1 \
+     "en/index.qmd: [Oefenboek Psychometrie (in Dutch)]" "$T16"
+
+# 17f: de kop "Practice books" en een link naar de plank zelf zijn geen boek, en
+# hoeven dus geen merk -- de thuiskaart van spiegel_schrijven heeft zo'n kop al,
+# hier komt er een link met een anker bij.
+cp "$T16/thuis_goed.qmd" "$T16/en/index.qmd"
+python3 - "$T16/en/index.qmd" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = s.replace(".\n:::\n", ". Some are [on their way in English](workbooks/index.qmd#on-its-way).\n:::\n", 1)
+open(p, "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "17f een link naar de plank zelf hoeft geen merk" 0 \
+     "taalmerk nagelopen: 2 titel(s) op en/workbooks/index.qmd, 2 op en/index.qmd" "$T16"
 rm -rf "$T16"
 
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------

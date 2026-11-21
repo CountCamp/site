@@ -560,6 +560,67 @@ html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks {
 html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks:hover,
 html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks:focus-within { transform: none; box-shadow: none; }
 
+/* ---- het taalmerk: in welke taal je landt (21-11-2026) ---------------
+   Ben, 21-11-2026: "Ja, taalmerk erop". Elke boektitel op de Engelse plank
+   (en/workbooks/index.qmd) en op de kaart "Practice books" van de Engelse
+   thuispagina krijgt een klein EN of NL. Aanleiding: beide testlezers
+   scrolden langs het enige Engelse boek, en Jeanne klikte zonder merk mis
+   (_logs/en_ts_pers_2026-11-21.md §4).
+
+   HET MERK WORDT NIET GETYPT. Het volgt uit het hreflang van de link: wat
+   de link zegt over de taal van zijn bestemming, dat toont het merk. Een
+   NL voor een Engelse link kan dus niet ontstaan, en een nieuw boek krijgt
+   zijn merk vanzelf zodra zijn link hreflang draagt. Een link zónder
+   hreflang krijgt geen merk; plankwacht.py eist het daarom op die twee
+   plekken (zie "taalmerk" daar).
+
+   Waar: alleen in de kop van een boek (.cc-boek h3) en in de kaart
+   .cc-card-werkboeken. Het taalknopje rechtsboven (nav.taalwissel) heeft
+   ook een <a hreflang>, en valt hier dus bewust buiten.
+
+   Vorm: een rechthoekje, geen pil. De pillen rechts zeggen het gereedschap
+   (R, SPSS) en de stand (nieuw, in opbouw); dit zegt iets anders en ziet er
+   dus anders uit. Het staat links, vóór de titel, waar het oog elke regel
+   binnenkomt, en de merken vormen zo één kolom. EN is gevuld, NL open:
+   op de Engelse plank is het Engelse boek de uitzondering, en die moet je
+   zien zonder te lezen. De letters dragen de betekenis, de vulling alleen
+   het onderscheid, dus het werkt ook in grijs (afdruk, rood-groen).
+
+   Een schermlezer leest het merk niet voor (de tekst na de "/" is leeg):
+   de titel zegt het al, met "(in Dutch)" en het hreflang zelf. Een browser
+   die die schrijfwijze niet kent, valt terug op de regel ervoor en leest
+   "NL" dan wel voor. */
+.cc-boek h3 a[hreflang]::before,
+.cc-card-werkboeken a[hreflang]::before {
+  display: inline-block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.06em;
+  font-style: normal; line-height: 1;
+  min-width: 2.1em; box-sizing: border-box; text-align: center;
+  padding: 0.22em 0.34em 0.18em;
+  border: 1px solid; border-radius: 3px;
+  margin-right: 0.5em; vertical-align: 0.16em;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.cc-boek h3 a[hreflang="en"]::before,
+.cc-card-werkboeken a[hreflang="en"]::before {
+  content: "EN"; content: "EN" / "";
+  color: var(--cc-paper); background: var(--cc-blue-deep); border-color: var(--cc-blue-deep);
+}
+.cc-boek h3 a[hreflang="nl"]::before,
+.cc-card-werkboeken a[hreflang="nl"]::before {
+  content: "NL"; content: "NL" / "";
+  color: var(--cc-ink-soft); background: transparent; border-color: #8a8378;
+}
+/* De vakken op de thuiskaart staan sinds 21-11-2026 onder elkaar, het merk
+   vooraan: zo staan de merken in één kolom, zoals op de plank. Een titel die
+   omslaat, springt in tot achter het merk. */
+.cc-card-werkboeken ul { list-style: none; padding-left: 0; margin: 0.5rem 0 0.7rem; }
+.cc-card-werkboeken li {
+  font-family: Georgia, serif; font-size: 0.98rem; line-height: 1.45;
+  margin: 0 0 0.3rem; padding-left: 2.15em; text-indent: -2.15em;
+}
+
 /* wie liever geen beweging heeft, krijgt de oplichter zonder lift */
 @media (prefers-reduced-motion: reduce) {
   .cc-boek { transition: none; }
