@@ -404,6 +404,11 @@ main#quarto-document-content h2 { margin-bottom: 1.1rem; }
   padding: 0.12rem 0.5rem; border-radius: 99px;
   flex: 0 0 auto; margin-left: auto;
 }
+/* Twee chips in één kop ("R" en "nieuw", "SPSS" en "in opbouw"): alleen de
+   eerste duwt naar rechts. Kregen ze allebei margin-left: auto, dan verdeelde
+   de flexbox de vrije ruimte over die twee, en zweefde "R" midden in de regel
+   (gezien 21-11-2026 op de Nederlandse plank, spoor taalmerk). */
+.cc-boek h3 .cc-chip + .cc-chip { margin-left: 0; }
 .cc-boek-maat .cc-chip { color: #3b3e6e; background: #E9E9F3; }
 .cc-boek-vak .cc-chip { color: #24402c; background: #E4EDE7; }
 /* zonder muis: zichtbare focusrand om de titel; de regel-oplichter
@@ -548,17 +553,89 @@ html:not([data-vorm="kaart"]) .cc-boek:focus-within .cc-chip-straks { background
    — en verder in het woord "in opbouw".
    En de regel licht niet op als je eroverheen gaat. Dat is geen detail:
    in de rug-vorm gedraagt een oplichtende regel zich als een knop, dus
-   een regel die reageert belóóft een klik die er niet is. */
+   een regel die reageert belóóft een klik die er niet is.
+   Tot 21-11-2026 gold dit alleen voor .cc-boek-vak.cc-boek-straks. "The R
+   practice book" onder "On its way in English" is geen vak, en had dus een
+   hele rug en een regel die oplichtte zonder link; Jeanne zag de rug van die
+   ene afwijken en dacht dat gestreept iets anders betekende (spoor taalmerk). */
 .cc-boek-straks h3 { color: var(--cc-ink-soft); }
-html:not([data-vorm="kaart"]) .cc-boek-vak.cc-boek-straks { border-left-style: dashed; }
-html:not([data-vorm="kaart"]) .cc-boek-vak.cc-boek-straks:hover,
-html:not([data-vorm="kaart"]) .cc-boek-vak.cc-boek-straks:focus-within { background: transparent; }
-html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks {
+html:not([data-vorm="kaart"]) .cc-boek-straks { border-left-style: dashed; }
+html:not([data-vorm="kaart"]) .cc-boek-straks:hover,
+html:not([data-vorm="kaart"]) .cc-boek-straks:focus-within { background: transparent; }
+html[data-vorm="kaart"] .cc-boek-straks {
   background: var(--cc-paper);
   border-style: dashed;
 }
-html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks:hover,
-html[data-vorm="kaart"] .cc-boek-vak.cc-boek-straks:focus-within { transform: none; box-shadow: none; }
+html[data-vorm="kaart"] .cc-boek-straks:hover,
+html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shadow: none; }
+
+/* ---- het taalmerk: in welke taal je landt (21-11-2026) ---------------
+   Ben, 21-11-2026: "Ja, taalmerk erop". Elke boektitel op de Engelse plank
+   (en/workbooks/index.qmd) en op de kaart "Practice books" van de Engelse
+   thuispagina krijgt een klein EN of NL. Aanleiding: beide testlezers
+   scrolden langs het enige Engelse boek, en Jeanne klikte zonder merk mis
+   (_logs/en_ts_pers_2026-11-21.md §4).
+
+   HET MERK WORDT NIET GETYPT. Het volgt uit het hreflang van de link: wat
+   de link zegt over de taal van zijn bestemming, dat toont het merk. Een
+   NL voor een Engelse link kan dus niet ontstaan, en een nieuw boek krijgt
+   zijn merk vanzelf zodra zijn link hreflang draagt. Een link zónder
+   hreflang krijgt geen merk; plankwacht.py eist het daarom op die twee
+   plekken (zie "taalmerk" daar).
+
+   Waar: alleen in de kop van een boek (.cc-boek h3) en in de kaart
+   .cc-card-werkboeken. Het taalknopje rechtsboven (nav.taalwissel) heeft
+   ook een <a hreflang>, en valt hier dus bewust buiten.
+
+   Vorm: een rechthoekje, geen pil. De pillen rechts zeggen het gereedschap
+   (R, SPSS) en de stand (nieuw, in opbouw); dit zegt iets anders en ziet er
+   dus anders uit. Het staat links, vóór de titel, waar het oog elke regel
+   binnenkomt, en de merken vormen zo één kolom. EN is gevuld, NL open:
+   op de Engelse plank is het Engelse boek de uitzondering, en die moet je
+   zien zonder te lezen. De letters dragen de betekenis, de vulling alleen
+   het onderscheid, dus het werkt ook in grijs (afdruk, rood-groen).
+
+   Een schermlezer leest het merk niet voor (de tekst na de "/" is leeg):
+   de titel zegt het al, met "(in Dutch)" en het hreflang zelf. Een browser
+   die die schrijfwijze niet kent, valt terug op de regel ervoor en leest
+   "NL" dan wel voor. */
+.cc-boek h3 a[hreflang]::before,
+.cc-card-werkboeken a[hreflang]::before {
+  display: inline-block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.06em;
+  font-style: normal; line-height: 1;
+  /* vaste breedte in rem, zodat EN en NL even breed zijn en de thuiskaart
+     een omgeslagen titel precies tot achter het merk kan laten inspringen */
+  width: 1.6rem; box-sizing: border-box; text-align: center;
+  padding: 0.22em 0 0.18em; text-indent: 0;
+  border: 1px solid; border-radius: 3px;
+  margin-right: 0.45rem; vertical-align: 0.16em;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.cc-boek h3 a[hreflang="en"]::before,
+.cc-card-werkboeken a[hreflang="en"]::before {
+  content: "EN"; content: "EN" / "";
+  color: var(--cc-paper); background: var(--cc-blue-deep); border-color: var(--cc-blue-deep);
+}
+.cc-boek h3 a[hreflang="nl"]::before,
+.cc-card-werkboeken a[hreflang="nl"]::before {
+  content: "NL"; content: "NL" / "";
+  color: var(--cc-ink-soft); background: transparent; border-color: #8a8378;
+}
+/* De vakken op de thuiskaart staan sinds 21-11-2026 onder elkaar, het merk
+   vooraan: zo staan de merken in één kolom, zoals op de plank. Een titel die
+   omslaat (op de plank en op de thuiskaart), springt in tot achter het merk: 2.05rem is de breedte van het
+   merk plus zijn marge hierboven (1.6 + 0.45). Het merk zelf zet zijn
+   text-indent terug op 0, want die erft anders door in het merk en duwt de
+   letters uit hun rechthoekje (gemeten 21-11-2026: een leeg doosje met "NL"
+   ernaast). */
+.cc-boek h3 a[hreflang] { padding-left: 2.05rem; text-indent: -2.05rem; }
+.cc-card-werkboeken ul { list-style: none; padding-left: 0; margin: 0.5rem 0 0.7rem; }
+.cc-card-werkboeken li {
+  font-family: Georgia, serif; font-size: 0.98rem; line-height: 1.45;
+  margin: 0 0 0.3rem; padding-left: 2.05rem; text-indent: -2.05rem;
+}
 
 /* wie liever geen beweging heeft, krijgt de oplichter zonder lift */
 @media (prefers-reduced-motion: reduce) {
