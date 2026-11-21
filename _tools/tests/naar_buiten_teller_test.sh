@@ -378,6 +378,50 @@ else
   gezakt=$((gezakt + 1))
 fi
 
+# Sinds 21-11-2026 (spoor taalpers) zegt de wachter het als hij niet kón kijken
+# (afloop 3), en noemt hij een bladzij zonder plek voor het knopje bij naam in
+# plaats van met een traceback te stoppen. De ECHTE taalonderdelen.py, met een
+# eigen tabel en eigen bladzijden.
+echte_taal_repo() {  # $1 = naam -> repo met de echte wachter en stukken, zonder tabel
+  local r; r="$(nep_repo "$1" 0 "teller-controle - nagemaakt, alles in orde")"
+  cp _tools/taalonderdelen.py "$r/_tools/"
+  cp -R _tools/taalwissel "$r/_tools/taalwissel"
+  echo "$r"
+}
+KAPOT_TAAL="$(echte_taal_repo kapottaal)"
+printf 'oefenboeken/x/a.html\ten/workbooks/x/a.html\n' > "$KAPOT_TAAL/_tools/taalparen.tsv"   # geen derde kolom
+keur     "6e een kapotte taalparen.tsv: HOUDT TEGEN" 1 "$KAPOT_TAAL"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+verwacht "  en noemt de regel van de tabel" "regel 1 is geen"
+getoetst=$((getoetst + 1))
+if grep -qF "mist zijn taalknopje" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+LEEG_TAAL="$(echte_taal_repo leegtaal)"
+printf 'index.html\ten/index.html\tauto\n' > "$LEEG_TAAL/_tools/taalparen.tsv"   # geen enkele losse tweeling
+keur     "6f een tabel zonder losse tweeling: HOUDT TEGEN (niets nagelopen is niet groen)" 1 "$LEEG_TAAL"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+
+ZONDER_KOP="$(echte_taal_repo zonderkop)"
+printf 'oefenboeken/x/a.html\ten/workbooks/x/a.html\tlos\n' > "$ZONDER_KOP/_tools/taalparen.tsv"
+mkdir -p "$ZONDER_KOP/oefenboeken/x" "$ZONDER_KOP/en/workbooks/x"
+printf '<html><body>\n<p>geen kop</p></body></html>\n' > "$ZONDER_KOP/oefenboeken/x/a.html"
+printf '<html><head><title>a</title>\n</head>\n<body>\n<p>a</p></body></html>\n' > "$ZONDER_KOP/en/workbooks/x/a.html"
+python3 "$ZONDER_KOP/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true   # de Engelse kant in orde maken
+keur     "6g een tweeling zonder plek voor de stukken: HOUDT TEGEN" 1 "$ZONDER_KOP"
+verwacht "  en noemt hem, met de reden" "oefenboeken/x/a.html: geen of meer dan één </head>"
+getoetst=$((getoetst + 1))
+if grep -qF "Traceback" "$M/uit"; then
+  echo "  ZAKT    en stopt met een traceback in plaats van een gat met naam"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      zonder traceback"
+fi
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."

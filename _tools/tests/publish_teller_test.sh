@@ -241,21 +241,64 @@ else
   gezakt=$((gezakt + 1))
 fi
 
+# Vanaf hier weigert de pers, en sinds 21-11-2026 (spoor taalpers) doet hij dat
+# VÓÓR hij de oude map weggooit (stap 0b). Bewijs dat er niets is aangeraakt: het
+# boek van 7b, mét zijn taalstukken, staat er na elke weigering byte voor byte nog.
+VORIG="$(shasum -a 256 "$T" | cut -d' ' -f1)"
+onaangeraakt() {  # $1 = naam
+  getoetst=$((getoetst + 1))
+  if [ -f "$T" ] && [ "$(shasum -a 256 "$T" | cut -d' ' -f1)" = "$VORIG" ]; then
+    echo "  ok    $1"
+  else
+    echo "  ZAKT  $1 — het vorige boek is weg of veranderd"
+    gezakt=$((gezakt + 1))
+  fi
+}
+
 bouw_bron   # de gewone thema-bladzij: <body> en de tekst op één regel
 zaak    "7c een tweeling zonder plek voor het knopje laat het script WEIGEREN" 1
 verwacht "  en noemt hem bij naam" "TAALSTUKKEN: 00_thema/00_thema.html"
-verwacht "  en zegt waarom het niet door mag" "missen hun taalstukken — NIET publiceren"
+verwacht "  en zegt dat hij niets aanraakte" "kunnen hun taalstukken niet krijgen — niets aangeraakt"
+onaangeraakt "  en het vorige boek staat er nog, met zijn knopje"
 
 printf '%s\t%s\t%s\n' oefenboeken/proefboek/09_weg/09_weg.html \
   en/workbooks/proefboek/09_weg/09_weg.html los >> "$PROEFSITE/_tools/taalparen.tsv"
 bouw_bron; bouw_thema_met_body
 zaak    "7d een rij voor een bladzij die het boek niet (meer) maakt: WEIGEREN" 1
-verwacht "  en noemt hem" "TAALSTUKKEN: 09_weg/09_weg.html — staat in _tools/taalparen.tsv, maar dit oefenboek maakt hem niet (meer)"
+verwacht "  en noemt hem" "TAALSTUKKEN: 09_weg/09_weg.html — staat in _tools/taalparen.tsv, maar de nieuwe render maakt hem niet (meer)"
+verwacht "  en zegt wat je eerst doet" "werk dan eerst _tools/taalparen.tsv bij"
+onaangeraakt "  en het vorige boek staat er nog"
+
+# Een oefenboek zonder tweeling (OZP 1, MVDA, Psychometrie) naast een tabel die
+# tweelingen van een ander boek noemt: gewoon door, en dat zegt hij ook.
+getoetst=$((getoetst + 1))
+bouw_bron
+python3 "$PROEFSITE/_tools/publish_workbook.py" --src "$M/bron" --name anderboek > "$M/uit" 2>&1
+code_ander=$?
+if [ "$code_ander" = 0 ] && grep -qF "taalstukken: 0 bladzij(den) met een losse tweeling in taalparen.tsv, 0 bijgezet, 0 fout" "$M/uit"; then
+  echo "  ok    7e een oefenboek zonder tweeling: door, met '0 bladzij(den)' (afloopcode 0)"
+else
+  echo "  ZAKT  7e een oefenboek zonder tweeling — afloop $code_ander"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+
+# Een tabel die niet te lezen is: dan weet de pers niet welke bladzijden een
+# tweeling hebben. Niet gekeken (3), en niets aangeraakt.
+cp "$PROEFSITE/_tools/taalparen.tsv" "$M/taalparen.goed"
+printf 'oefenboeken/proefboek/kapot.html\tzonder-derde-kolom\n' >> "$PROEFSITE/_tools/taalparen.tsv"
+bouw_bron; bouw_thema_met_body
+zaak    "7f een kapotte taalparen.tsv: NIET GEKEKEN, niet doorgaan" 3
+verwacht "  en noemt de regel van de tabel" "regel 3 is geen"
+onaangeraakt "  en het vorige boek staat er nog"
+cp "$M/taalparen.goed" "$PROEFSITE/_tools/taalparen.tsv"
 
 rm -f "$PROEFSITE/_tools/taalonderdelen.py"
 bouw_bron; bouw_thema_met_body
-zaak    "7e wel een tabel, geen taalonderdelen.py: WEIGEREN, niet stil overslaan" 1
+zaak    "7g wel een tabel, geen taalonderdelen.py: WEIGEREN, niet stil overslaan" 3
 verwacht "  en zegt dat het gereedschap vastliep" "taalonderdelen.py liep vast"
+verwacht "  en dat hij niets aanraakte" "Niets aangeraakt"
+onaangeraakt "  en het vorige boek staat er nog"
 
 echo ""
 if [ "$gezakt" = "0" ]; then

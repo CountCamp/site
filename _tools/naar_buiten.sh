@@ -204,6 +204,9 @@ doorstuur_nakijken() {   # $1 = blokkerend | melden
 # ts_pers_beide: 9 Nederlandse TS-bladzijden kaal, "Alle poorten staan groen").
 # Zelfde afweging als hierboven: rood kan hij alleen worden door een echte fout.
 # Geen bouw nodig: hij leest de bladzijden zoals ze in de repo staan.
+# Sinds 21-11-2026 (spoor taalpers) zet publish_workbook.py de stukken zelf terug
+# (stap 5b). Deze poort blijft, want hij vangt elke andere weg: boek/publiceer.sh
+# zonder lever.sh, een kopie met de hand, een pers die nog komt.
 taalstukken_nakijken() {   # $1 = blokkerend | melden
   local streng="$1" code=0 uit
   uit="$(python3 "$HIER/_tools/taalonderdelen.py" los --controleer 2>&1)" || code=$?
@@ -213,6 +216,9 @@ taalstukken_nakijken() {   # $1 = blokkerend | melden
   case "$code" in
     1) echo "  Een bladzij met een tweeling mist zijn taalknopje, hreflang of taalbalk."
        echo "  Herstellen: python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft)" ;;
+    3) echo "  De taalstukkenwachter kon niet kijken: _tools/taalparen.tsv is niet te lezen,"
+       echo "  of noemt geen enkele losse tweeling (de reden staat hierboven). Dat zegt"
+       echo "  niets over de bladzijden -- stilte betekent ongeldig, nooit goed." ;;
     *) echo "  De taalstukkenwachter zelf liep vast (afloopcode $code). Wat hij had"
        echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
        echo "  Staat _tools/taalonderdelen.py er, en draait hij los?" ;;

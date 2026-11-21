@@ -13,7 +13,8 @@ Een bladzij met een tweeling krijgt hooguit vijf stukken, en verder niets:
 Drie lezers moeten precies dezelfde bytes zien, en daarom staat elk stuk één keer:
   _tools/taalwissel.lua   de bladzijden die Quarto bouwt (taalparen.tsv: auto, eigen)
   dit bestand             de losse bladzijden (taalparen.tsv: los, los-eigen) —
-                          bouw_speelkist.py roept pas_toe_los() aan bij het kopiëren
+                          bouw_speelkist.py roept pas_toe_los() aan bij het kopiëren,
+                          publish_workbook.py na het inlezen van een oefenboek
   de wachtrij             (wachtrij_en.tsv, `#: nl_negeer`) laat deze stukken weg
                           voor hij Nederlands vergelijkt. Die regels rekent
                           `regels` hieronder uit; ze worden nooit met de hand getikt.
@@ -31,7 +32,9 @@ Alleen het adres in een link mag variëren, en dan alleen als pad binnen de site
 knopje) of als adres op countcamp.org (hreflang) — geen ander domein, geen javascript:.
 Getoetst in _tools/tests/taalwissel_negeer_test.py, met verminkingen die moeten zakken.
 
-Afloopcodes, huisafspraak: 0 schoon, 1 er is een gat, 2 verkeerd aangeroepen.
+Afloopcodes, huisafspraak: 0 schoon, 1 er is een gat, 2 verkeerd aangeroepen,
+3 kon niet kijken (`los`: taalparen.tsv is niet te lezen, of er staat geen enkele
+los- of los-eigen-regel in, zodat er niets na te lopen viel).
 """
 from __future__ import annotations
 
@@ -259,8 +262,19 @@ def pas_toe_los(tekst: str, sitepad: str) -> str:
 
 
 def cmd_los(a) -> int:
+    # Een tabel die niet te lezen is, is geen gat in een bladzij maar een wachter
+    # die niet kon kijken: dan weet niemand welke bladzijden stukken horen te
+    # dragen. Daarom 3 en niet 1. Met 1 zei naar_buiten.sh "een bladzij mist zijn
+    # taalknopje", en wie dat las zocht in de bladzijden naar een fout die in de
+    # tabel zat (spoor taalpers, 21-11-2026).
+    try:
+        tabel = paren()
+    except SystemExit as e:
+        print(f"  {e}")
+        print("  losse bladzijden: NIET nagelopen — taalparen.tsv is niet te lezen")
+        return 3
     gaten, n = [], 0
-    for p in paren():
+    for p in tabel:
         if p["wissel"] not in ("los", "los-eigen"):
             continue
         for kant in ("nl", "en"):
@@ -270,7 +284,14 @@ def cmd_los(a) -> int:
                 continue
             n += 1
             oud = lees(pad)
-            nieuw = pas_toe_los(oud, p[kant])
+            # Geen plek voor de stukken (geen </head>, geen <body> op een eigen
+            # regel) is een gat in DEZE bladzij, met naam. Tot 21-11-2026 werd het
+            # een traceback die de rest van de lijst niet meer liet zien.
+            try:
+                nieuw = pas_toe_los(oud, p[kant])
+            except ValueError as e:
+                gaten.append(f"{e} — deze bladzij kan de taalstukken niet dragen")
+                continue
             if oud == nieuw:
                 print(f"  {p[kant]}: in orde")
             elif a.controleer:
@@ -282,7 +303,13 @@ def cmd_los(a) -> int:
     print(f"  losse bladzijden: {n} nagelopen, {len(gaten)} gat(en)")
     for g in gaten:
         print("    - " + g)
-    return 1 if gaten or n == 0 else 0
+    if gaten:
+        return 1
+    if n == 0:
+        # Niets nagelopen is niet "in orde". Het is ook geen kale bladzij, dus geen 1.
+        print("  (geen enkele los- of los-eigen-regel in taalparen.tsv — niets om naar te kijken)")
+        return 3
+    return 0
 
 
 def main() -> int:
