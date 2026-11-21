@@ -196,6 +196,184 @@ verwacht "  en zegt dat het terugzetten vastliep" "doorstuurders: LIEP VAST"
 verwacht "  en de slotcontrole komt er nog steeds" "Compleet en gevalideerd"
 rm -f "$PROEFSITE/_tools/doorstuurders.py" "$PROEFSITE/_tools/doorstuurders.tsv"
 
+# === 7. taalstukken op een tweeling (21-11-2026, spoor ts_pers_beide) ========
+#     publish_workbook.py gooit oefenboeken/<naam>/ eerst weg, en daarmee knopje,
+#     hreflang en taalbalk die taalonderdelen.py er na de vorige publicatie in
+#     zette. Het Oefenboek TS stond na zijn pers met 9 kale Nederlandse
+#     bladzijden, en geen poort zei iets. De ECHTE taalonderdelen.py en stukken,
+#     met een eigen tabel.
+bouw_bron
+zaak    "7a zonder taalparen.tsv: geen tweelingen, en dat wordt gezegd" 0
+verwacht "  en zegt het" "geen _tools/taalparen.tsv in deze site"
+
+cp _tools/taalonderdelen.py "$PROEFSITE/_tools/"
+cp -R _tools/taalwissel "$PROEFSITE/_tools/taalwissel"
+printf '%s\t%s\t%s\n' oefenboeken/proefboek/00_thema/00_thema.html \
+  en/workbooks/proefboek/00_thema/00_thema.html los > "$PROEFSITE/_tools/taalparen.tsv"
+bouw_thema_met_body() {  # pas_toe_los zet het knopje na een <body> op een eigen regel
+  printf '<!doctype html>\n<html lang="nl"><head><meta charset="utf-8"><title>Thema</title>\n</head>\n<body>\n<p>inhoud</p></body></html>\n' \
+    > "$M/bron/00_thema/00_thema.html"
+}
+bouw_bron; bouw_thema_met_body
+zaak    "7b een tweeling krijgt zijn taalstukken bij het inlezen" 0
+verwacht "  en zegt wat hij zette" \
+         "taalstukken: 1 bladzij(den) met een losse tweeling in taalparen.tsv, 1 bijgezet, 0 fout"
+verwacht "  en dat de Engelse tweeling (buiten deze map) er niet is" \
+         "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: bestaat niet"
+verwacht "  en zegt dat onderaan nog eens" "LET OP: 1 bladzij(den) BUITEN deze map"
+verwacht "  met het herstel bij dit soort gat" "draai de pers van die kant, of haal de rij uit _tools/taalparen.tsv"
+getoetst=$((getoetst + 1))
+T="$PROEFSITE/oefenboeken/proefboek/00_thema/00_thema.html"
+n_knop=$(grep -cF 'aria-label="taal"' "$T")
+n_href=$(grep -cF 'hreflang="en" href="https://countcamp.org/en/workbooks/proefboek/00_thema/00_thema.html"' "$T")
+n_balk=$(grep -cF '/* taalbalk:' "$T")
+n_idx=$(grep -cF 'aria-label="taal"' "$PROEFSITE/oefenboeken/proefboek/index.html")
+if [ "$n_knop" = 1 ] && [ "$n_href" = 1 ] && [ "$n_balk" -ge 1 ] && [ "$n_idx" = 0 ]; then
+  echo "  ok    knopje 1x, hreflang naar de tweeling 1x, taalbalk erin; index.html (geen tweeling) niets"
+else
+  echo "  ZAKT  knopje $n_knop, hreflang $n_href, balk $n_balk, knopje op index.html $n_idx"
+  gezakt=$((gezakt + 1))
+fi
+getoetst=$((getoetst + 1))
+# Eerst opvangen, dan zoeken: de afloop is hier 1 (de Engelse kant bestaat in de
+# proefsite niet), en met pipefail zou die de grep overstemmen.
+CONTROLE="$(python3 "$PROEFSITE/_tools/taalonderdelen.py" los --controleer 2>&1)"
+if printf '%s\n' "$CONTROLE" | grep -qF "oefenboeken/proefboek/00_thema/00_thema.html: in orde"; then
+  echo "  ok    en taalonderdelen.py los --controleer vindt de Nederlandse kant in orde"
+else
+  echo "  ZAKT  taalonderdelen.py los --controleer vindt de Nederlandse kant NIET in orde"
+  gezakt=$((gezakt + 1))
+fi
+
+# Vanaf hier weigert de pers, en sinds 21-11-2026 (spoor taalpers) doet hij dat
+# VÓÓR hij de oude map weggooit (stap 0b). Bewijs dat er niets is aangeraakt: het
+# boek van 7b, mét zijn taalstukken, staat er na elke weigering byte voor byte nog.
+# Byte voor byte alleen is niet genoeg: een pers die de map weggooit en dezelfde
+# render terugzet, levert dezelfde bytes (zo bleef 7d groen op de pers zonder
+# voorproef). Daarom ook een merkbestand dat geen render meebrengt.
+VORIG="$(shasum -a 256 "$T" | cut -d' ' -f1)"
+MERK="$PROEFSITE/oefenboeken/proefboek/VORIGE_LEVERING"
+echo "neergezet in 7b" > "$MERK"
+onaangeraakt() {  # $1 = naam
+  getoetst=$((getoetst + 1))
+  if [ -f "$MERK" ] && [ -f "$T" ] && [ "$(shasum -a 256 "$T" | cut -d' ' -f1)" = "$VORIG" ]; then
+    echo "  ok    $1"
+  else
+    echo "  ZAKT  $1 — het vorige boek is weg of veranderd"
+    gezakt=$((gezakt + 1))
+  fi
+}
+
+bouw_bron   # de gewone thema-bladzij: <body> en de tekst op één regel
+zaak    "7c een tweeling zonder plek voor het knopje laat het script WEIGEREN" 1
+verwacht "  en noemt hem bij naam" "TAALSTUKKEN: 00_thema/00_thema.html"
+verwacht "  en zegt dat hij niets aanraakte" "kunnen hun taalstukken niet krijgen — niets aangeraakt"
+onaangeraakt "  en het vorige boek staat er nog, met zijn knopje"
+
+printf '%s\t%s\t%s\n' oefenboeken/proefboek/09_weg/09_weg.html \
+  en/workbooks/proefboek/09_weg/09_weg.html los >> "$PROEFSITE/_tools/taalparen.tsv"
+bouw_bron; bouw_thema_met_body
+zaak    "7d een rij voor een bladzij die het boek niet (meer) maakt: WEIGEREN" 1
+verwacht "  en noemt hem" "TAALSTUKKEN: 09_weg/09_weg.html — staat in _tools/taalparen.tsv, maar de nieuwe render maakt hem niet (meer)"
+verwacht "  en zegt wat je eerst doet" "werk dan eerst _tools/taalparen.tsv bij"
+onaangeraakt "  en het vorige boek staat er nog"
+
+# Een oefenboek zonder tweeling (OZP 1, MVDA, Psychometrie) naast een tabel die
+# tweelingen van een ander boek noemt: gewoon door, en dat zegt hij ook.
+getoetst=$((getoetst + 1))
+bouw_bron
+python3 "$PROEFSITE/_tools/publish_workbook.py" --src "$M/bron" --name anderboek > "$M/uit" 2>&1
+code_ander=$?
+if [ "$code_ander" = 0 ] && grep -qF "taalstukken: 0 bladzij(den) met een losse tweeling in taalparen.tsv, 0 bijgezet, 0 fout" "$M/uit"; then
+  echo "  ok    7e een oefenboek zonder tweeling: door, met '0 bladzij(den)' (afloopcode 0)"
+else
+  echo "  ZAKT  7e een oefenboek zonder tweeling — afloop $code_ander"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+
+# Een tabel die niet te lezen is: dan weet de pers niet welke bladzijden een
+# tweeling hebben. Niet gekeken (3), en niets aangeraakt.
+cp "$PROEFSITE/_tools/taalparen.tsv" "$M/taalparen.goed"
+printf 'oefenboeken/proefboek/kapot.html\tzonder-derde-kolom\n' >> "$PROEFSITE/_tools/taalparen.tsv"
+bouw_bron; bouw_thema_met_body
+zaak    "7f een kapotte taalparen.tsv: NIET GEKEKEN, niet doorgaan" 3
+verwacht "  en noemt de regel van de tabel" "regel 3 is geen"
+onaangeraakt "  en het vorige boek staat er nog"
+cp "$M/taalparen.goed" "$PROEFSITE/_tools/taalparen.tsv"
+
+rm -f "$PROEFSITE/_tools/taalonderdelen.py"
+bouw_bron; bouw_thema_met_body
+zaak    "7g wel een tabel, geen taalonderdelen.py: WEIGEREN, niet stil overslaan" 3
+verwacht "  en zegt dat het gereedschap vastliep" "taalonderdelen.py liep vast"
+verwacht "  en dat hij niets aanraakte" "Niets aangeraakt"
+onaangeraakt "  en het vorige boek staat er nog"
+
+# De overkant van een NIEUW paar (tegendraadse nakijker, 21-11-2026): de Engelse
+# kant staat er al, kaal. Deze pers schrijft daar niet, maar zegt het; na één keer
+# `taalonderdelen.py los` is het weg, en een volgende pers zegt niets meer.
+cp _tools/taalonderdelen.py "$PROEFSITE/_tools/"
+printf '%s\t%s\t%s\n' oefenboeken/proefboek/00_thema/00_thema.html \
+  en/workbooks/proefboek/00_thema/00_thema.html los > "$PROEFSITE/_tools/taalparen.tsv"
+mkdir -p "$PROEFSITE/en/workbooks/proefboek/00_thema"
+printf '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Theme</title>\n</head>\n<body>\n<p>content</p></body></html>\n' \
+  > "$PROEFSITE/en/workbooks/proefboek/00_thema/00_thema.html"
+bouw_bron; bouw_thema_met_body
+zaak    "7h de Engelse tweeling staat er kaal: door, maar hardop" 0
+verwacht "  en noemt hem" "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: mist zijn taalstukken"
+verwacht "  en hoe je het herstelt" "mist zijn taalstukken — herstel: python3 _tools/taalonderdelen.py los"
+python3 "$PROEFSITE/_tools/taalonderdelen.py" los > "$M/los" 2>&1
+bouw_bron; bouw_thema_met_body
+zaak    "7h na één keer los: de volgende pers is stil over de overkant" 0
+verwacht "  en zegt dat er niets aan de overkant is" "taalstukken aan de overkant (buiten deze map): 0 niet in orde"
+getoetst=$((getoetst + 1))
+if grep -qF "LET OP" "$M/uit"; then
+  echo "  ZAKT    en roept tóch LET OP"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      zonder LET OP"
+fi
+
+# Een WEES die deze pers net maakte (tweede nakijker, 21-11-2026): de rij gaat uit de
+# tabel (een Engelse week die wachtpagina werd), en de Engelse bladzij houdt zijn
+# knopje naar de Nederlandse. De pers meldde ✅ en "0 niet in orde".
+printf '# leeg: het paar is eruit\n' > "$PROEFSITE/_tools/taalparen.tsv"
+printf '%s\t%s\t%s\n' index.html en/index.html auto >> "$PROEFSITE/_tools/taalparen.tsv"
+bouw_bron; bouw_thema_met_body
+zaak    "7i een rij uit de tabel, de Engelse kant houdt zijn knopje: door, maar hardop" 0
+verwacht "  en noemt de wees" "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: draagt knopje"
+verwacht "  en onderaan" "LET OP: 1 bladzij(den) BUITEN deze map"
+
+# `volgt_de_bestanden` (een <n>-regel, Engelse kant in deze map): een Engels hoofdstuk
+# dat de nieuwe render niet meer maakt, is voor DEZE pers geen weigering. Een
+# Nederlands hoofdstuk dat ontbreekt wel. Rechtstreeks op de functie, want een Engelse
+# pers vraagt een stempel en een lab-commit die deze proefsite niet heeft.
+printf '%s\t%s\t%s\n' 'oefenboeken/proefboek/h<n>.html' 'en/workbooks/proefboek/h<n>.html' los \
+  > "$PROEFSITE/_tools/taalparen.tsv"
+mkdir -p "$PROEFSITE/en/workbooks/proefboek" "$M/regel_bron"
+for h in h0 h1; do
+  printf '<html><head><title>%s</title>\n</head>\n<body>\n<p>%s</p></body></html>\n' "$h" "$h" \
+    > "$PROEFSITE/en/workbooks/proefboek/$h.html"
+done
+cp "$PROEFSITE/en/workbooks/proefboek/h0.html" "$M/regel_bron/h0.html"   # de nieuwe render: alleen h0
+getoetst=$((getoetst + 1))
+VOLGT="$(python3 - "$PROEFSITE" "$M/regel_bron" <<'PY2'
+import os, sys
+site, bron = sys.argv[1], sys.argv[2]
+sys.path.insert(0, os.path.join(site, "_tools"))
+import publish_workbook as P
+en = P.voorproef_taalstukken(bron, os.path.join(site, "en", "workbooks", "proefboek"))[1]
+nl = P.voorproef_taalstukken(bron, os.path.join(site, "oefenboeken", "proefboek"))[1]
+print(f"en={[r for r, _ in en]} nl={[r for r, _ in nl]}")
+PY2
+)"
+if [ "$VOLGT" = "en=[] nl=['h1.html']" ]; then
+  echo "  ok    7j <n>-regel: Engels h1 weg uit de render is geen weigering, Nederlands h1 weg wel ($VOLGT)"
+else
+  echo "  ZAKT  7j <n>-regel: verwacht en=[] nl=['h1.html'], kreeg $VOLGT"
+  gezakt=$((gezakt + 1))
+fi
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."

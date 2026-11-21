@@ -121,6 +121,14 @@
 #      alleen als de bron op die commit schoon is), en en_bouw.py keurt zo'n bladzij dan
 #      als bijlage (WERKBOEK_STEMPEL) in plaats van als wees. Met de hand gekopieerd,
 #      zonder stempel, blijft hij een wees (spoor vb_site2, 28-10-2026).
+#      Heeft hij Nederlandse tweelingen (rijen in _tools/taalparen.tsv, `los`), dan
+#      zet publish_workbook.py ook hun knopje en hreflang, aan de kant die hij
+#      neerzet; een Nederlandse pers doet dat aan de Nederlandse kant (sinds
+#      21-11-2026, spoor taalpers). De OVERKANT zet hij niet: bij een NIEUW paar
+#      staat de Nederlandse kant er al, zonder knopje, en daar schrijft een Engelse
+#      pers niet. Dat meldt hij (LET OP); dan één keer
+#      python3 _tools/taalonderdelen.py los. Een volgende pers van hetzelfde boek
+#      heeft dat niet meer nodig.
 #   e. bash _tools/publiceer_en.sh  — en pas bij afloop 0 leveren.
 #
 # WAT DIT NIET DEKT — zodat niemand het denkt.

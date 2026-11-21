@@ -497,6 +497,16 @@ def deel_c() -> bool:
     kopie(echt, k_echt)
     kopie(spook, k_spook)
 
+    # Hoeveel gestempelde bladzijden de site al heeft, rekent de toets zelf uit, vóór
+    # het proefboek erin komt. Tot 21-11-2026 stond hieronder met de hand "2", het
+    # proefboek alleen; sinds het Engelse Oefenboek TS landde (9 gestempelde
+    # bladzijden) zijn het er 11, en zakte de toets op groei in plaats van op een fout
+    # (spoor taalpers). Wat hij beweert is: precies de 2 van dit boek komen erbij.
+    def gestempeld(uit):
+        m = re.search(r"uit een oefenboek: (\d+) bladzij\(den\)", uit)
+        return int(m.group(1)) if m else None
+    al = {soort: gestempeld(keur(site, soort)[1]) for soort, site in (("echt", k_echt), ("spook", k_spook))}
+
     # Het oefenboek: de echte plank (Quarto, teller, en-GB) één en twee mappen dieper,
     # gestempeld zoals publish_workbook.py het doet. In de spooksite de plank uit de
     # spooksite, net zo: sinds 14-11-2026 (spoor teller2) haalt de bouw ook uit een
@@ -517,8 +527,11 @@ def deel_c() -> bool:
     for soort, site in (("echt", k_echt), ("spook", k_spook)):
         code, uit = keur(site, soort)
         nul = nul and code == 0
-        uitslag(code == 0 and "verweesd: 0 " in uit and "uit een oefenboek: 2 bladzij(den)" in uit,
-                f"{soort} met het gestempelde oefenboek: afloop {code} (moet 0), 0 wezen, 2 bladzijden herkend",
+        verwacht = None if al[soort] is None else al[soort] + 2
+        uitslag(code == 0 and "verweesd: 0 " in uit and verwacht is not None
+                and f"uit een oefenboek: {verwacht} bladzij(den)" in uit,
+                f"{soort} met het gestempelde oefenboek: afloop {code} (moet 0), 0 wezen, {verwacht} bladzijden "
+                f"herkend ({al[soort]} stonden er al, 2 van dit boek)",
                 " | ".join(r.strip() for r in uit.splitlines()
                            if r.strip().startswith(("- ", "verweesd", "uit een oefenboek")))[:500])
     if not nul:

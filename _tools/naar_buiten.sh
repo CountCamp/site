@@ -192,6 +192,46 @@ doorstuur_nakijken() {   # $1 = blokkerend | melden
   return 0
 }
 
+# ---- elke losse tweeling draagt zijn taalstukken -----------------------
+# Knopje NL · EN, hreflang en (op de Nederlandse kant) de taalbalk komen er op de
+# site bij: _tools/taalonderdelen.py zet ze in elke bladzij die in taalparen.tsv
+# `los` of `los-eigen` staat. Een pers die zo'n bladzij opnieuw neerzet, haalt ze
+# weg: het boek (2-11 tot 11-11-2026, tot lever.sh ze zelf terugzette) en het
+# Oefenboek TS (_werk/naar_site.sh en publish_workbook.py, 21-11-2026). Allebei
+# stil: de site bouwt, de bladzij staat er, alleen de weg naar de andere taal is
+# weg. Tot hier zag alleen publiceer_en.sh het, en die draait niet bij elke
+# levering; deze poort en `--productie` bleven groen (gemeten 21-11, spoor
+# ts_pers_beide: 9 Nederlandse TS-bladzijden kaal, "Alle poorten staan groen").
+# Zelfde afweging als hierboven: rood kan hij alleen worden door een echte fout.
+# Geen bouw nodig: hij leest de bladzijden zoals ze in de repo staan.
+# Sinds 21-11-2026 (spoor taalpers) zet publish_workbook.py de stukken zelf terug
+# (stap 5b). Deze poort blijft, want hij vangt elke andere weg: boek/publiceer.sh
+# zonder lever.sh, een kopie met de hand, een pers die nog komt.
+taalstukken_nakijken() {   # $1 = blokkerend | melden
+  local streng="$1" code=0 uit
+  uit="$(python3 "$HIER/_tools/taalonderdelen.py" los --controleer 2>&1)" || code=$?
+  # Alleen wat níét in orde is, plus de telling; de rest is een lijst van 30+ regels.
+  printf '%s\n' "$uit" | sed -n '/: in orde$/!s/^/  /p'
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) # Twee soorten gat, twee herstellen; de regels hierboven zeggen welke het is.
+       echo "  Een bladzij met een tweeling mist zijn taalknopje, hreflang of taalbalk,"
+       echo "  of een bladzij zonder tweeling draagt ze nog (een wees). Herstellen:"
+       echo "    kale tweeling:  python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft)"
+       echo "    wees:           zet het paar terug in _tools/taalparen.tsv en draai los, of"
+       echo "                    python3 _tools/taalonderdelen.py ruim <pad>" ;;
+    3) echo "  De taalstukkenwachter kon niet kijken (de reden staat hierboven: de tabel"
+       echo "  is niet te lezen, noemt geen losse tweeling, of het gereedschap liep vast)."
+       echo "  Dat zegt niets over de bladzijden -- stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De taalstukkenwachter zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
+       echo "  Staat _tools/taalonderdelen.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 # ---- de GEBOUWDE site: elke bladzij precies één teller, of geen ---------
 # `tellers_nakijken` hierboven leest de BRONNEN van de bijlagen. Sinds
 # 14-11-2026 (spoor teller2; ontworpen 9-10, spoor teller) zet de bouw zelf de
@@ -245,9 +285,10 @@ case "$WEG" in
 --nakijken)
   echo "== alleen nakijken (er wordt niets gebouwd en niets geduwd)"
   code=0
-  plank_nakijken     blokkerend || code=1
-  tellers_nakijken   blokkerend || code=1
-  doorstuur_nakijken blokkerend || code=1
+  plank_nakijken       blokkerend || code=1
+  tellers_nakijken     blokkerend || code=1
+  doorstuur_nakijken   blokkerend || code=1
+  taalstukken_nakijken blokkerend || code=1
   echo
   if [ "$code" = 0 ]; then
     echo "Alle poorten staan groen. --productie zou hierop niet struikelen."
@@ -263,6 +304,7 @@ case "$WEG" in
   plank_nakijken melden
   tellers_nakijken melden
   doorstuur_nakijken melden
+  taalstukken_nakijken melden
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
     QUARTO_PROFILE=spook quarto render
@@ -287,6 +329,7 @@ case "$WEG" in
   plank_nakijken melden
   tellers_nakijken melden
   doorstuur_nakijken melden
+  taalstukken_nakijken melden
   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
   if [ -n "$(git status --porcelain)" ]; then
@@ -337,6 +380,7 @@ case "$WEG" in
   plank_nakijken blokkerend     || { echo "  Niet geleverd."; exit 1; }
   tellers_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
   doorstuur_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+  taalstukken_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   echo
   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
   if [ -z "$DROOG" ]; then

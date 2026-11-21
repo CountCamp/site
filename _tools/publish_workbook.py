@@ -37,8 +37,20 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      die het oefenboek en de commit van het lab noemt (WERKBOEK_STEMPEL in
      en_bouw.py), en alleen als de bron op die commit schoon is. Het Nederlands
      (`--section oefenboeken`) krijgt geen stempel: dat verandert hier niet.
+  6. Een bladzij met een tweeling in de andere taal (`_tools/taalparen.tsv`, `los`)
+     draagt knopje NL · EN, hreflang en op de Nederlandse kant de taalbalk. Stap 1
+     gooit de map weg en daarmee die stukken; tot 21-11-2026 moest daarna iemand
+     met de hand `taalonderdelen.py los` draaien, en wie het vergat merkte niets
+     (Oefenboek TS: 9 Nederlandse bladzijden kaal na de pers, en naar_buiten.sh
+     --nakijken bleef groen). → hier terugzetten, met taalonderdelen.py zelf; en
+     vóór het weggooien nagaan of de nieuwe render ze kan dragen (stap 0b).
+     Geldt voor elk oefenboek met een rij in de tabel, Nederlands of Engels, maar
+     alleen voor de kant die deze pers neerzet: de tweeling aan de overkant ligt
+     buiten zijn map, en daar schrijft hij niet. Mist die zijn stukken (een nieuw
+     paar), dan zegt hij dat (OVERKANT, LET OP). Een oefenboek zonder tweeling
+     krijgt alleen de regel "0 bladzij(den)".
 
-Dit script doet 1, 2, 4 en 5 deterministisch + valideert dat geen enkele asset
+Dit script doet 1, 2, 4, 5 en 6 deterministisch + valideert dat geen enkele asset
 breekt. Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
 
 Gebruik
@@ -47,7 +59,8 @@ Gebruik
         --src  "<pad naar werkboek>/_site" \
         --name ozp1
 
-Daarna in countcamp_site:  quarto render  &&  git add/commit/push.
+Daarna in countcamp_site:  bash _tools/naar_buiten.sh --nakijken, committen, en leveren
+met naar_buiten.sh --productie -- niet rechtstreeks naar GitHub: dat loopt om de poorten heen.
 
 Een Engels oefenboek:
     python3 _tools/publish_workbook.py --src "<lab>/…/en/_site" --section en/workbooks --name mvda
@@ -216,6 +229,140 @@ def zorg_voor_tellers(dst: str) -> tuple[list[str], list[str], list[tuple[str, s
             else:
                 over.append((rel, wat))
     return al_goed, bij, over
+
+
+def taal_bladzijden(dst: str) -> tuple[str, dict[str, bool]]:
+    """De bladzijden onder `dst` met een losse tweeling in _tools/taalparen.tsv
+    (`los` of `los-eigen`): (voorvoegsel, {sitepad: volgt_de_bestanden}).
+
+    `volgt_de_bestanden` is waar voor de Engelse kant van een <n>-regel (REGEL_N in
+    taalonderdelen.py). Zo'n regel telt de Engelse bladzijden die er staan; een
+    Engelse render met een hoofdstuk minder maakt de lijst dus korter, en dat is
+    voor DEZE pers geen reden om te weigeren -- zijn eigen map is dan gewoon af. Het
+    Nederlandse hoofdstuk dat zo zijn tweeling verliest, houdt wel zijn knopje: een
+    wees, en die meldt overkant_zonder_stukken (LET OP) en houdt naar_buiten.sh tegen.
+    Voor elke andere bladzij is "de render maakt hem niet" wel een weigering: dan
+    wijst het knopje op de andere kant naar niets.
+    """
+    from taalonderdelen import paren  # noqa: E402
+    voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
+    hier: dict[str, bool] = {}
+    for p in paren():
+        if p["wissel"] not in ("los", "los-eigen"):
+            continue
+        for k in ("nl", "en"):
+            if p[k].startswith(voor):
+                hier[p[k]] = k == "en" and "regel" in p
+    return voor, hier
+
+
+def _taalstukken_op(f: str, sitepad: str) -> tuple[str, str]:
+    """(oud, nieuw) voor één bladzij; ValueError als hij de stukken niet kan dragen
+    (geen </head>, geen <body> op een eigen regel, geen UTF-8)."""
+    from taalonderdelen import pas_toe_los  # noqa: E402
+    with open(f, encoding="utf-8") as h:
+        s = h.read()
+    return s, pas_toe_los(s, sitepad)
+
+
+def voorproef_taalstukken(src: str, dst: str) -> tuple[int, list[tuple[str, str]]]:
+    """Kan de nieuwe render in `src` de taalstukken dragen? Vóór er iets wordt
+    weggegooid, net als voorproef_stempels: elke bladzij met een tweeling moet in
+    de render staan en een plek hebben voor de stukken. Anders weigert de
+    publicatie terwijl het vorige oefenboek er nog staat, mét zijn knopjes, in
+    plaats van daarna met een half neergezet boek. Geeft (aantal, (bladzij, reden)).
+    De bron is de render vóór teller en herschrijven; die raken <head>-einde en
+    <body>-regel niet, dus wat hier past, past straks ook.
+    WAT HIJ NIET DEKT: een <n>-regel met zijn Engelse kant onder `dst`. Die regel
+    rekent taalonderdelen.py uit tegen de bestanden die NU op de site staan, en na
+    het kopiëren opnieuw; een nieuw hoofdstuk in de render ziet de voorproef dus
+    niet (tweede nakijker, 21-11-2026). Geen enkele <n>-regel wijst vandaag onder een
+    map van deze pers; main() zegt het hardop als dat ooit zo is.
+    """
+    voor, hier = taal_bladzijden(dst)
+    fout: list[tuple[str, str]] = []
+    for sitepad, volgt in sorted(hier.items()):
+        rel = sitepad[len(voor):]
+        f = os.path.join(src, rel)
+        if not os.path.isfile(f):
+            if not volgt:
+                fout.append((rel, "staat in _tools/taalparen.tsv, maar de nieuwe render maakt hem niet (meer)"))
+            continue
+        try:
+            _taalstukken_op(f, sitepad)
+        except ValueError as e:
+            fout.append((rel, str(e)))
+    return len(hier), fout
+
+
+def zet_taalstukken(dst: str) -> tuple[int, list[str], list[tuple[str, str]]]:
+    """Zet knopje, hreflang en taalbalk in elke bladzij onder `dst` die in
+    _tools/taalparen.tsv een losse tweeling heeft (`los` of `los-eigen`).
+
+    Geeft (aantal tweelingen onder dst, bijgezet, fout). Een rij in de tabel
+    waarvan dit oefenboek de bladzij niet (meer) maakt, is een fout: dan wijst het
+    knopje op de andere kant naar niets. Dezelfde aanroep als bouw_speelkist.py
+    (pas_toe_los bij het kopiëren); de stukken zelf staan alleen in taalonderdelen.py.
+    """
+    voor, hier = taal_bladzijden(dst)
+    bij: list[str] = []
+    fout: list[tuple[str, str]] = []
+    for sitepad in sorted(hier):
+        f = os.path.join(SITE_ROOT, sitepad)
+        rel = sitepad[len(voor):]
+        if not os.path.isfile(f):
+            fout.append((rel, "staat in _tools/taalparen.tsv, maar dit oefenboek maakt hem niet (meer)"))
+            continue
+        try:
+            s, t = _taalstukken_op(f, sitepad)
+        except ValueError as e:
+            fout.append((rel, str(e)))
+            continue
+        if t != s:
+            with open(f, "w", encoding="utf-8") as h:
+                h.write(t)
+            bij.append(rel)
+    return len(hier), bij, fout
+
+
+def overkant_zonder_stukken(dst: str) -> list[str]:
+    """De tweelingen BUITEN `dst` van bladzijden onder `dst` die hun taalstukken
+    missen, of er niet zijn. Deze pers schrijft daar niet -- dat is een ander boek
+    of de andere taal, en de kop belooft "schrijft alleen naar <section>/<name>/" --
+    maar hij zegt het wel. Bij een NIEUW paar is de overkant kaal tot iemand
+    taalonderdelen.py los draait (tegendraadse nakijker, 21-11-2026: een Engelse
+    pers voor een boek waarvan de Nederlandse kant al live staat, meldde ✅ terwijl
+    die Nederlandse kant geen knopje had).
+    En elke WEES in de repo: een bladzij met taalstukken die niet (meer) in de tabel
+    staat. Die kan deze pers net gemaakt hebben -- een Engelse week die wachtpagina
+    werd, een <n>-hoofdstuk dat wegviel -- en dan wijst er een knopje naar niets
+    (tweede nakijker, 21-11-2026: twee keer ✅ op precies dat geval)."""
+    from taalonderdelen import paren, pas_toe_los, wezen  # noqa: E402
+    voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
+    uit: list[str] = []
+    tabel = paren()
+    for p in tabel:
+        if p["wissel"] not in ("los", "los-eigen"):
+            continue
+        hier = [k for k in ("nl", "en") if p[k].startswith(voor)]
+        if len(hier) != 1:
+            continue
+        ander = p["en" if hier[0] == "nl" else "nl"]
+        f = os.path.join(SITE_ROOT, ander)
+        if not os.path.isfile(f):
+            uit.append(f"{ander}: bestaat niet (het knopje hier wijst naar niets) — draai de pers van die kant, of haal de rij uit _tools/taalparen.tsv")
+            continue
+        try:
+            with open(f, encoding="utf-8") as h:
+                s = h.read()
+            if pas_toe_los(s, ander) != s:
+                uit.append(f"{ander}: mist zijn taalstukken — herstel: python3 _tools/taalonderdelen.py los")
+        except ValueError as e:
+            uit.append(f"{ander}: {e}")
+    _n, wees, blind = wezen(tabel)
+    uit += wees
+    uit += [f"(niet volledig nagelopen: {b})" for b in blind]
+    return uit
 
 
 def _git(map_: str, *args: str) -> subprocess.CompletedProcess:
@@ -425,6 +572,34 @@ def main() -> int:
         log(f"stempel: countcamp-oefenboek {args.name}, lab-commit {lab_commit[:12]} "
             f"(bron schoon, niet nieuwer dan de render)")
 
+    # 0b) de taalstukken (punt 6): kan de nieuwe render ze dragen? Ook dit vóór er
+    #     iets weggegooid wordt, om dezelfde reden als de stempel. Een week met een
+    #     nieuwe naam liet anders eerst het boek neerzetten en meldde pas daarna dat
+    #     het knopje op de Engelse kant nergens meer heen wees.
+    #     Zonder taalparen.tsv geen tweelingen, en dat wordt gezegd (stap 5b); is de
+    #     tabel er wel en kan hij niet gelezen worden, dan is dat niet gekeken (3).
+    taal_aan = os.path.isfile(os.path.join(SITE_ROOT, "_tools", "taalparen.tsv"))
+    if taal_aan:
+        try:
+            n_taal, zakt = voorproef_taalstukken(src, dst)
+        except (Exception, SystemExit) as e:  # noqa: BLE001 -- paren() stopt met SystemExit op een kapotte tabel
+            log(f"FOUT: de taalstukken zijn niet na te kijken: taalonderdelen.py liep vast "
+                f"({type(e).__name__}: {e}). Niets aangeraakt.")
+            return 3
+        if zakt:
+            log(f"FOUT: {len(zakt)} bladzij(den) met een tweeling in _tools/taalparen.tsv kunnen hun "
+                f"taalstukken niet krijgen — niets aangeraakt:")
+            for rel, reden in zakt:
+                log(f"    TAALSTUKKEN: {rel} — {reden}")
+            log("  Heeft een bladzij een andere naam gekregen, werk dan eerst _tools/taalparen.tsv bij.")
+            return 1
+        log(f"taalstukken: {n_taal} bladzij(den) met een losse tweeling; de nieuwe render kan ze "
+            f"allemaal dragen")
+        if any(volgt for volgt in taal_bladzijden(dst)[1].values()):
+            log("  NB: een <n>-regel heeft zijn Engelse kant in deze map; een NIEUW hoofdstuk in de render "
+                "ziet deze voorproef niet (zie voorproef_taalstukken). Gaat het daarna mis, dan staat het "
+                "boek er al half.")
+
     if args.dry_run:
         log("[dry-run] zou kopiëren + strippen + valideren; stop hier.")
         return 0
@@ -516,6 +691,43 @@ def main() -> int:
     for p in problems[:20]:
         log("    MIST: " + p)
 
+    # 5b) de taalstukken (punt 6 hierboven). Na teller, stempel en validatie: de
+    #     volgorde waarin ze tot 21-11-2026 met de hand kwamen, en dezelfde bytes
+    #     (nagemeten op het Engelse TS-boek: 9 van 9 gelijk). De stempel blijft de
+    #     laatste regel; pas_toe_los raakt alleen <head> en de regel na <body>.
+    #     Niet vóór de validatie: dan telt die de link van het knopje naar de
+    #     tweeling mee, en in een weggooisite (naar_site_en.sh --weggooisite) staat
+    #     die tweeling er niet -- 9 keer MIST, gemeten 21-11. Of de tweeling er
+    #     is, toetst taalonderdelen.py los --controleer (naar_buiten.sh).
+    #     Zonder taalparen.tsv geen tweelingen, en dat wordt gezegd; is de tabel
+    #     er wel en het gereedschap niet, dan heeft stap 0b al geweigerd. Een fout
+    #     hier is dus iets wat de voorproef niet zag, en die wordt nog steeds gemeld.
+    taal_fout: list[tuple[str, str]] = []
+    if not taal_aan:
+        log("  taalstukken: geen _tools/taalparen.tsv in deze site -- geen tweelingen, niets gezet")
+    else:
+        try:
+            n_taal, taal_bij, taal_fout = zet_taalstukken(dst)
+        except (Exception, SystemExit) as e:  # noqa: BLE001 -- paren() stopt met SystemExit op een kapotte tabel
+            n_taal, taal_bij = 0, []
+            taal_fout = [("(alle)", f"taalonderdelen.py liep vast ({type(e).__name__}: {e})")]
+        log(f"  taalstukken: {n_taal} bladzij(den) met een losse tweeling in taalparen.tsv, "
+            f"{len(taal_bij)} bijgezet, {len(taal_fout)} fout")
+        for rel, reden in taal_fout:
+            log(f"    TAALSTUKKEN: {rel} — {reden}")
+    # De overkant: geen weigering (deze map is af), wel hardop, en onderaan nog eens.
+    overkant: list[str] = []
+    if taal_aan:
+        try:
+            overkant = overkant_zonder_stukken(dst)
+        except (Exception, SystemExit) as e:  # noqa: BLE001
+            overkant = [f"(niet nagekeken: {type(e).__name__}: {e})"]
+        log(f"  taalstukken aan de overkant (buiten deze map): {len(overkant)} niet in orde")
+        for wat in overkant[:5]:
+            log(f"    OVERKANT: {wat}")
+        if len(overkant) > 5:
+            log(f"    … en nog {len(overkant) - 5}")
+
     # 6) de doorstuurders op oude adressen BINNEN deze map terugzetten.
     #    Stap 1 gooide de hele map weg. Daar stonden sinds 1-10-2026 twee
     #    doorstuurders (de oude OZP 1-nummers 3 en 4, gewisseld op 19-9), en
@@ -580,8 +792,16 @@ def main() -> int:
         log(f"\n⚠️  {len(stempel_fout)} bladzij(den) dragen een stempel die _tools/en_bouw.py "
             f"niet herkent — NIET publiceren tot opgelost (zie NIET HERKEND hierboven).")
         fout = True
+    if taal_fout:
+        log(f"\n⚠️  {len(taal_fout)} bladzij(den) met een tweeling missen hun taalstukken "
+            f"— NIET publiceren tot opgelost (zie TAALSTUKKEN hierboven).")
+        fout = True
     if fout:
         return 1
+    if overkant:
+        log(f"\n⚠️  LET OP: {len(overkant)} bladzij(den) BUITEN deze map zijn niet in orde (zie OVERKANT "
+            f"hierboven, elk met zijn herstel). Deze map is af; daar schrijft deze pers niet.")
+        log("    Tot dat hersteld is, houden naar_buiten.sh en de Action de levering tegen.")
     if regel:
         # Onder en/ keurt alleen publiceer_en.sh (via en_bouw.py keur) de stempel, de
         # links, de taal, de merken en de werkbriefjes; de Action doet dat niet, en
@@ -589,7 +809,10 @@ def main() -> int:
         log("\n✅ Compleet en gevalideerd. Volgende stap: bash _tools/publiceer_en.sh (keurt en/ en "
             "schrijft het manifest), en pas bij afloop 0 leveren.")
     else:
-        log("\n✅ Compleet en gevalideerd. Volgende stap: quarto render + git push.")
+        # Niet meer "quarto render + git push" (tot 21-11-2026): een kale push loopt
+        # om elke poort in naar_buiten.sh heen.
+        log("\n✅ Compleet en gevalideerd. Volgende stap: bash _tools/naar_buiten.sh --nakijken, "
+            "dan committen en leveren met --productie.")
     return 0
 
 

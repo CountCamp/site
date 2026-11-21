@@ -45,6 +45,9 @@ nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
   # reden als bij de plankwacht hierboven -- deze toets meet de tellerpoort, en
   # de doorstuurpoort heeft zijn eigen toets (doorstuurders_test.sh).
   printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$r/_tools/doorstuurders.py"
+  # Sinds 21-11-2026 een VIERDE: de taalstukkenwachter. Zelfde reden; zijn eigen
+  # zaken staan onder 6.
+  printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$r/_tools/taalonderdelen.py"
   echo "$r"
 }
 
@@ -291,6 +294,284 @@ if [ "$BEDRADING" = ok ]; then
   echo "  ok    5g --productie (blokkerend) en --lokaal (meldend) roepen hem na de bouw aan"
 else
   echo "  ZAKT  5g bedrading: $BEDRADING"
+  gezakt=$((gezakt + 1))
+fi
+
+# --- 6. de taalstukkenpoort (21-11-2026, spoor ts_pers_beide) ---------------
+#     Een pers die een losse tweeling opnieuw neerzet, haalt knopje, hreflang en
+#     taalbalk weg. Gemeten die dag: 9 kale Nederlandse TS-bladzijden, en
+#     --nakijken zei "Alle poorten staan groen".
+# nep_repo en niet nep_basis: die laatste heeft geen tellerwachter, en dan wordt
+# de levering om de teller rood in plaats van om de taalstukken (zie zaak 4).
+KAAL_TAAL="$(nep_repo kaaltaal 0 "teller-controle - nagemaakt, alles in orde")"
+{ printf 'print("  oefenboeken/ts/index.html: in orde")\n'
+  printf 'print("  losse bladzijden: 2 nagelopen, 1 gat(en)")\n'
+  printf 'print("    - oefenboeken/ts/01_kapstok/01_kapstok.html: de taalstukken staan er niet (goed) in")\n'
+  printf 'import sys; sys.exit(1)\n'
+} > "$KAAL_TAAL/_tools/taalonderdelen.py"
+keur     "6a een tweeling zonder taalstukken: HOUDT TEGEN" 1 "$KAAL_TAAL"
+verwacht "  en noemt de bladzij bij naam" "oefenboeken/ts/01_kapstok/01_kapstok.html"
+verwacht "  en hoe je het repareert" "python3 _tools/taalonderdelen.py los"
+getoetst=$((getoetst + 1))
+if grep -qF "oefenboeken/ts/index.html: in orde" "$M/uit"; then
+  echo "  ZAKT    en laat de bladzijden die in orde zijn tóch allemaal zien"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en laat alleen zien wat niet in orde is"
+fi
+
+ZONDER_TAAL="$(nep_repo zondertaal 0 "teller-controle - nagemaakt, alles in orde")"
+rm -f "$ZONDER_TAAL/_tools/taalonderdelen.py"
+keur     "6b geen taalonderdelen.py: HOUDT TEGEN" 1 "$ZONDER_TAAL"
+verwacht "  en zegt dat het ONGEMETEN is" "is dus ONGEMETEN"
+getoetst=$((getoetst + 1))
+if grep -qF "mist zijn taalknopje" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# De echte wachter op de echte bladzijden van deze repo: groen, en hij heeft
+# gekeken (een telling boven nul). Met wegwijzers, zoals echte_teller_repo.
+ECHT_TAAL="$(nep_repo echtetaal 0 "teller-controle - nagemaakt, alles in orde")"
+cp _tools/taalonderdelen.py _tools/taalparen.tsv "$ECHT_TAAL/_tools/"
+cp -R _tools/taalwissel "$ECHT_TAAL/_tools/taalwissel"
+for m in oefenboeken en manuscript speeltjes tabellen tables; do
+  [ -e "$m" ] && ln -s "$PWD/$m" "$ECHT_TAAL/$m"
+done
+keur     "6c de echte taalstukken van deze repo: laat door" 0 "$ECHT_TAAL"
+getoetst=$((getoetst + 1))
+if grep -qE "losse bladzijden: [1-9][0-9]* nagelopen, 0 gat" "$M/uit"; then
+  echo "  ok      en hij heeft echt gekeken ($(grep -oE '[0-9]+ nagelopen' "$M/uit" | head -1))"
+else
+  echo "  ZAKT    en zegt niet dat hij bladzijden naliep -- niet gekeken is niet groen"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+# Sinds 21-11-2026 ook buiten de tabel (wezen). Hier lopen de bladzijden via
+# wegwijzers; de wachter moet die volgen, anders kijkt hij in deze toets nergens.
+getoetst=$((getoetst + 1))
+if grep -qE "buiten de tabel: [1-9][0-9]* \.html nagelopen, 0 met een taalstuk" "$M/uit"; then
+  echo "  ok      en ook buiten de tabel ($(grep -oE 'buiten de tabel: [0-9]+' "$M/uit"))"
+else
+  echo "  ZAKT    en keek niet buiten de tabel, of vond daar een taalstuk"
+  grep -F "buiten de tabel" "$M/uit" | sed 's/^/          /'
+  gezakt=$((gezakt + 1))
+fi
+
+getoetst=$((getoetst + 1))
+BEDRADING6="$(python3 - "$NAAR_BUITEN" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+def tak(naam):
+    m = re.search(r"^%s\)\n(.*?)^  ;;" % re.escape(naam), s, re.S | re.M)
+    return m.group(1) if m else ""
+fout = []
+for naam, hoe in (("--nakijken", "blokkerend"), ("--productie", "blokkerend"),
+                  ("--lokaal", "melden"), ("--proefdruk", "melden")):
+    t = tak(naam)
+    m = re.search(r"taalstukken_nakijken +%s" % hoe, t)
+    if not m:
+        fout.append(f"{naam} roept de poort niet {hoe} aan")
+    elif naam == "--productie" and "Niet geleverd" not in t[m.start():m.start() + 120]:
+        fout.append("--productie stopt niet als de poort rood is")
+    elif naam == "--productie" and m.start() > t.find("git push"):
+        fout.append("--productie roept de poort pas na de push aan")
+print("; ".join(fout) if fout else "ok")
+PY
+)"
+if [ "$BEDRADING6" = ok ]; then
+  echo "  ok    6d --nakijken en --productie (blokkerend), --lokaal en --proefdruk (meldend) roepen hem aan"
+else
+  echo "  ZAKT  6d bedrading: $BEDRADING6"
+  gezakt=$((gezakt + 1))
+fi
+
+# Sinds 21-11-2026 (spoor taalpers) zegt de wachter het als hij niet kón kijken
+# (afloop 3), en noemt hij een bladzij zonder plek voor het knopje bij naam in
+# plaats van met een traceback te stoppen. De ECHTE taalonderdelen.py, met een
+# eigen tabel en eigen bladzijden.
+echte_taal_repo() {  # $1 = naam -> repo met de echte wachter en stukken, zonder tabel
+  local r; r="$(nep_repo "$1" 0 "teller-controle - nagemaakt, alles in orde")"
+  cp _tools/taalonderdelen.py "$r/_tools/"
+  cp -R _tools/taalwissel "$r/_tools/taalwissel"
+  echo "$r"
+}
+KAPOT_TAAL="$(echte_taal_repo kapottaal)"
+printf 'oefenboeken/x/a.html\ten/workbooks/x/a.html\n' > "$KAPOT_TAAL/_tools/taalparen.tsv"   # geen derde kolom
+keur     "6e een kapotte taalparen.tsv: HOUDT TEGEN" 1 "$KAPOT_TAAL"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+verwacht "  en noemt de regel van de tabel" "regel 1 is geen"
+getoetst=$((getoetst + 1))
+if grep -qF "mist zijn taalknopje" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+LEEG_TAAL="$(echte_taal_repo leegtaal)"
+printf 'index.html\ten/index.html\tauto\n' > "$LEEG_TAAL/_tools/taalparen.tsv"   # geen enkele losse tweeling
+keur     "6f een tabel zonder losse tweeling: HOUDT TEGEN (niets nagelopen is niet groen)" 1 "$LEEG_TAAL"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+
+ZONDER_KOP="$(echte_taal_repo zonderkop)"
+printf 'oefenboeken/x/a.html\ten/workbooks/x/a.html\tlos\n' > "$ZONDER_KOP/_tools/taalparen.tsv"
+mkdir -p "$ZONDER_KOP/oefenboeken/x" "$ZONDER_KOP/en/workbooks/x"
+printf '<html><body>\n<p>geen kop</p></body></html>\n' > "$ZONDER_KOP/oefenboeken/x/a.html"
+printf '<html><head><title>a</title>\n</head>\n<body>\n<p>a</p></body></html>\n' > "$ZONDER_KOP/en/workbooks/x/a.html"
+python3 "$ZONDER_KOP/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true   # de Engelse kant in orde maken
+keur     "6g een tweeling zonder plek voor de stukken: HOUDT TEGEN" 1 "$ZONDER_KOP"
+verwacht "  en noemt hem, met de reden" "oefenboeken/x/a.html: geen of meer dan één </head>"
+getoetst=$((getoetst + 1))
+if grep -qF "Traceback" "$M/uit"; then
+  echo "  ZAKT    en stopt met een traceback in plaats van een gat met naam"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      zonder traceback"
+fi
+
+# Twee gevallen van de tegendraadse nakijker (21-11-2026), die met een kale
+# Python-fout op afloop 1 uitkwamen en dus "mist zijn taalknopje" heetten.
+GEEN_UTF8="$(echte_taal_repo geenutf8)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$GEEN_UTF8/_tools/"
+mkdir -p "$GEEN_UTF8/oefenboeken/x" "$GEEN_UTF8/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$GEEN_UTF8/en/workbooks/x/"
+printf '<html><head><title>caf\xe9</title>\n</head>\n<body>\n<p>a</p></body></html>\n' > "$GEEN_UTF8/oefenboeken/x/a.html"
+keur     "6h een tweeling die geen UTF-8 is: HOUDT TEGEN, als gat met naam" 1 "$GEEN_UTF8"
+verwacht "  en noemt hem" "oefenboeken/x/a.html"
+verwacht "  als een bladzij die de stukken niet kan dragen" "kan de taalstukken niet dragen"
+
+ZONDER_STUK="$(echte_taal_repo zonderstuk)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$ZONDER_STUK/_tools/"
+mkdir -p "$ZONDER_STUK/oefenboeken/x" "$ZONDER_STUK/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$ZONDER_STUK/en/workbooks/x/"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$ZONDER_STUK/oefenboeken/x/"
+rm -f "$ZONDER_STUK/_tools/taalwissel/stijl_knop_los.html"
+keur     "6i een stuk van de wachter zelf ontbreekt: HOUDT TEGEN" 1 "$ZONDER_STUK"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+verwacht "  en noemt de fout" "stijl_knop_los.html"
+getoetst=$((getoetst + 1))
+if grep -qF "mist zijn taalknopje" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# Een bladzij die uit de tabel viel en zijn knopje hield (tegendraadse nakijker,
+# 21-11-2026). Met een <n>-regel gebeurt dat zonder dat iemand de tabel aanraakt:
+# het Engelse h1 verdwijnt, en daarmee het paar -- het Nederlandse h1 niet.
+WEES_TAAL="$(echte_taal_repo weestaal)"
+printf 'oefenboeken/x/h<n>.html\ten/workbooks/x/h<n>.html\tlos\n' > "$WEES_TAAL/_tools/taalparen.tsv"
+mkdir -p "$WEES_TAAL/oefenboeken/x" "$WEES_TAAL/en/workbooks/x"
+for h in h0 h1; do
+  printf '<html><head><title>%s</title>\n</head>\n<body>\n<p>%s</p></body></html>\n' "$h" "$h" > "$WEES_TAAL/oefenboeken/x/$h.html"
+  cp "$WEES_TAAL/oefenboeken/x/$h.html" "$WEES_TAAL/en/workbooks/x/$h.html"
+done
+python3 "$WEES_TAAL/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true
+keur     "6k vooraf: twee paren uit één <n>-regel, met stukken: laat door" 0 "$WEES_TAAL"
+rm -f "$WEES_TAAL/en/workbooks/x/h1.html"
+keur     "6k het Engelse h1 weg, het Nederlandse h1 houdt zijn knopje: HOUDT TEGEN" 1 "$WEES_TAAL"
+verwacht "  en noemt de wees" "oefenboeken/x/h1.html: draagt knopje"
+verwacht "  met een herstel dat bestaat" "taalonderdelen.py ruim oefenboeken/x/h1.html"
+# Dat herstel moet ook echt herstellen (tweede nakijker: `los` haalt nooit iets weg,
+# dus "Herstellen: los" bij een wees liep in een kring).
+getoetst=$((getoetst + 1))
+# Afloop alleen is niet genoeg: een `ruim` die niet bestaat, geeft ook geen 0.
+if ! python3 "$WEES_TAAL/_tools/taalonderdelen.py" ruim oefenboeken/x/h0.html > "$M/ruim" 2>&1 \
+   && grep -qF "staat in taalparen.tsv — geen wees" "$M/ruim" \
+   && grep -qF 'aria-label="taal"' "$WEES_TAAL/oefenboeken/x/h0.html"; then
+  echo "  ok      ruim weigert een bladzij die in de tabel staat, zegt waarom, en h0 houdt zijn knopje"
+else
+  echo "  ZAKT    ruim op h0 (in de tabel): weigerde niet, zei niet waarom, of haalde het knopje weg"
+  sed 's/^/          /' "$M/ruim"
+  gezakt=$((gezakt + 1))
+fi
+python3 "$WEES_TAAL/_tools/taalonderdelen.py" ruim oefenboeken/x/h1.html > "$M/ruim" 2>&1 || true
+keur     "6k na ruim: de wees is weg, en de poort is groen" 0 "$WEES_TAAL"
+
+# Een wees in een map met een _ ervoor: Quarto neemt zo'n map onder een bijlage-glob
+# wél mee (oefenboeken/ts/_common_ts/ staat live), dus de wachter ook.
+WEES_LAAG="$(echte_taal_repo weeslaag)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$WEES_LAAG/_tools/"
+mkdir -p "$WEES_LAAG/oefenboeken/x/_extra" "$WEES_LAAG/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$WEES_LAAG/en/workbooks/x/"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$WEES_LAAG/oefenboeken/x/"
+python3 "$WEES_LAAG/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true
+cp "$WEES_LAAG/oefenboeken/x/a.html" "$WEES_LAAG/oefenboeken/x/_extra/w.html"
+keur     "6l een wees in oefenboeken/x/_extra/: HOUDT TEGEN" 1 "$WEES_LAAG"
+verwacht "  en noemt hem" "oefenboeken/x/_extra/w.html: draagt"
+
+# Een stuk van de wachter zelf dat geen UTF-8 is: een fout van het gereedschap, niet
+# van elke bladzij (tweede nakijker: beide bladzijden kregen "kan de taalstukken niet
+# dragen").
+KAPOT_STUK="$(echte_taal_repo kapotstuk)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$KAPOT_STUK/_tools/"
+mkdir -p "$KAPOT_STUK/oefenboeken/x" "$KAPOT_STUK/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$KAPOT_STUK/en/workbooks/x/"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$KAPOT_STUK/oefenboeken/x/"
+printf '\xe9' >> "$KAPOT_STUK/_tools/taalwissel/balk.html"
+keur     "6m een stuk van de wachter is geen UTF-8: HOUDT TEGEN" 1 "$KAPOT_STUK"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+getoetst=$((getoetst + 1))
+if grep -qF "kan de taalstukken niet dragen" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# Een map die hij niet mag lezen: de doorloop is dan onvolledig, en dat is niet groen.
+BLINDE_MAP="$(echte_taal_repo blindemap)"
+cp "$WEES_TAAL/_tools/taalparen.tsv" "$BLINDE_MAP/_tools/"
+cp -R "$WEES_TAAL/oefenboeken" "$WEES_TAAL/en" "$BLINDE_MAP/"
+mkdir -p "$BLINDE_MAP/oefenboeken/dicht"
+chmod 000 "$BLINDE_MAP/oefenboeken/dicht"
+keur     "6n een map die niet te lezen is: HOUDT TEGEN" 1 "$BLINDE_MAP"
+chmod 755 "$BLINDE_MAP/oefenboeken/dicht"   # anders kan de opruimer hem niet weghalen
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+verwacht "  en welke map" "oefenboeken/dicht"
+
+# De Action (21-11-2026, spoor taalpers): naar_buiten.sh leest de werkkopie, en wat
+# er naar main gaat kan daarvan afwijken (lever.sh commit alleen zijn eigen
+# bladzijden; een rechtstreekse push kan iedereen). Dus staat de wachter ook in
+# publish.yml, de enige poort waar elke route langs moet. Hier geëist: een stap die
+# hem draait, vóór de publicatiestap, zonder continue-on-error en zonder een `if:`
+# (allebei maken hem versiering; de tweede nakijker liet `if: false` groen zien).
+# PUBLISH_YML= laat een tegenproef een andere versie geven.
+PUBLISH_YML="${PUBLISH_YML:-.github/workflows/publish.yml}"
+getoetst=$((getoetst + 1))
+ACTIE6="$(python3 - "$PUBLISH_YML" <<'PY'
+import re, sys
+try:
+    s = open(sys.argv[1], encoding="utf-8").read()
+except OSError as e:
+    print(f"niet te lezen: {e}"); sys.exit()
+stappen = re.split(r"^      - name: ", s, flags=re.M)[1:]
+namen = [st.split("\n", 1)[0].strip() for st in stappen]
+wacht = [i for i, st in enumerate(stappen)
+         if re.search(r"^\s+run: python3 _tools/taalonderdelen\.py los --controleer\s*$", st, re.M)]
+publ = [i for i, st in enumerate(stappen) if "quarto-actions/publish" in st]
+if not wacht:
+    print("geen stap draait taalonderdelen.py los --controleer")
+elif not publ:
+    print("geen publicatiestap gevonden -- kan de volgorde niet toetsen")
+elif wacht[0] > publ[0]:
+    print(f"de wachter ({namen[wacht[0]]}) staat ná de publicatie ({namen[publ[0]]})")
+elif "continue-on-error" in stappen[wacht[0]]:
+    print("de wachterstap heeft continue-on-error: rood houdt niets tegen")
+elif re.search(r"^\s+if:", stappen[wacht[0]], re.M):
+    print("de wachterstap heeft een if: -- dan draait hij misschien niet")
+else:
+    print("ok")
+PY
+)"
+if [ "$ACTIE6" = ok ]; then
+  echo "  ok    6j publish.yml draait de taalstukkenwachter vóór de publicatie, en rood houdt tegen"
+else
+  echo "  ZAKT  6j publish.yml: $ACTIE6"
   gezakt=$((gezakt + 1))
 fi
 
