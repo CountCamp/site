@@ -450,6 +450,43 @@ else
   echo "  ok      en legt de schuld NIET bij de bladzijden"
 fi
 
+# De Action (21-11-2026, spoor taalpers): lever.sh levert buiten naar_buiten.sh om,
+# dus de wachter staat ook in publish.yml, de enige poort waar elke route langs
+# moet. Hier geëist: een stap die hem draait, vóór de publicatiestap, en zonder
+# continue-on-error (dan is hij versiering). PUBLISH_YML= laat een tegenproef een
+# andere versie geven.
+PUBLISH_YML="${PUBLISH_YML:-.github/workflows/publish.yml}"
+getoetst=$((getoetst + 1))
+ACTIE6="$(python3 - "$PUBLISH_YML" <<'PY'
+import re, sys
+try:
+    s = open(sys.argv[1], encoding="utf-8").read()
+except OSError as e:
+    print(f"niet te lezen: {e}"); sys.exit()
+stappen = re.split(r"^      - name: ", s, flags=re.M)[1:]
+namen = [st.split("\n", 1)[0].strip() for st in stappen]
+wacht = [i for i, st in enumerate(stappen)
+         if re.search(r"^\s+run: python3 _tools/taalonderdelen\.py los --controleer\s*$", st, re.M)]
+publ = [i for i, st in enumerate(stappen) if "quarto-actions/publish" in st]
+if not wacht:
+    print("geen stap draait taalonderdelen.py los --controleer")
+elif not publ:
+    print("geen publicatiestap gevonden -- kan de volgorde niet toetsen")
+elif wacht[0] > publ[0]:
+    print(f"de wachter ({namen[wacht[0]]}) staat ná de publicatie ({namen[publ[0]]})")
+elif "continue-on-error" in stappen[wacht[0]]:
+    print("de wachterstap heeft continue-on-error: rood houdt niets tegen")
+else:
+    print("ok")
+PY
+)"
+if [ "$ACTIE6" = ok ]; then
+  echo "  ok    6j publish.yml draait de taalstukkenwachter vóór de publicatie, en rood houdt tegen"
+else
+  echo "  ZAKT  6j publish.yml: $ACTIE6"
+  gezakt=$((gezakt + 1))
+fi
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."

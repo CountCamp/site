@@ -12,6 +12,9 @@
 #                 _tools/teller.html. Rood = er gaat niets live.
 #   3. publiceren de bouw uit stap 1, ongewijzigd (render: false).
 #
+# Daarvóór, sinds 21-11-2026 (spoor taalpers): de taalstukkenwachter
+# (_tools/taalonderdelen.py los --controleer). Rood = er gaat niets live.
+#
 # Tot 14-11-2026 deed quarto-actions/publish@v2 bouwen en publiceren in één
 # stap, en was er geen plek om ertussen te kijken: main publiceerde zonder
 # enige tellercontrole.
@@ -69,6 +72,18 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Taalstukken
+        # Elke losse tweeling uit _tools/taalparen.tsv (los, los-eigen) draagt
+        # knopje NL · EN, hreflang en (Nederlandse kant) de taalbalk. Een pers die
+        # zo'n bladzij opnieuw neerzet, haalt ze stil weg: het boek van 2-11 tot
+        # 11-11-2026, het Oefenboek TS op 21-11-2026 (9 kale Nederlandse
+        # bladzijden). naar_buiten.sh toetst het sinds 21-11-2026 ook (spoor
+        # taalpers), maar lever.sh levert buiten naar_buiten.sh om -- zie de kop.
+        # Vóór de bouw: hij leest de bladzijden zoals ze in de repo staan, en heeft
+        # geen bouw en geen git-geschiedenis nodig. Afloop 1 = een gat, 3 = niet
+        # gekeken; allebei rood, en dan gaat er niets live.
+        run: python3 _tools/taalonderdelen.py los --controleer
 
       - name: Render
         # QUARTO_PROFILE staat er met opzet bij, al is `echt` ook de standaard
