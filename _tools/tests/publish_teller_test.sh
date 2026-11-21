@@ -244,10 +244,15 @@ fi
 # Vanaf hier weigert de pers, en sinds 21-11-2026 (spoor taalpers) doet hij dat
 # VÓÓR hij de oude map weggooit (stap 0b). Bewijs dat er niets is aangeraakt: het
 # boek van 7b, mét zijn taalstukken, staat er na elke weigering byte voor byte nog.
+# Byte voor byte alleen is niet genoeg: een pers die de map weggooit en dezelfde
+# render terugzet, levert dezelfde bytes (zo bleef 7d groen op de pers zonder
+# voorproef). Daarom ook een merkbestand dat geen render meebrengt.
 VORIG="$(shasum -a 256 "$T" | cut -d' ' -f1)"
+MERK="$PROEFSITE/oefenboeken/proefboek/VORIGE_LEVERING"
+echo "neergezet in 7b" > "$MERK"
 onaangeraakt() {  # $1 = naam
   getoetst=$((getoetst + 1))
-  if [ -f "$T" ] && [ "$(shasum -a 256 "$T" | cut -d' ' -f1)" = "$VORIG" ]; then
+  if [ -f "$MERK" ] && [ -f "$T" ] && [ "$(shasum -a 256 "$T" | cut -d' ' -f1)" = "$VORIG" ]; then
     echo "  ok    $1"
   else
     echo "  ZAKT  $1 — het vorige boek is weg of veranderd"

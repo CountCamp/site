@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # ============================================================
 # naar_buiten_poort_mutatieproef.sh — meet de TOETS van de poort op de gebouwde
-# site (`gebouwde_tellers_nakijken` in naar_buiten.sh), niet de poort zelf.
+# site (`gebouwde_tellers_nakijken` in naar_buiten.sh), niet de poort zelf; sinds
+# 21-11-2026 ook die van de taalstukkenpoort (`taalstukken_nakijken`).
 #
 #   bash _tools/tests/naar_buiten_poort_mutatieproef.sh
 #
@@ -69,6 +70,20 @@ proef "de poort ziet een blinde wachter (afloop 3) als groen" "5e" \
   "$IN_POORT"'("if [ \"$code\" -eq 0 ]; then return 0; fi", "if [ \"$code\" -eq 0 ] || [ \"$code\" -eq 3 ]; then return 0; fi")'
 proef "de poort keurt de echte bouw als proefdruk" "5a" \
   "$IN_POORT"'("\"--$profiel\"", "--spook")'
+
+# De taalstukkenpoort (21-11-2026, spoor taalpers; zaken 6a-6g). `in_taal` vervangt
+# alleen binnen taalstukken_nakijken, om dezelfde reden als IN_POORT.
+IN_TAAL='(lambda oud, nieuw: (lambda i: s[:i] + s[i:].replace(oud, nieuw, 1))(s.index("taalstukken_nakijken() {")))'
+proef "--nakijken roept de taalpoort niet aan" "6a" \
+  's.replace("  taalstukken_nakijken blokkerend || code=1\n", "")'
+proef "--productie roept de taalpoort niet aan" "6d" \
+  's.replace("  taalstukken_nakijken blokkerend || { echo \"  Niet geleverd.\"; exit 1; }\n", "")'
+proef "de taalpoort houdt nooit tegen" "6a" \
+  "$IN_TAAL"'("  if [ \"$streng\" = blokkerend ]; then return 1; fi\n", "")'
+proef "de taalpoort ziet een blinde wachter (afloop 3) als groen" "6e" \
+  "$IN_TAAL"'("if [ \"$code\" -eq 0 ]; then return 0; fi", "if [ \"$code\" -eq 0 ] || [ \"$code\" -eq 3 ]; then return 0; fi")'
+proef "de taalpoort laat ook elke bladzij in orde zien" "  en laat de bladzijden" \
+  "$IN_TAAL"'("sed -n '"'"'/: in orde$/!s/^/  /p'"'"'", "sed '"'"'s/^/  /'"'"'")'
 
 echo
 if [ "$slecht" -eq 0 ]; then
