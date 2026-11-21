@@ -218,6 +218,9 @@ bouw_bron; bouw_thema_met_body
 zaak    "7b een tweeling krijgt zijn taalstukken bij het inlezen" 0
 verwacht "  en zegt wat hij zette" \
          "taalstukken: 1 bladzij(den) met een losse tweeling in taalparen.tsv, 1 bijgezet, 0 fout"
+verwacht "  en dat de Engelse tweeling (buiten deze map) er niet is" \
+         "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: bestaat niet"
+verwacht "  en zegt dat onderaan nog eens" "LET OP: 1 tweeling(en) BUITEN deze map"
 getoetst=$((getoetst + 1))
 T="$PROEFSITE/oefenboeken/proefboek/00_thema/00_thema.html"
 n_knop=$(grep -cF 'aria-label="taal"' "$T")
@@ -304,6 +307,31 @@ zaak    "7g wel een tabel, geen taalonderdelen.py: WEIGEREN, niet stil overslaan
 verwacht "  en zegt dat het gereedschap vastliep" "taalonderdelen.py liep vast"
 verwacht "  en dat hij niets aanraakte" "Niets aangeraakt"
 onaangeraakt "  en het vorige boek staat er nog"
+
+# De overkant van een NIEUW paar (tegendraadse nakijker, 21-11-2026): de Engelse
+# kant staat er al, kaal. Deze pers schrijft daar niet, maar zegt het; na één keer
+# `taalonderdelen.py los` is het weg, en een volgende pers zegt niets meer.
+cp _tools/taalonderdelen.py "$PROEFSITE/_tools/"
+printf '%s\t%s\t%s\n' oefenboeken/proefboek/00_thema/00_thema.html \
+  en/workbooks/proefboek/00_thema/00_thema.html los > "$PROEFSITE/_tools/taalparen.tsv"
+mkdir -p "$PROEFSITE/en/workbooks/proefboek/00_thema"
+printf '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Theme</title>\n</head>\n<body>\n<p>content</p></body></html>\n' \
+  > "$PROEFSITE/en/workbooks/proefboek/00_thema/00_thema.html"
+bouw_bron; bouw_thema_met_body
+zaak    "7h de Engelse tweeling staat er kaal: door, maar hardop" 0
+verwacht "  en noemt hem" "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: mist zijn taalstukken"
+verwacht "  en hoe je het herstelt" "Herstellen: python3 _tools/taalonderdelen.py los"
+python3 "$PROEFSITE/_tools/taalonderdelen.py" los > "$M/los" 2>&1
+bouw_bron; bouw_thema_met_body
+zaak    "7h na één keer los: de volgende pers is stil over de overkant" 0
+verwacht "  en zegt dat er niets aan de overkant is" "taalstukken aan de overkant (buiten deze map): 0 niet in orde"
+getoetst=$((getoetst + 1))
+if grep -qF "LET OP" "$M/uit"; then
+  echo "  ZAKT    en roept tóch LET OP"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      zonder LET OP"
+fi
 
 echo ""
 if [ "$gezakt" = "0" ]; then

@@ -44,8 +44,11 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      (Oefenboek TS: 9 Nederlandse bladzijden kaal na de pers, en naar_buiten.sh
      --nakijken bleef groen). → hier terugzetten, met taalonderdelen.py zelf; en
      vóór het weggooien nagaan of de nieuwe render ze kan dragen (stap 0b).
-     Geldt voor elk oefenboek met een rij in de tabel, aan beide kanten; een
-     oefenboek zonder tweeling krijgt alleen de regel "0 bladzij(den)".
+     Geldt voor elk oefenboek met een rij in de tabel, Nederlands of Engels, maar
+     alleen voor de kant die deze pers neerzet: de tweeling aan de overkant ligt
+     buiten zijn map, en daar schrijft hij niet. Mist die zijn stukken (een nieuw
+     paar), dan zegt hij dat (OVERKANT, LET OP). Een oefenboek zonder tweeling
+     krijgt alleen de regel "0 bladzij(den)".
 
 Dit script doet 1, 2, 4, 5 en 6 deterministisch + valideert dat geen enkele asset
 breekt. Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
@@ -56,7 +59,8 @@ Gebruik
         --src  "<pad naar werkboek>/_site" \
         --name ozp1
 
-Daarna in countcamp_site:  quarto render  &&  git add/commit/push.
+Daarna in countcamp_site:  bash _tools/naar_buiten.sh --nakijken, committen, en leveren
+met naar_buiten.sh --productie -- niet rechtstreeks naar GitHub: dat loopt om de poorten heen.
 
 Een Engels oefenboek:
     python3 _tools/publish_workbook.py --src "<lab>/…/en/_site" --section en/workbooks --name mvda
@@ -311,6 +315,38 @@ def zet_taalstukken(dst: str) -> tuple[int, list[str], list[tuple[str, str]]]:
                 h.write(t)
             bij.append(rel)
     return len(hier), bij, fout
+
+
+def overkant_zonder_stukken(dst: str) -> list[str]:
+    """De tweelingen BUITEN `dst` van bladzijden onder `dst` die hun taalstukken
+    missen, of er niet zijn. Deze pers schrijft daar niet -- dat is een ander boek
+    of de andere taal, en de kop belooft "schrijft alleen naar <section>/<name>/" --
+    maar hij zegt het wel. Bij een NIEUW paar is de overkant kaal tot iemand
+    taalonderdelen.py los draait (tegendraadse nakijker, 21-11-2026: een Engelse
+    pers voor een boek waarvan de Nederlandse kant al live staat, meldde ✅ terwijl
+    die Nederlandse kant geen knopje had)."""
+    from taalonderdelen import paren, pas_toe_los  # noqa: E402
+    voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
+    uit: list[str] = []
+    for p in paren():
+        if p["wissel"] not in ("los", "los-eigen"):
+            continue
+        hier = [k for k in ("nl", "en") if p[k].startswith(voor)]
+        if len(hier) != 1:
+            continue
+        ander = p["en" if hier[0] == "nl" else "nl"]
+        f = os.path.join(SITE_ROOT, ander)
+        if not os.path.isfile(f):
+            uit.append(f"{ander}: bestaat niet (het knopje hier wijst naar niets)")
+            continue
+        try:
+            with open(f, encoding="utf-8") as h:
+                s = h.read()
+            if pas_toe_los(s, ander) != s:
+                uit.append(f"{ander}: mist zijn taalstukken")
+        except ValueError as e:
+            uit.append(f"{ander}: {e}")
+    return uit
 
 
 def _git(map_: str, *args: str) -> subprocess.CompletedProcess:
@@ -659,6 +695,18 @@ def main() -> int:
             f"{len(taal_bij)} bijgezet, {len(taal_fout)} fout")
         for rel, reden in taal_fout:
             log(f"    TAALSTUKKEN: {rel} — {reden}")
+    # De overkant: geen weigering (deze map is af), wel hardop, en onderaan nog eens.
+    overkant: list[str] = []
+    if taal_aan:
+        try:
+            overkant = overkant_zonder_stukken(dst)
+        except (Exception, SystemExit) as e:  # noqa: BLE001
+            overkant = [f"(niet nagekeken: {type(e).__name__}: {e})"]
+        log(f"  taalstukken aan de overkant (buiten deze map): {len(overkant)} niet in orde")
+        for wat in overkant[:5]:
+            log(f"    OVERKANT: {wat}")
+        if len(overkant) > 5:
+            log(f"    … en nog {len(overkant) - 5}")
 
     # 6) de doorstuurders op oude adressen BINNEN deze map terugzetten.
     #    Stap 1 gooide de hele map weg. Daar stonden sinds 1-10-2026 twee
@@ -730,6 +778,11 @@ def main() -> int:
         fout = True
     if fout:
         return 1
+    if overkant:
+        log(f"\n⚠️  LET OP: {len(overkant)} tweeling(en) BUITEN deze map missen hun taalstukken (zie "
+            f"OVERKANT hierboven). Deze map is af; daar schrijft deze pers niet.")
+        log("    Herstellen: python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft).")
+        log("    Tot dan houden naar_buiten.sh en de Action de levering tegen.")
     if regel:
         # Onder en/ keurt alleen publiceer_en.sh (via en_bouw.py keur) de stempel, de
         # links, de taal, de merken en de werkbriefjes; de Action doet dat niet, en
@@ -737,7 +790,10 @@ def main() -> int:
         log("\n✅ Compleet en gevalideerd. Volgende stap: bash _tools/publiceer_en.sh (keurt en/ en "
             "schrijft het manifest), en pas bij afloop 0 leveren.")
     else:
-        log("\n✅ Compleet en gevalideerd. Volgende stap: quarto render + git push.")
+        # Niet meer "quarto render + git push" (tot 21-11-2026): een kale push loopt
+        # om elke poort in naar_buiten.sh heen.
+        log("\n✅ Compleet en gevalideerd. Volgende stap: bash _tools/naar_buiten.sh --nakijken, "
+            "dan committen en leveren met --productie.")
     return 0
 
 
