@@ -422,6 +422,34 @@ else
   echo "  ok      zonder traceback"
 fi
 
+# Twee gevallen van de tegendraadse nakijker (21-11-2026), die met een kale
+# Python-fout op afloop 1 uitkwamen en dus "mist zijn taalknopje" heetten.
+GEEN_UTF8="$(echte_taal_repo geenutf8)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$GEEN_UTF8/_tools/"
+mkdir -p "$GEEN_UTF8/oefenboeken/x" "$GEEN_UTF8/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$GEEN_UTF8/en/workbooks/x/"
+printf '<html><head><title>caf\xe9</title>\n</head>\n<body>\n<p>a</p></body></html>\n' > "$GEEN_UTF8/oefenboeken/x/a.html"
+keur     "6h een tweeling die geen UTF-8 is: HOUDT TEGEN, als gat met naam" 1 "$GEEN_UTF8"
+verwacht "  en noemt hem" "oefenboeken/x/a.html"
+verwacht "  als een bladzij die de stukken niet kan dragen" "kan de taalstukken niet dragen"
+
+ZONDER_STUK="$(echte_taal_repo zonderstuk)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$ZONDER_STUK/_tools/"
+mkdir -p "$ZONDER_STUK/oefenboeken/x" "$ZONDER_STUK/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$ZONDER_STUK/en/workbooks/x/"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$ZONDER_STUK/oefenboeken/x/"
+rm -f "$ZONDER_STUK/_tools/taalwissel/stijl_knop_los.html"
+keur     "6i een stuk van de wachter zelf ontbreekt: HOUDT TEGEN" 1 "$ZONDER_STUK"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+verwacht "  en noemt de fout" "stijl_knop_los.html"
+getoetst=$((getoetst + 1))
+if grep -qF "mist zijn taalknopje" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."

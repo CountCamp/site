@@ -216,9 +216,9 @@ taalstukken_nakijken() {   # $1 = blokkerend | melden
   case "$code" in
     1) echo "  Een bladzij met een tweeling mist zijn taalknopje, hreflang of taalbalk."
        echo "  Herstellen: python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft)" ;;
-    3) echo "  De taalstukkenwachter kon niet kijken: _tools/taalparen.tsv is niet te lezen,"
-       echo "  of noemt geen enkele losse tweeling (de reden staat hierboven). Dat zegt"
-       echo "  niets over de bladzijden -- stilte betekent ongeldig, nooit goed." ;;
+    3) echo "  De taalstukkenwachter kon niet kijken (de reden staat hierboven: de tabel"
+       echo "  is niet te lezen, noemt geen losse tweeling, of het gereedschap liep vast)."
+       echo "  Dat zegt niets over de bladzijden -- stilte betekent ongeldig, nooit goed." ;;
     *) echo "  De taalstukkenwachter zelf liep vast (afloopcode $code). Wat hij had"
        echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
        echo "  Staat _tools/taalonderdelen.py er, en draait hij los?" ;;

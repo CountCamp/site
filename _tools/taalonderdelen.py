@@ -33,8 +33,9 @@ knopje) of als adres op countcamp.org (hreflang) — geen ander domein, geen jav
 Getoetst in _tools/tests/taalwissel_negeer_test.py, met verminkingen die moeten zakken.
 
 Afloopcodes, huisafspraak: 0 schoon, 1 er is een gat, 2 verkeerd aangeroepen,
-3 kon niet kijken (`los`: taalparen.tsv is niet te lezen, of er staat geen enkele
-los- of los-eigen-regel in, zodat er niets na te lopen viel).
+3 kon niet kijken (taalparen.tsv is niet te lezen, er staat geen enkele los- of
+los-eigen-regel in zodat er niets na te lopen viel, of het gereedschap zelf liep
+vast -- bv. een stuk in _tools/taalwissel/ ontbreekt).
 """
 from __future__ import annotations
 
@@ -283,14 +284,16 @@ def cmd_los(a) -> int:
                 gaten.append(f"{p[kant]}: bestaat niet")
                 continue
             n += 1
-            oud = lees(pad)
             # Geen plek voor de stukken (geen </head>, geen <body> op een eigen
-            # regel) is een gat in DEZE bladzij, met naam. Tot 21-11-2026 werd het
-            # een traceback die de rest van de lijst niet meer liet zien.
+            # regel, geen UTF-8) is een gat in DEZE bladzij, met naam. Tot
+            # 21-11-2026 werd het een traceback die de rest van de lijst niet meer
+            # liet zien. (UnicodeDecodeError is een ValueError.)
             try:
+                oud = lees(pad)
                 nieuw = pas_toe_los(oud, p[kant])
             except ValueError as e:
-                gaten.append(f"{e} — deze bladzij kan de taalstukken niet dragen")
+                reden = str(e) if str(e).startswith(p[kant]) else f"{p[kant]}: {e}"
+                gaten.append(f"{reden} — deze bladzij kan de taalstukken niet dragen")
                 continue
             if oud == nieuw:
                 print(f"  {p[kant]}: in orde")
@@ -319,7 +322,17 @@ def main() -> int:
     lo = sub.add_parser("los")
     lo.add_argument("--controleer", action="store_true")
     a = ap.parse_args()
-    return {"regels": cmd_regels, "los": cmd_los}[a.cmd](a)
+    # Een fout die niemand voorzag, eindigt in Python op afloop 1, en 1 betekent
+    # hier "er is een gat in een bladzij". Dan stuurt naar_buiten.sh je naar de
+    # bladzijden met een herstel dat op dezelfde fout vastloopt (gemeten 21-11-2026,
+    # spoor taalpers: een ontbrekend _tools/taalwissel/stijl_knop_los.html gaf
+    # "mist zijn taalknopje"). Dus: niet gekeken, met de fout erbij.
+    try:
+        return {"regels": cmd_regels, "los": cmd_los}[a.cmd](a)
+    except Exception as e:  # noqa: BLE001
+        print(f"  taalonderdelen.py liep vast: {type(e).__name__}: {e}")
+        print("  NIET nagelopen — dit zegt niets over de bladzijden")
+        return 3
 
 
 if __name__ == "__main__":
