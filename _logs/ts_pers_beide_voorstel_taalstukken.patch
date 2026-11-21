@@ -1,0 +1,384 @@
+diff --git a/_tools/naar_buiten.sh b/_tools/naar_buiten.sh
+index fffcd6f..1ad2ac2 100755
+--- a/_tools/naar_buiten.sh
++++ b/_tools/naar_buiten.sh
+@@ -192,6 +192,36 @@ doorstuur_nakijken() {   # $1 = blokkerend | melden
+   return 0
+ }
+ 
++# ---- elke losse tweeling draagt zijn taalstukken -----------------------
++# Knopje NL · EN, hreflang en (op de Nederlandse kant) de taalbalk komen er op de
++# site bij: _tools/taalonderdelen.py zet ze in elke bladzij die in taalparen.tsv
++# `los` of `los-eigen` staat. Een pers die zo'n bladzij opnieuw neerzet, haalt ze
++# weg: het boek (2-11 tot 11-11-2026, tot lever.sh ze zelf terugzette) en het
++# Oefenboek TS (_werk/naar_site.sh en publish_workbook.py, 21-11-2026). Allebei
++# stil: de site bouwt, de bladzij staat er, alleen de weg naar de andere taal is
++# weg. Tot hier zag alleen publiceer_en.sh het, en die draait niet bij elke
++# levering; deze poort en `--productie` bleven groen (gemeten 21-11, spoor
++# ts_pers_beide: 9 Nederlandse TS-bladzijden kaal, "Alle poorten staan groen").
++# Zelfde afweging als hierboven: rood kan hij alleen worden door een echte fout.
++# Geen bouw nodig: hij leest de bladzijden zoals ze in de repo staan.
++taalstukken_nakijken() {   # $1 = blokkerend | melden
++  local streng="$1" code=0 uit
++  uit="$(python3 "$HIER/_tools/taalonderdelen.py" los --controleer 2>&1)" || code=$?
++  # Alleen wat níét in orde is, plus de telling; de rest is een lijst van 30+ regels.
++  printf '%s\n' "$uit" | sed -n '/: in orde$/!s/^/  /p'
++  if [ "$code" -eq 0 ]; then return 0; fi
++  case "$code" in
++    1) echo "  Een bladzij met een tweeling mist zijn taalknopje, hreflang of taalbalk."
++       echo "  Herstellen: python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft)" ;;
++    *) echo "  De taalstukkenwachter zelf liep vast (afloopcode $code). Wat hij had"
++       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
++       echo "  Staat _tools/taalonderdelen.py er, en draait hij los?" ;;
++  esac
++  if [ "$streng" = blokkerend ]; then return 1; fi
++  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
++  return 0
++}
++
+ # ---- de GEBOUWDE site: elke bladzij precies één teller, of geen ---------
+ # `tellers_nakijken` hierboven leest de BRONNEN van de bijlagen. Sinds
+ # 14-11-2026 (spoor teller2; ontworpen 9-10, spoor teller) zet de bouw zelf de
+@@ -245,9 +275,10 @@ case "$WEG" in
+ --nakijken)
+   echo "== alleen nakijken (er wordt niets gebouwd en niets geduwd)"
+   code=0
+-  plank_nakijken     blokkerend || code=1
+-  tellers_nakijken   blokkerend || code=1
+-  doorstuur_nakijken blokkerend || code=1
++  plank_nakijken       blokkerend || code=1
++  tellers_nakijken     blokkerend || code=1
++  doorstuur_nakijken   blokkerend || code=1
++  taalstukken_nakijken blokkerend || code=1
+   echo
+   if [ "$code" = 0 ]; then
+     echo "Alle poorten staan groen. --productie zou hierop niet struikelen."
+@@ -263,6 +294,7 @@ case "$WEG" in
+   plank_nakijken melden
+   tellers_nakijken melden
+   doorstuur_nakijken melden
++  taalstukken_nakijken melden
+   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
+   if [ -z "$DROOG" ]; then
+     QUARTO_PROFILE=spook quarto render
+@@ -287,6 +319,7 @@ case "$WEG" in
+   plank_nakijken melden
+   tellers_nakijken melden
+   doorstuur_nakijken melden
++  taalstukken_nakijken melden
+   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
+   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
+   if [ -n "$(git status --porcelain)" ]; then
+@@ -337,6 +370,7 @@ case "$WEG" in
+   plank_nakijken blokkerend     || { echo "  Niet geleverd."; exit 1; }
+   tellers_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
+   doorstuur_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
++  taalstukken_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+   echo
+   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
+   if [ -z "$DROOG" ]; then
+diff --git a/_tools/publish_workbook.py b/_tools/publish_workbook.py
+index 799330e..348e1cf 100644
+--- a/_tools/publish_workbook.py
++++ b/_tools/publish_workbook.py
+@@ -37,8 +37,14 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
+      die het oefenboek en de commit van het lab noemt (WERKBOEK_STEMPEL in
+      en_bouw.py), en alleen als de bron op die commit schoon is. Het Nederlands
+      (`--section oefenboeken`) krijgt geen stempel: dat verandert hier niet.
+-
+-Dit script doet 1, 2, 4 en 5 deterministisch + valideert dat geen enkele asset
++  6. Een bladzij met een tweeling in de andere taal (`_tools/taalparen.tsv`, `los`)
++     draagt knopje NL · EN, hreflang en op de Nederlandse kant de taalbalk. Stap 1
++     gooit de map weg en daarmee die stukken; tot 21-11-2026 moest daarna iemand
++     met de hand `taalonderdelen.py los` draaien, en wie het vergat merkte niets
++     (Oefenboek TS: 9 Nederlandse bladzijden kaal na de pers, en naar_buiten.sh
++     --nakijken bleef groen). → hier terugzetten, met taalonderdelen.py zelf.
++
++Dit script doet 1, 2, 4, 5 en 6 deterministisch + valideert dat geen enkele asset
+ breekt. Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
+ 
+ Gebruik
+@@ -218,6 +224,39 @@ def zorg_voor_tellers(dst: str) -> tuple[list[str], list[str], list[tuple[str, s
+     return al_goed, bij, over
+ 
+ 
++def zet_taalstukken(dst: str) -> tuple[int, list[str], list[tuple[str, str]]]:
++    """Zet knopje, hreflang en taalbalk in elke bladzij onder `dst` die in
++    _tools/taalparen.tsv een losse tweeling heeft (`los` of `los-eigen`).
++
++    Geeft (aantal tweelingen onder dst, bijgezet, fout). Een rij in de tabel
++    waarvan dit oefenboek de bladzij niet (meer) maakt, is een fout: dan wijst het
++    knopje op de andere kant naar niets. Dezelfde aanroep als bouw_speelkist.py
++    (pas_toe_los bij het kopiëren); de stukken zelf staan alleen in taalonderdelen.py.
++    """
++    from taalonderdelen import paren, pas_toe_los  # noqa: E402
++    voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
++    hier = sorted({p[k] for p in paren() if p["wissel"] in ("los", "los-eigen")
++                   for k in ("nl", "en") if p[k].startswith(voor)})
++    bij: list[str] = []
++    fout: list[tuple[str, str]] = []
++    for sitepad in hier:
++        f = os.path.join(SITE_ROOT, sitepad)
++        rel = sitepad[len(voor):]
++        if not os.path.isfile(f):
++            fout.append((rel, "staat in _tools/taalparen.tsv, maar dit oefenboek maakt hem niet (meer)"))
++            continue
++        s = open(f, encoding="utf-8").read()
++        try:
++            t = pas_toe_los(s, sitepad)
++        except ValueError as e:
++            fout.append((rel, str(e)))
++            continue
++        if t != s:
++            open(f, "w", encoding="utf-8").write(t)
++            bij.append(rel)
++    return len(hier), bij, fout
++
++
+ def _git(map_: str, *args: str) -> subprocess.CompletedProcess:
+     return subprocess.run(["git", "-C", map_, *args], capture_output=True, text=True)
+ 
+@@ -516,6 +555,30 @@ def main() -> int:
+     for p in problems[:20]:
+         log("    MIST: " + p)
+ 
++    # 5b) de taalstukken (punt 6 hierboven). Na teller, stempel en validatie: de
++    #     volgorde waarin ze tot 21-11-2026 met de hand kwamen, en dezelfde bytes
++    #     (nagemeten op het Engelse TS-boek: 9 van 9 gelijk). De stempel blijft de
++    #     laatste regel; pas_toe_los raakt alleen <head> en de regel na <body>.
++    #     Niet vóór de validatie: dan telt die de link van het knopje naar de
++    #     tweeling mee, en in een weggooisite (naar_site_en.sh --weggooisite) staat
++    #     die tweeling er niet -- 9 keer MIST, gemeten 21-11. Of de tweeling er
++    #     is, toetst taalonderdelen.py los --controleer (naar_buiten.sh).
++    #     Zonder taalparen.tsv geen tweelingen, en dat wordt gezegd; is de tabel
++    #     er wel en het gereedschap niet, dan is dat een fout.
++    taal_fout: list[tuple[str, str]] = []
++    if not os.path.isfile(os.path.join(SITE_ROOT, "_tools", "taalparen.tsv")):
++        log("  taalstukken: geen _tools/taalparen.tsv in deze site -- geen tweelingen, niets gezet")
++    else:
++        try:
++            n_taal, taal_bij, taal_fout = zet_taalstukken(dst)
++        except (Exception, SystemExit) as e:  # noqa: BLE001 -- paren() stopt met SystemExit op een kapotte tabel
++            n_taal, taal_bij = 0, []
++            taal_fout = [("(alle)", f"taalonderdelen.py liep vast ({type(e).__name__}: {e})")]
++        log(f"  taalstukken: {n_taal} bladzij(den) met een losse tweeling in taalparen.tsv, "
++            f"{len(taal_bij)} bijgezet, {len(taal_fout)} fout")
++        for rel, reden in taal_fout:
++            log(f"    TAALSTUKKEN: {rel} — {reden}")
++
+     # 6) de doorstuurders op oude adressen BINNEN deze map terugzetten.
+     #    Stap 1 gooide de hele map weg. Daar stonden sinds 1-10-2026 twee
+     #    doorstuurders (de oude OZP 1-nummers 3 en 4, gewisseld op 19-9), en
+@@ -580,6 +643,10 @@ def main() -> int:
+         log(f"\n⚠️  {len(stempel_fout)} bladzij(den) dragen een stempel die _tools/en_bouw.py "
+             f"niet herkent — NIET publiceren tot opgelost (zie NIET HERKEND hierboven).")
+         fout = True
++    if taal_fout:
++        log(f"\n⚠️  {len(taal_fout)} bladzij(den) met een tweeling missen hun taalstukken "
++            f"— NIET publiceren tot opgelost (zie TAALSTUKKEN hierboven).")
++        fout = True
+     if fout:
+         return 1
+     if regel:
+diff --git a/_tools/tests/doorstuurders_test.sh b/_tools/tests/doorstuurders_test.sh
+index 35d19b2..658a268 100644
+--- a/_tools/tests/doorstuurders_test.sh
++++ b/_tools/tests/doorstuurders_test.sh
+@@ -206,6 +206,9 @@ bedraad() {  # $1 = naam -> proefsite met de echte pers, en nagemaakte plank- en
+   cp _tools/naar_buiten.sh "$S/_tools/"
+   printf 'print("plankwacht - nagemaakt, alles in orde")\n'  > "$S/_tools/plankwacht.py"
+   printf 'print("tellers - nagemaakt, alles in orde")\n'     > "$S/_tools/controleer_tellers.py"
++  # Sinds 21-11-2026 ook de taalstukkenpoort; zijn eigen zaken staan in
++  # naar_buiten_teller_test.sh (zaak 6).
++  printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$S/_tools/taalonderdelen.py"
+   echo "$S"
+ }
+ S="$(bedraad pers_groen)"
+diff --git a/_tools/tests/naar_buiten_teller_test.sh b/_tools/tests/naar_buiten_teller_test.sh
+index 4298b97..5038b15 100644
+--- a/_tools/tests/naar_buiten_teller_test.sh
++++ b/_tools/tests/naar_buiten_teller_test.sh
+@@ -45,6 +45,9 @@ nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
+   # reden als bij de plankwacht hierboven -- deze toets meet de tellerpoort, en
+   # de doorstuurpoort heeft zijn eigen toets (doorstuurders_test.sh).
+   printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$r/_tools/doorstuurders.py"
++  # Sinds 21-11-2026 een VIERDE: de taalstukkenwachter. Zelfde reden; zijn eigen
++  # zaken staan onder 6.
++  printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$r/_tools/taalonderdelen.py"
+   echo "$r"
+ }
+ 
+@@ -294,6 +297,87 @@ else
+   gezakt=$((gezakt + 1))
+ fi
+ 
++# --- 6. de taalstukkenpoort (21-11-2026, spoor ts_pers_beide) ---------------
++#     Een pers die een losse tweeling opnieuw neerzet, haalt knopje, hreflang en
++#     taalbalk weg. Gemeten die dag: 9 kale Nederlandse TS-bladzijden, en
++#     --nakijken zei "Alle poorten staan groen".
++# nep_repo en niet nep_basis: die laatste heeft geen tellerwachter, en dan wordt
++# de levering om de teller rood in plaats van om de taalstukken (zie zaak 4).
++KAAL_TAAL="$(nep_repo kaaltaal 0 "teller-controle - nagemaakt, alles in orde")"
++{ printf 'print("  oefenboeken/ts/index.html: in orde")\n'
++  printf 'print("  losse bladzijden: 2 nagelopen, 1 gat(en)")\n'
++  printf 'print("    - oefenboeken/ts/01_kapstok/01_kapstok.html: de taalstukken staan er niet (goed) in")\n'
++  printf 'import sys; sys.exit(1)\n'
++} > "$KAAL_TAAL/_tools/taalonderdelen.py"
++keur     "6a een tweeling zonder taalstukken: HOUDT TEGEN" 1 "$KAAL_TAAL"
++verwacht "  en noemt de bladzij bij naam" "oefenboeken/ts/01_kapstok/01_kapstok.html"
++verwacht "  en hoe je het repareert" "python3 _tools/taalonderdelen.py los"
++getoetst=$((getoetst + 1))
++if grep -qF "oefenboeken/ts/index.html: in orde" "$M/uit"; then
++  echo "  ZAKT    en laat de bladzijden die in orde zijn tóch allemaal zien"
++  gezakt=$((gezakt + 1))
++else
++  echo "  ok      en laat alleen zien wat niet in orde is"
++fi
++
++ZONDER_TAAL="$(nep_repo zondertaal 0 "teller-controle - nagemaakt, alles in orde")"
++rm -f "$ZONDER_TAAL/_tools/taalonderdelen.py"
++keur     "6b geen taalonderdelen.py: HOUDT TEGEN" 1 "$ZONDER_TAAL"
++verwacht "  en zegt dat het ONGEMETEN is" "is dus ONGEMETEN"
++getoetst=$((getoetst + 1))
++if grep -qF "mist zijn taalknopje" "$M/uit"; then
++  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
++  gezakt=$((gezakt + 1))
++else
++  echo "  ok      en legt de schuld NIET bij de bladzijden"
++fi
++
++# De echte wachter op de echte bladzijden van deze repo: groen, en hij heeft
++# gekeken (een telling boven nul). Met wegwijzers, zoals echte_teller_repo.
++ECHT_TAAL="$(nep_repo echtetaal 0 "teller-controle - nagemaakt, alles in orde")"
++cp _tools/taalonderdelen.py _tools/taalparen.tsv "$ECHT_TAAL/_tools/"
++cp -R _tools/taalwissel "$ECHT_TAAL/_tools/taalwissel"
++for m in oefenboeken en manuscript speeltjes tabellen tables; do
++  [ -e "$m" ] && ln -s "$PWD/$m" "$ECHT_TAAL/$m"
++done
++keur     "6c de echte taalstukken van deze repo: laat door" 0 "$ECHT_TAAL"
++getoetst=$((getoetst + 1))
++if grep -qE "losse bladzijden: [1-9][0-9]* nagelopen, 0 gat" "$M/uit"; then
++  echo "  ok      en hij heeft echt gekeken ($(grep -oE '[0-9]+ nagelopen' "$M/uit"))"
++else
++  echo "  ZAKT    en zegt niet dat hij bladzijden naliep -- niet gekeken is niet groen"
++  sed 's/^/          /' "$M/uit"
++  gezakt=$((gezakt + 1))
++fi
++
++getoetst=$((getoetst + 1))
++BEDRADING6="$(python3 - "$NAAR_BUITEN" <<'PY'
++import re, sys
++s = open(sys.argv[1], encoding="utf-8").read()
++def tak(naam):
++    m = re.search(r"^%s\)\n(.*?)^  ;;" % re.escape(naam), s, re.S | re.M)
++    return m.group(1) if m else ""
++fout = []
++for naam, hoe in (("--nakijken", "blokkerend"), ("--productie", "blokkerend"),
++                  ("--lokaal", "melden"), ("--proefdruk", "melden")):
++    t = tak(naam)
++    m = re.search(r"taalstukken_nakijken +%s" % hoe, t)
++    if not m:
++        fout.append(f"{naam} roept de poort niet {hoe} aan")
++    elif naam == "--productie" and "Niet geleverd" not in t[m.start():m.start() + 120]:
++        fout.append("--productie stopt niet als de poort rood is")
++    elif naam == "--productie" and m.start() > t.find("git push"):
++        fout.append("--productie roept de poort pas na de push aan")
++print("; ".join(fout) if fout else "ok")
++PY
++)"
++if [ "$BEDRADING6" = ok ]; then
++  echo "  ok    6d --nakijken en --productie (blokkerend), --lokaal en --proefdruk (meldend) roepen hem aan"
++else
++  echo "  ZAKT  6d bedrading: $BEDRADING6"
++  gezakt=$((gezakt + 1))
++fi
++
+ echo ""
+ if [ "$gezakt" = "0" ]; then
+   echo "$getoetst zaken getoetst, alles groen."
+diff --git a/_tools/tests/plankwacht_test.sh b/_tools/tests/plankwacht_test.sh
+index 42b4439..054ffe0 100644
+--- a/_tools/tests/plankwacht_test.sh
++++ b/_tools/tests/plankwacht_test.sh
+@@ -552,6 +552,9 @@ cp "$BRON/_tools/tellerregel.py"        "$T7/_tools/"
+ # groen -- zaak 7 en 8 meten de plank, en de doorstuurpoort heeft zijn eigen
+ # toets (doorstuurders_test.sh, met de echte naar_buiten.sh).
+ printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$T7/_tools/doorstuurders.py"
++# Sinds 21-11-2026 een VIERDE: de taalstukkenwachter. Zelfde reden; zijn eigen
++# zaken staan in naar_buiten_teller_test.sh (zaak 6).
++printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$T7/_tools/taalonderdelen.py"
+ # Eén echte bladzij mét teller, zodat de tellerwachter hier groen staat omdat
+ # hij iets ZAG en niet omdat er niets te zien was.
+ mkdir -p "$T7/oefenboeken/geteld"
+diff --git a/_tools/tests/publish_teller_test.sh b/_tools/tests/publish_teller_test.sh
+index bcf7b55..518f6c4 100644
+--- a/_tools/tests/publish_teller_test.sh
++++ b/_tools/tests/publish_teller_test.sh
+@@ -196,6 +196,67 @@ verwacht "  en zegt dat het terugzetten vastliep" "doorstuurders: LIEP VAST"
+ verwacht "  en de slotcontrole komt er nog steeds" "Compleet en gevalideerd"
+ rm -f "$PROEFSITE/_tools/doorstuurders.py" "$PROEFSITE/_tools/doorstuurders.tsv"
+ 
++# === 7. taalstukken op een tweeling (21-11-2026, spoor ts_pers_beide) ========
++#     publish_workbook.py gooit oefenboeken/<naam>/ eerst weg, en daarmee knopje,
++#     hreflang en taalbalk die taalonderdelen.py er na de vorige publicatie in
++#     zette. Het Oefenboek TS stond na zijn pers met 9 kale Nederlandse
++#     bladzijden, en geen poort zei iets. De ECHTE taalonderdelen.py en stukken,
++#     met een eigen tabel.
++bouw_bron
++zaak    "7a zonder taalparen.tsv: geen tweelingen, en dat wordt gezegd" 0
++verwacht "  en zegt het" "geen _tools/taalparen.tsv in deze site"
++
++cp _tools/taalonderdelen.py "$PROEFSITE/_tools/"
++cp -R _tools/taalwissel "$PROEFSITE/_tools/taalwissel"
++printf '%s\t%s\t%s\n' oefenboeken/proefboek/00_thema/00_thema.html \
++  en/workbooks/proefboek/00_thema/00_thema.html los > "$PROEFSITE/_tools/taalparen.tsv"
++bouw_thema_met_body() {  # pas_toe_los zet het knopje na een <body> op een eigen regel
++  printf '<!doctype html>\n<html lang="nl"><head><meta charset="utf-8"><title>Thema</title>\n</head>\n<body>\n<p>inhoud</p></body></html>\n' \
++    > "$M/bron/00_thema/00_thema.html"
++}
++bouw_bron; bouw_thema_met_body
++zaak    "7b een tweeling krijgt zijn taalstukken bij het inlezen" 0
++verwacht "  en zegt wat hij zette" \
++         "taalstukken: 1 bladzij(den) met een losse tweeling in taalparen.tsv, 1 bijgezet, 0 fout"
++getoetst=$((getoetst + 1))
++T="$PROEFSITE/oefenboeken/proefboek/00_thema/00_thema.html"
++n_knop=$(grep -cF 'aria-label="taal"' "$T")
++n_href=$(grep -cF 'hreflang="en" href="https://countcamp.org/en/workbooks/proefboek/00_thema/00_thema.html"' "$T")
++n_balk=$(grep -cF '/* taalbalk:' "$T")
++n_idx=$(grep -cF 'aria-label="taal"' "$PROEFSITE/oefenboeken/proefboek/index.html")
++if [ "$n_knop" = 1 ] && [ "$n_href" = 1 ] && [ "$n_balk" -ge 1 ] && [ "$n_idx" = 0 ]; then
++  echo "  ok    knopje 1x, hreflang naar de tweeling 1x, taalbalk erin; index.html (geen tweeling) niets"
++else
++  echo "  ZAKT  knopje $n_knop, hreflang $n_href, balk $n_balk, knopje op index.html $n_idx"
++  gezakt=$((gezakt + 1))
++fi
++getoetst=$((getoetst + 1))
++# Eerst opvangen, dan zoeken: de afloop is hier 1 (de Engelse kant bestaat in de
++# proefsite niet), en met pipefail zou die de grep overstemmen.
++CONTROLE="$(python3 "$PROEFSITE/_tools/taalonderdelen.py" los --controleer 2>&1)"
++if printf '%s\n' "$CONTROLE" | grep -qF "oefenboeken/proefboek/00_thema/00_thema.html: in orde"; then
++  echo "  ok    en taalonderdelen.py los --controleer vindt de Nederlandse kant in orde"
++else
++  echo "  ZAKT  taalonderdelen.py los --controleer vindt de Nederlandse kant NIET in orde"
++  gezakt=$((gezakt + 1))
++fi
++
++bouw_bron   # de gewone thema-bladzij: <body> en de tekst op één regel
++zaak    "7c een tweeling zonder plek voor het knopje laat het script WEIGEREN" 1
++verwacht "  en noemt hem bij naam" "TAALSTUKKEN: 00_thema/00_thema.html"
++verwacht "  en zegt waarom het niet door mag" "missen hun taalstukken — NIET publiceren"
++
++printf '%s\t%s\t%s\n' oefenboeken/proefboek/09_weg/09_weg.html \
++  en/workbooks/proefboek/09_weg/09_weg.html los >> "$PROEFSITE/_tools/taalparen.tsv"
++bouw_bron; bouw_thema_met_body
++zaak    "7d een rij voor een bladzij die het boek niet (meer) maakt: WEIGEREN" 1
++verwacht "  en noemt hem" "TAALSTUKKEN: 09_weg/09_weg.html — staat in _tools/taalparen.tsv, maar dit oefenboek maakt hem niet (meer)"
++
++rm -f "$PROEFSITE/_tools/taalonderdelen.py"
++bouw_bron; bouw_thema_met_body
++zaak    "7e wel een tabel, geen taalonderdelen.py: WEIGEREN, niet stil overslaan" 1
++verwacht "  en zegt dat het gereedschap vastliep" "taalonderdelen.py liep vast"
++
+ echo ""
+ if [ "$gezakt" = "0" ]; then
+   echo "$getoetst zaken getoetst, alles groen."
