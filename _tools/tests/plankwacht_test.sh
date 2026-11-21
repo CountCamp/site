@@ -598,8 +598,16 @@ p = sys.argv[1]; s = open(p, encoding="utf-8").read()
 s = s.replace(".\n:::\n", ". Some are [on their way in English](workbooks/index.qmd#on-its-way).\n:::\n", 1)
 open(p, "w", encoding="utf-8").write(s)
 PY
+printf '\n## On its way in English {#on-its-way}\n' >> "$EN16"
 SPIEGEL_LATEN=1 zaak "17f een link naar de plank zelf hoeft geen merk" 0 \
-     "taalmerk nagelopen: 2 titel(s) op en/workbooks/index.qmd, 2 op en/index.qmd" "$T16"
+     "taalmerk nagelopen: 2 titel(s) op en/workbooks/index.qmd, 2 op en/index.qmd; 1 anker(s)" "$T16"
+
+# 17g: dezelfde link, maar de kop met dat id is weg (hernoemd of geschrapt). De
+# linkcontrole van en_bouw.py laat alles na "#" vallen; zonder deze zaak ziet
+# niemand dat de laatste zin van de thuiskaart nergens meer heen wijst.
+cp "$T16/en_goed.qmd" "$EN16"
+SPIEGEL_LATEN=1 zaak "17g een anker naar een kop die er niet (meer) is, vuurt" 1 \
+     "wijst naar #on-its-way op en/workbooks/index.qmd, maar daar staat geen kop" "$T16"
 rm -rf "$T16"
 
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------

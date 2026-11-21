@@ -784,9 +784,23 @@ def spiegel(wortel: str, plank: str, en_plank: str, thuis: str, en_thuis: str
             uit.append(Bevinding("fout", k, f"{fout} (taalmerk)"))
     boeken = set(nl_doel) | set(en_doel)
     merk_thuis = 0
+    planken = {doel_van(p, os.path.basename(p)): p for p in (plank, en_plank)}
+    ankers = 0
     if os.path.isfile(os.path.join(wortel, en_thuis)):
         for tekst, href, attr, regelnr in thuiskaart_taal(wortel, en_thuis):
             d = doel_van(en_thuis, href)
+            # Een link met een anker naar een plank ("on their way in English",
+            # 21-11-2026): de linkcontrole van en_bouw.py laat alles na "#" vallen,
+            # dus een kop die hernoemd of weggehaald is, zou niemand merken. Eis
+            # daarom een kop met precies dat id, als {#...} in de bron.
+            if "#" in href and d in planken:
+                anker = href.split("#", 1)[1]
+                ankers += 1
+                with open(os.path.join(wortel, planken[d]), encoding="utf-8") as f:
+                    if "{#" + anker + "}" not in zonder_commentaar(f.read()):
+                        uit.append(Bevinding("fout", Kaartje(f"{en_thuis}: [{tekst}]", href, regelnr),
+                            f"wijst naar #{anker} op {planken[d]}, maar daar staat geen kop met "
+                            f"{{#{anker}}} -- de bouw kijkt niet naar ankers, dus dit ziet verder niemand"))
             if d not in boeken:
                 continue
             merk_thuis += 1
@@ -794,7 +808,8 @@ def spiegel(wortel: str, plank: str, en_plank: str, thuis: str, en_thuis: str
             if fout:
                 uit.append(Bevinding("fout", Kaartje(f"{en_thuis}: [{tekst}]", href, regelnr),
                                      f"{fout} (taalmerk)"))
-    merkregel = f"taalmerk nagelopen: {merk_plank} titel(s) op {en_plank}, {merk_thuis} op {en_thuis}"
+    merkregel = (f"taalmerk nagelopen: {merk_plank} titel(s) op {en_plank}, {merk_thuis} op {en_thuis}"
+                 f"; {ankers} anker(s) van {en_thuis} naar een plank nagelopen")
 
     regel = (f"spiegel: {len(nl)} boek(en) met een link op {plank}, "
              f"{len(gedeeld_nl)} daarvan ook op {en_plank}"
