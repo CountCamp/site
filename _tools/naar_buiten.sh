@@ -214,8 +214,12 @@ taalstukken_nakijken() {   # $1 = blokkerend | melden
   printf '%s\n' "$uit" | sed -n '/: in orde$/!s/^/  /p'
   if [ "$code" -eq 0 ]; then return 0; fi
   case "$code" in
-    1) echo "  Een bladzij met een tweeling mist zijn taalknopje, hreflang of taalbalk."
-       echo "  Herstellen: python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft)" ;;
+    1) # Twee soorten gat, twee herstellen; de regels hierboven zeggen welke het is.
+       echo "  Een bladzij met een tweeling mist zijn taalknopje, hreflang of taalbalk,"
+       echo "  of een bladzij zonder tweeling draagt ze nog (een wees). Herstellen:"
+       echo "    kale tweeling:  python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft)"
+       echo "    wees:           zet het paar terug in _tools/taalparen.tsv en draai los, of"
+       echo "                    python3 _tools/taalonderdelen.py ruim <pad>" ;;
     3) echo "  De taalstukkenwachter kon niet kijken (de reden staat hierboven: de tabel"
        echo "  is niet te lezen, noemt geen losse tweeling, of het gereedschap liep vast)."
        echo "  Dat zegt niets over de bladzijden -- stilte betekent ongeldig, nooit goed." ;;

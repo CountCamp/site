@@ -220,7 +220,8 @@ verwacht "  en zegt wat hij zette" \
          "taalstukken: 1 bladzij(den) met een losse tweeling in taalparen.tsv, 1 bijgezet, 0 fout"
 verwacht "  en dat de Engelse tweeling (buiten deze map) er niet is" \
          "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: bestaat niet"
-verwacht "  en zegt dat onderaan nog eens" "LET OP: 1 tweeling(en) BUITEN deze map"
+verwacht "  en zegt dat onderaan nog eens" "LET OP: 1 bladzij(den) BUITEN deze map"
+verwacht "  met het herstel bij dit soort gat" "draai de pers van die kant, of haal de rij uit _tools/taalparen.tsv"
 getoetst=$((getoetst + 1))
 T="$PROEFSITE/oefenboeken/proefboek/00_thema/00_thema.html"
 n_knop=$(grep -cF 'aria-label="taal"' "$T")
@@ -320,7 +321,7 @@ printf '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Them
 bouw_bron; bouw_thema_met_body
 zaak    "7h de Engelse tweeling staat er kaal: door, maar hardop" 0
 verwacht "  en noemt hem" "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: mist zijn taalstukken"
-verwacht "  en hoe je het herstelt" "Herstellen: python3 _tools/taalonderdelen.py los"
+verwacht "  en hoe je het herstelt" "mist zijn taalstukken — herstel: python3 _tools/taalonderdelen.py los"
 python3 "$PROEFSITE/_tools/taalonderdelen.py" los > "$M/los" 2>&1
 bouw_bron; bouw_thema_met_body
 zaak    "7h na één keer los: de volgende pers is stil over de overkant" 0
@@ -331,6 +332,46 @@ if grep -qF "LET OP" "$M/uit"; then
   gezakt=$((gezakt + 1))
 else
   echo "  ok      zonder LET OP"
+fi
+
+# Een WEES die deze pers net maakte (tweede nakijker, 21-11-2026): de rij gaat uit de
+# tabel (een Engelse week die wachtpagina werd), en de Engelse bladzij houdt zijn
+# knopje naar de Nederlandse. De pers meldde ✅ en "0 niet in orde".
+printf '# leeg: het paar is eruit\n' > "$PROEFSITE/_tools/taalparen.tsv"
+printf '%s\t%s\t%s\n' index.html en/index.html auto >> "$PROEFSITE/_tools/taalparen.tsv"
+bouw_bron; bouw_thema_met_body
+zaak    "7i een rij uit de tabel, de Engelse kant houdt zijn knopje: door, maar hardop" 0
+verwacht "  en noemt de wees" "OVERKANT: en/workbooks/proefboek/00_thema/00_thema.html: draagt knopje"
+verwacht "  en onderaan" "LET OP: 1 bladzij(den) BUITEN deze map"
+
+# `volgt_de_bestanden` (een <n>-regel, Engelse kant in deze map): een Engels hoofdstuk
+# dat de nieuwe render niet meer maakt, is voor DEZE pers geen weigering. Een
+# Nederlands hoofdstuk dat ontbreekt wel. Rechtstreeks op de functie, want een Engelse
+# pers vraagt een stempel en een lab-commit die deze proefsite niet heeft.
+printf '%s\t%s\t%s\n' 'oefenboeken/proefboek/h<n>.html' 'en/workbooks/proefboek/h<n>.html' los \
+  > "$PROEFSITE/_tools/taalparen.tsv"
+mkdir -p "$PROEFSITE/en/workbooks/proefboek" "$M/regel_bron"
+for h in h0 h1; do
+  printf '<html><head><title>%s</title>\n</head>\n<body>\n<p>%s</p></body></html>\n' "$h" "$h" \
+    > "$PROEFSITE/en/workbooks/proefboek/$h.html"
+done
+cp "$PROEFSITE/en/workbooks/proefboek/h0.html" "$M/regel_bron/h0.html"   # de nieuwe render: alleen h0
+getoetst=$((getoetst + 1))
+VOLGT="$(python3 - "$PROEFSITE" "$M/regel_bron" <<'PY2'
+import os, sys
+site, bron = sys.argv[1], sys.argv[2]
+sys.path.insert(0, os.path.join(site, "_tools"))
+import publish_workbook as P
+en = P.voorproef_taalstukken(bron, os.path.join(site, "en", "workbooks", "proefboek"))[1]
+nl = P.voorproef_taalstukken(bron, os.path.join(site, "oefenboeken", "proefboek"))[1]
+print(f"en={[r for r, _ in en]} nl={[r for r, _ in nl]}")
+PY2
+)"
+if [ "$VOLGT" = "en=[] nl=['h1.html']" ]; then
+  echo "  ok    7j <n>-regel: Engels h1 weg uit de render is geen weigering, Nederlands h1 weg wel ($VOLGT)"
+else
+  echo "  ZAKT  7j <n>-regel: verwacht en=[] nl=['h1.html'], kreeg $VOLGT"
+  gezakt=$((gezakt + 1))
 fi
 
 echo ""

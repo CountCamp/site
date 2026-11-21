@@ -21,8 +21,13 @@
 #
 # WAAROM DIT HIER STAAT EN NIET ALLEEN IN naar_buiten.sh: dit is de enige poort
 # die élke route naar de echte site passeert. `lever.sh` in het lab commit en
-# pusht de site zelf, buiten naar_buiten.sh om, en dan draaien de poorten daar
-# niet. Alles wat main raakt, komt hier wél langs.
+# pusht de site zelf. Sinds 28-10-2026 draait hij daarvoor wel
+# naar_buiten.sh --nakijken (lever.sh:174-191), maar dat leest de WERKKOPIE, en
+# lever.sh commit daarvan alleen zijn eigen bladzijden; en een rechtstreekse push
+# kan iedereen. (Tot 21-11-2026 stond hier dat lever.sh "buiten naar_buiten.sh om"
+# pusht; dat klopte sinds 28-10 niet meer -- tweede nakijker, spoor taalpers.)
+# Alles wat main raakt, komt hier wél langs, en hier wordt gekeken naar wat er
+# echt gepusht is.
 #
 # WAT `render: false` DOET -- nagelezen in de bron, niet aangenomen (9-10 op
 # quarto-cli 1.10.19, 14-11 opnieuw op 1.11.9, de versie die setup@v2 nu
@@ -79,7 +84,9 @@ jobs:
         # zo'n bladzij opnieuw neerzet, haalt ze stil weg: het boek van 2-11 tot
         # 11-11-2026, het Oefenboek TS op 21-11-2026 (9 kale Nederlandse
         # bladzijden). naar_buiten.sh toetst het sinds 21-11-2026 ook (spoor
-        # taalpers), maar lever.sh levert buiten naar_buiten.sh om -- zie de kop.
+        # taalpers), maar op de werkkopie. Een voorbeeld: lever.sh zet daar elke
+        # kale bladzij goed, commit alleen de zijne, en een eerder kaal gecommit
+        # hoofdstuk gaat dan toch mee naar main. Zie de kop.
         # Vóór de bouw: hij leest de bladzijden zoals ze in de repo staan, en heeft
         # geen bouw en geen git-geschiedenis nodig. Afloop 1 = een gat, 3 = niet
         # gekeken; allebei rood, en dan gaat er niets live.

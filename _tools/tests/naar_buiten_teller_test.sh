@@ -475,12 +475,72 @@ keur     "6k vooraf: twee paren uit één <n>-regel, met stukken: laat door" 0 "
 rm -f "$WEES_TAAL/en/workbooks/x/h1.html"
 keur     "6k het Engelse h1 weg, het Nederlandse h1 houdt zijn knopje: HOUDT TEGEN" 1 "$WEES_TAAL"
 verwacht "  en noemt de wees" "oefenboeken/x/h1.html: draagt knopje"
+verwacht "  met een herstel dat bestaat" "taalonderdelen.py ruim oefenboeken/x/h1.html"
+# Dat herstel moet ook echt herstellen (tweede nakijker: `los` haalt nooit iets weg,
+# dus "Herstellen: los" bij een wees liep in een kring).
+getoetst=$((getoetst + 1))
+# Afloop alleen is niet genoeg: een `ruim` die niet bestaat, geeft ook geen 0.
+if ! python3 "$WEES_TAAL/_tools/taalonderdelen.py" ruim oefenboeken/x/h0.html > "$M/ruim" 2>&1 \
+   && grep -qF "staat in taalparen.tsv — geen wees" "$M/ruim" \
+   && grep -qF 'aria-label="taal"' "$WEES_TAAL/oefenboeken/x/h0.html"; then
+  echo "  ok      ruim weigert een bladzij die in de tabel staat, zegt waarom, en h0 houdt zijn knopje"
+else
+  echo "  ZAKT    ruim op h0 (in de tabel): weigerde niet, zei niet waarom, of haalde het knopje weg"
+  sed 's/^/          /' "$M/ruim"
+  gezakt=$((gezakt + 1))
+fi
+python3 "$WEES_TAAL/_tools/taalonderdelen.py" ruim oefenboeken/x/h1.html > "$M/ruim" 2>&1 || true
+keur     "6k na ruim: de wees is weg, en de poort is groen" 0 "$WEES_TAAL"
 
-# De Action (21-11-2026, spoor taalpers): lever.sh levert buiten naar_buiten.sh om,
-# dus de wachter staat ook in publish.yml, de enige poort waar elke route langs
-# moet. Hier geëist: een stap die hem draait, vóór de publicatiestap, en zonder
-# continue-on-error (dan is hij versiering). PUBLISH_YML= laat een tegenproef een
-# andere versie geven.
+# Een wees in een map met een _ ervoor: Quarto neemt zo'n map onder een bijlage-glob
+# wél mee (oefenboeken/ts/_common_ts/ staat live), dus de wachter ook.
+WEES_LAAG="$(echte_taal_repo weeslaag)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$WEES_LAAG/_tools/"
+mkdir -p "$WEES_LAAG/oefenboeken/x/_extra" "$WEES_LAAG/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$WEES_LAAG/en/workbooks/x/"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$WEES_LAAG/oefenboeken/x/"
+python3 "$WEES_LAAG/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true
+cp "$WEES_LAAG/oefenboeken/x/a.html" "$WEES_LAAG/oefenboeken/x/_extra/w.html"
+keur     "6l een wees in oefenboeken/x/_extra/: HOUDT TEGEN" 1 "$WEES_LAAG"
+verwacht "  en noemt hem" "oefenboeken/x/_extra/w.html: draagt"
+
+# Een stuk van de wachter zelf dat geen UTF-8 is: een fout van het gereedschap, niet
+# van elke bladzij (tweede nakijker: beide bladzijden kregen "kan de taalstukken niet
+# dragen").
+KAPOT_STUK="$(echte_taal_repo kapotstuk)"
+cp "$ZONDER_KOP/_tools/taalparen.tsv" "$KAPOT_STUK/_tools/"
+mkdir -p "$KAPOT_STUK/oefenboeken/x" "$KAPOT_STUK/en/workbooks/x"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$KAPOT_STUK/en/workbooks/x/"
+cp "$ZONDER_KOP/en/workbooks/x/a.html" "$KAPOT_STUK/oefenboeken/x/"
+printf '\xe9' >> "$KAPOT_STUK/_tools/taalwissel/balk.html"
+keur     "6m een stuk van de wachter is geen UTF-8: HOUDT TEGEN" 1 "$KAPOT_STUK"
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+getoetst=$((getoetst + 1))
+if grep -qF "kan de taalstukken niet dragen" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# Een map die hij niet mag lezen: de doorloop is dan onvolledig, en dat is niet groen.
+BLINDE_MAP="$(echte_taal_repo blindemap)"
+cp "$WEES_TAAL/_tools/taalparen.tsv" "$BLINDE_MAP/_tools/"
+cp -R "$WEES_TAAL/oefenboeken" "$WEES_TAAL/en" "$BLINDE_MAP/"
+mkdir -p "$BLINDE_MAP/oefenboeken/dicht"
+chmod 000 "$BLINDE_MAP/oefenboeken/dicht"
+keur     "6n een map die niet te lezen is: HOUDT TEGEN" 1 "$BLINDE_MAP"
+chmod 755 "$BLINDE_MAP/oefenboeken/dicht"   # anders kan de opruimer hem niet weghalen
+verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
+verwacht "  en welke map" "oefenboeken/dicht"
+
+# De Action (21-11-2026, spoor taalpers): naar_buiten.sh leest de werkkopie, en wat
+# er naar main gaat kan daarvan afwijken (lever.sh commit alleen zijn eigen
+# bladzijden; een rechtstreekse push kan iedereen). Dus staat de wachter ook in
+# publish.yml, de enige poort waar elke route langs moet. Hier geëist: een stap die
+# hem draait, vóór de publicatiestap, zonder continue-on-error en zonder een `if:`
+# (allebei maken hem versiering; de tweede nakijker liet `if: false` groen zien).
+# PUBLISH_YML= laat een tegenproef een andere versie geven.
 PUBLISH_YML="${PUBLISH_YML:-.github/workflows/publish.yml}"
 getoetst=$((getoetst + 1))
 ACTIE6="$(python3 - "$PUBLISH_YML" <<'PY'
@@ -502,6 +562,8 @@ elif wacht[0] > publ[0]:
     print(f"de wachter ({namen[wacht[0]]}) staat ná de publicatie ({namen[publ[0]]})")
 elif "continue-on-error" in stappen[wacht[0]]:
     print("de wachterstap heeft continue-on-error: rood houdt niets tegen")
+elif re.search(r"^\s+if:", stappen[wacht[0]], re.M):
+    print("de wachterstap heeft een if: -- dan draait hij misschien niet")
 else:
     print("ok")
 PY

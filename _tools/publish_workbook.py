@@ -238,8 +238,11 @@ def taal_bladzijden(dst: str) -> tuple[str, dict[str, bool]]:
     `volgt_de_bestanden` is waar voor de Engelse kant van een <n>-regel (REGEL_N in
     taalonderdelen.py). Zo'n regel telt de Engelse bladzijden die er staan; een
     Engelse render met een hoofdstuk minder maakt de lijst dus korter, en dat is
-    geen fout. Voor elke andere bladzij wel: dan wijst het knopje op de andere
-    kant naar niets.
+    voor DEZE pers geen reden om te weigeren -- zijn eigen map is dan gewoon af. Het
+    Nederlandse hoofdstuk dat zo zijn tweeling verliest, houdt wel zijn knopje: een
+    wees, en die meldt overkant_zonder_stukken (LET OP) en houdt naar_buiten.sh tegen.
+    Voor elke andere bladzij is "de render maakt hem niet" wel een weigering: dan
+    wijst het knopje op de andere kant naar niets.
     """
     from taalonderdelen import paren  # noqa: E402
     voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
@@ -270,6 +273,11 @@ def voorproef_taalstukken(src: str, dst: str) -> tuple[int, list[tuple[str, str]
     plaats van daarna met een half neergezet boek. Geeft (aantal, (bladzij, reden)).
     De bron is de render vóór teller en herschrijven; die raken <head>-einde en
     <body>-regel niet, dus wat hier past, past straks ook.
+    WAT HIJ NIET DEKT: een <n>-regel met zijn Engelse kant onder `dst`. Die regel
+    rekent taalonderdelen.py uit tegen de bestanden die NU op de site staan, en na
+    het kopiëren opnieuw; een nieuw hoofdstuk in de render ziet de voorproef dus
+    niet (tweede nakijker, 21-11-2026). Geen enkele <n>-regel wijst vandaag onder een
+    map van deze pers; main() zegt het hardop als dat ooit zo is.
     """
     voor, hier = taal_bladzijden(dst)
     fout: list[tuple[str, str]] = []
@@ -324,11 +332,16 @@ def overkant_zonder_stukken(dst: str) -> list[str]:
     maar hij zegt het wel. Bij een NIEUW paar is de overkant kaal tot iemand
     taalonderdelen.py los draait (tegendraadse nakijker, 21-11-2026: een Engelse
     pers voor een boek waarvan de Nederlandse kant al live staat, meldde ✅ terwijl
-    die Nederlandse kant geen knopje had)."""
-    from taalonderdelen import paren, pas_toe_los  # noqa: E402
+    die Nederlandse kant geen knopje had).
+    En elke WEES in de repo: een bladzij met taalstukken die niet (meer) in de tabel
+    staat. Die kan deze pers net gemaakt hebben -- een Engelse week die wachtpagina
+    werd, een <n>-hoofdstuk dat wegviel -- en dan wijst er een knopje naar niets
+    (tweede nakijker, 21-11-2026: twee keer ✅ op precies dat geval)."""
+    from taalonderdelen import paren, pas_toe_los, wezen  # noqa: E402
     voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
     uit: list[str] = []
-    for p in paren():
+    tabel = paren()
+    for p in tabel:
         if p["wissel"] not in ("los", "los-eigen"):
             continue
         hier = [k for k in ("nl", "en") if p[k].startswith(voor)]
@@ -337,15 +350,18 @@ def overkant_zonder_stukken(dst: str) -> list[str]:
         ander = p["en" if hier[0] == "nl" else "nl"]
         f = os.path.join(SITE_ROOT, ander)
         if not os.path.isfile(f):
-            uit.append(f"{ander}: bestaat niet (het knopje hier wijst naar niets)")
+            uit.append(f"{ander}: bestaat niet (het knopje hier wijst naar niets) — draai de pers van die kant, of haal de rij uit _tools/taalparen.tsv")
             continue
         try:
             with open(f, encoding="utf-8") as h:
                 s = h.read()
             if pas_toe_los(s, ander) != s:
-                uit.append(f"{ander}: mist zijn taalstukken")
+                uit.append(f"{ander}: mist zijn taalstukken — herstel: python3 _tools/taalonderdelen.py los")
         except ValueError as e:
             uit.append(f"{ander}: {e}")
+    _n, wees, blind = wezen(tabel)
+    uit += wees
+    uit += [f"(niet volledig nagelopen: {b})" for b in blind]
     return uit
 
 
@@ -579,6 +595,10 @@ def main() -> int:
             return 1
         log(f"taalstukken: {n_taal} bladzij(den) met een losse tweeling; de nieuwe render kan ze "
             f"allemaal dragen")
+        if any(volgt for volgt in taal_bladzijden(dst)[1].values()):
+            log("  NB: een <n>-regel heeft zijn Engelse kant in deze map; een NIEUW hoofdstuk in de render "
+                "ziet deze voorproef niet (zie voorproef_taalstukken). Gaat het daarna mis, dan staat het "
+                "boek er al half.")
 
     if args.dry_run:
         log("[dry-run] zou kopiëren + strippen + valideren; stop hier.")
@@ -779,10 +799,9 @@ def main() -> int:
     if fout:
         return 1
     if overkant:
-        log(f"\n⚠️  LET OP: {len(overkant)} tweeling(en) BUITEN deze map missen hun taalstukken (zie "
-            f"OVERKANT hierboven). Deze map is af; daar schrijft deze pers niet.")
-        log("    Herstellen: python3 _tools/taalonderdelen.py los  (en commit wat hij schrijft).")
-        log("    Tot dan houden naar_buiten.sh en de Action de levering tegen.")
+        log(f"\n⚠️  LET OP: {len(overkant)} bladzij(den) BUITEN deze map zijn niet in orde (zie OVERKANT "
+            f"hierboven, elk met zijn herstel). Deze map is af; daar schrijft deze pers niet.")
+        log("    Tot dat hersteld is, houden naar_buiten.sh en de Action de levering tegen.")
     if regel:
         # Onder en/ keurt alleen publiceer_en.sh (via en_bouw.py keur) de stempel, de
         # links, de taal, de merken en de werkbriefjes; de Action doet dat niet, en

@@ -22,6 +22,7 @@ Drie lezers moeten precies dezelfde bytes zien, en daarom staat elk stuk één k
     python3 _tools/taalonderdelen.py regels            de nl_negeer-regels voor de wachtrij
     python3 _tools/taalonderdelen.py los               zet de stukken in de losse bladzijden
     python3 _tools/taalonderdelen.py los --controleer  kijk alleen of ze er goed in staan
+    python3 _tools/taalonderdelen.py ruim <pad> ...     haal ze uit een wees (niet in de tabel)
 
 DE UITZONDERING IS SMAL, en zo is ze bedoeld (Ben, 24-10-2026: het knopje mag op de
 Nederlandse bladzijden; "anything else changing in a Dutch page's output still stops
@@ -270,8 +271,12 @@ def pas_toe_los(tekst: str, sitepad: str) -> str:
 # en manuscript/h1.html valt uit de tabel met zijn knopje erin (tegendraadse
 # nakijker, gemeten in een kladsite: "2 nagelopen, 0 gat(en)", afloop 0).
 # Daarom ook: elke .html in de repo die een taalstuk draagt, moet in de tabel staan.
-# Alleen wat live kan gaan: mappen die met _ of . beginnen slaat Quarto over (de
-# stukken zelf staan in _tools/taalwissel/). Gemeten 21-11-2026: 471 .html, 0 wezen.
+# WAT HIJ OVERSLAAT, en waarom precies dat. NIET "elke map met een _": Quarto neemt
+# zulke mappen wél mee als ze onder een bijlage-glob vallen (oefenboeken/ts/_common_ts/
+# staat live; tweede nakijker, 21-11-2026). Wel: wat met een punt begint (.git,
+# .quarto, .claude), de bouwmappen zelf (_site, _site_en, _site_spook, _site_en_werk),
+# _freeze en node_modules, en _tools/ in de wortel -- daar staan de stukken zelf.
+# Een map die hij niet mag lezen, maakt de doorloop onvolledig: dan "niet gekeken".
 _MERKEN = {
     "knopje": '<nav class="taalwissel',
     "taalbalk": "/* taalbalk:",
@@ -279,17 +284,24 @@ _MERKEN = {
 }
 
 
-def wezen(tabel: list[dict]) -> tuple[int, list[str]]:
-    """(aantal nagelopen .html buiten de tabel, ['<pad>: draagt …'])."""
+def _niet_live(d: str, in_wortel: bool) -> bool:
+    return (d.startswith((".", "_site")) or d in ("_freeze", "node_modules")
+            or (in_wortel and d == "_tools"))
+
+
+def wezen(tabel: list[dict]) -> tuple[int, list[str], list[str]]:
+    """(aantal nagelopen .html buiten de tabel, ['<pad>: draagt …'], [mappen die
+    niet te lezen waren])."""
     in_tabel = {p[k] for p in tabel for k in ("nl", "en")}
-    n, uit, gezien = 0, [], set()
-    for dp, dirs, fs in os.walk(REPO, followlinks=True):
+    n, uit, gezien, blind = 0, [], set(), []
+    for dp, dirs, fs in os.walk(REPO, followlinks=True, onerror=lambda e: blind.append(f"{e.filename}: {e.strerror}")):
         echt = os.path.realpath(dp)
         if echt in gezien:          # een wegwijzer in een kring
             dirs[:] = []
             continue
         gezien.add(echt)
-        dirs[:] = sorted(d for d in dirs if not d.startswith(("_", ".")))
+        wortel = os.path.samefile(dp, REPO)
+        dirs[:] = sorted(d for d in dirs if not _niet_live(d, wortel))
         for f in sorted(fs):
             if not f.endswith(".html"):
                 continue
@@ -301,9 +313,48 @@ def wezen(tabel: list[dict]) -> tuple[int, list[str]]:
                 t = h.read()
             dragen = [naam for naam, merk in _MERKEN.items() if merk in t]
             if dragen:
-                uit.append(f"{rel}: draagt {', '.join(dragen)}, maar staat niet in taalparen.tsv — "
-                           f"zijn tweeling is er niet (meer); haal de stukken weg of zet het paar terug")
-    return n, uit
+                uit.append(f"{rel}: draagt {', '.join(dragen)}, maar staat niet in taalparen.tsv (een wees) — "
+                           f"zet het paar terug en draai `los`, of haal de stukken weg met "
+                           f"`python3 _tools/taalonderdelen.py ruim {rel}`")
+    return n, uit, blind
+
+
+def zonder_alle_stukken(tekst: str) -> str:
+    """Alles wat pas_toe_los ooit in een bladzij zet, aan beide kanten, ongeacht een
+    paar: voor een wees, die geen paar meer heeft om zonder_stukken mee te vragen."""
+    for _naam, r in negeer_regexen():
+        tekst = re.sub(r, "", tekst)
+    return re.sub(r'<nav class="taalwissel taalwissel-los" aria-label="language">.*?</nav>\n', "", tekst)
+
+
+def cmd_ruim(a) -> int:
+    """Haal de taalstukken uit een wees. Alleen op een bladzij die NIET in de tabel
+    staat, en alleen als je hem bij naam noemt: of de tabel of de bladzij achterloopt,
+    beslist een mens (tweede nakijker, 21-11-2026: zonder dit gereedschap had een wees
+    geen herstel, en hield hij elke pers tegen)."""
+    in_tabel = {p[k] for p in paren() for k in ("nl", "en")}
+    fout = 0
+    for sitepad in a.pad:
+        sitepad = sitepad.replace(os.sep, "/")
+        pad = os.path.join(REPO, sitepad)
+        if sitepad in in_tabel:
+            print(f"  {sitepad}: staat in taalparen.tsv — geen wees; niets weggehaald (bedoel je `los`?)")
+            fout = 1
+            continue
+        if not os.path.isfile(pad):
+            print(f"  {sitepad}: bestaat niet")
+            fout = 1
+            continue
+        oud = lees(pad)
+        nieuw = zonder_alle_stukken(oud)
+        if nieuw == oud:
+            print(f"  {sitepad}: droeg geen taalstukken (die ik herken) — niets weggehaald")
+            fout = 1
+            continue
+        with open(pad, "w", encoding="utf-8") as f:
+            f.write(nieuw)
+        print(f"  {sitepad}: taalstukken weggehaald ({len(oud) - len(nieuw)} tekens)")
+    return fout
 
 
 def cmd_los(a) -> int:
@@ -318,6 +369,12 @@ def cmd_los(a) -> int:
         print(f"  {e}")
         print("  losse bladzijden: NIET nagelopen — taalparen.tsv is niet te lezen")
         return 3
+    # De stukken zelf één keer vooraf. Is er een kapot of weg, dan is dat een fout
+    # van het gereedschap (main: afloop 3), en niet van elke bladzij die ze daarna
+    # niet kon krijgen -- zo stond het er tot de tweede nakijker (21-11-2026): één
+    # byte geen UTF-8 in balk.html gaf "deze bladzij kan de taalstukken niet dragen"
+    # op elke bladzij.
+    negeer_regexen()
     gaten, n = [], 0
     for p in tabel:
         if p["wissel"] not in ("los", "los-eigen"):
@@ -351,14 +408,19 @@ def cmd_los(a) -> int:
     for g in gaten:
         print("    - " + g)
     # Ook bij `los` zonder --controleer alleen gemeld, nooit weggehaald: zonder paar
-    # weet niemand of de tabel of de bladzij achterloopt.
-    n_buiten, wees = wezen(tabel)
+    # weet niemand of de tabel of de bladzij achterloopt. Weghalen is `ruim`.
+    n_buiten, wees, blind = wezen(tabel)
     print(f"  buiten de tabel: {n_buiten} .html nagelopen, {len(wees)} met een taalstuk")
     for w in wees:
         print("    - " + w)
     gaten += wees
     if gaten:
         return 1
+    if blind:
+        for b in blind:
+            print(f"  NIET te lezen: {b}")
+        print("  buiten de tabel: NIET volledig nagelopen — een map was niet te lezen")
+        return 3
     if n == 0:
         # Niets nagelopen is niet "in orde". Het is ook geen kale bladzij, dus geen 1.
         print("  (geen enkele los- of los-eigen-regel in taalparen.tsv — niets om naar te kijken)")
@@ -372,6 +434,8 @@ def main() -> int:
     sub.add_parser("regels")
     lo = sub.add_parser("los")
     lo.add_argument("--controleer", action="store_true")
+    ru = sub.add_parser("ruim", help="haal de taalstukken uit een wees (een bladzij die niet in de tabel staat)")
+    ru.add_argument("pad", nargs="+", help="sitepad, bv. oefenboeken/ts/06_oud/06_oud.html")
     a = ap.parse_args()
     # Een fout die niemand voorzag, eindigt in Python op afloop 1, en 1 betekent
     # hier "er is een gat in een bladzij". Dan stuurt naar_buiten.sh je naar de
@@ -379,7 +443,7 @@ def main() -> int:
     # spoor taalpers: een ontbrekend _tools/taalwissel/stijl_knop_los.html gaf
     # "mist zijn taalknopje"). Dus: niet gekeken, met de fout erbij.
     try:
-        return {"regels": cmd_regels, "los": cmd_los}[a.cmd](a)
+        return {"regels": cmd_regels, "los": cmd_los, "ruim": cmd_ruim}[a.cmd](a)
     except Exception as e:  # noqa: BLE001
         print(f"  taalonderdelen.py liep vast: {type(e).__name__}: {e}")
         print("  NIET nagelopen — dit zegt niets over de bladzijden")
