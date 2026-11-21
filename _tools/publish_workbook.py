@@ -37,8 +37,14 @@ Dat kunnen we niet 1-op-1 in de countcamp_site-repo plakken, om drie redenen:
      die het oefenboek en de commit van het lab noemt (WERKBOEK_STEMPEL in
      en_bouw.py), en alleen als de bron op die commit schoon is. Het Nederlands
      (`--section oefenboeken`) krijgt geen stempel: dat verandert hier niet.
+  6. Een bladzij met een tweeling in de andere taal (`_tools/taalparen.tsv`, `los`)
+     draagt knopje NL · EN, hreflang en op de Nederlandse kant de taalbalk. Stap 1
+     gooit de map weg en daarmee die stukken; tot 21-11-2026 moest daarna iemand
+     met de hand `taalonderdelen.py los` draaien, en wie het vergat merkte niets
+     (Oefenboek TS: 9 Nederlandse bladzijden kaal na de pers, en naar_buiten.sh
+     --nakijken bleef groen). → hier terugzetten, met taalonderdelen.py zelf.
 
-Dit script doet 1, 2, 4 en 5 deterministisch + valideert dat geen enkele asset
+Dit script doet 1, 2, 4, 5 en 6 deterministisch + valideert dat geen enkele asset
 breekt. Punt 3 is een eenmalige config-regel en wordt hier alleen gecontroleerd.
 
 Gebruik
@@ -216,6 +222,39 @@ def zorg_voor_tellers(dst: str) -> tuple[list[str], list[str], list[tuple[str, s
             else:
                 over.append((rel, wat))
     return al_goed, bij, over
+
+
+def zet_taalstukken(dst: str) -> tuple[int, list[str], list[tuple[str, str]]]:
+    """Zet knopje, hreflang en taalbalk in elke bladzij onder `dst` die in
+    _tools/taalparen.tsv een losse tweeling heeft (`los` of `los-eigen`).
+
+    Geeft (aantal tweelingen onder dst, bijgezet, fout). Een rij in de tabel
+    waarvan dit oefenboek de bladzij niet (meer) maakt, is een fout: dan wijst het
+    knopje op de andere kant naar niets. Dezelfde aanroep als bouw_speelkist.py
+    (pas_toe_los bij het kopiëren); de stukken zelf staan alleen in taalonderdelen.py.
+    """
+    from taalonderdelen import paren, pas_toe_los  # noqa: E402
+    voor = os.path.relpath(dst, SITE_ROOT).replace(os.sep, "/") + "/"
+    hier = sorted({p[k] for p in paren() if p["wissel"] in ("los", "los-eigen")
+                   for k in ("nl", "en") if p[k].startswith(voor)})
+    bij: list[str] = []
+    fout: list[tuple[str, str]] = []
+    for sitepad in hier:
+        f = os.path.join(SITE_ROOT, sitepad)
+        rel = sitepad[len(voor):]
+        if not os.path.isfile(f):
+            fout.append((rel, "staat in _tools/taalparen.tsv, maar dit oefenboek maakt hem niet (meer)"))
+            continue
+        s = open(f, encoding="utf-8").read()
+        try:
+            t = pas_toe_los(s, sitepad)
+        except ValueError as e:
+            fout.append((rel, str(e)))
+            continue
+        if t != s:
+            open(f, "w", encoding="utf-8").write(t)
+            bij.append(rel)
+    return len(hier), bij, fout
 
 
 def _git(map_: str, *args: str) -> subprocess.CompletedProcess:
@@ -516,6 +555,30 @@ def main() -> int:
     for p in problems[:20]:
         log("    MIST: " + p)
 
+    # 5b) de taalstukken (punt 6 hierboven). Na teller, stempel en validatie: de
+    #     volgorde waarin ze tot 21-11-2026 met de hand kwamen, en dezelfde bytes
+    #     (nagemeten op het Engelse TS-boek: 9 van 9 gelijk). De stempel blijft de
+    #     laatste regel; pas_toe_los raakt alleen <head> en de regel na <body>.
+    #     Niet vóór de validatie: dan telt die de link van het knopje naar de
+    #     tweeling mee, en in een weggooisite (naar_site_en.sh --weggooisite) staat
+    #     die tweeling er niet -- 9 keer MIST, gemeten 21-11. Of de tweeling er
+    #     is, toetst taalonderdelen.py los --controleer (naar_buiten.sh).
+    #     Zonder taalparen.tsv geen tweelingen, en dat wordt gezegd; is de tabel
+    #     er wel en het gereedschap niet, dan is dat een fout.
+    taal_fout: list[tuple[str, str]] = []
+    if not os.path.isfile(os.path.join(SITE_ROOT, "_tools", "taalparen.tsv")):
+        log("  taalstukken: geen _tools/taalparen.tsv in deze site -- geen tweelingen, niets gezet")
+    else:
+        try:
+            n_taal, taal_bij, taal_fout = zet_taalstukken(dst)
+        except (Exception, SystemExit) as e:  # noqa: BLE001 -- paren() stopt met SystemExit op een kapotte tabel
+            n_taal, taal_bij = 0, []
+            taal_fout = [("(alle)", f"taalonderdelen.py liep vast ({type(e).__name__}: {e})")]
+        log(f"  taalstukken: {n_taal} bladzij(den) met een losse tweeling in taalparen.tsv, "
+            f"{len(taal_bij)} bijgezet, {len(taal_fout)} fout")
+        for rel, reden in taal_fout:
+            log(f"    TAALSTUKKEN: {rel} — {reden}")
+
     # 6) de doorstuurders op oude adressen BINNEN deze map terugzetten.
     #    Stap 1 gooide de hele map weg. Daar stonden sinds 1-10-2026 twee
     #    doorstuurders (de oude OZP 1-nummers 3 en 4, gewisseld op 19-9), en
@@ -579,6 +642,10 @@ def main() -> int:
     if stempel_fout:
         log(f"\n⚠️  {len(stempel_fout)} bladzij(den) dragen een stempel die _tools/en_bouw.py "
             f"niet herkent — NIET publiceren tot opgelost (zie NIET HERKEND hierboven).")
+        fout = True
+    if taal_fout:
+        log(f"\n⚠️  {len(taal_fout)} bladzij(den) met een tweeling missen hun taalstukken "
+            f"— NIET publiceren tot opgelost (zie TAALSTUKKEN hierboven).")
         fout = True
     if fout:
         return 1

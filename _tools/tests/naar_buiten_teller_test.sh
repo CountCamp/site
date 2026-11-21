@@ -45,6 +45,9 @@ nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
   # reden als bij de plankwacht hierboven -- deze toets meet de tellerpoort, en
   # de doorstuurpoort heeft zijn eigen toets (doorstuurders_test.sh).
   printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$r/_tools/doorstuurders.py"
+  # Sinds 21-11-2026 een VIERDE: de taalstukkenwachter. Zelfde reden; zijn eigen
+  # zaken staan onder 6.
+  printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$r/_tools/taalonderdelen.py"
   echo "$r"
 }
 
@@ -291,6 +294,87 @@ if [ "$BEDRADING" = ok ]; then
   echo "  ok    5g --productie (blokkerend) en --lokaal (meldend) roepen hem na de bouw aan"
 else
   echo "  ZAKT  5g bedrading: $BEDRADING"
+  gezakt=$((gezakt + 1))
+fi
+
+# --- 6. de taalstukkenpoort (21-11-2026, spoor ts_pers_beide) ---------------
+#     Een pers die een losse tweeling opnieuw neerzet, haalt knopje, hreflang en
+#     taalbalk weg. Gemeten die dag: 9 kale Nederlandse TS-bladzijden, en
+#     --nakijken zei "Alle poorten staan groen".
+# nep_repo en niet nep_basis: die laatste heeft geen tellerwachter, en dan wordt
+# de levering om de teller rood in plaats van om de taalstukken (zie zaak 4).
+KAAL_TAAL="$(nep_repo kaaltaal 0 "teller-controle - nagemaakt, alles in orde")"
+{ printf 'print("  oefenboeken/ts/index.html: in orde")\n'
+  printf 'print("  losse bladzijden: 2 nagelopen, 1 gat(en)")\n'
+  printf 'print("    - oefenboeken/ts/01_kapstok/01_kapstok.html: de taalstukken staan er niet (goed) in")\n'
+  printf 'import sys; sys.exit(1)\n'
+} > "$KAAL_TAAL/_tools/taalonderdelen.py"
+keur     "6a een tweeling zonder taalstukken: HOUDT TEGEN" 1 "$KAAL_TAAL"
+verwacht "  en noemt de bladzij bij naam" "oefenboeken/ts/01_kapstok/01_kapstok.html"
+verwacht "  en hoe je het repareert" "python3 _tools/taalonderdelen.py los"
+getoetst=$((getoetst + 1))
+if grep -qF "oefenboeken/ts/index.html: in orde" "$M/uit"; then
+  echo "  ZAKT    en laat de bladzijden die in orde zijn tóch allemaal zien"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en laat alleen zien wat niet in orde is"
+fi
+
+ZONDER_TAAL="$(nep_repo zondertaal 0 "teller-controle - nagemaakt, alles in orde")"
+rm -f "$ZONDER_TAAL/_tools/taalonderdelen.py"
+keur     "6b geen taalonderdelen.py: HOUDT TEGEN" 1 "$ZONDER_TAAL"
+verwacht "  en zegt dat het ONGEMETEN is" "is dus ONGEMETEN"
+getoetst=$((getoetst + 1))
+if grep -qF "mist zijn taalknopje" "$M/uit"; then
+  echo "  ZAKT    en legt de schuld tóch bij de bladzijden"
+  gezakt=$((gezakt + 1))
+else
+  echo "  ok      en legt de schuld NIET bij de bladzijden"
+fi
+
+# De echte wachter op de echte bladzijden van deze repo: groen, en hij heeft
+# gekeken (een telling boven nul). Met wegwijzers, zoals echte_teller_repo.
+ECHT_TAAL="$(nep_repo echtetaal 0 "teller-controle - nagemaakt, alles in orde")"
+cp _tools/taalonderdelen.py _tools/taalparen.tsv "$ECHT_TAAL/_tools/"
+cp -R _tools/taalwissel "$ECHT_TAAL/_tools/taalwissel"
+for m in oefenboeken en manuscript speeltjes tabellen tables; do
+  [ -e "$m" ] && ln -s "$PWD/$m" "$ECHT_TAAL/$m"
+done
+keur     "6c de echte taalstukken van deze repo: laat door" 0 "$ECHT_TAAL"
+getoetst=$((getoetst + 1))
+if grep -qE "losse bladzijden: [1-9][0-9]* nagelopen, 0 gat" "$M/uit"; then
+  echo "  ok      en hij heeft echt gekeken ($(grep -oE '[0-9]+ nagelopen' "$M/uit"))"
+else
+  echo "  ZAKT    en zegt niet dat hij bladzijden naliep -- niet gekeken is niet groen"
+  sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+
+getoetst=$((getoetst + 1))
+BEDRADING6="$(python3 - "$NAAR_BUITEN" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+def tak(naam):
+    m = re.search(r"^%s\)\n(.*?)^  ;;" % re.escape(naam), s, re.S | re.M)
+    return m.group(1) if m else ""
+fout = []
+for naam, hoe in (("--nakijken", "blokkerend"), ("--productie", "blokkerend"),
+                  ("--lokaal", "melden"), ("--proefdruk", "melden")):
+    t = tak(naam)
+    m = re.search(r"taalstukken_nakijken +%s" % hoe, t)
+    if not m:
+        fout.append(f"{naam} roept de poort niet {hoe} aan")
+    elif naam == "--productie" and "Niet geleverd" not in t[m.start():m.start() + 120]:
+        fout.append("--productie stopt niet als de poort rood is")
+    elif naam == "--productie" and m.start() > t.find("git push"):
+        fout.append("--productie roept de poort pas na de push aan")
+print("; ".join(fout) if fout else "ok")
+PY
+)"
+if [ "$BEDRADING6" = ok ]; then
+  echo "  ok    6d --nakijken en --productie (blokkerend), --lokaal en --proefdruk (meldend) roepen hem aan"
+else
+  echo "  ZAKT  6d bedrading: $BEDRADING6"
   gezakt=$((gezakt + 1))
 fi
 

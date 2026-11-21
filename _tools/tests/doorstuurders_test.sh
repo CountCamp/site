@@ -206,6 +206,9 @@ bedraad() {  # $1 = naam -> proefsite met de echte pers, en nagemaakte plank- en
   cp _tools/naar_buiten.sh "$S/_tools/"
   printf 'print("plankwacht - nagemaakt, alles in orde")\n'  > "$S/_tools/plankwacht.py"
   printf 'print("tellers - nagemaakt, alles in orde")\n'     > "$S/_tools/controleer_tellers.py"
+  # Sinds 21-11-2026 ook de taalstukkenpoort; zijn eigen zaken staan in
+  # naar_buiten_teller_test.sh (zaak 6).
+  printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$S/_tools/taalonderdelen.py"
   echo "$S"
 }
 S="$(bedraad pers_groen)"

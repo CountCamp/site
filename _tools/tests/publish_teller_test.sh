@@ -196,6 +196,67 @@ verwacht "  en zegt dat het terugzetten vastliep" "doorstuurders: LIEP VAST"
 verwacht "  en de slotcontrole komt er nog steeds" "Compleet en gevalideerd"
 rm -f "$PROEFSITE/_tools/doorstuurders.py" "$PROEFSITE/_tools/doorstuurders.tsv"
 
+# === 7. taalstukken op een tweeling (21-11-2026, spoor ts_pers_beide) ========
+#     publish_workbook.py gooit oefenboeken/<naam>/ eerst weg, en daarmee knopje,
+#     hreflang en taalbalk die taalonderdelen.py er na de vorige publicatie in
+#     zette. Het Oefenboek TS stond na zijn pers met 9 kale Nederlandse
+#     bladzijden, en geen poort zei iets. De ECHTE taalonderdelen.py en stukken,
+#     met een eigen tabel.
+bouw_bron
+zaak    "7a zonder taalparen.tsv: geen tweelingen, en dat wordt gezegd" 0
+verwacht "  en zegt het" "geen _tools/taalparen.tsv in deze site"
+
+cp _tools/taalonderdelen.py "$PROEFSITE/_tools/"
+cp -R _tools/taalwissel "$PROEFSITE/_tools/taalwissel"
+printf '%s\t%s\t%s\n' oefenboeken/proefboek/00_thema/00_thema.html \
+  en/workbooks/proefboek/00_thema/00_thema.html los > "$PROEFSITE/_tools/taalparen.tsv"
+bouw_thema_met_body() {  # pas_toe_los zet het knopje na een <body> op een eigen regel
+  printf '<!doctype html>\n<html lang="nl"><head><meta charset="utf-8"><title>Thema</title>\n</head>\n<body>\n<p>inhoud</p></body></html>\n' \
+    > "$M/bron/00_thema/00_thema.html"
+}
+bouw_bron; bouw_thema_met_body
+zaak    "7b een tweeling krijgt zijn taalstukken bij het inlezen" 0
+verwacht "  en zegt wat hij zette" \
+         "taalstukken: 1 bladzij(den) met een losse tweeling in taalparen.tsv, 1 bijgezet, 0 fout"
+getoetst=$((getoetst + 1))
+T="$PROEFSITE/oefenboeken/proefboek/00_thema/00_thema.html"
+n_knop=$(grep -cF 'aria-label="taal"' "$T")
+n_href=$(grep -cF 'hreflang="en" href="https://countcamp.org/en/workbooks/proefboek/00_thema/00_thema.html"' "$T")
+n_balk=$(grep -cF '/* taalbalk:' "$T")
+n_idx=$(grep -cF 'aria-label="taal"' "$PROEFSITE/oefenboeken/proefboek/index.html")
+if [ "$n_knop" = 1 ] && [ "$n_href" = 1 ] && [ "$n_balk" -ge 1 ] && [ "$n_idx" = 0 ]; then
+  echo "  ok    knopje 1x, hreflang naar de tweeling 1x, taalbalk erin; index.html (geen tweeling) niets"
+else
+  echo "  ZAKT  knopje $n_knop, hreflang $n_href, balk $n_balk, knopje op index.html $n_idx"
+  gezakt=$((gezakt + 1))
+fi
+getoetst=$((getoetst + 1))
+# Eerst opvangen, dan zoeken: de afloop is hier 1 (de Engelse kant bestaat in de
+# proefsite niet), en met pipefail zou die de grep overstemmen.
+CONTROLE="$(python3 "$PROEFSITE/_tools/taalonderdelen.py" los --controleer 2>&1)"
+if printf '%s\n' "$CONTROLE" | grep -qF "oefenboeken/proefboek/00_thema/00_thema.html: in orde"; then
+  echo "  ok    en taalonderdelen.py los --controleer vindt de Nederlandse kant in orde"
+else
+  echo "  ZAKT  taalonderdelen.py los --controleer vindt de Nederlandse kant NIET in orde"
+  gezakt=$((gezakt + 1))
+fi
+
+bouw_bron   # de gewone thema-bladzij: <body> en de tekst op één regel
+zaak    "7c een tweeling zonder plek voor het knopje laat het script WEIGEREN" 1
+verwacht "  en noemt hem bij naam" "TAALSTUKKEN: 00_thema/00_thema.html"
+verwacht "  en zegt waarom het niet door mag" "missen hun taalstukken — NIET publiceren"
+
+printf '%s\t%s\t%s\n' oefenboeken/proefboek/09_weg/09_weg.html \
+  en/workbooks/proefboek/09_weg/09_weg.html los >> "$PROEFSITE/_tools/taalparen.tsv"
+bouw_bron; bouw_thema_met_body
+zaak    "7d een rij voor een bladzij die het boek niet (meer) maakt: WEIGEREN" 1
+verwacht "  en noemt hem" "TAALSTUKKEN: 09_weg/09_weg.html — staat in _tools/taalparen.tsv, maar dit oefenboek maakt hem niet (meer)"
+
+rm -f "$PROEFSITE/_tools/taalonderdelen.py"
+bouw_bron; bouw_thema_met_body
+zaak    "7e wel een tabel, geen taalonderdelen.py: WEIGEREN, niet stil overslaan" 1
+verwacht "  en zegt dat het gereedschap vastliep" "taalonderdelen.py liep vast"
+
 echo ""
 if [ "$gezakt" = "0" ]; then
   echo "$getoetst zaken getoetst, alles groen."
