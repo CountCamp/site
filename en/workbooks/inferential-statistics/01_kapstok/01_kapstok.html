@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Week 1 · Sampling distributions and hypothesis testing – Inferential Statistics Practice Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../02_een_gemiddelde/02_een_gemiddelde.html" rel="next">
+<link href="../00_voorkennis_z/00_voorkennis_z.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../common/styles/countcamp.css">
+<link rel="stylesheet" href="../_common_ts_nl/ts.css">
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">The seven weeks</a></li><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">Week 1 · Sampling distributions and hypothesis testing</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Inferential Statistics Practice Book</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Back to CountCamp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Start</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00_voorkennis_z/00_voorkennis_z.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 0 · The basics: spread, <em>z</em>-scores and the normal distribution</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">The seven weeks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_kapstok/01_kapstok.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Week 1 · Sampling distributions and hypothesis testing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_een_gemiddelde/02_een_gemiddelde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 2 · Hypothesis tests for one mean</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 3 · Hypothesis tests for two means and confidence intervals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04_categorisch/04_categorisch.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 4 · Probabilities and tests for categorical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05_effect_power/05_effect_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 5 · Effect sizes and power</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06_assumpties/06_assumpties.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 6 · Assumptions and alternative tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07_toetskeuze/07_toetskeuze.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 7 · Choosing a test, and an overview</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-question-beneath-all-seven-weeks" id="toc-the-question-beneath-all-seven-weeks" class="nav-link active" data-scroll-target="#the-question-beneath-all-seven-weeks">The question beneath all seven weeks</a></li>
+  <li><a href="#only-god-knows-the-mean" id="toc-only-god-knows-the-mean" class="nav-link" data-scroll-target="#only-god-knows-the-mean">Only God knows the mean</a></li>
+  <li><a href="#three-distributions-with-almost-the-same-name" id="toc-three-distributions-with-almost-the-same-name" class="nav-link" data-scroll-target="#three-distributions-with-almost-the-same-name">Three distributions with almost the same name</a></li>
+  <li><a href="#two-hypotheses-nothing-going-on-or-something" id="toc-two-hypotheses-nothing-going-on-or-something" class="nav-link" data-scroll-target="#two-hypotheses-nothing-going-on-or-something">Two hypotheses: nothing going on, or something</a></li>
+  <li><a href="#counting-dots" id="toc-counting-dots" class="nav-link" data-scroll-target="#counting-dots">Counting dots</a></li>
+  <li><a href="#the-p-value-what-it-says-and-what-it-doesnt" id="toc-the-p-value-what-it-says-and-what-it-doesnt" class="nav-link" data-scroll-target="#the-p-value-what-it-says-and-what-it-doesnt">The <em>p</em>-value: what it says, and what it doesn’t</a></li>
+  <li><a href="#deciding" id="toc-deciding" class="nav-link" data-scroll-target="#deciding">Deciding</a>
+  <ul class="collapse">
+  <li><a href="#the-other-route-the-critical-value" id="toc-the-other-route-the-critical-value" class="nav-link" data-scroll-target="#the-other-route-the-critical-value">The other route: the critical value</a></li>
+  </ul></li>
+  <li><a href="#two-ways-to-be-wrong" id="toc-two-ways-to-be-wrong" class="nav-link" data-scroll-target="#two-ways-to-be-wrong">Two ways to be wrong</a></li>
+  <li><a href="#not-significant-is-not-the-same-as-equal" id="toc-not-significant-is-not-the-same-as-equal" class="nav-link" data-scroll-target="#not-significant-is-not-the-same-as-equal">Not significant is not the same as equal</a></li>
+  <li><a href="#the-six-step-plan" id="toc-the-six-step-plan" class="nav-link" data-scroll-target="#the-six-step-plan">The six-step plan</a></li>
+  <li><a href="#in-r-choosing-rows" id="toc-in-r-choosing-rows" class="nav-link" data-scroll-target="#in-r-choosing-rows">In R: choosing rows</a>
+  <ul class="collapse">
+  <li><a href="#a-report-from-your-script" id="toc-a-report-from-your-script" class="nav-link" data-scroll-target="#a-report-from-your-script">A report from your script</a></li>
+  </ul></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#exam-block" id="toc-exam-block" class="nav-link" data-scroll-target="#exam-block">Exam block</a></li>
+  <li><a href="#the-coat-rack-at-a-glance" id="toc-the-coat-rack-at-a-glance" class="nav-link" data-scroll-target="#the-coat-rack-at-a-glance">The coat rack at a glance</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">The seven weeks</a></li><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">Week 1 · Sampling distributions and hypothesis testing</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Week 1 · Sampling distributions and hypothesis testing</h1>
+<p class="subtitle lead">the coat rack — what the other six weeks will hang on</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="verhaal">
+<p>It was already getting light when the bat came home, and now he knew for sure.</p>
+<p>“Poor sleepers worry more than other animals,” he said to the dormouse, who woke up because he said it.</p>
+<p>“I don’t have to believe it, I know it,” he said, “I saw three of them last night.”</p>
+<p>“Who?” she asked.</p>
+<p>“Me, the moth, and someone by the stream I couldn’t see properly,” he said.</p>
+<p>“And if you’d flown the other way?” she asked, and she turned over.</p>
+</div>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>What you learn this week</strong></p>
+<ul>
+<li>the difference between population and sample, and between μ and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math></li>
+<li>three distributions with almost the same name</li>
+<li>the null hypothesis and the alternative hypothesis</li>
+<li>reading the <em>p</em>-value off a dot plot, by counting</li>
+<li>deciding: reject or do not reject</li>
+<li>why “not significant” is something other than “equal”</li>
+<li>in R, choosing rows from a dataset, and turning your script into a report</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="the-question-beneath-all-seven-weeks" class="level1">
+<h1>The question beneath all seven weeks</h1>
+<p>You measure something in a small group of people, and you see a difference. For example, in your sample poor sleepers worry a bit more than average. And then comes the question this whole practice book turns on:</p>
+<blockquote class="blockquote">
+<p>Is that difference also there in the <strong>population</strong>, or could you just as easily have drawn <em>these</em> people by chance?</p>
+</blockquote>
+<p>For seven weeks you ask that one question, each time wearing a different coat: with one mean, with two means, with categories, with and without a bell shape. This first week doesn’t go deep. It puts up the <strong>coat rack</strong>: the hooks that every later week will hang on. You hardly calculate anything here; you count dots. Wherever something is worked out later, the page tells you in which week.</p>
+</section>
+<section id="only-god-knows-the-mean" class="level1">
+<h1>Only God knows the mean</h1>
+<p>You want to say something about <strong>all</strong> poor sleepers: the <strong>population</strong>. Their mean worry score is called μ (<em>mu</em>). You don’t know that number, and you never will. That is why it gets a Greek letter: vague letters for vague things.</p>
+<p>What you <em>do</em> know is your <strong>sample</strong>: the 25 people you actually measured. Their mean is called <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> (<em>x-bar</em>). You can simply calculate that number.</p>
+<table class="table-striped caption-top table">
+<caption>Population in Greek letters, sample in Latin ones</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>population</th>
+<th>sample</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>what it is</td>
+<td>everyone you want to say something about</td>
+<td>the people you actually measured</td>
+</tr>
+<tr class="even">
+<td>mean</td>
+<td>μ</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math></td>
+</tr>
+<tr class="odd">
+<td>standard deviation</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">σ</mi><mi>x</mi></msub><annotation encoding="application/x-tex">\sigma_x</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>x</mi></msub><annotation encoding="application/x-tex">s_x</annotation></semantics></math></td>
+</tr>
+<tr class="even">
+<td>size</td>
+<td><em>N</em></td>
+<td><em>n</em></td>
+</tr>
+<tr class="odd">
+<td>do you know it?</td>
+<td>no — a <strong>parameter</strong></td>
+<td>yes — a <strong>statistic</strong></td>
+</tr>
+</tbody>
+</table>
+<p>And then the sentence never to forget: <strong>it is all about the population.</strong> Nobody writes an article about the 25 people who happened to take part. You use their mean <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> to say something about μ. Put formally: the statistic <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> <em>estimates</em> the parameter μ. Your sample itself estimates nothing; your sample is what you calculate with.</p>
+</section>
+<section id="three-distributions-with-almost-the-same-name" class="level1">
+<h1>Three distributions with almost the same name</h1>
+<p>Three names, and two of them differ by one small ending.</p>
+<ul>
+<li>The <strong>population distribution</strong>: the scores of everyone in the population.</li>
+<li>The <strong>sample distribution</strong>: the scores of the people in your one sample.</li>
+<li>The <strong>sampling distribution</strong>: the distribution of a statistic — for example <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> — over all possible samples of the same size <em>n</em> from the same population.</li>
+</ul>
+<p>That third one is the heart of everything that comes after, and it is the hardest to picture. So, a game. Suppose a hundred people each draw a sample of their own, of 25 poor sleepers. Each of them works out the mean, writes it on a card, and hangs the card on a line — in order, small numbers on the left, big ones on the right. That row of cards is the sampling distribution. One card is not one person; one card is one <strong>sample</strong>. Really, <em>all</em> possible samples belong on that line, but a hundred is enough to see the shape.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Sample distribution or sampling distribution?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Sample distribution or sampling distribution?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Look at the ending. Sampl<strong>ing</strong> distribution: many samples, and one number from each. Sample distribution: one sample, and many people in it.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-twee" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Two dot plots stand side by side on the same axis, from 20 to 80. On the left, under the heading 'only one sample: 25 individual scores', 25 open circles lie flat and widely spread, from 33 to 63. On the right, under the heading 'as many as 100 samples: 100 calculated means', 100 open squares stand in tall stacks, close together between 45 and 55.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-twee-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-twee-1.png" class="img-fluid figure-img" alt="Two dot plots stand side by side on the same axis, from 20 to 80. On the left, under the heading 'only one sample: 25 individual scores', 25 open circles lie flat and widely spread, from 33 to 63. On the right, under the heading 'as many as 100 samples: 100 calculated means', 100 open squares stand in tall stacks, close together between 45 and 55." width="691">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-twee-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: On the left, the sample distribution: only one sample, with the individual scores of 25 people, from 33 to 63. On the right, the sampling distribution: as many as 100 samples. Each square is the mean of its own sample of 25 people; together they lie from 45 to 55. Same axis. Circle = one person, square = one mean.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Why those cards form a bell shape around the middle, and how wide that bell is, we work out in week 2 (<em>Hypothesis tests for one mean</em>). The bell is then called the <strong>normal distribution</strong>, the reason it forms is called the <strong>central limit theorem</strong>, and its width is called the <strong>standard error</strong>. This week we only count.</p>
+<p>Want to brush up on the normal distribution and <em>z</em>-scores first? You can, in <a href="../00_voorkennis_z/00_voorkennis_z.html">week 0</a>: what you need for week 2.</p>
+</section>
+<section id="two-hypotheses-nothing-going-on-or-something" class="level1">
+<h1>Two hypotheses: nothing going on, or something</h1>
+<p>In every test you set two statements about the <strong>population</strong> against each other.</p>
+<ul>
+<li>The <strong>null hypothesis</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: nothing is going on. No difference, no change. With the null, always think: <em>absent</em> — the difference is absent.</li>
+<li>The <strong>alternative hypothesis</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: something <em>is</em> going on. This is usually what the researcher expects.</li>
+</ul>
+<p>For the poor sleepers, if the worry questionnaire is designed so that the mean in the general population is 50:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">\mu = 50</annotation></semantics></math> — poor sleepers worry the same amount as everyone else, on average<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">\mu \neq 50</annotation></semantics></math> — poor sleepers do not worry the same amount as everyone else, on average</p>
+</div>
+<p>Three rules, and every pair you ever write down has to pass all three:</p>
+<ol type="1">
+<li><strong>About the population, so about μ.</strong> Never about <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>: you already know that number, so there is nothing to test.</li>
+<li><strong>The equals sign goes in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</strong> The null hypothesis names one exact value; that is what you calculate from.</li>
+<li><strong>Together they cover everything.</strong> Whatever does not fall under <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> falls under <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>. No gap in between.</li>
+</ol>
+<p><strong>Two-tailed.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> has ≠, and not equal means: it can go up or down. That is called <strong>two-tailed</strong> testing, and in this practice book it is what you do by default. There are four reasons to do it even when you <em>do</em> expect a direction:</p>
+<ul>
+<li>Often you have no direction. You don’t know whether poor sleepers worry more or worry less; you want to know <em>whether</em> it is different.</li>
+<li>If you do have an expectation, you still want to know when things go the other way. Training that makes the worrying worse is not something you want to miss.</li>
+<li>Some tests pick no side. For those, a one-sided version doesn’t even exist; you will meet them in week 4 (<em>Probabilities and tests for categorical variables</em>).</li>
+<li>Anyone who picks the direction after seeing the data is cheating. That is called <strong>post hoc hypothesising</strong>. Two-tailed, decided beforehand, prevents it.</li>
+</ul>
+<p>You will also come across <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>. Same thing, different name.</p>
+</section>
+<section id="counting-dots" class="level1">
+<h1>Counting dots</h1>
+<p>Now the heart of the week. You can’t answer the question <em>“is my difference real?”</em> directly. What you <em>can</em> do: pretend that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true, and see how strange your result would then be.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="The example: worrying">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The example: worrying
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A researcher measures how much 25 poor sleepers worry, with a questionnaire designed so that the mean in the general population is 50 and the standard deviation 10.</p>
+<p>Suppose <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true: poor sleepers worry the same amount as everyone else, on average. A hundred researchers each draw 25 poor sleepers and work out the mean, rounded to a whole number. Each mean becomes one dot, drawn as a square: a mean, not a person. This is what that looks like:</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb" class="quarto-float quarto-figure quarto-figure-center anchored" alt="This dot plot shows open squares, stacked above the numbers 45 to 55. The tallest stack is above 50; towards both sides the stacks get lower, down to one square above 45 and one above 55.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-vb-1.png" class="img-fluid figure-img" alt="This dot plot shows open squares, stacked above the numbers 45 to 55. The tallest stack is above 50; towards both sides the stacks get lower, down to one square above 45 and one above 55." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: A hundred means of samples of 25 poor sleepers, if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true (μ = 50). Each square is the mean of one sample.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This is a sampling distribution: each dot is a card from the game. Look at where the dots are. Most of them sit close to 50 — which makes sense, because in this world the mean <em>is</em> 50. But not all of them: by pure chance a sample sometimes comes out at 54 or 46, and every now and then at 55 or 45. That is how far chance can take you, even when nothing is going on.</p>
+<p><strong>Now your own sample.</strong> Suppose the real sample of 25 poor sleepers gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>. How strange is that, <em>if</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true?</p>
+<p>Count the dots that lie <strong>at least as far from 50</strong> as your 55. Your 55 is 5 above 50. Just as far on the other side is 45. So:</p>
+<table class="caption-top table">
+<caption>At <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> = 55: the dots that lie at least as far from 50</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th>dots</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>55 or higher</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>45 or lower</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>together</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">
+p = \dfrac{2}{100} = .02
+</annotation></semantics></math></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb-staart" class="quarto-float quarto-figure quarto-figure-center anchored" alt="This is the same dot plot. The squares above 45 and above 55 are coloured orange; all the other squares are dark.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-staart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-vb-staart-1.png" class="img-fluid figure-img" alt="This is the same dot plot. The squares above 45 and above 55 are coloured orange; all the other squares are dark." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-staart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The same hundred squares. Orange: the squares that lie at least as far from 50 as 55, on both sides. Together 2 of the 100.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>That number is the <strong><em>p</em>-value</strong>. In words: <em>if</em> poor sleepers really score 50 on average, then only 2 of the 100 samples come out as far from 50 as yours did, or further.</p>
+<p>In week 0, every piece of the bell had a <em>p</em> next to it: the probability of that piece. The <em>p</em>-value is just such a <em>p</em>. Now <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is in the middle, and the boundary is at your result, on both sides.</p>
+<p><strong>And at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>53</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 53</annotation></semantics></math>?</strong> Same recipe. 53 is 3 above 50; on the other side, that is 47. Count:</p>
+<ul>
+<li>53 or higher: 11 dots;</li>
+<li>47 or lower: 11 dots.</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>11</mn><mo>+</mo><mn>11</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.22</mn></mrow><annotation encoding="application/x-tex">
+p = \dfrac{11 + 11}{100} = .22
+</annotation></semantics></math></p>
+<p>In this world without a difference, a mean like that simply turns up regularly.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="With a dot plot: always count both sides">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>With a dot plot: always count both sides
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two-tailed means: this side <em>and</em> the mirror side. In a dot plot, then, you count both of them, and add them up.</p>
+<p>Here the two tails happen to hold exactly the same number of dots, so one side times two gives the same: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>1</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">2 \times \dfrac{1}{100} = .02</annotation></semantics></math>. But don’t count on it. A dot plot of a hundred samples is rarely that tidy — in exercise 1.5 it isn’t, and then “times two” gives a wrong number.</p>
+<p>That shortcut only comes back with a smooth, symmetrical bell, in week 2. There the two sides are always exactly the same size.</p>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Check in R — counting with sum()">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Check in R — counting with sum()
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You counted by hand. R can count along with you, so you can see that it adds up. New to R? Then read <em>In R: choosing rows</em> first, further on this week: it explains what the square brackets <code>[ ]</code> do. This box can wait.</p>
+<p>Copy the stacks from the figure, from left to right:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the stacks from the figure, from left to right (waarde = value, aantal = count)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>waarde <span class="ot">&lt;-</span> <span class="dv">45</span><span class="sc">:</span><span class="dv">55</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>aantal <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">12</span>, <span class="dv">17</span>, <span class="dv">20</span>, <span class="dv">17</span>, <span class="dv">12</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># are there a hundred?</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 55 or higher, and 45 or lower</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&gt;=</span> <span class="dv">55</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&lt;=</span> <span class="dv">45</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and at 53: 53 or higher, and 47 or lower</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&gt;=</span> <span class="dv">53</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(aantal[waarde <span class="sc">&lt;=</span> <span class="dv">47</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11</code></pre>
+</div>
+</div>
+<p>The same counts as by hand: at 55, 2 of the 100 together; at 53, 22 of the 100 together.</p>
+</div>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — making the dots yourself in R">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — making the dots yourself in R
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The hundred dots above are a thought experiment. In R you can simply <em>do</em> it: draw a sample of 25 a hundred times from a population with μ = 50 and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">σ</mi><mi>x</mi></msub><annotation encoding="application/x-tex">\sigma_x</annotation></semantics></math> = 10, and write down each mean.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2600</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># one sample of 25, and its mean</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 51.80573</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a hundred times: a hundred cards (bordjes), rounded to whole numbers</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>bordjes <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">100</span>, <span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">mean =</span> <span class="dv">50</span>, <span class="at">sd =</span> <span class="dv">10</span>))))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(bordjes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>bordjes
+46 47 48 49 50 51 52 53 54 55 56 
+ 1 11 13 15 24 12 12  8  2  1  1 </code></pre>
+</div>
+</div>
+<p>Your hundred lie slightly differently from the ones in the figure — that is chance itself. The shape is the same: a hill around 50, sloping away to the sides. How wide that hill is, you can even work out without drawing a single sample; that is for week 2.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-p-value-what-it-says-and-what-it-doesnt" class="level1">
+<h1>The <em>p</em>-value: what it says, and what it doesn’t</h1>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="The p-value">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The <em>p</em>-value
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The probability of a result that is <strong>at least as extreme</strong> as yours, <strong>if the null hypothesis is true</strong>.</p>
+<p>That result is called the <strong>test statistic</strong>. This week it is simply the sample mean <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>; from week 2 on, a number derived from it.</p>
+</div>
+</div>
+<p>Three parts, and all three have to be in it:</p>
+<ol type="1">
+<li>it is a <strong>probability</strong> — a number between 0 and 1;</li>
+<li>of <strong>this or a more extreme</strong> result — with a two-tailed test, on both sides;</li>
+<li><strong>given that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true</strong> — you calculate in the world where nothing is going on.</li>
+</ol>
+<p>You can think of the <em>p</em>-value as your <strong>surprise value</strong>: how surprised you should be by your data, if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true. The smaller <em>p</em>, the bigger the surprise.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="The bakery">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The bakery
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the end of the street there was always a bakery. You haven’t been there in a long time. Is it still a bakery? You may go and look, but only blindfolded and with a clothes peg on your nose. You may say nothing except: <em>“Surprise me.”</em> That is your sample.</p>
+<p>Under <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> — it is still the bakery — you expect bread in your hands. A croissant could happen too. But you get a <strong>bicycle</strong>. Is that possible under <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>? Yes, once, perhaps, as a special offer. But the probability of a bicycle, <em>if</em> it is a bakery, is so small that it makes you jump. <em>When p is low, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> must go.</em> It must have turned into a bike shop.</p>
+</div>
+</div>
+<p>Now look carefully at what this does and doesn’t say. The <em>p</em>-value is the probability of a bicycle <strong>if it is a bakery</strong>. It is <strong>not</strong> the probability that it is a bakery, now that you have a bicycle. The two look alike, and they are very different probabilities.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The reversal">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The reversal
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“<em>p</em> = .02, so the probability that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true is .02.” Wrong.</p>
+<p>The <em>p</em>-value works from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> to the data, not back. It says how strange your data are in a world without a difference. How likely that world itself is, it doesn’t say.</p>
+</div>
+</div>
+</section>
+<section id="deciding" class="level1">
+<h1>Deciding</h1>
+<p>A <em>p</em>-value is a number; a test ends with a decision. For that, you agree on a boundary <strong>beforehand</strong>: the <strong>significance level</strong> α (<em>alpha</em>). In this practice book it is always α = .05, unless an exercise says otherwise.</p>
+<ul>
+<li>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p \leq \alpha</annotation></semantics></math>, you <strong>reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math></strong>. The result is <strong>significant</strong>.</li>
+<li>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&gt;</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p &gt; \alpha</annotation></semantics></math>, you <strong>do not reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math></strong>.</li>
+</ul>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — p &lt; α or p ≤ α?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — <em>p</em> &lt; α or <em>p</em> ≤ α?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In other books and explanations, the rule is also given as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p &lt; \alpha</annotation></semantics></math>: reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> only if <em>p</em> is smaller than α. With a calculated <em>p</em>, that difference hardly ever matters, because a calculated <em>p</em> is practically never exactly equal to α. If you count dots out of a hundred, <em>p</em> <em>can</em> come out at exactly .05: five dots out of the hundred. Then you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, because the rule is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p \leq \alpha</annotation></semantics></math>.</p>
+<p>Still, it can matter when you see a rounded <em>p</em>. A <em>p</em> of .0504 is written as .050 with three decimals and as .05 with two. If all you read is that .05, then by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p \leq \alpha</annotation></semantics></math> you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, and by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>&lt;</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p &lt; \alpha</annotation></semantics></math> you don’t. In a case like that, look at more decimals. Then both rules say the same thing: .0504 is bigger than .05, so you do not reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. With a <em>p</em> of .0496, which looks exactly the same when rounded, you <em>do</em> reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. In an exam you don’t need to worry about that rounding: you won’t be given a rounded <em>p</em> that seems to sit right on .05. You read the <em>p</em> as it stands: if it says .05, it is .05.</p>
+</div>
+</div>
+</div>
+<p>For the poor sleepers with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">p = .02</annotation></semantics></math>, and .02 ≤ .05. You reject the null hypothesis that poor sleepers score 50 on average on the worry questionnaire. With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>53</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 53</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.22</mn></mrow><annotation encoding="application/x-tex">p = .22</annotation></semantics></math>: you do not reject that null hypothesis.</p>
+<p>Always say <em>what</em> you reject. Not <em>“we reject it”</em>, but <em>“we reject the null hypothesis that …”</em>.</p>
+<section id="the-other-route-the-critical-value" class="level2">
+<h2 class="anchored" data-anchor-id="the-other-route-the-critical-value">The other route: the critical value</h2>
+<p>You can also draw a <strong>boundary</strong> in the dot plot beforehand. Which means are <em>so</em> far from 50 that the <em>p</em>-value drops below .05?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="yehnwbrseb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@charset "UTF-8";
+#yehnwbrseb table {
+  font-family: 'Times New Roman', system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#yehnwbrseb thead, #yehnwbrseb tbody, #yehnwbrseb tfoot, #yehnwbrseb tr, #yehnwbrseb td, #yehnwbrseb th {
+  border-style: none;
+}
+
+#yehnwbrseb p {
+  margin: 0;
+  padding: 0;
+}
+
+#yehnwbrseb .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#yehnwbrseb .gt_title {
+  color: #333333;
+  font-size: 100%;
+  font-weight: initial;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#yehnwbrseb .gt_subtitle {
+  color: #333333;
+  font-size: 100%;
+  font-weight: initial;
+  padding-top: 1px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#yehnwbrseb .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#yehnwbrseb .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#yehnwbrseb .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#yehnwbrseb .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#yehnwbrseb .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#yehnwbrseb .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#yehnwbrseb .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#yehnwbrseb .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #000000;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#yehnwbrseb .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#yehnwbrseb .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#yehnwbrseb .gt_row {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: none;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#yehnwbrseb .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#yehnwbrseb .gt_row_group_first td {
+  border-top-width: 1px;
+}
+
+#yehnwbrseb .gt_row_group_first th {
+  border-top-width: 1px;
+}
+
+#yehnwbrseb .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#yehnwbrseb .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#yehnwbrseb .gt_table_body {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+}
+
+#yehnwbrseb .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yehnwbrseb .gt_sourcenote {
+  font-size: 85%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yehnwbrseb .gt_left {
+  text-align: left;
+}
+
+#yehnwbrseb .gt_center {
+  text-align: center;
+}
+
+#yehnwbrseb .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#yehnwbrseb .gt_font_normal {
+  font-weight: normal;
+}
+
+#yehnwbrseb .gt_font_bold {
+  font-weight: bold;
+}
+
+#yehnwbrseb .gt_font_italic {
+  font-style: italic;
+}
+
+#yehnwbrseb .gt_super {
+  font-size: 65%;
+}
+
+#yehnwbrseb .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#yehnwbrseb .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#yehnwbrseb .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#yehnwbrseb .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#yehnwbrseb .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#yehnwbrseb .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#yehnwbrseb .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#yehnwbrseb .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yehnwbrseb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+
+/* Container krimpt tot tabel-inhoud — voorkomt dat een lange Note. de
+       tabel breed uitrekt (was visueel slecht leesbaar). Note wrapt dan
+       binnen de natuurlijke tabel-breedte. NB: GEEN width op .gt_table
+       zelf — gt zet daar inline-style 'width:Npx' op via tab_options(),
+       die mogen we niet overrulen anders verliest de title-cell met
+       colspan=ncol zijn volle breedte. */
+.gt_table_container {
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+/* Titel en ondertitel beide italic — elk op eigen regel boven dikke lijn */
+.gt_heading {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* NB: GEEN display: block — dat haalt de cel uit de table-layout
+       waardoor colspan=ncol niet meer werkt en titel krimpt naar
+       eerste-kolom-breedte. Laat het default table-cell-gedrag staan.
+       Cel zelf is non-italic; italic ontstaat alleen waar <em>…</em>
+       staat (via markdown `*...*` of expliciete <em>-tags). Dat maakt
+       de table_number-modus mogelijk: 'Table 1' blijft non-italic, de
+       beschrijvende titel daaronder is wel italic. */
+.gt_title {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 4px !important;
+  padding-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+
+.gt_title em {
+  font-style: italic !important;
+}
+
+.gt_title strong {
+  font-weight: bold !important;
+}
+
+.gt_subtitle {
+  text-align: left !important;
+  font-size: 1em !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  white-space: normal !important;
+  padding-top: 1px !important;
+  padding-bottom: 4px !important;
+  border-top: none !important;
+}
+
+.gt_subtitle em {
+  font-style: italic !important;
+}
+
+/* Note. links uitgelijnd; wrapt binnen tabel-breedte i.p.v. deze
+       uit te rekken. APA 7 §7.14: tabel-notes double-spaced. */
+.gt_sourcenotes, .gt_sourcenote {
+  text-align: left !important;
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 2 !important;
+  padding-top: 6px !important;
+}
+
+/* Tabular figures voor gelijke cijferbreedte */
+.gt_row {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky kolom-header — bij scrollen blijft de header bovenaan zichtbaar.
+       Plus white-space: nowrap zodat headers nooit op streepjes/spaties
+       wrappen ('BC-SMD' niet als 'BC-/SMD'). auto_width_apa() rekent
+       met ruimere char-breedte voor headers, zodat de kolom breed genoeg is. */
+.gt_col_heading {
+  position: sticky !important;
+  top: 0 !important;
+  background-color: #FFFFFF !important;
+  z-index: 2;
+  white-space: nowrap !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border"><em>How Far From 50 Does a Mean Have to Lie to Be Significant?</em></td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="afstand" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">distance from 50</th>
+<th id="waarden" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">means that far out</th>
+<th id="p" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><em>p</em></th>
+<th id="beslissing" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">decision at α = .05</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="afstand">3</td>
+<td class="gt_row gt_left" headers="waarden">47 or lower, 53 or higher</td>
+<td class="gt_row gt_right" headers="p">.22</td>
+<td class="gt_row gt_left" headers="beslissing">do not reject</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="afstand">4</td>
+<td class="gt_row gt_left" headers="waarden">46 or lower, 54 or higher</td>
+<td class="gt_row gt_right" headers="p">.08</td>
+<td class="gt_row gt_left" headers="beslissing">do not reject</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="afstand">5</td>
+<td class="gt_row gt_left" headers="waarden">45 or lower, 55 or higher</td>
+<td class="gt_row gt_right" headers="p">.02</td>
+<td class="gt_row gt_left" headers="beslissing">reject</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>From a distance of 5 on, <em>p</em> drops below .05. So the boundaries are 45 and 55: those are the <strong>critical values</strong>. Everything <em>on</em> or beyond those boundaries is the <strong>rejection region</strong> — so 55 itself belongs to it. If your <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> falls in that region, you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vb-grens" class="quarto-float quarto-figure quarto-figure-center anchored" alt="This is the same dot plot again, with all the squares dark and two orange dashed vertical lines, one at 45 and one at 55; each line runs through the stack on its value.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vb-grens-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-vb-grens-1.png" class="img-fluid figure-img" alt="This is the same dot plot again, with all the squares dark and two orange dashed vertical lines, one at 45 and one at 55; each line runs through the stack on its value." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vb-grens-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The critical values 45 and 55 (dashed lines). The rejection region is everything on or beyond those lines.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>It’s like a fever. From 38 degrees on, you have a fever; that 38 is a critical value, agreed on <em>before</em> anyone put the thermometer in. The lines themselves are the critical values; everything <em>on</em> and beyond the lines is the rejection region. In an exam, those two are a favourite mix-up.</p>
+<p>Two routes, the same decision:</p>
+<ul>
+<li><strong>the <em>p</em>-value route</strong> — count both sides, and set that <em>p</em> next to α = .05;</li>
+<li><strong>the critical-value route</strong> — draw the boundaries beforehand, and see whether <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> lies on or beyond a boundary.</li>
+</ul>
+<p>They always come out the same. What goes wrong is switching halfway: setting a <em>p</em> from only one side next to .05, for example. Pick one route per exercise and see it through.</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — why the boundaries shift a little in week 2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — why the boundaries shift a little in week 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The means in the dot plot are rounded to whole numbers. So “53 or higher” counts everything from 52.5 up. That is why counting dots gives a rough <em>p</em>, and rough boundaries.</p>
+<p>In week 2 you work out the same example exactly, without rounding. Then the <em>p</em> at 53 is not .22 but .13, and the boundaries are not at 45 and 55 but at 46.08 and 53.92. You can look up the <em>p</em> at 53 yourself, at <em>z</em> = 1.50 in <a href="https://countcamp.org/oefenboeken/ts/08_tabellen/08_tabel_a.html" hreflang="nl">table A</a> (at the back of the Dutch edition, in Dutch), or have R calculate it; both give .13. At a mean of exactly 54, the decision even flips: counting says .08, calculating says .046.</p>
+<p>That is not a fault of the dots. That is how a picture of a hundred rounded numbers works: it shows the shape, not the third decimal.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="two-ways-to-be-wrong" class="level1">
+<h1>Two ways to be wrong</h1>
+<p>You decide without ever knowing how things really are. So you can be wrong, in two ways.</p>
+<table class="caption-top table">
+<caption>Four possible outcomes of one test</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is actually true</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is actually not true</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math></td>
+<td><strong>Type I error</strong>: false alarm (probability α)</td>
+<td>correct</td>
+</tr>
+<tr class="even">
+<td>you do not reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math></td>
+<td>correct</td>
+<td><strong>Type II error</strong>: missed (probability β)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>A <strong>Type I error</strong> is a false positive: you shout <em>“difference!”</em> and there is nothing there. You set the probability of that yourself, with α: it is at most .05. In the dot plot of the poor sleepers it is even just .02: that many dots (2 of the 100) lie on or beyond the boundaries. With the boundaries one step closer in, at 46 and 54, it would already have been .08: more than α, so the boundaries cannot lie there.</li>
+<li>A <strong>Type II error</strong> is a false negative: there <em>is</em> a difference, but your test doesn’t see it.</li>
+</ul>
+<p>How big that second probability is, and how you make it smaller, is for week 5 (<em>Effect sizes and power</em>).</p>
+</section>
+<section id="not-significant-is-not-the-same-as-equal" class="level1">
+<h1>Not significant is not the same as equal</h1>
+<p>With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>53</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 53</annotation></semantics></math> you did not reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. Does that mean that poor sleepers score exactly 50 on average? <strong>No.</strong></p>
+<p>You may say only two things: <em>“reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>”</em> or <em>“do not reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>”</em>. Never <em>“accept <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>”</em>, and never <em>“retain <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>”</em> either. Some books do write <em>retain</em>, meaning only that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> was not rejected. You may think it to yourself for a moment, but you never say it or write it. Not rejecting means: the evidence is not strong enough. It does not mean that there is nothing. The difference may well be there, just too small to see with this sample.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The classic trap">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The classic trap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“There was no significant difference in X between group A and group B, so the groups are the same.”</p>
+<p>Absence of evidence is not evidence of absence. With a small sample you miss even a big difference.</p>
+</div>
+</div>
+<p>The confidence interval shows which values of μ your data still <em>do</em> allow; that comes in week 3 (<em>Hypothesis tests for two means and confidence intervals</em>). And significant is not the same as <em>large</em> or <em>important</em> either. A difference that is large or important is called <strong>practically significant</strong>; that comes in week 5.</p>
+</section>
+<section id="the-six-step-plan" class="level1">
+<h1>The six-step plan</h1>
+<p>Every test in this practice book goes through the same six steps. This week you fill them in with dots; from week 2 on, with formulas.</p>
+<ol type="1">
+<li><strong>Hypotheses.</strong> Write down <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>, about μ. Agree on α.</li>
+<li><strong>Sampling distribution.</strong> What do the results look like if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true?</li>
+<li><strong>Test statistic.</strong> Which number from your sample do you set against it? This week, that is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> itself.</li>
+<li><strong><em>p</em>-value.</strong> How extreme is your result? Compare <em>p</em> with α.</li>
+<li><strong>Statistical conclusion.</strong> Reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> or do not reject it.</li>
+<li><strong>Conclusion in context.</strong> Answer the research question, in plain words.</li>
+</ol>
+<p>For the poor sleepers with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>:</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 50; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 50; α = .05.</li>
+<li>The dot plot in <a href="#fig-vb" class="quarto-xref">Figure&nbsp;2</a>: a hundred means under <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>55</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 55</annotation></semantics></math>.</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">p = .02</annotation></semantics></math>, and that is ≤ .05.</li>
+<li>Reject the null hypothesis that the mean worry score of poor sleepers is 50.</li>
+<li>On average, poor sleepers do not worry the same amount as the general population: they worry <em>more</em>, in this sample.</li>
+</ol>
+<p>Which test you choose in steps 2 and 3 depends on your question: one mean, two, or categories. That overview comes at the end: week 7 (<em>Choosing a test, and an overview</em>). And when you are actually allowed to use that smooth bell in step 2: week 6 (<em>Assumptions and alternative tests</em>).</p>
+</section>
+<section id="in-r-choosing-rows" class="level1">
+<h1>In R: choosing rows</h1>
+<p>This week you do one thing in R: take the rows you need out of a dataset. The practice dataset <code>slaapstudie</code> (Dutch for <em>sleep study</em>) has 30 first-year students who sleep badly. Half of them took part in sleep training, the other half didn’t (the control group). For everyone, the table holds their age and a worry score before and after.</p>
+<p>Download <a href="../data/slaapstudie.RData">slaapstudie.RData</a> and put it in your project folder. (No project yet? In RStudio: <em>File &gt; New Project…</em>, then <em>New Directory &gt; New Project</em>. The folder you choose there is your project folder.) Then:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the data ----</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># load() puts the object slaapstudie in your Environment</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the first six rows</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id    groep leeftijd piekeren_voor piekeren_na
+1  1 training       19            54          51
+2  2 controle       24            49          45
+3  3 training       19            48          47
+4  4 training       26            54          55
+5  5 controle       34            61          58
+6  6 controle       21            54          56</code></pre>
+</div>
+</div>
+<p>The column names are Dutch, like the dataset: <code>groep</code> is the group (<code>training</code>, or <code>controle</code> for the control group), <code>leeftijd</code> is age, and <code>piekeren_voor</code> and <code>piekeren_na</code> are the worry scores before and after the training.</p>
+<p>A data frame has rows and columns. You need three things:</p>
+<ul>
+<li><code>data[rows, columns]</code> picks rows and columns; leave one side empty and you get all of them;</li>
+<li><code>data$name</code> takes one column, by its name;</li>
+<li><code>==</code> asks <em>is this equal to?</em>, and gives <code>TRUE</code> or <code>FALSE</code> for each row.</li>
+</ul>
+<p>In the code below, <code>kies</code> is Dutch for <em>choose</em>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Choosing rows on a condition ----</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># which rows belong to the control group? TRUE or FALSE per row</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>kies <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the row numbers where it is TRUE</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(kies)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  2  5  6 10 11 13 14 15 18 19 21 23 26 28 30</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># only those rows, all columns</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> slaapstudie[kies, ]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># how many people is that?</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(controle)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the youngest and the oldest</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(controle<span class="sc">$</span>leeftijd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18 34</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the mean age in the control group</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(controle<span class="sc">$</span>leeftijd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.33333</code></pre>
+</div>
+</div>
+<p>The control group has 15 people, aged 18 to 34, with a mean age of 22.33.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(controle<span class="sc">$</span>leeftijd, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"age"</span>, <span class="at">ylab =</span> <span class="st">"count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-hist" class="quarto-float quarto-figure quarto-figure-center anchored" alt="This histogram shows the ages in the control group, in bins of 5 years from 15 to 35. Most people are in the bins up to 25; above that there are 2 more.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-hist-1.png" class="img-fluid figure-img" alt="This histogram shows the ages in the control group, in bins of 5 years from 15 to 35. Most people are in the bins up to 25; above that there are 2 more." width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Age in the control group of the sleep study.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — the same with dplyr">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — the same with dplyr
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filter() picks rows, pull() takes one column out</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>slaapstudie <span class="sc">|&gt;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(groep <span class="sc">==</span> <span class="st">"controle"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(leeftijd) <span class="sc">|&gt;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.33333</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="a-report-from-your-script" class="level2">
+<h2 class="anchored" data-anchor-id="a-report-from-your-script">A report from your script</h2>
+<p>With one command you turn a script into a report: your code, with the output and the figures underneath, in one HTML file. It looks like the R part above. In RStudio: <em>File &gt; Compile Report…</em> (or Ctrl+Shift+K, on a Mac Cmd+Shift+K), and choose HTML. The report appears next to your script, with the same name.</p>
+<p>Compile Report runs your whole script again, from top to bottom, and starts with an empty Environment. If something is in your Environment only because you typed it in the console, the report doesn’t know about it: it only knows what is in your script. If it doesn’t work, check four things:</p>
+<ul>
+<li>are your script and your data in the same project folder?</li>
+<li>are <code>library()</code> and <code>load()</code> at the top of your script, before the lines that need them?</li>
+<li>is there a <code>View()</code> or <code>install.packages()</code> in it? Take them out: they belong in the console.</li>
+<li>does your script itself stop with an error somewhere? Run it from top to bottom first (<em>Code &gt; Run Region &gt; Run All</em>); where it stops there, the report stops too.</li>
+</ul>
+</section>
+</section>
+<section id="practice" class="level1">
+<h1>Practice</h1>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.1 — Concepts">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.1 — Concepts
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>Which symbol goes with the population mean, and which with the sample mean?</li>
+<li>What is the difference between the population distribution, the sample distribution and the sampling distribution?</li>
+<li>What is the difference between <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>?</li>
+<li>Give the definition of the <em>p</em>-value. Name all its parts.</li>
+<li>What is the significance level α?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 1.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 1.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Population: μ. Sample: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>.</p></li>
+<li><p>The population distribution: the scores of everyone in the population. The sample distribution: the scores of the people in your one sample. The sampling distribution: the distribution of a statistic (such as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>) over all possible samples of the same size from the same population.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says that nothing is going on in the population (no difference, for example μ = 50) and contains the equals sign. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> says that something <em>is</em> going on (μ ≠ 50). Together they cover every possibility.</p></li>
+<li><p>The probability of a result (a test statistic) that is at least as extreme as the result you found, if the null hypothesis is true. Three parts: a probability; this or more extreme, with two-tailed on both sides; given <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</p></li>
+<li><p>The boundary you agree on beforehand: if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mi mathvariant="normal">α</mi></mrow><annotation encoding="application/x-tex">p \leq \alpha</annotation></semantics></math>, you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. It is also the probability of a Type I error that you are willing to take. Here α = .05.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.2 — Can you test with this?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.2 — Can you test with this?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For each pair, say whether you can do a hypothesis test with it. If not: why not?</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 12</annotation></semantics></math> against <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>≠</mo><mn>12</mn></mrow><annotation encoding="application/x-tex">\bar{x} \neq 12</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>3.5</mn></mrow><annotation encoding="application/x-tex">\mu = 3.5</annotation></semantics></math> against <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>3.5</mn></mrow><annotation encoding="application/x-tex">\mu \neq 3.5</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\mu \neq 20</annotation></semantics></math> against <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">\mu = 20</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math> against <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>110</mn></mrow><annotation encoding="application/x-tex">\mu = 110</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">μ</mi><mn>1</mn></msub><mo>=</mo><msub><mi mathvariant="normal">μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_1 = \mu_2</annotation></semantics></math> against <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">μ</mi><mn>1</mn></msub><mo>≠</mo><msub><mi mathvariant="normal">μ</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\mu_1 \neq \mu_2</annotation></semantics></math></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 1.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 1.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>No.</strong> This is about <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math>, and you already know that number. Hypotheses are about the population.</li>
+<li><strong>Yes.</strong> About μ, the equals sign in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, and together they cover everything.</li>
+<li><strong>No.</strong> The wrong way round: the equals sign belongs in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</li>
+<li><strong>No.</strong> Together they don’t cover everything: what if μ = 105? <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> has to be everything that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is not.</li>
+<li><strong>Yes.</strong> Two population means, equal against not equal. You test a pair like that in week 3.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.3 — What does p = .004 say?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.3 — What does <em>p</em> = .004 say?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Researchers look at whether the mean reaction time of people who have just stayed up all night differs from 250 milliseconds, the mean for well-rested people (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 250). They find <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>262</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 262</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.004</mn></mrow><annotation encoding="application/x-tex">p = .004</annotation></semantics></math>.</p>
+<p>Which statements are correct? More than one can be right.</p>
+<ol type="1">
+<li>There is strong evidence that μ = 250.</li>
+<li>There is evidence that μ ≠ 250.</li>
+<li>The probability that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true is .004.</li>
+<li>If μ = 250, then a sample mean at least as far from 250 as 262 is very unlikely.</li>
+<li>So the difference in reaction time is large and important.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 1.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 1.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Correct: 2 and 4.</strong></p>
+<ol type="1">
+<li>Wrong. A small <em>p</em> is evidence <em>against</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>, not for it.</li>
+<li>Correct. You reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> (.004 ≤ .05).</li>
+<li>Wrong. This is the reversal: <em>p</em> is the probability of data like these <em>if</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true, not the probability that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true.</li>
+<li>Correct. This is exactly the definition.</li>
+<li>Wrong. Significant says <em>whether</em> there is a difference, not how large or important it is.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.4 — A convenient sample">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.4 — A convenient sample
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You want to know whether first-year students sleep a different number of hours, on average, from adults in general, who sleep 7.2 hours a night on average. You ask the twelve students who are already in the library at nine in the morning. On average, they sleep 6.8 hours.</p>
+<ol type="a">
+<li>Write down <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>, in terms of μ.</li>
+<li>Is this a good sample for testing <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>?</li>
+<li>Do you think the difference is significant? What does that depend on?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 1.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 1.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>The hypotheses:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 7.2 — first-year students sleep the same number of hours as adults, on average<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 7.2 — first-year students sleep a different number of hours, on average</p>
+</div></li>
+<li><p>No.&nbsp;The sample was not drawn at random: anyone who is already in the library at nine has probably got up early. A group like that is not like all first-year students, and twelve is not many either.</p></li>
+<li><p>You don’t know yet. It depends on:</p>
+<ul>
+<li>how big the difference is (here 0.4 hours);</li>
+<li>how much sleep varies between students (the spread);</li>
+<li>how big the sample is.</li>
+</ul>
+<p>How those three together decide the test, you work out in week 2.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.5 — Counting dots">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.5 — Counting dots
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A researcher thinks that children who play a lot of video games score differently on a working memory test from children in general. In general, children score 30 on that test, on average.</p>
+<ol type="a">
+<li>Write down <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>, in terms of μ.</li>
+</ol>
+<p>Below are the means of 100 imaginary samples of 16 children, drawn from a population in which <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true. Each mean is rounded to a whole number.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-oef" class="quarto-float quarto-figure quarto-figure-center anchored" alt="This dot plot shows open squares above the numbers 25 to 35. The tallest stacks are above 28, 29 and 30; to the right of 30 the stacks slope down more gradually than on the left.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-oef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-oef-1.png" class="img-fluid figure-img" alt="This dot plot shows open squares above the numbers 25 to 35. The tallest stacks are above 28, 29 and 30; to the right of 30 the stacks slope down more gradually than on the left." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-oef-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: A hundred means of samples of 16 children, if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true (μ = 30). Each square is the mean of one sample.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ol start="2" type="a">
+<li>What does one dot represent? Is this a population distribution, a sample distribution or a sampling distribution?</li>
+<li>In the real sample of 16 children who game a lot, the mean you find is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 35</annotation></semantics></math>. In this figure, what is the probability of a mean of 35 or higher?</li>
+<li>What is the <em>p</em>-value at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 35</annotation></semantics></math>? (Two-tailed: this or a more extreme value.)</li>
+<li>Do you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>35</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 35</annotation></semantics></math>? What does that mean?</li>
+<li>Do c, d and e again for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 33</annotation></semantics></math>.</li>
+<li>From which means on do you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>? What are those boundaries called?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Short answer 1.5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Short answer 1.5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 30; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 30.</li>
+<li>The mean of one sample of 16 children; a sampling distribution.</li>
+<li>.01.</li>
+<li><em>p</em> = .02.</li>
+<li>Yes.</li>
+<li>.11; <em>p</em> = .17; no.</li>
+<li>At 25 or lower and at 35 or higher: the critical values.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Full worked answer 1.5 — step by step">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Full worked answer 1.5 — step by step
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>The hypotheses:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: μ = 30 — children who game a lot score the same as all children, on average<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: μ ≠ 30 — children who game a lot score differently, on average</p>
+</div></li>
+<li><p>One dot is the mean of one imaginary sample of 16 children, from a population in which μ = 30. So not the score of one child. The figure is a <strong>sampling distribution</strong>: the distribution of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> over many samples.</p></li>
+<li><p>Count the dots at 35 and higher: 1 dot. The probability is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>1</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.01</mn></mrow><annotation encoding="application/x-tex">\dfrac{1}{100} = .01</annotation></semantics></math>. Watch out: this is only one side.</p></li>
+<li><p>35 is 5 above 30. Just as far on the other side is 25. Count both sides:</p>
+<ul>
+<li>35 or higher: 1 dot;</li>
+<li>25 or lower: 1 dot.</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>1</mn><mo>+</mo><mn>1</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">
+p = \dfrac{1 + 1}{100} = .02
+</annotation></semantics></math></p></li>
+<li><p>Yes: .02 ≤ .05. You reject the null hypothesis that children who game a lot score 30 on the working memory test, on average. If that mean really were 30, a result this far from 30 would turn up in only 2 of the 100 samples.</p></li>
+<li><p>At <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>33</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 33</annotation></semantics></math>:</p>
+<ul>
+<li>c: 33 or higher: 11 dots, so .11;</li>
+<li>d: 33 is 3 above 30, the other side is 27. 27 or lower: that makes 6. So <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>11</mn><mo>+</mo><mn>6</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.17</mn></mrow><annotation encoding="application/x-tex">p = \dfrac{11 + 6}{100} = .17</annotation></semantics></math>;</li>
+<li>e: .17 &gt; .05, so you do not reject the null hypothesis. A mean like that simply turns up when there is no difference. That does <em>not</em> mean that children who game a lot score exactly 30 on average.</li>
+</ul>
+<p>Do you see that the two sides do not hold the same number of dots here? On the right you count 11, on the left 6. That is chance: a hundred drawn samples is a lot, but not infinitely many, and then the hill is rarely exactly symmetrical. That is why you really count both sides. One side times two would have given .22 here, and that is wrong.</p></li>
+<li><p>Look for the smallest distance from 30 at which <em>p</em> ≤ .05.</p>
+<ul>
+<li>Distance 5: 25 or lower is 1 dot, 35 or higher is 1 dot. Together 2, so <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.02</mn></mrow><annotation encoding="application/x-tex">p = .02</annotation></semantics></math>. Small enough.</li>
+<li>Distance 4: 26 or lower is 3 dots, and 34 or higher is 5 dots; together 8, so <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.08</mn></mrow><annotation encoding="application/x-tex">p = .08</annotation></semantics></math>. Too big.</li>
+</ul>
+<p>So you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> at a mean of 25 or lower and at 35 or higher. Those two boundaries are called the <strong>critical values</strong>; everything <em>on</em> or beyond those boundaries is the rejection region.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.6 — In R">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.6 — In R
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the dataset <code>slaapstudie</code>.</p>
+<ol type="a">
+<li>Load the file <code>slaapstudie.RData</code> and look at the first rows. Which variables do you see?</li>
+<li>Which row numbers belong to people older than 25? Use <code>which()</code>.</li>
+<li>Make a histogram of age in the control group.</li>
+<li>What is the mean age in the control group?</li>
+<li>What is the mean worry score <em>after</em> the training, in the training group?</li>
+<li>Turn your script into an HTML report.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 1.6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 1.6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. load the data ----</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. have a look ----</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  id    groep leeftijd piekeren_voor piekeren_na
+1  1 training       19            54          51
+2  2 controle       24            49          45
+3  3 training       19            48          47
+4  4 training       26            54          55
+5  5 controle       34            61          58
+6  6 controle       21            54          56</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## b. older than 25 ----</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(slaapstudie<span class="sc">$</span>leeftijd <span class="sc">&gt;</span> <span class="dv">25</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  4  5 23 29</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## c. the control group, in two steps as above ----</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>kies <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> slaapstudie[kies, ]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(controle<span class="sc">$</span>leeftijd, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"age"</span>, <span class="at">ylab =</span> <span class="st">"count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-hist-antwoord" class="quarto-float quarto-figure quarto-figure-center anchored" alt="This histogram shows the ages in the control group, in bins of 5 years from 15 to 35. Most people are in the bins up to 25; above that there are 2 more.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hist-antwoord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01_kapstok_files/figure-html/fig-hist-antwoord-1.png" class="img-fluid figure-img" alt="This histogram shows the ages in the control group, in bins of 5 years from 15 to 35. Most people are in the bins up to 25; above that there are 2 more." width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hist-antwoord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Age in the control group of the sleep study (answer 1.6c).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## d. the mean age in the control group ----</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(controle<span class="sc">$</span>leeftijd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.33333</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## e. the training group, after ----</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>kies <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> slaapstudie[kies, ]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(training<span class="sc">$</span>piekeren_na)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 51.26667</code></pre>
+</div>
+</div>
+<ol type="a">
+<li><p>Five variables: <code>id</code>, <code>groep</code>, <code>leeftijd</code>, <code>piekeren_voor</code> and <code>piekeren_na</code>.</p></li>
+<li><p>Rows 4, 5, 23 and 29.</p></li>
+</ol>
+<ol start="3" type="a">
+<li><p>See the histogram above: most people in the control group are in the bins up to 25, and only two are older. The data themselves give the exact ages: from 18 to 24, and 29 and 34 above that.</p></li>
+<li><p>22.33 years.</p></li>
+<li><p>51.27.</p></li>
+<li><p><em>File &gt; Compile Report…</em>, and choose HTML. Your project folder then has an HTML file with the same name as your script. If you get an error, go through the four questions under <em>A report from your script</em>, starting with the first: is <code>slaapstudie.RData</code> in the project folder?</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 1.7 — No significant difference">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1.7 — No significant difference
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>An article says: “there was no significant difference in sleep duration between students with and without a part-time job (<em>p</em> = .41).” May you conclude that students with and without a part-time job sleep equally long in the population? Explain.</li>
+<li>Explain why you may say <em>“we do not reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>”</em>, but not <em>“we accept <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>”</em>.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 1.7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 1.7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>No.&nbsp;<em>p</em> = .41 means that a difference like this one simply turns up when there is no difference in the population. It does not mean that there is no difference. The difference may be there and be too small for this sample to see it.</p></li>
+<li><p>A test can only gather evidence <em>against</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. If that evidence is too weak, you still don’t know whether <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is right; you just don’t have enough to rule it out. <em>“Accepting”</em> would say that you have shown there is no difference, and you haven’t.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="exam-block" class="level1">
+<h1>Exam block</h1>
+<p>This is how you might meet it in an exam: multiple choice with four options, a number to fill in, or yes or no. Questions 1 to 4 are about the figure in exercise 1.5.</p>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 1 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 1 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do you see in the figure in exercise 1.5?</p>
+<ol type="A">
+<li>the population distribution of the working memory scores</li>
+<li>the sample distribution of the 16 children who game a lot</li>
+<li>a sampling distribution</li>
+<li>the scores of 100 children</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> Each dot is the mean of a sample, and the figure shows how those means are distributed. D is the trap: they are 100 <em>samples</em>, not 100 children.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 2 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 2 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What does one dot in that figure represent?</p>
+<ol type="A">
+<li>the score of one child who games a lot</li>
+<li>the mean of the 16 children who game a lot, from the study</li>
+<li>the mean of a sample of 16 children from a population with μ = 30</li>
+<li>the score of one child from a population with μ = 30</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> The dots were made in the world of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. B is the trap: the mean from the study is just one number, and that is the very number you set <em>against</em> this figure.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 3 — fill in">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 3 — fill in
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A sample of 16 children who game a lot has a mean of 25. What is the two-tailed <em>p</em>-value according to the figure? Give two decimals.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>.02.</strong> 25 is 5 below 30; the other side is 35. 25 or lower: 1 dot; 35 or higher: 1 dot. Together 2 of the 100.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 4 — yes or no">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 4 — yes or no
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At that mean of 25, do you reject the null hypothesis (α = .05)?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Yes.</strong> .02 ≤ .05: you reject the null hypothesis that children who game a lot score 30 on average. Note: this mean lies <em>below</em> 30. Because you test two-tailed, that side counts just as much.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 5 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 5 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A researcher finds <em>p</em> = .012. Which statement is correct?</p>
+<ol type="A">
+<li>The probability that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true is .012.</li>
+<li>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true, the probability of a result at least as extreme is .012.</li>
+<li>The probability that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math> is true is .988.</li>
+<li>The probability that the result is due to chance is .012.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> A and C are the reversal.</p>
+<p>D is the trickiest, because it sounds like B. Watch the small word:</p>
+<ul>
+<li>B: the probability <strong>of</strong> such a result, <strong>if</strong> it is pure chance (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> true);</li>
+<li>D: the probability <strong>that</strong> it is chance, now that you have this result.</li>
+</ul>
+<p>In other words, D is the probability that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true — and that is A again. Back to the bakery: the probability of a bicycle if it is a bakery, against the probability that it is a bakery now that you have a bicycle.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 6 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 6 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The researcher from exercise 1.5 concludes that children who game a lot score differently on the working memory test, when in reality there is no difference. What has the researcher made?</p>
+<ol type="A">
+<li>a Type I error</li>
+<li>a Type II error</li>
+<li>a correct decision</li>
+<li>you can’t tell without the <em>p</em>-value</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>A.</strong> The researcher rejected <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> while <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> was true: a false alarm.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 7 — yes or no">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 7 — yes or no
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“There was no significant difference in concentration between the morning group and the evening group (<em>p</em> = .27). So the two groups concentrate equally well.” Is the second sentence right?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>No.</strong> Not rejecting is not the same as equal. All you may say is that you could not show a difference.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 8 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 8 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A researcher wants to know whether the mean IQ score of a group differs from 100. Which pair of hypotheses goes with that?</p>
+<ol type="A">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\bar{x} = 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>x</mi><mo accent="true">‾</mo></mover><mo>≠</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\bar{x} \neq 100</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu \neq 100</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>≠</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu \neq 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu = 100</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">μ</mi><mo>&gt;</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">\mu &gt; 100</annotation></semantics></math></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 8">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> A is about the sample, C is the wrong way round, and D only looks at one side, while the question says <em>“differs”</em>.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 9 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 9 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What do the two dashed lines in <a href="#fig-vb-grens" class="quarto-xref">Figure&nbsp;4</a> (with the worry example) represent?</p>
+<ol type="A">
+<li>the <em>p</em>-value</li>
+<li>the rejection region</li>
+<li>the critical values</li>
+<li>the significance level α</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 9">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 9
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> The lines are the boundaries themselves. The rejection region (B) is what lies on and beyond them.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-coat-rack-at-a-glance" class="level1">
+<h1>The coat rack at a glance</h1>
+<table class="caption-top table">
+<caption>What this week hangs up, and where it comes back</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>hook</th>
+<th>this week</th>
+<th>comes back in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>population and sample</td>
+<td>μ you estimate, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>x</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{x}</annotation></semantics></math> you calculate</td>
+<td>every week</td>
+</tr>
+<tr class="even">
+<td>the sampling distribution</td>
+<td>a hundred cards, counting dots</td>
+<td>why a bell: week 2</td>
+</tr>
+<tr class="odd">
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>, two-tailed</td>
+<td>nothing going on, or something; ≠ is two sides</td>
+<td>every week; tests that pick no side in week 4</td>
+</tr>
+<tr class="even">
+<td>the <em>p</em>-value</td>
+<td>the probability of this or more extreme, <em>if</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true</td>
+<td>calculating instead of counting: week 2</td>
+</tr>
+<tr class="odd">
+<td>deciding: α, critical value</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p \leq .05</annotation></semantics></math>: reject</td>
+<td>every week</td>
+</tr>
+<tr class="even">
+<td>Type I and Type II errors</td>
+<td>false alarm or missed</td>
+<td>the probability that you miss something: week 5</td>
+</tr>
+<tr class="odd">
+<td>not significant ≠ equal</td>
+<td>not rejecting is not accepting</td>
+<td>week 3 and week 5</td>
+</tr>
+<tr class="even">
+<td>the six-step plan</td>
+<td>six steps, the same every week</td>
+<td>which test when: week 7</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../00_voorkennis_z/00_voorkennis_z.html" class="pagination-link" aria-label="Week 0 · The basics: spread, z-scores and the normal distribution">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Week 0 · The basics: spread, <em>z</em>-scores and the normal distribution</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../02_een_gemiddelde/02_een_gemiddelde.html" class="pagination-link" aria-label="Week 2 · Hypothesis tests for one mean">
+        <span class="nav-page-text">Week 2 · Hypothesis tests for one mean</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Inferential Statistics Practice Book · CountCamp Lab · wisi.nl</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Questions, comments or suggestions? <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
+<!-- countcamp-oefenboek inferential-statistics lab-commit=334da05e86ce6169e98e2dc9e62ccae9cbac7791 geleverd=2026-11-21T19:25:00 -->
