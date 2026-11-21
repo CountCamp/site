@@ -262,6 +262,50 @@ def pas_toe_los(tekst: str, sitepad: str) -> str:
     return t
 
 
+# WEZEN (spoor taalpers, 21-11-2026). `los` liep tot hier alleen de bladzijden UIT de
+# tabel na. Een bladzij die er uit verdween, hield zijn knopje -- naar een tweeling
+# die er niet meer is, of naar een Engelse wachtpagina -- en niemand zag het, behalve
+# en_bouw.py keur 4b, en die draait alleen in publiceer_en.sh. Met een <n>-regel
+# gebeurt het zelfs zonder dat iemand de tabel aanraakt: haal en/book/h1.html weg,
+# en manuscript/h1.html valt uit de tabel met zijn knopje erin (tegendraadse
+# nakijker, gemeten in een kladsite: "2 nagelopen, 0 gat(en)", afloop 0).
+# Daarom ook: elke .html in de repo die een taalstuk draagt, moet in de tabel staan.
+# Alleen wat live kan gaan: mappen die met _ of . beginnen slaat Quarto over (de
+# stukken zelf staan in _tools/taalwissel/). Gemeten 21-11-2026: 471 .html, 0 wezen.
+_MERKEN = {
+    "knopje": '<nav class="taalwissel',
+    "taalbalk": "/* taalbalk:",
+    "hreflang": '<link rel="alternate" hreflang="',
+}
+
+
+def wezen(tabel: list[dict]) -> tuple[int, list[str]]:
+    """(aantal nagelopen .html buiten de tabel, ['<pad>: draagt …'])."""
+    in_tabel = {p[k] for p in tabel for k in ("nl", "en")}
+    n, uit, gezien = 0, [], set()
+    for dp, dirs, fs in os.walk(REPO, followlinks=True):
+        echt = os.path.realpath(dp)
+        if echt in gezien:          # een wegwijzer in een kring
+            dirs[:] = []
+            continue
+        gezien.add(echt)
+        dirs[:] = sorted(d for d in dirs if not d.startswith(("_", ".")))
+        for f in sorted(fs):
+            if not f.endswith(".html"):
+                continue
+            rel = os.path.relpath(os.path.join(dp, f), REPO).replace(os.sep, "/")
+            if rel in in_tabel:
+                continue
+            n += 1
+            with open(os.path.join(dp, f), encoding="utf-8", errors="replace") as h:
+                t = h.read()
+            dragen = [naam for naam, merk in _MERKEN.items() if merk in t]
+            if dragen:
+                uit.append(f"{rel}: draagt {', '.join(dragen)}, maar staat niet in taalparen.tsv — "
+                           f"zijn tweeling is er niet (meer); haal de stukken weg of zet het paar terug")
+    return n, uit
+
+
 def cmd_los(a) -> int:
     # Een tabel die niet te lezen is, is geen gat in een bladzij maar een wachter
     # die niet kon kijken: dan weet niemand welke bladzijden stukken horen te
@@ -306,6 +350,13 @@ def cmd_los(a) -> int:
     print(f"  losse bladzijden: {n} nagelopen, {len(gaten)} gat(en)")
     for g in gaten:
         print("    - " + g)
+    # Ook bij `los` zonder --controleer alleen gemeld, nooit weggehaald: zonder paar
+    # weet niemand of de tabel of de bladzij achterloopt.
+    n_buiten, wees = wezen(tabel)
+    print(f"  buiten de tabel: {n_buiten} .html nagelopen, {len(wees)} met een taalstuk")
+    for w in wees:
+        print("    - " + w)
+    gaten += wees
     if gaten:
         return 1
     if n == 0:

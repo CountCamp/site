@@ -343,10 +343,20 @@ done
 keur     "6c de echte taalstukken van deze repo: laat door" 0 "$ECHT_TAAL"
 getoetst=$((getoetst + 1))
 if grep -qE "losse bladzijden: [1-9][0-9]* nagelopen, 0 gat" "$M/uit"; then
-  echo "  ok      en hij heeft echt gekeken ($(grep -oE '[0-9]+ nagelopen' "$M/uit"))"
+  echo "  ok      en hij heeft echt gekeken ($(grep -oE '[0-9]+ nagelopen' "$M/uit" | head -1))"
 else
   echo "  ZAKT    en zegt niet dat hij bladzijden naliep -- niet gekeken is niet groen"
   sed 's/^/          /' "$M/uit"
+  gezakt=$((gezakt + 1))
+fi
+# Sinds 21-11-2026 ook buiten de tabel (wezen). Hier lopen de bladzijden via
+# wegwijzers; de wachter moet die volgen, anders kijkt hij in deze toets nergens.
+getoetst=$((getoetst + 1))
+if grep -qE "buiten de tabel: [1-9][0-9]* \.html nagelopen, 0 met een taalstuk" "$M/uit"; then
+  echo "  ok      en ook buiten de tabel ($(grep -oE 'buiten de tabel: [0-9]+' "$M/uit"))"
+else
+  echo "  ZAKT    en keek niet buiten de tabel, of vond daar een taalstuk"
+  grep -F "buiten de tabel" "$M/uit" | sed 's/^/          /'
   gezakt=$((gezakt + 1))
 fi
 
@@ -449,6 +459,22 @@ if grep -qF "mist zijn taalknopje" "$M/uit"; then
 else
   echo "  ok      en legt de schuld NIET bij de bladzijden"
 fi
+
+# Een bladzij die uit de tabel viel en zijn knopje hield (tegendraadse nakijker,
+# 21-11-2026). Met een <n>-regel gebeurt dat zonder dat iemand de tabel aanraakt:
+# het Engelse h1 verdwijnt, en daarmee het paar -- het Nederlandse h1 niet.
+WEES_TAAL="$(echte_taal_repo weestaal)"
+printf 'oefenboeken/x/h<n>.html\ten/workbooks/x/h<n>.html\tlos\n' > "$WEES_TAAL/_tools/taalparen.tsv"
+mkdir -p "$WEES_TAAL/oefenboeken/x" "$WEES_TAAL/en/workbooks/x"
+for h in h0 h1; do
+  printf '<html><head><title>%s</title>\n</head>\n<body>\n<p>%s</p></body></html>\n' "$h" "$h" > "$WEES_TAAL/oefenboeken/x/$h.html"
+  cp "$WEES_TAAL/oefenboeken/x/$h.html" "$WEES_TAAL/en/workbooks/x/$h.html"
+done
+python3 "$WEES_TAAL/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true
+keur     "6k vooraf: twee paren uit één <n>-regel, met stukken: laat door" 0 "$WEES_TAAL"
+rm -f "$WEES_TAAL/en/workbooks/x/h1.html"
+keur     "6k het Engelse h1 weg, het Nederlandse h1 houdt zijn knopje: HOUDT TEGEN" 1 "$WEES_TAAL"
+verwacht "  en noemt de wees" "oefenboeken/x/h1.html: draagt knopje"
 
 # De Action (21-11-2026, spoor taalpers): lever.sh levert buiten naar_buiten.sh om,
 # dus de wachter staat ook in publish.yml, de enige poort waar elke route langs
