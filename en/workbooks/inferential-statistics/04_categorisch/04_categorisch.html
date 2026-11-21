@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Week 4 · Probabilities and tests for categorical variables – Inferential Statistics Practice Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../05_effect_power/05_effect_power.html" rel="next">
+<link href="../03_twee_gemiddelden/03_twee_gemiddelden.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../common/styles/countcamp.css">
+<link rel="stylesheet" href="../_common_ts_nl/ts.css">
+  <script data-goatcounter="https://countcamp.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/oefenboeken/ts/04_categorisch/04_categorisch.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/workbooks/inferential-statistics/04_categorisch/04_categorisch.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/oefenboeken/ts/04_categorisch/04_categorisch.html">
+<style>
+/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
+.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
+.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.taalwissel-los [aria-current]{font-weight:600;}
+.taalwissel-los .taalwissel-sep{margin:0 .45em;}
+</style>
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+<nav class="taalwissel taalwissel-los" aria-label="language"><a href="../../../../oefenboeken/ts/04_categorisch/04_categorisch.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">The seven weeks</a></li><li class="breadcrumb-item"><a href="../04_categorisch/04_categorisch.html">Week 4 · Probabilities and tests for categorical variables</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Inferential Statistics Practice Book</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Back to CountCamp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Start</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../00_voorkennis_z/00_voorkennis_z.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 0 · The basics: spread, <em>z</em>-scores and the normal distribution</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">The seven weeks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_kapstok/01_kapstok.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 1 · Sampling distributions and hypothesis testing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_een_gemiddelde/02_een_gemiddelde.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 2 · Hypothesis tests for one mean</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 3 · Hypothesis tests for two means and confidence intervals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../04_categorisch/04_categorisch.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Week 4 · Probabilities and tests for categorical variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../05_effect_power/05_effect_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 5 · Effect sizes and power</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../06_assumpties/06_assumpties.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 6 · Assumptions and alternative tests</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../07_toetskeuze/07_toetskeuze.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Week 7 · Choosing a test, and an overview</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#counting-instead-of-measuring" id="toc-counting-instead-of-measuring" class="nav-link active" data-scroll-target="#counting-instead-of-measuring">Counting instead of measuring</a></li>
+  <li><a href="#probabilities-from-a-contingency-table" id="toc-probabilities-from-a-contingency-table" class="nav-link" data-scroll-target="#probabilities-from-a-contingency-table">Probabilities from a contingency table</a></li>
+  <li><a href="#independent-or-not" id="toc-independent-or-not" class="nav-link" data-scroll-target="#independent-or-not">Independent or not</a>
+  <ul class="collapse">
+  <li><a href="#the-multiplication-rule" id="toc-the-multiplication-rule" class="nav-link" data-scroll-target="#the-multiplication-rule">The multiplication rule</a></li>
+  <li><a href="#in-this-group-or-in-the-population" id="toc-in-this-group-or-in-the-population" class="nav-link" data-scroll-target="#in-this-group-or-in-the-population">In this group, or in the population?</a></li>
+  </ul></li>
+  <li><a href="#what-you-expect-when-nothing-is-going-on" id="toc-what-you-expect-when-nothing-is-going-on" class="nav-link" data-scroll-target="#what-you-expect-when-nothing-is-going-on">What you expect when nothing is going on</a></li>
+  <li><a href="#the-χ²-test-how-far-apart-are-counted-and-expected" id="toc-the-χ²-test-how-far-apart-are-counted-and-expected" class="nav-link" data-scroll-target="#the-χ²-test-how-far-apart-are-counted-and-expected">The χ² test: how far apart are counted and expected?</a></li>
+  <li><a href="#how-strange-is-6.25-counting-dots-again" id="toc-how-strange-is-6.25-counting-dots-again" class="nav-link" data-scroll-target="#how-strange-is-6.25-counting-dots-again">How strange is 6.25? Counting dots again</a></li>
+  <li><a href="#one-tail-and-yet-it-picks-no-side" id="toc-one-tail-and-yet-it-picks-no-side" class="nav-link" data-scroll-target="#one-tail-and-yet-it-picks-no-side">One tail, and yet it picks no side</a>
+  <ul class="collapse">
+  <li><a href="#why-3.84-the-fold" id="toc-why-3.84-the-fold" class="nav-link" data-scroll-target="#why-3.84-the-fold">Why 3.84: the fold</a></li>
+  </ul></li>
+  <li><a href="#the-six-steps" id="toc-the-six-steps" class="nav-link" data-scroll-target="#the-six-steps">The six steps</a></li>
+  <li><a href="#with-or-without-correction" id="toc-with-or-without-correction" class="nav-link" data-scroll-target="#with-or-without-correction">With or without correction</a></li>
+  <li><a href="#what-χ²-doesnt-tell-you" id="toc-what-χ²-doesnt-tell-you" class="nav-link" data-scroll-target="#what-χ²-doesnt-tell-you">What χ² doesn’t tell you</a></li>
+  <li><a href="#in-r-a-contingency-table-and-the-test" id="toc-in-r-a-contingency-table-and-the-test" class="nav-link" data-scroll-target="#in-r-a-contingency-table-and-the-test">In R: a contingency table and the test</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#exam-block" id="toc-exam-block" class="nav-link" data-scroll-target="#exam-block">Exam block</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../01_kapstok/01_kapstok.html">The seven weeks</a></li><li class="breadcrumb-item"><a href="../04_categorisch/04_categorisch.html">Week 4 · Probabilities and tests for categorical variables</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Week 4 · Probabilities and tests for categorical variables</h1>
+<p class="subtitle lead">counting instead of measuring</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="verhaal">
+<p>The moth knew every burrow in the wood where a screen was still glowing at night, and in many of those burrows someone lay tossing and turning.</p>
+<p>“Phone by the bed, bad sleep,” he said, “always together.”</p>
+<p>“Together that often,” said the bat, “it can’t be anything else: it means something.”</p>
+<p>The dormouse turned over, towards the side of the wood where the burrows were dark.</p>
+<p>“And over there,” she asked, “where the phone stays out in the hall: how do they sleep <em>there</em>?”</p>
+<p>The moth didn’t know: he had never looked inside a dark burrow.</p>
+</div>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>What you learn this week</strong></p>
+<ul>
+<li>counting instead of measuring: categorical variables in a contingency table</li>
+<li>three probabilities from one table: marginal, joint and conditional</li>
+<li>when two variables are independent, and the multiplication rule</li>
+<li>the expected counts when nothing is going on</li>
+<li>the χ² test of independence, by hand and in R</li>
+<li>why χ² has one tail and still doesn’t pick a side</li>
+<li>what to do with the correction that R adds without being asked</li>
+</ul>
+</div>
+</div>
+</div>
+<section id="counting-instead-of-measuring" class="level1">
+<h1>Counting instead of measuring</h1>
+<p>So far, every measurement had a number on a scale: a worry score, an age, how long someone sleeps. You can work out a mean of that. But a lot of what you want to know in psychology is a <strong>category</strong>. Do you sleep poorly or well? Is your phone next to your bed at night, or out in the hall? A variable like that is called <strong>categorical</strong> (nominal or ordinal), and it has no mean. What you <em>can</em> do: <strong>count</strong> how often each combination occurs.</p>
+<p>The question is still the one from week 1, in different clothes:</p>
+<blockquote class="blockquote">
+<p>Are two categorical variables related in the <strong>population</strong>, or do you happen to see a pattern in your sample by chance?</p>
+</blockquote>
+<p>For that you need two things this week: a bit of probability theory, and one test, the <strong>χ² test</strong> (<em>chi-square</em>).</p>
+</section>
+<section id="probabilities-from-a-contingency-table" class="level1">
+<h1>Probabilities from a contingency table</h1>
+<p>A researcher asks 100 first-year students two things: where is your phone at night, and how do you usually sleep? Two categorical variables, phone location and sleep, each with two categories. Set them out against each other and you get a <strong>contingency table</strong>:</p>
+<table class="caption-top table">
+<caption>Phone location and sleep for 100 first-year students</caption>
+<thead>
+<tr class="header">
+<th>phone</th>
+<th>sleeps poorly</th>
+<th>sleeps well</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>in the bedroom</td>
+<td>30</td>
+<td>30</td>
+<td>60</td>
+</tr>
+<tr class="even">
+<td>elsewhere</td>
+<td>10</td>
+<td>30</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>40</td>
+<td>60</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>Every probability you take from a table like this is a fraction. Think of a <strong>lucky-dip barrel</strong>. Below the fraction line is the barrel: everyone you draw from. Above the line are the <em>hits</em>: the ones who meet the condition.</p>
+<p><strong>The marginal probability</strong> is about one variable. Draw one student at random from all 100. What is the probability that they sleep poorly?</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">
+P(\text{poor sleep}) = \dfrac{40}{100} = .40
+</annotation></semantics></math></p>
+<p>It is called <em>marginal</em> because you take it from the margin: the edge of the table, where the totals are. In the same way, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) = \dfrac{60}{100} = .60</annotation></semantics></math>.</p>
+<p><strong>The joint probability</strong> is about two things at once. What is the probability that this one student has their phone in the bedroom <strong>and</strong> sleeps poorly? The barrel is still everyone; the hits are the ones who meet both conditions. That is one cell:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom and poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">
+P(\text{bedroom and poor sleep}) = \dfrac{30}{100} = .30
+</annotation></semantics></math></p>
+<p><strong>The conditional probability</strong> changes the barrel. What is the probability of sleeping poorly, <strong>given that</strong> the phone is in the bedroom? Now you only draw from the 60 people with their phone in the bedroom. That is your new barrel, and it goes below the line:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>60</mn></mfrac></mstyle><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">
+P(\text{poor sleep} \mid \text{bedroom}) = \dfrac{30}{60} = .50
+</annotation></semantics></math></p>
+<p>You read the vertical bar <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>∣</mi><annotation encoding="application/x-tex">\mid</annotation></semantics></math> as <em>given that</em>: what comes after it is the condition, and the condition decides the barrel.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The order matters">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The order matters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{bedroom})</annotation></semantics></math> is not the same as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo>∣</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{bedroom} \mid \text{poor sleep})</annotation></semantics></math>. In the second one, the barrel is the 40 poor sleepers, and 30 of them have their phone in the bedroom: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>40</mn></mfrac></mstyle><mo>=</mo><mn>.75</mn></mrow><annotation encoding="application/x-tex">\dfrac{30}{40} = .75</annotation></semantics></math>. A different number, because a different barrel.</p>
+<p>You know this already. The <em>p</em>-value from week 1 is a conditional probability too: the probability of a bike <strong>given that</strong> the shop is a bakery. Not the probability that it is a bakery, given a bike.</p>
+</div>
+</div>
+</section>
+<section id="independent-or-not" class="level1">
+<h1>Independent or not</h1>
+<p>Two variables are <strong>independent</strong> if one tells you nothing about the other. You know where someone’s phone is at night, and that changes nothing about your guess of how they sleep? Then they are independent. Two rules of thumb go with that, and they say the same thing:</p>
+<ol type="1">
+<li><strong>The conditional probabilities are equal in all groups.</strong> The probability of sleeping poorly is just as big with the phone in the bedroom as without.</li>
+<li><strong>The conditional probabilities are equal to the marginal probability.</strong> In each group, the same share sleeps poorly as in the whole table.</li>
+</ol>
+<p>In the table:</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{bedroom}) = .50</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">elsewhere</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>10</mn><mn>40</mn></mfrac></mstyle><mo>=</mo><mn>.25</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{elsewhere}) = \dfrac{10}{40} = .25</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep}) = .40</annotation></semantics></math></li>
+</ul>
+<p>Not equal. So in this group of 100, phone location and sleep are related: people with their phone in the bedroom sleep poorly more often.</p>
+<section id="the-multiplication-rule" class="level2">
+<h2 class="anchored" data-anchor-id="the-multiplication-rule">The multiplication rule</h2>
+<p>When you see <em>and</em>, you quickly think of <em>times</em>. That’s allowed, but only with independence. You also meet this rule as the <strong>multiplicative law for independent events</strong>, or the <strong>product rule</strong> for short:</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Multiplication rule — only for independent variables">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Multiplication rule — only for independent variables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ and } B) = P(A) \times P(B)
+</annotation></semantics></math></p>
+</div>
+</div>
+<p>Try it on the table: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) \times P(\text{poor sleep}) = .60 \times .40 = .24</annotation></semantics></math>. But in the table, the joint probability is .30. The rule gives the wrong number, and that is exactly the sign that the two variables are not independent.</p>
+<p>The rule you may <strong>always</strong> use, the <strong>general multiplicative law</strong>, has a conditional probability in it:</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Multiplication rule — always">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Multiplication rule — always
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ and } B) = P(A) \times P(B \mid A)
+</annotation></semantics></math></p>
+</div>
+</div>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) \times P(\text{poor sleep} \mid \text{bedroom}) = .60 \times .50 = .30</annotation></semantics></math>. That one <em>does</em> work. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are independent, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B \mid A)</annotation></semantics></math> is simply <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math>, and the second rule turns into the first.</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — the addition rule">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — the addition rule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Besides <em>and</em>, there is <em>or</em>. With <em>or</em> you may think: at least one of the two. The phone is in the bedroom, or you sleep poorly, or both.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ or } B) = P(A) + P(B) - P(A \text{ and } B)
+</annotation></semantics></math></p>
+<p>You subtract that last term so that you don’t count the overlap twice. In the table:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom or poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">
+P(\text{bedroom or poor sleep}) = .60 + .40 - .30 = .70
+</annotation></semantics></math></p>
+<p>Count it yourself: 30 + 30 + 10 = 70 people have their phone in the bedroom, sleep poorly, or both. Only the 30 in the bottom-right cell are left out.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="in-this-group-or-in-the-population" class="level2">
+<h2 class="anchored" data-anchor-id="in-this-group-or-in-the-population">In this group, or in the population?</h2>
+<p>Look closely at what you just did. You looked at <strong>these 100 first-year students</strong>, and saw a difference: .50 against .25. For this group, that is a fact. But almost every sample shows <em>some</em> difference, even when the two variables are completely independent in the population. Just as in week 1, where a sample mean almost never came out at exactly 50.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Two questions that look alike">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Two questions that look alike
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><em>“Are the variables dependent <strong>in this group</strong>?”</em> Look only at the probabilities in the table. If the conditional probabilities are not equal, then: dependent, in this group. No test needed. With real data, two probabilities are almost never exactly equal, so here the answer is almost always <em>dependent</em>. That is exactly why it says nothing yet about the population.</li>
+<li><em>“Are they related <strong>in the population</strong>?”</em> or <em>“Is the association significant?”</em> Then the question is whether the difference is bigger than chance can make it. The χ² test decides that.</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="what-you-expect-when-nothing-is-going-on" class="level1">
+<h1>What you expect when nothing is going on</h1>
+<p>Every test calculates from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: pretend nothing is going on, and see how strange your data are then. Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says: phone location and sleep are independent. Which counts should the table have in that case?</p>
+<p>Reason it out first. In the whole group, the proportion of poor sleepers is .40. If the two variables are independent, then in <strong>each</strong> group the proportion of poor sleepers is that same .40. Of the 60 people with their phone in the bedroom, you therefore expect <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.40</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">.40 \times 60 = 24</annotation></semantics></math>.</p>
+<p>That is the multiplication rule for independent variables, times the number of people: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .40 = 24</annotation></semantics></math>. Write the two probabilities as fractions over the grand total <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and one <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> cancels out:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>60</mn><mo>×</mo><mn>40</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">
+100 \times \dfrac{60}{100} \times \dfrac{40}{100}
+= \dfrac{60 \times 40}{100} = 24
+</annotation></semantics></math></p>
+<p>Row total times column total, divided by the grand total. That is the short formula:</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="The expected count in a cell">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The expected count in a cell
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext mathvariant="normal">row total</mtext><mo>×</mo><mtext mathvariant="normal">column total</mtext></mrow><mi>N</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">
+f_\text{e} = \dfrac{\text{row total} \times \text{column total}}{N}
+</annotation></semantics></math></p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><annotation encoding="application/x-tex">f_\text{e}</annotation></semantics></math>: the <strong>expected</strong> count in a cell, <em>if</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><annotation encoding="application/x-tex">f_\text{o}</annotation></semantics></math>: the <strong>observed</strong> count, the one you actually counted</li>
+</ul>
+<p>You also meet them as <em>expected</em> and <em>observed frequency</em>, per cell as <em>cell frequency</em>, or for short as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>E</mi><annotation encoding="application/x-tex">E</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>O</mi><annotation encoding="application/x-tex">O</annotation></semantics></math>. A frequency is just a count.</p>
+</div>
+</div>
+<p>The movement for each cell: look sideways to the row total, down to the column total, multiply, and divide by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>.</p>
+<table class="caption-top table">
+<caption>The expected counts if phone location and sleep are independent</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>sleeps poorly</th>
+<th>sleeps well</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>in the bedroom</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>60</mn><mo>×</mo><mn>40</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">\dfrac{60 \times 40}{100} = 24</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>60</mn><mo>×</mo><mn>60</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">\dfrac{60 \times 60}{100} = 36</annotation></semantics></math></td>
+<td>60</td>
+</tr>
+<tr class="even">
+<td>elsewhere</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>40</mn><mo>×</mo><mn>40</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">\dfrac{40 \times 40}{100} = 16</annotation></semantics></math></td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>40</mn><mo>×</mo><mn>60</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">\dfrac{40 \times 60}{100} = 24</annotation></semantics></math></td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>40</td>
+<td>60</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>Two things to see. The expected counts have <strong>the same totals in the margins</strong> (the <strong>marginal totals</strong>) as the real table; count it yourself. And in a two-by-two table you only need to work out one of them: once the totals are fixed, the other three follow by subtraction (60 − 24 = 36, and so on).</p>
+<p>Those expected counts are the most informative part of the whole test. Put them next to what you counted: 30 poor sleepers with their phone in the bedroom, where you expected 24. That’s where the story is.</p>
+</section>
+<section id="the-χ²-test-how-far-apart-are-counted-and-expected" class="level1">
+<h1>The χ² test: how far apart are counted and expected?</h1>
+<p>You want one number that says how far the whole table is from ‘independent’. Start with the deviation in each cell, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math>:</p>
+<table class="caption-top table">
+<caption>The deviation in each cell</caption>
+<thead>
+<tr class="header">
+<th>cell</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><annotation encoding="application/x-tex">f_\text{o}</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><annotation encoding="application/x-tex">f_\text{e}</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>bedroom, poorly</td>
+<td>30</td>
+<td>24</td>
+<td>+6</td>
+</tr>
+<tr class="even">
+<td>bedroom, well</td>
+<td>30</td>
+<td>36</td>
+<td>−6</td>
+</tr>
+<tr class="odd">
+<td>elsewhere, poorly</td>
+<td>10</td>
+<td>16</td>
+<td>−6</td>
+</tr>
+<tr class="even">
+<td>elsewhere, well</td>
+<td>30</td>
+<td>24</td>
+<td>+6</td>
+</tr>
+</tbody>
+</table>
+<p>Adding them up is no use: the deviations <strong>always</strong> add up to zero, because what one cell has too many, another has too few. So you square them, so that plus and minus no longer cancel each other out. And you divide each square by its own <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><annotation encoding="application/x-tex">f_\text{e}</annotation></semantics></math>. Why? Six off when you expected 16 is more news than six off when you expected 36.</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="The χ2 test statistic">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\chi^2</annotation></semantics></math> test statistic
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mo>∑</mo><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mfrac></mstyle><mspace width="2.0em"></mspace><mi>d</mi><mi>f</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+\chi^2 = \sum \dfrac{(f_\text{o} - f_\text{e})^2}{f_\text{e}}
+\qquad
+df = (r - 1) \times (c - 1)
+</annotation></semantics></math></p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∑</mo><annotation encoding="application/x-tex">\sum</annotation></semantics></math>: add up over <strong>all</strong> cells</li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi></mrow><annotation encoding="application/x-tex">df</annotation></semantics></math>: the degrees of freedom, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> the number of rows and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> the number of columns (the total row and total column don’t count)</li>
+</ul>
+</div>
+</div>
+<p>For the phone and sleep:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>30</mn><mo>−</mo><mn>24</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mn>24</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>30</mn><mo>−</mo><mn>36</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mn>36</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>10</mn><mo>−</mo><mn>16</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mn>16</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>30</mn><mo>−</mo><mn>24</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><mn>24</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>1.50</mn><mo>+</mo><mn>1.00</mn><mo>+</mo><mn>2.25</mn><mo>+</mo><mn>1.50</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>6.25</mn></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+\chi^2 &amp;= \dfrac{(30 - 24)^2}{24}
+        + \dfrac{(30 - 36)^2}{36}
+        + \dfrac{(10 - 16)^2}{16}
+        + \dfrac{(30 - 24)^2}{24} \\[4pt]
+       &amp;= 1.50 + 1.00 + 2.25 + 1.50 \\[4pt]
+       &amp;= 6.25
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Each term is that cell’s <strong>contribution</strong> to χ². The biggest comes from the smallest cell: 2.25, for the poor sleepers without their phone in the bedroom. There you expected 16 and saw only 10.</p>
+<p>And the degrees of freedom: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = (2 - 1) \times (2 - 1) = 1</annotation></semantics></math>. That is the same as what you saw with the expected counts: in a two-by-two table, everything is fixed once you know one cell. Look at the deviations too: in all four cells it is 6, only the sign changes.</p>
+</section>
+<section id="how-strange-is-6.25-counting-dots-again" class="level1">
+<h1>How strange is 6.25? Counting dots again</h1>
+<p>A χ² of 6.25. Is that a lot? The same question as in week 1, and the same thought experiment. Suppose <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true: in the population of first-year students, phone location and sleep are not related. A hundred researchers each draw 100 first-year students, make their contingency table and work out χ². Each χ² becomes one dot, drawn as an open square:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-sim" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A dot plot of open squares above an axis from 0 to 8. Just right of 0 is a tall stack of 49 squares; further right the stacks quickly get lower. At 6.25 there is an orange dashed line. To the right of it is one orange square.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_categorisch_files/figure-html/fig-sim-1.png" class="img-fluid figure-img" alt="A dot plot of open squares above an axis from 0 to 8. Just right of 0 is a tall stack of 49 squares; further right the stacks quickly get lower. At 6.25 there is an orange dashed line. To the right of it is one orange square." width="633">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: A hundred values of χ², each from a sample of 100 first-year students, drawn from a population in which phone location and sleep are independent. One square is the χ² of one sample, stacked per half unit. Orange: the square beyond your 6.25.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Three things stand out.</p>
+<ul>
+<li><strong>Everything lies to the right of 0.</strong> A χ² can’t be negative: it is a sum of squares, divided by positive numbers.</li>
+<li><strong>Most dots lie close to 0:</strong> 65 of the 100 are smaller than 1. Those are the two stacks to the left of 1, with 49 dots between 0 and 0.5 and 16 between 0.5 and 1. In a world without association, every table sits close to its expected counts, but rarely exactly on them.</li>
+<li><strong>To the right runs a long, thin tail.</strong> Now and then chance draws a table that is quite skewed.</li>
+</ul>
+<p>Your 6.25 lies far out in that tail. Count the dots that are <strong>at least as big</strong>: one of the 100. So in a world without association, a table like that turns up about once in a hundred.</p>
+<p>Worked out exactly, without a hundred dots, that shape is called the <strong>χ² distribution</strong>. Its shape depends on the degrees of freedom:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-krommen" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Three curves side by side, from left to right: at df = 1 the curve starts high at 0 and drops fast; at df = 2 it drops more gradually; at df = 3 it first rises to a hump around 1 and then drops. In each panel the part to the right of a dashed line is orange: at 3.84, 5.99 and 7.81. The three panels have the same vertical scale; at df = 1 the curve shoots up past the top edge at 0.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-krommen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_categorisch_files/figure-html/fig-krommen-1.png" class="img-fluid figure-img" alt="Three curves side by side, from left to right: at df = 1 the curve starts high at 0 and drops fast; at df = 2 it drops more gradually; at df = 3 it first rises to a hump around 1 and then drops. In each panel the part to the right of a dashed line is orange: at 3.84, 5.99 and 7.81. The three panels have the same vertical scale; at df = 1 the curve shoots up past the top edge at 0." width="691">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-krommen-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The χ² distribution with 1, 2 and 3 degrees of freedom. Orange: the right tail beyond the critical value at α = .05 (3.84, 5.99 and 7.81). In all three, the whole tail beyond the line is .05, including the part past the right edge.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The <em>p</em>-value is the area to the right of your χ². In R:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">6.25</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01241933</code></pre>
+</div>
+</div>
+<p>So <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.012</mn></mrow><annotation encoding="application/x-tex">p = .012</annotation></semantics></math>, which is close to the .01 you counted. <code>lower.tail = FALSE</code> asks for the right tail: the area from 6.25 to the right. In the left panel of the figure above, your 6.25 lies to the right of the line at 3.84: the area from 6.25 onwards is a small piece of the orange area, and that piece is .012.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Without R: the critical value">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Without R: the critical value
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = 1</annotation></semantics></math> and α = .05, the critical value is <strong>3.84</strong>. If your χ² is at or beyond 3.84, you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>. Here: 6.25 ≥ 3.84, so reject.</p>
+<p>Among the dots, five of the 100 were at or beyond 3.84: the four in the stack just past 4, and the orange one. The single dot just before 4 is a 3.75 and just misses. Five of the 100 is .05, as it should be.</p>
+<p>Where 3.84 comes from, you’ll see below: it is 1.96 squared. <strong>Put 3.84 on your cheat sheet</strong>, next to 1.96. With more degrees of freedom the boundary lies further to the right (at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math> it is 5.99). You don’t need to know that one by heart: in an exam, the <em>p</em> is given, or 3.84 is all you need.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Two ways: the χ² table and pchisq()">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Two ways: the χ² table and <code>pchisq()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="https://countcamp.org/oefenboeken/ts/08_tabellen/08_tabel_f.html" hreflang="nl">Table F</a>, at the back of the Dutch edition (in Dutch), gives the boundaries for every <em>df</em>. With it you bracket your <em>p</em> between two columns. You do that to check yourself: the table and R should come out the same.</p>
+<ul>
+<li><strong>You choose the row by <em>df</em>.</strong> Here, row 1.</li>
+<li><strong>Find the two numbers your χ² lies between.</strong> In row 1, 5.41 is under column .02 and 6.63 under column .01. Your 6.25 lies between them. Careful, turn the order round here: a larger χ² goes with a smaller <em>p</em>. So .01 &lt; <em>p</em> &lt; .02.</li>
+<li><strong>Not times two.</strong> The column heading is the probability in the right tail, and for χ² that is already your whole <em>p</em>. You’ll see why below, in <em>One tail, and yet it picks no side</em>.</li>
+</ul>
+<p>R gave <em>p</em> = .012: neatly in between, and both ways land below .05. You already know column .05 of row 1: 3.84.</p>
+</div>
+</div>
+</section>
+<section id="one-tail-and-yet-it-picks-no-side" class="level1">
+<h1>One tail, and yet it picks no side</h1>
+<p>Week 1 already said that some tests pick no side, and that a one-sided version doesn’t even exist for them. This is one of those tests.</p>
+<p>Look at the formula. Every deviation gets squared: 6 too many and 6 too few both give 36. The minus sign is gone. So χ² doesn’t know <strong>which way</strong> the association goes. Whether the people with their phone in the bedroom sleep poorly more often or less often: χ² gets big either way. It only measures <em>how</em> far the table is from ‘independent’.</p>
+<p>Three things follow from that.</p>
+<ul>
+<li><strong>For χ², extreme only means big.</strong> A χ² of 0 is not extreme in the other direction; it means the counts are exactly the expected ones. That’s why you look at <strong>one tail</strong>: the right one.</li>
+<li><strong>You don’t multiply the <em>p</em> by two.</strong> Both directions of the association are already in that one right tail, because squaring has lumped them together. Times two would count them twice.</li>
+<li><strong>A one-sided test is impossible.</strong> For that you would have to say which direction you expect, and that direction has vanished in the square.</li>
+</ul>
+<p>One tail, and still a test that reacts to an association in either direction: in that sense χ² is two-sided. In short: <strong>the tail</strong> says where you look, <strong>the side</strong> says whether you chose a direction beforehand. χ² is <em>one-tailed</em>, but <em>two-sided</em>.</p>
+<section id="why-3.84-the-fold" class="level2">
+<h2 class="anchored" data-anchor-id="why-3.84-the-fold">Why 3.84: the fold</h2>
+<p>With a two-by-two table you can watch it happen. There, χ² is exactly the square of a <em>z</em>: the difference in the proportion of poor sleepers between the two groups, expressed in standard errors. Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mn>6.25</mn></msqrt><mo>=</mo><mn>2.5</mn></mrow><annotation encoding="application/x-tex">\sqrt{6.25} = 2.5</annotation></semantics></math>.</p>
+<p>A <em>z</em> like that follows a smooth, symmetric bell, with a left half and a right half. A two-sided test at α = .05 means, there: .025 beyond −1.96 and .025 beyond 1.96. Square <em>z</em>, and the left half folds onto the right: −1.96 and 1.96 both become <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>1.96</mn><mn>2</mn></msup><mo>=</mo><mn>3.84</mn></mrow><annotation encoding="application/x-tex">1.96^2 = 3.84</annotation></semantics></math>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-vouw" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Two panels on the same scale, titled &quot;z: two tails&quot; and &quot;χ² = z²: one tail&quot;. On the left a symmetric bell shape from −4 to 4 with two dashed lines at −1.96 and 1.96; the thin tails outside them are orange, each labelled .025. On the right a curve from 0 to 8 that shoots up past the top edge of the panel at 0 and drops steeply, with one dashed line at 3.84; the tail to the right of it is orange, labelled .05. That tail is lower and longer than either of the two tails in the left panel.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vouw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_categorisch_files/figure-html/fig-vouw-1.png" class="img-fluid figure-img" alt="Two panels on the same scale, titled &quot;z: two tails&quot; and &quot;χ² = z²: one tail&quot;. On the left a symmetric bell shape from −4 to 4 with two dashed lines at −1.96 and 1.96; the thin tails outside them are orange, each labelled .025. On the right a curve from 0 to 8 that shoots up past the top edge of the panel at 0 and drops steeply, with one dashed line at 3.84; the tail to the right of it is orange, labelled .05. That tail is lower and longer than either of the two tails in the left panel." width="691">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vouw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: On the left, the bell of <em>z</em>, with .025 beyond −1.96 and .025 beyond 1.96. On the right, χ² with one degree of freedom: <em>z</em> squared. There the two tails of <em>z</em> lie together beyond 3.84: together .05, in one tail. Squaring does stretch that tail: lower and longer, but still .05.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In χ², the two tails of <em>z</em> lie together in one tail. That is why the critical value is 3.84, and why the ‘times two’ is already inside the right tail: the tail of <em>z</em> beyond 2.5 is .006, and twice that is .012, exactly the <em>p</em> of your χ².</p>
+<p>Maybe you know χ² as a whale. It only gets its hump with more degrees of freedom. With one degree of freedom it is almost nothing but tail. Look again at <a href="#fig-krommen" class="quarto-xref">Figure&nbsp;2</a>: at three degrees of freedom the hump is already there.</p>
+</section>
+</section>
+<section id="the-six-steps" class="level1">
+<h1>The six steps</h1>
+<p>The same six steps as in week 1.</p>
+<ol type="1">
+<li><p><strong>Hypotheses.</strong></p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: phone location and sleep are independent<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: phone location and sleep are related</p>
+</div>
+<p>Both about the population of first-year students. α = .05.</p></li>
+<li><p><strong>Sampling distribution.</strong> The χ² distribution with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = 1</annotation></semantics></math>.</p></li>
+<li><p><strong>Test statistic.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mn>6.25</mn></mrow><annotation encoding="application/x-tex">\chi^2 = 6.25</annotation></semantics></math>.</p></li>
+<li><p><strong><em>p</em>-value.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.012</mn></mrow><annotation encoding="application/x-tex">p = .012</annotation></semantics></math>, from the right tail. And .012 ≤ .05. Without R you see the same: 6.25 ≥ 3.84, and in table F you bracket your <em>p</em> between two columns: .01 &lt; <em>p</em> &lt; .02.</p></li>
+<li><p><strong>Statistical conclusion.</strong> Reject the null hypothesis that phone location and sleep are independent.</p></li>
+<li><p><strong>Conclusion in context.</strong> Among first-year students, phone location is related to how they sleep: in this sample, .50 of the people with their phone in the bedroom slept poorly, against .25 of the rest.</p></li>
+</ol>
+<p>In a report, you put the test in one sentence, with the degrees of freedom and the number of people between the brackets:</p>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+This is how you report it
+</div>
+<div class="rapportage-lijf">
+<p>Phone location was associated with sleep, χ²(1, <em>N</em> = 100) = 6.25, <em>p</em> = .012.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="You also see it written like this: H0: fo=fe">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>You also see it written like this: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>=</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} = f_\text{e}</annotation></semantics></math>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>That is the same null hypothesis, written short. What it means: if the variables are independent in the population, the counts should lie close to the expected ones. (Read literally, it is about your sample, and there is nothing to test there; see week 1.)</p>
+<p>You yourself write the version in words, as in step 1. If you see the short version in a multiple-choice question, it is simply the right null hypothesis.</p>
+</div>
+</div>
+<p>You read which way the association goes in step 6, <strong>from the table</strong>, not from χ²: χ² picks no side. Look at the conditional probabilities, or at which cells are above their expected count.</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Check in R — chisq.test() and pchisq()">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Check in R — chisq.test() and pchisq()
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You worked it out by hand. R does the same calculation alongside you, so that you can see it’s right. Type in the table row by row. The names in the code are Dutch, like the ones in the dataset: <code>telefoon</code> is the phone, and <code>uit</code> (<em>out</em>) holds the output.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the contingency table of the example, row by row</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>telefoon <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">10</span>, <span class="dv">30</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the test without correction: the same calculation as by hand</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>uit <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(telefoon, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>uit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  telefoon
+X-squared = 6.25, df = 1, p-value = 0.01242</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the expected counts</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>uit<span class="sc">$</span>expected</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]   24   36
+[2,]   16   24</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the p-value directly: only the right tail, not times two</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">6.25</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01241933</code></pre>
+</div>
+</div>
+<p>Same χ², same expected counts, same <em>p</em>. Watch <code>correct = FALSE</code>: without that bit, R gives a different number. The reason is below.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="with-or-without-correction" class="level1">
+<h1>With or without correction</h1>
+<p>Do the test in R without <code>correct = FALSE</code>, and with a two-by-two table you get a different answer:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># without correct = FALSE: for two by two, Yates' correction</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>telefoon <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">10</span>, <span class="dv">30</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(telefoon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  telefoon
+X-squared = 5.2517, df = 1, p-value = 0.02192</code></pre>
+</div>
+</div>
+<p>χ² is now 5.25 instead of 6.25, and <em>p</em> is .022 instead of .012. The heading line of the output says why: <em>with Yates’ continuity correction</em>.</p>
+<p>What is that? Counts jump: you count 30 or 31 poor sleepers, never 30.4. The χ² distribution you take the <em>p</em> from is smooth. With a two-by-two table, especially with few people, that smooth distribution doesn’t quite fit, and the <em>p</em> comes out a little too small. So Yates’ <strong>continuity correction</strong> first moves each deviation half a unit closer to zero, before squaring: here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>6</mn><mo>−</mo><mn>0.5</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>=</mo><mn>30.25</mn></mrow><annotation encoding="application/x-tex">(6 - 0.5)^2 = 30.25</annotation></semantics></math> instead of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>6</mn><mn>2</mn></msup><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">6^2 = 36</annotation></semantics></math>. That makes χ² smaller and <em>p</em> bigger: the test becomes more careful.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="What you do">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>What you do
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>By hand: without correction.</strong> That is the formula of this week. If a question asks for χ² for a table, that is the number it means.</li>
+<li><strong>R as a check on your handwork:</strong> <code>chisq.test(..., correct = FALSE)</code>. Then you get exactly your own number back.</li>
+<li><strong>If you’re shown R output:</strong> take the <em>p</em> that is there, and look in the heading line to see which test it is. If it says <em>with Yates’ continuity correction</em>, that <em>p</em> is the one with the correction.</li>
+<li><strong>If the two lead to different decisions,</strong> you are on a borderline case (exercise 4.6). Follow what the question gives you. Given a table: calculate without correction. Given R output: use the <em>p</em> from that output. If you write a report yourself, say which version you used.</li>
+</ul>
+<p>The correction only exists for a two-by-two table. With a bigger table, R calculates without correction.</p>
+</div>
+</div>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — no approximation: Fisher’s exact test">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — no approximation: Fisher’s exact test
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Yates’ correction is a patch: the smooth χ² distribution doesn’t exactly fit counts that jump. There is also a test that doesn’t approximate at all, but works out every table with the same marginal totals exactly: <strong>Fisher’s exact test</strong>. In R it is called <code>fisher.test()</code>, and you give it the same table.</p>
+<p>For the phone and sleep it gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.014</mn></mrow><annotation encoding="application/x-tex">p = .014</annotation></semantics></math>, close to the .012 without and the .022 with correction. For the earplugs of exercise 4.6 it gives .057: there it sides with Yates. So a borderline case really is a borderline case.</p>
+<p>You won’t calculate it this week; it’s good to know the name for when you meet it in a book or in R output.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="what-χ²-doesnt-tell-you" class="level1">
+<h1>What χ² doesn’t tell you</h1>
+<ul>
+<li><strong>Which way.</strong> χ² has no direction. You read the direction from the table.</li>
+<li><strong>How strong.</strong> χ² grows with the number of people. Double the phone table (60, 60, 20 and 60): the probabilities stay exactly the same, but χ² becomes 12.50, twice as much. So a big sample makes even a small association significant. How strong an association is, you measure with an effect size; that comes in week 5 (<em>Effect sizes and power</em>).</li>
+<li><strong>What the cause is.</strong> That phone location and sleep are related doesn’t mean the phone ruins your sleep. Maybe it is the other way round, and poor sleepers reach for their phone more often because they’re lying awake anyway. The test only sees association.</li>
+</ul>
+</section>
+<section id="in-r-a-contingency-table-and-the-test" class="level1">
+<h1>In R: a contingency table and the test</h1>
+<p>Once again you use the practice dataset <code>slaapstudie</code> (<em>sleep study</em>) from week 1: 30 first-year students who sleep poorly, half of them with a sleep training, the other half without. With it you do four things in R: make a contingency table, draw it, do the χ² test, and ask for the expected counts.</p>
+<p>The question: <strong>do people with a training improve more often?</strong> Improving is a category you make yourself here. Suppose the researchers agreed beforehand: anyone whose worry score afterwards is at least 3 points lower than before has <em>improved</em>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the data ----</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The names in the code are Dutch, like the columns of the dataset:</p>
+<ul>
+<li><code>piekeren_voor</code> and <code>piekeren_na</code>: the worry score before and after</li>
+<li><code>groep</code>: the group, <code>controle</code> or <code>training</code></li>
+<li><code>daling</code>: the drop, and <code>vooruit</code>: <em>improved</em> (literally <em>forward</em>)</li>
+<li><code>ja</code> and <code>nee</code>: yes and no, and <code>tabel</code>: the table</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## A new column: who improved? ----</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ifelse(condition, what if TRUE, what if FALSE)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>daling <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> slaapstudie<span class="sc">$</span>piekeren_na</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>vooruit <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(daling <span class="sc">&gt;=</span> <span class="dv">3</span>, <span class="st">"ja"</span>, <span class="st">"nee"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="do">## The contingency table ----</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># first the variable you count, then the groups</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>tabel <span class="ot">&lt;-</span> <span class="fu">table</span>(slaapstudie<span class="sc">$</span>vooruit, slaapstudie<span class="sc">$</span>groep)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>tabel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     
+      controle training
+  ja         7        9
+  nee        8        6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># with the totals added</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">addmargins</span>(tabel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     
+      controle training Sum
+  ja         7        9  16
+  nee        8        6  14
+  Sum       15       15  30</code></pre>
+</div>
+</div>
+<p><code>table()</code> counts every combination. <code>addmargins()</code> adds the row and column totals: the margins, where the marginal probabilities come from.</p>
+<p>In the training group, .60 improved (9 of the 15), in the control group .47.</p>
+<p>The bar chart. Only <code>barplot(tabel, beside = TRUE)</code> is needed; the rest is layout, and you may skip it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## The bar chart ----</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(tabel, <span class="at">beside =</span> <span class="cn">TRUE</span>,         <span class="co"># bars side by side, not stacked</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="cn">TRUE</span>,            <span class="co"># a legend: which colour is ja, which nee</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),               <span class="co"># the axis up to 15, so the legend fits</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"group"</span>, <span class="at">ylab =</span> <span class="st">"count"</span>,   <span class="co"># names on the axes</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">args.legend =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"improved"</span>, <span class="at">x =</span> <span class="st">"top"</span>, <span class="at">bty =</span> <span class="st">"n"</span>))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># the legend at the top, with a title and no box</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-barplot" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A bar chart with two pairs of bars, one pair for controle (the control group) and one for training. In each pair, a dark bar for improved (ja, yes) and a light bar for not improved (nee, no). For controle the bar for nee is a little higher than the bar for ja; for training the bar for ja is higher. So the dark bar, improved, is higher for training than for controle.">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-barplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04_categorisch_files/figure-html/fig-barplot-1.png" class="img-fluid figure-img" alt="A bar chart with two pairs of bars, one pair for controle (the control group) and one for training. In each pair, a dark bar for improved (ja, yes) and a light bar for not improved (nee, no). For controle the bar for nee is a little higher than the bar for ja; for training the bar for ja is higher. So the dark bar, improved, is higher for training than for controle." width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-barplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Improvement per group in the sleep study. Dark: improved (ja); light: not improved (nee).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Is that difference bigger than chance can make it? The test:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## The chi-square test ----</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the way R does it by default</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (for two by two: with Yates' correction)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(slaapstudie<span class="sc">$</span>vooruit, slaapstudie<span class="sc">$</span>groep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  slaapstudie$vooruit and slaapstudie$groep
+X-squared = 0.13393, df = 1, p-value = 0.7144</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># without correction, the way you calculate by hand</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>uit <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(slaapstudie<span class="sc">$</span>vooruit, slaapstudie<span class="sc">$</span>groep,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>uit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  slaapstudie$vooruit and slaapstudie$groep
+X-squared = 0.53571, df = 1, p-value = 0.4642</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## The expected counts ----</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>uit<span class="sc">$</span>expected</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   slaapstudie$groep
+slaapstudie$vooruit controle training
+                ja         8        8
+                nee        7        7</code></pre>
+</div>
+</div>
+<p>You can give <code>chisq.test()</code> two columns, as here, or a table you already have: <code>chisq.test(tabel, correct = FALSE)</code> gives exactly the same. It is one test, called in two ways.</p>
+<p>By hand you would get χ² = 0.54, and that is what R gives with <code>correct = FALSE</code>: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.46</mn></mrow><annotation encoding="application/x-tex">p = .46</annotation></semantics></math>. With correction it is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.71</mn></mrow><annotation encoding="application/x-tex">p = .71</annotation></semantics></math>. Both well above .05: you do <strong>not</strong> reject the null hypothesis that group and improvement are independent. With 30 people and an answer of only <em>yes</em> or <em>no</em>, you don’t see much. That doesn’t mean the training doesn’t work (week 1: not significant is not the same as equal).</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="From a score to a category: you throw something away">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>From a score to a category: you throw something away
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Someone whose worry score drops by 3 points and someone whose score drops by 11 are now both called <em>ja</em>. You’ve lost that difference. With the worry scores themselves, you can compare the two groups as in week 3, with two means. So making a category out of a score is a choice with a price; here you do it to practise in R.</p>
+</div>
+</div>
+</section>
+<section id="practice" class="level1">
+<h1>Practice</h1>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 4.1 — Concepts">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4.1 — Concepts
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>What level of measurement do the variables have in a χ² test? And in a <em>t</em> test?</li>
+<li>When are two categorical variables independent?</li>
+<li>Give the formula for:
+<ol type="1">
+<li>the multiplication rule for independent variables;</li>
+<li>the multiplication rule that always holds;</li>
+<li>the expected count <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><annotation encoding="application/x-tex">f_\text{e}</annotation></semantics></math> in a cell;</li>
+<li>the χ² test statistic;</li>
+<li>the degrees of freedom of χ².</li>
+</ol></li>
+<li>What does a χ² of 0 mean?</li>
+<li>What does a large χ² mean?</li>
+<li>Why can’t χ² be negative? And why does that make the χ² distribution skewed to the right?</li>
+<li>With χ² you look at one tail, and yet you call the test two-sided. Explain.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 4.1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>In a χ² test: categorical (nominal or ordinal); you count how often each combination occurs. In a <em>t</em> test, the dependent variable is a score on a scale (interval or ratio), because you compare means.</p></li>
+<li><p>When one tells you nothing about the other. In a table: the conditional probabilities are equal in all groups, and so also equal to the marginal probability.</p></li>
+<li><p>The formulas:</p>
+<ol type="1">
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A \text{ and } B) = P(A) \times P(B)</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A \text{ and } B) = P(A) \times P(B \mid A)</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext mathvariant="normal">row total</mtext><mo>×</mo><mtext mathvariant="normal">column total</mtext></mrow><mi>N</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">f_\text{e} = \dfrac{\text{row total} \times \text{column total}}{N}</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mo>∑</mo><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\chi^2 = \sum \dfrac{(f_\text{o} - f_\text{e})^2}{f_\text{e}}</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mi>c</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">df = (r - 1) \times (c - 1)</annotation></semantics></math>, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> rows and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> columns</li>
+</ol></li>
+<li><p>That the counts are exactly the expected ones: in the sample there is no association at all.</p></li>
+<li><p>That the counts are far from the expected ones. If χ² is big enough (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>≤</mo><mn>.05</mn></mrow><annotation encoding="application/x-tex">p \leq .05</annotation></semantics></math>), you reject the null hypothesis that the variables are independent.</p></li>
+<li><p>χ² is a sum of squares, divided by positive numbers; nothing negative can come out of that. So the distribution starts at 0, most values lie close to it, and to the right runs a long tail. To the left it has nowhere to go.</p></li>
+<li><p>One tail, because only a big χ² is extreme: your <em>p</em> is the area to the right of your χ². Two-sided, because squaring removes the minus sign: χ² reacts to an association in either direction. A cell can have too many or too few, and because the totals are fixed, another cell then automatically has the opposite. That is also why you don’t multiply the <em>p</em> by two. χ² is <em>one-tailed</em>, but <em>two-sided</em>.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 4.2 — Only the marginal totals">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4.2 — Only the marginal totals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For 100 first-year students you know whether they had breakfast that morning, and whether they fell asleep during the day. You only know the totals:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>had breakfast</th>
+<th>fell asleep</th>
+<th>did not fall asleep</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>yes</td>
+<td>…</td>
+<td>…</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<td>no</td>
+<td>…</td>
+<td>…</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>20</td>
+<td>80</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li>Fill in the counts you expect if having breakfast and falling asleep are independent. The cells have to add up to the totals.</li>
+<li>Now make up counts with a clear association. These too have to add up to the totals. There is more than one right answer.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 4.2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Row total times column total, divided by 100:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>had breakfast</th>
+<th>fell asleep</th>
+<th>did not fall asleep</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>yes</td>
+<td>14</td>
+<td>56</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<td>no</td>
+<td>6</td>
+<td>24</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>20</td>
+<td>80</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>For example, top left: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>70</mn><mo>×</mo><mn>20</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>14</mn></mrow><annotation encoding="application/x-tex">\dfrac{70 \times 20}{100} = 14</annotation></semantics></math>. The rest follows by subtraction. Now the same share falls asleep in both rows: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>14</mn><mn>70</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>6</mn><mn>30</mn></mfrac></mstyle><mo>=</mo><mn>.20</mn></mrow><annotation encoding="application/x-tex">\dfrac{14}{70} = \dfrac{6}{30} = .20</annotation></semantics></math>.</p></li>
+<li><p>The extreme example: all 20 who fell asleep had skipped breakfast.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>had breakfast</th>
+<th>fell asleep</th>
+<th>did not fall asleep</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>yes</td>
+<td>0</td>
+<td>70</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<td>no</td>
+<td>20</td>
+<td>10</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>20</td>
+<td>80</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>Any table in which the share who fell asleep clearly differs between the two rows is right.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 4.3 — The test by hand">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4.3 — The test by hand
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Researchers ask 240 first-year students whether they have an evening job, and whether on weekdays they usually sleep less than seven hours (<em>short</em>) or not (<em>long</em>).</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>evening job</th>
+<th>short</th>
+<th>long</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>yes</td>
+<td>50</td>
+<td>40</td>
+<td>90</td>
+</tr>
+<tr class="even">
+<td>no</td>
+<td>60</td>
+<td>90</td>
+<td>150</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>110</td>
+<td>130</td>
+<td>240</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li>What do the researchers want to know?</li>
+<li>Write down <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>.</li>
+<li>Work out the expected counts for all cells.</li>
+<li>Work out each cell’s contribution to χ², and then χ² itself.</li>
+<li>Work out the <em>p</em>-value with <code>pchisq()</code>. Watch the degrees of freedom. (No R to hand? You can still decide: compare with 3.84.)</li>
+<li>What is your statistical conclusion at α = .05?</li>
+<li>What is your conclusion in context?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Short answer 4.3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Short answer 4.3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol start="3" type="a">
+<li>The expected counts are 41.25, 48.75, 68.75 and 81.25.</li>
+<li>χ² = 5.48.</li>
+<li><em>df</em> = 1; <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.019</mn></mrow><annotation encoding="application/x-tex">p = .019</annotation></semantics></math>.</li>
+<li>Reject.</li>
+<li>Having an evening job is related to how long you sleep: with an evening job, you more often sleep less than seven hours.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Full worked answer 4.3 — step by step">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Full worked answer 4.3 — step by step
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>Whether having an evening job is related to how long first-year students sleep. In other words: whether the two variables are dependent.</p></li>
+<li><p>The hypotheses:</p>
+<div class="hypothesen">
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: having an evening job and sleep length are independent<br>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>: having an evening job and sleep length are related</p>
+</div></li>
+<li><p>Row total times column total, divided by 240:</p>
+<ul>
+<li>yes, short: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>90</mn><mo>×</mo><mn>110</mn></mrow><mn>240</mn></mfrac></mstyle><mo>=</mo><mn>41.25</mn></mrow><annotation encoding="application/x-tex">\dfrac{90 \times 110}{240} = 41.25</annotation></semantics></math></li>
+<li>yes, long: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>90</mn><mo>×</mo><mn>130</mn></mrow><mn>240</mn></mfrac></mstyle><mo>=</mo><mn>48.75</mn></mrow><annotation encoding="application/x-tex">\dfrac{90 \times 130}{240} = 48.75</annotation></semantics></math></li>
+<li>no, short: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>150</mn><mo>×</mo><mn>110</mn></mrow><mn>240</mn></mfrac></mstyle><mo>=</mo><mn>68.75</mn></mrow><annotation encoding="application/x-tex">\dfrac{150 \times 110}{240} = 68.75</annotation></semantics></math></li>
+<li>no, long: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>150</mn><mo>×</mo><mn>130</mn></mrow><mn>240</mn></mfrac></mstyle><mo>=</mo><mn>81.25</mn></mrow><annotation encoding="application/x-tex">\dfrac{150 \times 130}{240} = 81.25</annotation></semantics></math></li>
+</ul>
+<p>Check: the rows add up to 90 and 150, the columns to 110 and 130.</p></li>
+<li><p>Per cell:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>cell</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><annotation encoding="application/x-tex">f_\text{o}</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><annotation encoding="application/x-tex">f_\text{e}</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{(f_\text{o} - f_\text{e})^2}{f_\text{e}}</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>yes, short</td>
+<td>50</td>
+<td>41.25</td>
+<td>+8.75</td>
+<td>1.856</td>
+</tr>
+<tr class="even">
+<td>yes, long</td>
+<td>40</td>
+<td>48.75</td>
+<td>−8.75</td>
+<td>1.571</td>
+</tr>
+<tr class="odd">
+<td>no, short</td>
+<td>60</td>
+<td>68.75</td>
+<td>−8.75</td>
+<td>1.114</td>
+</tr>
+<tr class="even">
+<td>no, long</td>
+<td>90</td>
+<td>81.25</td>
+<td>+8.75</td>
+<td>0.942</td>
+</tr>
+<tr class="odd">
+<td><strong>χ²</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>5.48</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Keep calculating with the unrounded numbers in your calculator, and only round the final answer.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = (2 - 1) \times (2 - 1) = 1</annotation></semantics></math>. Only the right tail, not times two (<code>bijbaan</code> is the evening job):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">5.483</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.01920228</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and the whole test as a check</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>bijbaan <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">90</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(bijbaan, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Pearson's Chi-squared test
+
+data:  bijbaan
+X-squared = 5.4825, df = 1, p-value = 0.01921</code></pre>
+</div>
+</div>
+<p>So <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.019</mn></mrow><annotation encoding="application/x-tex">p = .019</annotation></semantics></math>.</p></li>
+<li><p>.019 ≤ .05: reject the null hypothesis that having an evening job and sleep length are independent. Without R you would have seen it too: 5.48 ≥ 3.84.</p></li>
+<li><p>Among first-year students, having an evening job is related to how long they sleep. In this sample, .56 of the people with an evening job slept less than seven hours, against .40 of the people without one. Whether the job is the cause, the test doesn’t say: maybe people who go to bed late anyway are more likely to take an evening job.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 4.4 — In R">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4.4 — In R
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use the dataset <code>slaapstudie</code>. Did the random assignment work out? With a good random assignment, worrying before the training is not related to the group someone ends up in.</p>
+<ol type="a">
+<li>Make a column <code>veel</code> (<em>a lot</em>) that is <code>"ja"</code> if someone scored more than 55 on the worry questionnaire before the training, and <code>"nee"</code> otherwise.</li>
+<li>Make a contingency table of <code>veel</code> against <code>groep</code>, with the totals added.</li>
+<li>Do the χ² test without correction. What is the <em>p</em>-value, and what do you decide?</li>
+<li>Ask for the expected counts.</li>
+<li>Does your answer to c mean that the groups worried equally at the start?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 4.4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. the new column ----</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>veel <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">&gt;</span> <span class="dv">55</span>, <span class="st">"ja"</span>, <span class="st">"nee"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">## b. the contingency table ----</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>tabel_veel <span class="ot">&lt;-</span> <span class="fu">table</span>(slaapstudie<span class="sc">$</span>veel, slaapstudie<span class="sc">$</span>groep)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">addmargins</span>(tabel_veel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     
+      controle training Sum
+  ja         7        6  13
+  nee        8        9  17
+  Sum       15       15  30</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## c. the test, without correction ----</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>uit_veel <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(slaapstudie<span class="sc">$</span>veel, slaapstudie<span class="sc">$</span>groep, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>uit_veel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  slaapstudie$veel and slaapstudie$groep
+X-squared = 0.13575, df = 1, p-value = 0.7125</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">## d. the expected counts ----</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>uit_veel<span class="sc">$</span>expected</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                slaapstudie$groep
+slaapstudie$veel controle training
+             ja       6.5      6.5
+             nee      8.5      8.5</code></pre>
+</div>
+</div>
+<ol start="3" type="a">
+<li><p>χ² = 0.14, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.71</mn></mrow><annotation encoding="application/x-tex">p = .71</annotation></semantics></math>. You do <strong>not</strong> reject the null hypothesis that worrying a lot at the start and the group are independent.</p></li>
+<li><p>See the output: in each group you expect 6.5 people who worry a lot, because the groups are the same size.</p></li>
+<li><p>No.&nbsp;Not significant is not the same as equal. You just haven’t found any sign that the assignment came out lopsided; that is what you hope, but it is no proof that the groups are equal.</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 4.5 — Probabilities from a bigger table">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4.5 — Probabilities from a bigger table
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A group of 400 students fill in how tired they usually feel during the day.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>hardly</th>
+<th>somewhat</th>
+<th>very</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>first year</td>
+<td>85</td>
+<td>95</td>
+<td>70</td>
+<td>250</td>
+</tr>
+<tr class="even">
+<td>later years</td>
+<td>75</td>
+<td>45</td>
+<td>30</td>
+<td>150</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>160</td>
+<td>140</td>
+<td>100</td>
+<td>400</td>
+</tr>
+</tbody>
+</table>
+<p>Draw one of these students at random. What is the probability that this student …</p>
+<ol type="a">
+<li>is in their first year <strong>and</strong> feels very tired?</li>
+<li>feels hardly tired?</li>
+<li>feels very tired, given that they are in a later year?</li>
+<li>Are year of study and tiredness independent <strong>for these 400 students</strong>? Look only at the probabilities; don’t do a test.</li>
+<li>For this table, R gives <code>X-squared = 10.114</code>, <code>df = 2</code> and <code>p-value = 0.006364</code>. Why is <em>df</em> 2 here, and what do you decide about the population?</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 4.5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>A joint probability: one cell, divided by everyone. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>70</mn><mn>400</mn></mfrac></mstyle><mo>=</mo><mn>.175</mn></mrow><annotation encoding="application/x-tex">\dfrac{70}{400} = .175</annotation></semantics></math>.</p></li>
+<li><p>A marginal probability: the column total, divided by everyone. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>160</mn><mn>400</mn></mfrac></mstyle><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">\dfrac{160}{400} = .40</annotation></semantics></math>.</p></li>
+<li><p>A conditional probability: the barrel is now only the 150 students in a later year. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>150</mn></mfrac></mstyle><mo>=</mo><mn>.20</mn></mrow><annotation encoding="application/x-tex">\dfrac{30}{150} = .20</annotation></semantics></math>.</p></li>
+<li><p>No.&nbsp;The barrel here is the row: all first-year students, or all students in a later year. Then go along column by column and compare the two rows:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>hardly</th>
+<th>somewhat</th>
+<th>very</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>first year</td>
+<td>.34</td>
+<td>.38</td>
+<td>.28</td>
+</tr>
+<tr class="even">
+<td>later years</td>
+<td>.50</td>
+<td>.30</td>
+<td>.20</td>
+</tr>
+<tr class="odd">
+<td>everyone</td>
+<td>.40</td>
+<td>.35</td>
+<td>.25</td>
+</tr>
+</tbody>
+</table>
+<p>They are not equal: of the first-year students, .28 feel very tired, of the students in a later year .20. So in this group, year of study and tiredness are dependent.</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = (2 - 1) \times (3 - 1) = 2</annotation></semantics></math>: two rows and three columns. Once the totals are fixed, you can fill in two cells freely; the rest follows. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.006</mn></mrow><annotation encoding="application/x-tex">p = .006</annotation></semantics></math> ≤ .05: you reject the null hypothesis that year of study and tiredness are independent. In the population, too, they are related. (The critical value at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">df = 2</annotation></semantics></math> is 5.99, and 10.11 lies beyond it.)</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Exercise 4.6 — With or without correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4.6 — With or without correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For a week, 120 first-year students sleep with or without earplugs. Afterwards they say whether they woke up during the night.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>woke up</th>
+<th>did not wake up</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>earplugs</td>
+<td>10</td>
+<td>50</td>
+<td>60</td>
+</tr>
+<tr class="even">
+<td>no earplugs</td>
+<td>20</td>
+<td>40</td>
+<td>60</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>30</td>
+<td>90</td>
+<td>120</td>
+</tr>
+</tbody>
+</table>
+<ol type="a">
+<li>Work out χ² by hand. Do you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> at α = .05?</li>
+</ol>
+<p>A fellow student does the same test in R, with <code>chisq.test()</code>, and gets this (<code>dopjes</code> are the earplugs):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dopjes <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">20</span>, <span class="dv">40</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(dopjes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test with Yates' continuity correction
+
+data:  dopjes
+X-squared = 3.6, df = 1, p-value = 0.05778</code></pre>
+</div>
+</div>
+<ol start="2" type="a">
+<li>Why does a different number come out there? And what do you write down if you use this output?</li>
+<li><strong>Two ways.</strong> Look up your χ² from a and your fellow student’s in <a href="https://countcamp.org/oefenboeken/ts/08_tabellen/08_tabel_f.html" hreflang="nl">table F</a> (in Dutch), row <em>df</em> = 1. Which side of 3.84 do they lie on, between which two columns, and what does that mean for their <em>p</em>? Does that match R? For your χ², <code>pchisq(4.44, df = 1, lower.tail = FALSE)</code> gives the <em>p</em>; your fellow student’s is in the output above.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer 4.6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li><p>The expected counts are 15, 45, 15 and 45, and each deviation is 5:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mstyle displaystyle="true"><mfrac><msup><mn>5</mn><mn>2</mn></msup><mn>15</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>5</mn><mn>2</mn></msup><mn>45</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>5</mn><mn>2</mn></msup><mn>15</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>5</mn><mn>2</mn></msup><mn>45</mn></mfrac></mstyle><mo>=</mo><mn>4.44</mn></mrow><annotation encoding="application/x-tex">
+\chi^2 = \dfrac{5^2}{15} + \dfrac{5^2}{45}
+       + \dfrac{5^2}{15} + \dfrac{5^2}{45}
+       = 4.44
+</annotation></semantics></math></p>
+<p>With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = 1</annotation></semantics></math>: 4.44 ≥ 3.84. Reject. (R gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.035</mn></mrow><annotation encoding="application/x-tex">p = .035</annotation></semantics></math>; for what table F says about it, see c.)</p></li>
+<li><p>With a two-by-two table, R applies Yates’ correction by default; it says so in the heading line. First each deviation moves half a unit closer to zero: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo>−</mo><mn>0.5</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">(5 - 0.5)^2</annotation></semantics></math> instead of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>5</mn><mn>2</mn></msup><annotation encoding="application/x-tex">5^2</annotation></semantics></math>. Then χ² = 3.60, and that lies <em>below</em> 3.84: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.058</mn></mrow><annotation encoding="application/x-tex">p = .058</annotation></semantics></math>, do not reject.</p>
+<p>This is a borderline case: the two routes give a different decision. What you do depends on what you’re given:</p>
+<ul>
+<li>if you only get the table, you calculate without correction: reject;</li>
+<li>if you get this output, you take the <em>p</em> that is there: do not reject;</li>
+<li>if you write a report yourself, you say that it is the version with the correction, and that with it, the result is only just not significant.</li>
+</ul>
+<div class="rapportage rap-af">
+<div class="rapportage-kop">
+This is how you report it
+</div>
+<div class="rapportage-lijf">
+<p>With Yates’ correction, wearing earplugs was not significantly associated with waking up at night, χ²(1, <em>N</em> = 120) = 3.60, <em>p</em> = .058.</p>
+</div>
+</div>
+<p>What is never allowed: picking the version that suits you best, <em>after</em> you saw both. That is the same cheating as choosing the direction after seeing the data (week 1).</p></li>
+<li><p>In row 1 of table F:</p>
+<table class="caption-top table">
+<caption>The borderline case of exercise 4.6 in table F</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>lies between</th>
+<th>so</th>
+<th>R gives</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>your χ² = 4.44 (without correction)</td>
+<td>3.84 (column .05) and 5.02 (column .025)</td>
+<td>.025 &lt; <em>p</em> &lt; .05</td>
+<td><em>p</em> = .035</td>
+</tr>
+<tr class="even">
+<td>your fellow student’s χ² = 3.60 (with correction)</td>
+<td>2.71 (column .10) and 3.84 (column .05)</td>
+<td>.05 &lt; <em>p</em> &lt; .10</td>
+<td><em>p</em> = .058</td>
+</tr>
+</tbody>
+</table>
+<p>Both agree with R. And in the table you see the borderline case at once: moving each deviation half a unit closer to zero, as the correction does, shifts χ² one column to the left, across the boundary at 3.84. Not times two: for χ², the column heading is already your whole <em>p</em>.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="exam-block" class="level1">
+<h1>Exam block</h1>
+<p>This is how you might meet it in an exam: multiple choice with four options, a number to fill in, or yes or no. Questions 1 and 2 are about this table of 80 first-year students:</p>
+<table class="caption-top table">
+<caption>Alarms and being on time, for 80 first-year students</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th>on time</th>
+<th>late</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>two alarms</td>
+<td>40</td>
+<td>10</td>
+<td>50</td>
+</tr>
+<tr class="even">
+<td>one alarm</td>
+<td>18</td>
+<td>12</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>58</td>
+<td>22</td>
+<td>80</td>
+</tr>
+</tbody>
+</table>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 1 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 1 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What is the probability of being on time, given that you set two alarms? And are the number of alarms and being on time dependent, for these 80 first-year students?</p>
+<ol type="A">
+<li>.50; dependent</li>
+<li>.80; dependent</li>
+<li>.50; independent</li>
+<li>.80; independent</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 1">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> The barrel is the 50 people with two alarms: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>50</mn></mfrac></mstyle><mo>=</mo><mn>.80</mn></mrow><annotation encoding="application/x-tex">\dfrac{40}{50} = .80</annotation></semantics></math>. With one alarm it is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>18</mn><mn>30</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">\dfrac{18}{30} = .60</annotation></semantics></math>. Not equal, so dependent, in this group. .50 is the trap: that is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>80</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{40}{80}</annotation></semantics></math>, the joint probability of two alarms <strong>and</strong> on time.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 2 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 2 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How many people with two alarms do you expect in the column <em>late</em>, if the number of alarms and being on time are independent?</p>
+<ol type="A">
+<li>10</li>
+<li>8.25</li>
+<li>13.75</li>
+<li>.275</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 2">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>50</mn><mo>×</mo><mn>22</mn></mrow><mn>80</mn></mfrac></mstyle><mo>=</mo><mn>13.75</mn></mrow><annotation encoding="application/x-tex">\dfrac{50 \times 22}{80} = 13.75</annotation></semantics></math>. A is the number you counted, not the one you expected. B is the expected count in the row below. D is the probability of being late, not yet a count: you still have to multiply it by 50.</p>
+</div>
+</div>
+</div>
+<p>Questions 3 and 4 are about this table of 100 first-year students:</p>
+<table class="caption-top table">
+<caption>Sport in the evening and falling asleep, for 100 first-year students</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>falls asleep within 20 minutes</th>
+<th>does not fall asleep within 20 minutes</th>
+<th>total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sport in the evening</td>
+<td>25</td>
+<td>25</td>
+<td>50</td>
+</tr>
+<tr class="even">
+<td>no sport</td>
+<td>30</td>
+<td>20</td>
+<td>50</td>
+</tr>
+<tr class="odd">
+<td>total</td>
+<td>55</td>
+<td>45</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 3 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 3 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You want to test whether sport in the evening and falling asleep quickly are related. What is χ² for this table?</p>
+<ol type="A">
+<li>χ² = 0.31</li>
+<li>χ² = 1.01</li>
+<li>χ² = 3.84</li>
+<li>χ² = 25.00</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 3">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 3
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> The expected counts are 27.5 and 22.5 in both rows, and the deviation is 2.5 in every cell:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>27.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>22.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>27.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>22.5</mn></mfrac></mstyle><mo>=</mo><mn>1.01</mn></mrow><annotation encoding="application/x-tex">
+\chi^2 = \dfrac{2.5^2}{27.5} + \dfrac{2.5^2}{22.5}
+        + \dfrac{2.5^2}{27.5} + \dfrac{2.5^2}{22.5}
+        = 1.01
+</annotation></semantics></math></p>
+<p>The other three are each a well-known mistake. A is the <em>p</em>-value that goes with this χ² (in table F, 1.01 lies even further left than the first column of row 1, so <em>p</em> &gt; .25). C is not a χ² of this table but the critical value at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>f</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">df = 1</annotation></semantics></math>: in <a href="https://countcamp.org/oefenboeken/ts/08_tabellen/08_tabel_f.html" hreflang="nl">table F</a> (in Dutch), row 1, column .05. You also come across it with three decimals, as 3.841. D is what you get if you add up the squares and forget to divide by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub><annotation encoding="application/x-tex">f_\text{e}</annotation></semantics></math>.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 4 — yes or no">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 4 — yes or no
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At that χ², do you reject the null hypothesis (α = .05)?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>No.</strong> 1.01 lies below the critical value 3.84 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.31</mn></mrow><annotation encoding="application/x-tex">p = .31</annotation></semantics></math>). You do <strong>not</strong> reject the null hypothesis that sport in the evening and falling asleep quickly are independent.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 5 — fill in">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 5 — fill in
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A contingency table has 3 rows and 4 columns (not counting the totals). How many degrees of freedom does the χ² test have?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>6.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">(3 - 1) \times (4 - 1) = 2 \times 3 = 6</annotation></semantics></math>.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 6 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 6 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Why don’t you multiply the <em>p</em>-value of a χ² test by two?</p>
+<ol type="A">
+<li>Because the χ² test is one-sided.</li>
+<li>Because both directions of the association are already in the right tail.</li>
+<li>Because the χ² distribution is symmetric.</li>
+<li>Because with categorical variables you have no null hypothesis.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 6">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 6
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> Squaring removes the minus sign, so too many and too few both end up on the right. A is the trap: you look at one tail, but the test is not one-sided; it reacts to an association in either direction. C is wrong: the χ² distribution is skewed to the right. D is wrong: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says that the variables are independent.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 7 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 7 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A researcher wants to know whether choosing tea or coffee is related to year of study. Which null hypothesis goes with a χ² test?</p>
+<ol type="A">
+<li>Choice and year of study are independent.</li>
+<li>Choice and year of study are dependent.</li>
+<li>First-year students choose coffee more often than students in later years.</li>
+<li>The mean year of study is the same for coffee drinkers as for tea drinkers.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 7">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 7
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>A.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says that nothing is going on: no association. B is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>. C picks a direction, and χ² has none. D is about means; year of study is a category here.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 8 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 8 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Someone does the test of exercise 4.3 in R, with <code>chisq.test()</code> and no further settings. At the top of the output it says <em>Pearson’s Chi-squared test with Yates’ continuity correction</em>, and below that <code>X-squared = 4.8738</code>, <code>df = 1</code> and <code>p-value = 0.02727</code>. Which statement is right?</p>
+<ol type="A">
+<li>R made a mistake, because by hand χ² = 5.48 came out.</li>
+<li>R used a correction; without that correction χ² would be a little bigger.</li>
+<li>Because of the correction, you may no longer reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>.</li>
+<li>You still have to multiply R’s <em>p</em> by two.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 8">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 8
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B.</strong> With the correction, R first moves each deviation half a unit closer to zero; that makes χ² smaller. With <code>correct = FALSE</code> you get the 5.48 of your handwork back. C is wrong: even <em>with</em> the correction, <em>p</em> = .027 ≤ .05. D is wrong: χ² has one tail, and that one tail already holds both directions of the association.</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 9 — yes or no">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 9 — yes or no
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>“We found χ²(1, <em>N</em> = 400) = 18.40, <em>p</em> &lt; .001. So year of study is strongly related to sleep length.” Is the second sentence right?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 9">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 9
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>No.</strong> Significant says <em>that</em> there is an association, not how strong it is. With a great many people, even a small association becomes significant. How strong it is, an effect size tells you (week 5).</p>
+</div>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note no-icon callout-titled" title="Question 10 — multiple choice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Question 10 — multiple choice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Alarms again, now in a different group of first-year students and without a table: you only get probabilities. The probability that someone sets two alarms is .40. The probability that someone is on time is .70. And given that someone sets two alarms, the probability that they are on time is .80. What is the probability that someone sets two alarms <strong>and</strong> is on time?</p>
+<ol type="A">
+<li>.80</li>
+<li>.56</li>
+<li>.32</li>
+<li>.28</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 10">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer question 10
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-47" class="callout-47-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C.</strong> You are looking for an <em>and</em> probability. The short rule, the two separate probabilities multiplied together, is only allowed if two alarms and being on time have nothing to do with each other. Here they are related: people who set two alarms are on time more often (.80) than the whole group (.70). So you take the rule you may always use:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">two and on time</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">two</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">on time</mtext><mo>∣</mo><mtext mathvariant="normal">two</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.40</mn><mo>×</mo><mn>.80</mn><mo>=</mo><mn>.32</mn></mrow><annotation encoding="application/x-tex">
+P(\text{two and on time}) = P(\text{two}) \times P(\text{on time} \mid \text{two}) = .40 \times .80 = .32
+</annotation></semantics></math></p>
+<ul>
+<li>.28 is the trap: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.40</mn><mo>×</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">.40 \times .70</annotation></semantics></math>, the short rule, for independent events. It is not allowed here: .80 is not .70.</li>
+<li>.56 multiplies the two probabilities that have <em>on time</em> in them: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.70</mn><mo>×</mo><mn>.80</mn></mrow><annotation encoding="application/x-tex">.70 \times .80</annotation></semantics></math>. But .80 only holds for people who set two alarms, so the probability of two alarms belongs in front of it.</li>
+<li>.80 is the conditional probability from the question itself. That can’t be the answer: an <em>and</em> probability is never larger than either of the two separate probabilities, and the probability of two alarms is only .40. With <em>and</em>, the barrel is the whole group, not just the people who set two alarms.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html" class="pagination-link" aria-label="Week 3 · Hypothesis tests for two means and confidence intervals">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Week 3 · Hypothesis tests for two means and confidence intervals</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../05_effect_power/05_effect_power.html" class="pagination-link" aria-label="Week 5 · Effect sizes and power">
+        <span class="nav-page-text">Week 5 · Effect sizes and power</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Inferential Statistics Practice Book · CountCamp Lab · wisi.nl</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Questions, comments or suggestions? <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
+<!-- countcamp-oefenboek inferential-statistics lab-commit=334da05e86ce6169e98e2dc9e62ccae9cbac7791 geleverd=2026-11-21T19:25:00 -->
