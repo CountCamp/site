@@ -252,10 +252,15 @@ def cmd_bouw(a) -> int:
     except OSError as e:
         zeg(f"  FOUT: kon en/ niet bewaren vóór de bouw ({e}) — niet gebouwd, want Quarto zou hem verplaatsen")
         return 3
-    zeg(f"  $ quarto render --profile {profiel}")
+    zeg(f"  $ quarto render --profile {profiel}   (via _tools/schone_bouw.py: in een kopie zonder .claude/)")
+    # Niet ter plaatse: Quarto loopt de hele projectmap af, ook de werkkopieën van
+    # andere zetters onder .claude/worktrees/ (22-11-2026, spoor pers_nacht). In de
+    # kopie verplaatst Quarto en/*.html daar, niet hier; bewaar/herstel blijft staan
+    # als tweede slot.
     try:
-        r = subprocess.run(["quarto", "render", "--profile", profiel], cwd=REPO,
-                           capture_output=True, text=True)
+        r = subprocess.run([sys.executable, os.path.join(REPO, "_tools", "schone_bouw.py"),
+                            "--uit", "_site_en", "--", "render", "--profile", profiel],
+                           cwd=REPO, capture_output=True, text=True)
     finally:
         h_code, h_regels = herstel(voor_bouw)
         zeg("  en/ in de repo terug zoals vóór de bouw: " + h_regels[0])

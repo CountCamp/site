@@ -275,15 +275,18 @@ def tak(naam):
     return m.group(1) if m else ""
 prod, lok = tak("--productie"), tak("--lokaal")
 fout = []
-r = prod.find("quarto render")
+# De bouw is sinds 22-11-2026 (spoor pers_nacht) geen kale `quarto render` meer
+# maar de schone bouw: een kopie zonder .claude/ (zie _tools/schone_bouw.py).
+BOUW = "_tools/schone_bouw.py --uit _site -- render"
+r = prod.find(BOUW)
 p = prod.find("gebouwde_tellers_nakijken echt blokkerend")
 if p < 0:
     fout.append("--productie roept de poort niet blokkerend aan")
 elif r < 0 or p < r:
-    fout.append("--productie roept de poort niet NA quarto render aan")
+    fout.append("--productie roept de poort niet NA de bouw (%s) aan" % BOUW)
 elif "Niet geleverd" not in prod[p:p + 120]:
     fout.append("--productie stopt niet als de poort rood is")
-r = lok.find("quarto render")
+r = lok.find(BOUW)
 p = lok.find("gebouwde_tellers_nakijken spook melden")
 if p < 0 or r < 0 or p < r:
     fout.append("--lokaal roept de poort niet na de bouw aan (spook, melden)")
