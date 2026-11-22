@@ -43,6 +43,7 @@ Getoetst door _tools/tests/schone_bouw_test.sh (met bijtproef).
 import argparse
 import os
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -103,10 +104,26 @@ def main() -> int:
         n = sum(len(fs) for _d, _ds, fs in os.walk(spiegel))
         zeg(f"quarto {' '.join(args)}  in {spiegel}  "
             f"(kopie zonder .claude/, .git, .quarto, _site*: {n} bestanden, {time.time() - t0:.1f}s)")
-        r = subprocess.run(["quarto", *args], cwd=spiegel)
-        if r.returncode != 0:
-            zeg(f"quarto eindigde met afloop {r.returncode}; {a.uit}/ in de repo is NIET aangeraakt")
-            return r.returncode
+        # Een signaal (Ctrl-C, afgeschoten, terminal dicht) gaat door naar quarto; dan
+        # wachten tot die stopt, de uitvoermap NIET terugzetten, en de kopie opruimen.
+        # Zonder dit ruimde een afgeschoten schil zijn kopie niet op en liep quarto
+        # daarin door.
+        ontvangen: list[int] = []
+        proc = subprocess.Popen(["quarto", *args], cwd=spiegel)
+
+        def doorgeven(signum, _frame):
+            ontvangen.append(signum)
+            if proc.poll() is None:
+                proc.send_signal(signum)
+        for s in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+            signal.signal(s, doorgeven)
+        code = proc.wait()
+        if ontvangen:
+            zeg(f"onderbroken door signaal {ontvangen[0]}; {a.uit}/ in de repo is NIET aangeraakt")
+            return 128 + ontvangen[0]
+        if code != 0:
+            zeg(f"quarto eindigde met afloop {code}; {a.uit}/ in de repo is NIET aangeraakt")
+            return code
         nieuw = os.path.join(spiegel, a.uit)
         if not os.path.isdir(nieuw):
             zeg(f"quarto gaf afloop 0 maar schreef geen {a.uit}/ -- klopt --uit met de uitvoermap van deze bouw?")

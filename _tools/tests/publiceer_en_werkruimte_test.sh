@@ -149,7 +149,13 @@ if [ "\$*" = "render" ]; then
   if [ \$n -eq 2 ]; then
     case "$1" in
       knoei)  printf ' ' >> _site/archief/index.html ;;
-      schiet) kill -TERM \$PPID ;;
+      # Het script zelf afschieten, niet wat ertussen zit: sinds 22-11-2026 is de
+      # ouder van quarto _tools/schone_bouw.py, en die geeft een signaal alleen door.
+      schiet) p=\$PPID
+              while [ "\$p" -gt 1 ] && ! ps -o command= -p "\$p" | grep -q 'publiceer_en\.sh'; do
+                p=\$(ps -o ppid= -p "\$p" | tr -d ' ')
+              done
+              [ "\$p" -gt 1 ] && kill -TERM "\$p" ;;
     esac
   fi
 fi
