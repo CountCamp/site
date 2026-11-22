@@ -48,7 +48,10 @@
 # sloeg niet aan, 3 kon niet kijken.
 # PROEF_MUTATIE="bestand|||oud|||nieuw" verandert vóór de proef één ding in de
 # kloon; zo meet _tools/tests/publiceer_en_werkruimte_mutatieproef.sh of deze
-# toets bijt.
+# toets bijt. Meer dingen tegelijk: zet ;;; tussen de drietallen. Dat is nodig
+# sinds 22-11-2026: een bescherming die achter een andere staat (de uitsluiting
+# in _quarto-nl.yml achter de schone bouw, herstel achter de schone bouw), bijt
+# pas als de voorste ook weg is.
 # ============================================================
 set -uo pipefail
 case ":$PATH:" in *":$HOME/.local/bin:"*) ;; *) PATH="$HOME/.local/bin:$PATH";; esac
@@ -85,13 +88,15 @@ done < <(cd "$REPO" && git ls-files -z -m -o --exclude-standard)
 if [ -n "${PROEF_MUTATIE:-}" ]; then
   python3 - "$P" "$PROEF_MUTATIE" <<'PY' || exit 2
 import os, sys
-wortel, (pad, oud, nieuw) = sys.argv[1], sys.argv[2].split("|||")
-p = os.path.join(wortel, pad)
-s = open(p, encoding="utf-8").read()
-if oud not in s:
-    sys.exit(f"MUTATIE SLOEG NIET AAN: {oud!r} staat niet in {pad}")
-open(p, "w", encoding="utf-8").write(s.replace(oud, nieuw, 1))
-print(f"mutatie: {pad}")
+wortel = sys.argv[1]
+for deel in sys.argv[2].split(";;;"):
+    pad, oud, nieuw = deel.split("|||")
+    p = os.path.join(wortel, pad)
+    s = open(p, encoding="utf-8").read()
+    if oud not in s:
+        sys.exit(f"MUTATIE SLOEG NIET AAN: {oud!r} staat niet in {pad}")
+    open(p, "w", encoding="utf-8").write(s.replace(oud, nieuw, 1))
+    print(f"mutatie: {pad}")
 PY
 fi
 "${GIT[@]}" -C "$P" add -A && "${GIT[@]}" -C "$P" commit --quiet --allow-empty -m "proef: basis (+$n_los ongecommit bestand(en) uit de werkkopie)"
@@ -257,8 +262,13 @@ geval_4() {
 geval_8() {
   # de Engelse bouw los, zonder publiceer_en.sh eromheen: ook die laat en/ heel
   terug_naar_basis
+  # De balk is bouw-uitvoer (gitignored) en staat dus niet in een verse kloon;
+  # zonder hem stopt de spookbouw (FATAL ... _spooksite/banner.html). In de hele
+  # reeks schreef een eerder geval hem al, los zakte dit geval altijd -- en de
+  # mutatieproef draait het los (gemeten 22-11-2026, spoor pers_nacht).
+  (cd "$P" && bash _spooksite/maak_banner.sh "proef geval 8" "publiceer_en_werkruimte_test.sh") > "$P.uit/g8.log" 2>&1
   afdruk "$P.uit/voor_g8"
-  (cd "$P" && python3 _tools/en_bouw.py bouw --soort spook) > "$P.uit/g8.log" 2>&1; local code=$?
+  (cd "$P" && python3 _tools/en_bouw.py bouw --soort spook) >> "$P.uit/g8.log" 2>&1; local code=$?
   zelfde_als "$P.uit/voor_g8" g8; local zelfde=$?
   uitslag "$(waar [ "$code" -eq 0 ])" "geval 8: en_bouw.py bouw los — afloop $code (moet 0)"
   local terug; terug="$(grep -o '[0-9]* teruggezet' "$P.uit/g8.log" | head -1)"

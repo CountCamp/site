@@ -34,15 +34,24 @@ proef() {  # $1 = naam, $2 = geval(len), $3 = "bestand|||oud|||nieuw"
 
 echo "mutatieproef — maakt één bescherming kapot en kijkt of de toets dat merkt"
 # fout 1: .claude/ in de bouw
-proef "de uitsluiting van .claude/ weg uit _quarto-nl.yml" 1 \
-  '_quarto-nl.yml|||    - "!.claude/**"|||    - "!.claude-niet/**"'
+# Sinds 22-11-2026 (spoor pers_nacht) bouwen de scripts in een kopie zonder
+# .claude/ (_tools/schone_bouw.py). De uitsluiting in _quarto-nl.yml staat daar
+# achter: alleen die weghalen laat geval 1 terecht groen (gemeten: ZORGELIJK).
+# Dus gaan ze hier samen weg. Dat de schone bouw zelf bijt, meet
+# _tools/tests/schone_bouw_test.sh (zaak 4).
+proef "de uitsluiting van .claude/ weg uit _quarto-nl.yml, én de schone bouw neemt .claude/ mee" 1 \
+  '_quarto-nl.yml|||    - "!.claude/**"|||    - "!.claude-niet/**";;;_tools/schone_bouw.py|||NOOIT = {".claude"}|||NOOIT = set()'
 proef "keuring 0 (werkruimte) uitgezet" 6 \
   '_tools/en_bouw.py|||        if WERKRUIMTE in dn:|||        if False:'
 proef "de taalbalk-keuring loopt weer door .claude/" 6 \
   '_tools/en_bouw.py|||    for dp, _d, fs in loop(site):|||    for dp, _d, fs in os.walk(site):'
 # fout 2: een mislukte run laat de repo zoals hij was
-proef "de Engelse bouw zet en/ niet terug" 8 \
-  '_tools/en_bouw.py|||        h_code, h_regels = herstel(voor_bouw)|||        h_code, h_regels = 0, ["(uitgezet)"]'
+# Herstel achter de bouw staat sinds 22-11-2026 achter de schone bouw: in de kopie
+# verplaatst Quarto en/*.html daar, niet in de repo. Alleen herstel uitzetten bleef
+# daardoor groen -- en ving tot dan toe alleen iets omdat geval 8 los altijd zakte
+# (geen _spooksite/banner.html in de kloon). Dus: ook de bouw weer ter plaatse.
+proef "de Engelse bouw ter plaatse, én zet en/ niet terug" 8 \
+  '_tools/en_bouw.py|||        h_code, h_regels = herstel(voor_bouw)|||        h_code, h_regels = 0, ["(uitgezet)"];;;_tools/en_bouw.py|||r = subprocess.run([sys.executable, os.path.join(REPO, "_tools", "schone_bouw.py"),|||r = subprocess.run(["quarto", "render", "--profile", profiel] or ['
 proef "stop() zet de repo niet terug" 4 \
   '_tools/publiceer_en.sh|||  if [ "$BEWAARD_NU" -eq 1 ]; then|||  if false; then'
 proef "stop() schrijft het manifest weer in _tools/" 2 \
