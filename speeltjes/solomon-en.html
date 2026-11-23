@@ -241,6 +241,8 @@
   table.kaart.vijf th:nth-child(1){width:9%} table.kaart.vijf th:nth-child(2){width:22%}
   table.kaart.vijf th:nth-child(3){width:28%} table.kaart.vijf th:nth-child(4){width:23%} table.kaart.vijf th:nth-child(5){width:18%}
   .twijfel-klein{display:none}
+  /* stap 10: op een smal scherm vallen de nullen en enen weg (ze staan al in de tabel boven de vraag), zodat "het model
+     zegt" en "de verbetering bevat" naast elkaar in beeld blijven (testlezers, 23-11-2026, op 390 px) */
 
   /* ===== de twijfelaar: per trede het bezwaar dat die trede beantwoordt (Ben, 8-10-2026: "bij een gevonden
      verschil kan een kriticus het effect wegverklaren, en dat wil je voor zijn") ===== */
@@ -261,6 +263,8 @@
     .sommen4{grid-template-columns:1fr}
     td.schuif input[type=range]{width:78px}
     .twijfelkol{display:none}
+    table.mpg tr>:nth-child(2),table.mpg tr>:nth-child(3),table.mpg tr>:nth-child(4){display:none}
+    table.data.mpg{font-size:14px} table.data.mpg th,table.data.mpg td{padding:4px 7px 4px 2px}
     .twijfel-klein{display:block;white-space:normal;font-weight:400;font-size:12.5px;line-height:1.3;color:var(--dim);max-width:6.5em}
     table.data{font-size:15px} table.data th,table.data td{padding:4px 9px 4px 3px}
     table.som{font-size:15.5px}
@@ -331,7 +335,7 @@
   </figure>
 
   <h2 id="ladder-kop">The ladder</h2>
-  <p>One thing you may assume from the start: random assignment put the groups together, so on average they started
+  <p>One thing you may assume from the start: random assignment formed the groups, so on average they started
   out equal. The other assumptions come along the way, at the place where you need them.</p>
   <p class="kl"><span id="aantal-stappen"></span> steps, and then an encore of <span id="aantal-toegift"></span>: then
   everything turns out to be a regression. The first step sets down the equation for group I, where all four pieces sit.
@@ -347,13 +351,15 @@
     <caption><span id="aantal-aannames"></span> assumptions, and how you take care of them</caption>
     <tr><th>what you assume</th><th>why that is allowed</th><th>does the design take care of it, or do you measure it?</th></tr>
     <tr><td>The four groups started out equal on average.</td><td>Random assignment (R) decided who went into which group.</td>
-        <td>The design takes care of it, but only on average: random assignment never makes two groups exactly equal. You can see that in the pretests of I and II, <span data-v="voorI"></span> and <span data-v="voorII"></span>.</td></tr>
+        <td>The design takes care of it, but only on average: random assignment hardly ever makes two groups exactly equal. You can see that in the pretests of I and II, <span data-v="voorI"></span> and <span data-v="voorII"></span>.</td></tr>
     <tr><td>Groups III and IV had the same score beforehand as the mean of the pretests of I and II.</td><td>That follows from the first row. This is called <i>substitution</i>: you fill in a number in a place where you measured nothing.</td>
         <td>The design. Measuring is impossible here: give group III a pretest, and it has become group I.</td></tr>
     <!-- sinds 23-11-2026: bij 50 en 50 deed deze aanname er voor S niet toe, bij 48 en 52 wel (zie de uitklapper
          "how do you test whether S really differs from zero") -->
-    <tr><td>A group that sat one point higher beforehand also sits one point higher afterwards.</td><td>That is how an improvement works: posttest minus pretest. Every point a group was ahead beforehand is taken away one for one.</td>
-        <td>You can measure it, but this page does not: an analysis of covariance estimates how much a point beforehand is still worth afterwards. Usually that is less than one.</td></tr>
+    <!-- Michelle (23-11): bij "covariantieanalyse" klapte ze dicht, en "minder dan één" zonder waarom. Nu met de eigen
+         getallen; de vakterm staat alleen nog in de uitklapper "how do you test whether S really differs from zero". -->
+    <tr><td>A group that scored one point higher at pretest also scores one point higher at posttest.</td><td>That is how an improvement works: posttest minus pretest. I and II started <span data-r="voorAfstand"></span> points apart; you assume that this leaves them <span data-r="voorAfstand"></span> points apart at the end as well, apart from what the pieces do.</td>
+        <td>You can measure it, but this page does not. Usually less of it is left afterwards: part of a difference beforehand is chance in that one measurement, and that does not come back (regression to the mean).</td></tr>
     <tr><td>What gets better by itself gets better by the same amount in all four groups.</td><td>The groups run through the same period, in the same world.</td>
         <td>The design: all groups at the same time.</td></tr>
     <tr><td>The pieces add up.</td><td>That is a convention: what is left in group I after you take away the other pieces, you call S.</td>
@@ -392,8 +398,12 @@
   <div class="tabelvak" id="sb-tabel"></div>
   <div id="sb-sommen"></div>
   <div class="tabelvak" id="sb-regressie"></div>
-  <p class="zacht kl">Also try: make the pretests of I and II equal. See what happens to T and S then, and to the
-  regression on the posttest.</p>
+  <!-- Tot 23-11-2026: "make the pretests equal". Jeanne en de Engelse lezer zagen S dan naar 0 springen (de
+       nametingen blijven staan) en dachten dat ze het speeltje kapot hadden gemaakt. Wat schuiven echt laat zien: de
+       regressie van de nameting kijkt niet naar de voormetingen, de sommen wel. -->
+  <p class="zacht kl">Also try: move the slider of pretest I or II. The regression with the posttest as outcome does
+  not change, because it does not look at the pretests; T and S in the calculations do. With equal pretests the two
+  agree again.</p>
 
   <h2 id="eigen">And in your own research?</h2>
   <p class="kl">If you measure before and after in your own research, the improvement you see holds everything at once:
@@ -427,8 +437,9 @@
     himself. If you also want to <em>test</em> whether S really differs from zero, you
     need more than means: you look at the scores of all the people. There you get stuck, because groups III and IV
     have no pretest of their own, so no improvement per person either. Campbell and Stanley (1963) therefore
-    recommended another route: test on the posttests, with two factors: pretest (yes or no) and therapy (yes or
-    no), the two switches from the encore. That is exactly the regression on the posttest from the encore. Its
+    recommended another route: a 2 × 2 analysis of variance (ANOVA) on the posttests, with two factors: pretest (yes
+    or no) and therapy (yes or no), the two switches from the encore. That is exactly the regression with the posttest
+    as outcome from the encore. Its
     interaction is S plus the difference between pretest I and pretest II: with these numbers
     <span data-r="kaal"></span>, where the calculations give <span data-r="S"></span>. If the pretests of I and II
     are equal, it gives the same number.</p>
@@ -436,16 +447,24 @@
          aanname die bij 50 en 50 onzichtbaar was. Een hulpagent las Campbell & Stanley (1963, p. 25) en
          Van Engelenburg (1999, vgl. 21, p. 11): die laatste corrigeert de interactie voor het verschil in voormeting
          met een geschatte helling; de sommen hier zijn hetzelfde met de helling vast op 1 (eigen afleiding). -->
-    <p class="kl">Which of the two is right? That depends on an assumption. The calculations with improvements assume
-    that a group that sat one point higher beforehand also sits exactly one point higher afterwards. The numbers on
-    this page are made that way, but in real data it is usually less than one point. An analysis of covariance
-    estimates from the data how much it is, and so takes into account where I and II started (van Engelenburg, 1999).
-    The posttests on their own assume nothing about the pretest, but they carry the chance of random assignment with
-    them: over many studies that averages out, in a single study it does not.</p>
-    <p class="kl">Mind you: in an analysis with an interaction, the main effect of therapy is the mean of the effect
-    with and without a pretest. On the improvements, that is (<span data-r="metS"></span> + <span data-r="zonderS"></span>) / 2
-    = <span data-r="hoofd"></span>, and not the <span data-r="X"></span> of <i>b</i><sub>2</sub>: that weight is only
-    the effect without a pretest.</p>
+    <!-- Ronde 2 (23-11): Jeanne en de Engelse lezer bleven allebei achter met "welke is nu goed?". De alinea zegt nu
+         eerst wat hier geldt (de getallen zijn met helling 1 gemaakt, dus 4) en dan wat je in echte data doet; en dat
+         de variantieanalyse op de nametingen wél iets aanneemt. -->
+    <p class="kl">Which of the two is right? On this page, the calculations, because the numbers are made that way: a
+    group that scored one point higher at pretest scores exactly one point higher at posttest. Here S really is
+    <span data-r="S"></span>, and <span data-r="kaal"></span> is the mistake. In real data you do not know that.
+    There the ladder is the bookkeeping: it shows which piece is in which group, and it is not the test itself. The
+    ANOVA on the posttests acts as if I and II started out equal; thanks to random assignment that holds on average,
+    but in a single study the difference can hide S, as it does here, or create one. If you want to use the pretest
+    where you have it, you estimate from groups I and II how much a point at pretest is still worth at posttest (an
+    analysis of covariance), and correct the difference between I and II with it (van Engelenburg, 1999). Usually it
+    is less than one point: regression to the mean.</p>
+    <!-- Jeanne (23-11): "ik heb nu drie getallen voor het effect van de therapie: 8, 10 en 12". -->
+    <p class="kl">Mind you: with an interaction, the effect of the therapy on quality of life no longer has one number.
+    Without a pretest it is <span data-r="zonderS"></span>, the weight <i>b</i><sub>2</sub>; with a pretest
+    <span data-r="metS"></span>, X + S. An ANOVA calls the mean of those two the main effect of therapy, with the
+    improvements (<span data-r="metS"></span> + <span data-r="zonderS"></span>) / 2 = <span data-r="hoofd"></span>.
+    That is not a new piece, only a summary of two.</p>
   </details>
 
   <p class="foot">
@@ -659,7 +678,7 @@
   // de boekhouding van de stukjes-stap ernaast, zodat de paren te zien zijn: b2 bij X, b1 bij T, b3 bij S (Michelle, 8-10)
   // de rijen staan I tot en met IV, net als elke andere tabel op de bladzij (Jeanne, 8-10: twee volgordes in één
   // stap); "van onder naar boven" klopt dan letterlijk met de tabel
-  var MODEL_PER_GROEP = '<table class="data"><caption>What is left of the model per group, next to the bookkeeping of ' + stap('stukjes') + '</caption>' +
+  var MODEL_PER_GROEP = '<table class="data mpg"><caption>What is left of the model per group, next to the bookkeeping of ' + stap('stukjes') + '</caption>' +
     '<tr><th>group</th><th class="getal">' + SV + '</th><th class="getal">' + SW + '</th><th class="getal">' + VX + '</th><th>the model says</th><th>in ' + stap('stukjes') + ': the improvement contains</th></tr>' +
     '<tr><td>I</td><td class="getal">1</td><td class="getal">1</td><td class="getal">1</td><td class="bevat"><i>Y</i> = ' + b(0) + ' + ' + b(1) + ' + ' + b(2) + ' + ' + b(3) + '</td><td class="bevat">' + kl('H/M + X + T + S') + '</td></tr>' +
     '<tr><td>II</td><td class="getal">1</td><td class="getal">0</td><td class="getal">0</td><td class="bevat"><i>Y</i> = ' + b(0) + ' + ' + b(1) + '</td><td class="bevat">' + kl('H/M + T') + '</td></tr>' +
@@ -752,10 +771,10 @@
       invoer:{soort:'getal', goed:r.leen, fouten:[
         [GETALLEN.voorI, 'That is the pretest of group I. Why would III and IV have started out exactly like that, and not like group II?'],
         [GETALLEN.voorII, 'That is the pretest of group II. Why would III and IV have started out exactly like that, and not like group I?']]},
-      hint:'Random assignment put the groups together. How will III and IV have started out on average, compared with I and II?',
+      hint:'Random assignment formed the groups. How will III and IV have started out on average, compared with I and II?',
       uit:function(){ return WELKE + P('The mean of the two pretests you do have. From here on, that number is called the <i>borrowed pretest</i>.') +
         som('borrowed pretest', ['(pretest I + pretest II) / 2', '(' + g(GETALLEN.voorI) + ' + ' + gh(GETALLEN.voorII) + ') / 2', g(r.leen)]) +
-        P('That is allowed because random assignment put the groups together: on average they started out equal. On average, not exactly: I and II are already ' + pt(Math.abs(GETALLEN.voorII - GETALLEN.voorI)) + ' apart. Whether III and IV look more like I or more like II, you do not know, so the middle is your best guess. You fill in a number in a place where you measured nothing. That is called <i>substitution</i>.') +
+        P('That is allowed because random assignment formed the groups: on average they started out equal. On average, not exactly: I and II are already ' + pt(Math.abs(GETALLEN.voorII - GETALLEN.voorI)) + ' apart. Whether III and IV look more like I or more like II, you do not know, so the middle is your best guess. And not ' + g(GETALLEN.voorI) + ' for III because III got the therapy, like I: the pretest came before the therapy, so the therapy cannot decide where anyone started. You fill in a number in a place where you measured nothing. That is called <i>substitution</i>.') +
         P('Measuring is impossible here, by the way: give group III a pretest, and it has become group I.'); } },
 
     hm: { titel:'Group IV: how big is H/M?', twijfel:'HM',
@@ -850,11 +869,18 @@
         return WELKE + P('The one from ' + stap('s') + ', with the borrowed pretest: S\u00a0=\u00a0' + g(r.S) + '. Or the one from ' + stap('did') + ', with the improvements. Both need the pretests of I and II.') +
         P('With posttests only, it goes wrong. Take the calculation of ' + stap('did') + ', but with posttests instead of improvements:') +
         som(L, ['(posttest I − posttest II) − (posttest III − posttest IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(KAAL)]) +
-        P('A posttest carries along where a group started. For III and IV that makes no difference: they got the same borrowed pretest, so it drops out of posttest III − posttest IV. For I and II it does: posttest I − posttest II holds not only X + S but also the difference between pretest I and pretest II. What is left:') +
-        som(L, ['S + (pretest I − pretest II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(r.S) + ' + ' + gh(VOOR_VERSCHIL), g(KAAL)]) +
-        P('That calculation acts as if I and II started out equal, and they did not: I started at ' + g(GETALLEN.voorI) + ' and II at ' + g(GETALLEN.voorII) + '.' + (gelijk(KAAL, 0) ? ' Here S even cancels out exactly.' : '') +
-          ' With improvements that does not happen, because there you first take away the pretests that I and II actually had.') +
-        P('And the borrowed pretest? It always drops out of S, in ' + stap('did') + ' too, because III and IV get the same one. You needed it for H/M and T, not for S.') +
+        // Michelle (23-11): "S + (voormeting I − voormeting II)" viel uit de lucht, en "de geleende voormeting valt altijd
+        // weg" kon ze niet nakijken. Nu staat het met getallen: een nameting is voormeting plus verbetering.
+        P('Why ' + g(KAAL) + '? A posttest is where a group started, plus what it gained: pretest plus improvement. Write the two differences out like that:') +
+        somBlok([
+          ['posttest I − posttest II', ['(' + g(GETALLEN.voorI) + ' + ' + gh(r.vI) + ') − (' + g(GETALLEN.voorII) + ' + ' + gh(r.vII) + ')',
+            '(' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ') + (' + g(r.vI) + ' − ' + gh(r.vII) + ')', g(VOOR_VERSCHIL) + ' + ' + gh(r.vI - r.vII), g(a)]],
+          ['posttest III − posttest IV', ['(' + g(r.leen) + ' + ' + gh(r.vIII) + ') − (' + g(r.leen) + ' + ' + gh(r.vIV) + ')', g(r.vIII) + ' − ' + gh(r.vIV), g(c)]]
+        ]) +
+        P('For III and IV the borrowed pretest drops out: it is ' + g(r.leen) + ' for both. For I and II it does not: group I started ' + pt(Math.abs(VOOR_VERSCHIL)) + (VOOR_VERSCHIL < 0 ? ' lower' : ' higher') +
+          ' than group II, and that ' + g(VOOR_VERSCHIL) + ' counts. With improvements it was ' + g(r.vI - r.vII) + ' − ' + gh(r.vIII - r.vIV) + ', and that is S. With posttests only, the ' + g(VOOR_VERSCHIL) + ' comes on top' +
+          (gelijk(KAAL, 0) ? ', and here it cancels S out exactly.' : '.')) +
+        P('With improvements that does not happen, because there you first take away the pretests that I and II actually had. So the borrowed pretest does not matter for S: you needed it for H/M and T.') +
         P('The other answers:') +
         // de som met alleen nametingen staat hierboven al uitgeschreven, dus niet nog eens in het lijstje
         '<ul>' + ST.kaal.invoer.opties.filter(function(o){ return !gelijk(o, r.S) && !gelijk(o, KAAL); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
@@ -885,23 +911,26 @@
           [b(1), ['posttest II − ' + b(0), g(GETALLEN.naII) + ' − ' + gh(rb.na.b0), g(rb.na.b1)]],
           [b(3), ['posttest I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(GETALLEN.naI) + ' − ' + gh(rb.na.b0) + ' − ' + gh(rb.na.b1) + ' − ' + gh(rb.na.b2), g(rb.na.b3)]]
         ]) +
+        // beeld boven regel (Michelle, 23-11): eerst de trap, dan b0, dan pas b1 en b3
+        trapReg('na') +
         P('They look a little different from ' + stap('x') + ': there you first took off the pretest ' + g(r.leen) + ' and then H/M ' + g(r.HM) + '; here those two sit together in ' + b(0) + ' = ' + g(rb.na.b0) + ', so you take them off in one go.') +
+        P('And look at ' + b(0) + ', the posttest of those who got nothing. The starting level sits in there, where everyone started on average (the borrowed pretest), and so does H/M:') +
+        som(b(0), ['starting level + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
+        P('So in this regression you do not see H/M on its own: it is hidden inside ' + b(0) + '.') +
         // Tot 23-11-2026 stond hier "b1 is T ... b3 is S". Dat klopte alleen bij gelijke voormetingen: de regressie op de
         // nameting is de som met alleen nametingen, en met 48 en 52 geeft ze b1 = 3 en b3 = 0. Wat er nu staat, rekent dat voor.
         P(b(2) + ' is X, what the therapy does: ' + g(rb.na.b2) + ', just as in ' + stap('x') + '. But ' + b(1) + ' is ' + g(rb.na.b1) + ', and T was ' + g(r.T) +
           '. And ' + b(3) + ', the weight of the product ' + VX + ', is ' + g(rb.na.b3) + ', and S was ' + g(r.S) +
-          '. A posttest carries along where a group started, and the model only knows whether there was a pretest, not how high it was. Group II started at ' +
-          g(GETALLEN.voorII) + ' and group I at ' + g(GETALLEN.voorI) + ', not at the borrowed ' + g(r.leen) + ':') +
+          '. A posttest is pretest plus improvement, and the model only knows whether there was a pretest, not how high it was. Posttest II is ' +
+          g(GETALLEN.voorII) + ' + ' + gh(r.HM) + ' + ' + gh(r.T) + ' (pretest II, H/M, T); ' + b(0) + ' is ' + g(r.leen) + ' + ' + gh(r.HM) + ' (borrowed pretest, H/M):') +
         somBlok([
-          [b(1), ['T + (pretest II − borrowed pretest)', g(r.T) + ' + (' + g(GETALLEN.voorII) + ' − ' + gh(r.leen) + ')', g(rb.na.b1)]],
-          [b(3), ['S + (pretest I − pretest II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(rb.na.b3)]]
+          [b(1), ['posttest II − ' + b(0), '(' + g(GETALLEN.voorII) + ' + ' + gh(r.HM) + ' + ' + gh(r.T) + ') − (' + g(r.leen) + ' + ' + gh(r.HM) + ')',
+            '(' + g(GETALLEN.voorII) + ' − ' + gh(r.leen) + ') + ' + gh(r.T), g(GETALLEN.voorII - r.leen) + ' + ' + gh(r.T), g(rb.na.b1)]]
         ]) +
-        P('That ' + b(3) + ' is exactly the calculation with posttests only from ' + stap('kaal') + '.' + (gelijk(rb.na.b3, 0) ? ' So on the posttest you do not see the pretest sensitization here at all.' : '') +
-          ' In ' + stap('regVer') + ', the improvement takes the difference in pretests away first.') +
-        P('And look at ' + b(0) + ', the posttest of those who got nothing. The starting level sits in there, where everyone started on average (the borrowed pretest), and so does H/M:') +
-        som(b(0), ['starting level + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
-        P('So in this regression you do not see H/M on its own: it is hidden inside ' + b(0) + '.') +
-        trapReg('na'); } },
+        P('The ' + g(r.T) + ' is T. The ' + g(GETALLEN.voorII - r.leen) + ' is how far group II started above the borrowed pretest. And ' + b(3) + ' is the calculation with posttests only from ' + stap('kaal') + ': S plus the difference between pretest I and pretest II.') +
+        som(b(3), ['S + (pretest I − pretest II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(rb.na.b3)]) +
+        P((gelijk(rb.na.b3, 0) ? 'So with the posttest as outcome you do not see the pretest sensitization here at all.' : '') +
+          ' In ' + stap('regVer') + ', the improvement takes the difference in pretests away first.'); } },
 
     regVer: { titel:'And this is a regression: the improvement', toegift:true,
       tabelReg:'ver',
@@ -919,14 +948,14 @@
         ]) +
         // tot 23-11-2026: "De andere twee bleven wat ze waren: b1 is T, b2 is X". Met ongelijke voormetingen veranderde b1
         // wel (op de nameting 3, hier 1), dus dat staat er nu uitgerekend
-        P(b(3) + ' is S, just as in ' + stap('s') + ', and ' + b(1) + ' is T. On the posttest they were ' + g(rb.na.b3) + ' and ' + g(rb.na.b1) +
+        P(b(3) + ' is S, just as in ' + stap('s') + ', and ' + b(1) + ' is T. With the posttest as outcome they were ' + g(rb.na.b3) + ' and ' + g(rb.na.b1) +
           '; the improvement first takes away where each group started, so the difference in pretests is no longer in them. And now ' + b(0) +
           ' is exactly H/M: the improvement of those who got nothing. Only ' + b(2) + ' stayed what it was: X.') +
         '<div class="tabelvak"><table class="data"><caption>What the weights mean, per dependent variable</caption>' +
         '<tr><th>dependent variable</th><th>' + b(0) + ' means</th><th>' + kl('H/M') + ' visible on its own?</th><th>' + b(1) + ' and ' + b(3) + ' are ' + kl('T') + ' and ' + kl('S') + '?</th></tr>' +
         '<tr><td>posttest</td><td>starting level + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>no</td><td>' + jaNee(rb.na) + '</td></tr>' +
         '<tr><td>improvement</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>yes</td><td>' + jaNee(rb.ver) + '</td></tr></table></div>' +
-        P('On the improvement, every regression weight is a piece from the equation of the design, and the interaction ' + VX + ' is the pretest sensitization. On the posttest there is more in them: the starting level in ' + b(0) + ', and the difference in pretests in ' + b(1) + ' and ' + b(3) + '. What you see on its own depends on what you choose as <i>Y</i>.') +
+        P('With the improvement as outcome, every regression weight is a piece from the equation of the design, and the interaction ' + VX + ' is the pretest sensitization. With the posttest as outcome there is more in them: the starting level in ' + b(0) + ', and the difference in pretests in ' + b(1) + ' and ' + b(3) + '. What you see on its own depends on what you choose as <i>Y</i>.') +
         trapReg('ver'); } }
   };
   var stappen = VOLGORDE.map(function(k){ if (!ST[k]) throw new Error('VOLGORDE noemt een trede die niet bestaat: ' + k); return ST[k]; });
@@ -948,21 +977,26 @@
     ['posttest II − posttest III', GETALLEN.naII - GETALLEN.naIII, {T:1, X:-1}],
     ['improvement I − improvement II', r.vI - r.vII, {X:1, S:1}],
     ['improvement I', r.vI, {HM:1, X:1, T:1, S:1}], ['posttest I − pretest I', r.vI, {HM:1, X:1, T:1, S:1}]
-  ].filter(function(w){ var s = 0; for (var k in w[2]) s += w[2][k] * r[k]; return gelijk(w[1], s); });
+  ].map(function(w){ var s = 0; for (var k in w[2]) s += w[2][k] * r[k]; w.push(gelijk(w[1], s)); return w; });
+  var WEGEN_TOEVAL = WEGEN.filter(function(w){ return !w[3]; });
+  WEGEN = WEGEN.filter(function(w){ return w[3]; });
+  function stukjesNaam(c){ return Object.keys(c).map(function(k){ return (c[k] < 0 ? '− ' : '') + NAAM[k]; }).join(' + ').replace(/\+ − /g, '− '); }
   function duiding(o){
     var sl = ['HM','X','T','S'], past = [];
     // de som met alleen nametingen eerst: dat getal is geen som van stukjes (solomon_getallen_test.py), dus anders
     // stond er "dat getal komt uit geen van de sommen hier", terwijl het juist de natuurlijkste fout is
     if (!gelijk(VOOR_VERSCHIL, 0) && gelijk(o, KAAL))
-      return 'that is the calculation of ' + stap('did') + ' with posttests only. It acts as if I and II started out equal, but I started at ' +
-        g(GETALLEN.voorI) + ' and II at ' + g(GETALLEN.voorII) + ', and that difference is in your answer.';
+      return 'that is the calculation of ' + stap('did') + ' with posttests only. It acts as if I and II started out equal, but group I started at ' +
+        g(GETALLEN.voorI) + ' and group II at ' + g(GETALLEN.voorII) + ', and that difference is in your answer.';
     for (var m = 1; m < 16; m++){
       var sub = sl.filter(function(k, i){ return m & (1 << i); });
       if (gelijk(sub.reduce(function(a, k){ return a + r[k]; }, 0), o)) past.push(sub);
     }
     var wegen = WEGEN.filter(function(w){ return gelijk(w[1], o); }).map(function(w){ return w[0]; });
     var via = wegen.length ? ' (for instance ' + wegen.join(', or ') + ')' : '';
-    if (!past.length) return 'that number comes from none of the calculations here' + via + '.';
+    var toeval = WEGEN_TOEVAL.filter(function(w){ return gelijk(w[1], o); }).map(function(w){
+      return ' If you got there via ' + w[0] + ', that is a coincidence: it holds ' + stukjesNaam(w[2]) + ', plus the difference in pretests.'; }).join('');
+    if (!past.length) return 'that number comes from none of the calculations here' + via + '.' + toeval;
     return past.map(function(sub){
       var naam = sub.map(function(k){ return NAAM[k]; }).join(' + ');
       if (sub.length === 1) return sub[0] === 'S' ? 'that is S.' : 'that is ' + naam + ', ' + UITLEG[sub[0]] + via + '; S is not in it.';
@@ -970,7 +1004,7 @@
       var rest = sub.filter(function(k){ return k !== 'S'; }).map(function(k){ return NAAM[k]; });
       if (sub.indexOf('S') >= 0) return 'that is ' + naam + via + ': you forgot to take away ' + rest.join(' and ') + '.';
       return 'that is ' + naam + via + '; S is not in it.';
-    }).join(' Or: ');
+    }).join(' Or: ') + toeval;
   }
 
   function invoerHTML(st, i){
@@ -1071,7 +1105,7 @@
   // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
   document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
   [].forEach.call(document.querySelectorAll('[data-v]'), function(e){ e.textContent = g(GETALLEN[e.getAttribute('data-v')]); });
-  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL};
+  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL, voorAfstand:Math.abs(VOOR_VERSCHIL)};
   [].forEach.call(document.querySelectorAll('[data-r]'), function(e){ e.textContent = g(AFGELEID[e.getAttribute('data-r')]); });
   // de streep hoort bij elke letter, ook buiten de ladder (APA-lens, 8-10: de lege kaart stond kaal naast de ingevulde).
   // Alleen in tekstknopen, niet in de innerHTML: daar ving kl() ook de X in het attribuut data-r="X" en brak de
@@ -1358,8 +1392,8 @@
       '<tr><td>posttest</td><td class="getal">' + g(q.na.b0) + '</td><td class="getal">' + g(q.na.b1) + '</td><td class="getal">' + g(q.na.b2) + '</td><td class="getal">' + g(q.na.b3) + '</td></tr>' +
       '<tr><td>improvement</td><td class="getal">' + g(q.ver.b0) + '</td><td class="getal">' + g(q.ver.b1) + '</td><td class="getal">' + g(q.ver.b2) + '</td><td class="getal">' + g(q.ver.b3) + '</td></tr></table>' +
       '<p class="zacht" style="font-size:14px;margin-top:0">' + kl(ongelijk ?
-        'The pretests of I and II differ (' + g(nu.voorI) + ' and ' + g(nu.voorII) + '). The regression on the posttest does not know that: the difference sits in its ' + b(1) + ' and ' + b(3) + '. The regression on the improvement takes it off first.' :
-        'On the improvement, ' + b(0) + ' is H/M; on the posttest, H/M is hidden inside ' + b(0) + ', together with the starting level ' + g(rr.leen) + '. The other three weights are T, X and S in both.') + '</p>';
+        'The pretests of I and II differ (' + g(nu.voorI) + ' and ' + g(nu.voorII) + '). The regression with the posttest as outcome does not know that: the difference ends up in its ' + b(1) + ' and ' + b(3) + '. The regression with the improvement as outcome takes it away first.' :
+        'With the improvement as outcome, ' + b(0) + ' is H/M; with the posttest as outcome, H/M is hidden inside ' + b(0) + ', together with the starting level ' + g(rr.leen) + '. The other three weights are T, X and S in both.') + '</p>';
     waterval(document.getElementById('waterval'), rr);
     document.getElementById('wv-cap').textContent = 'The improvement of group I (' + pt(rr.vI) + '), built from the four pieces. Each piece starts where the previous one ended.';
     var met = rr.S + rr.X, zonder = rr.X, o;
