@@ -2920,6 +2920,9 @@ margin-bottom: 0.4em;
 
 html.werk-lezer .werk::before {
 content: "✎ waar ik twijfel";
+text-transform: none;
+letter-spacing: 0.01em;
+font-size: 0.85em;
 }
 .werk p, .werk-blok p, .werk-blok li {
 text-align: left;
@@ -3077,68 +3080,9 @@ max-width: calc(100vw - 2.5rem);
 }
 }
 </style>
-<link rel="alternate" hreflang="nl" href="https://countcamp.org/manuscript/h2.html">
-<link rel="alternate" hreflang="en" href="https://countcamp.org/en/book/h2.html">
-<link rel="alternate" hreflang="x-default" href="https://countcamp.org/manuscript/h2.html">
-<style>
-/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
-.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
-.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
-.taalwissel-los [aria-current]{font-weight:600;}
-.taalwissel-los .taalwissel-sep{margin:0 .45em;}
-</style>
-<style>
-/* taalbalk: een voorstel, geen doorsturen (_tools/taalwissel/balk.html) */
-.taalbalk{display:flex;align-items:center;justify-content:center;gap:.9rem;margin:0;padding:.35rem 1rem;background:#dfebf2;border-bottom:1px solid #b9cfdd;color:#1a3a5c;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
-.taalbalk a{color:#1a3a5c;text-decoration:underline;text-underline-offset:2px;}
-.taalbalk a:hover{text-decoration-thickness:2px;}
-.taalbalk button{margin:0;padding:0 .45rem;border:1px solid #1a3a5c;border-radius:3px;background:transparent;color:#1a3a5c;font:inherit;line-height:1.4;cursor:pointer;}
-.taalbalk a:focus-visible,.taalbalk button:focus-visible{outline:2px solid #1a3a5c;outline-offset:2px;}
-</style>
-<script>
-/* taalbalk: alleen voor een browser zonder Nederlands, en alleen als er een Engelse tweeling is (_tools/taalwissel/balk.html) */
-(function () {
-  var SLEUTEL = "countcamp-taalbalk";
-  var talen = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language];
-  var bekend = false;
-  for (var i = 0; i < talen.length; i++) {
-    if (!talen[i]) continue;
-    if (/^nl(-|$)/i.test(talen[i])) return;
-    bekend = true;
-  }
-  if (!bekend) return;
-  try { if (window.localStorage.getItem(SLEUTEL) === "weg") return; } catch (e) {}
-  function zet() {
-    var doel = document.querySelector('nav a[hreflang="en"]') || document.querySelector('link[rel="alternate"][hreflang="en"]');
-    if (!doel || !document.body) return;
-    var balk = document.createElement("div");
-    balk.className = "taalbalk";
-    balk.lang = "en";
-    balk.setAttribute("role", "note");
-    var link = document.createElement("a");
-    link.href = doel.getAttribute("href");
-    link.hreflang = "en";
-    link.textContent = "This page is also in English →";
-    var knop = document.createElement("button");
-    knop.type = "button";
-    knop.setAttribute("aria-label", "Close");
-    knop.textContent = "×";
-    knop.addEventListener("click", function () {
-      try { window.localStorage.setItem(SLEUTEL, "weg"); } catch (e) {}
-      if (balk.parentNode) balk.parentNode.removeChild(balk);
-    });
-    balk.appendChild(link);
-    balk.appendChild(knop);
-    var plek = document.getElementById("quarto-header") || document.body;
-    plek.insertBefore(balk, plek.firstChild);
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", zet); else zet();
-})();
-</script>
 </head>
 
 <body class="fullcontent quarto-light">
-<nav class="taalwissel taalwissel-los" aria-label="taal"><span aria-current="page">NL</span><span class="taalwissel-sep" aria-hidden="true">·</span><a href="../en/book/h2.html" hreflang="en" lang="en" title="This page in English">EN</a></nav>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
@@ -3493,9 +3437,15 @@ window.CC_SECTIES = {"h0.html":[{"i":"in-den-beginne","t":"1. In den beginne"},{
      "tekst puur" klinkt als een andere leesstand (ronde 2, tweede blik). Het adres staat hier één keer per bladzij en niet
      in elk briefje: de hoek staat vast in beeld, dus het staat naast elke
      "laat het ons weten" zonder dat iemand het hoeft te herhalen (besluit 3
-     van 10-11-2026, keuzes.md). */
+     van 10-11-2026, keuzes.md).
+     De naam. Tot 23-11-2026 zei de dichte knop "meekijken: waar ik twijfel".
+     Ben, 23-11: "hernoemen naar ✎ waar ik twijfel, met de twee scripts mee" --
+     dus heten knop en briefje nu hetzelfde (boek.css, html.werk-lezer
+     .werk::before). De twee scripts zijn en/_maak_afterbody_en.py (vertaalt
+     deze tekst, en zakt als hij hem niet precies één keer vindt) en
+     _tools/slotregel_meet.py (zoekt de knop op id). */
   var lezer = !!document.querySelector('meta[name="cc-werknotities"][content="lezer"]');
-  var LEZER_DICHT = '✎ meekijken: waar ik twijfel (';
+  var LEZER_DICHT = '✎ waar ik twijfel (';
   var WERK_DICHT = '✎ toon werknotities (';
   var OPEN = '✎ tekst puur';
   var OPEN_LEZER = '✎ werknotities dichtklappen';
@@ -4463,4 +4413,4 @@ geeft elke <p> uitvulling, afbreekstreepjes en een ondermarge voor de
 
 
 </body></html>
-<!-- countcamp-publicatie H2 bron-hash=5f6626315b2f212076ca66a506b360c9b9b912f468c89ac3094338af3bf6ad55 geleverd=2026-11-14T12:33:48 -->
+<!-- countcamp-publicatie H2 bron-hash=2688a510c6a95150399e42fef972ed5fe9fd288b23890bee69d306e1d486e451 geleverd=2026-11-23T16:35:58 -->
