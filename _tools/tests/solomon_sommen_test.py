@@ -16,7 +16,8 @@ Daarbovenop de route (23-11-2026, ronde 2 van C). Een som kan van regel tot rege
 weg gaan: tot 23-11 rekende de bladzij het hoofdeffect "van de variantieanalyse" uit als (X + S + X) / 2, uit de
 stukjes, terwijl de variantieanalyse van de nametingen 8 geeft (de nakijker: "een getal moet ook berekend worden langs
 de route die de zin noemt"). Daarom heeft een som met een etiket uit ROUTE hieronder een vaste uitkomst, uitgerekend
-uit de GETALLEN van de bladzij zelf; elk zulk etiket moet op de bladzij staan, anders keek deze toets niet.
+uit de GETALLEN van de bladzij zelf; elk zulk etiket moet op de bladzij staan, en de twee die stap 9 en de
+uitklapper delen in minstens twee sommen, anders keek deze toets niet.
 
 Wat hij niet ziet: de sommen zoals ze na het schuiven op het speelbord staan; alleen de begintoestand.
 
@@ -73,11 +74,16 @@ def waarde(s):
 
 
 def route(bron_tekst):
-    """Etiket -> (uitkomst, hoe), uitgerekend uit de GETALLEN van de bladzij; per taal het eigen etiket."""
+    """Etiket -> (uitkomst, hoe, in hoeveel sommen minstens), uitgerekend uit de GETALLEN van de bladzij; per taal het
+    eigen etiket. 'nameting I − II' en 'nameting III − IV' staan in stap 9 én in de uitklapper over toetsen: zonder dat
+    minimum zou een uitklapper met een ander minteken in het etiket ongezien blijven, omdat stap 9 het etiket al levert
+    (nakijker, 23-11)."""
     m = re.search(r"var GETALLEN = \{([^}]*)\}", bron_tekst)
     if not m:
         return None
     d = {k: float(v) for k, v in re.findall(r"(\w+):\s*(-?\d+(?:\.\d+)?)", m.group(1))}
+    if not {"voorI", "voorII", "naI", "naII", "naIII", "naIV"} <= set(d):
+        return None
     leen = (d["voorI"] + d["voorII"]) / 2
     vI, vII, vIII, vIV = d["naI"] - d["voorI"], d["naII"] - d["voorII"], d["naIII"] - leen, d["naIV"] - leen
     na_I_II, na_III_IV = d["naI"] - d["naII"], d["naIII"] - d["naIV"]
@@ -85,10 +91,10 @@ def route(bron_tekst):
     op_na = (na_I_II + na_III_IV) / 2                      # wat de variantieanalyse van de nametingen geeft
     en = 'lang="en"' in bron_tekst[:300]
     return {
-        ("posttest I − II" if en else "nameting I − II"): (na_I_II, "nameting I - nameting II"),
-        ("posttest III − IV" if en else "nameting III − IV"): (na_III_IV, "nameting III - nameting IV"),
-        ("main effect with the calculations" if en else "hoofdeffect met de sommen"): (met_sommen, "((vI - vII) + (vIII - vIV)) / 2"),
-        ("main effect on the posttests" if en else "hoofdeffect op de nametingen"): (op_na, "((naI - naII) + (naIII - naIV)) / 2"),
+        ("posttest I − II" if en else "nameting I − II"): (na_I_II, "nameting I - nameting II", 2),
+        ("posttest III − IV" if en else "nameting III − IV"): (na_III_IV, "nameting III - nameting IV", 2),
+        ("main effect from the calculations" if en else "hoofdeffect met de sommen"): (met_sommen, "((vI - vII) + (vIII - vIV)) / 2", 1),
+        ("main effect on the posttests" if en else "hoofdeffect op de nametingen"): (op_na, "((naI - naII) + (naIII - naIV)) / 2", 1),
     }
 
 
@@ -99,15 +105,16 @@ def toets(bron):
         return None
     ROUTE = route(bron.read_text(encoding="utf-8"))
     if ROUTE is None:
-        print("KON NIET KIJKEN: geen 'var GETALLEN = {...}' in %s" % bron.name)
+        print("KON NIET KIJKEN: geen 'var GETALLEN = {...}' met de zes metingen in %s" % bron.name)
         return None
     gezien = {k: 0 for k in ROUTE}
+    in_sommen = {k: set() for k in ROUTE}
     # de broncode van som() en somBlok() staat zelf in de DOM, met de tabelkop als tekenreeks: scripts eerst eruit.
     # Ook de lopende som van groep I ("geen-apa som lopend") telt mee; tot de nakijker het zag (23-11) viel hij erbuiten.
     dom = re.sub(r"<script\b.*?</script>", "", dom, flags=re.S)
     tabellen = re.findall(r'<table class="geen-apa som(?: lopend)?">(.*?)</table>', dom, re.S)
     fouten, regels, gerekend, woorden = [], 0, 0, 0
-    for tab in tabellen:
+    for nr, tab in enumerate(tabellen):
         reeks = {}
         for rij in re.findall(r"<tr>(.*?)</tr>", tab, re.S):
             l = re.search(r'<td class="l">(.*?)</td>', rij, re.S)
@@ -126,12 +133,14 @@ def toets(bron):
             reeks.setdefault(links, (rechts, v))
             if links in ROUTE:
                 gezien[links] += 1
-                moet, hoe = ROUTE[links]
+                in_sommen[links].add(nr)
+                moet, hoe, _ = ROUTE[links]
                 if abs(v - moet) > 1e-9:
                     fouten.append("%s = %s geeft %g, maar langs de route van dat etiket, %s, is het %g" % (links, rechts, v, hoe, moet))
-    for k, n in gezien.items():
-        if not n:
-            fouten.append("etiket '%s' staat niet (met een getal) op de bladzij: de routetoets keek dus niet" % k)
+    for k, (_, _, minst) in ROUTE.items():
+        if len(in_sommen[k]) < minst:
+            fouten.append("etiket '%s' staat (met een getal) in %d som(men), moet in minstens %d: de routetoets keek dus niet overal"
+                          % (k, len(in_sommen[k]), minst))
     print("%-18s %2d sommen, %3d regels: %3d uitgerekend, %2d met woorden (niet te rekenen), %d langs een vaste route, %d fout" %
           (bron.name, len(tabellen), regels, gerekend, woorden, sum(gezien.values()), len(fouten)))
     for f in fouten:
