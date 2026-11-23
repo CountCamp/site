@@ -7,6 +7,7 @@ uitziet en niet klopt. Op 23-11-2026 rekenden vier lezers alle sommen met de han
 wijziging.
 
 Hoe. De bladzij gaat open in headless Chrome (--dump-dom, alle uitklappers open). In elke tabel van de klasse "som"
+(ook de lopende som van groep I, klasse "som lopend")
 hoort bij elke linkerkant een rij rechterkanten, elk achter een "=". Elke rechterkant die alleen uit getallen en
 + − × / ( ) bestaat, wordt uitgerekend, en alle uitkomsten bij dezelfde linkerkant moeten gelijk zijn. Een
 rechterkant met woorden erin ("startniveau + H/M") telt niet mee, en dat wordt geteld en gemeld.
@@ -70,7 +71,10 @@ def toets(bron):
     if 'id="klaar"' not in dom:
         print("KON NIET KIJKEN: %s gaf geen volledige bladzij" % bron.name)
         return None
-    tabellen = re.findall(r'<table class="geen-apa som">(.*?)</table>', dom, re.S)
+    # de broncode van som() en somBlok() staat zelf in de DOM, met de tabelkop als tekenreeks: scripts eerst eruit.
+    # Ook de lopende som van groep I ("geen-apa som lopend") telt mee; tot de nakijker het zag (23-11) viel hij erbuiten.
+    dom = re.sub(r"<script\b.*?</script>", "", dom, flags=re.S)
+    tabellen = re.findall(r'<table class="geen-apa som(?: lopend)?">(.*?)</table>', dom, re.S)
     fouten, regels, gerekend, woorden = [], 0, 0, 0
     for tab in tabellen:
         reeks = {}
