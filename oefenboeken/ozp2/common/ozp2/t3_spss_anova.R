@@ -272,6 +272,6 @@ local({
     "Bonferroni sport 1-2 wijkt af van dia 44" = spss_p(rw2$p_bon) == ".003" &&
       spss_getal(rw2$lo_bon, 4) == "1.2470" && spss_getal(rw2$hi_bon, 4) == "5.5530",
     # Tabel E: de waarden die college 3 (dia 47) uit het boek fotografeert, df 2 en 6
-    "Tabel E wijkt af van de foto op dia 47" = all(tabel_E(2, 6) == c(3.46, 5.14, 7.26, 10.92, 27.00))
+    "de F-tabel (Tabel E) wijkt af van de foto op dia 47" = all(tabel_E(2, 6) == c(3.46, 5.14, 7.26, 10.92, 27.00))
   )
 })

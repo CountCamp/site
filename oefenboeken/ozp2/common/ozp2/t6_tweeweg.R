@@ -86,7 +86,7 @@ kolommenF <- c(.100, .050, .025, .010, .001)
 # "kolom .05 geeft 3.22" voor df = (2, 42), een rij die op papier niet bestaat.
 rijen_tabel_E <- c(1:30, 40, 50)
 kritF <- function(p, df1, df2) {
-  stopifnot("Tabel E heeft deze noemer-df niet als rij (zie rijen_tabel_E)" = df2 %in% rijen_tabel_E)
+  stopifnot("de F-tabel (Tabel E) heeft deze noemer-df niet als rij (zie rijen_tabel_E)" = df2 %in% rijen_tabel_E)
   round(qf(1 - p, df1, df2), 2)
 }
 # Tussen welke twee kolommen ligt F? Geeft de p-range terug. Zakt als F zo dicht

@@ -75,7 +75,7 @@ kaart <- list(
     s3 = "Eén groep, uitkomst continu. **σ van de populatie bekend** (gegeven in de opgave). Normaal verdeeld, of $n$ groot.",
     s4 = paste0("$z = \\dfrac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}$, geen $df$",
                 eq("Eq. 7 · SPSS kent geen *z*-toets voor een gemiddelde: met de hand")),
-    s5 = paste0("Tabel A (standaardnormaal).<br>", EENZ_Z),
+    s5 = paste0("*z*-tabel (Tabel A op de dia's), de standaardnormale verdeling.<br>", EENZ_Z),
     s6 = BESLIS,
     s7 = paste0("BI: $\\bar{x} \\pm z^* \\dfrac{\\sigma}{\\sqrt{n}}$<br>*z* = …, *p* = …",
                 eq("Eq. 8 · effectgrootte staat niet op het blad"))
@@ -89,7 +89,7 @@ kaart <- list(
     s3 = "Eén groep, uitkomst continu. σ onbekend, dus $s$ uit de steekproef. Ongeveer normaal.",
     s4 = paste0("$t = \\dfrac{\\bar{x} - \\mu_0}{s / \\sqrt{n}}$, $df = n - 1$",
                 eq("Eq. 9, 11 · SPSS: One-Sample T Test → `One-Sample Test`: `t`, `df`")),
-    s5 = paste0("Tabel D, rij $df$.<br>", EENZIJD),
+    s5 = paste0("*t*-tabel (Tabel D op de dia's), rij $df$.<br>", EENZIJD),
     s6 = BESLIS,
     s7 = paste0("BI: $\\bar{x} \\pm t^* \\dfrac{s}{\\sqrt{n}}$<br>*t*(*df*) = …, *p* = …, *d* = …",
                 eq("Eq. 10 · Cohens *d*: `One-Sample Effect Sizes` (niet op het blad)"))
@@ -103,7 +103,7 @@ kaart <- list(
     s3 = "Twee metingen aan **dezelfde** eenheden (within), of gekoppelde paren. Uitkomst continu. De **verschilscores** ongeveer normaal.",
     s4 = paste0("Per eenheid $d_i$, dan $t = \\dfrac{\\bar{d}}{s_d / \\sqrt{n}}$, $df = n - 1$ ($n$ = paren)",
                 eq("Eq. 17 (daar heet *d̄* *x̄* en is μ₀ = 0) · SPSS: Paired-Samples T Test → `Paired Samples Test`: `Mean`, `Std. Deviation`, `t`, `df`")),
-    s5 = paste0("Tabel D, rij $df$.<br>", EENZIJD),
+    s5 = paste0("*t*-tabel, rij $df$.<br>", EENZIJD),
     s6 = BESLIS,
     s7 = paste0("BI: $\\bar{d} \\pm t^* \\dfrac{s_d}{\\sqrt{n}}$<br>*t*(*df*) = …, *p* = …, *d* = … (vanaf 0.2 klein, 0.5 middelgroot, 0.8 groot), 95% BI […, …]",
                 eq("Cohens *d* Eq. 18, met *r* uit `Paired Samples Correlations` · SPSS' eigen *d* deelt door *s*~*d*~ en is groter"))
@@ -117,7 +117,7 @@ kaart <- list(
     s3 = "Eén categorische onafhankelijke met **twee** groepen, andere eenheden (between). Uitkomst continu. Per groep ongeveer normaal; Levene zegt of de spreiding gelijk is.",
     s4 = paste0("$t = \\dfrac{\\bar{x}_1 - \\bar{x}_2}{\\sqrt{s_1^2 / n_1 + s_2^2 / n_2}}$, $df$ = kleinste $n$ − 1",
                 eq("Eq. 12, 14 · SPSS: Independent-Samples T Test → `Independent Samples Test`: `Levene's Test` (`Sig.`) kiest de rij, dan `t`, `df`")),
-    s5 = paste0("Tabel D, rij $df$.<br>", EENZIJD, "<br>Levene: `Sig.` $\\leq .05$ → onderste rij."),
+    s5 = paste0("*t*-tabel, rij $df$.<br>", EENZIJD, "<br>Levene: `Sig.` $\\leq .05$ → onderste rij."),
     s6 = BESLIS,
     s7 = paste0("BI: $(\\bar{x}_1 - \\bar{x}_2) \\pm t^* \\sqrt{\\dfrac{s_1^2}{n_1} + \\dfrac{s_2^2}{n_2}}$<br>*t*(*df*) = …, *p* = …, *d* = … (vanaf 0.2 klein, 0.5 middelgroot, 0.8 groot)",
                 eq("Eq. 13 · Cohens *d* Eq. 15–16 met *s*~p~ · SPSS: `Independent Samples Effect Sizes`"))
@@ -131,7 +131,7 @@ kaart <- list(
     s3 = "Twee metingen aan **dezelfde** eenheden. Uitkomst minstens ordinaal. Verdeling van de verschillen lelijk (scheef, uitschieters, kleine $n$).",
     s4 = paste0("Rangen van $\\lvert d_i \\rvert$; $W^+$ = som van de rangen met een plus; dan $Z = \\dfrac{W^+ - \\mu_{W^+}}{\\sigma_{W^+}}$, geen $df$",
                 eq("Eq. 49–52 · SPSS: Nonparametric Tests → Related Samples → `Related-Samples Wilcoxon Signed Rank Test Summary`: `Test Statistic`, `Standardized Test Statistic` (jouw *Z*), `Asymptotic Sig.(2-sided test)`")),
-    s5 = paste0("Tabel A, via $Z$.<br>", EENZ_Z),
+    s5 = paste0("*z*-tabel, via $Z$.<br>", EENZ_Z),
     s6 = BESLIS,
     s7 = paste0("Rapporteer met medianen: *Z* = …, *p* = …, *Mdn* vóór = …, *Mdn* na = …",
                 eq("Effectgrootte staat niet op het blad"))
@@ -145,7 +145,7 @@ kaart <- list(
     s3 = "Eén categorische onafhankelijke met **twee** groepen, andere eenheden. Uitkomst minstens ordinaal. Verdelingen lelijk.",
     s4 = paste0("Alle $N$ scores op één rij rangen; $W$ = rangsom van groep 1; dan $Z = \\dfrac{W - \\mu_W}{\\sigma_W}$, geen $df$",
                 eq("Eq. 45–48 · SPSS: Nonparametric Tests → Independent Samples → `Independent-Samples Mann-Whitney U Test Summary`: `Wilcoxon W` (soms de rangsom van de ándere groep), `Standardized Test Statistic` (jouw *Z*, soms met omgekeerd teken), `Asymptotic Sig.(2-sided test)`")),
-    s5 = paste0("Tabel A, via $Z$.<br>", EENZ_Z),
+    s5 = paste0("*z*-tabel, via $Z$.<br>", EENZ_Z),
     s6 = BESLIS,
     s7 = paste0("Rapporteer met medianen: *W* = …, *Z* = …, *p* = …, *Mdn*₁ = …, *Mdn*₂ = …",
                 eq("Effectgrootte staat niet op het blad"))
@@ -159,9 +159,9 @@ kaart <- list(
     s3 = "Eén categorische onafhankelijke met **drie of meer** groepen, andere eenheden. Uitkomst continu. Per groep ongeveer normaal, gelijke varianties (Levene).",
     s4 = paste0("$F = \\dfrac{\\mathit{MSG}}{\\mathit{MSE}}$, $\\mathit{DFG} = I - 1$, $\\mathit{DFE} = N - I$",
                 eq("Eq. 21–29 · SPSS: One-Way ANOVA → `ANOVA`: `Between Groups`, `Within Groups`; `Sum of Squares`, `df`, `Mean Square`, `F`")),
-    s5 = paste0("Tabel E, kolom $\\mathit{DFG}$, rij $\\mathit{DFE}$.<br>", RECHTS_F, "<br>SPSS: `Sig.`"),
+    s5 = paste0("*F*-tabel (Tabel E op de dia's), kolom $\\mathit{DFG}$, rij $\\mathit{DFE}$.<br>", RECHTS_F, "<br>SPSS: `Sig.`"),
     s6 = BESLIS,
-    s7 = paste0("*F*(*DFG*, *DFE*) = …, *p* = …, η² = … (vanaf .01 klein, .06 middelgroot, .14 groot)<br>Verworpen? Dan post hoc (LSD, Bonferroni) of een contrast: Tabel D, altijd tweezijdig.",
+    s7 = paste0("*F*(*DFG*, *DFE*) = …, *p* = …, η² = … (vanaf .01 klein, .06 middelgroot, .14 groot)<br>Verworpen? Dan post hoc (LSD, Bonferroni) of een contrast: *t*-tabel, altijd tweezijdig.",
                 eq("η² Eq. 30 · post hoc Eq. 31–33, contrast Eq. 34–36 · SPSS: `ANOVA Effect Sizes` (rij `Eta-squared`), `Multiple Comparisons`, `Contrast Tests`"))
   ),
   list(
@@ -173,9 +173,9 @@ kaart <- list(
     s3 = "Eén categorische onafhankelijke met **drie of meer** groepen, andere eenheden. Uitkomst minstens ordinaal. Verdelingen lelijk of varianties ongelijk.",
     s4 = paste0("Alle $N$ scores rangen; rangsom $R_i$ per groep; $H = \\dfrac{12}{N(N+1)} \\sum \\dfrac{R_i^2}{n_i} - 3(N+1)$, $df = I - 1$",
                 eq("Eq. 53–54 · SPSS: Nonparametric Tests → Independent Samples → `Independent-Samples Kruskal-Wallis Test Summary`: `Test Statistic` (gecorrigeerd voor knopen, dus iets groter dan jouw *H*), `Degree Of Freedom`, `Asymptotic Sig.(2-sided test)`")),
-    s5 = paste0("Tabel F (χ²), rij $df$.<br>", RECHTS_H, "<br>SPSS: `Asymptotic Sig.`"),
+    s5 = paste0("χ²-tabel (Tabel F op de dia's), rij $df$.<br>", RECHTS_H, "<br>SPSS: `Asymptotic Sig.`"),
     s6 = BESLIS,
-    s7 = paste0("*H*(*df*) = …, *p* = …, ε² = …, met medianen per groep<br>Verworpen? Dan paarsgewijs (Dunn): $z_{ij}$ in Tabel A, tweezijdig ×2.",
+    s7 = paste0("*H*(*df*) = …, *p* = …, ε² = …, met medianen per groep<br>Verworpen? Dan paarsgewijs (Dunn): $z_{ij}$ in de *z*-tabel, tweezijdig ×2.",
                 eq("ε² Eq. 57 · Dunn Eq. 55–56 · SPSS: `Pairwise Comparisons` (`Std. Test Statistic`, `Adj. Sig.`)"))
   ),
   list(
@@ -187,10 +187,10 @@ kaart <- list(
     s3 = "**Twee** categorische onafhankelijke, andere eenheden per cel. Uitkomst continu. Per cel ongeveer normaal, gelijke varianties.",
     s4 = paste0("Per bron $F = \\dfrac{\\mathit{MS}_{\\text{bron}}}{\\mathit{MSE}}$; $\\mathit{DFA} = I - 1$, $\\mathit{DFB} = J - 1$, $\\mathit{DFAB} = (I-1)(J-1)$, $\\mathit{DFE} = N - IJ$",
                 eq("Eq. 37–43 · SPSS: General Linear Model → Univariate → `Tests of Between-Subjects Effects`: rijen A, B, A * B, `Error`; `Type III Sum of Squares`, `df`, `Mean Square`, `F`")),
-    s5 = paste0("Tabel E, per bron.<br>", RECHTS_F, "<br>SPSS: `Sig.` per rij"),
+    s5 = paste0("*F*-tabel, per bron.<br>", RECHTS_F, "<br>SPSS: `Sig.` per rij"),
     s6 = paste0(BESLIS, "<br>Eerst de interactie; is die er, dan zeggen de hoofdeffecten minder."),
-    s7 = paste0("Per bron: *F*(*DFA*, *DFE*) = …, *p* = …, η~p~² = …<br>Interactie in woorden: het effect van A op de uitkomst verschilt per niveau van B.",
-                eq("partiële η² Eq. 44 · SPSS: `Partial Eta Squared` (aanvinken onder Options), profielplot, `Estimated Marginal Means`"))
+    s7 = paste0("Per bron: *F*(*DFA*, *DFE*) = …, *p* = …, $\\eta^2_{\\text{p}}$ = …<br>Interactie in woorden: het effect van A op de uitkomst verschilt per niveau van B.",
+                eq("$\\eta^2_{\\text{p}}$ Eq. 44 (daar $\\eta^2_{\\text{part}}$) · SPSS: `Partial Eta Squared` (aanvinken onder Options), profielplot, `Estimated Marginal Means`"))
   ),
   list(
     id = "regr1", thema = "07_regressie_enkelvoudig", kort = "correlatie of enkelvoudige regressie", gedraagt = "t",
@@ -201,7 +201,7 @@ kaart <- list(
     s3 = "**Twee continue** variabelen, één meting per eenheid. Verband lineair (puntenwolk: geen worst). Residuen ongeveer normaal, gelijke spreiding.",
     s4 = paste0("$t = \\dfrac{r \\sqrt{n-2}}{\\sqrt{1 - r^2}}$ of $t = \\dfrac{b_1}{\\mathit{SE}_{b_1}}$, $df = n - 2$",
                 eq("*r* Eq. 58–59, *t* Eq. 63–65, *df* Eq. 69 · SPSS: Correlate → Bivariate → `Correlations` (`Pearson Correlation`, `Sig. (2-tailed)`); Regression → Linear → `Coefficients` (`B`, `Std. Error`, `t`, `Sig.`)")),
-    s5 = "Tabel D, rij $n - 2$.<br>De tabel geeft de staartkans; tweezijdig ×2 (Pippi).<br>SPSS: `Sig. (2-tailed)` in `Correlations`, `Sig.` in `Coefficients`; allebei tweezijdig.",
+    s5 = "*t*-tabel, rij $n - 2$.<br>De tabel geeft de staartkans; tweezijdig ×2 (Pippi).<br>SPSS: `Sig. (2-tailed)` in `Correlations`, `Sig.` in `Coefficients`; allebei tweezijdig.",
     s6 = BESLIS,
     s7 = paste0("*r*(*df*) = …, *p* = … · of: *b*₁ = …, *t*(*df*) = …, *p* = …, *R*² = …<br>Richting en eenheid erbij: per … meer $x$, … meer $y$.",
                 eq("*b* Eq. 60–62, *R*² Eq. 75, BI voor *b*₁ Eq. 71 · SPSS: `Model Summary` (`R Square`), `ANOVA` (`F`)"))
@@ -215,7 +215,7 @@ kaart <- list(
     s3 = "Eén continue uitkomst, **twee of meer** voorspellers, allemaal getallen (een groep erbij? dan ANCOVA). Lineair, residuen normaal met gelijke spreiding, geen multicollineariteit (VIF).",
     s4 = paste0("$F = \\dfrac{\\mathit{MSM}}{\\mathit{MSE}}$ met $\\mathit{DFM} = p$, $\\mathit{DFE} = n - p - 1$; per voorspeller $t = \\dfrac{b_j}{\\mathit{SE}_{b_j}}$",
                 eq("Eq. 76–83 · SPSS: Regression → Linear → `ANOVA` (`F`, `Sig.`), `Coefficients` (`B`, `Beta`, `t`, `Sig.`; `Tolerance`, `VIF` onder Statistics), `Model Summary` (`R Square`, `R Square Change`)")),
-    s5 = "Tabel E voor de *F* van het model: alleen de rechterstaart, nooit ×2.<br>Tabel D voor de *t* per voorspeller: tweezijdig ×2.<br>SPSS geeft bij allebei de tweezijdige `Sig.`.",
+    s5 = "*F*-tabel voor de *F* van het model: alleen de rechterstaart, nooit ×2.<br>*t*-tabel voor de *t* per voorspeller: tweezijdig ×2.<br>SPSS geeft bij allebei de tweezijdige `Sig.`.",
     s6 = BESLIS,
     s7 = paste0("*F*(*DFM*, *DFE*) = …, *p* = …, *R*² = …; per voorspeller *b* = …, *t*(*df*) = …, *p* = …<br>Δ*R*² als je een blok voorspellers toevoegt.",
                 eq("*R*² Eq. 82, BI Eq. 84 · SPSS: `R Square Change`, `F Change`"))
@@ -229,10 +229,10 @@ kaart <- list(
     s3 = "Eén categorische onafhankelijke (groepen, andere eenheden) **plus** een continue covariaat. Uitkomst continu. Covariaat lineair met de uitkomst, in elke groep dezelfde helling (parallelle regressielijnen), en gemeten vóór de ingreep.",
     s4 = paste0("$F = \\dfrac{\\mathit{MS}_{\\text{groep}}}{\\mathit{MSE}}$ uit de uitvoer; niet op het formuleblad",
                 eq("SPSS: General Linear Model → Univariate, covariaat bij `Covariate(s)` → `Tests of Between-Subjects Effects`: rij covariaat, rij groep, `Error` · eerst mét de productterm groep × covariaat (mag niet significant zijn), dan zonder")),
-    s5 = paste0("Tabel E.<br>", RECHTS_F, "<br>SPSS: `Sig.`"),
+    s5 = paste0("*F*-tabel.<br>", RECHTS_F, "<br>SPSS: `Sig.`"),
     s6 = BESLIS,
-    s7 = paste0("*F*(*df*₁, *df*₂) = …, *p* = …, η~p~² = …, met de **gecorrigeerde** gemiddelden (het blad geeft hier geen *df*-namen)",
-                eq("partiële η²: `Partial Eta Squared` · gecorrigeerde gemiddelden: `Estimated Marginal Means` (tabel `Estimates`)"))
+    s7 = paste0("*F*(*df*₁, *df*₂) = …, *p* = …, $\\eta^2_{\\text{p}}$ = …, met de **gecorrigeerde** gemiddelden (het blad geeft hier geen *df*-namen)",
+                eq("$\\eta^2_{\\text{p}}$: `Partial Eta Squared` · gecorrigeerde gemiddelden: `Estimated Marginal Means` (tabel `Estimates`)"))
   )
 )
 
