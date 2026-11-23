@@ -177,9 +177,9 @@ kansen_E <- c(.100, .050, .025, .010, .001)
 fw <- function(p, df1, df2) round(qf(1 - p, df1, df2), 2)
 klemF <- function(Fv, df1, df2) {
   v <- fw(kansen_E, df1, df2)
-  stopifnot("F ligt op de rand van een regel van Tabel E" = all(abs(Fv - v) > .03))
+  stopifnot("F ligt op de rand van een regel van de F-tabel (Tabel E)" = all(abs(Fv - v) > .03))
   i <- sum(v < Fv)
-  stopifnot("F valt onder .100 of voorbij .001: geen range uit Tabel E" = i >= 1, i < length(kansen_E))
+  stopifnot("F valt onder .100 of voorbij .001: geen range uit de F-tabel (Tabel E)" = i >= 1, i < length(kansen_E))
   c(hoog = kansen_E[i], laag = kansen_E[i + 1], F_hoog = v[i + 1], F_laag = v[i])
 }
 # Het blok van Tabel E voor één (df1, df2) als markdown, met de gevonden F op

@@ -75,7 +75,7 @@ t5_kolommen <- c(.25, .20, .15, .10, .05, .025, .02, .01, .005, .0025, .001, .00
 t5_chi_grens <- function(p, df) round(qchisq(1 - p, df), 2)
 t5_klem_chi <- function(H, df, marge = .05) {
   v <- t5_chi_grens(t5_kolommen, df)
-  stopifnot("H ligt op de rand van een kolom van Tabel F" = all(abs(H - v) > marge))
+  stopifnot("H ligt op de rand van een kolom van de chi2-tabel (Tabel F)" = all(abs(H - v) > marge))
   i <- sum(v < H)
   if (i == 0) return(c(hoog = NA, laag = t5_kolommen[1], H_hoog = v[1], H_laag = NA))
   stopifnot("H valt voorbij de laatste kolom" = i < length(v))
