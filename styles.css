@@ -603,13 +603,11 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
    die die schrijfwijze niet kent, valt terug op de regel ervoor en leest
    "NL" dan wel voor.
 
-   Het EN-label op de Nederlandse plank (a.cc-taal, zie hieronder) heeft
-   hetzelfde rechthoekje, en daarom staat het in dezelfde regels: één plek
-   voor het uiterlijk. Het merk zelf (::before) slaat het label over, anders
-   stond er een tweede EN vóór de letters EN. */
+   Het EN-label op de Nederlandse plank (a.cc-taal, zie hieronder) is ook
+   een link met hreflang in een boekkop, maar krijgt dit merk niet: dan
+   stond er een merk EN vóór de letters EN. */
 .cc-boek h3 a[hreflang]:not(.cc-taal)::before,
-.cc-card-werkboeken a[hreflang]::before,
-.cc-boek h3 a.cc-taal {
+.cc-card-werkboeken a[hreflang]::before {
   display: inline-block;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 0.66rem; font-weight: 600; letter-spacing: 0.06em;
@@ -623,10 +621,8 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 .cc-boek h3 a[hreflang="en"]:not(.cc-taal)::before,
-.cc-card-werkboeken a[hreflang="en"]::before { content: "EN"; content: "EN" / ""; }
-.cc-boek h3 a[hreflang="en"]:not(.cc-taal)::before,
-.cc-card-werkboeken a[hreflang="en"]::before,
-.cc-boek h3 a.cc-taal {
+.cc-card-werkboeken a[hreflang="en"]::before {
+  content: "EN"; content: "EN" / "";
   color: var(--cc-paper); background: var(--cc-blue-deep); border-color: var(--cc-blue-deep);
 }
 .cc-boek h3 a[hreflang="nl"]::before,
@@ -649,25 +645,37 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
    _tools/taallabel.py zet het na de bouw, uit _tools/taalparen.tsv, bij elk
    boek met een Engelse tweeling die in de bouw staat.
 
-   Hetzelfde rechthoekje als het EN-merk op de Engelse plank (de regels
-   hierboven), maar met een andere plek en een andere rol. Daar is het merk
-   versiering op de titellink en zegt het waar die link landt. Hier is het
-   label zelf een link, naar het Engelse boek, en staat het rechts achter
-   de pillen. Vóór een Nederlandse titel zou "EN" lezen als "dit boek is
-   Engels".
+   Het staat rechts achter de pillen, niet links vóór de titel zoals het
+   merk op de Engelse plank: daar zegt het merk waar de titellink landt,
+   hier is het label zelf een link, naar het Engelse boek. Vóór een
+   Nederlandse titel zou "EN" lezen als "dit boek is Engels".
+
+   WAAROM HET ER ANDERS UITZIET DAN HET EN-MERK (23-11-2026). De eerste
+   versie was hetzelfde gevulde donkerblauwe rechthoekje als het merk op de
+   Engelse plank. Op deze plank staat ernaast de pil "nieuw", in precies dat
+   donkerblauw, en beide testlezers lazen EN op 390 pixels als nog een
+   sticker en niet als iets om op te tikken. Michelle: "in mijn hoofd is EN
+   een tweede nieuw-sticker"; Jeanne: "Dat ik daar met dit rechthoekje
+   naartoe kan, komt niet over." Op een telefoon wint kleur het van vorm.
+   Nu: open, met de pijl die op deze plank al "hier ga je naar binnen"
+   betekent (elke titel eindigt erop), in de kleur van de titels.
 
    Drie dingen die het label moet hebben, omdat het een tweede link in de
    kop is (zie "de hele regel/kaart klikbaar" bovenaan de plank):
      - boven de laag van de titellink liggen (position + z-index), anders
        vangt die laag de klik en land je in het Nederlands;
      - een groter klikvlak dan het rechthoekje, onzichtbaar (::after), want
-       het rechthoekje is maar zo'n 26 bij 15 pixels, en wie op een telefoon
-       net misduwt, landt anders op het Nederlandse boek;
+       wie op een telefoon net misduwt, landt anders op het Nederlandse boek;
      - geen kleur- of onderstreepwissel van de rij-oplichter. Die regels
        gaan over de titel. */
 .cc-boek h3 a.cc-taal {
   position: relative; z-index: 1;
   flex: 0 0 auto; margin: 0 0 0 auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; line-height: 1;
+  white-space: nowrap; padding: 0.2rem 0.4rem 0.16rem;
+  color: var(--cc-blue-deep); background: transparent;
+  border: 1px solid var(--cc-blue-deep); border-radius: 3px;
 }
 /* naar rechts duwen doet de eerste pil al; staan er pillen, dan duwt het
    label niet mee (anders verdeelt de flexbox de ruimte, zie .cc-chip + .cc-chip) */
@@ -677,7 +685,7 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
 .cc-boek h3 a.cc-taal::after { content: ""; position: absolute; inset: -0.4rem 0 -0.4rem -0.3rem; }
 .cc-boek h3 a.cc-taal,
 html:not([data-vorm="kaart"]) .cc-boek:hover h3 a.cc-taal { text-decoration: none; }
-.cc-boek h3 a.cc-taal:hover { color: var(--cc-paper); background: var(--cc-blue); border-color: var(--cc-blue); }
+.cc-boek h3 a.cc-taal:hover { color: var(--cc-paper); background: var(--cc-blue-deep); }
 .cc-card-werkboeken ul { list-style: none; padding-left: 0; margin: 0.5rem 0 0.7rem; }
 .cc-card-werkboeken li {
   font-family: Georgia, serif; font-size: 0.98rem; line-height: 1.45;

@@ -50,13 +50,21 @@ import threading
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 PLANK = "oefenboeken/index.html"
-ZONDER = re.compile(r' ?<a class="cc-taal" [^>]*>EN</a>')
+ZONDER = re.compile(r' ?<a class="cc-taal" [^>]*>[^<]*</a>')
 TELLER = re.compile(r'<script data-goatcounter="[^"]*"\s+async src="//gc\.zgo\.at/count\.js"></script>\s*')
 
 PROEF = r"""
 <script>
 (function () {
   function kleur(s) { var m = s.match(/[\d.]+/g); return m ? m.slice(0, 3).map(Number) : null; }
+  // Het vlak dat je echt ziet: een doorzichtig vlak toont dat van zijn ouder.
+  function vlak(e) {
+    for (; e; e = e.parentElement) {
+      var c = getComputedStyle(e).backgroundColor, m = c.match(/[\d.]+/g);
+      if (m && (m.length < 4 || Number(m[3]) > 0)) return m.slice(0, 3).map(Number);
+    }
+    return [255, 255, 255];
+  }
   function aan(x, y) { var e = document.elementFromPoint(x, y); var a = e && e.closest("a"); return a ? a.getAttribute("href").replace(location.origin, "") : null; }
   function meet() {
     var uit = {breedte: window.innerWidth, vorm: document.documentElement.getAttribute("data-vorm") || "rug", boeken: []};
@@ -80,7 +88,7 @@ PROEF = r"""
         b.merk = getComputedStyle(lab, "::before").content;
         b.binnen = l.left >= k.left && l.right <= k.right + 0.5;
         var h = lab.parentElement; b.kop_past = h.scrollWidth <= h.clientWidth + 1;
-        b.letter = kleur(cs.color); b.vlak = kleur(cs.backgroundColor);
+        b.letter = kleur(cs.color); b.vlak = vlak(lab);
         b.tekst_label = lab.textContent;
       }
       uit.boeken.push(b);
@@ -233,7 +241,7 @@ def main() -> int:
                     eis(b["merk"] in ("none", "normal"), f"{naam}: geen tweede merk ervoor (::before {b['merk']})")
                     eis(b["binnen"], f"{naam}: het label blijft binnen zijn boek")
                     eis(b["kop_past"], f"{naam}: de kop met het label past in zijn breedte")
-                    eis(b["tekst_label"] == "EN", f"{naam}: er staat {b['tekst_label']!r}")
+                    eis(b["tekst_label"].startswith("EN"), f"{naam}: er staat {b['tekst_label']!r}")
                     c = contrast(b["letter"], b["vlak"]) if b["letter"] and b["vlak"] else 0
                     eis(c >= 4.5, f"{naam}: contrast {c:.1f}:1 (letter {b['letter']}, vlak {b['vlak']})")
                 zonder = [b for b in u["boeken"] if not b["label"] and "tekst" in b]

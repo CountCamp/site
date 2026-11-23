@@ -19,14 +19,13 @@ waarvan de titellink naar een bladzij wijst die in taalparen.tsv een Engelse
 tweeling heeft, achteraan in zijn kop één link:
 
     <a class="cc-taal" href="../en/workbooks/…/index.html" hreflang="en" lang="en"
-       title="The English edition of this book">EN</a>
+       title="The English edition of this book">EN →</a>
 
-Zijn uiterlijk staat in styles.css ("het EN-label"): hetzelfde rechthoekje als
-het taalmerk op de Engelse plank, waar het NL- en EN-merk uit het hreflang van de
-link komen. Daar zegt het merk in welke taal de titellink landt; hier is het
-label zelf de link, en zegt het hetzelfde: klik je erop, dan land je in het
-Engels. Daarom staat het rechts bij de pillen en niet links vóór de titel: vóór
-een Nederlandse titel zou EN lezen als "dit boek is Engels".
+Zijn uiterlijk en het waarom daarvan staan in styles.css ("het EN-label"). Het
+staat rechts bij de pillen en niet links vóór de titel, zoals het taalmerk op de
+Engelse plank: dat merk zegt in welke taal de titellink landt, en vóór een
+Nederlandse titel zou EN lezen als "dit boek is Engels". Hier is het label zelf
+de link.
 
 AFGELEID, NIET GETIKT. Welk boek een label krijgt, staat nergens met de hand:
 het volgt uit de titellink op de plank en de paren in taalparen.tsv, gelezen met
@@ -80,15 +79,18 @@ import taalonderdelen  # noqa: E402
 REPO = os.path.dirname(HIER)
 PLANKEN = ["oefenboeken/index.html"]
 TITEL = "The English edition of this book"
+# De pijl is die van de titels op de plank: "hier ga je naar binnen". Zonder pijl lazen
+# beide testlezers het label als sticker, naast de pil "nieuw" (zie styles.css, "het EN-label").
+TEKST = "EN →"
 
 _BOEK = re.compile(r'(<section\b[^>]*\bclass="[^"]*\bcc-boek\b[^"]*"[^>]*>\s*<h3\b[^>]*>)(.*?)(</h3>)', re.S)
 _TITELLINK = re.compile(r'\s*<a href="([^"]+)"')
-_LABEL = re.compile(r' ?<a class="cc-taal" [^>]*>EN</a>')
+_LABEL = re.compile(r' ?<a class="cc-taal" [^>]*>[^<]*</a>')
 
 
 def label(plank: str, en: str) -> str:
     return (f'<a class="cc-taal" href="{taalonderdelen.relatief(plank, en)}" hreflang="en" lang="en" '
-            f'title="{TITEL}">EN</a>')
+            f'title="{TITEL}">{TEKST}</a>')
 
 
 def doel(plank: str, href: str) -> str | None:

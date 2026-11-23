@@ -70,7 +70,7 @@ PLANK = """<main>
 </main>
 """
 
-LABEL = re.compile(r'<a class="cc-taal" href="([^"]+)" hreflang="en" lang="en" title="[^"]+">EN</a>')
+LABEL = re.compile(r'<a class="cc-taal" href="([^"]+)" hreflang="en" lang="en" title="[^"]+">EN →</a>')
 
 
 def kop_van(html: str, href: str) -> str:
@@ -144,7 +144,7 @@ def gevallen(tools: str) -> list[tuple[str, bool, str]]:
             "MVDA en Psychometrie hebben geen paar in de tabel, dus geen label")
         eis("label achteraan", kop_van(p, "ts/index.html").endswith(
             '<span class="cc-chip cc-chip-nieuw">nieuw</span> <a class="cc-taal" href="../' + TS_EN
-            + '" hreflang="en" lang="en" title="The English edition of this book">EN</a></h3>'),
+            + '" hreflang="en" lang="en" title="The English edition of this book">EN →</a></h3>'),
             "het label staat als laatste in de kop, na de pillen, met één spatie ervoor")
 
         eerst = p
