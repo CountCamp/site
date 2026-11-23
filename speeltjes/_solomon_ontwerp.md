@@ -525,6 +525,51 @@ Engelse. Alle drie rekenden de getallen na en vonden geen fout. Ronde 1:
   *"random assignment put the groups together"* las als samenvoegen (nu *formed the groups*, ook op twee oudere
   plekken); *"sat one point higher"* (nu *scored one point higher at pretest*); *"swallows S"* (nu *cancels S out*).
 
+**Ronde 2** (dezelfde drie lezers en de APA-lens, op de stand na ronde 1; hun uitslagen staan in het transcript van
+de eerste zetter, niet in een bestand). Alle vier rekenden de nieuwe sommen na en vonden geen rekenfout. De Engelse
+lezer vond twee problemen die ronde 1 zelf had gemaakt: de nieuwe zin in stap 3 en een *"They"* in stap 10 dat na het
+verschuiven van de trap naar de figuur wees. Verwerkt door de tweede en derde zetter (23-11, `patch_r3.py`,
+`patch_r4.py` in `.quarto/kladje_lenen/`):
+
+- **Stap 3** (Engelse lezer): *"En niet 48 voor III omdat ..."* las ook als *"het is niet 48, en de reden is de
+  therapie"*; Engels *"like I"* als *"zoals ik"*. Nu *"En geef III niet de 48 van groep I omdat ze allebei de therapie
+  kregen: ..."*.
+- **Stap 9 op 390 px** (Michelle, Jeanne): precies de twee regels die het werk doen, *"(48 + 15) − (52 + 3)"* en
+  *"(48 − 52) + (15 − 3)"*, vielen buiten beeld, omdat het label *"nameting I − nameting II"* zo breed was. Nu
+  *"nameting I − II"* en *"nameting III − IV"*. De hint van stap 9 is een zin korter.
+- **Stap 10** (Engelse lezer): *"Ze zien er iets anders uit"* wees naar de figuur; nu *"De sommen hierboven ..."*. Twee
+  keer 52 (*b*₁ = 55 − 52 en verbetering II = 55 − 52, cijfer voor cijfer gelijk): nu één zin die het toeval noemt,
+  alleen als voormeting II en *b*₀ gelijk zijn (uitgerekend met `gelijk()`).
+- **Stap 10, *b*₃** (Jeanne: *"heb ik zelf moeten nagaan"*; Michelle: *"het enige stuk dat daar nog in de oude stijl
+  staat"*): *b*₃ kreeg een formule aangereikt, *"S + (voormeting I − voormeting II)"*, terwijl *b*₁ erboven uit de
+  getallen werd opgebouwd. Nu net zo: nameting I is 48 + 2 + 1 + 8 + 4, *b*₀ en *b*₁ samen zijn nameting II, dus
+  *b*₃ = (48 + 2 + 1 + 8 + 4) − (52 + 2 + 1 + 8) = (48 − 52) + 4 = 0, en *"H/M, T en X vallen weg"*. Deze vorm is
+  van mij (C), niet uit de Bib; Michelle stelde iets vergelijkbaars voor.
+- **Speelbord, *"Probeer ook"*** (Jeanne: H/M schuift ook mee; Michelle: *"de twee"* las als de twee rijen van de
+  tabel): nu *"H/M, T en S in de sommen wel"*, en wat het eens wordt met wat: *"de som voor T hetzelfde als b₁ ...,
+  en de som voor S hetzelfde als b₃: met deze nametingen 0"*, dat getal uitgerekend (`data-r="kaal"`).
+- **Uitklapper** (Jeanne, Engelse lezer): *"of er een maken"* las niet als *"een S die er niet is"*; nu staat dat
+  erbij. *"variantieanalyse op de nametingen"* naast *"de regressie van de nameting"* las als twee richtingen voor één
+  ding; nu twee keer *"van"* (*toets op de nametingen* bleef, dat is geen regressierichting). Engels: *"In real data,
+  the ladder is just the bookkeeping"*, *"use it to adjust the difference"*, *"is no longer a single number"*,
+  *"the encore's regression with the posttest as outcome"*; in de aannamerij *"over and above what the pieces do"*
+  en *"does not recur at posttest"*; stap 8 *"Here the letter I stands for"*.
+- **APA-lens, ronde 2:** één fout, de bron van van Engelenburg noemde ERIC niet (nu *"(Research Report No. 99-06;
+  ED435692). University of Twente, ...; ERIC."*); zweefteksten van de trap met *b*₀..*b*₃ in Unicode en met
+  *"="*; *Van Engelenburg* met hoofdletter in Nederlandse lopende tekst zonder voornaam (Nederlandse spellingregel;
+  de Engelse bladzij houdt *van*); harde spaties binnen *"(12 + 8)"* en rond *"2 × 2"*. Bewust niet veranderd: de
+  bronnen op rol in plaats van op alfabet, en de cursieve geleende voormeting *"(50)"*.
+- **Op smalle schermen** iets minder ruimte rond *"="* in de sommen (0,45 em → 0,3 em), want de nieuwe som voor
+  *b*₃ was op echte 390 px 6 px te breed. Gemeten met de bladzij in een iframe van 390 px (`smal.py`); de oudere
+  lange sommen in stap 3 en stap 9 schuiven nog steeds, zoals vóór stuk 3.
+
+**Een toets erbij: `solomon_sommen_test.py`.** De getallen in de sommen kwamen al uit de data, maar de vorm van een
+som (*"(52 + 2 + 1) − (50 + 2)"*) is met de hand samengesteld, en tot nu toe rekenden alleen de lezers die na. De
+toets opent beide bladzijden in headless Chrome en rekent in elke som elke regel na tegen de regel ervoor: 20 sommen,
+86 regels per taal, waarvan 59 alleen uit getallen bestaan en uitgerekend worden (de 27 met woorden, zoals
+*"startniveau + H/M"*, telt hij en slaat hij over). Bijtproef: een *"+ 1"* extra in de som voor *b*₁ geeft drie
+foutmeldingen en afloop 1. Wat hij niet ziet: de sommen na het schuiven op het speelbord.
+
 **Niet veranderd, wel gemeld** (buiten deze opdracht, of een keuze voor Ben):
 
 - Michelle: stap 9 heeft als enige rekenstap geen figuur, en juist daar zit de kern. Haar voorstel: vier staven van
