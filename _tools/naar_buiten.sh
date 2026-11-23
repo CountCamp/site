@@ -270,6 +270,36 @@ gebouwde_tellers_nakijken() {   # $1 = echt | spook   $2 = blokkerend | melden
   return 0
 }
 
+# ---- de GEBOUWDE site: geen HTML-commentaar in de bladzij -------------------
+# Ben, 23-11-2026: "uit de pagina halen vóór publiceren (alle boeken)". De bouw
+# haalt het eruit (_tools/commentaar_weg.py, post-render, na de teller); dit leest
+# _site/ na, elke bladzij op elke diepte, met dezelfde ontleder. Toegestaan zijn
+# alleen de merktekens van de teller en twee stempels die een machine terugleest
+# (zie _tools/commentaarregel.py); de wachter noemt ze bij elke run.
+# Draait alleen NA een bouw, om dezelfde reden als `gebouwde_tellers_nakijken`:
+# bij --nakijken ligt er geen verse _site/, en de BRONNEN dragen hun commentaar
+# met opzet ("qmd houdt korte verwijzing"). Blokkerend op --productie, meldend op
+# de proefwegen -- rood kan hij alleen worden doordat de bouw er een liet staan,
+# en dat is altijd een echte fout.
+gebouwd_commentaar_nakijken() {   # $1 = blokkerend | melden
+  local streng="$1" code=0
+  # De hele uitvoer: bij een schone site zijn dat de tabel per map, de toegestane
+  # lijst met hoe vaak, en het oordeel -- een uitsluiting die je niet ziet is een gat.
+  python3 "$HIER/_tools/commentaarwacht.py" --site "$HIER/_site" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) echo "  Er staat HTML-commentaar in de gebouwde site (zie de regels hierboven)." ;;
+    3) echo "  De commentaarwacht kon niet (helemaal) kijken. Dat is geen schone uitslag"
+       echo "  maar een blinde: stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De commentaarwacht zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
+       echo "  Staat _tools/commentaarwacht.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 huidige_tak() { git branch --show-current; }
 
 # ============================================================
@@ -315,6 +345,7 @@ case "$WEG" in
     QUARTO_PROFILE=spook python3 _tools/schone_bouw.py --uit _site -- render
     controleer spook _site/index.html
     gebouwde_tellers_nakijken spook melden
+    gebouwd_commentaar_nakijken melden
     echo
     echo "klaar. Bekijken:"
     echo "  open $HIER/_site/index.html"
@@ -395,9 +426,11 @@ case "$WEG" in
     python3 _tools/schone_bouw.py --uit _site -- render >/dev/null
     controleer echt _site/index.html || { echo "  Niet geleverd."; exit 1; }
     gebouwde_tellers_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }
+    gebouwd_commentaar_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   else
     echo "  [droogloop] python3 _tools/schone_bouw.py --uit _site -- render && controleer echt _site/index.html"
     echo "  [droogloop] python3 _tools/tellerwacht.py --echt"
+    echo "  [droogloop] python3 _tools/commentaarwacht.py"
   fi
   echo
   doe git push origin main

@@ -14,6 +14,8 @@
 #
 # Daarvóór, sinds 21-11-2026 (spoor taalpers): de taalstukkenwachter
 # (_tools/taalonderdelen.py los --controleer). Rood = er gaat niets live.
+# Erna, sinds 23-11-2026 (spoor pers_commentaar): de commentaarwacht
+# (_tools/commentaarwacht.py) op de gebouwde _site/. Rood = er gaat niets live.
 #
 # Tot 14-11-2026 deed quarto-actions/publish@v2 bouwen en publiceren in één
 # stap, en was er geen plek om ertussen te kijken: main publiceerde zonder
@@ -104,6 +106,17 @@ jobs:
 
       - name: Tellerwacht
         run: python3 _tools/tellerwacht.py --echt
+
+      - name: Commentaarwacht
+        # Ben, 23-11-2026: HTML-commentaar "uit de pagina halen vóór publiceren
+        # (alle boeken)". De bouw haalt het eruit (_tools/commentaar_weg.py,
+        # post-render, na teller_zetten.py); deze stap leest de GEBOUWDE _site/ na,
+        # elke .html en elke search.json, op elke diepte. Afloop 1 = er staat nog
+        # commentaar, 3 = niet gekeken; allebei rood, en dan gaat er niets live.
+        # Toegestaan zijn alleen de merktekens van de teller en twee stempels die
+        # een machine terugleest (lever.sh --push zoekt de boekstempel op de live
+        # bladzij); de wachter noemt ze bij elke run, met hoe vaak.
+        run: python3 _tools/commentaarwacht.py
 
       - name: Publish to gh-pages (the build above, not rendered again)
         uses: quarto-dev/quarto-actions/publish@v2

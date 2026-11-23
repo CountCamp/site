@@ -90,11 +90,16 @@ jobs:
           # Sinds 14-11-2026 (spoor teller2) haalt de bouw zelf elke teller eruit
           # (_tools/teller_zetten.py, post-render); deze regel leest ze allemaal na.
           python3 _tools/tellerwacht.py --spook
+          # Een proefdruk staat net zo openbaar op countcamp.org als de site zelf
+          # (pr-preview/), dus ook hier geen HTML-commentaar in de bladzij
+          # (23-11-2026, spoor pers_commentaar; de bouw haalt het eruit,
+          # _tools/commentaar_weg.py, en dit leest het na).
+          python3 _tools/commentaarwacht.py
           # De CNAME hoort NIET mee: die stuurt countcamp.org aan en is van de
           # echte site. In een submap doet hij niets, maar meesturen is vragen
           # om een ongeluk als iemand ooit source-dir verzet.
           rm -f _site/CNAME
-          echo "proefdruk gecontroleerd: noindex ja, balk ja, teller nee -- op elke bladzij"
+          echo "proefdruk gecontroleerd: noindex ja, balk ja, teller nee, commentaar nee -- op elke bladzij"
 
       - name: Neerzetten en de link in de PR
         uses: rossjrw/pr-preview-action@v1

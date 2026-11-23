@@ -17,8 +17,17 @@ project:
   # _tools/teller.html veranderen. Nalezen: python3 _tools/tellerwacht.py --echt
   # (of --spook). Staat hier in het basisbestand en niet in een profiel, omdat
   # elke bouw erlangs moet; het script kiest zelf op grond van QUARTO_PROFILE.
+  #
+  # Daarna het commentaar eruit (23-11-2026, spoor pers_commentaar; Ben: "uit de
+  # pagina halen vóór publiceren (alle boeken)"). Ook dit na ELKE render en in
+  # elke bladzij, bijlagen incluis: _tools/commentaar_weg.py haalt elk
+  # <!-- ... --> weg, op de toegestane lijst in _tools/commentaarregel.py na
+  # (de merktekens van de teller en twee stempels die een machine terugleest).
+  # NA de teller en niet ervoor: zie de kop van commentaar_weg.py. Nalezen:
+  # python3 _tools/commentaarwacht.py
   post-render:
     - _tools/teller_zetten.py
+    - _tools/commentaar_weg.py
 
 website:
   title: "CountCamp"
@@ -94,6 +103,12 @@ format:
     fig-align: center
     callout-appearance: default
     callout-icon: false
+    # Commentaar uit de .qmd van de site komt niet in de bladzij (23-11-2026,
+    # spoor pers_commentaar). Dit vangt alleen wat pandoc in de .qmd ziet --
+    # gemeten op 1.9.38: niet een ```{=html}-blok, een include, een Lua-filter of
+    # Quarto's eigen sjabloon, en geen enkele bijlage. De rest doet
+    # _tools/commentaar_weg.py (post-render, hierboven).
+    strip-comments: true
 
 execute:
   echo: false
