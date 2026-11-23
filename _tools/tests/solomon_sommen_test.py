@@ -12,6 +12,12 @@ hoort bij elke linkerkant een rij rechterkanten, elk achter een "=". Elke rechte
 + − × / ( ) bestaat, wordt uitgerekend, en alle uitkomsten bij dezelfde linkerkant moeten gelijk zijn. Een
 rechterkant met woorden erin ("startniveau + H/M") telt niet mee, en dat wordt geteld en gemeld.
 
+Daarbovenop de route (23-11-2026, ronde 2 van C). Een som kan van regel tot regel kloppen en toch langs de verkeerde
+weg gaan: tot 23-11 rekende de bladzij het hoofdeffect "van de variantieanalyse" uit als (X + S + X) / 2, uit de
+stukjes, terwijl de variantieanalyse van de nametingen 8 geeft (de nakijker: "een getal moet ook berekend worden langs
+de route die de zin noemt"). Daarom heeft een som met een etiket uit ROUTE hieronder een vaste uitkomst, uitgerekend
+uit de GETALLEN van de bladzij zelf; elk zulk etiket moet op de bladzij staan, anders keek deze toets niet.
+
 Wat hij niet ziet: de sommen zoals ze na het schuiven op het speelbord staan; alleen de begintoestand.
 
 Gebruik: solomon_sommen_test.py [bladzij.html ...]   (zonder argument: beide talen)
@@ -66,11 +72,36 @@ def waarde(s):
     return eval(s, {"__builtins__": {}})   # alleen cijfers en + - * / ( ), getoetst met REKEN hierboven
 
 
+def route(bron_tekst):
+    """Etiket -> (uitkomst, hoe), uitgerekend uit de GETALLEN van de bladzij; per taal het eigen etiket."""
+    m = re.search(r"var GETALLEN = \{([^}]*)\}", bron_tekst)
+    if not m:
+        return None
+    d = {k: float(v) for k, v in re.findall(r"(\w+):\s*(-?\d+(?:\.\d+)?)", m.group(1))}
+    leen = (d["voorI"] + d["voorII"]) / 2
+    vI, vII, vIII, vIV = d["naI"] - d["voorI"], d["naII"] - d["voorII"], d["naIII"] - leen, d["naIV"] - leen
+    na_I_II, na_III_IV = d["naI"] - d["naII"], d["naIII"] - d["naIV"]
+    met_sommen = ((vI - vII) + (vIII - vIV)) / 2          # het gemiddelde van X + S en X, met de verbeteringen
+    op_na = (na_I_II + na_III_IV) / 2                      # wat de variantieanalyse van de nametingen geeft
+    en = 'lang="en"' in bron_tekst[:300]
+    return {
+        ("posttest I − II" if en else "nameting I − II"): (na_I_II, "nameting I - nameting II"),
+        ("posttest III − IV" if en else "nameting III − IV"): (na_III_IV, "nameting III - nameting IV"),
+        ("main effect with the calculations" if en else "hoofdeffect met de sommen"): (met_sommen, "((vI - vII) + (vIII - vIV)) / 2"),
+        ("main effect on the posttests" if en else "hoofdeffect op de nametingen"): (op_na, "((naI - naII) + (naIII - naIV)) / 2"),
+    }
+
+
 def toets(bron):
     dom = dump(bron)
     if 'id="klaar"' not in dom:
         print("KON NIET KIJKEN: %s gaf geen volledige bladzij" % bron.name)
         return None
+    ROUTE = route(bron.read_text(encoding="utf-8"))
+    if ROUTE is None:
+        print("KON NIET KIJKEN: geen 'var GETALLEN = {...}' in %s" % bron.name)
+        return None
+    gezien = {k: 0 for k in ROUTE}
     # de broncode van som() en somBlok() staat zelf in de DOM, met de tabelkop als tekenreeks: scripts eerst eruit.
     # Ook de lopende som van groep I ("geen-apa som lopend") telt mee; tot de nakijker het zag (23-11) viel hij erbuiten.
     dom = re.sub(r"<script\b.*?</script>", "", dom, flags=re.S)
@@ -93,8 +124,16 @@ def toets(bron):
             if links in reeks and abs(reeks[links][1] - v) > 1e-9:
                 fouten.append("%s = %s geeft %g, maar de regel ervoor (%s) gaf %g" % (links, rechts, v, reeks[links][0], reeks[links][1]))
             reeks.setdefault(links, (rechts, v))
-    print("%-18s %2d sommen, %3d regels: %3d uitgerekend, %2d met woorden (niet te rekenen), %d fout" %
-          (bron.name, len(tabellen), regels, gerekend, woorden, len(fouten)))
+            if links in ROUTE:
+                gezien[links] += 1
+                moet, hoe = ROUTE[links]
+                if abs(v - moet) > 1e-9:
+                    fouten.append("%s = %s geeft %g, maar langs de route van dat etiket, %s, is het %g" % (links, rechts, v, hoe, moet))
+    for k, n in gezien.items():
+        if not n:
+            fouten.append("etiket '%s' staat niet (met een getal) op de bladzij: de routetoets keek dus niet" % k)
+    print("%-18s %2d sommen, %3d regels: %3d uitgerekend, %2d met woorden (niet te rekenen), %d langs een vaste route, %d fout" %
+          (bron.name, len(tabellen), regels, gerekend, woorden, sum(gezien.values()), len(fouten)))
     for f in fouten:
         print("   FOUT:", f)
     if not tabellen or not gerekend:
@@ -109,4 +148,4 @@ if None in uitslag:
     sys.exit(3)
 if not all(uitslag):
     sys.exit(1)
-print("ok: elke regel van elke som geeft hetzelfde als de regel ervoor")
+print("ok: elke regel van elke som geeft hetzelfde als de regel ervoor, en de sommen met een vaste route eindigen waar die route uitkomt")
