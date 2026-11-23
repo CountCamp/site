@@ -400,7 +400,7 @@ erbij:
 | stap 10, *b*₁ en *b*₃ op de nameting | 1 en 4: T en S | 3 en 0 | voorgerekend: *b*₁ = T + (52 − 50), *b*₃ = S + (48 − 52) |
 | stap 10, de trap van de nameting | 50 + 2 + 8 + 1 + 4 = 65 = nameting I | zou op 65 eindigen, nameting I is 63 | tekent nu de gewichten: 52, +8, +3 (grijs), 0 (grijs, plat), eind 63 |
 | stap 11, "de andere twee bleven wat ze waren" | waar | *b*₁ was 3, is nu 1 | uitgerekend; tabel met vierde kolom |
-| uitklapper, hoofdeffect | (12 + 8) / 2 = 10, "in zo'n analyse" (op de nametingen) | op de nametingen (8 + 8) / 2 = 8 | "op de verbeteringen is dat 10" |
+| uitklapper, hoofdeffect | (12 + 8) / 2 = 10, "in zo'n analyse" (op de nametingen) | op de nametingen (8 + 8) / 2 = 8 | een som op de nametingen: met voormeting 63 − 55 = 8, zonder 60 − 52 = 8, hoofdeffect (8 + 8) / 2 = 8 (sinds ronde 2 van C; tot dan *"met de verbeteringen (12 + 8) / 2 = 10"*, ingetrokken, zie *Ronde 2 van C*) |
 | uitklapper, "de interactie daarin is S" | waar | 0 | "S plus het verschil tussen voormeting I en II: met deze getallen 0" |
 | `duiding()`, wegen door de kale tabel | elke weg meet zijn stukjes | nameting I − nameting II = 8, en dat is niet X | een weg telt alleen mee als hij met deze getallen echt zijn stukjes meet |
 
@@ -496,7 +496,8 @@ Engelse. Alle drie rekenden de getallen na en vonden geen fout. Ronde 1:
   alsof I en II gelijk begonnen, en dat dat door het lot gemiddeld klopt.
 - **Jeanne: drie getallen voor het effect van de therapie (8, 10, 12)**, en de zin over het hoofdeffect als
   "alles hiervoor was fout". Nu zegt hij dat er met een interactie geen één getal meer is, en dat 10 een
-  samenvatting van twee is, geen nieuw stukje.
+  samenvatting van twee is, geen nieuw stukje. (De 10 zelf is in ronde 2 van C geschrapt; de zin *"geen nieuw stukje,
+  alleen een samenvatting van twee"* bleef. Zie *Ronde 2 van C*.)
 - **Michelle en Jeanne: *"S + (voormeting I − voormeting II)"* viel uit de lucht** (Jeanne: *"konijn uit een
   hoed"*). Stap 9 rekent het nu met getallen voor: een nameting is voormeting plus verbetering,
   (48 + 15) − (52 + 3) = (48 − 52) + (15 − 3) = −4 + 12, en (50 + 10) − (50 + 2) = 10 − 2, zodat je de 50 ziet
@@ -605,13 +606,87 @@ hem niet, ik herken hem"*; Jeanne: *"op de tweede keer lezen"*). Verwerkt (`patc
 - **Commentaar uit de tijd van 50/50** (nakijker): *"(65 − 50)"*, de oude volgorde *"dan lenen, dan IV"*, en de
   paren *"b2 bij X, b1 bij T, b3 bij S"*, die op de nameting sinds 48/52 niet meer gelden.
 
+**Ronde 2 van C: het hoofdeffect** (23-11, vierde zetter, tak `worktree-solomon_lenen`). Tot deze ronde stond het
+hieronder bij *Niet veranderd, wel gemeld*: de uitklapper noemde *"(12 + 8) / 2 = 10"* het hoofdeffect *"met de
+verbeteringen"*, maar een variantieanalyse van verbeteringen kun je in echte data niet draaien (III en IV hebben geen
+verbetering per persoon, zegt dezelfde uitklapper; Campbell & Stanley, 1963, p. 25: *"The asymmetries of the design rule
+out the analysis of variance of gain scores"*), en de variantieanalyse van de nametingen die de uitklapper aanraadt,
+geeft (8 + 8) / 2 = 8. Wie het advies volgde, kreeg 8 en dacht een fout te hebben gemaakt. Besluit van C
+(meesterknecht): niet laten staan; de 10 alleen houden met een duidelijk etiket, en zeggen dat de aangeraden analyse 8
+geeft, uitgerekend en via de sommentoets, of de 10 schrappen als dat schoner is.
+
+*Voor* (stand 0a2473d):
+
+> Let wel: met een interactie heeft het effect van de therapie op de kwaliteit van leven geen één getal meer. Zonder
+> voormeting is het 8, het gewicht *b*₂; met voormeting 12 (X + S). Een variantieanalyse noemt het gemiddelde van die
+> twee het hoofdeffect van de therapie op de kwaliteit van leven, met de verbeteringen (12 + 8) / 2 = 10. Dat is geen
+> nieuw stukje, alleen een samenvatting van twee.
+
+*Na* (stand 2fd2fdb):
+
+> Let wel: met een interactie heeft het effect van de therapie op de kwaliteit van leven geen één getal meer. Zonder
+> voormeting is het 8 (X), met voormeting 12 (X + S). Een variantieanalyse vat die twee toch samen in één getal, het
+> hoofdeffect van de therapie op de kwaliteit van leven: hun gemiddelde. Dat is geen nieuw stukje, alleen een
+> samenvatting van twee.
+>
+> Met de sommen van dit speeltje is dat:
+> hoofdeffect met de sommen = (12 + 8) / 2 = 10
+>
+> Die som kun je in echte data niet maken: III en IV hebben geen verbetering per persoon.
+>
+> Wat je wél kunt draaien, de variantieanalyse van de nametingen die Campbell en Stanley aanraden, neemt voor het
+> effect met voormeting nameting I − II, en voor het effect zonder voormeting nameting III − IV:
+> nameting I − II = 63 − 55 = 8
+> nameting III − IV = 60 − 52 = 8
+> hoofdeffect op de nametingen = (8 + 8) / 2 = 8
+>
+> Draai je die analyse, dan krijg je dus 8, en dan rekende je goed. Alleen ziet die analyse met voormeting 8 en niet
+> 12, want I begon 4 punten lager (stap 9). Daardoor is haar hoofdeffect hier 8 en niet 10, en haar interactie 0 en
+> niet 4: twee keer dezelfde vergissing.
+
+(Op de bladzij staan de sommen uitgelijnd op "=", met één "=" per regel; hier zijn ze ingekort tot één regel.)
+
+**Hoe het zo werd: eerst geschrapt, toen terug met etiket.** De eerste versie (2ea9802) schrapte de 10. De reden was
+Jeannes klacht uit ronde 1 (*"8, 10 en 12"*): een vierde getal leek die klacht te herhalen. Twee lezers vielen daar
+onafhankelijk over. De Engelse lezer: *"'The two' can only be 8 and 12, so I work out 10 before I reach"* de som, en
+*"Here S really is 4, and 0 is the mistake"* tegen *"not a mistake on your part"*: *"I'm left asking whether the 8 is
+right or wrong"*. Jeanne: *"Nu heb ik 10 in mijn hoofd en 8 op papier, en de tekst noemt mijn 10 nergens"*, en *"jouw
+som klopt, de analyse is blind — moest ik zelf leggen"*. De zin die de 10 bij de lezer laat ontstaan, *"het gemiddelde
+van die twee"*, kan niet weg zonder het begrip hoofdeffect weg te halen. Daarom staat de 10 er nu weer, met als etiket
+wat hij is: *"hoofdeffect met de sommen"*, plus de zin dat je die som in echte data niet kunt maken. Het gedachte-
+experiment is dus benoemd en niet verzwegen. De slotzin zegt wat Jeanne zelf moest leggen: je rekende goed, en de
+analyse ziet het verschil in voormeting niet, net als bij haar interactie.
+
+**Verder in deze ronde:**
+
+- **Etiketten.** De som van de analyse heet *"nameting I − II"*, *"nameting III − IV"* en *"hoofdeffect op de
+  nametingen"*. In 2ea9802 stond er *"met voormeting = 8"*, vier regels onder *"met voormeting 12"* (Jeanne: *"zelfde
+  etiket, twee getallen, in één adem"*; de Engelse lezer hetzelfde).
+- **"(X)" in plaats van "het gewicht *b*₂".** De 8 stond in *b*'s en de 12 in stukjes (Jeanne, Engelse lezer). Het
+  verschil was ook inhoudelijk: in de regressie van de nameting, die volgens de alinea erboven deze variantieanalyse
+  ís, is het effect met voormeting *b*₂ + *b*₃ = 8 + 0 = 8, niet 12.
+- **"ze" wordt "die analyse"** (Jeanne las *"neemt ze"* eerst als Campbell en Stanley).
+- **Engels:** *"boils the two down to one number"* (was *"still summarizes"*; *"still"* las ook als *"nog steeds"*),
+  *"a summary of the two"*, *"uses posttest I − II for"* (was *"takes ... from"*, dat in een bladzij vol sommen als
+  aftrekken leest).
+- **"(X + S)" met harde spaties** (APA-lens: hij kon over twee regels breken). De harde spaties in de nieuwe zinnen
+  staan als ` ` in de bron, zoals in de rest van het script. In 2ea9802 stond het teken zelf erin, en dan vindt
+  wie op ` ` zoekt ze niet (APA-lens).
+- **De getallen.** Alle getallen komen uit `GETALLEN` (`echt` en `hoofd` in het blok na `var AFGELEID`), en
+  `AFGELEID.hoofd` is weg. Beide sommen staan uitgelijnd, zodat `solomon_sommen_test.py` ze narekent: per taal 29
+  sommen (was 27). Bijtproeven: de 10 fout (`echt` + 1) geeft *"hoofdeffect met de sommen = 11 geeft 11, maar de regel
+  ervoor ((12 + 8) / 2) gaf 10"*. De 8 fout of het effect met voormeting fout geeft hetzelfde soort melding. Alle drie
+  afloop 1.
+
+**Wat de Bib zei** (`bib_query.sh hoofdeffect`): geen getagde items, 69 op inhoud. Het naaste dat van Ben zelf is
+(auteur: Ben, bijles-transcript): hoofdeffecten horen bij de marginale gemiddelden, de rij- en kolomgemiddelden. Hier
+zijn dat (63 + 60) / 2 = 61.5 met therapie en (55 + 52) / 2 = 53.5 zonder. Dat verschil van 8 is wat SPSS toont. Niet op
+de bladzij gezet: het zijn twee getallen erbij in een alinea die Jeanne al vol vond. De vorm *"het gemiddelde van het
+effect met en zonder voormeting"* (dezelfde 8, langs de enkelvoudige effecten) is van C, niet uit de Bib, en sluit aan
+op de *"8 en 12"* van de zin ervoor.
+
 **Niet veranderd, wel gemeld** (buiten deze opdracht, of een keuze voor Ben):
 
-- **Ronde 3, het hoofdeffect** (Engelse lezer in ronde 2 en 3, nakijker): de uitklapper noemt *"(12 + 8) / 2 = 10"* het
-  hoofdeffect *"met de verbeteringen"*, maar een variantieanalyse van verbeteringen kun je in echte data niet draaien
-  (III en IV hebben geen verbetering per persoon, zegt dezelfde uitklapper), en de aangeraden variantieanalyse van de
-  nametingen geeft (8 + 8) / 2 = 8. Niet veranderd: een vierde getal erbij was in ronde 1 precies Jeannes klacht
-  (*"8, 10, 12"*), en schrappen is een inhoudelijke keuze. Staat als vraag op het bord.
 - **Ronde 3, een brug tussen de twee antwoorden** (Engelse lezer): noem de helling van nameting op voormeting *w*; dan
   is de gecorrigeerde interactie (63 − 55) + *w*·(52 − 48) − (60 − 52) = 4*w*. *w* = 1 geeft de 4 van de ladder, *w* = 0
   de 0 van de variantieanalyse van de nametingen, en *"meestal minder dan één"* legt echte data ertussen. Nagerekend,
