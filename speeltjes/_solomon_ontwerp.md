@@ -475,6 +475,76 @@ nameting, verbetering I voor de andere, en op het speelbord bij elke stand. Muta
 terug → *"de trap eindigt op 65, moet 63 zijn"*, afloop 1 (en in de proefrun *wijdste bereik*, waar de voormetingen
 0 en 100 zijn, *"eindigt op 150, moet 100 zijn"*: die trap loog daar al vóór stuk 3).
 
+## Wat de testlezers zeiden in stuk 3, en wat er veranderde
+
+Michelle en Jeanne lazen de gerenderde Nederlandse bladzij (alle uitklappers open, als tekst, plus schermafdrukken op
+echte 390 px), een Engelstalige master-student (`general-purpose`-agent die de Nederlandse bladzij nooit zag) de
+Engelse. Alle drie rekenden de getallen na en vonden geen fout. Ronde 1:
+
+- **Jeanne en de Engelse lezer, allebei: "Welke van de twee klopt?" liet ze onzeker achter.** Stap 9 zegt dat 0 fout
+  is, de uitklapper dat Campbell en Stanley precies die toets aanraden. Jeanne: *"het goede antwoord staat niet op
+  deze bladzij"*; de Engelse lezer wilde één zin: hier is S door de constructie 4, met echte data doe je iets anders.
+  Nu zegt de alinea eerst wat hier geldt (*"In dit speeltje de sommen, want de getallen zijn zo gemaakt"*), dan dat
+  de ladder de boekhouding is en niet de toets, en dan wat je in echte data doet (2 × 2-variantieanalyse op de
+  nametingen, of een covariantieanalyse op I en II).
+- **Jeanne: de bladzij sprak zichzelf tegen** (stap 9: *"rekent alsof I en II gelijk begonnen"*; uitklapper: *"de
+  nametingen alleen nemen niets aan"*). Nu zegt de uitklapper ook dat de variantieanalyse op de nametingen rekent
+  alsof I en II gelijk begonnen, en dat dat door het lot gemiddeld klopt.
+- **Jeanne: drie getallen voor het effect van de therapie (8, 10, 12)**, en de zin over het hoofdeffect als
+  "alles hiervoor was fout". Nu zegt hij dat er met een interactie geen één getal meer is, en dat 10 een
+  samenvatting van twee is, geen nieuw stukje.
+- **Michelle en Jeanne: *"S + (voormeting I − voormeting II)"* viel uit de lucht** (Jeanne: *"konijn uit een
+  hoed"*). Stap 9 rekent het nu met getallen voor: een nameting is voormeting plus verbetering,
+  (48 + 15) − (52 + 3) = (48 − 52) + (15 − 3) = −4 + 12, en (50 + 10) − (50 + 2) = 10 − 2, zodat je de 50 ziet
+  wegvallen. Stap 10 rekent *b*₁ zo: (52 + 2 + 1) − (50 + 2) = (52 − 50) + 1.
+- **Michelle: *"En de geleende voormeting? Die valt uit S altijd weg"* kon ze niet nakijken.** Die alinea is weg; de
+  som van III en IV hierboven laat het zien, en één zin zegt waar je hem wél voor nodig had (H/M en T).
+- **Michelle: in stap 10 kwam de uitleg vóór het plaatje.** Nu: de vier sommen, de trap, dan *b*₀, dan *b*₁ en *b*₃.
+- **Michelle: bij "covariantieanalyse" in de aannametabel klapte ze dicht**, en *"meestal minder dan één"* zonder
+  waarom. De rij zegt het nu met de eigen getallen (*"I en II begonnen 4 punten uit elkaar"*), met de reden
+  (*"een deel van een verschil vooraf is toeval van die ene meting"*, regressie naar het midden); de vakterm staat
+  alleen nog in de uitklapper.
+- **Jeanne en de Engelse lezer: *"zet de voormetingen gelijk"* liet S naar 0 springen** (de nametingen blijven staan,
+  dus verbetering I wordt 13): Jeanne dacht het speeltje kapot te hebben gemaakt. Nu: *"schuif aan voormeting I of II:
+  de regressie van de nameting verandert dan niet, want die kijkt niet naar de voormetingen; T en S in de sommen
+  wel"*. Dat is de les van stap 10, zichtbaar gemaakt.
+- **De Engelse lezer: *"the regression on the posttest"* maakt in het Engels de nameting tot voorspeller.** Dat geldt
+  in het Nederlands ook (huisregel *regressie ván Y óp X*, TAALGIDS, *Richting*), en het stond al vóór stuk 3 op de
+  bladzij. Nu overal *de regressie van de nameting* / *the regression with the posttest as outcome*; *op de
+  nametingen* blijft alleen in *toets op de nametingen*, waar het geen regressierichting is.
+- **Jeanne: waarom niet 48 voor III, omdat III net als I de therapie kreeg?** Stap 3 zegt nu: de voormeting kwam vóór
+  de therapie, dus de therapie kan niet bepalen waar iemand begon.
+- **De Engelse lezer: wie via nameting I − nameting II op 8 kwam, las "dat is X (bijvoorbeeld nameting III −
+  nameting IV)"**. `duiding()` voegt nu bij een weg die met deze getallen toevallig op een keuze uitkomt een eigen zin
+  toe: *"Kwam je er via nameting I − nameting II, dan is dat toeval: daarin zit X + S, plus het verschil in
+  voormeting."*
+- **Alle drie: op 390 px stond in de tabel "wat er per groep van het model overblijft" alleen het rijtje nullen en
+  enen in beeld**; de twee kolommen waar het om gaat stonden er rechts buiten. Op een smal scherm vallen de nullen en
+  enen nu weg (ze staan al in de tabel boven de vraag), en de tabel staat iets kleiner; op 390 px past hij helemaal.
+- **Engelse lezer, taal in tekst van dit stuk:** *"I started"* las als het voornaamwoord (nu *group I started*);
+  *"random assignment put the groups together"* las als samenvoegen (nu *formed the groups*, ook op twee oudere
+  plekken); *"sat one point higher"* (nu *scored one point higher at pretest*); *"swallows S"* (nu *cancels S out*).
+
+**Niet veranderd, wel gemeld** (buiten deze opdracht, of een keuze voor Ben):
+
+- Michelle: stap 9 heeft als enige rekenstap geen figuur, en juist daar zit de kern. Haar voorstel: vier staven van
+  voormeting naar nameting (I 48 → 63, II 52 → 55, III en IV 50 → 60 en 52); *alleen nametingen* is dan alleen naar
+  de bovenkanten kijken, *verbetering* naar de lengtes. Niet gebouwd (een nieuwe figuur hoort eerst langs de
+  beeldverteller); een idee voor Ben.
+- Michelle: *"Je vergelijkt / Je neemt aan"* stopt na stap 7; in stap 10 had hij het punt gemaakt (*"je neemt aan:
+  niets over waar II begon"*).
+- Michelle en de Engelse lezer: lange sommen (stap 3, stap 9) lopen op 390 px het schuifvak uit zonder zichtbaar
+  teken dat het vak schuift. Zo was het al vóór stuk 3.
+- De Engelse lezer: drie keer 52 (voormeting II, nameting IV en *b*₀). Dat volgt uit 48/52 en de stukjes en is niet
+  weg te kiezen; *b*₁ = (52 + 2 + 1) − (50 + 2) in stap 10 houdt ze nu uit elkaar.
+- De Engelse lezer, oudere vertaalkeuzes uit stuk 2 die hij als on-Engels las: *sit* voor *zitten*, *take away*,
+  *staircase*, *encore*, *bare table*, *substitution* (hij verwacht *imputation*), geen samentrekkingen; en twee
+  inhoudelijke: *head start* (de voorzet van de twijfelaar bij S) betekent in het Engels juist een betere
+  startpositie, en *"koning Salomo liet een zwaard halen om eerlijk te verdelen"* klopt niet met het verhaal (het
+  zwaard was een list om de echte moeder te vinden).
+- Jeanne: onder de letter S in de ingevulde kaart staat klein *"de therapie werkte alleen dankzij de vragenlijst"*;
+  haar oog koppelt dat aan de betekenis van S, terwijl het de twijfel is.
+
 ## Wat de testlezers en de APA-lens zeiden in stuk 1c, en wat er veranderde
 
 Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.quarto/kladje_solomon/dom1c.html`), Jeanne en de
