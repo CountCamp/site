@@ -16,7 +16,10 @@ import os
 import sys
 
 sys.dont_write_bytecode = True
-TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# GEREEDSCHAP: een kopie van _tools/ om te proeven (commentaar_mutatieproef.sh
+# geeft een kreupele). Zonder: de echte, naast deze map.
+TOOLS = os.path.abspath(os.environ.get('GEREEDSCHAP')
+                        or os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, TOOLS)
 from commentaarregel import (TELLER_BEGIN, TELLER_EIND, lees,  # noqa: E402
                              zonder_commentaar)
