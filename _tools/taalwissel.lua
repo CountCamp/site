@@ -148,8 +148,15 @@ end
 -- kop "Vertaling van ...". Ze zijn voor Mieke en Ben, niet voor een bezoeker die
 -- de paginabron opent — een open vraag ("klopt die nog?") hoort niet op de echte
 -- site. In de .qmd blijven ze staan: daar zoekt Mieke ze. Alleen onder en/, en
--- alleen deze drie soorten; elk ander commentaar blijft staan, net als in
--- solomon-en.html, waar de redenen in de bron het huisgebruik zijn.
+-- alleen deze drie soorten.
+-- INGETROKKEN (23-11-2026, spoor pers_commentaar): "elk ander commentaar blijft
+-- staan, net als in solomon-en.html, waar de redenen in de bron het huisgebruik
+-- zijn". Ben, 23-11: "uit de pagina halen vóór publiceren (alle boeken); redenen
+-- in ONTWERP.md, qmd houdt korte verwijzing". In de BRON blijft het staan; uit de
+-- BLADZIJ gaat sindsdien elk commentaar, na de bouw, door _tools/commentaar_weg.py
+-- (post-render) en strip-comments in _quarto.yml. Dit filter doet daardoor op de
+-- site niets meer wat die twee niet ook doen; het blijft staan omdat het de
+-- briefjes al in de pandoc-stap weghaalt, vóór er iets anders met de bladzij gebeurt.
 -- BEN mag gevolgd worden door een dubbele punt, een spatie of een haakje (25-10-2026,
 -- spoor en_voorpagina): "<!-- BEN (en_voorpagina, 25-10-2026): ..." glipte langs de
 -- oude vorm "BEN:", en keuring 6 in en_bouw.py had dezelfde blinde vlek — acht

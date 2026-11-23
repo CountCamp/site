@@ -290,14 +290,28 @@ if not (stap["Render"] < stap["Tellerwacht"] < stap["Commentaarwacht"] < pub):
     sys.exit("volgorde klopt niet: %s" % namen)
 PY
 waar "proefdruk.yml: draait de wachter" command grep -qF "python3 _tools/commentaarwacht.py" .github/workflows/proefdruk.yml
-waar "naar_buiten.sh --productie: wacht blokkerend, vóór de push" python3 - <<'PY'
-import sys
-t = open("_tools/naar_buiten.sh", encoding="utf-8").read()
-prod = t.split("--productie)\n", 1)[1]
-a = prod.find("gebouwd_commentaar_nakijken blokkerend")
-b = prod.find("doe git push origin main")
-if a < 0 or b < 0 or a > b:
-    sys.exit("in --productie: wacht op %d, push op %d" % (a, b))
+waar "naar_buiten.sh: --productie na de bouw blokkerend en vóór de push, --lokaal meldend" \
+  python3 - "${NAAR_BUITEN:-_tools/naar_buiten.sh}" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+def tak(naam):
+    m = re.search(r"^%s\)\n(.*?)^  ;;" % re.escape(naam), s, re.S | re.M)
+    return m.group(1) if m else ""
+prod, lok = tak("--productie"), tak("--lokaal")
+BOUW = "_tools/schone_bouw.py --uit _site -- render"
+fout = []
+r, a, b = prod.find(BOUW), prod.find("gebouwd_commentaar_nakijken blokkerend"), prod.find("doe git push origin main")
+if a < 0 or r < 0 or b < 0 or not (r < a < b):
+    fout.append("--productie: bouw op %d, wacht op %d, push op %d" % (r, a, b))
+elif "exit 1" not in prod[a:prod.find("\n", a)]:
+    # op DEZE regel; zie zaak 5g in naar_buiten_teller_test.sh voor waarom
+    fout.append("--productie stopt niet als de commentaarpoort rood is")
+r, a = lok.find(BOUW), lok.find("gebouwd_commentaar_nakijken melden")
+if a < 0 or r < 0 or a < r:
+    fout.append("--lokaal roept de commentaarpoort niet (meldend) na de bouw aan")
+if "if [ \"$streng\" = blokkerend ]; then return 1; fi" not in s.split("gebouwd_commentaar_nakijken() {", 1)[-1].split("\n}\n", 1)[0]:
+    fout.append("de commentaarpoort houdt nooit tegen")
+sys.exit("; ".join(fout) if fout else 0)
 PY
 
 echo

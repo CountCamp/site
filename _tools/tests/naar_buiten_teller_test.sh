@@ -284,7 +284,11 @@ if p < 0:
     fout.append("--productie roept de poort niet blokkerend aan")
 elif r < 0 or p < r:
     fout.append("--productie roept de poort niet NA de bouw (%s) aan" % BOUW)
-elif "Niet geleverd" not in prod[p:p + 120]:
+# Op DEZE regel, niet "binnen 120 tekens": sinds 23-11-2026 (spoor
+# pers_commentaar) staat de commentaarpoort er direct onder, met zijn eigen
+# "Niet geleverd", en dan bleef de mutatie "--productie stopt niet als de poort
+# rood is" groen.
+elif "Niet geleverd" not in prod[p:prod.find("\n", p)]:
     fout.append("--productie stopt niet als de poort rood is")
 r = lok.find(BOUW)
 p = lok.find("gebouwde_tellers_nakijken spook melden")
