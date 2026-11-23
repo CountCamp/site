@@ -892,7 +892,7 @@
       // omdat voormeting I en II gelijk waren. Wat er met 48 en 52 misgaat, is niet het lenen maar het overslaan van
       // de eigen voormetingen van I en II: de geleende voormeting valt uit S altijd weg (III en IV krijgen dezelfde).
       uit:function(){ var a = GETALLEN.naI - GETALLEN.naII, c = GETALLEN.naIII - GETALLEN.naIV, L = 'alleen nametingen';
-        return WELKE + P('Die van ' + stap('s') + ', met de geleende voormeting: S = ' + g(r.S) + '. Of die van ' + stap('did') + ', met de verbeteringen. Allebei hebben ze de voormetingen van I en II nodig.') +
+        return WELKE + P('Die van ' + stap('s') + ', met de geleende voormeting: S\u00a0=\u00a0' + g(r.S) + '. Of die van ' + stap('did') + ', met de verbeteringen. Allebei hebben ze de voormetingen van I en II nodig.') +
         P('Met alleen nametingen gaat het mis. Neem de som van ' + stap('did') + ', maar dan met nametingen in plaats van verbeteringen:') +
         som(L, ['(nameting I − nameting II) − (nameting III − nameting IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(KAAL)]) +
         P('Een nameting draagt mee waar een groep begon. Bij III en IV maakt dat niet uit: die kregen dezelfde geleende voormeting, dus in nameting III − nameting IV valt hij weg. Bij I en II wel: in nameting I − nameting II zit naast X + S ook het verschil tussen voormeting I en II. Wat er overblijft:') +
@@ -919,7 +919,8 @@
       invoer:{soort:'getal', goed:rb.na.b0},
       hint:'Groep IV heeft de schakelaar ' + SV + ' op 0 en de schakelaar ' + SW + ' op 0, dus alles valt weg behalve ' + b(0) + '. Welke nameting is dat?',
       uit:function(){ return WELKE + P('Eerst wat het model per groep zegt, naast de boekhouding van ' + stap('stukjes') + ':') +
-        MODEL_PER_GROEP +
+        // in een schuifvak: zonder dat duwde deze tabel op 390 px de hele bladzij tot 696 px breed (gemeten 23-11-2026)
+        '<div class="tabelvak">' + MODEL_PER_GROEP + '</div>' +
         // de nummers 0, 2, 1, 3 lijken een tikfout (Jeanne, 8-10): zeg waarom ze kruisen met de ladder
         P('Dan van onder naar boven, net als de ladder: groep IV geeft ' + b(0) + ', groep III geeft ' + b(2) + ', groep II geeft ' + b(1) + ', en groep I geeft ' + b(3) +
           '. De nummers kruisen de ladder even: in het model staat ' + SV + ' vóór ' + SW + ', dus de voormeting kreeg ' + b(1) + ' en de therapie ' + b(2) + ', terwijl de ladder eerst X vond en dan T.') +
@@ -966,10 +967,10 @@
         P(b(3) + ' is S, net als in ' + stap('s') + ', en ' + b(1) + ' is T. Op de nameting waren dat ' + g(rb.na.b3) + ' en ' + g(rb.na.b1) +
           '; de verbetering haalt bij elke groep eerst af waar hij begon, dus het verschil in voormeting zit er niet meer in. En nu is ' + b(0) +
           ' precies H/M: de verbetering van wie niets kreeg. Alleen ' + b(2) + ' bleef wat hij was: X.') +
-        '<table class="data"><caption>Wat de gewichten betekenen, per afhankelijke variabele</caption>' +
+        '<div class="tabelvak"><table class="data"><caption>Wat de gewichten betekenen, per afhankelijke variabele</caption>' +
         '<tr><th>afhankelijke variabele</th><th>' + b(0) + ' betekent</th><th>' + kl('H/M') + ' los te zien?</th><th>' + b(1) + ' en ' + b(3) + ' zijn ' + kl('T') + ' en ' + kl('S') + '?</th></tr>' +
         '<tr><td>nameting</td><td>startniveau + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>nee</td><td>' + jaNee(rb.na) + '</td></tr>' +
-        '<tr><td>verbetering</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>ja</td><td>' + jaNee(rb.ver) + '</td></tr></table>' +
+        '<tr><td>verbetering</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>ja</td><td>' + jaNee(rb.ver) + '</td></tr></table></div>' +
         P('Op de verbetering is elk regressiegewicht een stukje uit de som van het ontwerp, en de interactie ' + VX + ' is de sensitisatie. Op de nameting zit er meer in: het startniveau in ' + b(0) + ', en het verschil in voormeting in ' + b(1) + ' en ' + b(3) + '. Wat je los ziet, hangt af van wat je als <i>Y</i> kiest.') +
         trapReg('ver'); } }
   };
