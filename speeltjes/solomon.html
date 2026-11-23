@@ -506,12 +506,20 @@
     hoeveel een punt vooraf achteraf nog waard is (een covariantieanalyse), en corrigeert daarmee het verschil tussen
     I en II (Van Engelenburg, 1999). Meestal is dat minder dan één punt: regressie naar het midden.</p>
     <!-- Jeanne (23-11): "ik heb nu drie getallen voor het effect van de therapie: 8, 10 en 12". De alinea zegt nu
-         waarom er met een interactie geen één getal meer is, en dat 10 een samenvatting is, geen nieuw stukje. -->
+         waarom er met een interactie geen één getal meer is, en dat het hoofdeffect een samenvatting is, geen nieuw stukje. -->
+    <!-- Ronde 2 (C, 23-11): hier stond "met de verbeteringen (12 + 8) / 2 = 10". Een variantieanalyse van verbeteringen
+         kun je in echte data niet draaien (III en IV hebben geen verbetering per persoon; Campbell & Stanley, 1963, p. 25:
+         "the asymmetries of the design rule out the analysis of variance of gain scores"), en de variantieanalyse van de
+         nametingen die deze uitklapper aanraadt, geeft 8. Wie het advies volgde, kreeg 8 en dacht een fout te hebben
+         gemaakt. De 10 is geschrapt, niet als gedachte-experiment gelabeld: dat was een vierde getal geweest, precies
+         Jeannes klacht. Nu rekent de som eronder (gevuld uit GETALLEN, nagerekend door solomon_sommen_test.py) voor
+         wat de aangeraden analyse geeft, en waarom dat 8 is. -->
     <p class="kl">Let wel: met een interactie heeft het effect van de therapie op de kwaliteit van leven geen één getal
     meer. Zonder voormeting is het <span data-r="zonderS"></span>, het gewicht <i>b</i><sub>2</sub>; met voormeting
-    <span data-r="metS"></span> (X + S). Een variantieanalyse noemt het gemiddelde van die twee het hoofdeffect van
-    de therapie op de kwaliteit van leven, met de verbeteringen (<span data-r="metS"></span>&nbsp;+&nbsp;<span data-r="zonderS"></span>)&nbsp;/&nbsp;2&nbsp;=&nbsp;<span data-r="hoofd"></span>.
-    Dat is geen nieuw stukje, alleen een samenvatting van twee.</p>
+    <span data-r="metS"></span> (X + S). Een variantieanalyse vat die twee toch samen in één getal, het hoofdeffect van
+    de therapie op de kwaliteit van leven: het gemiddelde van het effect met en het effect zonder voormeting. Dat is
+    geen nieuw stukje, alleen een samenvatting van twee.</p>
+    <div id="hoofdeffect-na"></div>
   </details>
 
   <p class="foot">
@@ -1163,8 +1171,25 @@
   // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
   document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
   [].forEach.call(document.querySelectorAll('[data-v]'), function(e){ e.textContent = g(GETALLEN[e.getAttribute('data-v')]); });
-  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL, naB1:rb.na.b1, voorAfstand:Math.abs(VOOR_VERSCHIL)};
+  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, X:r.X, S:r.S, kaal:KAAL, naB1:rb.na.b1, voorAfstand:Math.abs(VOOR_VERSCHIL)};
   [].forEach.call(document.querySelectorAll('[data-r]'), function(e){ e.textContent = g(AFGELEID[e.getAttribute('data-r')]); });
+  // Het hoofdeffect zoals de aangeraden variantieanalyse van de nametingen het geeft (C, ronde 2, 23-11-2026). Tot dan
+  // stond hier (X + S + X) / 2 "met de verbeteringen", een analyse die je in echte data niet kunt draaien. Beide
+  // effecten komen uit de nametingen: met voormeting I − II, zonder III − IV. Wijkt I − II af van X + S, dan zegt de
+  // zin waarom (het verschil in voormeting), en dat het dezelfde oorzaak is als haar interactie (KAAL).
+  (function(){
+    var met = GETALLEN.naI - GETALLEN.naII, zonder = GETALLEN.naIII - GETALLEN.naIV, hoofd = (met + zonder) / 2;
+    document.getElementById('hoofdeffect-na').innerHTML =
+      P('De variantieanalyse van de nametingen die Campbell en Stanley aanraden, haalt allebei die effecten uit de nametingen:') +
+      somBlok([
+        ['met voormeting', ['nameting I − II', g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII), g(met)]],
+        ['zonder voormeting', ['nameting III − IV', g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV), g(zonder)]],
+        ['hoofdeffect', ['(' + g(met) + ' + ' + gh(zonder) + ') / 2', g(hoofd)]]
+      ]) +
+      P('Als hoofdeffect krijg je dus ' + g(hoofd) + ', en dat is geen rekenfout van jou.' + (gelijk(met, r.X + r.S) ? '' :
+        ' Voor het effect met voormeting neemt ze nameting I − II, en dat is ' + g(met) + ', niet ' + g(r.X + r.S) + ': I begon ' +
+        pt(Math.abs(VOOR_VERSCHIL)) + (VOOR_VERSCHIL < 0 ? ' lager' : ' hoger') + ', zoals je in ' + stap('kaal') + ' zag. Daardoor komt ook haar interactie op ' + g(KAAL) + ' uit.'));
+  })();
   // de streep hoort bij elke letter, ook buiten de ladder (APA-lens, 8-10: de lege kaart stond kaal naast de ingevulde).
   // Alleen in tekstknopen, niet in de innerHTML: daar ving kl() ook de X in het attribuut data-r="X" en brak de
   // bladzij (Michelle, Jeanne en de APA-lens, 8-10, alle drie: er stond letterlijk 'X">8' in de uitklapper).

@@ -461,11 +461,15 @@
     analysis of covariance), and use it to adjust the difference between I and II (van Engelenburg, 1999). Usually it
     is less than one point: regression to the mean.</p>
     <!-- Jeanne (23-11): "ik heb nu drie getallen voor het effect van de therapie: 8, 10 en 12". -->
+    <!-- Ronde 2 (C, 23-11): hier stond "with the improvements (12 + 8) / 2 = 10". Een variantieanalyse van verbeteringen
+         kun je in echte data niet draaien (Campbell & Stanley, 1963, p. 25), en de aangeraden variantieanalyse van de
+         nametingen geeft 8. De 10 is geschrapt; de som eronder rekent voor wat de aangeraden analyse geeft. Zie solomon.html. -->
     <p class="kl">Note that with an interaction, the effect of the therapy on quality of life is no longer a single
     number. Without a pretest it is <span data-r="zonderS"></span>, the weight <i>b</i><sub>2</sub>; with a pretest,
-    <span data-r="metS"></span> (X + S). An ANOVA calls the mean of those two the main effect of the therapy on quality of life, with the
-    improvements (<span data-r="metS"></span>&nbsp;+&nbsp;<span data-r="zonderS"></span>)&nbsp;/&nbsp;2&nbsp;=&nbsp;<span data-r="hoofd"></span>.
-    That is not a new piece, only a summary of two.</p>
+    <span data-r="metS"></span> (X + S). An ANOVA still summarizes the two in a single number, the main effect of the
+    therapy on quality of life: the mean of the effect with a pretest and the effect without one. That is not a new
+    piece, only a summary of two.</p>
+    <div id="hoofdeffect-na"></div>
   </details>
 
   <p class="foot">
@@ -1118,8 +1122,23 @@
   // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
   document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
   [].forEach.call(document.querySelectorAll('[data-v]'), function(e){ e.textContent = g(GETALLEN[e.getAttribute('data-v')]); });
-  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL, naB1:rb.na.b1, voorAfstand:Math.abs(VOOR_VERSCHIL)};
+  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, X:r.X, S:r.S, kaal:KAAL, naB1:rb.na.b1, voorAfstand:Math.abs(VOOR_VERSCHIL)};
   [].forEach.call(document.querySelectorAll('[data-r]'), function(e){ e.textContent = g(AFGELEID[e.getAttribute('data-r')]); });
+  // Het hoofdeffect zoals de aangeraden variantieanalyse van de nametingen het geeft (C, ronde 2, 23-11-2026). Tot dan
+  // stond hier (X + S + X) / 2 "with the improvements", een analyse die je in echte data niet kunt draaien. Zie solomon.html.
+  (function(){
+    var met = GETALLEN.naI - GETALLEN.naII, zonder = GETALLEN.naIII - GETALLEN.naIV, hoofd = (met + zonder) / 2;
+    document.getElementById('hoofdeffect-na').innerHTML =
+      P('The ANOVA on the posttests that Campbell and Stanley recommend takes both of those effects from the posttests:') +
+      somBlok([
+        ['with a pretest', ['posttest I − II', g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII), g(met)]],
+        ['without a pretest', ['posttest III − IV', g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV), g(zonder)]],
+        ['main effect', ['(' + g(met) + ' + ' + gh(zonder) + ') / 2', g(hoofd)]]
+      ]) +
+      P('So the main effect you get is ' + g(hoofd) + ', and that is not a mistake on your part.' + (gelijk(met, r.X + r.S) ? '' :
+        ' For the effect with a pretest it uses posttest I − II, and that is ' + g(met) + ', not ' + g(r.X + r.S) + ': group I started ' +
+        pt(Math.abs(VOOR_VERSCHIL)) + (VOOR_VERSCHIL < 0 ? ' lower' : ' higher') + ', as you saw in ' + stap('kaal') + '. That is also why its interaction comes out at ' + g(KAAL) + '.'));
+  })();
   // de streep hoort bij elke letter, ook buiten de ladder (APA-lens, 8-10: de lege kaart stond kaal naast de ingevulde).
   // Alleen in tekstknopen, niet in de innerHTML: daar ving kl() ook de X in het attribuut data-r="X" en brak de
   // bladzij (Michelle, Jeanne en de APA-lens, 8-10, alle drie: er stond letterlijk 'X">8' in de uitklapper).
