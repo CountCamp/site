@@ -1,4 +1,4 @@
-# Het oordeel van Solomon — ontwerpnotitie (stuk 1, 1b, 1c, 1d en 2, 8-10-2026)
+# Het oordeel van Solomon — ontwerpnotitie (stuk 1, 1b, 1c, 1d en 2, 8-10-2026; stuk 3, 23-11-2026)
 
 **De titel** is sinds stuk 1c *Het oordeel van Solomon* (Ben bedoelde het salomonsoordeel: het zwaard dat eerlijk
 verdeelt). Stuk 1b heette *Het zwaard van Solomon*; dat is ingetrokken. Het zwaardje als beeld in stap 7 blijft.
@@ -40,8 +40,10 @@ nameting 15 / 10 / 11 / 8. Daarin vielen T en S samen (allebei 2) en was H/M 0.
 
 ## De getallen
 
-Zes getypte getallen, alles verder uitgerekend: voormeting I en II 50, nameting I 65, II 53, III 60, IV 52.
-Daaruit: H/M = 2, T = 1, X = 8, S = 4; verbeteringen 15 / 3 / 10 / 2.
+Zes getypte getallen, alles verder uitgerekend: **sinds stuk 3 (23-11-2026)** voormeting I 48, II 52, nameting I 63,
+II 55, III 60, IV 52. Daaruit: geleende voormeting 50, H/M = 2, T = 1, X = 8, S = 4; verbeteringen 15 / 3 / 10 / 2.
+De stukjes en de verbeteringen zijn dezelfde als in stuk 1–2; alleen de voormetingen en de nametingen van I en II
+veranderden (zie *Stuk 3*). Tot 23-11 stonden er voormeting I en II 50, nameting I 65 en II 53: ingetrokken.
 
 Ben stelde op 8-10 voor: H/M 2, T 1, X 6, S 3 (nametingen 62 / 53 / 58 / 52), met de opdracht *"if you find a
 reason these numbers teach worse (e.g. a step where two pieces still coincide), pick better ones and say why."*
@@ -113,30 +115,40 @@ treden heten in de bron op naam (`VOLGORDE`, `ST`), en elke verwijzing *"stap N"
 
 | stap | vraagt | de som | hint wijst naar |
 |---|---|---|---|
-| 1 Groep I: de hele som | verbetering I | 65 − 50 = 15, en dan 15 = H/M + X + T + S: totaal bekend, stukjes niet | nameting min voormeting |
+| 1 Groep I: de hele som | verbetering I | 63 − 48 = 15, en dan 15 = H/M + X + T + S: totaal bekend, stukjes niet | nameting min voormeting |
 | 2 Welke stukjes zitten in welke groep? | vinkjes groep × stukje | geen, de boekhouding | vanzelf beter overal; X waar therapie; T waar voormeting; S waar allebei |
-| 3 Leen een voormeting | het startpunt van III en IV | (50 + 50) / 2 = 50 | het lot: gemiddeld gelijk begonnen |
+| 3 Leen een voormeting | het startpunt van III en IV | (48 + 52) / 2 = 50; wie 48 of 52 invult krijgt te horen waarom die niet beter is dan de andere | het lot: gemiddeld gelijk begonnen |
 | 4 Groep IV: H/M | H/M | 52 − 50 = 2, dan 15 = 2 + X + T + S | IV kreeg niets |
 | 5 Groep III: X | X | (60 − 50) − 2 = 8, dan 15 = 2 + 8 + T + S | H/M ken je al |
-| 6 Groep II: T | T | (53 − 50) − 2 = 1, dan 15 = 2 + 8 + 1 + S | II heeft een echte voormeting |
+| 6 Groep II: T | T | (55 − 52) − 2 = 1, dan 15 = 2 + 8 + 1 + S | II heeft een echte voormeting |
 | 7 Groep I: S | S | 15 = 11 + S; S = 15 − 11; S = 4 | de lopende som: wat moet S zijn om op 15 te komen; **hier valt het zwaard** |
 | 8 Verschil in verschil | (I − II) − (III − IV) | (15 − 3) − (10 − 2) = 4 | schrijf I − II uit in stukjes |
-| 9 De proef op de som: de kale tabel | meerkeuze 1 / 4 / 8 / 12 / 13 / 15 (uitgerekend en gesorteerd) | stap 7 of 8 | elk fout antwoord is een vergeten stukje |
-| 10 Toegift, regressie: de nameting | *b*₀ | nameting IV = 52 = startniveau + H/M | groep IV houdt alleen *b*₀ over |
+| 9 De proef op de som: de kale tabel | meerkeuze 0 / 1 / 4 / 8 / 12 / 15 (uitgerekend en gesorteerd) | stap 7 of 8; de som met alleen nametingen geeft (63 − 55) − (60 − 52) = 0 = S + (48 − 52) | elk fout antwoord is een vergeten stukje, of de som met alleen nametingen |
+| 10 Toegift, regressie: de nameting | *b*₀ | nameting IV = 52 = startniveau + H/M; uitwerking: *b*₁ = 3 = T + (52 − 50), *b*₃ = 0 = S + (48 − 52) | groep IV houdt alleen *b*₀ over |
 | 11 Toegift, regressie: de verbetering | *b*₃ | 15 − 2 − 1 − 8 = 4 | van onder naar boven, net als stap 10 |
+
+(De getallen in deze tabel zijn die van stuk 3. Tot 23-11: 65 − 50 in stap 1, (50 + 50) / 2 in stap 3, (53 − 50) − 2
+in stap 6, keuzes 1 / 4 / 8 / 12 / 13 / 15 in stap 9; ingetrokken.)
 
 **Volgorde van stap 2 en 3.** Ben noemt lenen vóór de boekhouding; hier staat de boekhouding eerst, omdat die de
 reden levert om bij IV te beginnen (*"alleen IV bevat alleen H/M"*), en IV levert dan de reden om te lenen (IV heeft
 geen voormeting). Zo trekt elke stap de volgende aan. Het oude stapje *"Wie deed de voormeting?"* (aflezen) is in de
 leen-stap opgegaan. De oude ladder (stuk 1b: aflezen, lenen, boekhouding, IV, III, II, I) is daarmee ingetrokken.
+**Ben, 23-11-2026: "(2) volgorde zo"** — de boekhouding blijft vóór het lenen; de open vraag hierover is gesloten.
 
 **De regressiestappen** (Bens toevoeging c; sinds 1c met de schakelaars voluit). *Y* = *b*₀ + *b*₁·voormeting +
-*b*₂·therapie + *b*₃·voormeting·therapie, met voormeting en therapie elk 0 of 1. Stap 10 neemt de nameting als *Y*:
-dezelfde vier sommen als stap 4–7, alleen heten de stukjes nu *b*; *b*₂ = X, *b*₁ = T, *b*₃ = S (de interactie ís de
-sensitisatie), maar *b*₀ = 52 = startniveau 50 + H/M 2. Stap 11 neemt de verbetering als *Y* (met de geleende
-voormeting): nu is *b*₀ = H/M, de rest blijft. Een kleine APA-tabel zet het naast elkaar (nameting: startniveau +
-H/M, nee; verbetering: H/M, ja). Op het speelbord rekenen beide regressies live mee met de schuifjes; bij ongelijke
-voormetingen van I en II zegt een noot dat de regressie op de nameting dat verschil in *b*₁ en *b*₃ stopt. Bens
+*b*₂·therapie + *b*₃·(voormeting·therapie), met voormeting en therapie elk 0 of 1; de haakjes om het product sinds
+stuk 3 (Ben, 23-11: *"haakjes erom"*), op alle drie de plekken tegelijk omdat het model één constante is (`MODEL`).
+Stap 10 neemt de nameting als *Y*, en lost op zoals stap 4–7, van onder naar boven. *b*₀ = 52 = startniveau 50 + H/M 2
+en *b*₂ = 8 = X, maar **sinds stuk 3 zijn *b*₁ en *b*₃ op de nameting niet T en S**: *b*₁ = 3 = T + (voormeting II −
+geleende voormeting), *b*₃ = 0 = S + (voormeting I − voormeting II). De uitwerking rekent dat voor, en de trap van de
+nameting tekent nu de gewichten (zie *Stuk 3*). Tot 23-11 stond hier *"b₂ = X, b₁ = T, b₃ = S (de interactie ís de
+sensitisatie)"* voor de nameting; dat gold alleen bij gelijke voormetingen en is ingetrokken. Stap 11 neemt de
+verbetering als *Y* (met de geleende voormeting): nu is *b*₀ = H/M en zijn *b*₁, *b*₂, *b*₃ weer T, X, S. Een kleine
+APA-tabel zet het naast elkaar, sinds stuk 3 met een vierde kolom (*b*₁ en *b*₃ zijn T en S? nameting: nee (3 en 0);
+verbetering: ja (1 en 4)). Op het speelbord rekenen beide regressies live mee met de schuifjes; bij ongelijke
+voormetingen van I en II zegt een noot dat de regressie op de nameting dat verschil in *b*₁ en *b*₃ stopt (sinds
+stuk 3 is dat de stand waarmee het speelbord opent). Bens
 woord *startgetal* voor het intercept komt uit de Bib (`berekening-regressie-aapjes-slope-intercept-voorspellen`,
 `auteur: Ben`: *"De b0 noem ik vanaf nu het startgetal of intercept"*); *startniveau* is zijn woord uit de briefing
 van 8-10.
@@ -359,6 +371,110 @@ and without (X = 8)* — twee losse feiten die in het Nederlands door *en* gesch
 bijschrift gebruikt nu komma's, die hij wel als grens leest. De andere kant is ernstiger: een Engelse ketting met *so*
 of *therefore* ziet hij niet. Gemeld als verrassing; de wacht is van het huis, niet van dit spoor.
 
+## Stuk 3 — voormetingen 48 en 52, haakjes om het product (23-11-2026)
+
+**Aanleiding.** Drie open vragen (hieronder 4, 5 en 6), op het bord beantwoord door Ben, 23-11-2026: *"(1)
+voormetingen ongelijk, 48/52, zodat stap 3 het lenen echt leert; (2) volgorde zo; (3) haakjes erom"*. Zetter
+`solomon_lenen`, op de tak `worktree-solomon_lenen`, vanaf 210a5ed. De oudere tak `worktree-solomon` (b7a91d1, stuk
+2b) is niet gebruikt.
+
+**Welke voormeting is 48.** Groep I en II hebben een voormeting. Gekozen: I = 48, II = 52, in Bens volgorde. De
+stukjes bleven 2/8/1/4, dus nameting I = 48 + 15 = 63 en nameting II = 52 + 3 = 55 (teruggerekend zoals `maak()` het
+doet; III en IV veranderden niet). De omgekeerde keuze (I = 52, II = 48) is nagerekend en afgewezen: dan geeft de som
+met alleen nametingen (67 − 51) − (60 − 52) = 8, precies X, en kan stap 9 een student die de voormetingen oversloeg
+niet meer onderscheiden van een die X vergat. Met 48/52 komt die som op 0, en 0 is geen som van stukjes. De keuze
+staat als vraag voor Ben op het bord, met 48/52 als standaard.
+
+**Wat 48/52 raakt — meer dan stap 3 en stap 9.** Ongelijke voormetingen veranderen niet alleen de weg zonder lenen.
+Alles wat op de nametingen rust zonder de voormetingen te gebruiken, krijgt het verschil tussen voormeting I en II
+erbij:
+
+| plek | met 50/50 | met 48/52 | wat er nu staat |
+|---|---|---|---|
+| stap 3 | (50 + 50) / 2 = 50, een som om niets | (48 + 52) / 2 = 50 | eigen terugmelding bij 48 of 52; *"het midden is je beste gok"* (Bens woorden, 8-10: *"dat gemiddelde uitrekenen als beste gok voor O0 van III en IV"*) |
+| stap 9, som met alleen nametingen | (65 − 53) − (60 − 52) = 4 = S | (63 − 55) − (60 − 52) = 0 = S + (48 − 52) | voorgerekend waarom het 0 is; 0 is een keuze (vervangt X + T + S, zie hieronder) |
+| stap 10, *b*₁ en *b*₃ op de nameting | 1 en 4: T en S | 3 en 0 | voorgerekend: *b*₁ = T + (52 − 50), *b*₃ = S + (48 − 52) |
+| stap 10, de trap van de nameting | 50 + 2 + 8 + 1 + 4 = 65 = nameting I | zou op 65 eindigen, nameting I is 63 | tekent nu de gewichten: 52, +8, +3 (grijs), 0 (grijs, plat), eind 63 |
+| stap 11, "de andere twee bleven wat ze waren" | waar | *b*₁ was 3, is nu 1 | uitgerekend; tabel met vierde kolom |
+| uitklapper, hoofdeffect | (12 + 8) / 2 = 10, "in zo'n analyse" (op de nametingen) | op de nametingen (8 + 8) / 2 = 8 | "op de verbeteringen is dat 10" |
+| uitklapper, "de interactie daarin is S" | waar | 0 | "S plus het verschil tussen voormeting I en II: met deze getallen 0" |
+| `duiding()`, wegen door de kale tabel | elke weg meet zijn stukjes | nameting I − nameting II = 8, en dat is niet X | een weg telt alleen mee als hij met deze getallen echt zijn stukjes meet |
+
+**Wat het lenen wel en niet doet — de belangrijkste vondst.** De hulpagent die de literatuur las (zie hieronder) zag
+het als eerste, en het is nagerekend: de geleende voormeting valt uit S en uit X altijd weg, want III en IV krijgen
+dezelfde. Met 40, 50 of 70 als geleende voormeting blijft X = 8 en S = 4; alleen H/M (12, 2, −18) en T (−9, 1, 21)
+schuiven. Wat S redt bij 48/52 is dus niet het lenen, maar dat I en II hun **eigen** voormeting aftrekken. Bens
+premisse *"zodat stap 3 het lenen echt leert"* klopt voor stap 3 zelf en voor H/M en T; voor S heeft het lenen nooit
+iets uitgemaakt. Daarom heet de weg die breekt op de bladzij **"alleen nametingen"** en niet "zonder lenen", zegt de
+hint van stap 9 *"de voormetingen van I en II staan er wél: sla ze niet over"*, en zegt de uitwerking hardop: *"En de
+geleende voormeting? Die valt uit S altijd weg ... Je had hem nodig voor H/M en T, niet voor S."* Die laatste zin is
+van mij (C), niet uit de Bib.
+
+**Keuze 13 eruit, 0 erin.** Stap 9 bood X + T + S = 13 aan omdat nameting I − nameting IV daar uitkwam (Jeanne, 8-10:
+de natuurlijkste fout uit een kale tabel). Met 48/52 komt die weg op 11 uit, dus 13 had geen weg meer achter zich.
+De som met alleen nametingen (0) is nu de natuurlijkste fout en staat ervoor in de plaats; de keuzes worden
+uitgerekend en ontdubbeld. 11 staat er niet bij: wie nameting I − nameting IV rekent, vindt zijn getal niet en moet
+opnieuw kijken.
+
+**Een vijfde aanname, die er altijd al was.** De sommen met verbeteringen nemen aan dat een groep die vooraf een punt
+hoger zat, achteraf ook precies een punt hoger zit (de helling van nameting op voormeting is 1). Bij 50/50 deed dat
+er voor S niet toe; bij 48/52 is het precies het verschil tussen 4 (de sommen) en 0 (de nametingen). De getallen van
+het speeltje zijn zo gemaakt (elke nameting is de eigen voormeting plus de stukjes), maar in echte data is de helling
+meestal kleiner dan 1 (Senn, 2006, p. 4339: zij is in de praktijk de correlatie, dus kleiner dan 1). Daarom staat er
+nu een vijfde rij in de aannametabel (het aantal in het bijschrift wordt geteld, niet getikt) en een alinea *"Welke
+van de twee klopt?"* in de uitklapper over toetsen, met van Engelenburg (1999) in de voetregel. Dat is een toevoeging
+die Ben niet vroeg; zonder haar zei de bladzij stilzwijgend dat de toets op de nametingen, die Campbell en Stanley
+aanraden, fout is.
+
+**Hoe de literatuur ongelijke voormetingen behandelt** (hulpagent, 23-11, ±60 zoekacties; per bron gezegd wat
+zelf gelezen is en wat uit tweede hand komt):
+
+- **Solomon (1949)** — artikel achter een betaalmuur; alleen uit tweede hand (de documentatie van het R-pakket
+  `solomonR`, J. Uhalt): de voormeting van de groepen zonder voormeting is ½(a₁ + a₂) (p. 141), de interactie
+  d₁ − (d₂ + d₃ − d₄) (p. 147, tabel V). Dat is Bens methode en die van het speeltje. Zijn eigen voormetingen
+  verschilden ook (3.2 tegen 2.8; 5.4 tegen 6.0) en hij middelde toch; of hij gewogen middelde, valt uit zijn tabellen
+  niet op te maken (bij 8 en 9 leerlingen geven beide 5.7). Zijn groepen waren niet geloot.
+- **Campbell & Stanley (1963), p. 25** — zelf gelezen (gescand boek): *"The asymmetries of the design rule out the
+  analysis of variance of gain scores. (Solomon's suggestions concerning these are judged unacceptable.) ... one can
+  treat the posttest scores with a simple 2 × 2 analysis of variance design ... If the main and interactive effects of
+  pretesting are negligible, it may be desirable to perform an analysis of covariance of O4 versus O2, pretest scores
+  being the covariate."* Op dezelfde bladzij lenen ze zelf de voormetingen om history en maturation te schatten.
+- **Braver & Braver (1988)** — artikel niet bereikbaar (403); uit tweede hand (Sawilowsky & Markman, ERIC ED316556):
+  eerst een 2 × 2-variantieanalyse op de nametingen (test A); daarna onder meer een covariantieanalyse op groep 1 en 2
+  met de voormeting als covariaat, en een meta-analytische combinatie. Hun toets op sensitisatie gebruikt alleen de
+  nametingen en zou met de getallen van het speeltje S = 0 geven.
+- **van Engelenburg (1999)** — zelf gelezen (ERIC ED435692): vergelijking 21 (p. 11) corrigeert de interactie op de
+  nametingen voor het verschil in voormeting, met een geschatte helling; p. 16: *"since sampling fluctuations can play
+  a role, it is advisable to correct for pre-experimental differences if possible."* Dat de sommen van het speeltje
+  hetzelfde zijn met de helling vast op 1, staat niet bij hem: dat is een afleiding van de hulpagent (en klopt: met
+  helling 1 geeft vgl. 21 precies 0 − (48 − 52) = 4).
+- **Senn (2006)**, *Statistics in Medicine, 25*, 4334–4344 — zelf gelezen: de verschilscore is ΔY − ΔX, de
+  covariantieanalyse ΔY − β̂ΔX, en β̂ is in de praktijk kleiner dan 1. (Het nummer van het tijdschrift, 24, is niet
+  van de pdf zelf gehaald; nog na te kijken als hij ooit in een bronvermelding komt.)
+- **Dimitrov & Rumrill (2003), p. 160** — opnieuw zelf gelezen: hun formule mist + D₄ (zie de tabel hierboven).
+
+**Oordeel.** Het lenen zoals het speeltje het doet is Solomons eigen rekenwijze (volgens tweede hand), en Campbell en
+Stanley lenen zelf ook voor H/M. Het is niet hoe de latere literatuur S toetst bij ongelijke voormetingen: die toetst
+op de nametingen (en accepteert het verschil als toeval), of corrigeert met een geschatte helling. Dat staat nu op de
+bladzij, in de uitklapper en in de aannametabel, niet in de ladder zelf.
+
+**Ook in dit stuk, niet gevraagd:** op een echt scherm van 390 px was de bladzij 696 px breed, door de tabel *"wat er
+per groep van het model overblijft"* in de uitwerking van stap 10, die niet in een schuifvak stond. Dat was al zo
+vóór stuk 3 (op 210a5ed dezelfde 54 uitstekende elementen). Nu staat hij in een `.tabelvak`, net als de nieuwe tabel
+van stap 11. Gemeten met de bladzij in een iframe van 390 px, want headless Chrome maakt een venster nooit smaller dan
+500 px (`--window-size=390` gaf `innerWidth` 500); de schermafdrukken van eerdere stukken "op telefoonbreedte" waren
+dus waarschijnlijk 500 px breed.
+
+**De toetsen.** `solomon_getallen_test.py` eist nu ongelijke voormetingen (tot 23-11 eiste hij gelijke; ingetrokken)
+en dat de som met alleen nametingen geen som van stukjes is; hij neemt paden als argument voor een mutatieproef.
+Mutaties: de oude 50/50 → *"voormeting I en II zijn allebei 50"* en *"de som met alleen nametingen is 4, en dat is ook
+S"*; 52/48 → *"is 8, en dat is ook X"*; allebei afloop 1. `solomon_figuren_test.py` leest de stand *de ladder* uit de
+bladzij (hij stond er als [50, 50, 65, 53, 60, 52] getikt), noemt de stand met 50.5 nu *geleende voormeting 50.5*
+(heette *ongelijke voormetingen*), en rekent bij elke trap na waar hij eindigt: nameting I voor de trap van de
+nameting, verbetering I voor de andere, en op het speelbord bij elke stand. Mutatie: de oude trap van de nameting
+terug → *"de trap eindigt op 65, moet 63 zijn"*, afloop 1 (en in de proefrun *wijdste bereik*, waar de voormetingen
+0 en 100 zijn, *"eindigt op 150, moet 100 zijn"*: die trap loog daar al vóór stuk 3).
+
 ## Wat de testlezers en de APA-lens zeiden in stuk 1c, en wat er veranderde
 
 Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.quarto/kladje_solomon/dom1c.html`), Jeanne en de
@@ -451,7 +567,10 @@ Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.ht
   de uitwerking rekent (65 − 53) − (60 − 52) = 4 voor, met de reden waarom lenen daar wegvalt; 13 staat bij de
   keuzes; en `duiding()` noemt naast de vergeten stukjes ook elke rechttoe-rechtaan weg door de tabel die op dat
   getal uitkomt (uitgerekend uit een lijst van nameting-verschillen). Het toetsscript eist nu ook dat de twee
-  echte voormetingen gelijk zijn, anders klopt die som niet.
+  echte voormetingen gelijk zijn, anders klopt die som niet. *(Ingetrokken in stuk 3, 23-11-2026: de voormetingen
+  zijn nu 48 en 52, de uitwerking rekent voor waarom de som met alleen nametingen dan 0 geeft, en de toets eist het
+  omgekeerde: ongelijke voormetingen. De lijst van nameting-verschillen telt een weg alleen nog mee als hij met deze
+  getallen echt zijn stukjes meet.)*
 - **Jeanne: *"dezelfde vier sommen"* en dan andere sommen** (stap 5: (60 − 50) − 2; stap 10: 60 − 52). Nu staat
   erbij waarom: de 50 en de 2 zitten samen in *b*₀ = 52.
 - **Jeanne: *"factor"* zonder uitleg** in de uitklapper, en haar paniek-verrassing dat een echte tweeweg-analyse een
@@ -499,11 +618,13 @@ Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.ht
 2. ~~De volgorde slotvraag → regressie, of regressie → slotvraag?~~ Beslist in 1c (meesterknecht): ladder → slotvraag
    → regressie als aangekondigde toegift. Ingetrokken als open vraag.
 3. De bron naar `countcamp_lab/boek/04_speeltjes/` en `KIST` in `bouw_speelkist.py`: perswerk.
-4. De volgorde van stap 2 en 3 (boekhouding vóór lenen) wijkt af van Bens eigen volgorde (lenen eerst); zie *De
-   ladder*. Als hij zijn volgorde wil, is het één verwisseling in `VOLGORDE`.
-5. **De leen-stap valt met 50 en 50 niet te toetsen** (Michelle én Jeanne, 1c): het gemiddelde van 50 en 50 is 50,
-   of je nu middelt of overschrijft, dus "(50 + 50) / 2 = 50" ziet eruit als een som om niets. Ongelijke voormetingen
-   (bijvoorbeeld 48 en 52) zouden het lenen echt laten zien, maar dan klopt de weg zonder lenen in stap 9 niet meer
-   (dat eist `solomon_getallen_test.py` ook). Twee goede dingen die elkaar bijten; aan Ben welke wint. Nu wint stap 9.
-6. Haakjes om het product in het model, *b*₃·(voormeting·therapie)? De lens: geen regel, een keuze; het is één
-   constante (`MODEL`), dus hij geldt dan meteen op alle drie de plekken.
+4. ~~De volgorde van stap 2 en 3 (boekhouding vóór lenen)~~ Beslist door Ben, 23-11-2026: *"(2) volgorde zo"*.
+   Ingetrokken als open vraag.
+5. ~~De leen-stap valt met 50 en 50 niet te toetsen~~ Beslist door Ben, 23-11-2026: *"(1) voormetingen ongelijk,
+   48/52, zodat stap 3 het lenen echt leert"*. Uitgevoerd in stuk 3; de oude stand ("nu wint stap 9") is ingetrokken.
+6. ~~Haakjes om het product in het model?~~ Beslist door Ben, 23-11-2026: *"(3) haakjes erom"*. Uitgevoerd in stuk 3.
+7. **Nieuw in stuk 3: welke voormeting is 48 en welke 52?** Gekozen I = 48, II = 52 (Bens volgorde, en met 52/48 valt
+   de som met alleen nametingen op 8 = X). Staat als vraag met die standaard op het bord.
+8. **Nieuw in stuk 3: de vijfde aanname en de alinea "Welke van de twee klopt?"** zijn een toevoeging die Ben niet
+   vroeg, maar die de bladzij nodig had om waar te blijven (zie *Stuk 3*). Weghalen kan; dan zegt de bladzij
+   stilzwijgend dat de som met verbeteringen de goede is en de toets op de nametingen de foute.
