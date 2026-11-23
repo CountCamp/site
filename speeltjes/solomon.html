@@ -184,6 +184,8 @@
   svg .seg{stroke-width:1.5;fill-opacity:.28}
   svg .seg-hm{fill:var(--c-hm);stroke:var(--c-hm)} svg .seg-x{fill:var(--c-x);stroke:var(--c-x)}
   svg .seg-t{fill:var(--c-t);stroke:var(--c-t)} svg .seg-s{fill:var(--c-s);stroke:var(--c-s)}
+  /* een trede die geen stukje is: een gewicht van de regressie op de nameting waar het verschil in voormeting in zit */
+  svg .seg-b{fill:var(--vaag);stroke:var(--vaag)}
   svg .totaal{fill:var(--ink);fill-opacity:.06;stroke:var(--ink);stroke-width:1}
   /* verbindingslijntjes: dun en vaag, niet gestippeld (huisstijl: geen stippellijnen) */
   svg .verbind{stroke:var(--vaag);stroke-width:.8}
@@ -388,12 +390,16 @@
   <p>Dit nam je onderweg aan. Bij elke aanname: waarom dat mag, en of het ontwerp hem regelt of dat je hem meet.</p>
   <div class="tabelvak">
   <table class="data kl" id="aannames">
-    <caption>Vier aannames, en hoe je ze regelt</caption>
+    <caption><span id="aantal-aannames"></span> aannames, en hoe je ze regelt</caption>
     <tr><th>wat je aanneemt</th><th>waarom dat mag</th><th>regel je het met het ontwerp, of meet je het?</th></tr>
     <tr><td>De vier groepen begonnen gemiddeld gelijk.</td><td>Het lot (R) bepaalde wie in welke groep kwam.</td>
-        <td>Het ontwerp regelt het. Een stukje kun je natrekken: de voormetingen van I en II zijn <span data-v="voorI"></span> en <span data-v="voorII"></span>.</td></tr>
+        <td>Het ontwerp regelt het, maar alleen gemiddeld: precies gelijk maakt het lot twee groepen nooit. Dat zie je aan de voormetingen van I en II, <span data-v="voorI"></span> en <span data-v="voorII"></span>.</td></tr>
     <tr><td>Groep III en IV hadden vooraf dezelfde score als het gemiddelde van de voormetingen van I en II.</td><td>Dat volgt uit de eerste regel. Dit heet <i>substitutie</i>: je vult een getal in op een plek waar je niets gemeten hebt.</td>
         <td>Het ontwerp. Meten kan hier niet: geef je groep III een voormeting, dan is het groep I geworden.</td></tr>
+    <!-- sinds 23-11-2026: bij 50 en 50 deed deze aanname er voor S niet toe, bij 48 en 52 wel (zie de uitklapper
+         "hoe toets je of S echt van nul verschilt") -->
+    <tr><td>Een groep die vooraf een punt hoger zat, zit achteraf ook een punt hoger.</td><td>Zo werkt een verbetering: nameting min voormeting. Elk punt voorsprong vooraf trek je er één op één af.</td>
+        <td>Je kunt het meten, maar dit speeltje doet het niet: een covariantieanalyse schat hoeveel een punt vooraf achteraf nog waard is. Meestal is dat minder dan één.</td></tr>
     <tr><td>Wat vanzelf beter wordt, wordt in alle vier de groepen even hard beter.</td><td>De groepen lopen dezelfde periode, in dezelfde wereld.</td>
         <td>Het ontwerp: alle groepen tegelijk.</td></tr>
     <tr><td>De stukjes tellen op.</td><td>Zo spreek je het af: wat er in groep I overblijft als je de andere stukjes eraf haalt, noem je S.</td>
@@ -432,7 +438,7 @@
   <div class="tabelvak" id="sb-tabel"></div>
   <div id="sb-sommen"></div>
   <div class="tabelvak" id="sb-regressie"></div>
-  <p class="zacht kl">Probeer ook: de voormetingen van I en II niet gelijk. Kijk wat er dan met T en S gebeurt, en met
+  <p class="zacht kl">Probeer ook: zet de voormetingen van I en II gelijk. Kijk wat er dan met T en S gebeurt, en met
   de regressie op de nameting.</p>
 
   <h2 id="eigen">En in je eigen onderzoek?</h2>
@@ -464,22 +470,35 @@
   <details class="verder">
     <summary>Voor wie verder wil: hoe toets je of S echt van nul verschilt?</summary>
     <p class="kl">Dit speeltje rekent met gemiddelden, met de geleende voormeting erbij. Zo rekende Solomon (1949)
-    het zelf ook, en om S te vinden klopt dat. Wil je ook <em>toetsen</em> of S echt van nul verschilt, dan heb
+    het zelf ook. Wil je ook <em>toetsen</em> of S echt van nul verschilt, dan heb
     je meer nodig dan gemiddelden: je kijkt naar de scores van alle mensen. Daar loop je vast, want groep III
     en IV hebben geen eigen voormeting, dus ook geen verbetering per persoon. Campbell en Stanley (1963)
     raadden daarom een andere weg aan: toets op de nametingen, met twee factoren: voormeting (ja of nee) en
     therapie (ja of nee), de twee schakelaars uit de toegift. Dat is precies de regressie op de nameting uit de
-    toegift, en de interactie daarin is S. Zijn de voormetingen van I en II gelijk, dan komt er hetzelfde getal
-    uit als met de sommen.</p>
-    <p class="kl">Let wel: het hoofdeffect van therapie in zo’n analyse is het gemiddelde van het effect mét en zonder
-    voormeting, (<span data-r="metS"></span> + <span data-r="zonderS"></span>) / 2 = <span data-r="hoofd"></span>,
-    en niet de <span data-r="X"></span> van <i>b</i><sub>2</sub>: dat gewicht is alleen het effect zónder voormeting.</p>
+    toegift. Haar interactie is S plus het verschil tussen voormeting I en II: met deze getallen
+    <span data-r="kaal"></span>, waar de sommen <span data-r="S"></span> geven. Zijn de voormetingen van I en II
+    gelijk, dan komt er hetzelfde getal uit.</p>
+    <!-- 23-11-2026: met ongelijke voormetingen spreken de twee wegen elkaar tegen, en welke klopt hangt af van een
+         aanname die bij 50 en 50 onzichtbaar was. Een hulpagent las Campbell & Stanley (1963, p. 25) en
+         Van Engelenburg (1999, vgl. 21, p. 11): die laatste corrigeert de interactie voor het verschil in voormeting
+         met een geschatte helling; de sommen hier zijn hetzelfde met de helling vast op 1 (eigen afleiding). -->
+    <p class="kl">Welke van de twee klopt? Dat hangt af van een aanname. De sommen met verbeteringen nemen aan dat
+    wie vooraf een punt hoger zat, achteraf ook precies een punt hoger zit. In dit speeltje zijn de getallen zo
+    gemaakt, maar in echte data is het meestal minder dan een punt. Een covariantieanalyse schat uit de data hoeveel
+    het is, en houdt zo rekening met waar I en II begonnen (van Engelenburg, 1999). De nametingen alleen nemen niets
+    aan over de voormeting, maar dragen het toeval van het lot mee: over veel onderzoeken middelt dat uit, in één
+    onderzoek niet.</p>
+    <p class="kl">Let wel: in een analyse met interactie is het hoofdeffect van therapie het gemiddelde van het effect
+    mét en zonder voormeting. Op de verbeteringen is dat (<span data-r="metS"></span> + <span data-r="zonderS"></span>) / 2
+    = <span data-r="hoofd"></span>, en niet de <span data-r="X"></span> van <i>b</i><sub>2</sub>: dat gewicht is alleen
+    het effect zónder voormeting.</p>
   </details>
 
   <p class="foot">
     De regressieve ruggengraat &middot; <a href="https://countcamp.org/manuscript/h10.html">Hoofdstuk 10 — Verschil in verschil</a> &middot; sensitisatie is een verschil in verschil<br>
     <span class="ref">Het ontwerp en de rekenwijze: Solomon, R. L. (1949). An extension of control group design. <i>Psychological Bulletin, 46</i>(2), 137–150. https://doi.org/10.1037/h0062958</span><br>
-    <span class="ref">De toets op de nametingen: Campbell, D. T., &amp; Stanley, J. C. (1963). <i>Experimental and quasi-experimental designs for research</i>. Rand McNally.</span>
+    <span class="ref">De toets op de nametingen: Campbell, D. T., &amp; Stanley, J. C. (1963). <i>Experimental and quasi-experimental designs for research</i>. Rand McNally.</span><br>
+    <span class="ref">De correctie voor ongelijke voormetingen: van Engelenburg, G. (1999). <i>Statistical analysis for the Solomon four-group design</i> (Research Report No. 99-06). University of Twente, Faculty of Educational Science and Technology. https://files.eric.ed.gov/fulltext/ED435692.pdf</span>
   </p>
 </div>
 
@@ -491,7 +510,11 @@
   // Kwaliteit van leven, 0 tot 100. Gekozen zodat elke som van stukjes een eigen getal
   // geeft (nagerekend in _tools/tests/solomon_getallen_test.py): wie een stukje vergeet,
   // komt op een getal uit dat precies verraadt wélk stukje.
-  var GETALLEN = {voorI:50, voorII:50, naI:65, naII:53, naIII:60, naIV:52};
+  // De voormetingen zijn sinds 23-11-2026 ongelijk, 48 en 52 (Ben: "voormetingen ongelijk, 48/52, zodat stap 3
+  // het lenen echt leert"); tot dan waren ze 50 en 50, en (50 + 50) / 2 = 50 was een som om niets. De stukjes
+  // bleven H/M 2, X 8, T 1, S 4; de nametingen van I en II zijn daaruit teruggerekend zoals maak() hieronder doet
+  // (nameting I = 48 + 2 + 8 + 1 + 4, nameting II = 52 + 2 + 1), III en IV veranderden niet.
+  var GETALLEN = {voorI:48, voorII:52, naI:63, naII:55, naIII:60, naIV:52};
 
   // ===== de methode, van beneden naar boven =====
   // Voormeting van III en IV = gemiddelde van I en II. Dan:
@@ -508,7 +531,7 @@
     return {leen:leen, vI:vI, vII:vII, vIII:vIII, vIV:vIV, HM:HM, X:X, T:T, S:S};
   }
   // ===== dezelfde vier groepen als regressie, met V (voormeting 0/1) en X (therapie 0/1) =====
-  //   Y = b0 + b1·V + b2·X + b3·V·X
+  //   Y = b0 + b1·V + b2·X + b3·(V·X)
   //   IV (0,0): b0        III (0,1): b0 + b2        II (1,0): b0 + b1        I (1,1): b0 + b1 + b2 + b3
   // Twee keer: met de nameting als Y, en met de verbetering (na − voor, met de geleende voormeting) als Y.
   function regressie(d){
@@ -534,8 +557,10 @@
   // en die X botste met het stukje X van 8 punten: Jeanne en Michelle lazen allebei "b2 is X" terwijl X net
   // 1 was. Met woorden is er maar één X over, het stukje. De woorden staan rechtop: het zijn namen van
   // schakelaars, geen symbolen; b en Y blijven cursief.
+  // Het product staat in het model tussen haakjes, b3·(voormeting·therapie) (Ben, 23-11-2026: "haakjes erom"):
+  // zo leest het als één term met één gewicht, en niet als b3·voormeting met daarachter nog iets.
   var SV = 'voormeting', SW = 'therapie', VX = SV + '·' + SW;
-  var MODEL = '<i>Y</i> = ' + b(0) + ' + ' + b(1) + '·' + SV + ' + ' + b(2) + '·' + SW + ' + ' + b(3) + '·' + VX;
+  var MODEL = '<i>Y</i> = ' + b(0) + ' + ' + b(1) + '·' + SV + ' + ' + b(2) + '·' + SW + ' + ' + b(3) + '·(' + VX + ')';
 
   // de letters van de stukjes krijgen hun vaste streep
   var KLEUR = {HM:'hm', X:'x', T:'t', S:'s'};
@@ -697,6 +722,12 @@
 
   // ===== de ladder =====
   var r = los(GETALLEN), rb = regressie(GETALLEN);
+  // De weg met alleen nametingen: de som van de verschil-in-verschil-stap, maar met nametingen in plaats van
+  // verbeteringen. Dat is b3 van de regressie op de nameting, en die is S plus het verschil tussen voormeting I en II.
+  // Met 48 en 52 (sinds 23-11-2026) is dat 4 + (−4) = 0; solomon_getallen_test.py eist dat dit geen som van stukjes is.
+  var KAAL = rb.na.b3, VOOR_VERSCHIL = GETALLEN.voorI - GETALLEN.voorII;
+  // zijn b1 en b3 van een regressie T en S? uitgerekend, met de twee gewichten erbij
+  function jaNee(q){ return (gelijk(q.b1, r.T) && gelijk(q.b3, r.S) ? 'ja' : 'nee') + ' (' + g(q.b1) + ' en ' + g(q.b3) + ')'; }
   var MATRIX_GOED = {I:['H/M','X','T','S'], II:['H/M','T'], III:['H/M','X'], IV:['H/M']};
   // ===== de twijfelaar: per stukje het bezwaar dat het beantwoordt =====
   // Ben, 8-10-2026: "Als onderzoeker wil je zo graag bewijzen dat je manipulatie echt gewerkt heeft, maar bij een
@@ -761,11 +792,15 @@
       tabel:{titel:TITEL, licht:['III','IV']},
       voor:'<p>Kijk in de kolom <i>voormeting</i>: groep I en II hebben er een, groep III en IV vulden de vragenlijst één keer in, aan het eind. Zonder voormeting geen verbetering, en zonder de verbetering van groep IV geen ' + kl('H/M') + '.</p>',
       vraag:'Welk getal neem je voor groep III en IV als hun score vooraf?',
-      invoer:{soort:'getal', goed:r.leen},
+      // Wie één van de twee voormetingen overneemt, krijgt te horen waarom die niet beter is dan de andere. Sinds de
+      // voormetingen ongelijk zijn (23-11-2026) kan dat fout gaan; met 50 en 50 was elk van de twee ook het goede antwoord.
+      invoer:{soort:'getal', goed:r.leen, fouten:[
+        [GETALLEN.voorI, 'Dat is de voormeting van groep I. Waarom zouden III en IV precies zo begonnen zijn, en niet zoals groep II?'],
+        [GETALLEN.voorII, 'Dat is de voormeting van groep II. Waarom zouden III en IV precies zo begonnen zijn, en niet zoals groep I?']]},
       hint:'Het lot heeft de groepen samengesteld. Hoe zullen III en IV dan gemiddeld begonnen zijn, vergeleken met I en II?',
       uit:function(){ return WELKE + P('Het gemiddelde van de twee voormetingen die je wél hebt. Dat getal heet hierna de <i>geleende voormeting</i>.') +
         som('geleende voormeting', ['(voormeting I + voormeting II) / 2', '(' + g(GETALLEN.voorI) + ' + ' + gh(GETALLEN.voorII) + ') / 2', g(r.leen)]) +
-        P('Dat mag omdat het lot de groepen samenstelde: gemiddeld begonnen ze gelijk. Je vult een getal in op een plek waar je niets gemeten hebt. Dat heet <i>substitutie</i>.') +
+        P('Dat mag omdat het lot de groepen samenstelde: gemiddeld begonnen ze gelijk. Gemiddeld, niet precies: I en II liggen al ' + pt(Math.abs(GETALLEN.voorII - GETALLEN.voorI)) + ' uit elkaar. Of III en IV meer op I of meer op II lijken, weet je niet, dus het midden is je beste gok. Je vult een getal in op een plek waar je niets gemeten hebt. Dat heet <i>substitutie</i>.') +
         P('Meten kan hier trouwens niet: geef je groep III een voormeting, dan is het groep I geworden.'); } },
 
     hm: { titel:'Groep IV: hoe groot is H/M?', twijfel:'HM',
@@ -847,16 +882,29 @@
       tabel:{titel:TITEL},
       voor:'<p>Nog één keer, maar nu zonder geleende voormetingen en zonder kolom <i>bevat</i>: alleen de kale tabel, zoals je hem in een artikel tegenkomt. Lukt dit, dan is de ladder af.</p>',
       vraag:'Wat is de beste schatting van S, de sensitisatie?',
-      // T, S, X, X + S, X + T + S (nameting I − nameting IV: de natuurlijkste fout uit een kale tabel, Jeanne 8-10) en alles
-      invoer:{soort:'keuze', opties:[r.T, r.S, r.X, r.X + r.S, r.X + r.T + r.S, r.vI].sort(function(a, c){ return a - c; }), gelijkAanT:true},
-      hint:'Sensitisatie is S: wat voormeting en therapie samen extra doen met de kwaliteit van leven. Elk fout antwoord is een stukje dat je vergat eraf te halen, of het verkeerde stukje. Je mag de voormeting lenen zoals in ' + stap('leen') + '; het kan ook zonder, met de som van ' + stap('did') + ' maar dan met nametingen.',
-      uit:function(){ var a = GETALLEN.naI - GETALLEN.naII, c = GETALLEN.naIII - GETALLEN.naIV;
-        return WELKE + P('Die van ' + stap('s') + ', met de geleende voormeting, geeft S = ' + g(r.S) + '. Het kan ook zonder lenen: de som van ' + stap('did') + ', maar dan met nametingen. De geleende voormeting valt daar weg, want III en IV kregen dezelfde; en I en II hebben dezelfde echte voormeting.') +
-        som('S', ['(nameting I − nameting II) − (nameting III − nameting IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(a - c)]) +
+      // T, S, X, X + S, alles, en de som met alleen nametingen (KAAL: de natuurlijkste fout uit een kale tabel sinds de voormetingen
+      // ongelijk zijn). Tot 23-11-2026 stond hier X + T + S, als uitkomst van nameting I − nameting IV (Jeanne, 8-10);
+      // met 48 en 52 komt die weg niet meer op X + T + S uit, dus die keuze is vervangen. Dubbele getallen gaan eruit.
+      invoer:{soort:'keuze', opties:[r.T, r.S, r.X, r.X + r.S, r.vI, KAAL].filter(function(o, i, a){
+        return a.findIndex(function(p){ return gelijk(p, o); }) === i; }).sort(function(a, c){ return a - c; }), gelijkAanT:true},
+      hint:'Sensitisatie is S: wat voormeting en therapie samen extra doen met de kwaliteit van leven. Er staat geen geleende voormeting in de tabel, maar je mag hem zelf lenen, zoals in ' + stap('leen') + '. En de voormetingen van I en II staan er wél: sla ze niet over. Elk fout antwoord is een stukje dat je vergat eraf te halen, het verkeerde stukje, of een som met alleen nametingen.',
+      // Tot 23-11-2026 rekende deze uitwerking S ook "zonder lenen" uit, met alleen nametingen; dat klopte alleen
+      // omdat voormeting I en II gelijk waren. Wat er met 48 en 52 misgaat, is niet het lenen maar het overslaan van
+      // de eigen voormetingen van I en II: de geleende voormeting valt uit S altijd weg (III en IV krijgen dezelfde).
+      uit:function(){ var a = GETALLEN.naI - GETALLEN.naII, c = GETALLEN.naIII - GETALLEN.naIV, L = 'alleen nametingen';
+        return WELKE + P('Die van ' + stap('s') + ', met de geleende voormeting: S = ' + g(r.S) + '. Of die van ' + stap('did') + ', met de verbeteringen. Allebei hebben ze de voormetingen van I en II nodig.') +
+        P('Met alleen nametingen gaat het mis. Neem de som van ' + stap('did') + ', maar dan met nametingen in plaats van verbeteringen:') +
+        som(L, ['(nameting I − nameting II) − (nameting III − nameting IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(KAAL)]) +
+        P('Een nameting draagt mee waar een groep begon. Bij III en IV maakt dat niet uit: die kregen dezelfde geleende voormeting, dus in nameting III − nameting IV valt hij weg. Bij I en II wel: in nameting I − nameting II zit naast X + S ook het verschil tussen voormeting I en II. Wat er overblijft:') +
+        som(L, ['S + (voormeting I − voormeting II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(r.S) + ' + ' + gh(VOOR_VERSCHIL), g(KAAL)]) +
+        P('Die som rekent alsof I en II gelijk begonnen, en dat deden ze niet: I begon op ' + g(GETALLEN.voorI) + ' en II op ' + g(GETALLEN.voorII) + '.' + (gelijk(KAAL, 0) ? ' Hier valt S er zelfs precies tegen weg.' : '') +
+          ' Met verbeteringen gebeurt dat niet, want daar haal je bij I en II eerst hun eigen voormeting af.') +
+        P('En de geleende voormeting? Die valt uit S altijd weg, ook in ' + stap('did') + ', want III en IV krijgen dezelfde. Je had hem nodig voor H/M en T, niet voor S.') +
         P('De andere antwoorden:') +
-        '<ul>' + ST.kaal.invoer.opties.filter(function(o){ return !gelijk(o, r.S); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
+        // de som met alleen nametingen staat hierboven al uitgeschreven, dus niet nog eens in het lijstje
+        '<ul>' + ST.kaal.invoer.opties.filter(function(o){ return !gelijk(o, r.S) && !gelijk(o, KAAL); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
         (gelijk(r.S, r.T) ? P('En let op: met deze getallen is T óók ' + g(r.T) + '. Rekende je T uit in plaats van S, dan was je antwoord goed en je som fout.') : '') +
-        P('Hiermee is de ladder af. Wat volgt is een toegift: dezelfde sommen, maar dan als regressie.'); } },
+        P('Hiermee is de ladder af. Wat volgt is een toegift: dezelfde ladder, maar dan als regressie.'); } },
 
     // De toegift: eerst de makkelijke vraag (b0 aflezen), dan pas de ketting (b3). Michelle (8-10): met b3
     // vooraan was de moeilijkste trede de eerste na de finish, en Jeanne: "elk stapje vraagt één ding" hield
@@ -866,7 +914,7 @@
       voor:'<p>Alles wat je deed, kun je ook als regressie schrijven. Maak van de tabel twee schakelaars, en schrijf ze voluit: <i>' + SV + '</i> is 1 als de groep een voormeting kreeg en anders 0; <i>' + SW +
         '</i> is 1 als de groep de therapie kreeg en anders 0. De nameting is <i>Y</i>, en het model is:</p>' +
         '<p class="model">' + MODEL + '</p>' +
-        '<p>Vul je voor een groep een 0 in, dan valt die term weg; vul je een 1 in, dan blijft het gewicht staan. Het product ' + VX + ' is alleen 1 als allebei 1 zijn. Dat ziet er nieuw uit, maar het zijn dezelfde vier sommen als in ' + stapTotMet('hm', 's') + ': alleen heten de stukjes nu <i>b</i>.</p>',
+        '<p>Vul je voor een groep een 0 in, dan valt die term weg; vul je een 1 in, dan blijft het gewicht staan. Het product ' + VX + ' is alleen 1 als allebei 1 zijn. Dat ziet er nieuw uit, maar je lost het op zoals in ' + stapTotMet('hm', 's') + ', van onder naar boven: alleen heten de stukjes nu <i>b</i>.</p>',
       vraag:'Hoe groot is ' + b(0) + '?',
       invoer:{soort:'getal', goed:rb.na.b0},
       hint:'Groep IV heeft de schakelaar ' + SV + ' op 0 en de schakelaar ' + SW + ' op 0, dus alles valt weg behalve ' + b(0) + '. Welke nameting is dat?',
@@ -882,8 +930,19 @@
           [b(3), ['nameting I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(GETALLEN.naI) + ' − ' + gh(rb.na.b0) + ' − ' + gh(rb.na.b1) + ' − ' + gh(rb.na.b2), g(rb.na.b3)]]
         ]) +
         P('Ze zien er iets anders uit dan in ' + stap('x') + ': daar trok je eerst de voormeting ' + g(r.leen) + ' af en dan H/M ' + g(r.HM) + '; hier zitten die twee samen in ' + b(0) + ' = ' + g(rb.na.b0) + ', dus trek je ze in één keer af.') +
-        P(b(2) + ' is X, wat de therapie doet. ' + b(1) + ' is T, wat de voormeting doet. En ' + b(3) + ', het gewicht van het product ' + VX + ', is S: de sensitisatie ís de interactie.') +
-        P('Maar kijk naar ' + b(0) + ', de nameting van wie niets kreeg. Daar zit het startniveau in, waar iedereen gemiddeld begon (de geleende voormeting), én H/M:') +
+        // Tot 23-11-2026 stond hier "b1 is T ... b3 is S". Dat klopte alleen bij gelijke voormetingen: de regressie op de
+        // nameting is de som met alleen nametingen, en met 48 en 52 geeft ze b1 = 3 en b3 = 0. Wat er nu staat, rekent dat voor.
+        P(b(2) + ' is X, wat de therapie doet: ' + g(rb.na.b2) + ', net als in ' + stap('x') + '. Maar ' + b(1) + ' is ' + g(rb.na.b1) + ', en T was ' + g(r.T) +
+          '. En ' + b(3) + ', het gewicht van het product ' + VX + ', is ' + g(rb.na.b3) + ', en S was ' + g(r.S) +
+          '. Een nameting draagt mee waar een groep begon, en het model weet alleen of er een voormeting was, niet hoe hoog die was. Groep II begon op ' +
+          g(GETALLEN.voorII) + ' en groep I op ' + g(GETALLEN.voorI) + ', niet op de geleende ' + g(r.leen) + ':') +
+        somBlok([
+          [b(1), ['T + (voormeting II − geleende voormeting)', g(r.T) + ' + (' + g(GETALLEN.voorII) + ' − ' + gh(r.leen) + ')', g(rb.na.b1)]],
+          [b(3), ['S + (voormeting I − voormeting II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(rb.na.b3)]]
+        ]) +
+        P('Die ' + b(3) + ' is precies de som met alleen nametingen uit ' + stap('kaal') + '.' + (gelijk(rb.na.b3, 0) ? ' Op de nameting zie je de sensitisatie hier dus helemaal niet.' : '') +
+          ' In ' + stap('regVer') + ' haalt de verbetering het verschil in voormeting er eerst af.') +
+        P('En kijk naar ' + b(0) + ', de nameting van wie niets kreeg. Daar zit het startniveau in, waar iedereen gemiddeld begon (de geleende voormeting), én H/M:') +
         som(b(0), ['startniveau + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
         P('In deze regressie zie je H/M dus niet los: het zit in ' + b(0) + ' verstopt.') +
         trapReg('na'); } },
@@ -902,12 +961,16 @@
           [b(1), ['verbetering II − ' + b(0), g(r.vII) + ' − ' + gh(rb.ver.b0), g(rb.ver.b1)]],
           [b(3), ['verbetering I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(r.vI) + ' − ' + gh(rb.ver.b0) + ' − ' + gh(rb.ver.b1) + ' − ' + gh(rb.ver.b2), g(rb.ver.b3)]]
         ]) +
-        P(b(3) + ' is S, net als in ' + stap('s') + '. En nu is ' + b(0) + ' precies H/M: de verbetering van wie niets kreeg. De andere twee bleven wat ze waren: ' + b(1) + ' is T, ' + b(2) + ' is X.') +
-        '<table class="data"><caption>Wat het gewicht ' + b(0) + ' betekent, per afhankelijke variabele</caption>' +
-        '<tr><th>afhankelijke variabele</th><th>' + b(0) + ' betekent</th><th>' + kl('H/M') + ' los te zien?</th></tr>' +
-        '<tr><td>nameting</td><td>startniveau + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>nee</td></tr>' +
-        '<tr><td>verbetering</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>ja</td></tr></table>' +
-        P('Elk regressiegewicht is een stukje uit de som van het ontwerp, en de interactie ' + VX + ' is de sensitisatie. Of je H/M los ziet, hangt af van wat je als <i>Y</i> kiest.') +
+        // tot 23-11-2026: "De andere twee bleven wat ze waren: b1 is T, b2 is X". Met ongelijke voormetingen veranderde b1
+        // wel (op de nameting 3, hier 1), dus dat staat er nu uitgerekend
+        P(b(3) + ' is S, net als in ' + stap('s') + ', en ' + b(1) + ' is T. Op de nameting waren dat ' + g(rb.na.b3) + ' en ' + g(rb.na.b1) +
+          '; de verbetering haalt bij elke groep eerst af waar hij begon, dus het verschil in voormeting zit er niet meer in. En nu is ' + b(0) +
+          ' precies H/M: de verbetering van wie niets kreeg. Alleen ' + b(2) + ' bleef wat hij was: X.') +
+        '<table class="data"><caption>Wat de gewichten betekenen, per afhankelijke variabele</caption>' +
+        '<tr><th>afhankelijke variabele</th><th>' + b(0) + ' betekent</th><th>' + kl('H/M') + ' los te zien?</th><th>' + b(1) + ' en ' + b(3) + ' zijn ' + kl('T') + ' en ' + kl('S') + '?</th></tr>' +
+        '<tr><td>nameting</td><td>startniveau + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>nee</td><td>' + jaNee(rb.na) + '</td></tr>' +
+        '<tr><td>verbetering</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>ja</td><td>' + jaNee(rb.ver) + '</td></tr></table>' +
+        P('Op de verbetering is elk regressiegewicht een stukje uit de som van het ontwerp, en de interactie ' + VX + ' is de sensitisatie. Op de nameting zit er meer in: het startniveau in ' + b(0) + ', en het verschil in voormeting in ' + b(1) + ' en ' + b(3) + '. Wat je los ziet, hangt af van wat je als <i>Y</i> kiest.') +
         trapReg('ver'); } }
   };
   var stappen = VOLGORDE.map(function(k){ if (!ST[k]) throw new Error('VOLGORDE noemt een trede die niet bestaat: ' + k); return ST[k]; });
@@ -917,14 +980,26 @@
   // rechttoe-rechtaan weg door de kale tabel (nameting min nameting) die op dat getal uitkomt; niets getypt.
   var NAAM = {HM:'H/M', X:'X', T:'T', S:'S'};
   var UITLEG = {HM:'wat vanzelf beter wordt', X:'wat de therapie doet', T:'wat de voormeting zelf doet', S:'wat voormeting en therapie samen extra doen'};
+  // Elke weg draagt de stukjes die hij meet als de groepen gelijk begonnen. Hij telt alleen mee als hij dat met deze
+  // getallen ook echt doet: met voormetingen 48 en 52 is nameting I − nameting II 8, en dat is niet X maar
+  // X + S + (48 − 52). Zonder die toets noemde de uitwerking 8 "X, bijvoorbeeld nameting I − nameting II" (23-11-2026).
   var WEGEN = [
-    ['nameting I − nameting II',  GETALLEN.naI - GETALLEN.naII],  ['nameting I − nameting III',  GETALLEN.naI - GETALLEN.naIII],
-    ['nameting I − nameting IV',  GETALLEN.naI - GETALLEN.naIV],  ['nameting II − nameting IV',  GETALLEN.naII - GETALLEN.naIV],
-    ['nameting III − nameting IV', GETALLEN.naIII - GETALLEN.naIV], ['nameting II − nameting III', GETALLEN.naII - GETALLEN.naIII],
-    ['verbetering I − verbetering II', r.vI - r.vII], ['verbetering I', r.vI], ['nameting I − voormeting I', r.vI]
-  ];
+    ['nameting I − nameting II',  GETALLEN.naI - GETALLEN.naII,   {X:1, S:1}],
+    ['nameting I − nameting III', GETALLEN.naI - GETALLEN.naIII,  {T:1, S:1}],
+    ['nameting I − nameting IV',  GETALLEN.naI - GETALLEN.naIV,   {X:1, T:1, S:1}],
+    ['nameting II − nameting IV', GETALLEN.naII - GETALLEN.naIV,  {T:1}],
+    ['nameting III − nameting IV', GETALLEN.naIII - GETALLEN.naIV, {X:1}],
+    ['nameting II − nameting III', GETALLEN.naII - GETALLEN.naIII, {T:1, X:-1}],
+    ['verbetering I − verbetering II', r.vI - r.vII, {X:1, S:1}],
+    ['verbetering I', r.vI, {HM:1, X:1, T:1, S:1}], ['nameting I − voormeting I', r.vI, {HM:1, X:1, T:1, S:1}]
+  ].filter(function(w){ var s = 0; for (var k in w[2]) s += w[2][k] * r[k]; return gelijk(w[1], s); });
   function duiding(o){
     var sl = ['HM','X','T','S'], past = [];
+    // de som met alleen nametingen eerst: dat getal is geen som van stukjes (solomon_getallen_test.py), dus anders
+    // stond er "dat getal komt uit geen van de sommen hier", terwijl het juist de natuurlijkste fout is
+    if (!gelijk(VOOR_VERSCHIL, 0) && gelijk(o, KAAL))
+      return 'dat is de som van ' + stap('did') + ' met alleen nametingen. Die rekent alsof I en II gelijk begonnen, maar I begon op ' +
+        g(GETALLEN.voorI) + ' en II op ' + g(GETALLEN.voorII) + ', en dat verschil zit in je antwoord.';
     for (var m = 1; m < 16; m++){
       var sub = sl.filter(function(k, i){ return m & (1 << i); });
       if (gelijk(sub.reduce(function(a, k){ return a + r[k]; }, 0), o)) past.push(sub);
@@ -966,6 +1041,8 @@
       var ruw = document.getElementById('in-' + i).value.trim().replace(',', '.').replace('−', '-');
       if (ruw === '' || isNaN(Number(ruw))){ fb.className = 'terugmelding'; fb.textContent = 'Vul eerst een getal in.'; return; }
       goed = gelijk(Number(ruw), iv.goed);
+      // een bekend fout antwoord krijgt zijn eigen terugmelding (alleen als het niet toevallig ook het goede is)
+      if (!goed) (iv.fouten || []).forEach(function(f){ if (gelijk(Number(ruw), f[0])) tekst = f[1]; });
     } else if (iv.soort === 'vink'){
       var aan = [].slice.call(document.querySelectorAll('input[name="v-' + i + '"]:checked')).map(function(e){ return e.value; });
       goed = aan.length === iv.goed.length && iv.goed.every(function(o){ return aan.indexOf(o) >= 0; });
@@ -1000,6 +1077,9 @@
   var nHoofd = stappen.filter(function(s){ return !s.toegift; }).length, nToegift = stappen.length - nHoofd;
   document.getElementById('aantal-stappen').textContent = woord(nHoofd).charAt(0).toUpperCase() + woord(nHoofd).slice(1);
   document.getElementById('aantal-toegift').textContent = woord(nToegift);
+  // het aantal aannames in het bijschrift wordt geteld, niet getikt (er kwam er op 23-11-2026 een bij)
+  var nAannames = document.querySelectorAll('#aannames tr').length - 1;
+  document.getElementById('aantal-aannames').textContent = woord(nAannames).charAt(0).toUpperCase() + woord(nAannames).slice(1);
 
   document.getElementById('ladder').innerHTML = stappen.map(function(st, i){
     return '<section class="trede' + (st.zwaard ? ' heeft-zwaard' : '') + '" id="stap-' + (i + 1) + '"><div class="stapnr">' + (st.toegift ? 'Toegift · ' : '') + 'Stap ' + (i + 1) + ' van ' + stappen.length + '</div>' +
@@ -1035,7 +1115,7 @@
   // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
   document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
   [].forEach.call(document.querySelectorAll('[data-v]'), function(e){ e.textContent = g(GETALLEN[e.getAttribute('data-v')]); });
-  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X};
+  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL};
   [].forEach.call(document.querySelectorAll('[data-r]'), function(e){ e.textContent = g(AFGELEID[e.getAttribute('data-r')]); });
   // de streep hoort bij elke letter, ook buiten de ladder (APA-lens, 8-10: de lege kaart stond kaal naast de ingevulde).
   // Alleen in tekstknopen, niet in de innerHTML: daar ving kl() ook de X in het attribuut data-r="X" en brak de
@@ -1106,6 +1186,8 @@
   // opt.basis: de vloer (0 voor de verbetering, de geleende voormeting voor de nameting);
   // opt.b0tik: bij de eerste trede "b0" op de bovenkant zetten; opt.brij: de b's onder de treden;
   // opt.as en opt.totaalLabel: de teksten langs de as en onder de laatste kolom.
+  // opt.kleuren, opt.rij1, opt.titels: andere kleuren, etiketten onder de treden en zweefteksten, voor de trap van de
+  // nameting, waarvan de treden gewichten zijn en geen stukjes (23-11-2026). In rij1 is {b:i} een cursieve b met index.
   function waterval(svg, rr, tot, opt){
     opt = opt || {};
     while (svg.firstChild) svg.removeChild(svg.firstChild);
@@ -1165,10 +1247,10 @@
         return;
       }
       if (i === tot - 1 && i < 3) el(svg, 'line', {x1:x0 + bw, y1:y(s.b), x2:cx(i + 1) - bw / 2, y2:y(s.b), 'class':'verbind'});
-      var vorm;
-      if (h < 1.5){ vorm = el(svg, 'line', {x1:x0, y1:y(s.a), x2:x0 + bw, y2:y(s.a), 'class':'seg seg-' + KLEUR[s.k], 'stroke-width':2.5}); }
-      else { vorm = el(svg, 'rect', {x:x0, y:top, width:bw, height:h, 'class':'seg seg-' + KLEUR[s.k]}); }
-      el(vorm, 'title', {}, NAAM[s.k] + ' = ' + g(s.v) + ': ' + UITLEG[s.k]);
+      var vorm, kleur = opt.kleuren ? opt.kleuren[i] : KLEUR[s.k];
+      if (h < 1.5){ vorm = el(svg, 'line', {x1:x0, y1:y(s.a), x2:x0 + bw, y2:y(s.a), 'class':'seg seg-' + kleur, 'stroke-width':2.5}); }
+      else { vorm = el(svg, 'rect', {x:x0, y:top, width:bw, height:h, 'class':'seg seg-' + kleur}); }
+      el(vorm, 'title', {}, opt.titels ? opt.titels[i] : NAAM[s.k] + ' = ' + g(s.v) + ': ' + UITLEG[s.k]);
       // op een vloer boven nul krijgt de eerste trede niet "+2" maar waar hij eindigt: dat is b0
       var lab = (opt.b0tik && i === 0) ? g(s.b) : (s.v > 0 ? '+' : '') + g(s.v);
       el(svg, 'text', {x:cx(i), y:getalY(s.a, s.b), 'text-anchor':'middle', 'font-size':14, 'font-weight':600, 'class':'waarde'}, lab);
@@ -1186,18 +1268,34 @@
     var tv = el(svg, 'rect', {x:xt, y:tt, width:bw, height:Math.max(th, 1), 'class':'totaal'});
     el(tv, 'title', {}, (opt.totaalLabel || 'verbetering I') + ' = ' + g(eind));
     el(svg, 'text', {x:cx(4), y:getalY(basis, eind), 'text-anchor':'middle', 'font-size':14, 'font-weight':600, 'class':'waarde'}, g(eind));
-    ['H/M', '+ X', '+ T', '+ S', '= I'].forEach(function(t, i){
-      el(svg, 'text', {x:cx(i), y:B + 24, 'text-anchor':'middle', 'font-size':15}, t);
+    (opt.rij1 || ['H/M', '+ X', '+ T', '+ S', '= I']).forEach(function(t, i){
+      if (typeof t === 'string'){ el(svg, 'text', {x:cx(i), y:B + 24, 'text-anchor':'middle', 'font-size':15}, t); return; }
+      var tx = el(svg, 'text', {x:cx(i), y:B + 24, 'text-anchor':'middle', 'font-size':15});
+      el(tx, 'tspan', {}, '+ '); el(tx, 'tspan', {'font-style':'italic'}, 'b'); el(tx, 'tspan', {dy:'4', 'font-size':'11'}, String(t.b));
     });
     if (opt.brij) [0, 2, 1, 3].forEach(function(bi, i){ bTekst(svg, {x:cx(i) - 5, y:B + 41, 'font-size':13, 'class':'astekst'}, bi); });
     el(svg, 'text', {x:cx(4), y:B + 41, 'text-anchor':'middle', 'class':'astekst'}, opt.totaalLabel || 'verbetering I');
   }
-  // de trap in de toegift: op de nameting met de vloer op de geleende voormeting, op de verbetering met de b's eronder
+  // de trap in de toegift: op de nameting met de vloer op de geleende voormeting, op de verbetering met de b's eronder.
+  // De trap van de nameting tekent sinds 23-11-2026 de gewichten van die regressie, niet de stukjes: daarvóór
+  // stapelde hij H/M, X, T en S op de vloer van 50 en kwam hij op 65 uit, terwijl nameting I met de voormetingen
+  // 48 en 52 op 63 staat. Een trede die geen stukje is (b1 is hier T + 2, b3 is S − 4) staat grijs.
+  function trapNa(){
+    var rr = los(GETALLEN), q = regressie(GETALLEN).na;
+    var schoon = {T:gelijk(q.b1, rr.T), S:gelijk(q.b3, rr.S)};
+    return {rr:{HM:q.b0 - rr.leen, X:q.b2, T:q.b1, S:q.b3, vI:q.b0 + q.b1 + q.b2 + q.b3 - rr.leen}, schoon:schoon,
+      opt:{basis:rr.leen, b0tik:true, as:'nameting', totaalLabel:'nameting I',
+        kleuren:['hm', 'x', schoon.T ? 't' : 'b', schoon.S ? 's' : 'b'],
+        rij1:['H/M', {b:2}, {b:1}, {b:3}, '= I'],
+        titels:['b0 = ' + g(q.b0) + ': startniveau ' + g(rr.leen) + ' + H/M ' + g(rr.HM), 'b2 = ' + g(q.b2), 'b1 = ' + g(q.b1), 'b3 = ' + g(q.b3)]}};
+  }
   function trapReg(soort){
-    var rr = los(GETALLEN), q = regressie(GETALLEN);
-    var tekst = soort === 'na'
-      ? 'Dezelfde trap als in ' + stap('s') + ', maar de vloer ligt op ' + g(rr.leen) + ': de geleende voormeting. De eerste trede, H/M, eindigt op ' + g(q.na.b0) + ', en dat is ' + b(0) + '. Daarom zit H/M erin verstopt.'
-      : 'De trap van ' + stap('s') + ', met de gewichten eronder: ' + b(0) + ' is de eerste trede, H/M; ' + b(3) + ' de laatste, S.';
+    var rr = los(GETALLEN), q = regressie(GETALLEN), na = trapNa(), tekst;
+    if (soort === 'na') tekst = 'De trap van de nameting. De vloer ligt op ' + g(rr.leen) + ', de geleende voormeting. De eerste trede, H/M, eindigt op ' + g(q.na.b0) +
+      ', en dat is ' + b(0) + ': daarom zit H/M erin verstopt. Daarna komen ' + b(2) + ', ' + b(1) + ' en ' + b(3) + ', tot nameting I, ' + g(GETALLEN.naI) + '. ' +
+      (na.schoon.T && na.schoon.S ? b(2) + ', ' + b(1) + ' en ' + b(3) + ' zijn X, T en S.'
+        : b(2) + ' is X; ' + b(1) + ' en ' + b(3) + ' staan grijs, want ze zijn hier niet T en S, maar ' + g(q.na.b1) + ' en ' + g(q.na.b3) + '.');
+    else tekst = 'De trap van ' + stap('s') + ', met de gewichten eronder: ' + b(0) + ' is de eerste trede, H/M; ' + b(3) + ' de laatste, S.';
     return '<figure class="mini"><svg class="mini-wv" data-tot="4" data-soort="' + soort + '" viewBox="0 0 460 262" role="img" aria-label="' + tekst.replace(/<[^>]+>/g, '') + '"></svg>' +
       '<figcaption>' + kl(tekst) + '</figcaption></figure>';
   }
@@ -1218,10 +1316,10 @@
 
   // de trapjes in de uitwerkingen van de ladder, stap voor stap ingekleurd; in de toegift met vloer of met b's
   [].forEach.call(document.querySelectorAll('svg.mini-wv'), function(s){
-    var soort = s.getAttribute('data-soort'), opt = {};
-    if (soort === 'na') opt = {basis:r.leen, b0tik:true, as:'nameting', totaalLabel:'nameting I'};
+    var soort = s.getAttribute('data-soort'), opt = {}, rr = los(GETALLEN);
+    if (soort === 'na'){ var na = trapNa(); rr = na.rr; opt = na.opt; }
     if (soort === 'ver') opt = {brij:true};
-    waterval(s, los(GETALLEN), Number(s.getAttribute('data-tot')), opt);
+    waterval(s, rr, Number(s.getAttribute('data-tot')), opt);
   });
 
   // ===== het zwaard: de balk van groep I, met de sneden erin (zichtbaar zodra S gevonden is) =====

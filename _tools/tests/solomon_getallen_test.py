@@ -73,10 +73,12 @@ def main():
             # Die tekenen alleen deze getallen, niet de schuifjes; een negatief stukje kunnen ze niet laten
             # zien (stuk 1d, 8-10-2026). Het speelbord kan het wel: zie solomon_figuren_test.py.
             fouten.append("stukje %s is %g: het zwaard en de verschil-in-verschil-balken tekenen alleen positieve stukjes" % (naam, v))
-    # stap 9 rekent S uit de kale tabel zonder lenen: (naI - naII) - (naIII - naIV). Dat is alleen S als de
-    # twee echte voormetingen gelijk zijn; anders zit hun verschil erin en liegt de uitwerking.
-    if abs(d["voorI"] - d["voorII"]) > 1e-9:
-        fouten.append("voormeting I (%g) en II (%g) verschillen: de som zonder lenen in stap 9 geeft dan niet S" % (d["voorI"], d["voorII"]))
+    # De voormetingen van I en II zijn ongelijk (Ben, 23-11-2026: "voormetingen ongelijk, 48/52, zodat stap 3 het
+    # lenen echt leert"). Met gelijke voormetingen is het gemiddelde gelijk aan elk van de twee, dus leert stap 3
+    # niets, en dan liegen de uitwerkingen van stap 9, 10 en 11, die nu voorrekenen wat er misgaat zonder lenen.
+    # Tot 23-11 eiste deze toets het omgekeerde: dat de twee gelijk waren, omdat stap 9 toen zonder lenen rekende.
+    if abs(d["voorI"] - d["voorII"]) < 1e-9:
+        fouten.append("voormeting I en II zijn allebei %g: dan leert stap 3 het lenen niet, en stap 9 tot en met 11 rekenen voor wat er misgaat bij ongelijke voormetingen" % d["voorI"])
     sommen = {}
     for n in range(1, 5):
         for c in combinations(st, n):
@@ -84,15 +86,24 @@ def main():
     for s, wie in sorted(sommen.items()):
         if len(wie) > 1:
             fouten.append("deelsom %g komt %d keer voor: %s" % (s, len(wie), " en ".join(wie)))
+    # De weg zonder lenen, (naI - naII) - (naIII - naIV), is S + (voorI - voorII). Stap 9 biedt dat getal aan als
+    # keuze en legt het uit als "de som zonder lenen". Is het ook een som van stukjes, dan kan de bladzij een student
+    # die het lenen oversloeg niet meer onderscheiden van een die een stukje vergat (met voorI 52 en voorII 48 is
+    # het 8, precies X).
+    kaal = (d["naI"] - d["naII"]) - (d["naIII"] - d["naIV"])
+    if round(kaal, 9) in sommen:
+        fouten.append("de som zonder lenen is %g, en dat is ook %s: stap 9 kan die twee fouten dan niet uit elkaar houden" % (kaal, sommen[round(kaal, 9)][0]))
     print("bladzijden: " + ", ".join(namen) + " (dezelfde zes getallen)" if not any("andere getallen" in f for f in fouten) else "bladzijden: " + ", ".join(namen))
     print("getallen  : " + ", ".join("%s %g" % kv for kv in d.items()))
     print("stukjes   : " + ", ".join("%s %g" % kv for kv in st.items()))
     print("deelsommen: %d, waarvan %d uniek" % (len(sommen), sum(1 for w in sommen.values() if len(w) == 1)))
+    print("zonder lenen: (%g - %g) - (%g - %g) = %g, S = %g" % (d["naI"], d["naII"], d["naIII"], d["naIV"], kaal, st["S"]))
     if fouten:
         for f in fouten:
             print("FOUT: " + f)
         return 1
-    print("ok: elke som van stukjes geeft een eigen getal, elk stukje is groter dan 0, alles tussen 0 en 100")
+    print("ok: elke som van stukjes geeft een eigen getal, elk stukje is groter dan 0, alles tussen 0 en 100, "
+          "de voormetingen van I en II verschillen, en de som zonder lenen is geen som van stukjes")
     return 0
 
 

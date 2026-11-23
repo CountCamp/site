@@ -37,8 +37,9 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 # De schuifjes: voormeting I, voormeting II, nameting I, II, III, IV. De stukjes erachter staan erbij; ze volgen
 # uit de zes getallen (H/M = nameting IV - geleende voormeting, X = nameting III - nameting IV, enzovoort) en
 # worden hieronder in stukjes() nagerekend, zodat een verkeerd uitgerekend geval de toets zelf laat zakken.
+# De eerste stand, "de ladder", staat hier niet: die leest main() uit de bladzij zelf (var GETALLEN), want tot
+# 23-11-2026 stond hij hier als [50, 50, 65, 53, 60, 52] getikt, en sinds de voormetingen 48 en 52 zijn, loog dat.
 SCHUIFSTANDEN = [
-    ("de ladder",                    [50, 50, 65, 53, 60, 52], {"HM": 2, "X": 8, "T": 1, "S": 4}),
     ("H/M negatief (Bens geval)",    [50, 50, 62, 50, 57, 49], {"HM": -1, "X": 8, "T": 1, "S": 4}),
     ("X negatief",                   [50, 50, 49, 53, 44, 52], {"HM": 2, "X": -8, "T": 1, "S": 4}),
     ("T negatief",                   [50, 50, 61, 49, 60, 52], {"HM": 2, "X": 8, "T": -3, "S": 4}),
@@ -53,8 +54,10 @@ SCHUIFSTANDEN = [
     ("vlak onder nul",               [50, 50, 98, 41, 47, 40], {"HM": -10, "X": 7, "T": 1, "S": 50}),
     # een dalend stukje dat precies op nul eindigt: niets zakt onder nul, maar zijn getal hangt eronder
     ("terug tot nul",                [50, 50, 55, 54, 50, 53], {"HM": 3, "X": -3, "T": 1, "S": 4}),
-    # ongelijke voormetingen: de geleende voormeting in de schuiftabel wordt 50.5 en moet meeschuiven (stuk 2b)
-    ("ongelijke voormetingen",       [48, 53, 65, 53, 60, 52], {"HM": 1.5, "X": 8, "T": -1.5, "S": 9}),
+    # een geleende voormeting met een halve punt: hij wordt 50.5 en moet in de schuiftabel meeschuiven (stuk 2b).
+    # Heette tot 23-11-2026 "ongelijke voormetingen"; sinds de ladder zelf ongelijke voormetingen heeft (48 en 52,
+    # geleend 50), is wat deze stand nog extra toetst de halve punt.
+    ("geleende voormeting 50.5",     [48, 53, 65, 53, 60, 52], {"HM": 1.5, "X": 8, "T": -1.5, "S": 9}),
 ]
 # andere getypte getallen voor run 2 (zelfde volgorde als GETALLEN in de bladzij)
 SLEUTELS = ["voorI", "voorII", "naI", "naII", "naIII", "naIV"]
@@ -75,7 +78,7 @@ MEETSCRIPT = r"""
 <style>.zwaard *{transition:none!important}</style>
 <script>
 (function(){
-  var STANDEN = %(standen)s, LADDER = %(ladder)s, ZONDER = %(zonder)s;
+  var STANDEN = %(standen)s, LADDER = %(ladder)s, ZONDER = %(zonder)s, EIND = %(eind)s;
   var uit = {metingen: [], fouten: []};
   function zichtbaar(e){ return e.checkVisibility({opacityProperty:true, visibilityProperty:true}); }
   function vak(e){ var r = e.getBoundingClientRect(); return {l:r.left, r:r.right, t:r.top, b:r.bottom}; }
@@ -137,6 +140,8 @@ MEETSCRIPT = r"""
     if (leen.length !== 2) uit.fouten.push('speelbord, ' + st[0] + ': ' + leen.length + ' cellen met de geleende voormeting in de schuiftabel, geen 2');
     [].forEach.call(leen, function(e){ if (e.textContent !== moet) uit.fouten.push('speelbord, ' + st[0] + ': geleende voormeting in de schuiftabel is ' + e.textContent + ', moet ' + moet + ' zijn'); });
     meet(document.getElementById('waterval'), 'speelbord, ' + st[0]);
+    var ww = document.querySelectorAll('#waterval text.waarde'), wl = ww.length ? ww[ww.length - 1].textContent : '(geen)';
+    if (wl !== fmt(st[1][2] - st[1][0])) uit.fouten.push('speelbord, ' + st[0] + ': de trap eindigt op ' + wl + ', moet ' + fmt(st[1][2] - st[1][0]) + ' zijn');
   });
   // 2. de ladder, met alle uitwerkingen open
   if (LADDER){
@@ -149,6 +154,15 @@ MEETSCRIPT = r"""
         meet(svg, wie + ' voor het klieven');
         trede.classList.add('gekliefd'); meet(svg, wie + ' na het klieven'); trede.classList.remove('gekliefd');
       } else meet(svg, wie);
+      // Waar eindigt de trap? Het getal boven het grijze blok moet de nameting I zijn (trap van de nameting) of de
+      // verbetering I (de andere trappen); de toets rekent dat zelf uit de zes getallen. Sinds 23-11-2026: tot dan
+      // stapelde de trap van de nameting de stukjes op de vloer van de geleende voormeting, en met de voormetingen
+      // 48 en 52 kwam hij op 65 uit waar nameting I 63 is. Over elkaar stond er niets, dus de toets zag het niet.
+      if (svg.matches('.mini-wv')){
+        var w = svg.querySelectorAll('text.waarde'), laatst = w.length ? w[w.length - 1].textContent : '(geen)';
+        var moet = svg.getAttribute('data-soort') === 'na' ? EIND.naI : EIND.vI;
+        if (laatst !== moet) uit.fouten.push(wie + ': de trap eindigt op ' + laatst + ', moet ' + moet + ' zijn');
+      }
     });
   }
   var pre = document.createElement('pre'); pre.id = 'figuurtoets'; pre.textContent = JSON.stringify(uit);
@@ -179,6 +193,21 @@ def draai_chrome(pad, werkmap):
     return uitvoer.read_text(encoding="utf-8", errors="replace")
 
 
+def fmt(v):
+    """Zoals g() op de bladzij: geheel getal kaal, anders een of twee decimalen, en een echte min."""
+    r = round(v * 100) / 100
+    s = str(int(r)) if r == int(r) else ("%.1f" % r if abs(r * 10 - round(r * 10)) < 1e-9 else "%.2f" % r)
+    return s.replace("-", "\u2212")
+
+
+def lees_getallen(tekst):
+    m = re.search(r"var GETALLEN = \{([^}]*)\}", tekst)
+    if not m:
+        return None
+    d = dict((k, float(v)) for k, v in re.findall(r"(\w+):\s*(-?\d+(?:\.\d+)?)", m.group(1)))
+    return [d[k] for k in SLEUTELS] if all(k in d for k in SLEUTELS) else None
+
+
 def maak_kopie(bron, werkmap, naam, standen, ladder, zonder, getallen=None):
     t = re.sub(r'\s*<script data-goatcounter[^>]*></script>', '', bron)   # anders zoekt Chrome file://gc.zgo.at
     if getallen is not None:
@@ -186,8 +215,10 @@ def maak_kopie(bron, werkmap, naam, standen, ladder, zonder, getallen=None):
         t, n = re.subn(r"var GETALLEN = \{[^}]*\};", nieuw, t)
         if n != 1:
             return None
+    z = getallen if getallen is not None else lees_getallen(bron)
+    eind = {"naI": fmt(z[2]), "vI": fmt(z[2] - z[0])}   # waar de trappen van de ladder moeten eindigen
     script = MEETSCRIPT % {"standen": json.dumps(standen), "ladder": "true" if ladder else "false",
-                           "zonder": json.dumps(zonder)}
+                           "zonder": json.dumps(zonder), "eind": json.dumps(eind)}
     pad = werkmap / (naam + ".html")
     pad.write_text(t.replace("</body>", script + "</body>", 1), encoding="utf-8")
     return pad
@@ -208,6 +239,11 @@ def main():
     if not Path(CHROME).exists():
         print("KON NIET KIJKEN: geen Chrome op %s" % CHROME)
         return 3
+    ladder = lees_getallen(PAGINA.read_text(encoding="utf-8"))
+    if ladder is None:
+        print("KON NIET KIJKEN: 'var GETALLEN = {...}' met de zes getallen niet gevonden in %s" % PAGINA)
+        return 3
+    SCHUIFSTANDEN.insert(0, ("de ladder", ladder, stukjes(ladder)))
     fout_in_lijst = []
     for naam, z, verwacht in SCHUIFSTANDEN:
         st = stukjes(z)
