@@ -46,8 +46,14 @@ import sys
 sys.dont_write_bytecode = True
 HIER = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HIER)
-from commentaarregel import TOEGESTAAN, kort, lees  # noqa: E402
-from tellerwacht import vak  # noqa: E402
+try:
+    # commentaarregel leest bij het laden _tools/teller.html en de stempels uit
+    # en_bouw.py; is daar iets stuk, dan breekt het HIER, en dat is blind (3).
+    from commentaarregel import TOEGESTAAN, kort, lees  # noqa: E402
+    from tellerwacht import vak  # noqa: E402
+except Exception as _e:  # noqa: BLE001
+    print('KON NIET KIJKEN -- de ontleder laat zich niet laden: %s: %s' % (type(_e).__name__, _e))
+    sys.exit(3)
 
 REPO = os.path.dirname(HIER)
 OVERSLAAN = {'.claude', '.git'}   # werkkopieën van zetters; nooit site (zie en_bouw.py, keuring 0)
@@ -203,4 +209,15 @@ def main() -> int:
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    # Een wachter die breekt, heeft niet gekeken: afloop 3, niet 1. Python's eigen
+    # afloop bij een traceback is 1, en die las naar_buiten.sh als "commentaar
+    # gevonden" (nakijker 23-11). Zelfde vorm als doorstuurders.py.
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except BaseException as e:  # noqa: BLE001 -- juist alles: elke breuk is blind
+        print('KON NIET KIJKEN -- de wachter brak af: %s: %s' % (type(e).__name__, e))
+        import traceback
+        traceback.print_exc()
+        sys.exit(3)

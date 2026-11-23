@@ -87,19 +87,13 @@ def _teller_merken() -> tuple[str, str]:
     return regels[0].strip(), regels[-1].strip()
 
 
-def _conditioneel(c: str) -> bool:
-    """Een conditioneel commentaar voor oude Internet Explorers: een instructie
-    aan de browser, geen notitie. Drie vormen:
-        <!--[if lt IE 9]> ... <![endif]-->   (verborgen voor andere browsers)
-        <!--[if !IE]><!-->                   (opener van de zichtbare vorm)
-        <!--<![endif]-->                     (sluiter van de zichtbare vorm)
-    """
-    return bool(re.fullmatch(r'<!--\[if [^\]]{1,40}\]>.*<!\[endif\]-->', c, re.S)
-                or re.fullmatch(r'<!--\[if [^\]]{1,40}\]><!-->', c)
-                or c == '<!--<![endif]-->')
-
-
 TELLER_BEGIN, TELLER_EIND = _teller_merken()
+
+# INGETROKKEN (23-11-2026, nakijker van spoor pers_commentaar): een vierde recht,
+# 'conditioneel', voor IE-commentaren (`<!--[if lt IE 9]> ... <![endif]-->`). De
+# toets liet ALLES tussen `]>` en `<![endif]` door: `<!--[if IE]> MIEKE: geheim
+# <![endif]-->` gaf afloop 0 en bleef staan. Geen machine leest die vorm terug,
+# en hij stond 0 keer op de site (live en nieuw) -- dus geen recht, gewoon weg.
 
 # (naam, wie leest het terug, toets op de hele `<!-- ... -->`)
 TOEGESTAAN = (
@@ -116,9 +110,6 @@ TOEGESTAAN = (
      'de stempel van publish_workbook.py; en_bouw.py keur leest hem in de bouw '
      '(WERKBOEK_STEMPEL)',
      lambda c: bool(WERKBOEK_STEMPEL.fullmatch(c))),
-    ('conditioneel',
-     'een instructie aan oude Internet Explorers, geen notitie',
-     _conditioneel),
 )
 
 
@@ -301,20 +292,23 @@ def zonder_commentaar(t: str) -> tuple[str, list[Commentaar], list[Commentaar]]:
     """Geef (nieuwe tekst, weggehaald, bewaard). Idempotent: draai je hem op zijn
     eigen uitkomst, dan komt die byte voor byte terug.
 
-    Waarom in rondes: in een kwaadaardig geval kan weghalen een NIEUW commentaar
-    maken (`<!<!-- x -->--` wordt `<!--`). Dan nog een ronde, tot er niets meer te
-    halen valt -- anders was de uitkomst niet idempotent, en zou de wachter rood
-    staan op een bladzij die het filter 'schoon' noemde.
+    Eén ronde, en dan WEIGEREN als weghalen een nieuw commentaar maakte. In een
+    zeldzaam geval plakt het weghalen twee stukken tekst tot een nieuw `<!--`:
+    `3 <<!-- x -->!-- zichtbaar` wordt `3 <!-- zichtbaar`. De browser toonde daar
+    `<!-- zichtbaar` als tekst. Tot 23-11 haalde een tweede ronde dat ook weg, en
+    dan verdween zichtbare tekst -- bij een `<!--` dat nooit sluit de rest van de
+    bladzij -- terwijl de wachter daarna 'schoon' zei (de nakijker van dit spoor
+    mat het). Nu stopt de bouw (RuntimeError; commentaar_weg.py geeft afloop 3)
+    en kijkt een mens. Op de echte site kwam het 0 keer voor: pandoc schrijft een
+    losse `<` als `&lt;`.
     """
-    alles_weg: list[Commentaar] = []
-    bewaard: list[Commentaar] = []
-    for _ronde in range(10):
-        t, weg, bewaard = _een_ronde(t)
-        if not weg:
-            return t, alles_weg, bewaard
-        alles_weg.extend(weg)
-    raise RuntimeError('commentaarregel: na tien rondes nog commentaar over -- dit is geen '
-                       'bladzij maar een puzzel; kijk er met de hand naar')
+    t, weg, bewaard = _een_ronde(t)
+    _nog, nieuw, _b = _een_ronde(t)
+    if nieuw:
+        raise RuntimeError('commentaarregel: weghalen maakte een nieuw commentaar (%s, regel %d) -- '
+                           'daar stond zichtbare tekst; kijk er met de hand naar'
+                           % (kort(nieuw[0].tekst, 60), nieuw[0].regel))
+    return t, weg, bewaard
 
 
 def kort(c: str, breed: int = 80) -> str:

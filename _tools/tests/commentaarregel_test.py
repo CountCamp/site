@@ -29,6 +29,8 @@ STEMPEL_BOEK = ('<!-- countcamp-publicatie H4 bron-hash=' + 'a' * 64
 STEMPEL_OEFENBOEK = ('<!-- countcamp-oefenboek mvda lab-commit=' + 'b' * 40
                      + ' geleverd=2026-11-23T10:00:00 -->')
 
+WEIGERT = object()   # verwacht: zonder_commentaar weigert (RuntimeError)
+
 # (naam, invoer, verwachte uitvoer, waarom)
 GEVALLEN = [
     ('eigen regel', 'a\n  <!-- MIEKE: weg -->\nb', 'a\nb',
@@ -50,8 +52,8 @@ GEVALLEN = [
      'in <pre> is het een echt (onzichtbaar) commentaar; de regel blijft, want daar telt elke regelovergang'),
     ('codeblok toont', '<pre><code>&lt;!-- toon --&gt;</code></pre>', None,
      'wat een codeblok TOONT staat er als &lt;!-- en wordt nooit aangeraakt'),
-    ('conditioneel', '<!--[if lt IE 9]><script src="x.js"></script><![endif]-->', None,
-     'een instructie aan oude IE: staat op de toegestane lijst'),
+    ('conditioneel', 'a<!--[if IE]> MIEKE: geheim <![endif]-->b', 'ab',
+     'een IE-commentaar is sinds 23-11 geen recht meer: het liet elke tekst door, en niemand leest het terug'),
     ('leeg', 'a<!-->b<!--->c<!---->d', 'abcd',
      'HTML5: <!--> en <!---> zijn al afgesloten lege commentaren'),
     ('--!>', 'a<!-- x --!>b', 'ab',
@@ -66,8 +68,10 @@ GEVALLEN = [
      'alleen de precieze vorm mag blijven; een halve stempel is een notitie'),
     ('verouderde teller', '<!-- teller:begin oud -->\n', '',
      'alleen het merkteken uit _tools/teller.html zelf mag blijven'),
-    ('puzzel', 'a<<!-- x -->!-- y -->b', 'ab',
-     'weghalen kan een nieuw commentaar maken (a<!-- y -->b); dan nog een ronde, anders is het niet idempotent'),
+    ('puzzel', 'a<<!-- x -->!-- y -->b', WEIGERT,
+     'weghalen kan een nieuw commentaar maken (a<!-- y -->b) waar de browser tekst toonde: weigeren, niet doorknippen'),
+    ('puzzel open', '<p>3 <<!-- x -->!-- zichtbaar</p><p>de rest</p>', WEIGERT,
+     'idem met een <!-- dat nooit sluit: een tweede ronde wiste hier de rest van de bladzij (nakijker 23-11)'),
     ('bogus', 'a<!<!-- x -->b', None,
      'HTML5: <! zonder -- is een "bogus comment" tot de eerste > -- de browser ziet hier geen <!-- x -->'),
     ('nooit dicht', 'a <!-- nooit dicht', 'a ',
@@ -87,6 +91,18 @@ GEVALLEN = [
 def main() -> int:
     zak = 0
     for naam, invoer, verwacht, waarom in GEVALLEN:
+        if verwacht is WEIGERT:
+            try:
+                uit = zonder_commentaar(invoer)[0]
+            except RuntimeError:
+                print('ok    %-20s %s' % (naam, waarom))
+                continue
+            zak += 1
+            print('ZAKT  %-20s %s' % (naam, waarom))
+            print('        invoer:    %r' % invoer)
+            print('        verwacht:  weigering (RuntimeError)')
+            print('        kreeg:     %r' % uit)
+            continue
         verwacht = invoer if verwacht is None else verwacht
         uit, _weg, _bewaard = zonder_commentaar(invoer)
         nog_eens, weg2, _ = zonder_commentaar(uit)

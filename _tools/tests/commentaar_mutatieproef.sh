@@ -66,11 +66,10 @@ mutatie "toegestane lijst te ruim (elke stempel-achtige)" commentaarregel.py \
   "     lambda c: bool(LAB_STEMPEL.fullmatch(c))),"  "     lambda c: 'countcamp-publicatie' in c),"
 mutatie "tellermerken niet meer toegestaan" commentaarregel.py \
   "     lambda c: c in (TELLER_BEGIN, TELLER_EIND)),"  "     lambda c: False),"
-mutatie "filter niet idempotent (één ronde)" commentaarregel.py \
-  "    for _ronde in range(10):" "    for _ronde in range(1):
-        t, weg, bewaard = _een_ronde(t)
-        alles_weg.extend(weg)
-        return t, alles_weg, bewaard"
+mutatie "filter weigert een puzzel niet meer (wist dan zichtbare tekst)" commentaarregel.py \
+  "    if nieuw:
+        raise RuntimeError" "    if False:
+        raise RuntimeError"
 mutatie "wachter keurt niets af" commentaarwacht.py \
   "    if vondsten or zoekindex:
         print('\nFOUT" "    if False:
