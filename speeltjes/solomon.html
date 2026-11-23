@@ -398,8 +398,10 @@
         <td>Het ontwerp. Meten kan hier niet: geef je groep III een voormeting, dan is het groep I geworden.</td></tr>
     <!-- sinds 23-11-2026: bij 50 en 50 deed deze aanname er voor S niet toe, bij 48 en 52 wel (zie de uitklapper
          "hoe toets je of S echt van nul verschilt") -->
-    <tr><td>Een groep die vooraf een punt hoger zat, zit achteraf ook een punt hoger.</td><td>Zo werkt een verbetering: nameting min voormeting. Elk punt voorsprong vooraf trek je er één op één af.</td>
-        <td>Je kunt het meten, maar dit speeltje doet het niet: een covariantieanalyse schat hoeveel een punt vooraf achteraf nog waard is. Meestal is dat minder dan één.</td></tr>
+    <!-- Michelle (23-11): bij "covariantieanalyse" klapte ze dicht, en "minder dan één" zonder waarom. Nu met de eigen
+         getallen; de vakterm staat alleen nog in de uitklapper "hoe toets je of S echt van nul verschilt". -->
+    <tr><td>Een groep die vooraf een punt hoger zat, zit achteraf ook een punt hoger.</td><td>Zo rekent een verbetering: nameting min voormeting. I en II begonnen <span data-r="voorAfstand"></span> punten uit elkaar; je neemt aan dat ze daardoor ook <span data-r="voorAfstand"></span> punten uit elkaar eindigen, los van wat de stukjes doen.</td>
+        <td>Je kunt het meten, maar dit speeltje doet het niet. Meestal blijft er achteraf minder van over: een deel van een verschil vooraf is toeval van die ene meting, en dat komt achteraf niet terug.</td></tr>
     <tr><td>Wat vanzelf beter wordt, wordt in alle vier de groepen even hard beter.</td><td>De groepen lopen dezelfde periode, in dezelfde wereld.</td>
         <td>Het ontwerp: alle groepen tegelijk.</td></tr>
     <tr><td>De stukjes tellen op.</td><td>Zo spreek je het af: wat er in groep I overblijft als je de andere stukjes eraf haalt, noem je S.</td>
@@ -895,11 +897,18 @@
         return WELKE + P('Die van ' + stap('s') + ', met de geleende voormeting: S\u00a0=\u00a0' + g(r.S) + '. Of die van ' + stap('did') + ', met de verbeteringen. Allebei hebben ze de voormetingen van I en II nodig.') +
         P('Met alleen nametingen gaat het mis. Neem de som van ' + stap('did') + ', maar dan met nametingen in plaats van verbeteringen:') +
         som(L, ['(nameting I − nameting II) − (nameting III − nameting IV)', '(' + g(GETALLEN.naI) + ' − ' + gh(GETALLEN.naII) + ') − (' + g(GETALLEN.naIII) + ' − ' + gh(GETALLEN.naIV) + ')', g(a) + ' − ' + gh(c), g(KAAL)]) +
-        P('Een nameting draagt mee waar een groep begon. Bij III en IV maakt dat niet uit: die kregen dezelfde geleende voormeting, dus in nameting III − nameting IV valt hij weg. Bij I en II wel: in nameting I − nameting II zit naast X + S ook het verschil tussen voormeting I en II. Wat er overblijft:') +
-        som(L, ['S + (voormeting I − voormeting II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(r.S) + ' + ' + gh(VOOR_VERSCHIL), g(KAAL)]) +
-        P('Die som rekent alsof I en II gelijk begonnen, en dat deden ze niet: I begon op ' + g(GETALLEN.voorI) + ' en II op ' + g(GETALLEN.voorII) + '.' + (gelijk(KAAL, 0) ? ' Hier valt S er zelfs precies tegen weg.' : '') +
-          ' Met verbeteringen gebeurt dat niet, want daar haal je bij I en II eerst hun eigen voormeting af.') +
-        P('En de geleende voormeting? Die valt uit S altijd weg, ook in ' + stap('did') + ', want III en IV krijgen dezelfde. Je had hem nodig voor H/M en T, niet voor S.') +
+        // Michelle (23-11): "S + (voormeting I − voormeting II)" viel uit de lucht, en "de geleende voormeting valt altijd
+        // weg" kon ze niet nakijken. Nu staat het met getallen: een nameting is voormeting plus verbetering.
+        P('Waarom ' + g(KAAL) + '? Een nameting is waar een groep begon, plus wat hij erbij kreeg: voormeting plus verbetering. Schrijf de twee verschillen zo uit:') +
+        somBlok([
+          ['nameting I − nameting II', ['(' + g(GETALLEN.voorI) + ' + ' + gh(r.vI) + ') − (' + g(GETALLEN.voorII) + ' + ' + gh(r.vII) + ')',
+            '(' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ') + (' + g(r.vI) + ' − ' + gh(r.vII) + ')', g(VOOR_VERSCHIL) + ' + ' + gh(r.vI - r.vII), g(a)]],
+          ['nameting III − nameting IV', ['(' + g(r.leen) + ' + ' + gh(r.vIII) + ') − (' + g(r.leen) + ' + ' + gh(r.vIV) + ')', g(r.vIII) + ' − ' + gh(r.vIV), g(c)]]
+        ]) +
+        P('Bij III en IV valt de geleende voormeting weg: die is voor allebei ' + g(r.leen) + '. Bij I en II niet: I begon ' + pt(Math.abs(VOOR_VERSCHIL)) + (VOOR_VERSCHIL < 0 ? ' lager' : ' hoger') +
+          ' dan II, en die ' + g(VOOR_VERSCHIL) + ' telt mee. Met verbeteringen was het ' + g(r.vI - r.vII) + ' − ' + gh(r.vIII - r.vIV) + ', en dat is S. Met alleen nametingen komt de ' + g(VOOR_VERSCHIL) + ' erbij' +
+          (gelijk(KAAL, 0) ? ', en hier slokt die S precies op.' : '.')) +
+        P('Met verbeteringen gebeurt dat niet, want daar haal je bij I en II eerst hun eigen voormeting af. De geleende voormeting doet er voor S dus niet toe: die had je nodig voor H/M en T.') +
         P('De andere antwoorden:') +
         // de som met alleen nametingen staat hierboven al uitgeschreven, dus niet nog eens in het lijstje
         '<ul>' + ST.kaal.invoer.opties.filter(function(o){ return !gelijk(o, r.S) && !gelijk(o, KAAL); }).map(function(o){ return '<li>' + g(o) + ': ' + kl(duiding(o)) + '</li>'; }).join('') + '</ul>' +
@@ -930,7 +939,12 @@
           [b(1), ['nameting II − ' + b(0), g(GETALLEN.naII) + ' − ' + gh(rb.na.b0), g(rb.na.b1)]],
           [b(3), ['nameting I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2), g(GETALLEN.naI) + ' − ' + gh(rb.na.b0) + ' − ' + gh(rb.na.b1) + ' − ' + gh(rb.na.b2), g(rb.na.b3)]]
         ]) +
+        // beeld boven regel (Michelle, 23-11): eerst de trap, dan b0, dan pas b1 en b3
+        trapReg('na') +
         P('Ze zien er iets anders uit dan in ' + stap('x') + ': daar trok je eerst de voormeting ' + g(r.leen) + ' af en dan H/M ' + g(r.HM) + '; hier zitten die twee samen in ' + b(0) + ' = ' + g(rb.na.b0) + ', dus trek je ze in één keer af.') +
+        P('En kijk naar ' + b(0) + ', de nameting van wie niets kreeg. Daar zit het startniveau in, waar iedereen gemiddeld begon (de geleende voormeting), én H/M:') +
+        som(b(0), ['startniveau + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
+        P('In deze regressie zie je H/M dus niet los: het zit in ' + b(0) + ' verstopt.') +
         // Tot 23-11-2026 stond hier "b1 is T ... b3 is S". Dat klopte alleen bij gelijke voormetingen: de regressie op de
         // nameting is de som met alleen nametingen, en met 48 en 52 geeft ze b1 = 3 en b3 = 0. Wat er nu staat, rekent dat voor.
         P(b(2) + ' is X, wat de therapie doet: ' + g(rb.na.b2) + ', net als in ' + stap('x') + '. Maar ' + b(1) + ' is ' + g(rb.na.b1) + ', en T was ' + g(r.T) +
@@ -942,11 +956,7 @@
           [b(3), ['S + (voormeting I − voormeting II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(rb.na.b3)]]
         ]) +
         P('Die ' + b(3) + ' is precies de som met alleen nametingen uit ' + stap('kaal') + '.' + (gelijk(rb.na.b3, 0) ? ' Op de nameting zie je de sensitisatie hier dus helemaal niet.' : '') +
-          ' In ' + stap('regVer') + ' haalt de verbetering het verschil in voormeting er eerst af.') +
-        P('En kijk naar ' + b(0) + ', de nameting van wie niets kreeg. Daar zit het startniveau in, waar iedereen gemiddeld begon (de geleende voormeting), én H/M:') +
-        som(b(0), ['startniveau + H/M', g(r.leen) + ' + ' + gh(r.HM), g(rb.na.b0)]) +
-        P('In deze regressie zie je H/M dus niet los: het zit in ' + b(0) + ' verstopt.') +
-        trapReg('na'); } },
+          ' In ' + stap('regVer') + ' haalt de verbetering het verschil in voormeting er eerst af.'); } },
 
     regVer: { titel:'En dit is een regressie: de verbetering', toegift:true,
       tabelReg:'ver',
@@ -1116,7 +1126,7 @@
   // ===== de tabel bovenaan, de getallen in de vaste tekst, en de kleurstrepen in de vaste tekst =====
   document.getElementById('tabel-ontwerp').innerHTML = tabel(GETALLEN, {titel:TITEL});
   [].forEach.call(document.querySelectorAll('[data-v]'), function(e){ e.textContent = g(GETALLEN[e.getAttribute('data-v')]); });
-  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL};
+  var AFGELEID = {metS:r.X + r.S, zonderS:r.X, hoofd:(r.X + r.S + r.X) / 2, X:r.X, S:r.S, kaal:KAAL, voorAfstand:Math.abs(VOOR_VERSCHIL)};
   [].forEach.call(document.querySelectorAll('[data-r]'), function(e){ e.textContent = g(AFGELEID[e.getAttribute('data-r')]); });
   // de streep hoort bij elke letter, ook buiten de ladder (APA-lens, 8-10: de lege kaart stond kaal naast de ingevulde).
   // Alleen in tekstknopen, niet in de innerHTML: daar ving kl() ook de X in het attribuut data-r="X" en brak de
