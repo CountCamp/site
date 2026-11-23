@@ -22,17 +22,27 @@ WAT HET EIST
   idempotent        een tweede run verandert geen byte
   boek zonder link  STAT 3 krijgt nooit een label
   vorm onbekend     een plank waarin geen enkel boek te herkennen is: afloop 3
+  één boek onbekend    naast herkende boeken één in een andere vorm (<div>, of de
+                    link niet vooraan: <strong><a>, <a class=… href=…>): afloop 3
+                    (nakijker, 23-11-2026: dat bleef eerst stil, afloop 0)
   niet in de bouw   geen plank in de uitvoermap (de Engelse ronde): afloop 0, gezegd
-  tabel onleesbaar  afloop 3
+  tabel onleesbaar  afloop 3, ook als de tabel geen UTF-8 is
+  plank op slot     de plank is niet te schrijven: afloop 1, plank onveranderd
+  doel: …           waar een link heen gaat (doel()), adres voor adres: #anker,
+                    ?vraag, map/, ../, boven de wortel, /vanaf-de-wortel, een vol
+                    adres op countcamp.org, elders, //, mailto:
 
-Daarna de MUTATIEPROEF: dezelfde gevallen tegen vier kreupele kopieën van het
+Daarna de MUTATIEPROEF: dezelfde gevallen tegen kreupele kopieën van het
 script. Elke kopie moet minstens één geval laten zakken; zakt er geen, dan
-bewaakt deze toets dat stuk niet.
+bewaakt deze toets dat stuk niet. De eerste vier stonden er vanaf het begin; de
+rest kwam erbij nadat de nakijker op 23-11-2026 zes eigen verminkingen draaide
+en er vijf ongezien doorkwamen.
 
 Afloop: 0 alles goed, 1 minstens één geval of mutatie zakt.
 """
 from __future__ import annotations
 
+import importlib.util
 import os
 import re
 import shutil
@@ -190,8 +200,58 @@ def gevallen(tools: str) -> list[tuple[str, bool, str]]:
 
         code, log = k.draai(paren=os.path.join(k.map, "bestaat_niet.tsv"))
         eis("tabel onleesbaar", code == 3 and "NIET gekeken" in log, f"afloop {code} (verwacht 3)")
+
+        kapot = os.path.join(k.map, "geen_utf8.tsv")
+        with open(kapot, "wb") as f:
+            f.write(b"oefenboeken/ts/index.html\ten/workbooks/\xff\xfe.html\tlos\n")
+        code, log = k.draai(paren=kapot)
+        eis("tabel geen UTF-8", code == 3 and "NIET gekeken" in log,
+            f"afloop {code} (verwacht 3; was 1 met een traceback, nakijker 23-11-2026)")
+
+        # Eén boek in een andere vorm, naast boeken die wél herkend worden.
+        ts = '<a href="ts/index.html">Toetsende Statistiek →</a>'
+        for naam, plank in (
+                ("één boek als <div>", PLANK.replace("</main>", '<div class="cc-boek cc-boek-vak"><p>eerst dit</p>\n'
+                                                     '<h3><a href="ozp1/index.html">OZP 1 →</a></h3>\n</div>\n</main>')),
+                ("link in <strong>", PLANK.replace(ts, "<strong>" + ts + "</strong>")),
+                ("class vóór href", PLANK.replace(ts, ts.replace("<a href", '<a class="x" href')))):
+            k.schrijf_plank(plank)
+            code, log = k.draai()
+            eis(f"één boek onbekend: {naam}"[:40], code == 3 and "vorm die ik niet ken" in log,
+                f"afloop {code} (verwacht 3), en het noemt het boek")
+
+        k.schrijf_plank(PLANK)
+        os.chmod(k.plank, 0o444)
+        try:
+            code, log = k.draai()
+            eis("plank op slot", code == 1 and k.lees_plank() == PLANK and "FOUT" in log,
+                f"afloop {code} (verwacht 1), plank onveranderd")
+        finally:
+            os.chmod(k.plank, 0o644)
     finally:
         k.weg()
+
+    # doel(): waar een link op de plank heen gaat, rechtstreeks uit (deze kopie van) het script.
+    spec = importlib.util.spec_from_file_location(f"taallabel_{abs(hash(tools))}", os.path.join(tools, "taallabel.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    P = "oefenboeken/index.html"
+    for href, verwacht in (
+            ("ts/index.html", "oefenboeken/ts/index.html"),
+            ("ts/index.html#week-1", "oefenboeken/ts/index.html"),
+            ("ts/index.html?vorm=kaart", "oefenboeken/ts/index.html"),
+            ("ts/", "oefenboeken/ts/index.html"),
+            ("../manuscript/handleiding/index.html", "manuscript/handleiding/index.html"),
+            ("../../buiten.html", None),
+            ("/oefenboeken/ts/", "oefenboeken/ts/index.html"),
+            ("/", "index.html"),
+            ("https://countcamp.org/oefenboeken/ts/index.html", "oefenboeken/ts/index.html"),
+            ("https://example.org/oefenboeken/ts/index.html", None),
+            ("//example.org/x.html", None),
+            ("mailto:vragen@countcamp.org", None),
+            ("#alleen-een-anker", None)):
+        kreeg = mod.doel(P, href)
+        eis(f"doel: {href}"[:40], kreeg == verwacht, f"verwacht {verwacht}, kreeg {kreeg}")
     return uit
 
 
@@ -205,6 +265,23 @@ MUTATIES = [
      'tekst = _LABEL.sub("", tekst)', "tekst = tekst"),
     ("blind is groen", "een plank zonder herkende boeken geeft afloop 0",
      'if t["boeken"] == 0:', "if False:"),
+    # Erbij na de nakijker (23-11-2026): vijf van zijn zes verminkingen kwamen ongezien door.
+    ("één boek mag ontbreken", "een boek in een andere vorm blijft stil zonder label",
+     'if t["onbekend"]:', "if False:"),
+    ("anker blijft", "een #anker of ?vraag blijft aan het adres hangen",
+     'href = href.split("#", 1)[0].split("?", 1)[0]', "href = href"),
+    ("map zonder index", "ts/ wordt geen ts/index.html",
+     'if href.endswith("/"):', "if False:"),
+    ("boven de wortel", "../../buiten.html telt als bladzij van de site",
+     'return None if pad == ".." or pad.startswith("../") else pad', "return pad"),
+    ("elders is hier", "een adres op een ander domein telt als bladzij van de site",
+     'if not href or re.match(r"[a-z][a-z0-9+.-]*:|//", href, re.I):', "if not href:"),
+    ("countcamp.org is elders", "een vol adres op countcamp.org krijgt geen label",
+     r'm = re.match(r"https?://(?:www\.)?countcamp\.org(/.*)?\Z", href, re.I)', "m = None"),
+    ("wortel is relatief", "/oefenboeken/ts/ wordt gelezen alsof het naast de plank staat",
+     'basis = "" if href.startswith("/") else posixpath.dirname(plank)', "basis = posixpath.dirname(plank)"),
+    ("schrijffout is groen", "een plank die niet te schrijven is, geeft afloop 0",
+     "code = max(code, 1)", "code = max(code, 0)"),
 ]
 
 

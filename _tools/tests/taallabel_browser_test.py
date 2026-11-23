@@ -53,7 +53,31 @@ sys.path.insert(0, os.path.join(REPO, "_tools"))
 from kiek import IFRAME_ONDER, omhulsel  # noqa: E402
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 PLANK = "oefenboeken/index.html"
-ZONDER = re.compile(r' ?<a class="cc-taal" [^>]*>[^<]*</a>')
+# Het label weghalen met de regex van het script zelf, niet met een eigen kopie: verandert
+# de vorm van het label, dan zou een kopie niets meer weghalen, en vergeleek "met tegen
+# zonder" de bladzij stil met zichzelf (nakijker, 23-11-2026).
+from taallabel import _LABEL as ZONDER  # noqa: E402
+
+# DE MERKEN OP DE ENGELSE PLANK MOGEN NIET VERANDEREN. De eerste versie van de CSS van
+# het label verkleurde de rand van het NL-merk daar (nakijker, 23-11-2026: 10 van 10
+# merken, van #8a8378 naar donkergrijs), en deze toets keek alleen naar de Nederlandse
+# plank. Plank en thuiskaart delen hun merkregels; hun merken horen dus gelijk te zijn.
+MERKEN = [("en/workbooks/index.html", ".cc-boek h3 a[hreflang]"),
+          ("en/index.html", ".cc-card-werkboeken a[hreflang]")]
+MERK_MEET = r"""
+<script>
+window.addEventListener("load", function () { setTimeout(function () {
+  var uit = {};
+  document.querySelectorAll("__SEL__").forEach(function (a) {
+    var t = a.getAttribute("hreflang"), cs = getComputedStyle(a, "::before");
+    var w = [cs.content, cs.color, cs.backgroundColor, cs.borderTopColor, cs.borderTopStyle, cs.width].join(" | ");
+    (uit[t] = uit[t] || {})[w] = ((uit[t] || {})[w] || 0) + 1;
+  });
+  var pre = document.createElement("pre"); pre.id = "PROEF"; pre.textContent = JSON.stringify(uit);
+  document.body.appendChild(pre);
+}, 400); });
+</script>
+"""
 TELLER = re.compile(r'<script data-goatcounter="[^"]*"\s+async src="//gc\.zgo\.at/count\.js"></script>\s*')
 
 PROEF = r"""
@@ -247,6 +271,37 @@ def main() -> int:
                 fout = [b["titel"] for b in zonder if b["tekst"] != b["titel"]]
                 eis(zonder and not fout, f"{len(zonder)} boek(en) zonder label: de tekst wijst naar de eigen titel"
                     + (f" -- NIET bij {fout}" if fout else ""))
+
+        print("\nde merken op de Engelse plank tegen die op de Engelse thuiskaart (1200 pixels)")
+        gemeten = []
+        for pagina, sel in MERKEN:
+            bron_p = os.path.join(site, pagina)
+            if not os.path.isfile(bron_p):
+                print(f"KON NIET KIJKEN: {pagina} staat niet in {site}")
+                return 3
+            n[0] += 1
+            proef = f"{os.path.splitext(pagina)[0]}__merk{n[0]}.html"
+            t = TELLER.sub("", open(bron_p, encoding="utf-8").read())
+            with open(os.path.join(kopie, proef), "w", encoding="utf-8") as f:
+                f.write(t.replace("</body>", MERK_MEET.replace("__SEL__", sel) + "</body>", 1))
+            r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-sandbox", "--no-first-run",
+                                f"--user-data-dir={os.path.join(werk, f'profiel{n[0]}')}",
+                                "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE 127.0.0.1",
+                                "--window-size=1200,900", "--virtual-time-budget=5000", "--dump-dom",
+                                f"http://127.0.0.1:{poort}/{proef}"], capture_output=True, text=True, timeout=120)
+            m = re.search(r'<pre id="PROEF">(.*?)</pre>', r.stdout, re.S)
+            if not m:
+                print(f"KON NIET KIJKEN: geen meting op {pagina}")
+                return 3
+            gemeten.append(json.loads(html.unescape(m.group(1))))
+        plank_m, kaart_m = gemeten
+        for taal in ("nl", "en"):
+            p, k = plank_m.get(taal, {}), kaart_m.get(taal, {})
+            eis(len(p) == 1 and p.keys() == k.keys(),
+                f"merk {taal.upper()}: plank {sum(p.values())}x {list(p) or '-'}, thuiskaart {sum(k.values())}x "
+                f"{list(k) or '-'}" if p.keys() != k.keys() or len(p) != 1 else
+                f"merk {taal.upper()}: {sum(p.values())} op de plank, {sum(k.values())} op de thuiskaart, allemaal "
+                f"{next(iter(p))}")
         if a.foto:
             os.makedirs(a.foto, exist_ok=True)
             boeken = re.findall(r'<section\b[^>]*\bcc-boek\b[^>]*>\s*<h3[^\n]*', plank)

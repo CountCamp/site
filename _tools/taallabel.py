@@ -44,23 +44,39 @@ EEN PAAR NAAR EEN BLADZIJ DIE ER NIET STAAT: geen label, en een LET OP-regel in
 de bouwuitvoer. Bewust geen afgebroken bouw. Een dode link op de Nederlandse
 plank is erger dan geen label, en een kapot Engels paar mag de Nederlandse site
 niet tegenhouden, bijvoorbeeld een herpublicatie op de dag van een herkansing.
-Wie het gat wel tegenhoudt, is de poort: naar_buiten.sh draait
-`taalonderdelen.py los --controleer`, en die meldt een los-paar zonder Engelse
-kant als "bestaat niet" (afloop 1). Voor een auto-paar doet en_bouw.py dat.
+Wie het gat wel tegenhoudt, hangt van het soort paar af. Een los-paar (alle
+oefenboeken) zonder Engelse kant meldt `taalonderdelen.py los --controleer` als
+"bestaat niet" (afloop 1), en dat houdt naar_buiten.sh --productie en de Action
+tegen. Een auto- of eigen-paar houdt alleen en_bouw.py tegen, en dat draait
+alleen in publiceer_en.sh: daar blijft het bij de LET OP-regel (nakijker,
+23-11-2026). Op 23-11 heeft geen boek op de plank zo'n paar.
 
 Wat de uitvoer van Quarto moet zijn: een boek is een
 <section class="… cc-boek …"> met als eerste een <h3>, en de titellink is het
 eerste in die kop (gemeten op Quarto 1.9.38, 23-11-2026). Een boek zonder link
-(STAT 3, "in opbouw") krijgt niets. Vindt het script op een plank die er wél
-staat GEEN enkel boek, dan is de vorm veranderd en is er niet gekeken: afloop 3,
-en dan stopt de bouw. Een plank zonder labels ziet er precies zo uit als een
-plank waar niemand ze heeft gevraagd, en dat verschil moet iemand zien.
+(STAT 3, "in opbouw") krijgt niets. Herkent het script op een plank die er wél
+staat GEEN enkel boek, of één boek niet (een element met de klasse cc-boek dat
+geen <section> met een <h3> is, of een kop waarin de link niet vooraan staat),
+dan is er niet (helemaal) gekeken: afloop 3, en dan stopt de bouw. Een plank
+zonder labels ziet er precies zo uit als een plank waar niemand ze heeft
+gevraagd, en dat verschil moet iemand zien.
+
+NIET GEDEKT (nakijker, 23-11-2026): de wachtrij van de Engelse vertalers
+vergelijkt Nederlandse bladzijden voor en na een stap, met uitzonderingen uit
+`taalonderdelen.py regels`. Het label staat daar niet tussen. Een stap die een
+paar voor een boek op de plank toevoegt, zou de plank dus veranderen en
+tegengehouden worden. Nu kan dat niet: taalparen.tsv staat in _tools/, en de
+rij raakt _tools/ niet aan. Of het label een uitzondering krijgt, beslist Ben.
 
 Idempotent: eerst gaan de labels van een vorige run eruit, dan komen ze terug.
 
 Afloopcodes: 0 klaar (ook als de plank niet in deze bouw zit, zoals in de
 Engelse ronde; dat wordt gezegd), 1 een plank niet te lezen of te schrijven,
-3 niet gekeken (taalparen.tsv onleesbaar, of geen enkel boek herkend).
+3 niet gekeken (taalparen.tsv onleesbaar, of een boek niet herkend). Let op:
+Quarto maakt van elke afloop van een post-render-stap een 1 en slaat de stappen
+erna over; een mislukte run laat een _site zonder teller en mét commentaar
+achter (nakijker, 23-11-2026, gemeten). De Action en naar_buiten.sh laten die
+niet door.
 Getoetst in _tools/tests/taallabel_test.py, met een mutatieproef.
 """
 from __future__ import annotations
@@ -85,6 +101,7 @@ TEKST = "EN →"
 
 _BOEK = re.compile(r'(<section\b[^>]*\bclass="[^"]*\bcc-boek\b[^"]*"[^>]*>\s*<h3\b[^>]*>)(.*?)(</h3>)', re.S)
 _TITELLINK = re.compile(r'\s*<a href="([^"]+)"')
+_KLASSE = re.compile(r'<[a-zA-Z][a-zA-Z0-9]*\b[^>]*\bclass="([^"]*)"')
 _LABEL = re.compile(r' ?<a class="cc-taal" [^>]*>[^<]*</a>')
 
 
@@ -95,27 +112,44 @@ def label(plank: str, en: str) -> str:
 
 def doel(plank: str, href: str) -> str | None:
     """Het sitepad waar een link op de plank heen gaat, of None voor een link
-    buiten de site (een adres met schema, //, of een absoluut pad)."""
+    buiten de site. Binnen de site zijn: een relatief pad (ts/index.html,
+    ../manuscript/…), een pad vanaf de wortel (/oefenboeken/ts/) en een vol adres
+    op countcamp.org. Een map (eindigt op /) wordt zijn index.html. Een #anker of
+    ?vraag doet niet mee. Buiten: elk ander schema (https://elders, mailto:), //,
+    en een pad dat boven de wortel uitkomt."""
     href = href.split("#", 1)[0].split("?", 1)[0]
-    if not href or re.match(r"[a-z][a-z0-9+.-]*:|/", href, re.I):
+    m = re.match(r"https?://(?:www\.)?countcamp\.org(/.*)?\Z", href, re.I)
+    if m:
+        href = m.group(1) or "/"
+    if not href or re.match(r"[a-z][a-z0-9+.-]*:|//", href, re.I):
         return None
-    pad = posixpath.normpath(posixpath.join(posixpath.dirname(plank), href))
+    basis = "" if href.startswith("/") else posixpath.dirname(plank)
+    pad = posixpath.normpath(posixpath.join(basis, href.lstrip("/")))
     if href.endswith("/"):
-        pad += "/index.html"
-    return None if pad.startswith("..") else pad
+        pad = "index.html" if pad == "." else pad + "/index.html"
+    return None if pad == ".." or pad.startswith("../") else pad
 
 
 def zet(tekst: str, plank: str, tweeling: dict, site: str) -> tuple[str, dict]:
     """De plank met labels, en wat er gezien is. `tweeling`: Nederlands sitepad ->
     zijn paar uit taalparen.tsv."""
     tekst = _LABEL.sub("", tekst)
-    telling = {"boeken": 0, "met_link": 0, "label": [], "zonder_pagina": []}
+    telling = {"boeken": 0, "met_link": 0, "label": [], "zonder_pagina": [], "onbekend": []}
+
+    # ELK BOEK MOET HERKEND WORDEN, niet alleen één. Een element met de klasse
+    # cc-boek dat geen <section> met een <h3> is (Quarto maakt er een <div> van zodra
+    # er iets vóór de ### staat), of een kop met een link die niet vooraan staat
+    # (<strong><a>, een pil ervoor, <a class=… href=…>), zou anders stil zonder
+    # label blijven, met afloop 0 (nakijker, 23-11-2026, gemeten).
+    elementen = [m.group(0)[:90] for m in _KLASSE.finditer(tekst) if "cc-boek" in m.group(1).split()]
 
     def per_boek(m: re.Match) -> str:
         telling["boeken"] += 1
         kop = m.group(2)
         t = _TITELLINK.match(kop)
         if not t:
+            if "<a " in kop:
+                telling["onbekend"].append("een link die niet vooraan in de kop staat: " + kop.strip()[:90])
             return m.group(0)
         telling["met_link"] += 1
         nl = doel(plank, t.group(1))
@@ -129,7 +163,11 @@ def zet(tekst: str, plank: str, tweeling: dict, site: str) -> tuple[str, dict]:
         telling["label"].append(f"{nl} -> {en}")
         return m.group(1) + kop + " " + label(plank, en) + m.group(3)
 
-    return _BOEK.sub(per_boek, tekst), telling
+    uit = _BOEK.sub(per_boek, tekst)
+    if len(elementen) != telling["boeken"]:
+        telling["onbekend"].append(f"{len(elementen)} element(en) met de klasse cc-boek, maar {telling['boeken']} "
+                                   f"als <section> met een <h3> herkend; het eerste: {elementen[0] if elementen else '-'}")
+    return uit, telling
 
 
 def main() -> int:
@@ -142,7 +180,7 @@ def main() -> int:
         taalonderdelen.PAREN = os.path.abspath(a.paren)
     try:
         tweeling = {p["nl"]: p for p in taalonderdelen.paren()}
-    except (SystemExit, OSError) as e:
+    except (SystemExit, OSError, UnicodeError) as e:
         print(f"taallabel: NIET gekeken -- {taalonderdelen.PAREN} is niet te lezen: {e}", file=sys.stderr)
         return 3
 
@@ -167,14 +205,22 @@ def main() -> int:
             print(f"taallabel: NIET gekeken -- geen enkel boek (<section class=\"cc-boek\"> met een <h3>) "
                   f"herkend in {plank}; is de uitvoer van Quarto veranderd?", file=sys.stderr)
             return 3
+        if t["onbekend"]:
+            print(f"taallabel: NIET (helemaal) gekeken -- {plank} heeft een boek in een vorm die ik niet ken, en dat "
+                  f"boek zou stil zonder label blijven:", file=sys.stderr)
+            for o in t["onbekend"]:
+                print(f"    - {o}", file=sys.stderr)
+            print("  Zet de kaart in oefenboeken/index.qmd terug in de vorm ::: {.cc-boek} / ### [titel](pad) / "
+                  "tekst, of leer dit script de nieuwe vorm.", file=sys.stderr)
+            return 3
         print(f"taallabel: {plank} -- {t['boeken']} boeken, {t['met_link']} met een link, "
               f"{len(t['label'])} met EN-label" + (": " + ", ".join(t["label"]) if t["label"] else ""))
         for z, wissel in t["zonder_pagina"]:
-            wie = ("taalonderdelen.py los --controleer in naar_buiten.sh" if wissel.startswith("los")
-                   else "en_bouw.py in publiceer_en.sh")
+            wie = ("Tegenhouden doen taalonderdelen.py los --controleer in naar_buiten.sh en de Action"
+                   if wissel.startswith("los") else
+                   "Tegenhouden doet alleen en_bouw.py in publiceer_en.sh; de Action en naar_buiten.sh NIET")
             print(f"taallabel: LET OP {z} staat in taalparen.tsv, maar de Engelse bladzij staat niet in "
-                  f"{site} -- geen label, want een dode link is erger dan geen label. Tegenhouden doet "
-                  f"{wie}", file=sys.stderr)
+                  f"{site} -- geen label, want een dode link is erger dan geen label. {wie}.", file=sys.stderr)
     return code
 
 
