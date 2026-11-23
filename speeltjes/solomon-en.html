@@ -463,7 +463,7 @@
     <p class="kl">Mind you: with an interaction, the effect of the therapy on quality of life no longer has one number.
     Without a pretest it is <span data-r="zonderS"></span>, the weight <i>b</i><sub>2</sub>; with a pretest
     <span data-r="metS"></span>, X + S. An ANOVA calls the mean of those two the main effect of therapy, with the
-    improvements (<span data-r="metS"></span> + <span data-r="zonderS"></span>) / 2 = <span data-r="hoofd"></span>.
+    improvements (<span data-r="metS"></span> + <span data-r="zonderS"></span>)&nbsp;/&nbsp;2&nbsp;=&nbsp;<span data-r="hoofd"></span>.
     That is not a new piece, only a summary of two.</p>
   </details>
 
@@ -471,7 +471,7 @@
     From the (Dutch) book <i lang="nl">De regressieve ruggengraat</i> &middot; <a href="https://countcamp.org/manuscript/h10.html" hreflang="nl">Chapter 10 — <span lang="nl">Verschil in verschil</span> (difference in differences)</a> &middot; sensitization is a difference in differences<br>
     <span class="ref">The design and the arithmetic: Solomon, R. L. (1949). An extension of control group design. <i>Psychological Bulletin, 46</i>(2), 137–150. https://doi.org/10.1037/h0062958</span><br>
     <span class="ref">The test on the posttests: Campbell, D. T., &amp; Stanley, J. C. (1963). <i>Experimental and quasi-experimental designs for research</i>. Rand McNally.</span><br>
-    <span class="ref">The correction for unequal pretests: van Engelenburg, G. (1999). <i>Statistical analysis for the Solomon four-group design</i> (Research Report No. 99-06). University of Twente, Faculty of Educational Science and Technology. https://files.eric.ed.gov/fulltext/ED435692.pdf</span>
+    <span class="ref">The correction for unequal pretests: van Engelenburg, G. (1999). <i>Statistical analysis for the Solomon four-group design</i> (Research Report No. 99-06; ED435692). University of Twente, Faculty of Educational Science and Technology; ERIC. https://files.eric.ed.gov/fulltext/ED435692.pdf</span>
   </p>
 </div>
 
@@ -948,12 +948,13 @@
         ]) +
         // tot 23-11-2026: "De andere twee bleven wat ze waren: b1 is T, b2 is X". Met ongelijke voormetingen veranderde b1
         // wel (op de nameting 3, hier 1), dus dat staat er nu uitgerekend
-        P(b(3) + ' is S, just as in ' + stap('s') + ', and ' + b(1) + ' is T. With the posttest as outcome they were ' + g(rb.na.b3) + ' and ' + g(rb.na.b1) +
+        // b1 vóór b3, zoals in de tabel eronder (APA-lens: "0 en 3" boven "(3 en 0)")
+        P(b(1) + ' is T, and ' + b(3) + ' is S, just as in ' + stap('s') + '. With the posttest as outcome they were ' + g(rb.na.b1) + ' and ' + g(rb.na.b3) +
           '; the improvement first takes away where each group started, so the difference in pretests is no longer in them. And now ' + b(0) +
           ' is exactly H/M: the improvement of those who got nothing. Only ' + b(2) + ' stayed what it was: X.') +
         '<div class="tabelvak"><table class="data"><caption>What the weights mean, per dependent variable</caption>' +
         '<tr><th>dependent variable</th><th>' + b(0) + ' means</th><th>' + kl('H/M') + ' visible on its own?</th><th>' + b(1) + ' and ' + b(3) + ' are ' + kl('T') + ' and ' + kl('S') + '?</th></tr>' +
-        '<tr><td>posttest</td><td>starting level + ' + kl('H/M') + ' (' + g(r.leen) + ' + ' + gh(r.HM) + ' = ' + g(rb.na.b0) + ')</td><td>no</td><td>' + jaNee(rb.na) + '</td></tr>' +
+        '<tr><td>posttest</td><td>starting level + ' + kl('H/M') + ' (' + g(r.leen) + '\u00a0+\u00a0' + gh(r.HM) + '\u00a0=\u00a0' + g(rb.na.b0) + ')</td><td>no</td><td>' + jaNee(rb.na) + '</td></tr>' +
         '<tr><td>improvement</td><td>' + kl('H/M') + ' (' + g(rb.ver.b0) + ')</td><td>yes</td><td>' + jaNee(rb.ver) + '</td></tr></table></div>' +
         P('With the improvement as outcome, every regression weight is a piece from the equation of the design, and the interaction ' + VX + ' is the pretest sensitization. With the posttest as outcome there is more in them: the starting level in ' + b(0) + ', and the difference in pretests in ' + b(1) + ' and ' + b(3) + '. What you see on its own depends on what you choose as <i>Y</i>.') +
         trapReg('ver'); } }
@@ -1277,7 +1278,8 @@
       opt:{basis:rr.leen, b0tik:true, as:'posttest', totaalLabel:'posttest I',
         kleuren:['hm', 'x', schoon.T ? 't' : 'b', schoon.S ? 's' : 'b'],
         rij1:['H/M', {b:2}, {b:1}, {b:3}, '= I'],
-        titels:['b0 = ' + g(q.b0) + ': starting level ' + g(rr.leen) + ' + H/M ' + g(rr.HM), 'b2 = ' + g(q.b2), 'b1 = ' + g(q.b1), 'b3 = ' + g(q.b3)]}};
+        // zweefteksten kunnen geen cursief of subscript dragen: dan de index als Unicode, en "H/M 2" niet als "T 1" (APA-lens)
+        titels:['b\u2080 = ' + g(q.b0) + ': starting level + H/M, ' + g(rr.leen) + ' + ' + gh(rr.HM), 'b\u2082 = ' + g(q.b2), 'b\u2081 = ' + g(q.b1), 'b\u2083 = ' + g(q.b3)]}};
   }
   function trapReg(soort){
     var rr = los(GETALLEN), q = regressie(GETALLEN), na = trapNa(), tekst;
