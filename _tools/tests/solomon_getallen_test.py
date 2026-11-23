@@ -44,6 +44,9 @@ def los(d):
 
 
 def main():
+    global PAGINAS
+    if len(sys.argv) > 1:          # andere kopieen meten, bijvoorbeeld voor een mutatieproef
+        PAGINAS = [Path(a).resolve() for a in sys.argv[1:]]
     gelezen = {}
     for pagina in PAGINAS:
         if not pagina.exists():
@@ -86,24 +89,24 @@ def main():
     for s, wie in sorted(sommen.items()):
         if len(wie) > 1:
             fouten.append("deelsom %g komt %d keer voor: %s" % (s, len(wie), " en ".join(wie)))
-    # De weg zonder lenen, (naI - naII) - (naIII - naIV), is S + (voorI - voorII). Stap 9 biedt dat getal aan als
-    # keuze en legt het uit als "de som zonder lenen". Is het ook een som van stukjes, dan kan de bladzij een student
-    # die het lenen oversloeg niet meer onderscheiden van een die een stukje vergat (met voorI 52 en voorII 48 is
+    # De som met alleen nametingen, (naI - naII) - (naIII - naIV), is S + (voorI - voorII). Stap 9 biedt dat getal aan
+    # als keuze en legt het apart uit. Is het ook een som van stukjes, dan kan de bladzij een student
+    # die de voormetingen oversloeg niet meer onderscheiden van een die een stukje vergat (met voorI 52 en voorII 48 is
     # het 8, precies X).
     kaal = (d["naI"] - d["naII"]) - (d["naIII"] - d["naIV"])
     if round(kaal, 9) in sommen:
-        fouten.append("de som zonder lenen is %g, en dat is ook %s: stap 9 kan die twee fouten dan niet uit elkaar houden" % (kaal, sommen[round(kaal, 9)][0]))
+        fouten.append("de som met alleen nametingen is %g, en dat is ook %s: stap 9 kan die twee fouten dan niet uit elkaar houden" % (kaal, sommen[round(kaal, 9)][0]))
     print("bladzijden: " + ", ".join(namen) + " (dezelfde zes getallen)" if not any("andere getallen" in f for f in fouten) else "bladzijden: " + ", ".join(namen))
     print("getallen  : " + ", ".join("%s %g" % kv for kv in d.items()))
     print("stukjes   : " + ", ".join("%s %g" % kv for kv in st.items()))
     print("deelsommen: %d, waarvan %d uniek" % (len(sommen), sum(1 for w in sommen.values() if len(w) == 1)))
-    print("zonder lenen: (%g - %g) - (%g - %g) = %g, S = %g" % (d["naI"], d["naII"], d["naIII"], d["naIV"], kaal, st["S"]))
+    print("alleen nametingen: (%g - %g) - (%g - %g) = %g, S = %g" % (d["naI"], d["naII"], d["naIII"], d["naIV"], kaal, st["S"]))
     if fouten:
         for f in fouten:
             print("FOUT: " + f)
         return 1
     print("ok: elke som van stukjes geeft een eigen getal, elk stukje is groter dan 0, alles tussen 0 en 100, "
-          "de voormetingen van I en II verschillen, en de som zonder lenen is geen som van stukjes")
+          "de voormetingen van I en II verschillen, en de som met alleen nametingen is geen som van stukjes")
     return 0
 
 
