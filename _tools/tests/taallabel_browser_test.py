@@ -48,6 +48,9 @@ import tempfile
 import threading
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.dont_write_bytecode = True
+sys.path.insert(0, os.path.join(REPO, "_tools"))
+from kiek import IFRAME_ONDER, omhulsel  # noqa: E402
 CHROME = os.environ.get("CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 PLANK = "oefenboeken/index.html"
 ZONDER = re.compile(r' ?<a class="cc-taal" [^>]*>[^<]*</a>')
@@ -103,7 +106,7 @@ PROEF = r"""
           w = {r: Math.round(r.right), e: e.tagName.toLowerCase() + (e.className ? "." + String(e.className).split(" ").join(".") : "")}; });
       uit.breedste = w;
     }
-    // In een raampje (390 pixels, zie RAAM) gaat de meting naar de bladzij eromheen.
+    // In een iframe (390 pixels, zie omhulsel) gaat de meting naar de bladzij eromheen.
     var doc = window.parent !== window ? window.parent.document : document;
     var pre = doc.createElement("pre"); pre.id = "PROEF"; pre.textContent = JSON.stringify(uit);
     doc.body.appendChild(pre);
@@ -113,23 +116,15 @@ PROEF = r"""
 </script>
 """
 
-# HEADLESS CHROME GAAT NIET SMALLER DAN 500 PIXELS: --window-size=390,900 gaf een
-# venster van 500 (gemeten 23-11-2026; de eerste versie van deze toets zag dat aan
-# window.innerWidth en zakte). Daarom staat de plank voor de smalle maat in een raampje
-# (iframe) van precies die breedte: daarbinnen is de bladzij 390 pixels breed, en
-# gelden de media-queries van een telefoon.
-RAAM = ('<!doctype html><html><head><meta charset="utf-8"><style>body{{margin:0}}'
-        'iframe{{border:0;display:block;width:{b}px;height:{h}px}}</style></head>'
-        '<body><iframe src="{src}"></iframe></body></html>')
-
 # Voor de foto: naar het eerste boek met een label, met en zonder label op hetzelfde boek.
+# Na 900 ms, want het omhulsel van kiek.py zet de bladzij na 600 ms terug op zijn `vanaf`.
 NAAR = r"""
 <script>
 window.addEventListener("load", function () { setTimeout(function () {
   // het hoeveelste boek: Quarto maakt van een href een vol adres, dus op href zoeken mist
   var s = document.querySelectorAll("section.cc-boek")[__NR__]; if (!s) return;
   window.scrollTo(0, s.getBoundingClientRect().top + window.scrollY - 70);
-}, 400); });
+}, 900); });
 </script>
 """
 
@@ -186,11 +181,15 @@ def main() -> int:
             f.write(plank.replace("</body>", extra + "</body>", 1))
         adres = f"/{proef}?vorm={vorm}"
         venster = breedte
-        if breedte < 500:
+        # TELEFOONBREEDTE: headless Chrome gaat niet smaller dan ongeveer 500 px (zie de
+        # kop van kiek.py). Smaller dan IFRAME_ONDER gaat de plank daarom in het iframe van
+        # kiek.py, en binnen dat iframe is hij echt 390 breed. Gemeten 23-11-2026: zonder
+        # dat gaf --window-size=390 een bladzij van 500, en de toets zakte erop.
+        if breedte < IFRAME_ONDER:
             raam = f"oefenboeken/raam{n[0]}.html"
             with open(os.path.join(kopie, raam), "w", encoding="utf-8") as f:
-                f.write(RAAM.format(b=breedte, h=hoogte, src=adres))
-            adres, venster = f"/{raam}", 500
+                f.write(omhulsel(adres.lstrip("/"), breedte, hoogte))
+            adres, venster = f"/{raam}", max(breedte, 500)
         return subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-sandbox", "--no-first-run",
                                f"--user-data-dir={os.path.join(werk, f'profiel{n[0]}')}", "--hide-scrollbars",
                                "--host-resolver-rules=MAP * ~NOTFOUND , EXCLUDE 127.0.0.1",
