@@ -389,8 +389,11 @@ main#quarto-document-content h2 { margin-bottom: 1.1rem; }
    omdat hij later in de DOM staat lag hij bovenop. Quarto's ankertje is zo'n
    tweede <a> — 7 bij 0 pixels groot, onzichtbaar, en toch ving het élke klik
    op de rij. De rij bleef muisdood terwijl de link zelf gewoon werkte.
-   Alleen de titel mag de rij overspannen. */
-.cc-boek h3 a:not(.anchorjs-link)::after { content: ""; position: absolute; inset: 0; }
+   Alleen de titel mag de rij overspannen. Sinds 23-11-2026 staat er een
+   derde soort <a> in de kop: het EN-label (a.cc-taal, zie "het EN-label"
+   onderaan). Zonder :not(.cc-taal) bracht een klik op de rij je naar het
+   Engelse boek in plaats van naar het Nederlandse. */
+.cc-boek h3 a:not(.anchorjs-link):not(.cc-taal)::after { content: ""; position: absolute; inset: 0; }
 .cc-boek:hover h3 a { color: var(--cc-blue); }
 .cc-boek p {
   font-family: Georgia, serif; font-size: 0.97rem; line-height: 1.65;
@@ -598,8 +601,18 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
    Een schermlezer leest het merk niet voor (de tekst na de "/" is leeg):
    de titel zegt het al, met "(in Dutch)" en het hreflang zelf. Een browser
    die die schrijfwijze niet kent, valt terug op de regel ervoor en leest
-   "NL" dan wel voor. */
-.cc-boek h3 a[hreflang]::before,
+   "NL" dan wel voor.
+
+   Het EN-label op de Nederlandse plank (a.cc-taal, zie hieronder) is ook
+   een link met hreflang in een boekkop, maar krijgt dit merk niet: dan
+   stond er een merk EN vóór de letters EN. LET OP: de :not(.cc-taal) staat
+   op ALLE DRIE de .cc-boek-regels hieronder, niet alleen op de eerste. Hij
+   maakt een regel zwaarder, en stond hij alleen op de eerste, dan won diens
+   "border: 1px solid" van de randkleur van het NL-merk: op 23-11-2026 had
+   het NL-merk op de Engelse plank zo een donkergrijze rand in plaats van
+   #8a8378 (nakijker, gemeten op 10 van 10 merken; de kaart op en/index.qmd
+   bleef goed). taallabel_browser_test.py vergelijkt plank en kaart sindsdien. */
+.cc-boek h3 a[hreflang]:not(.cc-taal)::before,
 .cc-card-werkboeken a[hreflang]::before {
   display: inline-block;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -613,12 +626,12 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
   margin-right: 0.45rem; vertical-align: 0.16em;
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
-.cc-boek h3 a[hreflang="en"]::before,
+.cc-boek h3 a[hreflang="en"]:not(.cc-taal)::before,
 .cc-card-werkboeken a[hreflang="en"]::before {
   content: "EN"; content: "EN" / "";
   color: var(--cc-paper); background: var(--cc-blue-deep); border-color: var(--cc-blue-deep);
 }
-.cc-boek h3 a[hreflang="nl"]::before,
+.cc-boek h3 a[hreflang="nl"]:not(.cc-taal)::before,
 .cc-card-werkboeken a[hreflang="nl"]::before {
   content: "NL"; content: "NL" / "";
   color: var(--cc-ink-soft); background: transparent; border-color: #8a8378;
@@ -630,7 +643,55 @@ html[data-vorm="kaart"] .cc-boek-straks:focus-within { transform: none; box-shad
    text-indent terug op 0, want die erft anders door in het merk en duwt de
    letters uit hun rechthoekje (gemeten 21-11-2026: een leeg doosje met "NL"
    ernaast). */
-.cc-boek h3 a[hreflang] { padding-left: 2.05rem; text-indent: -2.05rem; }
+.cc-boek h3 a[hreflang]:not(.cc-taal) { padding-left: 2.05rem; text-indent: -2.05rem; }
+
+/* ---- het EN-label: dit boek is er ook in het Engels (23-11-2026) -------
+   Ben, 23-11-2026: "Ja, klein EN-label per boek", op de Nederlandse plank
+   (oefenboeken/index.qmd). Het label staat NIET in die bron:
+   _tools/taallabel.py zet het na de bouw, uit _tools/taalparen.tsv, bij elk
+   boek met een Engelse tweeling die in de bouw staat.
+
+   Het staat rechts achter de pillen, niet links vóór de titel zoals het
+   merk op de Engelse plank: daar zegt het merk waar de titellink landt,
+   hier is het label zelf een link, naar het Engelse boek. Vóór een
+   Nederlandse titel zou "EN" lezen als "dit boek is Engels".
+
+   WAAROM HET ER ANDERS UITZIET DAN HET EN-MERK (23-11-2026). De eerste
+   versie was hetzelfde gevulde donkerblauwe rechthoekje als het merk op de
+   Engelse plank. Op deze plank staat ernaast de pil "nieuw", in precies dat
+   donkerblauw, en beide testlezers lazen EN op 390 pixels als nog een
+   sticker en niet als iets om op te tikken. Michelle: "in mijn hoofd is EN
+   een tweede nieuw-sticker"; Jeanne: "Dat ik daar met dit rechthoekje
+   naartoe kan, komt niet over." Op een telefoon wint kleur het van vorm.
+   Nu: open, met de pijl die op deze plank al "hier ga je naar binnen"
+   betekent (elke titel eindigt erop), in de kleur van de titels.
+
+   Drie dingen die het label moet hebben, omdat het een tweede link in de
+   kop is (zie "de hele regel/kaart klikbaar" bovenaan de plank):
+     - boven de laag van de titellink liggen (position + z-index), anders
+       vangt die laag de klik en land je in het Nederlands;
+     - een groter klikvlak dan het rechthoekje, onzichtbaar (::after), want
+       wie op een telefoon net misduwt, landt anders op het Nederlandse boek;
+     - geen kleur- of onderstreepwissel van de rij-oplichter. Die regels
+       gaan over de titel. */
+.cc-boek h3 a.cc-taal {
+  position: relative; z-index: 1;
+  flex: 0 0 auto; margin: 0 0 0 auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; line-height: 1;
+  white-space: nowrap; padding: 0.2rem 0.4rem 0.16rem;
+  color: var(--cc-blue-deep); background: transparent;
+  border: 1px solid var(--cc-blue-deep); border-radius: 3px;
+}
+/* naar rechts duwen doet de eerste pil al; staan er pillen, dan duwt het
+   label niet mee (anders verdeelt de flexbox de ruimte, zie .cc-chip + .cc-chip) */
+.cc-boek h3 .cc-chip ~ a.cc-taal { margin-left: 0; }
+/* rechts niet groter: daar is de rand van het boek, en een klikvlak dat
+   eroverheen steekt maakt de bladzij op een telefoon breder dan het scherm */
+.cc-boek h3 a.cc-taal::after { content: ""; position: absolute; inset: -0.4rem 0 -0.4rem -0.3rem; }
+.cc-boek h3 a.cc-taal,
+html:not([data-vorm="kaart"]) .cc-boek:hover h3 a.cc-taal { text-decoration: none; }
+.cc-boek h3 a.cc-taal:hover { color: var(--cc-paper); background: var(--cc-blue-deep); }
 .cc-card-werkboeken ul { list-style: none; padding-left: 0; margin: 0.5rem 0 0.7rem; }
 .cc-card-werkboeken li {
   font-family: Georgia, serif; font-size: 0.98rem; line-height: 1.45;
