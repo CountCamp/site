@@ -513,7 +513,7 @@ d = \dfrac{\bar{x} - \mu_0}{\sigma} = \dfrac{55 - 50}{10} = 0.50
 </section>
 <section id="two-groups-training-versus-control" class="level2">
 <h2 class="anchored" data-anchor-id="two-groups-training-versus-control">Two groups: training versus control</h2>
-<p>You know the practice dataset <code>slaapstudie</code> from week 1: 30 students in their first year who sleep badly; half of them got sleep training. Everyone’s worrying was measured, before and after. For each person, take the <strong>drop</strong>: worry score before minus worry score after. Does worrying drop more in the training group than in the control group?</p>
+<p>You know the practice dataset <code>sleepstudy</code> from week 1: 30 students in their first year who sleep badly; half of them got sleep training. Everyone’s worrying was measured, before and after. For each person, take the <strong>drop</strong>: worry score before minus worry score after. Does worrying drop more in the training group than in the control group?</p>
 <table class="caption-top table">
 <caption>Drop in worry score, by group</caption>
 <thead>
@@ -701,19 +701,19 @@ t = \dfrac{\text{mean difference}}{\dfrac{s_\text{difference}}{\sqrt{n}}}
 <p>You calculated by hand, with the rounded numbers from the tables. R checks without rounding. New to R? Read <em>In R: working out effect sizes</em> first, further on this week. This box can wait.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the drop per person</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>daling <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> slaapstudie<span class="sc">$</span>piekeren_na</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_drop <span class="ot">&lt;-</span> sleepstudy<span class="sc">$</span>worry_before <span class="sc">-</span> sleepstudy<span class="sc">$</span>worry_after</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># two groups: Welch, with the groups as a formula</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>t_uit <span class="ot">&lt;-</span> <span class="fu">t.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>t_uit<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_uit<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_uit<span class="sc">$</span>parameter)   <span class="co"># eta squared</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>t_out <span class="ot">&lt;-</span> <span class="fu">t.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>t_out<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_out<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_out<span class="sc">$</span>parameter)   <span class="co"># eta squared</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        t 
 0.1046463 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cohen's d, with the s of the control group</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gem <span class="ot">&lt;-</span> <span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, mean)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sds <span class="ot">&lt;-</span> <span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, sd)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(gem[<span class="st">"training"</span>] <span class="sc">-</span> gem[<span class="st">"controle"</span>]) <span class="sc">/</span> sds[<span class="st">"controle"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, mean)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sds <span class="ot">&lt;-</span> <span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, sd)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(means[<span class="st">"training"</span>] <span class="sc">-</span> means[<span class="st">"control"</span>]) <span class="sc">/</span> sds[<span class="st">"control"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> training 
 0.5044188 </code></pre>
@@ -721,18 +721,18 @@ t = \dfrac{\text{mean difference}}{\dfrac{s_\text{difference}}{\sqrt{n}}}
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># paired: only the training group</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> slaapstudie[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>t_paar <span class="ot">&lt;-</span> <span class="fu">t.test</span>(training<span class="sc">$</span>piekeren_voor, training<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>t_paar<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_paar<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_paar<span class="sc">$</span>parameter)   <span class="co"># eta squared</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> sleepstudy[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>t_paired <span class="ot">&lt;-</span> <span class="fu">t.test</span>(training<span class="sc">$</span>worry_before, training<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>t_paired<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_paired<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_paired<span class="sc">$</span>parameter)   <span class="co"># eta squared</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        t 
 0.5929825 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(training<span class="sc">$</span>daling) <span class="sc">/</span> <span class="fu">sd</span>(training<span class="sc">$</span>piekeren_voor)   <span class="co"># d, with the pre-test</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(training<span class="sc">$</span>worry_drop) <span class="sc">/</span> <span class="fu">sd</span>(training<span class="sc">$</span>worry_before)   <span class="co"># d, with the pre-test</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.3577044</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(training<span class="sc">$</span>daling) <span class="sc">/</span> <span class="fu">sd</span>(training<span class="sc">$</span>daling)          <span class="co"># d, with the difference scores</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(training<span class="sc">$</span>worry_drop) <span class="sc">/</span> <span class="fu">sd</span>(training<span class="sc">$</span>worry_drop)          <span class="co"># d, with the difference scores</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.166092</code></pre>
 </div>
@@ -893,21 +893,21 @@ V = \sqrt{\dfrac{\chi^2}{n \, (k - 1)}}
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the table, row by row</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>tabel <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">65</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">65</span>,</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">40</span>, <span class="dv">160</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># without the continuity correction, as by hand</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(tabel, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(counts, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>x2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test
 
-data:  tabel
+data:  counts
 X-squared = 8, df = 1, p-value = 0.004678</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># phi</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(x2<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">sum</span>(tabel))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(x2<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">sum</span>(counts))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>X-squared 
 0.1632993 </code></pre>
@@ -1019,13 +1019,13 @@ z = \dfrac{53.92 - 55}{2} = -0.54
 <p><code>pnorm(z)</code> gives the probability to the left of <em>z</em>. So the probability to the right is <code>1 - pnorm(z)</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the critical boundary on the right: 50 + 1.96 times the standard error</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>grens <span class="ot">&lt;-</span> <span class="dv">50</span> <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="dv">2</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>grens</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>boundary <span class="ot">&lt;-</span> <span class="dv">50</span> <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>boundary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 53.92</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># how far is that boundary from 55, in standard errors?</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (grens <span class="sc">-</span> <span class="dv">55</span>) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (boundary <span class="sc">-</span> <span class="dv">55</span>) <span class="sc">/</span> <span class="dv">2</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -0.54</code></pre>
@@ -1205,13 +1205,13 @@ n = \left( \dfrac{1.96 + 0.84}{0.50} \right)^2 = 31.36
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># one study: 25 people, mean, z, p</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>een_p <span class="ot">&lt;-</span> <span class="cf">function</span>(mu) {</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>one_p <span class="ot">&lt;-</span> <span class="cf">function</span>(mu) {</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  scores <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">25</span>, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">10</span>)</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(scores) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">25</span>))</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(z))</span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>p_god <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">een_p</span>(<span class="at">mu =</span> <span class="dv">50</span>))</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>p_god <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">one_p</span>(<span class="at">mu =</span> <span class="dv">50</span>))</span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(p_god, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> .<span class="dv">1</span>), <span class="at">main =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"count"</span>,</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(p)), <span class="at">xaxt =</span> <span class="st">"n"</span>)</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> .<span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">".2"</span>, <span class="st">".4"</span>, <span class="st">".6"</span>, <span class="st">".8"</span>, <span class="st">"1"</span>))</span>
@@ -1237,7 +1237,7 @@ Figure&nbsp;3: Five thousand <em>p</em>-values when <math display="inline" xmlns
 <p>All the bars are about the same height: if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is true, a <em>p</em> between .9 and 1 turns up just as often as one between 0 and .1. So a high <em>p</em>-value is no sign that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> is right. And you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> in about .05 of the studies: that’s α, the false alarm.</p>
 <p><strong>Then in Allah’s world</strong> (μ = 55):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p_allah <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">een_p</span>(<span class="at">mu =</span> <span class="dv">55</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p_allah <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">one_p</span>(<span class="at">mu =</span> <span class="dv">55</span>))</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(p_allah, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> .<span class="dv">1</span>), <span class="at">main =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"count"</span>,</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(p)), <span class="at">xaxt =</span> <span class="st">"n"</span>)</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> .<span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">".2"</span>, <span class="st">".4"</span>, <span class="st">".6"</span>, <span class="st">".8"</span>, <span class="st">"1"</span>))</span>
@@ -1269,27 +1269,27 @@ Figure&nbsp;4: Five thousand <em>p</em>-values when μ = 55.
 <section id="in-r-working-out-effect-sizes" class="level1">
 <h1>In R: working out effect sizes</h1>
 <p>Effect sizes don’t come out of R by themselves. You take the ingredients from what <code>t.test()</code> and <code>chisq.test()</code> give you, and work out the rest yourself. You need three things.</p>
-<p><strong>1. Taking a piece out of the output.</strong> You can store the result of a test under a name. With <code>$</code> you pick out one piece. First the drop per person, as a new column (<code>daling</code> is Dutch for <em>drop</em>):</p>
+<p><strong>1. Taking a piece out of the output.</strong> You can store the result of a test under a name. With <code>$</code> you pick out one piece. First the drop per person, as a new column:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>daling <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> slaapstudie<span class="sc">$</span>piekeren_na</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_drop <span class="ot">&lt;-</span> sleepstudy<span class="sc">$</span>worry_before <span class="sc">-</span> sleepstudy<span class="sc">$</span>worry_after</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>t_uit <span class="ot">&lt;-</span> <span class="fu">t.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>t_out <span class="ot">&lt;-</span> <span class="fu">t.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>t_uit<span class="sc">$</span>statistic   <span class="co"># the t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>t_out<span class="sc">$</span>statistic   <span class="co"># the t</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        t 
 -1.656784 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>t_uit<span class="sc">$</span>parameter   <span class="co"># the degrees of freedom</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>t_out<span class="sc">$</span>parameter   <span class="co"># the degrees of freedom</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      df 
 23.48564 </code></pre>
 </div>
 </div>
-<p>The <em>t</em> is negative, while earlier it said 1.66. R puts the groups in alphabetical order (<code>controle</code>, the control group, before <code>training</code>), so it calculates control minus training. For η² that makes no difference, because <em>t</em> gets squared.</p>
+<p>The <em>t</em> is negative, while earlier it said 1.66. R puts the groups in alphabetical order, so it calculates control minus training. For η² that makes no difference, because <em>t</em> gets squared.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eta squared</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>t_uit<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_uit<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_uit<span class="sc">$</span>parameter)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>t_out<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_out<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_out<span class="sc">$</span>parameter)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        t 
 0.1046463 </code></pre>
@@ -1297,32 +1297,32 @@ Figure&nbsp;4: Five thousand <em>p</em>-values when μ = 55.
 </div>
 <p><strong>2. A mean or a standard deviation per group.</strong> You can do that by choosing rows, as in week 1. Faster is <code>tapply()</code>: take this column, split it by these groups, and do this with it.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>controle training 
+<pre><code> control training 
 1.066667 3.466667 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, sd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, sd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>controle training 
+<pre><code> control training 
 4.757951 2.972893 </code></pre>
 </div>
 </div>
 <p>Cohen’s <em>d</em> with the <em>s</em> of the control group is then (3.47 − 1.07) / 4.76 = 0.50.</p>
 <p><strong>3. Typing in a table for χ².</strong> With <code>matrix()</code>; <code>byrow = TRUE</code> lets you type it row by row.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>tabel <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">65</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">65</span>,</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">40</span>, <span class="dv">160</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(tabel, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(counts, <span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># phi</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(x2<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">sum</span>(tabel))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(x2<span class="sc">$</span>statistic <span class="sc">/</span> <span class="fu">sum</span>(counts))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>X-squared 
 0.1632993 </code></pre>
 </div>
 </div>
-<p>For a larger table you also need <em>k</em> for Cramér’s <em>V</em>, the smaller of the number of rows and columns: <code>k &lt;- min(nrow(tabel), ncol(tabel))</code>, and then <code>sqrt(x2$statistic / (sum(tabel) * (k - 1)))</code>.</p>
+<p>For a larger table you also need <em>k</em> for Cramér’s <em>V</em>, the smaller of the number of rows and columns: <code>k &lt;- min(nrow(counts), ncol(counts))</code>, and then <code>sqrt(x2$statistic / (sum(counts) * (k - 1)))</code>.</p>
 </section>
 <section id="practice" class="level1">
 <h1>Practice</h1>
@@ -1389,7 +1389,7 @@ Figure&nbsp;4: Five thousand <em>p</em>-values when μ = 55.
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use <code>slaapstudie</code>, now the <strong>control group</strong>: does their worrying change between before and after, without training?</p>
+<p>Use <code>sleepstudy</code>, now the <strong>control group</strong>: does their worrying change between before and after, without training?</p>
 <ol type="a">
 <li>Run the paired <em>t</em>-test in R. Fill in: “Worrying in the control group was … after than before, <em>t</em>(…) = …, <em>p</em> = ….” Is that significant?</li>
 <li>Work out η², by hand and in R. Small, medium or large?</li>
@@ -1434,14 +1434,14 @@ Figure&nbsp;4: Five thousand <em>p</em>-values when μ = 55.
 <div id="callout-23" class="callout-23-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> slaapstudie[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span>, ]</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>t_con <span class="ot">&lt;-</span> <span class="fu">t.test</span>(controle<span class="sc">$</span>piekeren_voor, controle<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>t_con</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>control <span class="ot">&lt;-</span> sleepstudy[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"control"</span>, ]</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>t_control <span class="ot">&lt;-</span> <span class="fu">t.test</span>(control<span class="sc">$</span>worry_before, control<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>t_control</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
 
-data:  controle$piekeren_voor and controle$piekeren_na
+data:  control$worry_before and control$worry_after
 t = 0.86827, df = 14, p-value = 0.3999
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
@@ -1451,18 +1451,18 @@ mean difference
        1.066667 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eta squared</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>t_con<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_con<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_con<span class="sc">$</span>parameter)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>t_control<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (t_control<span class="sc">$</span>statistic<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> t_control<span class="sc">$</span>parameter)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        t 
 0.0510978 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># d, with the pre-test and with the difference scores</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>daling <span class="ot">&lt;-</span> controle<span class="sc">$</span>piekeren_voor <span class="sc">-</span> controle<span class="sc">$</span>piekeren_na</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(daling) <span class="sc">/</span> <span class="fu">sd</span>(controle<span class="sc">$</span>piekeren_voor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>worry_drop <span class="ot">&lt;-</span> control<span class="sc">$</span>worry_before <span class="sc">-</span> control<span class="sc">$</span>worry_after</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(worry_drop) <span class="sc">/</span> <span class="fu">sd</span>(control<span class="sc">$</span>worry_before)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1157157</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(daling) <span class="sc">/</span> <span class="fu">sd</span>(daling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(worry_drop) <span class="sc">/</span> <span class="fu">sd</span>(worry_drop)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2241862</code></pre>
 </div>
@@ -2616,4 +2616,4 @@ z &amp;= \dfrac{55.152 - 55}{2.00} = 0.076
 
 
 </body></html>
-<!-- countcamp-oefenboek inferential-statistics lab-commit=6126c6f8c5460d137dbfbcae409799a661ba230c geleverd=2026-11-22T16:06:01 -->
+<!-- countcamp-oefenboek inferential-statistics lab-commit=c2f6b34fc2a7bdf21645df1dcbbd1e2273553df0 geleverd=2026-11-23T11:10:20 -->
