@@ -78,8 +78,8 @@ def main():
             fouten.append("stukje %s is %g: het zwaard en de verschil-in-verschil-balken tekenen alleen positieve stukjes" % (naam, v))
     # De voormetingen van I en II zijn ongelijk (Ben, 23-11-2026: "voormetingen ongelijk, 48/52, zodat stap 3 het
     # lenen echt leert"). Met gelijke voormetingen is het gemiddelde gelijk aan elk van de twee, dus leert stap 3
-    # niets, en dan liegen de uitwerkingen van stap 9, 10 en 11, die nu voorrekenen wat er misgaat zonder lenen.
-    # Tot 23-11 eiste deze toets het omgekeerde: dat de twee gelijk waren, omdat stap 9 toen zonder lenen rekende.
+    # niets, en dan liegen de uitwerkingen van stap 9, 10 en 11, die nu voorrekenen wat er misgaat met alleen nametingen.
+    # Tot 23-11 eiste deze toets het omgekeerde: dat de twee gelijk waren, omdat stap 9 toen met alleen nametingen rekende (toen 'zonder lenen' genoemd).
     if abs(d["voorI"] - d["voorII"]) < 1e-9:
         fouten.append("voormeting I en II zijn allebei %g: dan leert stap 3 het lenen niet, en stap 9 tot en met 11 rekenen voor wat er misgaat bij ongelijke voormetingen" % d["voorI"])
     sommen = {}

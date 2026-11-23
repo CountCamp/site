@@ -161,7 +161,10 @@ Field (2016) schrijft *Attractiveness*ᵢ = (*b*₀ + *b*₁Genderᵢ + *b*₂Al
 rechtop en het product als een benoemde variabele *Interaction*; OpenMenS (OU) schrijft *b*₄(exercise * coffee) en
 elders 0.07 · IQ; Trochim en Statology alleen symbolen; Van Engelenburg (1999, Twente), de enige Solomon-specifieke
 bron met sprekende letters, schrijft *b*<sub>T</sub>*T* + *b*<sub>P</sub>*P* + *b*<sub>TP</sub>*TP*. Niemand schrijft
-*b*₃·voormeting·therapie met middenstippen tussen woorden; dat is dus onze eigen schrijfwijze, en Bens.
+*b*₃·voormeting·therapie met middenstippen tussen woorden; dat is dus onze eigen schrijfwijze, en Bens. *(Ingetrokken
+23-11-2026 voor de vorm zonder haakjes: sinds Bens "haakjes erom" staat het model als *b*₃·(voormeting·therapie), zie
+Stuk 3. OpenMenS schreef al haakjes om het product, b₄(exercise * coffee). De middenstippen tussen woorden blijven
+onze schrijfwijze.)*
 
 **De volgorde: slotvraag vóór de regressie.** Ben schreef "stap 9 wordt een gewone slotvraag" en "voeg de regressie
 toe ná de oplossing van beneden naar boven". Beide passen in twee volgordes; gekozen is 9 = slotvraag (de proef op
@@ -385,7 +388,8 @@ met alleen nametingen (67 − 51) − (60 − 52) = 8, precies X, en kan stap 9 
 niet meer onderscheiden van een die X vergat. Met 48/52 komt die som op 0, en 0 is geen som van stukjes. De keuze
 staat als vraag voor Ben op het bord, met 48/52 als standaard.
 
-**Wat 48/52 raakt — meer dan stap 3 en stap 9.** Ongelijke voormetingen veranderen niet alleen de weg zonder lenen.
+**Wat 48/52 raakt — meer dan stap 3 en stap 9.** Ongelijke voormetingen veranderen niet alleen de weg met alleen nametingen (tot 23-11 hier "de weg zonder lenen"
+genoemd; waarom die naam niet klopt, zie hieronder).
 Alles wat op de nametingen rust zonder de voormetingen te gebruiken, krijgt het verschil tussen voormeting I en II
 erbij:
 
@@ -559,18 +563,76 @@ verschuiven van de trap naar de figuur wees. Verwerkt door de tweede en derde ze
   *"="*; *Van Engelenburg* met hoofdletter in Nederlandse lopende tekst zonder voornaam (Nederlandse spellingregel;
   de Engelse bladzij houdt *van*); harde spaties binnen *"(12 + 8)"* en rond *"2 × 2"*. Bewust niet veranderd: de
   bronnen op rol in plaats van op alfabet, en de cursieve geleende voormeting *"(50)"*.
-- **Op smalle schermen** iets minder ruimte rond *"="* in de sommen (0,45 em → 0,3 em), want de nieuwe som voor
+- **Op smalle schermen** iets minder ruimte rond *"="* in de sommen (`.45em` → `.3em`), want de nieuwe som voor
   *b*₃ was op echte 390 px 6 px te breed. Gemeten met de bladzij in een iframe van 390 px (`smal.py`); de oudere
   lange sommen in stap 3 en stap 9 schuiven nog steeds, zoals vóór stuk 3.
 
 **Een toets erbij: `solomon_sommen_test.py`.** De getallen in de sommen kwamen al uit de data, maar de vorm van een
 som (*"(52 + 2 + 1) − (50 + 2)"*) is met de hand samengesteld, en tot nu toe rekenden alleen de lezers die na. De
-toets opent beide bladzijden in headless Chrome en rekent in elke som elke regel na tegen de regel ervoor: 20 sommen,
-86 regels per taal, waarvan 59 alleen uit getallen bestaan en uitgerekend worden (de 27 met woorden, zoals
-*"startniveau + H/M"*, telt hij en slaat hij over). Bijtproef: een *"+ 1"* extra in de som voor *b*₁ geeft drie
-foutmeldingen en afloop 1. Wat hij niet ziet: de sommen na het schuiven op het speelbord.
+toets opent beide bladzijden in headless Chrome en rekent in elke som elke regel na tegen de regel ervoor. Eerste
+versie: 20 sommen, 86 regels. De nakijker zag dat hij de 9 lopende sommen van groep I (klasse `som lopend`) liet
+liggen en 2 tabelkoppen uit de scripttekst als som telde; gerepareerd. Nu per taal 27 sommen, 112 regels, waarvan 61
+alleen uit getallen bestaan en uitgerekend worden; de 51 met woorden, zoals *"startniveau + H/M"*, telt hij en slaat
+hij over. Bijtproeven: een *"+ 1"* extra in de som voor *b*₁ geeft drie foutmeldingen, *S* + 1 in de lopende som geeft
+*"S = 5 geeft 5, maar de regel ervoor (15 − 11) gaf 4"*; allebei afloop 1. Wat hij niet ziet: de sommen na het schuiven
+op het speelbord.
+
+**Ronde 3** (23-11, derde zetter; Michelle en Jeanne op de Nederlandse tekst, een Engelse lezer, de APA-lens en een
+nakijker, alle vijf op de stand na ronde 2). Geen van de vijf vond een rekenfout; de nakijker rekende alles na in R en
+vond geen getikt getal in lezerstekst (Python-scan van alle tekenreeksen met cijfers, 20 per bladzij, allemaal
+structureel, zoals *"1 is ja, 0 is nee"*). De nieuwe opbouw van *b*₃ landde bij alle drie de lezers (Michelle: *"ik lees
+hem niet, ik herken hem"*; Jeanne: *"op de tweede keer lezen"*). Verwerkt (`patch_r5.py`):
+
+- **Een zin uit de tijd van 50/50** (Engelse lezer, nakijker): de opzet van stap 10 zei *"alleen heten de stukjes nu
+  b"*, en twee schermen later is *b*₁ = 3 terwijl T = 1. Nu *"alleen heet wat je zoekt nu b"*. Ook de beschrijving
+  bovenin (`<meta name="description">`) zei nog *"dezelfde sommen als regressie"*; nu *"dezelfde ladder"*.
+- **Stap 3** (Jeanne, Engelse lezer): *"omdat ze allebei de therapie kregen"* las nog als de reden om het niet te doen.
+  Nu *"En leen voor III niet de 48 van groep I, alleen omdat ze allebei de therapie kregen"*.
+- **Stap 10:** de zin *"Het model weet alleen óf er een voormeting was, niet hoe hoog die was"* opent nu een eigen
+  alinea (Michelle: *"die staat begraven midden in de dichtste alinea"*). Bij *b*₃ staat de 52 bij naam, *"(voormeting
+  II, H/M, T)"*, want Jeanne en de Engelse lezer lazen (52 + 2 + 1 + 8) als *b*₀ + *b*₁ + *b*₂, wat ook op 63 uitkomt.
+  Het bijschrift zegt *"niet alleen T en S"* (Jeanne: *"niet"* was sterker dan de uitleg eronder).
+- **Speelbord** (Michelle: geen werkwoord; Jeanne en de Engelse lezer: wel het getal voor S, niet voor T): nu
+  *"veranderen wel"* en *"met de nametingen van de ladder 3 en 0"*, allebei uitgerekend (`naB1`, `kaal`). *"Van de
+  ladder"*, omdat die getallen bij het laden één keer worden gezet en niet meeschuiven (APA-lens).
+- **Geen zin begint meer met een symbool** in de veranderde tekst (APA-lens, nakijker): *"Het gewicht b₂ is X"*,
+  *"Hier is b₁ gelijk aan T"*, *"Dan vallen H/M, T en X weg"*. Harde spaties in de sommen in lopende tekst van stap 10
+  (10 per taal).
+- **Het object bij het hoofdeffect** (nakijker): *"het hoofdeffect van de therapie op de kwaliteit van leven"*.
+- **Alleen Engels:** *"Note that"* (*"Mind you"* leidt een tegenwerping in), *"That is where you get stuck"*, *"Then the
+  ladder is just the bookkeeping"* (twee zinnen achter elkaar begonnen met *"In real data"*), *"they are still 4 points
+  apart"*, *"with these numbers, 0"*.
+- **Commentaar uit de tijd van 50/50** (nakijker): *"(65 − 50)"*, de oude volgorde *"dan lenen, dan IV"*, en de
+  paren *"b2 bij X, b1 bij T, b3 bij S"*, die op de nameting sinds 48/52 niet meer gelden.
 
 **Niet veranderd, wel gemeld** (buiten deze opdracht, of een keuze voor Ben):
+
+- **Ronde 3, het hoofdeffect** (Engelse lezer in ronde 2 en 3, nakijker): de uitklapper noemt *"(12 + 8) / 2 = 10"* het
+  hoofdeffect *"met de verbeteringen"*, maar een variantieanalyse van verbeteringen kun je in echte data niet draaien
+  (III en IV hebben geen verbetering per persoon, zegt dezelfde uitklapper), en de aangeraden variantieanalyse van de
+  nametingen geeft (8 + 8) / 2 = 8. Niet veranderd: een vierde getal erbij was in ronde 1 precies Jeannes klacht
+  (*"8, 10, 12"*), en schrappen is een inhoudelijke keuze. Staat als vraag op het bord.
+- **Ronde 3, een brug tussen de twee antwoorden** (Engelse lezer): noem de helling van nameting op voormeting *w*; dan
+  is de gecorrigeerde interactie (63 − 55) + *w*·(52 − 48) − (60 − 52) = 4*w*. *w* = 1 geeft de 4 van de ladder, *w* = 0
+  de 0 van de variantieanalyse van de nametingen, en *"meestal minder dan één"* legt echte data ertussen. Nagerekend,
+  klopt; niet gebouwd, want het is nieuwe uitleg die eerst langs de lezers moet. Een idee voor Ben.
+- **Ronde 3, de dubbele 52 en de dubbele 2 zijn één toeval** (Engelse lezer): *b*₁ = verbetering II zodra H/M de
+  helft van het verschil in voormeting is, hier 2 = (52 − 48) / 2. Het volgt uit 48/52 en de stukjes 2/8/1/4; de
+  bladzij noemt het nu. Wil Ben het weg, dan moeten de getallen veranderen, niet de tekst.
+- **Ronde 3, de knop "Geen sensitisatie" op het speelbord geeft *b*₃ = −4** in de regressie van de nameting, en
+  *"Alleen de tijd"* *b*₁ = 2 en *b*₃ = −4 (nakijker, in R). Klopt met 48/52, en de noot onder de tabel legt het uit,
+  maar Ben zou het één keer moeten zien.
+- **Ronde 3, de volgorde H/M, T, X, S** in de opbouw van *b*₃ wijkt af van H/M, X, T, S elders (Michelle, Jeanne,
+  nakijker). Met opzet: zo staan 2, 1, 8 aan beide kanten op dezelfde plek en zie je ze wegvallen. Michelle: *"laten
+  staan"*; het staat nu hier, niet op de bladzij.
+- **Ronde 3, kleiner:** de hint van stap 9 heeft nu een puntkomma, en dat is voor Michelle een uitvalplek (in ronde 2
+  was hij haar te lang); links van *"="* staat in de sommen twee keer zoveel ruimte als rechts (APA-lens, al zo vóór
+  stuk 3); *"<voorAfstand> punten"* zou bij een verschil van 1 *"1 punten"* geven (nakijker; met 48/52 is het 4);
+  `solomon_figuren_test.py` toetst zonder argument alleen de Nederlandse bladzij (nakijker; ik draaide hem met beide
+  paden, afloop 0).
+- **Ronde 3, Michelles beeld:** in stap 9 twee staven naast die van stap 8, nu met nametingen: 8 en 8, niets steekt
+  uit, en onder de I−II-staaf hangt een stuk van −4, zodat je ziet dat de 12 op een vloer vier lager begon. Niet
+  gebouwd (een nieuwe figuur gaat eerst langs de beeldverteller).
 
 - Michelle: stap 9 heeft als enige rekenstap geen figuur, en juist daar zit de kern. Haar voorstel: vier staven van
   voormeting naar nameting (I 48 → 63, II 52 → 55, III en IV 50 → 60 en 52); *alleen nametingen* is dan alleen naar
