@@ -264,7 +264,7 @@
     table.data.mpg{font-size:14px} table.data.mpg th,table.data.mpg td{padding:4px 7px 4px 2px}
     .twijfel-klein{display:block;white-space:normal;font-weight:400;font-size:12.5px;line-height:1.3;color:var(--dim);max-width:6.5em}
     table.data{font-size:15px} table.data th,table.data td{padding:4px 9px 4px 3px}
-    table.som{font-size:15.5px}
+    table.som{font-size:15.5px} table.som td.l{padding-right:.3em} table.som td.is{padding:0 .3em}
     table.kaart{font-size:14px} table.kaart th,table.kaart td{padding:5px 4px}
     .trede,.kader{padding:12px 13px 10px}
   }
@@ -974,8 +974,17 @@
             '(' + g(GETALLEN.voorII) + ' − ' + gh(r.leen) + ') + ' + gh(r.T), g(GETALLEN.voorII - r.leen) + ' + ' + gh(r.T), g(rb.na.b1)]]
         ]) +
         P('De ' + g(r.T) + ' is T. De ' + g(GETALLEN.voorII - r.leen) + ' is hoeveel groep II boven de geleende voormeting begon.' +
-          (gelijk(GETALLEN.voorII, rb.na.b0) ? ' Toevallig dezelfde cijfers als verbetering II in ' + stap('t') + ' (' + g(GETALLEN.naII) + ' − ' + gh(GETALLEN.voorII) + '), maar daar is ' + g(GETALLEN.voorII) + ' de voormeting van II, en hier ' + b(0) + '.' : '') + ' En ' + b(3) + ' is de som met alleen nametingen uit ' + stap('kaal') + ': S plus het verschil tussen voormeting I en II.') +
-        som(b(3), ['S + (voormeting I − voormeting II)', g(r.S) + ' + (' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ')', g(rb.na.b3)]) +
+          (gelijk(GETALLEN.voorII, rb.na.b0) ? ' Toevallig dezelfde cijfers als verbetering II in ' + stap('t') + ' (' + g(GETALLEN.naII) + ' − ' + gh(GETALLEN.voorII) + '), maar daar is ' + g(GETALLEN.voorII) + ' de voormeting van II, en hier ' + b(0) + '.' : '')) +
+        // Jeanne en Michelle (23-11, ronde 2): b3 kreeg hier een formule aangereikt, "S + (voormeting I − voormeting II)",
+        // terwijl b1 erboven uit de getallen werd opgebouwd. Nu net zo: nameting I uit zijn stukjes, en b0 + b1 is nameting II.
+        P('Net zo met ' + b(3) + '. Nameting I is ' + g(GETALLEN.voorI) + ' + ' + gh(r.HM) + ' + ' + gh(r.T) + ' + ' + gh(r.X) + ' + ' + gh(r.S) +
+          ' (voormeting I, H/M, T, X, S). Samen zijn ' + b(0) + ' en ' + b(1) + ' nameting II, ' + g(GETALLEN.voorII) + ' + ' + gh(r.HM) + ' + ' + gh(r.T) + ', en ' + b(2) + ' is X:') +
+        somBlok([
+          [b(3), ['nameting I − ' + b(0) + ' − ' + b(1) + ' − ' + b(2),
+            '(' + g(GETALLEN.voorI) + ' + ' + gh(r.HM) + ' + ' + gh(r.T) + ' + ' + gh(r.X) + ' + ' + gh(r.S) + ') − (' + g(GETALLEN.voorII) + ' + ' + gh(r.HM) + ' + ' + gh(r.T) + ' + ' + gh(r.X) + ')',
+            '(' + g(GETALLEN.voorI) + ' − ' + gh(GETALLEN.voorII) + ') + ' + gh(r.S), g(GETALLEN.voorI - GETALLEN.voorII) + ' + ' + gh(r.S), g(rb.na.b3)]]
+        ]) +
+        P('H/M, T en X vallen weg. Over blijven S en het verschil tussen voormeting I en II: de som met alleen nametingen uit ' + stap('kaal') + '.') +
         P((gelijk(rb.na.b3, 0) ? 'In de regressie van de nameting zie je de sensitisatie hier dus helemaal niet.' : '') +
           ' In ' + stap('regVer') + ' haalt de verbetering het verschil in voormeting er eerst af.'); } },
 
