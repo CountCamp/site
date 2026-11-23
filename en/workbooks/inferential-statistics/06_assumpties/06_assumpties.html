@@ -615,15 +615,15 @@ r = \dfrac{|z|}{\sqrt{N}}
 <div class="callout-body-container callout-body">
 <p>By hand you work out the simple version: ranks, <em>W</em>, <em>z</em>. In R you can do exactly that:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># times to fall asleep, in minutes (zonder = without a phone, met = with)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>zonder <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">18</span>, <span class="dv">22</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>met    <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">19</span>, <span class="dv">24</span>, <span class="dv">27</span>, <span class="dv">31</span>, <span class="dv">35</span>, <span class="dv">44</span>, <span class="dv">120</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># times to fall asleep, in minutes</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>no_phone <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">18</span>, <span class="dv">22</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>phone    <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">19</span>, <span class="dv">24</span>, <span class="dv">27</span>, <span class="dv">31</span>, <span class="dv">35</span>, <span class="dv">44</span>, <span class="dv">120</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ranks of everyone together (rang = rank); rank() averages a tie for you</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>rang <span class="ot">&lt;-</span> <span class="fu">rank</span>(<span class="fu">c</span>(zonder, met))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ranks of everyone together; rank() averages a tie for you</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ranks <span class="ot">&lt;-</span> <span class="fu">rank</span>(<span class="fu">c</span>(no_phone, phone))</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># W: the rank sum of the first 7 (without a phone)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sum</span>(rang[<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>])</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sum</span>(ranks[<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>])</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>W</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31.5</code></pre>
@@ -643,12 +643,12 @@ r = \dfrac{|z|}{\sqrt{N}}
 </div>
 <p>And with the function that does it all in one go:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(zonder, met)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(no_phone, phone)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
-data:  zonder and met
+data:  no_phone and phone
 W = 3.5, p-value = 0.002486
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
@@ -860,16 +860,16 @@ r = \dfrac{|z|}{\sqrt{2n}}
 <div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the worry scores, before (voor) and after (na)</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>voor <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">61</span>, <span class="dv">58</span>, <span class="dv">52</span>, <span class="dv">66</span>, <span class="dv">70</span>, <span class="dv">57</span>, <span class="dv">63</span>, <span class="dv">68</span>, <span class="dv">55</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>na   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">55</span>, <span class="dv">55</span>, <span class="dv">55</span>, <span class="dv">65</span>, <span class="dv">62</span>, <span class="dv">45</span>, <span class="dv">58</span>, <span class="dv">59</span>, <span class="dv">40</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the worry scores, before and after</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>before <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">61</span>, <span class="dv">58</span>, <span class="dv">52</span>, <span class="dv">66</span>, <span class="dv">70</span>, <span class="dv">57</span>, <span class="dv">63</span>, <span class="dv">68</span>, <span class="dv">55</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>after  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">55</span>, <span class="dv">55</span>, <span class="dv">55</span>, <span class="dv">65</span>, <span class="dv">62</span>, <span class="dv">45</span>, <span class="dv">58</span>, <span class="dv">59</span>, <span class="dv">40</span>)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> voor <span class="sc">-</span> na</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> before <span class="sc">-</span> after</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># does anyone have a difference of 0? then take them out first: d &lt;- d[d != 0]</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>rang <span class="ot">&lt;-</span> <span class="fu">rank</span>(<span class="fu">abs</span>(d))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>ranks <span class="ot">&lt;-</span> <span class="fu">rank</span>(<span class="fu">abs</span>(d))</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># T+: the ranks of the positive differences</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>Tplus <span class="ot">&lt;-</span> <span class="fu">sum</span>(rang[d <span class="sc">&gt;</span> <span class="dv">0</span>])</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>Tplus <span class="ot">&lt;-</span> <span class="fu">sum</span>(ranks[d <span class="sc">&gt;</span> <span class="dv">0</span>])</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>Tplus</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 42.5</code></pre>
@@ -881,12 +881,12 @@ r = \dfrac{|z|}{\sqrt{2n}}
 <pre><code>[1] 0.01781719</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and the test itself; here R calls T+ V</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(voor, na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(before, after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon signed rank exact test
 
-data:  voor and na
+data:  before and after
 V = 42.5, p-value = 0.01562
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
@@ -1054,28 +1054,27 @@ p = \dfrac{2}{70} = .029
 </section>
 <section id="in-r-wilcox.test" class="level1">
 <h1>In R: <code>wilcox.test()</code></h1>
-<p>This week you do two things in R: look at whether the scores are skewed, and run the Wilcoxon tests. You use the practice dataset <code>slaapstudie</code> (Dutch for sleep study) again: 30 poor sleepers, half of them with sleep training, with a worry score before and after.</p>
-<p>The names in the dataset are Dutch: <code>groep</code> is the group, with the values <code>controle</code> and <code>training</code>, and <code>piekeren_voor</code> and <code>piekeren_na</code> are the worry score before and after.</p>
+<p>This week you do two things in R: look at whether the scores are skewed, and run the Wilcoxon tests. You use the practice dataset <code>sleepstudy</code> again: 30 poor sleepers, half of them with sleep training, with a worry score before and after.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"sleepstudy.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><strong>Two groups.</strong> Did worrying drop more in the training group than in the control group? First make a column with the drop (<code>daling</code> is Dutch for drop), and look:</p>
+<p><strong>Two groups.</strong> Did worrying drop more in the training group than in the control group? First make a column with the drop, and look:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>daling <span class="ot">&lt;-</span> slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> slaapstudie<span class="sc">$</span>piekeren_na</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_drop <span class="ot">&lt;-</span> sleepstudy<span class="sc">$</span>worry_before <span class="sc">-</span> sleepstudy<span class="sc">$</span>worry_after</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie, <span class="at">ylab =</span> <span class="st">"drop"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy, <span class="at">ylab =</span> <span class="st">"drop"</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the median per group</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, median)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, median)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>controle training 
+<pre><code> control training 
        2        4 </code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-box" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Two boxplots side by side, controle (the control group) on the left and training on the right. The thick line in the middle, the median, is at 2 for controle and at 4 for training. Below the control group there is one separate circle, at -11. Along the bottom the axis says groep (group); up the side, drop.">
+<div id="fig-box" class="quarto-float quarto-figure quarto-figure-center anchored" alt="Two boxplots side by side, control on the left and training on the right. The thick line in the middle, the median, is at 2 for control and at 4 for training. Below the control group there is one separate circle, at -11.">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="06_assumpties_files/figure-html/fig-box-1.png" class="img-fluid figure-img" alt="Two boxplots side by side, controle (the control group) on the left and training on the right. The thick line in the middle, the median, is at 2 for controle and at 4 for training. Below the control group there is one separate circle, at -11. Along the bottom the axis says groep (group); up the side, drop." width="528">
+<img src="06_assumpties_files/figure-html/fig-box-1.png" class="img-fluid figure-img" alt="Two boxplots side by side, control on the left and training on the right. The thick line in the middle, the median, is at 2 for control and at 4 for training. Below the control group there is one separate circle, at -11." width="528">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-box-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Drop in worry score (before minus after), per group.
@@ -1086,28 +1085,28 @@ Figure&nbsp;4: Drop in worry score (before minus after), per group.
 </div>
 <p>Then the rank-sum test. You read the <code>~</code> as ‘split by’: the drop, split by group.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
-data:  daling by groep
+data:  worry_drop by group
 W = 80, p-value = 0.1813
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 </div>
 <p><em>p</em> = .18, so you don’t reject the null hypothesis: with these 30 people there is no systematic difference in drop between the two groups to be seen. (The <em>t</em>-test on the same question gives <em>p</em> = .11, and doesn’t reject either.)</p>
-<p>Which group does R add up? With <code>~</code>, the group that comes first in the alphabet: <em>controle</em>. (If you give R two lists of numbers, as in the check of the rank-sum test, it adds up the first list.) Their rank sum is 200; R subtracts the smallest possible one, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>15</mn><mo>×</mo><mn>16</mn></mrow><mn>2</mn></mfrac></mstyle><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">\dfrac{15 \times 16}{2} = 120</annotation></semantics></math>, and reports <em>W</em> = 80.</p>
+<p>Which group does R add up? With <code>~</code>, the group that comes first in the alphabet: <em>control</em>. (If you give R two lists of numbers, as in the check of the rank-sum test, it adds up the first list.) Their rank sum is 200; R subtracts the smallest possible one, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>15</mn><mo>×</mo><mn>16</mn></mrow><mn>2</mn></mfrac></mstyle><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">\dfrac{15 \times 16}{2} = 120</annotation></semantics></math>, and reports <em>W</em> = 80.</p>
 <p><strong>Two paired measurements.</strong> Did worrying drop within the training group of the sleep study? Select the rows, and give R the two columns with <code>paired = TRUE</code>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> slaapstudie[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> sleepstudy[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(training<span class="sc">$</span>piekeren_voor, training<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(training<span class="sc">$</span>worry_before, training<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon signed rank exact test
 
-data:  training$piekeren_voor and training$piekeren_na
+data:  training$worry_before and training$worry_after
 V = 113.5, p-value = 0.0007324
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
@@ -1395,7 +1394,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <div class="callout-body-container callout-body">
 <ol type="a">
-<li>Put the scores from exercise 6.2 into R, as two lists of numbers called <code>koffie</code> (coffee) and <code>geen</code> (none), and do the rank-sum test with <code>wilcox.test()</code>.</li>
+<li>Put the scores from exercise 6.2 into R, as two lists of numbers called <code>coffee</code> and <code>no_coffee</code>, and do the rank-sum test with <code>wilcox.test()</code>.</li>
 <li>R reports a different <em>W</em> from the one you found by hand. How are they related?</li>
 <li>Do you get the same <em>p</em>-value as in 6.2? The same decision?</li>
 </ol>
@@ -1414,15 +1413,15 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <div id="callout-21" class="callout-21-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>koffie <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">11</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>geen   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">4</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>coffee <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">11</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>no_coffee   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">4</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(koffie, geen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(coffee, no_coffee)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
-data:  koffie and geen
+data:  coffee and no_coffee
 W = 52, p-value = 0.1334
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
@@ -1628,7 +1627,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2.31</mn><msqrt><mrow><mn>2</mn><mo>×</mo><mn>8</mn></mrow></msqrt></mfrac></mstyle><mo>=</mo><mn>.58</mn></mrow><annotation encoding="application/x-tex">r =\dfrac{2.31}{\sqrt{2 \times 8}} = .58</annotation></semantics></math>: the difference in reaction time between a short and a normal night is a large effect. If you divide by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msqrt><mn>8</mn></msqrt><annotation encoding="application/x-tex">\sqrt{8}</annotation></semantics></math> by mistake, you end up with .82.</p></li>
 <li><p>.021 ≤ .05: you reject the null hypothesis that the reaction time after a short night is the same as after a normal night. After a short night, students react systematically more slowly.</p></li>
 </ol>
-<p>In R: <code>wilcox.test(kort, gewoon, paired = TRUE)</code> (with <code>kort</code> the short night and <code>gewoon</code> the normal one) gives <em>V</em> = 34.5 (your <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>T</mi><mo>+</mo></msup><annotation encoding="application/x-tex">T^+</annotation></semantics></math>) and the exact <em>p</em> = .023.</p>
+<p>In R: <code>wilcox.test(short, normal, paired = TRUE)</code> gives <em>V</em> = 34.5 (your <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>T</mi><mo>+</mo></msup><annotation encoding="application/x-tex">T^+</annotation></semantics></math>) and the exact <em>p</em> = .023.</p>
 <p>So you have three numbers for the same <em>p</em>:</p>
 <ul>
 <li>.0208 from Table A,</li>
@@ -1636,7 +1635,7 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <li>.023 from <code>wilcox.test()</code>.</li>
 </ul>
 <p>All three are below .05: the same decision. The first two lay the bell over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>T</mi><mo>+</mo></msup><annotation encoding="application/x-tex">T^+</annotation></semantics></math>. With few people, R counts through every possible order; that is the word <em>exact</em>, and you saw in exercise 6.3c why that gives a different number. In a report, you give the <em>p</em> from R.</p>
-<p>Put the lists the other way round, <code>wilcox.test(gewoon, kort, paired = TRUE)</code>, and R reports <em>V</em> = 1.5: then it calculates normal − short night.</p>
+<p>Put the lists the other way round, <code>wilcox.test(normal, short, paired = TRUE)</code>, and R reports <em>V</em> = 1.5: then it calculates normal − short night.</p>
 </div>
 </div>
 </div>
@@ -1650,9 +1649,9 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use <code>slaapstudie</code>, with the column <code>daling</code> (the drop) from <em>In R</em> above.</p>
+<p>Use <code>sleepstudy</code>, with the column <code>worry_drop</code> from <em>In R</em> above.</p>
 <ol type="a">
-<li>Make a histogram of the drop for each group. Use <code>hist(slaapstudie$daling[slaapstudie$groep == "training"])</code>, and the same for the control group.</li>
+<li>Make a histogram of the drop for each group. Use <code>hist(sleepstudy$worry_drop[sleepstudy$group == "training"])</code>, and the same for the control group.</li>
 <li>For each group, compare the mean with the median.</li>
 <li>Do you find the <em>t</em>-test acceptable here? Why or why not?</li>
 <li>Do the <em>t</em>-test and the rank-sum test. Which <em>p</em>-values do you get?</li>
@@ -1673,18 +1672,18 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(slaapstudie<span class="sc">$</span>daling[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span>])</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(slaapstudie<span class="sc">$</span>daling[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sleepstudy<span class="sc">$</span>worry_drop[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"training"</span>])</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sleepstudy<span class="sc">$</span>worry_drop[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"control"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>controle training 
+<pre><code> control training 
 1.066667 3.466667 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(slaapstudie<span class="sc">$</span>daling, slaapstudie<span class="sc">$</span>groep, median)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sleepstudy<span class="sc">$</span>worry_drop, sleepstudy<span class="sc">$</span>group, median)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>controle training 
+<pre><code> control training 
        2        4 </code></pre>
 </div>
 </div>
@@ -1694,11 +1693,11 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 <li><p>There is something to be said for it, and something against. No long tail, and mean and median are close together: the <em>t</em>-test can be defended. But 15 per group is not a lot, and that one outlier pulls at the mean of the control group. There is no wrong answer here, as long as you explain your choice, and as long as you make it <em>before</em> you test.</p></li>
 <li><p>Both tests, and only their <em>p</em>-value:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)<span class="sc">$</span>p.value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)<span class="sc">$</span>p.value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1108642</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)<span class="sc">$</span>p.value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)<span class="sc">$</span>p.value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1813086</code></pre>
 </div>
@@ -1746,7 +1745,7 @@ Figure&nbsp;5: All 20 ways to give three of the six students the card <em>with e
 <ol start="3" type="a">
 <li>What is the <em>p</em>-value (two-tailed)?</li>
 <li>What is the smallest possible <em>p</em>-value with three against three? What does that mean for such a small study?</li>
-<li>How would you do this with the 30 people of <code>slaapstudie</code>?</li>
+<li>How would you do this with the 30 people of <code>sleepstudy</code>?</li>
 </ol>
 </div>
 </div>
@@ -2674,4 +2673,4 @@ Figure&nbsp;5: All 20 ways to give three of the six students the card <em>with e
 
 
 </body></html>
-<!-- countcamp-oefenboek inferential-statistics lab-commit=6126c6f8c5460d137dbfbcae409799a661ba230c geleverd=2026-11-22T16:06:01 -->
+<!-- countcamp-oefenboek inferential-statistics lab-commit=c2f6b34fc2a7bdf21645df1dcbbd1e2273553df0 geleverd=2026-11-23T11:10:20 -->

@@ -509,7 +509,7 @@ Figure&nbsp;1: The drop in worry score per person, on the left in the training g
 <td>number</td>
 <td>two groups, different people</td>
 <td>bell OK</td>
-<td><code>t.test(y ~ groep)</code></td>
+<td><code>t.test(y ~ group)</code></td>
 </tr>
 <tr class="even">
 <td>paired <em>t</em>-test</td>
@@ -523,7 +523,7 @@ Figure&nbsp;1: The drop in worry score per person, on the left in the training g
 <td>rank order or number</td>
 <td>two groups, different people</td>
 <td>bell not OK, or a rank order</td>
-<td><code>wilcox.test(y ~ groep)</code></td>
+<td><code>wilcox.test(y ~ group)</code></td>
 </tr>
 <tr class="even">
 <td>Wilcoxon signed-rank test</td>
@@ -715,17 +715,16 @@ z &amp;= \dfrac{T^+ - \mu_{T^+}}{\sigma_{T^+}}
 </section>
 <section id="one-dataset-four-questions" class="level1">
 <h1>One dataset, four questions</h1>
-<p>You know the practice dataset <code>slaapstudie</code> from week 1: 30 first-year students who sleep poorly. Half of them got sleep training, the other half didn’t. For everyone there is a worry score before and after. The questionnaire is made so that the mean in the general population is 50 and the standard deviation 10.</p>
-<p>The dataset keeps its Dutch names: <code>groep</code> is the group (‘training’ or ‘controle’, the control group), <code>leeftijd</code> the age, and <code>piekeren_voor</code> and <code>piekeren_na</code> are the worry scores before and after.</p>
+<p>You know the practice dataset <code>sleepstudy</code> from week 1: 30 first-year students who sleep poorly. Half of them got sleep training, the other half didn’t. For everyone there is a worry score before and after. The questionnaire is made so that the mean in the general population is 50 and the standard deviation 10.</p>
 <table class="caption-top table">
-<caption>The first six rows of slaapstudie</caption>
+<caption>The first six rows of sleepstudy</caption>
 <thead>
 <tr class="header">
 <th>id</th>
-<th>groep</th>
-<th>leeftijd</th>
-<th>piekeren_voor</th>
-<th>piekeren_na</th>
+<th>group</th>
+<th>age</th>
+<th>worry_before</th>
+<th>worry_after</th>
 </tr>
 </thead>
 <tbody>
@@ -738,7 +737,7 @@ z &amp;= \dfrac{T^+ - \mu_{T^+}}{\sigma_{T^+}}
 </tr>
 <tr class="even">
 <td>2</td>
-<td>controle</td>
+<td>control</td>
 <td>24</td>
 <td>49</td>
 <td>45</td>
@@ -759,21 +758,21 @@ z &amp;= \dfrac{T^+ - \mu_{T^+}}{\sigma_{T^+}}
 </tr>
 <tr class="odd">
 <td>5</td>
-<td>controle</td>
+<td>control</td>
 <td>34</td>
 <td>61</td>
 <td>58</td>
 </tr>
 <tr class="even">
 <td>6</td>
-<td>controle</td>
+<td>control</td>
 <td>21</td>
 <td>54</td>
 <td>56</td>
 </tr>
 </tbody>
 </table>
-<p>Do you see the two shapes of the data file? <code>piekeren_voor</code> and <code>piekeren_na</code> sit side by side on one row: that is paired. The column <code>groep</code> splits the people in two: that is independent.</p>
+<p>Do you see the two shapes of the data file? <code>worry_before</code> and <code>worry_after</code> sit side by side on one row: that is paired. The column <code>group</code> splits the people in two: that is independent.</p>
 <p>Four questions to the same table. They sound like family, and each one asks for a different test.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="Research question A — Do poor sleepers worry differently from the general population?">
 <div class="callout-header d-flex align-content-center">
@@ -976,8 +975,8 @@ t &amp;= \dfrac{3.47 - 1.07}{1.449} = \dfrac{2.40}{1.449} = 1.66
 <p>How you type this in yourself is below, in <em>In R: all the tests on one dataset</em>. This fold-out only shows that R finds the same.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A. z-test: R has no function for it, so by hand in R</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(slaapstudie)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(slaapstudie<span class="sc">$</span>piekeren_voor) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sleepstudy)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(sleepstudy<span class="sc">$</span>worry_before) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.282177</code></pre>
@@ -988,15 +987,15 @@ t &amp;= \dfrac{3.47 - 1.07}{1.449} = \dfrac{2.40}{1.449} = 1.66
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> slaapstudie[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> sleepstudy[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># B. paired t-test in the training group</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(training<span class="sc">$</span>piekeren_voor, training<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(training<span class="sc">$</span>worry_before, training<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
 
-data:  training$piekeren_voor and training$piekeren_na
+data:  training$worry_before and training$worry_after
 t = 4.5163, df = 14, p-value = 0.0004839
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
@@ -1007,54 +1006,54 @@ mean difference
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>daling <span class="ot">&lt;-</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> slaapstudie<span class="sc">$</span>piekeren_na</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_drop <span class="ot">&lt;-</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  sleepstudy<span class="sc">$</span>worry_before <span class="sc">-</span> sleepstudy<span class="sc">$</span>worry_after</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># C. independent t-test on the drop, and the rank-sum test next to it</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
 
-data:  daling by groep
+data:  worry_drop by group
 t = -1.6568, df = 23.486, p-value = 0.1109
-alternative hypothesis: true difference in means between group controle and group training is not equal to 0
+alternative hypothesis: true difference in means between group control and group training is not equal to 0
 95 percent confidence interval:
  -5.3932115  0.5932115
 sample estimates:
-mean in group controle mean in group training 
+ mean in group control mean in group training 
               1.066667               3.466667 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
-data:  daling by groep
+data:  worry_drop by group
 W = 80, p-value = 0.1813
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 </div>
-<p>R puts the groups in alphabetical order, ‘controle’ before ‘training’, and calculates control minus training: that is why there is a minus sign in front of the <em>t</em>. Why the <em>W</em> here is 80 and not the rank sum is explained below, in the fold-out <em>If you want to go further — three more choices R makes</em>.</p>
+<p>R puts the groups in alphabetical order, ‘control’ before ‘training’, and calculates control minus training: that is why there is a minus sign in front of the <em>t</em>. Why the <em>W</em> here is 80 and not the rank sum is explained below, in the fold-out <em>If you want to go further — three more choices R makes</em>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># D. worry group afterwards, and the chi-squared test</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>piekergroep <span class="ot">&lt;-</span> <span class="fu">cut</span>(slaapstudie<span class="sc">$</span>piekeren_na,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">47</span>, <span class="dv">56</span>, <span class="cn">Inf</span>),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"middle"</span>, <span class="st">"high"</span>))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>tabel <span class="ot">&lt;-</span> <span class="fu">table</span>(slaapstudie<span class="sc">$</span>groep, slaapstudie<span class="sc">$</span>piekergroep)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>tabel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_group <span class="ot">&lt;-</span> <span class="fu">cut</span>(sleepstudy<span class="sc">$</span>worry_after,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">47</span>, <span class="dv">56</span>, <span class="cn">Inf</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"middle"</span>, <span class="st">"high"</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">table</span>(sleepstudy<span class="sc">$</span>group, sleepstudy<span class="sc">$</span>worry_group)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          
            low middle high
-  controle   5      4    6
+  control    5      4    6
   training   5      6    4</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(tabel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(counts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pearson's Chi-squared test
 
-data:  tabel
+data:  counts
 X-squared = 0.8, df = 2, p-value = 0.6703</code></pre>
 </div>
 </div>
@@ -1064,44 +1063,44 @@ X-squared = 0.8, df = 2, p-value = 0.6703</code></pre>
 </section>
 <section id="in-r-all-the-tests-on-one-dataset" class="level1">
 <h1>In R: all the tests on one dataset</h1>
-<p>This week you do nothing new in R. You put everything you can already do in R side by side: one line for each test. Load <code>slaapstudie</code> as in week 1, and add one column, the drop (<code>daling</code>):</p>
+<p>This week you do nothing new in R. You put everything you can already do in R side by side: one line for each test. Load <code>sleepstudy</code> as in week 1, and add one column, the drop (<code>worry_drop</code>):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"sleepstudy.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>daling <span class="ot">&lt;-</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> slaapstudie<span class="sc">$</span>piekeren_na</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> slaapstudie[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> slaapstudie[slaapstudie<span class="sc">$</span>groep <span class="sc">==</span> <span class="st">"controle"</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_drop <span class="ot">&lt;-</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  sleepstudy<span class="sc">$</span>worry_before <span class="sc">-</span> sleepstudy<span class="sc">$</span>worry_after</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> sleepstudy[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"training"</span>, ]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>control <span class="ot">&lt;-</span> sleepstudy[sleepstudy<span class="sc">$</span>group <span class="sc">==</span> <span class="st">"control"</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## One group against a fixed number ----</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># z-test (sigma_x known): by hand, and pnorm() for the p</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(slaapstudie)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(slaapstudie<span class="sc">$</span>piekeren_voor) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sleepstudy)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(sleepstudy<span class="sc">$</span>worry_before) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pnorm</span>(<span class="sc">-</span><span class="fu">abs</span>(z))</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># t-test (sigma_x unknown)</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(slaapstudie<span class="sc">$</span>piekeren_voor, <span class="at">mu =</span> <span class="dv">50</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(sleepstudy<span class="sc">$</span>worry_before, <span class="at">mu =</span> <span class="dv">50</span>)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Two groups, different people ----</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># bell OK: Welch</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># bell not OK: rank-sum test</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(daling <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(worry_drop <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="do">## The same people, twice ----</span></span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co"># bell OK: paired t-test</span></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(training<span class="sc">$</span>piekeren_voor, training<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(training<span class="sc">$</span>worry_before, training<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co"># bell not OK: signed-rank test</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(training<span class="sc">$</span>piekeren_voor, training<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(training<span class="sc">$</span>worry_before, training<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Two categorical variables ----</span></span>
 <span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="co"># first chop the worry score afterwards into three groups</span></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>piekergroep <span class="ot">&lt;-</span> <span class="fu">cut</span>(slaapstudie<span class="sc">$</span>piekeren_na,</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>                               <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">47</span>, <span class="dv">56</span>, <span class="cn">Inf</span>),</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>                               <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"middle"</span>, <span class="st">"high"</span>))</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(slaapstudie<span class="sc">$</span>groep, slaapstudie<span class="sc">$</span>piekergroep))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>worry_group <span class="ot">&lt;-</span> <span class="fu">cut</span>(sleepstudy<span class="sc">$</span>worry_after,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>                              <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">47</span>, <span class="dv">56</span>, <span class="cn">Inf</span>),</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>                              <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"low"</span>, <span class="st">"middle"</span>, <span class="st">"high"</span>))</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(sleepstudy<span class="sc">$</span>group, sleepstudy<span class="sc">$</span>worry_group))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>See the pattern? A tilde <code>~</code> means <em>“by group”</em>: on the left the outcome, on the right the grouping variable. Two columns with a comma between them and <code>paired = TRUE</code> means: the same people. And <code>t.test()</code> becomes <code>wilcox.test()</code> when the bell isn’t OK. That’s all there is to it.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="What R quietly chooses for you">
@@ -1118,7 +1117,7 @@ X-squared = 0.8, df = 2, p-value = 0.6703</code></pre>
 <ul>
 <li><strong><code>t.test()</code> with two groups is Welch.</strong> That is why there are degrees of freedom with decimals (23.49), and not the smaller of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mn>1</mn></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_1 - 1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mn>2</mn></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n_2 - 1</annotation></semantics></math> that you take by hand.</li>
 <li><strong>Groups in alphabetical order.</strong> R calculates control minus training. So a minus sign in the output only says something about that order.</li>
-<li><strong>Without <code>paired = TRUE</code> it isn’t paired.</strong> Type <code>t.test(training$piekeren_voor, training$piekeren_na)</code> and forget <code>paired = TRUE</code>, and R calculates an independent test without a murmur, as if before and after came from different people. You get an answer, only to the wrong question.</li>
+<li><strong>Without <code>paired = TRUE</code> it isn’t paired.</strong> Type <code>t.test(training$worry_before, training$worry_after)</code> and forget <code>paired = TRUE</code>, and R calculates an independent test without a murmur, as if before and after came from different people. You get an answer, only to the wrong question.</li>
 </ul>
 </div>
 </div>
@@ -1136,7 +1135,7 @@ X-squared = 0.8, df = 2, p-value = 0.6703</code></pre>
 <div class="callout-body-container callout-body">
 <p>You don’t need this to choose a test. It is handy, though, when you put your own numbers next to R’s.</p>
 <ul>
-<li><strong>The <em>W</em> of <code>wilcox.test()</code> is not the rank sum.</strong> R subtracts <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><msub><mi>n</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{n_1(n_1 + 1)}{2}</annotation></semantics></math> from it, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math> the group R takes first (alphabetically: controle). For research question C the rank sum of the control group is 200, and R reports <em>W</em> = 200 − 120 = 80. That doesn’t change the <em>p</em>-value.</li>
+<li><strong>The <em>W</em> of <code>wilcox.test()</code> is not the rank sum.</strong> R subtracts <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mrow><msub><mi>n</mi><mn>1</mn></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mn>2</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{n_1(n_1 + 1)}{2}</annotation></semantics></math> from it, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math> the group R takes first (alphabetically: control). For research question C the rank sum of the control group is 200, and R reports <em>W</em> = 200 − 120 = 80. That doesn’t change the <em>p</em>-value.</li>
 <li><strong><code>wilcox.test()</code> decides for itself how it calculates.</strong> With small groups an exact <em>p</em>, with large groups an approximation with a small correction. By hand you use the approximation without the correction, so your <em>p</em> may differ in the second decimal. Your version of R counts too: since R 4.6, <code>wilcox.test()</code> also calculates exactly when there are tied scores, and an older R may give a slightly different <em>p</em>.</li>
 <li><strong><code>chisq.test()</code> on a two-by-two table</strong> uses a correction by default (Yates’s). With a table like the one in research question D, two by three, it doesn’t.</li>
 </ul>
@@ -1268,12 +1267,12 @@ X-squared = 0.8, df = 2, p-value = 0.6703</code></pre>
 <div class="callout-body-container callout-body">
 <p>A researcher types this into R, for the control group of the sleep study:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(controle<span class="sc">$</span>piekeren_voor, controle<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(control<span class="sc">$</span>worry_before, control<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
 
-data:  controle$piekeren_voor and controle$piekeren_na
+data:  control$worry_before and control$worry_after
 t = 0.86827, df = 14, p-value = 0.3999
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
@@ -1322,9 +1321,9 @@ mean difference
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use <code>slaapstudie</code>. For each question, first choose the test with the table from <em>One table, seven tests</em>, and then run it in R.</p>
+<p>Use <code>sleepstudy</code>. For each question, first choose the test with the table from <em>One table, seven tests</em>, and then run it in R.</p>
 <ol type="a">
-<li>Load the data and make the column <code>daling</code>, as above.</li>
+<li>Load the data and make the column <code>worry_drop</code>, as above.</li>
 <li>Do the 30 participants still worry differently from the general population (50) on average <strong>after</strong> the study? Do it with the <em>z</em>-test (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="normal">σ</mi><mi>x</mi></msub><annotation encoding="application/x-tex">\sigma_x</annotation></semantics></math> = 10) and with the <em>t</em>-test, and make a histogram to go with it.</li>
 <li>Do the training and the control group already differ in worry score <strong>before</strong> the training?</li>
 <li>Do c again, but now as if the bell isn’t OK.</li>
@@ -1347,8 +1346,8 @@ mean difference
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## b. worrying afterwards against 50 ----</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(slaapstudie)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(slaapstudie<span class="sc">$</span>piekeren_na) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sleepstudy)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> (<span class="fu">mean</span>(sleepstudy<span class="sc">$</span>worry_after) <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> (<span class="dv">10</span> <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>z</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.040673</code></pre>
@@ -1357,12 +1356,12 @@ mean difference
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2980274</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(slaapstudie<span class="sc">$</span>piekeren_na, <span class="at">mu =</span> <span class="dv">50</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(sleepstudy<span class="sc">$</span>worry_after, <span class="at">mu =</span> <span class="dv">50</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     One Sample t-test
 
-data:  slaapstudie$piekeren_na
+data:  sleepstudy$worry_after
 t = 1.139, df = 29, p-value = 0.264
 alternative hypothesis: true mean is not equal to 50
 95 percent confidence interval:
@@ -1371,7 +1370,7 @@ sample estimates:
 mean of x 
      51.9 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(slaapstudie<span class="sc">$</span>piekeren_na, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"worry score afterwards"</span>, <span class="at">ylab =</span> <span class="st">"count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sleepstudy<span class="sc">$</span>worry_after, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"worry score afterwards"</span>, <span class="at">ylab =</span> <span class="st">"count"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-hist-na" class="quarto-float quarto-figure quarto-figure-center anchored" alt="A histogram of the worry scores afterwards of the 30 participants, in bins of 5 points from 30 to 70. The tallest bar is at 55 to 60; on both sides the bars get lower, with no outliers standing apart.">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1391,36 +1390,36 @@ Figure&nbsp;2: Worry scores afterwards, all 30 participants (answer 7.4b).
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## c. and d. the groups before the training ----</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(piekeren_voor <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(worry_before <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
 
-data:  piekeren_voor by groep
+data:  worry_before by group
 t = -0.32817, df = 27.93, p-value = 0.7452
-alternative hypothesis: true difference in means between group controle and group training is not equal to 0
+alternative hypothesis: true difference in means between group control and group training is not equal to 0
 95 percent confidence interval:
  -8.208213  5.941546
 sample estimates:
-mean in group controle mean in group training 
+ mean in group control mean in group training 
               53.60000               54.73333 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(piekeren_voor <span class="sc">~</span> groep, <span class="at">data =</span> slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(worry_before <span class="sc">~</span> group, <span class="at">data =</span> sleepstudy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon rank sum exact test
 
-data:  piekeren_voor by groep
+data:  worry_before by group
 W = 109, p-value = 0.8942
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">## e. and f. the control group, before against after ----</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(controle<span class="sc">$</span>piekeren_voor, controle<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(control<span class="sc">$</span>worry_before, control<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
 
-data:  controle$piekeren_voor and controle$piekeren_na
+data:  control$worry_before and control$worry_after
 t = 0.86827, df = 14, p-value = 0.3999
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
@@ -1429,12 +1428,12 @@ sample estimates:
 mean difference 
        1.066667 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(controle<span class="sc">$</span>piekeren_voor, controle<span class="sc">$</span>piekeren_na, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(control<span class="sc">$</span>worry_before, control<span class="sc">$</span>worry_after, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon signed rank exact test
 
-data:  controle$piekeren_voor and controle$piekeren_na
+data:  control$worry_before and control$worry_after
 V = 81, p-value = 0.2399
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
@@ -3254,4 +3253,4 @@ V = \sqrt{\dfrac{\chi^2}{n \, (k - 1)}} = \sqrt{\dfrac{0.80}{30 \times 1}} = .16
 
 
 </body></html>
-<!-- countcamp-oefenboek inferential-statistics lab-commit=6126c6f8c5460d137dbfbcae409799a661ba230c geleverd=2026-11-22T16:06:01 -->
+<!-- countcamp-oefenboek inferential-statistics lab-commit=c2f6b34fc2a7bdf21645df1dcbbd1e2273553df0 geleverd=2026-11-23T11:10:20 -->

@@ -1960,33 +1960,32 @@ z = \dfrac{38 - 30}{5} = 1.60
 </div>
 </div>
 <p>The same number as via <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi><mo>=</mo><mn>1.50</mn></mrow><annotation encoding="application/x-tex">z = 1.50</annotation></semantics></math>. A common mistake is to do both at once: <code>pnorm(1.5, mean = 50, sd = 10)</code>. Then you are asking R about a worry score of 1.5, and you get a number close to 0. R puts it on your screen as <code>6.173074e-07</code>. That <code>e-07</code> means: move the point seven places to the left. Written out, it is <code>0.0000006173074</code>: six zeros between the point and the 6, and the 6 itself in the seventh place. For someone one and a half rulers above the middle, that is suspiciously small: a sign that you asked R something other than what you meant.</p>
-<p><strong>A whole column at once.</strong> The practice dataset <code>slaapstudie</code> (Dutch for <em>sleep study</em>) comes with you through the whole book: 30 poor sleepers, with, among other things, their worry score before a sleep training (<code>piekeren_voor</code>: <em>piekeren</em> is worrying, <em>voor</em> is before). Download <a href="../data/slaapstudie.RData">slaapstudie.RData</a> and put it in your project folder. (No project yet? In RStudio: <em>File &gt; New Project…</em>, then <em>New Directory &gt; New Project</em>. The folder you choose there is your project folder.) Then:</p>
+<p><strong>A whole column at once.</strong> The practice dataset <code>sleepstudy</code> comes with you through the whole book: 30 poor sleepers, with, among other things, their worry score before a sleep training (<code>worry_before</code>). Download <a href="../data/sleepstudy.RData">sleepstudy.RData</a> and put it in your project folder. (No project yet? In RStudio: <em>File &gt; New Project…</em>, then <em>New Directory &gt; New Project</em>. The folder you choose there is your project folder.) Then:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Load the data ----</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"slaapstudie.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"sleepstudy.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This is how you convert that whole column into <em>z</em>-scores relative to the general population. Two signs you need for it:</p>
 <ul>
-<li><code>slaapstudie$piekeren_voor</code> takes one column out of the table, by its name;</li>
-<li><code>&lt;-</code> stores what is on the right under the name on the left, here as a new column <code>z_voor</code> (<em>z before</em>).</li>
+<li><code>sleepstudy$worry_before</code> takes one column out of the table, by its name;</li>
+<li><code>&lt;-</code> stores what is on the right under the name on the left, here as a new column <code>z_before</code>.</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># z per person: (score - 50) / 10</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>slaapstudie<span class="sc">$</span>z_voor <span class="ot">&lt;-</span> (slaapstudie<span class="sc">$</span>piekeren_voor <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> <span class="dv">10</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sleepstudy<span class="sc">$</span>z_before <span class="ot">&lt;-</span> (sleepstudy<span class="sc">$</span>worry_before <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">/</span> <span class="dv">10</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the first six rows, with the new column</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(slaapstudie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleepstudy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  id    groep leeftijd piekeren_voor piekeren_na z_voor
-1  1 training       19            54          51    0.4
-2  2 controle       24            49          45   -0.1
-3  3 training       19            48          47   -0.2
-4  4 training       26            54          55    0.4
-5  5 controle       34            61          58    1.1
-6  6 controle       21            54          56    0.4</code></pre>
+<pre><code>  id    group age worry_before worry_after z_before
+1  1 training  19           54          51      0.4
+2  2  control  24           49          45     -0.1
+3  3 training  19           48          47     -0.2
+4  4 training  26           54          55      0.4
+5  5  control  34           61          58      1.1
+6  6  control  21           54          56      0.4</code></pre>
 </div>
 </div>
-<p>The other columns are Dutch too: <code>groep</code> is the group (<code>training</code>, or <code>controle</code> for the control group), <code>leeftijd</code> is age, and <code>piekeren_na</code> is the worry score after the training.</p>
 <p>Check the first row: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>54</mn><mo>−</mo><mn>50</mn></mrow><mn>10</mn></mfrac></mstyle><mo>=</mo><mn>0.4</mn></mrow><annotation encoding="application/x-tex">\dfrac{54 - 50}{10} = 0.4</annotation></semantics></math>. In exercise 0.6 you carry on with that column.</p>
 <p><strong>A round for tomorrow.</strong> The rounds on this page have fixed numbers. If you want another round tomorrow, with numbers you don’t know yet, let R give them to you. <code>sample(1:20, 5)</code> draws five whole numbers between 1 and 20, different ones every time:</p>
 <div class="cell">
@@ -2765,11 +2764,11 @@ Figure&nbsp;15: This is what your drawing might look like: the same bell four ti
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use <code>slaapstudie</code> and the column <code>z_voor</code> from <em>In R: probabilities from the bell</em>.</p>
+<p>Use <code>sleepstudy</code> and the column <code>z_before</code> from <em>In R: probabilities from the bell</em>.</p>
 <ol type="a">
 <li>How many of the 30 poor sleepers have a <em>z</em> above 1.645?</li>
 <li>How many would you expect if they were 30 random people from the general population?</li>
-<li>What is the mean of <code>z_voor</code>? Why isn’t it 0?</li>
+<li>What is the mean of <code>z_before</code>? Why isn’t it 0?</li>
 </ol>
 </div>
 </div>
@@ -2787,7 +2786,7 @@ Figure&nbsp;15: This is what your drawing might look like: the same bell four ti
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a. how many above 1.645?</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(slaapstudie<span class="sc">$</span>z_voor <span class="sc">&gt;</span> <span class="fl">1.645</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(sleepstudy<span class="sc">$</span>z_before <span class="sc">&gt;</span> <span class="fl">1.645</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4</code></pre>
 </div>
@@ -2797,7 +2796,7 @@ Figure&nbsp;15: This is what your drawing might look like: the same bell four ti
 <pre><code>[1] 1.5</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># c. the mean of z</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(slaapstudie<span class="sc">$</span>z_voor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sleepstudy<span class="sc">$</span>z_before)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4166667</code></pre>
 </div>
@@ -4162,4 +4161,4 @@ Figure&nbsp;15: This is what your drawing might look like: the same bell four ti
 
 
 </body></html>
-<!-- countcamp-oefenboek inferential-statistics lab-commit=6126c6f8c5460d137dbfbcae409799a661ba230c geleverd=2026-11-22T16:06:01 -->
+<!-- countcamp-oefenboek inferential-statistics lab-commit=c2f6b34fc2a7bdf21645df1dcbbd1e2273553df0 geleverd=2026-11-23T11:10:20 -->
