@@ -306,19 +306,20 @@ def main() -> int:
         for o in som_fout:
             print('  ' + o)
 
-    print('verboden woord in zicht (%s): %d keer' % (VERBODEN_ZICHTBAAR.pattern, len(woorden)))
+    print('verboden woord in zicht (werknotitie / work note / working note): %d keer' % len(woorden))
+    if woorden:
+        print('\nFOUT -- %d keer een verboden woord in zicht. Herstellen in de BRON, niet in '
+              '_site/: een .qmd van de site, of in het lab (een knoplabel staat in de afterbody '
+              'van het boek). Een interne naam (bestand, klasse, scriptnaam) mag blijven; '
+              'zie de kop van _tools/commentaarwacht.py.' % len(woorden))
     if vondsten or zoekindex:
         print('\nFOUT -- %d commentaar/commentaren op %d bladzij(den), %d in een zoekindex. '
               'Herstellen: python3 _tools/commentaar_weg.py --site <map> (of gewoon opnieuw '
               'quarto render; dat draait hem vanzelf). Moet er een bij op de toegestane lijst, '
               'zet hem dan in _tools/commentaarregel.py, met wie hem terugleest.'
               % (len(vondsten), tot[1], len(zoekindex)))
+        return 1
     if woorden:
-        print('\nFOUT -- %d keer een verboden woord in zicht. Herstellen in de BRON, niet in '
-              '_site/: een .qmd van de site, of in het lab (een knoplabel staat in de afterbody '
-              'van het boek). Een interne naam (bestand, klasse, scriptnaam) mag blijven; '
-              'zie de kop van _tools/commentaarwacht.py.' % len(woorden))
-    if vondsten or zoekindex or woorden:
         return 1
     if onleesbaar or som_fout:
         print('\nKON NIET (HELEMAAL) KIJKEN -- zie hierboven.')

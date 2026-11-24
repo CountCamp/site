@@ -82,6 +82,34 @@ mutatie "wachter: onleesbaar telt als schoon" commentaarwacht.py \
   "    if onleesbaar or som_fout:" "    if False:"
 mutatie "wachter toont de hele tekst in plaats van 80 tekens" commentaarregel.py \
   "def kort(c: str, breed: int = 80) -> str:" "def kort(c: str, breed: int = 800) -> str:"
+# Het woord dat weg is (24-11-2026): deel E van de toets moet elk van deze merken.
+mutatie "woord: wachter keurt een verboden woord niet af" commentaarwacht.py \
+  "    if woorden:
+        return 1" "    if False:
+        return 1"
+mutatie "woord: knoplabel in een script niet gelezen" commentaarwacht.py \
+  "                if (any(ch.isspace() for ch in s) or '✎' in s) and VERBODEN_ZICHTBAAR.search(s):" \
+  "                if False:"
+mutatie "woord: elke scriptnaam telt (cc-werknotities wordt een vondst)" commentaarwacht.py \
+  "                if (any(ch.isspace() for ch in s) or '✎' in s) and VERBODEN_ZICHTBAAR.search(s):" \
+  "                if VERBODEN_ZICHTBAAR.search(s):"
+mutatie "woord: commentaar in een script telt mee" commentaarwacht.py \
+  "        elif js.startswith('/*', i):" "        elif False:"
+mutatie "woord: attributen niet gelezen" commentaarwacht.py \
+  "        for a in _ZICHTBARE_ATTR.finditer(m.group(0)):" "        for a in []:"
+mutatie "woord: CSS content niet gelezen" commentaarwacht.py \
+  "            for k in _CSS_CONTENT.finditer(css):" "            for k in []:"
+mutatie "woord: tekst in de bladzij niet gelezen" commentaarwacht.py \
+  "        if VERBODEN_ZICHTBAAR.search(htmlmod.unescape(r)):" "        if False:"
+mutatie "woord: search.json niet op het woord gelezen" commentaarwacht.py \
+  "                    if m and waar.rsplit('.', 1)[-1] not in ZOEKINDEX_INTERN:" "                    if False:"
+mutatie "woord: href in search.json telt ook" commentaarwacht.py \
+  "ZOEKINDEX_INTERN = {'href', 'objectID'}" "ZOEKINDEX_INTERN = set()"
+mutatie "woord: alleen met spatie, niet met streepje" commentaarwacht.py \
+  "VERBODEN_ZICHTBAAR = re.compile(r'werk[\s\-­]*notitie|" "VERBODEN_ZICHTBAAR = re.compile(r'werk[\s]*notitie|"
+mutatie "woord: alleen een gewone spatie tussen working en notes (&nbsp; glipt erdoor)" commentaarwacht.py \
+  "VERBODEN_ZICHTBAAR = re.compile(r'werk[\s\-­]*notitie|work(?:ing)?[\s\-­]+notes?\b', re.I)" \
+  "VERBODEN_ZICHTBAAR = re.compile(r'werk[\s\-­]*notitie|work(?:ing)?[ \-­]+notes?\b', re.I)"
 
 # De poort in naar_buiten.sh: een kreupele kopie via NAAR_BUITEN (deel D leest die).
 poort() {  # $1 = naam, $2 = oud, $3 = nieuw
