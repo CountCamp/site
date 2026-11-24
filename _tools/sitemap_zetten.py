@@ -202,7 +202,10 @@ def main() -> int:
     for rel, tekst in bladen.items():
         doel = R.adres(anders.get(rel, rel))
         bestaand = R.canonicals(tekst)
-        vreemd = [h for h in bestaand if not R.gelijk_adres(h, doel)]
+        # Naar zichzelf of naar het doel uit de tabel: dat vervangt de bouw. Al het
+        # andere zegt iets wat de site niet besloot.
+        vreemd = [h for h in bestaand
+                  if not (R.gelijk_adres(h, doel) or R.gelijk_adres(h, R.adres(rel)))]
         if vreemd:
             weiger.append('%s draagt al een canonical naar %s, en verwacht is %s. Staat dat '
                           'zo in de bron, zet de bladzij dan in canoniek_anders.tsv of haal '
