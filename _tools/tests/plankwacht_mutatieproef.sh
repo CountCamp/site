@@ -142,7 +142,11 @@ proef "alleen het woordental telt (drie korte zinnen mogen)" \
 proef "alleen het zinnental telt (één lange lijstzin mag)" \
   'if n_zinnen <= MAX_ZINNEN and woorden <= MAX_WOORDEN:|||if n_zinnen <= MAX_ZINNEN:'
 proef "de cursieve datum wordt niet herkend (de vorm van voor 24-11)" \
-  'r"\bBijgewerkt\s+(\d{1,2})\s+([a-zA-Zé]+)\s+(\d{4})"|||r"\*\*Bijgewerkt\s+(\d{1,2})\s+([a-zA-Zé]+)\s+(\d{4})\*\*"'
+  'r"\bBijgewerkt[\s:,]+(\d{1,2})|||r"\*\*Bijgewerkt\s+(\d{1,2})&&&(\d{4})", re.IGNORECASE
+)|||(\d{4})\*\*", re.IGNORECASE
+)'
+proef "een dubbele punt achter Bijgewerkt verbergt de datum" \
+  'Bijgewerkt[\s:,]+(\d{1,2})|||Bijgewerkt\s+(\d{1,2})'
 proef "een commentaar telt als bijwerkregel" \
   'tekst = zonder_voorwerk(zonder_commentaar(f.read()))|||tekst = zonder_voorwerk(f.read())'
 proef "de YAML-kop telt als bijwerkregel" \

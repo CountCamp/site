@@ -134,9 +134,10 @@ MAANDEN = {
 # november 2026.*". Zonder eis aan de opmaak eromheen: tot 24-11 zocht deze
 # regel alleen de vette vorm, en de cursieve vorm die Ben die dag vroeg, zette
 # de datumcontrole van OZP 1 stil uit -- gemeten: 5 beloftes werden er 4, en
-# de wachter bleef groen. Een andere opmaak mag een belofte niet onzichtbaar maken.
+# de wachter bleef groen. Een andere opmaak mag een belofte niet onzichtbaar maken;
+# daarom mag er ook een dubbele punt of komma achter "Bijgewerkt" staan.
 RE_BIJGEWERKT = re.compile(
-    r"\bBijgewerkt\s+(\d{1,2})\s+([a-zA-Zé]+)\s+(\d{4})", re.IGNORECASE
+    r"\bBijgewerkt[\s:,]+(\d{1,2})\s+([a-zA-Zé]+)\s+(\d{4})", re.IGNORECASE
 )
 
 # "**Vier van de zeven thema's staan online:**" -- het sterretje mag ook ontbreken.

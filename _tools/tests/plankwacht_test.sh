@@ -651,6 +651,9 @@ zaak "18b alleen de datum, cursief, blijft stil en de datum telt mee" 0 \
 bijwerk_plank "$T18" "*Bijgewerkt 10 september 2026.*"
 zaak "18c een verouderde cursieve datum vuurt" 1 \
      "is voor het laatst veranderd op 2026-11-23" "$T18"
+bijwerk_plank "$T18" "*Bijgewerkt: 10 september 2026.*"
+zaak "18c2 ook met een dubbele punt achter Bijgewerkt" 1 \
+     "is voor het laatst veranderd op 2026-11-23" "$T18"
 bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.* Nieuw: een speeltje waarmee je zelf een steekproef trekt."
 zaak "18d de datum plus één korte zin blijft stil" 0 \
      "bijwerkregels: 1 gevonden op 4 bladzijde(n)" "$T18"
