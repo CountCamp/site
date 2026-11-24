@@ -311,7 +311,9 @@ def main() -> int:
         print('\nFOUT -- %d keer een verboden woord in zicht. Herstellen in de BRON, niet in '
               '_site/: een .qmd van de site, of in het lab (een knoplabel staat in de afterbody '
               'van het boek). Een interne naam (bestand, klasse, scriptnaam) mag blijven; '
-              'zie de kop van _tools/commentaarwacht.py.' % len(woorden))
+              'zie de kop van _tools/commentaarwacht.py. Staat de vondst onder en/ en is de '
+              'en/*.qmd al schoon, dan is de gecommitte Engelse bouw ouder dan zijn bron: '
+              'bash _tools/publiceer_en.sh bouwt hem opnieuw.' % len(woorden))
     if vondsten or zoekindex:
         print('\nFOUT -- %d commentaar/commentaren op %d bladzij(den), %d in een zoekindex. '
               'Herstellen: python3 _tools/commentaar_weg.py --site <map> (of gewoon opnieuw '
