@@ -681,12 +681,15 @@ bijwerk_plank "$T18" "**Eerste versie, 19 november 2026.** Wat er al staat: de *
 zaak "18j 'Eerste versie, <datum>' met een opsomming vuurt ook" 1 \
      "telt 33 woorden en 2 zin(nen)" "$T18"
 # 18k: de Engelse plank, met de Amerikaanse datumvorm
+# (en met October: november, september, december en april zijn ook Nederlandse
+#  maanden, dus met November meet deze zaak niet of de Engelse maand herkend wordt --
+#  de mutatieproef van 24-11 liet dat zien)
 bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.*"
 spiegel_schrijven "$T18"
 python3 - "$T18/en/workbooks/index.qmd" <<'PY'
 import sys
 p = sys.argv[1]; s = open(p, encoding="utf-8").read()
-s = s.replace('{hreflang="nl"}\n:::', '{hreflang="nl"}\n**Updated November 23, 2026** — New: the *t*-tests. Also the rank tests. And Kruskal-Wallis.\n:::', 1)
+s = s.replace('{hreflang="nl"}\n:::', '{hreflang="nl"}\n**Updated October 23, 2026** — New: the *t*-tests. Also the rank tests. And Kruskal-Wallis.\n:::', 1)
 open(p, "w", encoding="utf-8").write(s)
 PY
 SPIEGEL_LATEN=1 zaak "18k een lange bijwerkregel op de Engelse plank vuurt" 1 \
@@ -695,6 +698,9 @@ SPIEGEL_LATEN=1 zaak "18k een lange bijwerkregel op de Engelse plank vuurt" 1 \
 spiegel_schrijven "$T18"
 printf '\n**Bijgewerkt 23 november 2026** — Nieuw thema. Nieuwe bijlage.\n' >> "$T18/index.qmd"
 SPIEGEL_LATEN=1 zaak "18l een lange bijwerkregel op de thuispagina vuurt" 1 "FOUT  index.qmd (regel" "$T18"
+spiegel_schrijven "$T18"
+printf '\n**Updated October 23, 2026** — New theme. New appendix.\n' >> "$T18/en/index.qmd"
+SPIEGEL_LATEN=1 zaak "18l2 en op de Engelse thuispagina ook" 1 "FOUT  en/index.qmd (regel" "$T18"
 # 18m: de YAML-kop van bijwerk_plank draagt een lange bijwerkregel als notitie
 # (een #-regel). Elke zaak hierboven die stil bleef, bewees al dat die niet
 # telt; deze zegt het hardop, met de telling van alleen de ene echte regel.
