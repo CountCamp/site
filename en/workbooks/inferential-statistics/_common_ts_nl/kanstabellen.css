@@ -1,0 +1,131 @@
+/* De kanstabellen achterin (08_tabellen/), gemaakt door _common_ts/R/kanstabellen.R.
+
+   OP EEN TELEFOON. Een tabel van dertien kolommen is breder dan 390 px. De
+   bladzijde schuift daarom nooit opzij: alleen de doos (.kt-doos) schuift, in
+   twee richtingen. Daarbinnen blijven de kolomkoppen boven staan, de eerste
+   kolom (z of df) links, en bij tabel D de rij C onderaan -- zo zie je bij elke
+   cel waar hij bij hoort. Kleven binnen een doos die zelf schuift kan alleen als
+   die doos een hoogte heeft; vandaar max-height.
+
+   OP PAPIER. Geen doos, geen kleven, en elke tabel op een nieuwe bladzijde
+   (.kt-blad). De A4-pdf's naast de bladzijden zijn het eigenlijke drukwerk; dit is
+   voor wie gewoon op "afdrukken" drukt. */
+
+.kt-doos {
+  max-width: 100%;
+  max-height: 78vh;
+  overflow: auto;
+  border: 1px solid #d9d9d9;
+  margin: 0.4rem 0 1.4rem 0;
+  background: #ffffff;
+}
+.kt-doos:focus { outline: 2px solid #9fb3d1; outline-offset: 2px; }
+
+table.kanstabel {
+  border-collapse: separate;      /* kleven werkt alleen netjes met separate */
+  border-spacing: 0;
+  /* Niet de Georgia van de lopende tekst: die heeft alleen cijfers in oude stijl
+     (0.741 danst op en neer), en in een opzoektabel lees je dan sneller een rij
+     mis. De koppenletter van het boek heeft rechte, even brede cijfers. */
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: 0.86rem;
+  line-height: 1.3;
+  margin: 0;
+  width: max-content;
+  min-width: 100%;
+  color: #222222;
+}
+.kanstabel caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: 600;
+  color: #33558b;
+  padding: 0.45rem 0.6rem 0.35rem 0.6rem;
+  /* Mag afbreken, en niet breder dan het scherm: met nowrap werd het bijschrift
+     van tabel E op een telefoon afgekapt bij "(df" (nakijker, 16-11-2026). */
+  white-space: normal;
+  max-width: 88vw;
+}
+.kanstabel th, .kanstabel td {
+  padding: 0.2rem 0.55rem;
+  text-align: center;
+  white-space: nowrap;
+  background: #ffffff;
+  border: 0;
+  box-sizing: border-box;
+}
+.kanstabel thead th { font-weight: 600; border-bottom: 1px solid #222222; }
+.kanstabel thead tr:first-child th { border-top: 2px solid #222222; }
+.kanstabel thead .kt-spanwijdte { font-weight: 400; border-bottom: 1px solid #bbbbbb; }
+.kanstabel tbody th { font-weight: 600; }
+.kanstabel tbody tr:last-child > * { border-bottom: 2px solid #222222; }
+
+/* de banden van vijf rijen, zoals Moore & McCabe */
+.kanstabel tr.kt-band > * { background: #eef3f8; }
+
+/* kleven: de laatste kopregel boven, de eerste kolom links */
+.kanstabel thead tr:last-child th { position: sticky; top: 0; z-index: 3; }
+.kanstabel tbody th:first-child,
+.kanstabel tfoot th:first-child,
+.kanstabel thead th:first-child { position: sticky; left: 0; z-index: 2; }
+.kanstabel thead tr:last-child th:first-child { z-index: 4; }
+.kanstabel tbody th:first-child, .kanstabel thead th:first-child { border-right: 1px solid #bbbbbb; }
+
+/* tabel D: de rij z* en de rij C */
+.kanstabel tr.kt-zster > * { border-top: 1px solid #bbbbbb; }
+.kanstabel td.kt-heilig { font-weight: 700; }
+.kanstabel tfoot td, .kanstabel tfoot th {
+  position: sticky; bottom: 0; z-index: 3;
+  background: #f4f6f9; border-top: 1px solid #222222; border-bottom: 2px solid #222222;
+}
+.kanstabel tfoot th:first-child { z-index: 4; }
+
+/* tabel E: twee kolommen links (noemer en p) blijven staan */
+.kanstabel.kt-e th:first-child { min-width: 4.2em; width: 4.2em; }
+.kanstabel.kt-e tbody th.kt-p, .kanstabel.kt-e thead tr:last-child th:nth-child(2) {
+  position: sticky; left: 4.2em; z-index: 2; border-right: 1px solid #bbbbbb;
+  font-weight: 400; color: #444444;
+}
+.kanstabel.kt-e thead tr:last-child th:nth-child(2) { z-index: 4; }
+.kanstabel.kt-e thead tr:first-child th:nth-child(2) { position: sticky; left: 4.2em; z-index: 2; }
+.kanstabel.kt-e tbody th[rowspan] { vertical-align: top; }
+.kanstabel.kt-e tr.kt-blok-begin > * { border-top: 1px solid #bbbbbb; }
+.kanstabel .kt-klein { font-weight: 400; font-size: 0.78em; color: #555555; }
+
+/* de kruisdraad: tik een cel aan, en zijn rij en kolom lichten op */
+.kanstabel tr.kt-rij-aan > *, .kanstabel .kt-kol-aan { background: #fbe8cf !important; }
+.kanstabel td.kt-cel-aan { outline: 2px solid #33425a; outline-offset: -2px; font-weight: 700; }
+.kanstabel td { cursor: pointer; }
+
+/* de leesstrook boven tabel A */
+.kt-strook {
+  font-size: 0.95rem; margin: 0.2rem 0 0.8rem 0;
+  padding: 0.45rem 0.7rem; background: #f4f6f9; border-left: 3px solid #33558b;
+}
+/* De drie stukken staan in één alinea (pandoc zet ze in een <p>); die alinea
+   moet ze uit elkaar zetten, anders liep "links van z" door in "rechts = 1 − cel"
+   (telefoonfoto en een testlezer, 16-11-2026). */
+.kt-strook > p { display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem; margin: 0; }
+.kt-strook > p > span { white-space: nowrap; }
+
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  #quarto-sidebar, #quarto-margin-sidebar, #quarto-header, nav.page-navigation,
+  footer.footer, .nav-footer, #quarto-back-to-top, .kt-scherm { display: none !important; }
+  #quarto-content, main.content { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+  .kt-blad { break-before: page; }
+  .kt-doos { max-height: none; overflow: visible; border: 0; margin: 0; }
+  /* Kop, plaatje en tabel samen op één A4: eerst bleven kop en plaatje alleen
+     achter op de bladzijde ervoor (Chrome-afdruk van tabel D, 16-11-2026). */
+  section.kt-blad h1, section.kt-blad h2 { margin-top: 0; break-after: avoid; }
+  section.kt-blad img { max-height: 34mm; width: auto; }
+  section.kt-blad .cell, section.kt-blad figure { margin: 0 0 1mm 0; break-after: avoid; }
+  table.kanstabel { width: 100%; font-size: 8pt; line-height: 1.12; }
+  .kanstabel caption { padding: 0 0 1mm 0; }
+  .kanstabel th, .kanstabel td { position: static !important; padding: 0.25mm 1mm; }
+  .kanstabel tr { break-inside: avoid; }
+  .kanstabel.kt-a, .kanstabel.kt-d, .kanstabel.kt-f { break-inside: avoid; }
+  .kanstabel tr.kt-rij-aan > *, .kanstabel .kt-kol-aan { background: inherit !important; }
+  .kanstabel tr.kt-band > * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
