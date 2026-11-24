@@ -61,7 +61,6 @@ HIER = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HIER)
 sys.path.insert(0, HIER)
 from tellerregel import tellerstand  # noqa: E402
-from sitemapregel import sitemap_zonder_engels  # noqa: E402
 # De tabel en de stukken van de taalwissel lezen we op één plek, zodat keuring,
 # filter en wachtrij nooit twee lezingen van dezelfde tabel hebben.
 from taalonderdelen import paren, vol_adres, stuk, pas_toe_los, BASIS  # noqa: E402
@@ -1085,6 +1084,10 @@ def na_manifest(manifest: str = MANIFEST) -> list[str]:
 
 # ---------------------------------------------------- foto / vergelijk ----
 def cmd_foto(a) -> int:
+    # Hier en niet bovenaan: alleen foto heeft hem nodig, en twee toetsen
+    # (en_na_manifest_test.sh, en_werkboek_lab_test.py) zetten en_bouw.py los neer
+    # met alleen tellerregel.py en taalonderdelen.py ernaast.
+    from sitemapregel import sitemap_zonder_engels
     site = os.path.abspath(a.site)
     if not os.path.isfile(os.path.join(site, "index.html")):
         zeg(f"FOUT: {site} is geen gebouwde site — kon niet kijken")
