@@ -295,6 +295,100 @@ zaak "32 lege map: kon niet kijken" 3 wacht --echt --site "$M/leeg"
 zaak "33 map bestaat niet: kon niet kijken" 3 wacht --echt --site "$M/bestaat_niet"
 zaak "34 bouwstap in lege map: niets gezien" 3 zetten --echt --site "$M/leeg"
 
+echo "== de bedrading: hangt hij ook ergens?"
+# Een wachter die bestaat maar nergens hangt, is de faalvorm van akkoord_hek.py,
+# dat zes dagen nergens bedraad stond.
+waar() {  # $1 = naam, $2.. = commando dat 0 moet geven
+  local naam="$1"; shift
+  getoetst=$((getoetst + 1))
+  if "$@" > "$M/uit" 2>&1; then echo "  ok    $naam"
+  else echo "  ZAKT  $naam"; sed 's/^/          /' "$M/uit"; gezakt=$((gezakt + 1)); fi
+}
+waar "35 _quarto.yml: sitemap_zetten.py als laatste post-render-stap" python3 - <<'PY'
+import re, sys
+t = open("_quarto.yml", encoding="utf-8").read()
+m = re.search(r"^  post-render:\n((?:    - .+\n)+)", t, re.M)
+stappen = re.findall(r"- (\S+)", m.group(1)) if m else []
+if not stappen or stappen[-1] != "_tools/sitemap_zetten.py":
+    sys.exit("post-render: %s" % stappen)
+PY
+waar "36 publish.yml: sitemapwacht --echt na Render, vóór Publish" python3 - <<'PY'
+import re, sys
+t = open(".github/workflows/publish.yml", encoding="utf-8").read()
+namen = re.findall(r"^      - name: (.+)$", t, re.M)
+stap = {n: i for i, n in enumerate(namen)}
+pub = next((i for n, i in stap.items() if n.startswith("Publish")), None)
+if "Render" not in stap or "Sitemapwacht" not in stap or pub is None:
+    sys.exit("stappen in publish.yml: %s" % namen)
+blok = t.split("- name: Sitemapwacht", 1)[1].split("- name:", 1)[0]
+if "python3 _tools/sitemapwacht.py --echt" not in blok:
+    sys.exit("de stap Sitemapwacht draait de wachter niet met --echt")
+if not (stap["Render"] < stap["Sitemapwacht"] < pub):
+    sys.exit("volgorde klopt niet: %s" % namen)
+PY
+waar "37 proefdruk.yml: sitemapwacht --spook vóór het neerzetten" python3 - <<'PY'
+import sys
+t = open(".github/workflows/proefdruk.yml", encoding="utf-8").read()
+w, n = t.find("python3 _tools/sitemapwacht.py --spook"), t.find("- name: Neerzetten")
+if w < 0 or n < 0 or w > n:
+    sys.exit("wachter op %d, neerzetten op %d" % (w, n))
+PY
+waar "38 naar_buiten.sh: --productie na de bouw blokkerend en vóór de push, --lokaal meldend" \
+  python3 - "${NAAR_BUITEN:-_tools/naar_buiten.sh}" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+def tak(naam):
+    m = re.search(r"^%s\)\n(.*?)^  ;;" % re.escape(naam), s, re.S | re.M)
+    return m.group(1) if m else ""
+prod, lok = tak("--productie"), tak("--lokaal")
+BOUW = "_tools/schone_bouw.py --uit _site -- render"
+fout = []
+r, a, b = prod.find(BOUW), prod.find("gebouwde_sitemap_nakijken echt blokkerend"), prod.find("doe git push origin main")
+if a < 0 or r < 0 or b < 0 or not (r < a < b):
+    fout.append("--productie: bouw op %d, wacht op %d, push op %d" % (r, a, b))
+elif "exit 1" not in prod[a:prod.find("\n", a)]:
+    fout.append("--productie stopt niet als de sitemappoort rood is")
+r, a = lok.find(BOUW), lok.find("gebouwde_sitemap_nakijken spook melden")
+if a < 0 or r < 0 or a < r:
+    fout.append("--lokaal roept de sitemappoort niet (spook, meldend) na de bouw aan")
+romp = s.split("gebouwde_sitemap_nakijken() {", 1)[-1].split("\n}\n", 1)[0]
+if 'if [ "$streng" = blokkerend ]; then return 1; fi' not in romp:
+    fout.append("de sitemappoort houdt nooit tegen")
+if 'sitemapwacht.py" "--$profiel"' not in romp:
+    fout.append("de sitemappoort draait de wachter niet met het profiel")
+sys.exit("; ".join(fout) if fout else 0)
+PY
+
+# De functie zelf, letterlijk uit naar_buiten.sh, op de bomen van hierboven.
+POORT="$(sed -n '/^gebouwde_sitemap_nakijken() {/,/^}/p' "${NAAR_BUITEN:-_tools/naar_buiten.sh}")"
+poort() {  # $1 = naam, $2 = verwachte afloopcode, $3 = site, $4 = echt|spook, $5 = blokkerend|melden
+  getoetst=$((getoetst + 1))
+  local r="$M/poortrepo"
+  rm -rf "$r"; mkdir -p "$r"; cp -R "$G/_tools" "$r/_tools"; cp -R "$3" "$r/_site"
+  ( HIER="$r"; eval "$POORT"; gebouwde_sitemap_nakijken "$4" "$5" ) > "$M/uit" 2>&1
+  local echt=$?
+  if [ "$echt" = "$2" ]; then echo "  ok    $1 (afloopcode $echt)"
+  else echo "  ZAKT  $1 — verwacht $2, kreeg $echt"; sed 's/^/          /' "$M/uit"; gezakt=$((gezakt + 1)); fi
+}
+poort "39 poort: de goede bouw laat door" 0 "$M/schoon" echt blokkerend
+muteer "$M/echt/sitemap.xml" "s.replace('</urlset>', '  <url><loc>https://countcamp.org/werkboeken/ggz_vs/</loc></url>\n</urlset>')"
+poort "40 poort: een doorstuurder in de sitemap HOUDT TEGEN" 1 "$M/echt" echt blokkerend
+in_uitvoer "40b ... en zegt het in gewone taal" "De sitemap of de canonicals kloppen niet"
+poort "41 poort: dezelfde bouw op een proefweg laat door" 0 "$M/echt" echt melden
+in_uitvoer "41b ... maar zegt het wel hardop" "op een proefweg houdt dit je niet tegen"
+poort "42 poort: de echte bouw als proefdruk gekeurd HOUDT TEGEN" 1 "$M/schoon" spook blokkerend
+poort "43 poort: een lege _site HOUDT TEGEN, als blinde" 1 "$M/leeg" echt blokkerend
+in_uitvoer "43b ... en noemt dat blindheid" "stilte betekent ongeldig, nooit goed"
+getoetst=$((getoetst + 1))
+rm -rf "$M/poortrepo"; mkdir -p "$M/poortrepo/_tools"; cp -R "$M/schoon" "$M/poortrepo/_site"
+( HIER="$M/poortrepo"; eval "$POORT"; gebouwde_sitemap_nakijken echt blokkerend ) > "$M/uit" 2>&1
+code=$?
+if [ "$code" = 1 ] && command grep -qF "is dus ONGEMETEN" "$M/uit" \
+   && ! command grep -qF "kloppen niet" "$M/uit"; then
+  echo "  ok    44 poort zonder wachter: houdt tegen, en legt de schuld niet bij de bladzijden"
+else echo "  ZAKT  44 poort zonder wachter (afloop $code):"; sed 's/^/          /' "$M/uit"; gezakt=$((gezakt + 1)); fi
+herstel
+
 echo
 echo "$((getoetst - gezakt)) ok, $gezakt gezakt (van $getoetst)"
 [ "$gezakt" -eq 0 ]

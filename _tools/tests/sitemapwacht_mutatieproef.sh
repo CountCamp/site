@@ -105,6 +105,50 @@ mutatie "blind is groen" \
   "              'nooit goed.' % site)
         return 0"
 
+# De poort in naar_buiten.sh: een kreupele kopie via NAAR_BUITEN (de bedrading
+# en de zaken 39-44 lezen die).
+poort() {  # $1 = naam, $2 = oud, $3 = nieuw
+  getoetst=$((getoetst + 1))
+  python3 - _tools/naar_buiten.sh "$M/naar_buiten.sh" "$2" "$3" <<'PY'
+import sys
+bron, uit, oud, nieuw = sys.argv[1:5]
+s = open(bron, encoding="utf-8").read()
+if s.count(oud) != 1:
+    sys.exit("mutatie niet toepasbaar: %r staat er %d keer in" % (oud, s.count(oud)))
+open(uit, "w", encoding="utf-8").write(s.replace(oud, nieuw))
+PY
+  if [ $? -ne 0 ]; then
+    echo "  MISLUKT    $1 -- de mutatie paste niet meer op de code"
+    zorgelijk=$((zorgelijk + 1)); return
+  fi
+  if NAAR_BUITEN="$M/naar_buiten.sh" bash _tools/tests/sitemapwacht_test.sh > "$M/uit" 2>&1; then
+    echo "  VERSIERING $1 -- de toets bleef groen"
+    zorgelijk=$((zorgelijk + 1))
+  else
+    echo "  opgemerkt  $1 -- $(command grep -c '^  ZAKT' "$M/uit") zaak/zaken zakten, bv.:"
+    command grep -m1 '^  ZAKT' "$M/uit" | sed 's/^  ZAKT  /               /'
+  fi
+}
+echo "mutaties in naar_buiten.sh"
+poort "--productie stopt niet als de sitemappoort rood is" \
+  '    gebouwde_sitemap_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }' \
+  '    gebouwde_sitemap_nakijken echt blokkerend'
+poort "--productie roept de sitemappoort niet aan" \
+  '    gebouwde_sitemap_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }
+' ''
+poort "--lokaal roept de sitemappoort niet aan" \
+  '    gebouwde_sitemap_nakijken spook melden
+' ''
+poort "de sitemappoort houdt nooit tegen" \
+  '       echo "  Staat _tools/sitemapwacht.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi' \
+  '       echo "  Staat _tools/sitemapwacht.py er, en draait hij los?" ;;
+  esac'
+poort "de sitemappoort slikt een blinde wachter" \
+  '  python3 "$HIER/_tools/sitemapwacht.py" "--$profiel" --site "$HIER/_site" | sed '"'"'s/^/  /'"'"' || code=$?' \
+  '  python3 "$HIER/_tools/sitemapwacht.py" "--$profiel" --site "$HIER/_site" | sed '"'"'s/^/  /'"'"' || true'
+
 echo
 if [ "$zorgelijk" -eq 0 ]; then
   echo "Alle $getoetst mutaties opgemerkt."

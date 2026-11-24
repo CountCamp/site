@@ -18,6 +18,8 @@
 # (_tools/commentaarwacht.py) op de gebouwde _site/. Rood = er gaat niets live.
 # Daarvóór ook, sinds 24-11-2026: de namenwacht (_tools/namenwacht.py) op de
 # bestanden van de repo zelf. Rood = er gaat niets live.
+# En als laatste, sinds 24-11-2026 (spoor sitemap_canoniek): de sitemapwacht
+# (_tools/sitemapwacht.py --echt) op de gebouwde _site/. Rood = er gaat niets live.
 #
 # Tot 14-11-2026 deed quarto-actions/publish@v2 bouwen en publiceren in één
 # stap, en was er geen plek om ertussen te kijken: main publiceerde zonder
@@ -137,6 +139,16 @@ jobs:
         # een machine terugleest (lever.sh --push zoekt de boekstempel op de live
         # bladzij); de wachter noemt ze bij elke run, met hoe vaak.
         run: python3 _tools/commentaarwacht.py
+
+      - name: Sitemapwacht
+        # Ben, 24-11-2026: "Sitemap + dubbele adressen". De bouw schrijft
+        # sitemap.xml uit de gebouwde site en zet in elke echte bladzij één
+        # canonical (_tools/sitemap_zetten.py, post-render); deze stap leest het na:
+        # elke echte bladzij in de sitemap, geen doorstuurder, noindex of 404 erin,
+        # elk adres in de vorm .../ en niet .../index.html, en elke hreflang naar een
+        # adres dat in de sitemap staat. Afloop 1 = een gat, 3 = niet gekeken;
+        # allebei rood, en dan gaat er niets live.
+        run: python3 _tools/sitemapwacht.py --echt
 
       - name: Publish to gh-pages (the build above, not rendered again)
         uses: quarto-dev/quarto-actions/publish@v2

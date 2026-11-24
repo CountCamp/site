@@ -314,6 +314,38 @@ gebouwde_tellers_nakijken() {   # $1 = echt | spook   $2 = blokkerend | melden
   return 0
 }
 
+# ---- de GEBOUWDE site: sitemap en canonical ---------------------------------
+# Ben, 24-11-2026: "Sitemap + dubbele adressen". De bouw schrijft sitemap.xml uit
+# de gebouwde site en zet in elke echte bladzij één canonical
+# (_tools/sitemap_zetten.py, post-render); dit leest _site/ na.
+#   echt   elke echte bladzij in de sitemap met één canonical in de vorm .../, en
+#          geen doorstuurder, noindex of 404 erin
+#   spook  geen sitemap, en geen canonical die de proefdruk als echt adres opgeeft
+# Draait alleen NA een bouw, om dezelfde reden als `gebouwde_tellers_nakijken`.
+# Blokkerend op --productie, meldend op de proefwegen.
+# Staat hier, tussen de teller en het commentaar, en niet onderaan: de
+# mutatieproef van de commentaarpoort herkent die aan wat er direct onder staat.
+gebouwde_sitemap_nakijken() {   # $1 = echt | spook   $2 = blokkerend | melden
+  local profiel="$1" streng="$2" code=0
+  python3 "$HIER/_tools/sitemapwacht.py" "--$profiel" --site "$HIER/_site" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) if [ "$profiel" = echt ]; then
+         echo "  De sitemap of de canonicals kloppen niet met de gebouwde site."
+       else
+         echo "  Deze proefdruk heeft een sitemap, of geeft zichzelf op als het echte adres."
+       fi ;;
+    3) echo "  De sitemapwacht kon niet kijken. Dat is geen schone uitslag maar"
+       echo "  een blinde: stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De sitemapwacht zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bladzijden."
+       echo "  Staat _tools/sitemapwacht.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 # ---- de GEBOUWDE site: geen HTML-commentaar in de bladzij -------------------
 # Ben, 23-11-2026: "uit de pagina halen vóór publiceren (alle boeken)". De bouw
 # haalt het eruit (_tools/commentaar_weg.py, post-render, na de teller); dit leest
@@ -395,6 +427,7 @@ case "$WEG" in
     controleer spook _site/index.html
     gebouwde_tellers_nakijken spook melden
     gebouwd_commentaar_nakijken melden
+    gebouwde_sitemap_nakijken spook melden
     echo
     echo "klaar. Bekijken:"
     echo "  open $HIER/_site/index.html"
@@ -478,10 +511,12 @@ case "$WEG" in
     controleer echt _site/index.html || { echo "  Niet geleverd."; exit 1; }
     gebouwde_tellers_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }
     gebouwd_commentaar_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+    gebouwde_sitemap_nakijken echt blokkerend || { echo "  Niet geleverd."; exit 1; }
   else
     echo "  [droogloop] python3 _tools/schone_bouw.py --uit _site -- render && controleer echt _site/index.html"
     echo "  [droogloop] python3 _tools/tellerwacht.py --echt"
     echo "  [droogloop] python3 _tools/commentaarwacht.py"
+    echo "  [droogloop] python3 _tools/sitemapwacht.py --echt"
   fi
   echo
   doe git push origin main
