@@ -33,14 +33,37 @@ dom: elke `<!--` in het bestand moet ergens verantwoord zijn (weg, toegestaan,
 of overgeslagen met een reden). Klopt die som niet, dan heeft de ontleder een
 blinde vlek, en dan zegt de wachter dat hij niet kon kijken.
 
-Afloopcode (huisafspraak): 0 schoon · 1 commentaar gevonden · 3 kon niet kijken
-(geen map, nul .html, een bestand dat niet te lezen is, of een som die niet klopt
--- stilte betekent ongeldig, nooit goed).
+Tweede eis: het woord dat weg is (24-11-2026, spoor boekvoorpagina_korter)
+-----------------------------------------------------------------------
+Ben, 24-11-2026: "En we doen geen werk notities meer, alleen maar hier twijfel ik
+enzo". Voor een bezoeker heten ze alleen nog "✎ waar ik twijfel" / "✎ where I
+have doubts". Dus nergens in wat een bezoeker ziet "werknotitie(s)", "work
+note(s)" of "working note(s)" (VERBODEN_ZICHTBAAR, in elke schrijfwijze met
+spatie, streepje of zacht afbreekstreepje). Zichtbaar telt hier:
+    tekst      tekst in de bladzij (ook <title>), na het terugzetten van entiteiten
+    attribuut  title, alt, placeholder, aria-label, aria-description en content
+               (de beschrijving in zoekresultaten staat in <meta content>)
+    script     een tekenreeks in <script> die op lezerstekst lijkt: hij bevat een
+               spatie of een ✎. Zo telt '✎ toon werknotities (' (een knoplabel)
+               wél en 'cc-werknotities' of 'meta[name="cc-werknotities"]' (namen
+               waar het script mee zoekt) niet. Commentaar in het script telt niet.
+    css        een content: "…" in <style> (CSS-commentaar telt niet)
+    zoekindex  elke tekst in search.json behalve href en objectID
+Interne namen mogen blijven: bestandsnamen, CSS-klassen, meta-namen, namen in een
+script, en HTML-commentaar (dat haalt de bouw toch weg). Wat dit NIET ziet: tekst
+die een script uit stukjes aan elkaar plakt ('werk' + 'notities'), en een woord in
+een plaatje of een pdf. Getoetst in tests/commentaar_test.sh (de zaken "woord").
+
+Afloopcode (huisafspraak): 0 schoon · 1 commentaar of een verboden woord gevonden ·
+3 kon niet kijken (geen map, nul .html, een bestand dat niet te lezen is, of een som
+die niet klopt -- stilte betekent ongeldig, nooit goed).
 """
 from __future__ import annotations
 import argparse
+import html as htmlmod
 import json
 import os
+import re
 import sys
 
 sys.dont_write_bytecode = True
@@ -71,6 +94,84 @@ def json_teksten(x, pad=''):
             yield from json_teksten(v, '%s[%d]' % (pad, i))
 
 
+# ------------------------------------------------- het woord dat weg is ----
+# Ben, 24-11-2026: "En we doen geen werk notities meer, alleen maar hier twijfel ik
+# enzo." Zie de kop van dit bestand voor wat hier "zichtbaar" heet.
+VERBODEN_ZICHTBAAR = re.compile(r'werk[\s\-­]*notitie|work(?:ing)?[\s\-­]+notes?\b', re.I)
+_ZICHTBARE_ATTR = re.compile(
+    r'''\s(title|alt|placeholder|aria-label|aria-description|content)\s*=\s*("([^"]*)"|'([^']*)')''', re.I)
+_RAUW_BLOK = re.compile(r'(<(script|style)\b[^>]*>)(.*?)(</\2\s*>)', re.I | re.S)
+_CSS_CONTENT = re.compile(r'''content\s*:\s*("([^"]*)"|'([^']*)')''', re.I)
+ZOEKINDEX_INTERN = {'href', 'objectID'}
+
+
+def _blank(t: str, b: int, e: int) -> str:
+    """Vervang t[b:e] door spaties, met de regelovergangen erin: plekken en
+    regelnummers blijven kloppen."""
+    return t[:b] + ''.join('\n' if c == '\n' else ' ' for c in t[b:e]) + t[e:]
+
+
+def js_tekenreeksen(js: str):
+    """(plek, inhoud) van elke tekenreeks in een script; commentaar (// en /* */)
+    slaat hij over. Een kleine lezer, geen volledige JavaScript-ontleder: een
+    reguliere expressie (/…/) ziet hij als code, wat voor deze vraag volstaat."""
+    i, n = 0, len(js)
+    while i < n:
+        c = js[i]
+        if js.startswith('//', i):
+            e = js.find('\n', i)
+            i = n if e < 0 else e
+        elif js.startswith('/*', i):
+            e = js.find('*/', i + 2)
+            i = n if e < 0 else e + 2
+        elif c in '"\'`':
+            j = i + 1
+            while j < n and js[j] != c and not (c != '`' and js[j] == '\n'):
+                j += 2 if js[j] == '\\' else 1
+            yield i, js[i + 1:j]
+            i = j + 1
+        else:
+            i += 1
+
+
+def verboden_in_zicht(tekst: str, lz) -> list[tuple[int, str, str]]:
+    """(regel, soort, stukje) voor elk zichtbaar voorkomen van VERBODEN_ZICHTBAAR.
+    `lz` is de lezing van commentaarregel.lees(tekst): zijn commentaren tellen niet."""
+    t = tekst
+    for c in lz.commentaren:
+        t = _blank(t, c.begin, c.eind)
+    uit: list[tuple[int, str, str]] = []
+
+    def meld(plek: int, soort: str, s: str):
+        m = VERBODEN_ZICHTBAAR.search(s)
+        if m:
+            a = max(0, m.start() - 30)
+            uit.append((t.count('\n', 0, plek) + 1, soort, ' '.join(s[a:m.end() + 30].split())))
+
+    for m in list(_RAUW_BLOK.finditer(t)):
+        b = m.start(3)
+        if m.group(2).lower() == 'script':
+            for p, s in js_tekenreeksen(m.group(3)):
+                if (any(ch.isspace() for ch in s) or '✎' in s) and VERBODEN_ZICHTBAAR.search(s):
+                    meld(b + p, 'script', s)
+        else:
+            css = re.sub(r'/\*.*?\*/', lambda k: ' ' * len(k.group(0)), m.group(3), flags=re.S)
+            for k in _CSS_CONTENT.finditer(css):
+                meld(b + k.start(), 'css', k.group(2) if k.group(2) is not None else k.group(3))
+        t = _blank(t, m.start(3), m.end(3))
+    for m in re.finditer(r'<[A-Za-z][^>]*>', t):
+        for a in _ZICHTBARE_ATTR.finditer(m.group(0)):
+            waarde = a.group(3) if a.group(3) is not None else a.group(4)
+            meld(m.start(), 'attribuut ' + a.group(1).lower(), htmlmod.unescape(waarde))
+    t = re.sub(r'<[^>]*>', lambda k: ' ' * len(k.group(0)), t)
+    plek = 0
+    for r in t.split('\n'):
+        if VERBODEN_ZICHTBAAR.search(htmlmod.unescape(r)):
+            meld(plek, 'tekst', htmlmod.unescape(r))
+        plek += len(r) + 1
+    return uit
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -94,6 +195,7 @@ def main() -> int:
     onleesbaar: list[str] = []
     som_fout: list[str] = []
     zoekindex: list[str] = []
+    woorden: list[str] = []     # VERBODEN_ZICHTBAAR in wat een bezoeker ziet
     n_html = n_json = 0
 
     for dp, dn, fn in os.walk(site):
@@ -113,6 +215,10 @@ def main() -> int:
                     if '<!--' in s:
                         p = s.find('<!--')
                         zoekindex.append('%s: %s: %s' % (rel, waar, kort(s[p:])))
+                    m = VERBODEN_ZICHTBAAR.search(s)
+                    if m and waar.rsplit('.', 1)[-1] not in ZOEKINDEX_INTERN:
+                        a = max(0, m.start() - 30)
+                        woorden.append('%s: zoekindex %s: %s' % (rel, waar, ' '.join(s[a:m.end() + 30].split())))
                 continue
             if not f.endswith('.html'):
                 continue
@@ -126,6 +232,8 @@ def main() -> int:
             r = per_vak.setdefault(vak(rel), [0, 0, 0])
             r[0] += 1
             lz = lees(tekst)
+            for regel, soort, stuk in verboden_in_zicht(tekst, lz):
+                woorden.append('%s:%d: %s: %s' % (rel, regel, soort, stuk))
             weg = [c for c in lz.commentaren if c.toegestaan is None]
             for c in lz.commentaren:
                 if c.toegestaan:
@@ -163,6 +271,11 @@ def main() -> int:
         print('\nCOMMENTAAR IN EEN ZOEKINDEX (%d):' % len(zoekindex))
         for v in zoekindex:
             print('  ' + v)
+    if woorden:
+        print('\nVERBODEN WOORD IN ZICHT (%d) -- "werknotities" / "work notes" heet voor een '
+              'bezoeker "waar ik twijfel" / "where I have doubts" (Ben, 24-11-2026):' % len(woorden))
+        for v in woorden:
+            print('  ' + v)
 
     print('')
     print('  %-28s %6s %16s %12s' % ('map', 'html', 'met commentaar', 'commentaren'))
@@ -193,18 +306,25 @@ def main() -> int:
         for o in som_fout:
             print('  ' + o)
 
+    print('verboden woord in zicht (%s): %d keer' % (VERBODEN_ZICHTBAAR.pattern, len(woorden)))
     if vondsten or zoekindex:
         print('\nFOUT -- %d commentaar/commentaren op %d bladzij(den), %d in een zoekindex. '
               'Herstellen: python3 _tools/commentaar_weg.py --site <map> (of gewoon opnieuw '
               'quarto render; dat draait hem vanzelf). Moet er een bij op de toegestane lijst, '
               'zet hem dan in _tools/commentaarregel.py, met wie hem terugleest.'
               % (len(vondsten), tot[1], len(zoekindex)))
+    if woorden:
+        print('\nFOUT -- %d keer een verboden woord in zicht. Herstellen in de BRON, niet in '
+              '_site/: een .qmd van de site, of in het lab (een knoplabel staat in de afterbody '
+              'van het boek). Een interne naam (bestand, klasse, scriptnaam) mag blijven; '
+              'zie de kop van _tools/commentaarwacht.py.' % len(woorden))
+    if vondsten or zoekindex or woorden:
         return 1
     if onleesbaar or som_fout:
         print('\nKON NIET (HELEMAAL) KIJKEN -- zie hierboven.')
         return 3
     print('\nSchoon: geen commentaar in %d bladzijden en %d zoekindex(en), op de toegestane '
-          'lijst na.' % (tot[0], n_json))
+          'lijst na, en geen verboden woord in zicht.' % (tot[0], n_json))
     return 0
 
 

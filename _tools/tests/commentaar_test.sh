@@ -26,6 +26,11 @@
 #      ándere ontleder) verder geen enkel verschil. Een tweede run: geen byte.
 #   D. DE BEDRADING. publish.yml draait de wachter na de bouw en vóór het
 #      publiceren, proefdruk.yml ook, naar_buiten.sh --productie vóór de push.
+#   E. HET WOORD DAT WEG IS (24-11-2026). "werknotities" / "work notes" in wat
+#      een bezoeker ziet -- tekst, een knoplabel in een script, CSS content, een
+#      title of de zoekbeschrijving, search.json -- maakt de wachter rood; als
+#      interne naam (klasse, meta-naam, scriptnaam, commentaar) niet.
+#      (Draait vóór C, zodat C ook de echte boekbladzijden op het woord naleest.)
 #
 # Plus de ontleder geval voor geval: _tools/tests/commentaarregel_test.py.
 # Afloop: 0 alles goed, 1 minstens één zaak zakt, 3 kon niet bouwen (geen quarto).
@@ -253,6 +258,70 @@ mkdir -p "$M/leeg"
 zaak "een lege map -> kon niet kijken" 3 wacht --site "$M/leeg"
 zaak "een map die niet bestaat -> kon niet kijken" 3 wacht --site "$M/bestaat-niet"
 zaak "het filter op een lege map -> niets gezien" 3 weg --site "$M/leeg"
+
+# ---------------------------------------------------------------- E ----
+# Het woord dat weg is. Ben, 24-11-2026: "En we doen geen werk notities meer,
+# alleen maar hier twijfel ik enzo." Elke zaak plant één ding in een verse kopie
+# van de wegwerpbouw; rood waar een bezoeker het woord ziet, schoon waar het een
+# interne naam is.
+echo "== E. het woord dat weg is: 'werknotities' / 'work notes' in zicht"
+plant() {  # $1 = bestand in de kopie, $2 = wat er vóór </body> komt
+  python3 - "$1" "$2" <<'PY'
+import sys
+p, x = sys.argv[1], sys.argv[2]
+t = open(p, encoding="utf-8").read()
+i = t.rfind("</body>")
+open(p, "w", encoding="utf-8").write(t[:i] + x + "\n" + t[i:])
+PY
+}
+woord_rood() {  # $1 = naam, $2 = wat er geplant wordt, $3 = soort in de uitvoer
+  verse_kopie; plant "$M/geplant/index.html" "$2"
+  zaak "woord: $1 -> rood" 1 wacht --site "$M/geplant"
+  in_uitvoer "woord: $1 -- de vondst noemt zijn soort" "$3"
+}
+woord_rood "in de tekst"                     '<p>Klap de werknotities open.</p>'           ": tekst: "
+woord_rood "met een hoofdletter en streepje" '<p>Werk-notitie</p>'                         ": tekst: "
+woord_rood "in het Engels, met &nbsp;"       '<p>the working&nbsp;notes</p>'               ": tekst: "
+woord_rood "als knoplabel in een script"     "<script>var DICHT = '✎ toon werknotities (';</script>" ": script: "
+woord_rood "als CSS content"                 '<style>.w::before { content: "✎ work notes"; }</style>' ": css: "
+woord_rood "in een title-attribuut"          '<button title="werknotities dichtklappen">x</button>' ": attribuut title: "
+woord_rood "in de zoekbeschrijving"          '<meta name="description" content="A book with work notes.">' ": attribuut content: "
+verse_kopie
+plant "$M/geplant/index.html" "$(cat <<'HTML'
+<div class="cc-werknotities" data-x="werknotities"><a href="WERKNOTITIES.md">de notities</a></div>
+<meta name="cc-werknotities" content="lezer">
+<script>
+  /* In een omgezet hoofdstuk heet de open knop "werknotities dichtklappen". */
+  // 'werknotities dichtklappen' in een regelcommentaar
+  var lezer = !!document.querySelector('meta[name="cc-werknotities"][content="lezer"]');
+  var KLASSE = 'cc-werknotities', SLEUTEL = "werknotities";
+</script>
+<style>/* content: "werknotities" in CSS-commentaar */ .cc-werknotities::before { content: "✎ waar ik twijfel"; }</style>
+HTML
+)"
+zaak "woord: alleen interne namen (klasse, meta-naam, scriptnaam, commentaar in script en css) -> schoon" 0 \
+  wacht --site "$M/geplant"
+in_uitvoer "woord: de wachter zegt dat hij keek" "verboden woord in zicht ("
+verse_kopie
+python3 - "$M/geplant/search.json" <<'PY'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p, encoding="utf-8"))
+d.append({"objectID": "werknotities.html", "href": "werknotities.html", "title": "x",
+          "text": "Hier klap je de werknotities open."})
+json.dump(d, open(p, "w", encoding="utf-8"))
+PY
+zaak "woord: in de tekst van search.json -> rood" 1 wacht --site "$M/geplant"
+in_uitvoer "woord: de vondst noemt de zoekindex" "zoekindex"
+verse_kopie
+python3 - "$M/geplant/search.json" <<'PY'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p, encoding="utf-8"))
+d.append({"objectID": "werknotities.html", "href": "werknotities.html", "title": "x", "text": "tekst"})
+json.dump(d, open(p, "w", encoding="utf-8"))
+PY
+zaak "woord: alleen in href en objectID van search.json -> schoon" 0 wacht --site "$M/geplant"
 
 # ---------------------------------------------------------------- C ----
 echo "== C. echte bladzijden uit deze repo"
