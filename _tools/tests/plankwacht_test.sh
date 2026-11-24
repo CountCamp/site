@@ -633,6 +633,9 @@ printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$T7/_tools/doors
 # Sinds 21-11-2026 een VIERDE: de taalstukkenwachter. Zelfde reden; zijn eigen
 # zaken staan in naar_buiten_teller_test.sh (zaak 6).
 printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$T7/_tools/taalonderdelen.py"
+# Sinds 24-11-2026 een VIJFDE: de namenwacht. Zelfde reden; zijn eigen zaken
+# staan in namenwacht_test.sh.
+printf 'print("namenwacht - nagemaakt, alles in orde")\n' > "$T7/_tools/namenwacht.py"
 # Eén echte bladzij mét teller, zodat de tellerwachter hier groen staat omdat
 # hij iets ZAG en niet omdat er niets te zien was.
 mkdir -p "$T7/oefenboeken/geteld"

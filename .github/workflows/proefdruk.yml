@@ -59,6 +59,20 @@ jobs:
         if: github.event.action != 'closed'
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: pdftotext voor de namenwacht
+        # Zonder pdftotext is een pdf voor de namenwacht BLIND (zie publish.yml).
+        if: github.event.action != 'closed'
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends poppler-utils
+
+      - name: Namenwacht
+        # Geen voornaam van een testlezer in een bestand van deze openbare repo
+        # (Ben, 23-11-2026: "Site + speeltjes schoonmaken"). Leest de repo, niet de
+        # bouw, en staat daarom vooraan: een tak die een naam draagt, is al openbaar
+        # zodra hij gepusht is, en een rode stap hier zet dat in de PR. Zijn uitvoer
+        # noemt de naam niet (<naam1>/<naam2>): dit logboek is openbaar.
+        if: github.event.action != 'closed'
+        run: python3 _tools/namenwacht.py
+
       - name: De balk schrijven — uit de bouw, niet uit een bestand
         if: github.event.action != 'closed'
         run: |

@@ -3,6 +3,13 @@
 **De titel** is sinds stuk 1c *Het oordeel van Solomon* (Ben bedoelde het salomonsoordeel: het zwaard dat eerlijk
 verdeelt). Stuk 1b heette *Het zwaard van Solomon*; dat is ingetrokken. Het zwaardje als beeld in stap 7 blijft.
 
+**De testlezers.** In de meeste rondes lazen twee Nederlandstalige testlezers mee, hier *testlezer A*
+en *testlezer B*; per ronde staat erbij wie er las. A leest zoals een student die bang is voor het
+tentamen: ze struikelt over beloften en over zinnen die elkaar tegenspreken. B haakt af bij dichte
+tekst en lange routes, en leeft op bij korte winst. Daarnaast las *de Engelse lezer* de Engelse
+versie; in de woordenlijst NL → EN bij *De Engelse tweeling* heet die *de testlezer*. Tot 24-11-2026
+stonden hier de voornamen van A en B; die horen niet in een openbare repo.
+
 Speeltje: `speeltjes/solomon.html`. Eén zelfstandig HTML-bestand, geen internet nodig.
 Proefdruk (sinds stuk 1): `QUARTO_PROFILE=spook quarto render` in de werkkopie, de kopie in `_site/` de drie
 merktekens geven (`.quarto/kladje_solomon/spook1d.sh` doet beide), en dan
@@ -154,8 +161,8 @@ woord *startgetal* voor het intercept komt uit de Bib (`berekening-regressie-aap
 van 8-10.
 
 **De schakelaars in woorden** (Ben, 8-10: *"Bij regressie kunnen we toch ook experiment of manipulatie of therapie
-uitgeschreven?"*). In stuk 1b heetten ze *V* en *X*, en die *X* botste met het stukje X van 8 punten (Jeanne en
-Michelle, allebei). Met woorden is er nog één X: het stukje. De woorden staan rechtop (namen van schakelaars, geen
+uitgeschreven?"*). In stuk 1b heetten ze *V* en *X*, en die *X* botste met het stukje X van 8 punten (testlezers A en
+B, allebei). Met woorden is er nog één X: het stukje. De woorden staan rechtop (namen van schakelaars, geen
 symbolen), *b* en *Y* cursief, het product met Bens middenstip. Wat anderen doen (hulpagent, 8-10, 14 zoekvragen):
 Field (2016) schrijft *Attractiveness*ᵢ = (*b*₀ + *b*₁Genderᵢ + *b*₂Alcoholᵢ + *b*₃Interactionᵢ) + εᵢ, de woorden
 rechtop en het product als een benoemde variabele *Interaction*; OpenMenS (OU) schrijft *b*₄(exercise * coffee) en
@@ -221,8 +228,8 @@ het staat nu op de eerste snede en leunt naar rechts boven X.
   methode (onbekende / waar verstopt / wat lost het op / som / aanname). Open punt uit stuk 1, nog niet beantwoord.
 - **Decimaalteken is de punt** (taalgids 20-7).
 - **H/M** is Bens notatie; hij hield hem (8-10) met de kleurstreep en de zin "twee letters, één stukje".
-- **De aannametabel staat ná de ladder** en de andere namen staan in een uitklapper onderaan (stuk 1, na Michelle en
-  Jeanne).
+- **De aannametabel staat ná de ladder** en de andere namen staan in een uitklapper onderaan (stuk 1, na testlezers B en
+  A).
 
 ## Stuk 1d — de trap met negatieve stukjes (8-10-2026)
 
@@ -308,7 +315,7 @@ cursieve *b* en *Y*, rechtop de letters H/M, X, T, S en de schakelaarwoorden, ne
 
 **Eén bewuste afwijking van de Nederlandse tekst:** de eerste alinea noemt *Richard L. Solomon, 1949*. De Engelse
 testlezer hield het ontwerp tot stap 7 voor een ontwerp van koning Salomo (de uitleg stond alleen in het bijschrift
-van het zwaard; Michelle las in 1c hetzelfde). In het Nederlands staat het jaartal niet in de eerste alinea; aan Ben
+van het zwaard; testlezer B las in 1c hetzelfde). In het Nederlands staat het jaartal niet in de eerste alinea; aan Ben
 of dat daar ook moet.
 
 **De koppeling van de twee talen.** Opgezocht (Google Search Central, *Tell Google about localized versions of your
@@ -351,7 +358,7 @@ treden en de koppen, verborgen in print. De id's van de treden (`stap-1` …) be
   Nederlands); *Every group got better* terwijl III en IV een streepje hebben (lost op in stap 3; ook zo in het
   Nederlands); *H/M* leest als een deling (Ben hield hem in 1b); *substitution* (Bens woord); de tabeltitel *Mean
   quality of life per group* blijft staan als de tabel kolommen bijkrijgt (ook in het Nederlands); *testing effect*
-  betekent in een geheugencursus iets anders (de waarschuwing staat onderaan in *andere namen*, Jeanne wilde hem in 1c
+  betekent in een geheugencursus iets anders (de waarschuwing staat onderaan in *andere namen*, testlezer A wilde hem in 1c
   niet midden in de ladder); de regel over het hoofdeffect in de laatste uitklapper is voor een SPSS-student de
   nuttigste zin van de bladzij en staat op de plek waar ze al gestopt was.
 - Ze rekende twintig getallen na en vond er geen fout; haar twee examenzinnen over sensitisatie klopten.
@@ -414,7 +421,7 @@ hint van stap 9 *"de voormetingen van I en II staan er wél: sla ze niet over"*,
 geleende voormeting? Die valt uit S altijd weg ... Je had hem nodig voor H/M en T, niet voor S."* Die laatste zin is
 van mij (C), niet uit de Bib.
 
-**Keuze 13 eruit, 0 erin.** Stap 9 bood X + T + S = 13 aan omdat nameting I − nameting IV daar uitkwam (Jeanne, 8-10:
+**Keuze 13 eruit, 0 erin.** Stap 9 bood X + T + S = 13 aan omdat nameting I − nameting IV daar uitkwam (testlezer A, 8-10:
 de natuurlijkste fout uit een kale tabel). Met 48/52 komt die weg op 11 uit, dus 13 had geen weg meer achter zich.
 De som met alleen nametingen (0) is nu de natuurlijkste fout en staat ervoor in de plaats; de keuzes worden
 uitgerekend en ontdubbeld. 11 staat er niet bij: wie nameting I − nameting IV rekent, vindt zijn getal niet en moet
@@ -481,43 +488,43 @@ terug → *"de trap eindigt op 65, moet 63 zijn"*, afloop 1 (en in de proefrun *
 
 ## Wat de testlezers zeiden in stuk 3, en wat er veranderde
 
-Michelle en Jeanne lazen de gerenderde Nederlandse bladzij (alle uitklappers open, als tekst, plus schermafdrukken op
+Testlezers B en A lazen de gerenderde Nederlandse bladzij (alle uitklappers open, als tekst, plus schermafdrukken op
 echte 390 px), een Engelstalige master-student (`general-purpose`-agent die de Nederlandse bladzij nooit zag) de
 Engelse. Alle drie rekenden de getallen na en vonden geen fout. Ronde 1:
 
-- **Jeanne en de Engelse lezer, allebei: "Welke van de twee klopt?" liet ze onzeker achter.** Stap 9 zegt dat 0 fout
-  is, de uitklapper dat Campbell en Stanley precies die toets aanraden. Jeanne: *"het goede antwoord staat niet op
+- **Testlezer A en de Engelse lezer, allebei: "Welke van de twee klopt?" liet ze onzeker achter.** Stap 9 zegt dat 0 fout
+  is, de uitklapper dat Campbell en Stanley precies die toets aanraden. Testlezer A: *"het goede antwoord staat niet op
   deze bladzij"*; de Engelse lezer wilde één zin: hier is S door de constructie 4, met echte data doe je iets anders.
   Nu zegt de alinea eerst wat hier geldt (*"In dit speeltje de sommen, want de getallen zijn zo gemaakt"*), dan dat
   de ladder de boekhouding is en niet de toets, en dan wat je in echte data doet (2 × 2-variantieanalyse op de
   nametingen, of een covariantieanalyse op I en II).
-- **Jeanne: de bladzij sprak zichzelf tegen** (stap 9: *"rekent alsof I en II gelijk begonnen"*; uitklapper: *"de
+- **Testlezer A: de bladzij sprak zichzelf tegen** (stap 9: *"rekent alsof I en II gelijk begonnen"*; uitklapper: *"de
   nametingen alleen nemen niets aan"*). Nu zegt de uitklapper ook dat de variantieanalyse op de nametingen rekent
   alsof I en II gelijk begonnen, en dat dat door het lot gemiddeld klopt.
-- **Jeanne: drie getallen voor het effect van de therapie (8, 10, 12)**, en de zin over het hoofdeffect als
+- **Testlezer A: drie getallen voor het effect van de therapie (8, 10, 12)**, en de zin over het hoofdeffect als
   "alles hiervoor was fout". Nu zegt hij dat er met een interactie geen één getal meer is, en dat 10 een
   samenvatting van twee is, geen nieuw stukje. (De 10 zelf is in ronde 2 van C geschrapt; de zin *"geen nieuw stukje,
   alleen een samenvatting van twee"* bleef. Zie *Ronde 2 van C*.)
-- **Michelle en Jeanne: *"S + (voormeting I − voormeting II)"* viel uit de lucht** (Jeanne: *"konijn uit een
+- **Testlezers B en A: *"S + (voormeting I − voormeting II)"* viel uit de lucht** (testlezer A: *"konijn uit een
   hoed"*). Stap 9 rekent het nu met getallen voor: een nameting is voormeting plus verbetering,
   (48 + 15) − (52 + 3) = (48 − 52) + (15 − 3) = −4 + 12, en (50 + 10) − (50 + 2) = 10 − 2, zodat je de 50 ziet
   wegvallen. Stap 10 rekent *b*₁ zo: (52 + 2 + 1) − (50 + 2) = (52 − 50) + 1.
-- **Michelle: *"En de geleende voormeting? Die valt uit S altijd weg"* kon ze niet nakijken.** Die alinea is weg; de
+- **Testlezer B: *"En de geleende voormeting? Die valt uit S altijd weg"* kon ze niet nakijken.** Die alinea is weg; de
   som van III en IV hierboven laat het zien, en één zin zegt waar je hem wél voor nodig had (H/M en T).
-- **Michelle: in stap 10 kwam de uitleg vóór het plaatje.** Nu: de vier sommen, de trap, dan *b*₀, dan *b*₁ en *b*₃.
-- **Michelle: bij "covariantieanalyse" in de aannametabel klapte ze dicht**, en *"meestal minder dan één"* zonder
+- **Testlezer B: in stap 10 kwam de uitleg vóór het plaatje.** Nu: de vier sommen, de trap, dan *b*₀, dan *b*₁ en *b*₃.
+- **Testlezer B: bij "covariantieanalyse" in de aannametabel klapte ze dicht**, en *"meestal minder dan één"* zonder
   waarom. De rij zegt het nu met de eigen getallen (*"I en II begonnen 4 punten uit elkaar"*), met de reden
   (*"een deel van een verschil vooraf is toeval van die ene meting"*, regressie naar het midden); de vakterm staat
   alleen nog in de uitklapper.
-- **Jeanne en de Engelse lezer: *"zet de voormetingen gelijk"* liet S naar 0 springen** (de nametingen blijven staan,
-  dus verbetering I wordt 13): Jeanne dacht het speeltje kapot te hebben gemaakt. Nu: *"schuif aan voormeting I of II:
+- **Testlezer A en de Engelse lezer: *"zet de voormetingen gelijk"* liet S naar 0 springen** (de nametingen blijven staan,
+  dus verbetering I wordt 13): testlezer A dacht het speeltje kapot te hebben gemaakt. Nu: *"schuif aan voormeting I of II:
   de regressie van de nameting verandert dan niet, want die kijkt niet naar de voormetingen; T en S in de sommen
   wel"*. Dat is de les van stap 10, zichtbaar gemaakt.
 - **De Engelse lezer: *"the regression on the posttest"* maakt in het Engels de nameting tot voorspeller.** Dat geldt
   in het Nederlands ook (huisregel *regressie ván Y óp X*, TAALGIDS, *Richting*), en het stond al vóór stuk 3 op de
   bladzij. Nu overal *de regressie van de nameting* / *the regression with the posttest as outcome*; *op de
   nametingen* blijft alleen in *toets op de nametingen*, waar het geen regressierichting is.
-- **Jeanne: waarom niet 48 voor III, omdat III net als I de therapie kreeg?** Stap 3 zegt nu: de voormeting kwam vóór
+- **Testlezer A: waarom niet 48 voor III, omdat III net als I de therapie kreeg?** Stap 3 zegt nu: de voormeting kwam vóór
   de therapie, dus de therapie kan niet bepalen waar iemand begon.
 - **De Engelse lezer: wie via nameting I − nameting II op 8 kwam, las "dat is X (bijvoorbeeld nameting III −
   nameting IV)"**. `duiding()` voegt nu bij een weg die met deze getallen toevallig op een keuze uitkomt een eigen zin
@@ -539,21 +546,21 @@ verschuiven van de trap naar de figuur wees. Verwerkt door de tweede en derde ze
 - **Stap 3** (Engelse lezer): *"En niet 48 voor III omdat ..."* las ook als *"het is niet 48, en de reden is de
   therapie"*; Engels *"like I"* als *"zoals ik"*. Nu *"En geef III niet de 48 van groep I omdat ze allebei de therapie
   kregen: ..."*.
-- **Stap 9 op 390 px** (Michelle, Jeanne): precies de twee regels die het werk doen, *"(48 + 15) − (52 + 3)"* en
+- **Stap 9 op 390 px** (testlezer B, testlezer A): precies de twee regels die het werk doen, *"(48 + 15) − (52 + 3)"* en
   *"(48 − 52) + (15 − 3)"*, vielen buiten beeld, omdat het label *"nameting I − nameting II"* zo breed was. Nu
   *"nameting I − II"* en *"nameting III − IV"*. De hint van stap 9 is een zin korter.
 - **Stap 10** (Engelse lezer): *"Ze zien er iets anders uit"* wees naar de figuur; nu *"De sommen hierboven ..."*. Twee
   keer 52 (*b*₁ = 55 − 52 en verbetering II = 55 − 52, cijfer voor cijfer gelijk): nu één zin die het toeval noemt,
   alleen als voormeting II en *b*₀ gelijk zijn (uitgerekend met `gelijk()`).
-- **Stap 10, *b*₃** (Jeanne: *"heb ik zelf moeten nagaan"*; Michelle: *"het enige stuk dat daar nog in de oude stijl
+- **Stap 10, *b*₃** (testlezer A: *"heb ik zelf moeten nagaan"*; testlezer B: *"het enige stuk dat daar nog in de oude stijl
   staat"*): *b*₃ kreeg een formule aangereikt, *"S + (voormeting I − voormeting II)"*, terwijl *b*₁ erboven uit de
   getallen werd opgebouwd. Nu net zo: nameting I is 48 + 2 + 1 + 8 + 4, *b*₀ en *b*₁ samen zijn nameting II, dus
   *b*₃ = (48 + 2 + 1 + 8 + 4) − (52 + 2 + 1 + 8) = (48 − 52) + 4 = 0, en *"H/M, T en X vallen weg"*. Deze vorm is
-  van mij (C), niet uit de Bib; Michelle stelde iets vergelijkbaars voor.
-- **Speelbord, *"Probeer ook"*** (Jeanne: H/M schuift ook mee; Michelle: *"de twee"* las als de twee rijen van de
+  van mij (C), niet uit de Bib; testlezer B stelde iets vergelijkbaars voor.
+- **Speelbord, *"Probeer ook"*** (testlezer A: H/M schuift ook mee; testlezer B: *"de twee"* las als de twee rijen van de
   tabel): nu *"H/M, T en S in de sommen wel"*, en wat het eens wordt met wat: *"de som voor T hetzelfde als b₁ ...,
   en de som voor S hetzelfde als b₃: met deze nametingen 0"*, dat getal uitgerekend (`data-r="kaal"`).
-- **Uitklapper** (Jeanne, Engelse lezer): *"of er een maken"* las niet als *"een S die er niet is"*; nu staat dat
+- **Uitklapper** (testlezer A, Engelse lezer): *"of er een maken"* las niet als *"een S die er niet is"*; nu staat dat
   erbij. *"variantieanalyse op de nametingen"* naast *"de regressie van de nameting"* las als twee richtingen voor één
   ding; nu twee keer *"van"* (*toets op de nametingen* bleef, dat is geen regressierichting). Engels: *"In real data,
   the ladder is just the bookkeeping"*, *"use it to adjust the difference"*, *"is no longer a single number"*,
@@ -578,22 +585,22 @@ hij over. Bijtproeven: een *"+ 1"* extra in de som voor *b*₁ geeft drie foutme
 *"S = 5 geeft 5, maar de regel ervoor (15 − 11) gaf 4"*; allebei afloop 1. Wat hij niet ziet: de sommen na het schuiven
 op het speelbord.
 
-**Ronde 3** (23-11, derde zetter; Michelle en Jeanne op de Nederlandse tekst, een Engelse lezer, de APA-lens en een
+**Ronde 3** (23-11, derde zetter; testlezers B en A op de Nederlandse tekst, een Engelse lezer, de APA-lens en een
 nakijker, alle vijf op de stand na ronde 2). Geen van de vijf vond een rekenfout; de nakijker rekende alles na in R en
 vond geen getikt getal in lezerstekst (Python-scan van alle tekenreeksen met cijfers, 20 per bladzij, allemaal
-structureel, zoals *"1 is ja, 0 is nee"*). De nieuwe opbouw van *b*₃ landde bij alle drie de lezers (Michelle: *"ik lees
-hem niet, ik herken hem"*; Jeanne: *"op de tweede keer lezen"*). Verwerkt (`patch_r5.py`):
+structureel, zoals *"1 is ja, 0 is nee"*). De nieuwe opbouw van *b*₃ landde bij alle drie de lezers (testlezer B: *"ik lees
+hem niet, ik herken hem"*; testlezer A: *"op de tweede keer lezen"*). Verwerkt (`patch_r5.py`):
 
 - **Een zin uit de tijd van 50/50** (Engelse lezer, nakijker): de opzet van stap 10 zei *"alleen heten de stukjes nu
   b"*, en twee schermen later is *b*₁ = 3 terwijl T = 1. Nu *"alleen heet wat je zoekt nu b"*. Ook de beschrijving
   bovenin (`<meta name="description">`) zei nog *"dezelfde sommen als regressie"*; nu *"dezelfde ladder"*.
-- **Stap 3** (Jeanne, Engelse lezer): *"omdat ze allebei de therapie kregen"* las nog als de reden om het niet te doen.
+- **Stap 3** (testlezer A, Engelse lezer): *"omdat ze allebei de therapie kregen"* las nog als de reden om het niet te doen.
   Nu *"En leen voor III niet de 48 van groep I, alleen omdat ze allebei de therapie kregen"*.
 - **Stap 10:** de zin *"Het model weet alleen óf er een voormeting was, niet hoe hoog die was"* opent nu een eigen
-  alinea (Michelle: *"die staat begraven midden in de dichtste alinea"*). Bij *b*₃ staat de 52 bij naam, *"(voormeting
-  II, H/M, T)"*, want Jeanne en de Engelse lezer lazen (52 + 2 + 1 + 8) als *b*₀ + *b*₁ + *b*₂, wat ook op 63 uitkomt.
-  Het bijschrift zegt *"niet alleen T en S"* (Jeanne: *"niet"* was sterker dan de uitleg eronder).
-- **Speelbord** (Michelle: geen werkwoord; Jeanne en de Engelse lezer: wel het getal voor S, niet voor T): nu
+  alinea (testlezer B: *"die staat begraven midden in de dichtste alinea"*). Bij *b*₃ staat de 52 bij naam, *"(voormeting
+  II, H/M, T)"*, want testlezer A en de Engelse lezer lazen (52 + 2 + 1 + 8) als *b*₀ + *b*₁ + *b*₂, wat ook op 63 uitkomt.
+  Het bijschrift zegt *"niet alleen T en S"* (testlezer A: *"niet"* was sterker dan de uitleg eronder).
+- **Speelbord** (testlezer B: geen werkwoord; testlezer A en de Engelse lezer: wel het getal voor S, niet voor T): nu
   *"veranderen wel"* en *"met de nametingen van de ladder 3 en 0"*, allebei uitgerekend (`naB1`, `kaal`). *"Van de
   ladder"*, omdat die getallen bij het laden één keer worden gezet en niet meeschuiven (APA-lens).
 - **Geen zin begint meer met een symbool** in de veranderde tekst (APA-lens, nakijker): *"Het gewicht b₂ is X"*,
@@ -653,14 +660,14 @@ en zegt de zin ervoor "toetst hier hetzelfde getal".)
 
 **Hoe het zo werd: vier keer bijgesteld, telkens door een lezer.**
 
-1. **Geschrapt** (2ea9802). De reden was Jeannes klacht uit ronde 1 (*"8, 10 en 12"*): een vierde getal leek die
+1. **Geschrapt** (2ea9802). De reden was de klacht van testlezer A uit ronde 1 (*"8, 10 en 12"*): een vierde getal leek die
    klacht te herhalen. Twee lezers vielen daar los van elkaar over. De Engelse lezer: *"'The two' can only be 8 and
    12, so I work out 10 before I reach"* de som, en *"Here S really is 4, and 0 is the mistake"* tegen *"not a mistake
-   on your part"*: *"I'm left asking whether the 8 is right or wrong"*. Jeanne: *"Nu heb ik 10 in mijn hoofd en 8 op
+   on your part"*: *"I'm left asking whether the 8 is right or wrong"*. Testlezer A: *"Nu heb ik 10 in mijn hoofd en 8 op
    papier, en de tekst noemt mijn 10 nergens"*. De zin die de 10 bij de lezer laat ontstaan, *"het gemiddelde van die
    twee"*, kan niet weg zonder het begrip hoofdeffect weg te halen.
 2. **Terug, als eigen som** (2fd2fdb), met het etiket *"Die som kun je in echte data niet maken"*. Dat bleek onwaar.
-   De Engelse lezer en Jeanne zagen allebei dat je de 10 gewoon uit een tabel met gemiddelden haalt (15 − 3 = 12,
+   De Engelse lezer en testlezer A zagen allebei dat je de 10 gewoon uit een tabel met gemiddelden haalt (15 − 3 = 12,
    60 − 52 = 8), zoals stap 9 en Solomon zelf doen.
 3. **"Uitrekenen kan, maar niet toetsen"** (a1803bc). Ook dat was onwaar. De nakijker rekende het na in R: als contrast
    is de 10 te toetsen, want de geleende voormeting valt uit X weg. Zonder echt effect verwierp die toets in zijn
@@ -678,23 +685,23 @@ Het eind is het smalste dat waar is, met de bron erbij.
 **Verder in deze ronde:**
 
 - **Etiketten.** De som van de analyse heet *"nameting I − II"*, *"nameting III − IV"* en *"hoofdeffect op de
-  nametingen"*. In 2ea9802 stond er *"met voormeting = 8"*, vier regels onder *"met voormeting 12"* (Jeanne: *"zelfde
+  nametingen"*. In 2ea9802 stond er *"met voormeting = 8"*, vier regels onder *"met voormeting 12"* (testlezer A: *"zelfde
   etiket, twee getallen, in één adem"*; de Engelse lezer hetzelfde). De zin ervoor zegt *"toetst een ander getal"* en
-  *"alleen uit de nametingen"*, zodat je weet dat er iets anders dan 12 komt (Jeanne zat er eerst negen regels mee).
-- **"(X)" in plaats van "het gewicht *b*₂".** De 8 stond in *b*'s en de 12 in stukjes (Jeanne, Engelse lezer). Het
+  *"alleen uit de nametingen"*, zodat je weet dat er iets anders dan 12 komt (testlezer A zat er eerst negen regels mee).
+- **"(X)" in plaats van "het gewicht *b*₂".** De 8 stond in *b*'s en de 12 in stukjes (testlezer A, Engelse lezer). Het
   verschil was ook inhoudelijk: in de regressie van de nameting, die volgens de alinea erboven deze variantieanalyse
   ís, is het effect met voormeting *b*₂ + *b*₃ = 8 + 0 = 8, niet 12.
 - **De vaste alinea schrijft de 10 niet meer toe aan "een variantieanalyse"** (nakijker): *"Toch kun je die twee
   samenvatten"*.
-- **Wie of wat.** *"die analyse"* (Jeanne las *"neemt ze"* eerst als Campbell en Stanley); *"de toets die ze wel
+- **Wie of wat.** *"die analyse"* (testlezer A las *"neemt ze"* eerst als Campbell en Stanley); *"de toets die ze wel
   aanraadden"* (eerst *"de nametingen die Campbell en Stanley aanraadden"*, dubbelzinnig); *"Die analyse rekent"*
   (anders twee keer *"ze"* voor twee dingen achter elkaar); *"lager dan II"* (nakijker); *"niet meer één getal"*
-  (Jeanne las *"geen één"* als *"geen enkel"*); *"dan deed je niets fout"* (was *"rekende je goed"*: SPSS rekent,
+  (testlezer A las *"geen één"* als *"geen enkel"*); *"dan deed je niets fout"* (was *"rekende je goed"*: SPSS rekent,
   niet jij).
 - **Het object, half.** *"het effect van de therapie met voormeting"* (nakijker: zonder *"van de therapie"* kon het
   als T lezen, het testeffect). *"op de kwaliteit van leven"* staat er bij die twee vermeldingen niet bij. **Bewuste
   afwijking** van de huisregel *het object staat er altijd bij*: het staat voluit in de eerste en de derde zin van de
-  alinea, en elke vermelding daarna langer maken weegt in een alinea die Jeanne al vol vond.
+  alinea, en elke vermelding daarna langer maken weegt in een alinea die testlezer A al vol vond.
 - **Engels:** *"boils the two down to one number"*, *"a summary of the two"*, *"uses ... for"* (was *"takes ...
   from"*, dat als aftrekken leest), *"on this page"*, *"main effect from the calculations"*, *"8, not 12"* (was een
   vertaling van *"en niet"*), *"no pretest of their own"* (stap 11 geeft III en IV wél een verbetering, met de
@@ -728,10 +735,10 @@ zijn dat (63 + 60) / 2 = 61.5 met therapie en (55 + 52) / 2 = 53.5 zonder. Dat v
 de bladzij gezet: het zijn twee getallen erbij in een slotzin die er al zeven heeft (Engelse lezer: *"I would not add
 a sentence to the last line"*). De vorm *"het gemiddelde van het effect met en zonder voormeting"* (dezelfde 8, langs
 de enkelvoudige effecten) is van C, niet uit de Bib, en sluit aan op de *"8 en 12"* van de zin ervoor. Ook
-*"hoofdeffect met de sommen"*, *"op de nametingen"* en *"twee keer dezelfde vergissing"* zijn van C. Jeanne en de
+*"hoofdeffect met de sommen"*, *"op de nametingen"* en *"twee keer dezelfde vergissing"* zijn van C. Testlezer A en de
 Engelse lezer zijn er twee keer overheen geweest.
 
-**Lezers in deze ronde:** de Engelse lezer (drie keer), Jeanne (drie keer), de nakijker (drie keer) en de APA-lens
+**Lezers in deze ronde:** de Engelse lezer (drie keer), testlezer A (drie keer), de nakijker (drie keer) en de APA-lens
 (twee keer; geen fout, twee twijfels, allebei verwerkt). Geen van hen vond een rekenfout.
 
 **Niet veranderd, wel gemeld** (buiten deze opdracht, of een keuze voor Ben):
@@ -748,7 +755,7 @@ Engelse lezer zijn er twee keer overheen geweest.
   Solomons methode en zegt alleen dat Campbell en Stanley *"een andere weg aanraadden"*. Ook raden zij de
   covariantieanalyse van O4 tegen O2 alleen aan *"if the main and interactive effects of pretesting are negligible"*;
   in dit speeltje zijn ze dat niet (T = 1, S = 4).
-- **Ronde 2 van C, Jeannes tentamenvraag:** *"SPSS → 8, tabel → 10 ... ik weet niet welke de docent wil."* Een
+- **Ronde 2 van C, de tentamenvraag van testlezer A:** *"SPSS → 8, tabel → 10 ... ik weet niet welke de docent wil."* Een
   didactische keuze voor Ben, geen zin om hier te repareren.
 - **Ronde 2 van C, de toegift in SPSS** (Engelse lezer, met de hand afgeleid, niet in SPSS gedraaid). Met
   voormeting en therapie als 0/1 neemt SPSS UNIANOVA standaard de hoogste code als referentie. De schattingen worden
@@ -756,7 +763,7 @@ Engelse lezer zijn er twee keer overheen geweest.
 - **Ronde 2 van C, "twee keer dezelfde vergissing" kost niet twee keer evenveel** (nakijker, Engelse lezer): het
   hoofdeffect zakt 2, de interactie 4, omdat het hoofdeffect het verschil in voormeting maar half meeneemt. De
   bladzij zegt niet waarom. Niet toegevoegd: de slotzin heeft al zeven getallen.
-- **Ronde 2 van C, waar de omweg uitkomt** (Jeanne: *"de enige zin in dit stuk zonder getal"*). Corrigeer je
+- **Ronde 2 van C, waar de omweg uitkomt** (testlezer A: *"de enige zin in dit stuk zonder getal"*). Corrigeer je
   I − II met een geschatte helling *b*, dan is het hoofdeffect ((63 − 55) − *b*·(48 − 52) + (60 − 52)) / 2: 10 bij
   *b* = 1, 9.2 bij *b* = .6, 8 bij *b* = 0 (nakijker, in R). Niet gebouwd: dat is een nieuwe bewering die eerst
   langs de lezers moet.
@@ -776,25 +783,25 @@ Engelse lezer zijn er twee keer overheen geweest.
 - **Ronde 3, de knop "Geen sensitisatie" op het speelbord geeft *b*₃ = −4** in de regressie van de nameting, en
   *"Alleen de tijd"* *b*₁ = 2 en *b*₃ = −4 (nakijker, in R). Klopt met 48/52, en de noot onder de tabel legt het uit,
   maar Ben zou het één keer moeten zien.
-- **Ronde 3, de volgorde H/M, T, X, S** in de opbouw van *b*₃ wijkt af van H/M, X, T, S elders (Michelle, Jeanne,
-  nakijker). Met opzet: zo staan 2, 1, 8 aan beide kanten op dezelfde plek en zie je ze wegvallen. Michelle: *"laten
+- **Ronde 3, de volgorde H/M, T, X, S** in de opbouw van *b*₃ wijkt af van H/M, X, T, S elders (testlezer B, testlezer A,
+  nakijker). Met opzet: zo staan 2, 1, 8 aan beide kanten op dezelfde plek en zie je ze wegvallen. Testlezer B: *"laten
   staan"*; het staat nu hier, niet op de bladzij.
-- **Ronde 3, kleiner:** de hint van stap 9 heeft nu een puntkomma, en dat is voor Michelle een uitvalplek (in ronde 2
+- **Ronde 3, kleiner:** de hint van stap 9 heeft nu een puntkomma, en dat is voor testlezer B een uitvalplek (in ronde 2
   was hij haar te lang); links van *"="* staat in de sommen twee keer zoveel ruimte als rechts (APA-lens, al zo vóór
   stuk 3); *"<voorAfstand> punten"* zou bij een verschil van 1 *"1 punten"* geven (nakijker; met 48/52 is het 4);
   `solomon_figuren_test.py` toetst zonder argument alleen de Nederlandse bladzij (nakijker; ik draaide hem met beide
   paden, afloop 0).
-- **Ronde 3, Michelles beeld:** in stap 9 twee staven naast die van stap 8, nu met nametingen: 8 en 8, niets steekt
+- **Ronde 3, het beeld van testlezer B:** in stap 9 twee staven naast die van stap 8, nu met nametingen: 8 en 8, niets steekt
   uit, en onder de I−II-staaf hangt een stuk van −4, zodat je ziet dat de 12 op een vloer vier lager begon. Niet
   gebouwd (een nieuwe figuur gaat eerst langs de beeldverteller).
 
-- Michelle: stap 9 heeft als enige rekenstap geen figuur, en juist daar zit de kern. Haar voorstel: vier staven van
+- Testlezer B: stap 9 heeft als enige rekenstap geen figuur, en juist daar zit de kern. Haar voorstel: vier staven van
   voormeting naar nameting (I 48 → 63, II 52 → 55, III en IV 50 → 60 en 52); *alleen nametingen* is dan alleen naar
   de bovenkanten kijken, *verbetering* naar de lengtes. Niet gebouwd (een nieuwe figuur hoort eerst langs de
   beeldverteller); een idee voor Ben.
-- Michelle: *"Je vergelijkt / Je neemt aan"* stopt na stap 7; in stap 10 had hij het punt gemaakt (*"je neemt aan:
+- Testlezer B: *"Je vergelijkt / Je neemt aan"* stopt na stap 7; in stap 10 had hij het punt gemaakt (*"je neemt aan:
   niets over waar II begon"*).
-- Michelle en de Engelse lezer: lange sommen (stap 3, stap 9) lopen op 390 px het schuifvak uit zonder zichtbaar
+- Testlezer B en de Engelse lezer: lange sommen (stap 3, stap 9) lopen op 390 px het schuifvak uit zonder zichtbaar
   teken dat het vak schuift. Zo was het al vóór stuk 3.
 - De Engelse lezer: drie keer 52 (voormeting II, nameting IV en *b*₀). Dat volgt uit 48/52 en de stukjes en is niet
   weg te kiezen; *b*₁ = (52 + 2 + 1) − (50 + 2) in stap 10 houdt ze nu uit elkaar.
@@ -803,13 +810,13 @@ Engelse lezer zijn er twee keer overheen geweest.
   inhoudelijke: *head start* (de voorzet van de twijfelaar bij S) betekent in het Engels juist een betere
   startpositie, en *"koning Salomo liet een zwaard halen om eerlijk te verdelen"* klopt niet met het verhaal (het
   zwaard was een list om de echte moeder te vinden).
-- Jeanne: onder de letter S in de ingevulde kaart staat klein *"de therapie werkte alleen dankzij de vragenlijst"*;
+- Testlezer A: onder de letter S in de ingevulde kaart staat klein *"de therapie werkte alleen dankzij de vragenlijst"*;
   haar oog koppelt dat aan de betekenis van S, terwijl het de twijfel is.
 
 ## Wat de testlezers en de APA-lens zeiden in stuk 1c, en wat er veranderde
 
-Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.quarto/kladje_solomon/dom1c.html`), Jeanne en de
-lens ook de bron. Michelle las tot en met stap 10 zonder uit te vallen (stap 11 gokte ze goed), Jeanne liep nergens
+Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.quarto/kladje_solomon/dom1c.html`), testlezer A en de
+lens ook de bron. Testlezer B las tot en met stap 10 zonder uit te vallen (stap 11 gokte ze goed), testlezer A liep nergens
 weg, de lens rekende alle getallen na en vond er geen fout.
 
 - **Alle drie, onafhankelijk: er stond kapotte tekst op de bladzij.** In de uitklapper *"hoe toets je of S echt van
@@ -817,37 +824,37 @@ weg, de lens rekende alle getallen na en vond er geen fout.
   van elke `.kl`-alinea en ving ook de X in het attribuut `data-r="X"`. Dat zat al in de proefdruk van 1b. Nu loopt
   de streep-pas alleen over tekstknopen (`createTreeWalker`), en de lens merkte terecht op dat dit een klasse was,
   geen incident: elke toekomstige attribuutwaarde met een losse X, T of S zou stil hetzelfde doen.
-- **Michelle en Jeanne, allebei: de ruggengraat stond verstopt.** De lopende som stond alleen in de dichtgeklapte
+- **Testlezers B en A, allebei: de ruggengraat stond verstopt.** De lopende som stond alleen in de dichtgeklapte
   uitwerkingen; wie alles goed had en nooit een uitwerking opende, zag de som van groep I na stap 1 nooit meer, en
   de hint van stap 7 verwees er wél naar. Nu staat de stapel-tot-nu-toe zichtbaar in de trede, tussen de tabel en
   de vraag (*"Zo staat de som van groep I nu:"*), en toont de uitwerking alleen de vorige regel en de nieuwe
-  (`lopend(k, van)`). Michelle sloeg de herhaalde bovenregels toch al over.
-- **Michelle en Jeanne, allebei: de stukjes-tabel vóór de eerste vraag was een drempel.** Vier omschrijvingen zonder
-  getal, nog voor er iets gerekend was; Michelle zakte weg bij *"H voor wat er in de wereld gebeurt"*, Jeanne gleed
+  (`lopend(k, van)`). Testlezer B sloeg de herhaalde bovenregels toch al over.
+- **Testlezers B en A, allebei: de stukjes-tabel vóór de eerste vraag was een drempel.** Vier omschrijvingen zonder
+  getal, nog voor er iets gerekend was; testlezer B zakte weg bij *"H voor wat er in de wereld gebeurt"*, testlezer A gleed
   eroverheen en moest bij de vinkjes terug. De tabel staat nu in stap 2, waar hij nodig is; stap 1 is alleen
-  65 − 50 (Michelle: *"in drie seconden goed, dus ik ben terug"*).
-- **Michelle: het bijschrift zei "samen 15" en de lege trap liet geen 15 zien.** Het grijze totaalblok staat nu in
+  65 − 50 (testlezer B: *"in drie seconden goed, dus ik ben terug"*).
+- **Testlezer B: het bijschrift zei "samen 15" en de lege trap liet geen 15 zien.** Het grijze totaalblok staat nu in
   elke trap, ook als hij nog niet af is, zodat je het gat ziet slinken; het verbindingslijntje komt pas bij de laatste
   trede.
-- **Michelle: het vinkjesrooster liep I → IV en de boekhouding IV → I.** Jeanne zag hetzelfde in stap 10 (de tabel
+- **Testlezer B: het vinkjesrooster liep I → IV en de boekhouding IV → I.** Testlezer A zag hetzelfde in stap 10 (de tabel
   met nullen en enen I → IV, *"wat het model zegt"* IV → I). Beide tabellen staan nu I → IV, net als elke andere
   tabel op de bladzij; *"van onder naar boven"* klopt dan letterlijk met de tabel.
-- **Michelle: "Solomon" in de titel, "Salomo" in het bijschrift las als een tikfout**, en in het verhaal snijdt het
+- **Testlezer B: "Solomon" in de titel, "Salomo" in het bijschrift las als een tikfout**, en in het verhaal snijdt het
   zwaard juist niet. Het bijschrift noemt nu de twee naamgenoten (Richard Solomon bedacht het ontwerp, koning Salomo
   liet een zwaard halen). Dat het oordeel eigenlijk is dat de snede uitblijft, staat er niet; de titel is Bens keuze.
-- **Jeanne: "groep IV geeft b₀, groep III geeft b₂, groep II geeft b₁, en groep I geeft b₃" las als een tikfout**
+- **Testlezer A: "groep IV geeft b₀, groep III geeft b₂, groep II geeft b₁, en groep I geeft b₃" las als een tikfout**
   (0, 2, 1, 3). Er staat nu bij waarom de nummers de ladder kruisen: in het model staat voormeting vóór therapie,
   dus T kreeg *b*₁ en X *b*₂, terwijl de ladder eerst X vindt. Bens volgorde van het model is gehouden.
-- **Jeanne: "voormeting = 0" in de hint las als de score 0.** Nu: *"de schakelaar voormeting op 0"*. Haar grotere
+- **Testlezer A: "voormeting = 0" in de hint las als de score 0.** Nu: *"de schakelaar voormeting op 0"*. Haar grotere
   punt blijft staan: *voormeting* is in stap 10 een schakelaar (0/1), een score (50) én heet ook *startniveau*. De
   X-botsing is weg; een kleinere voormeting-botsing is ervoor in de plaats gekomen, en de zin die hem uitlegt staat
   er eerlijk bij.
-- **Jeanne en de lens: de tabelkop "therapie (X)" en het hokje "X" in de tijdlijn droegen nog een tweede X**, de
+- **Testlezer A en de lens: de tabelkop "therapie (X)" en het hokje "X" in de tijdlijn droegen nog een tweede X**, de
   gebeurtenis naast het stukje. De kop heet nu *therapie*, het hokje in de tijdlijn zegt *therapie*. De enige X op
   de bladzij is nu het stukje.
-- **Jeanne: "voormeting III en IV" als naam van één getal** las als "voormeting III, en IV". Nu heet dat getal
+- **Testlezer A: "voormeting III en IV" als naam van één getal** las als "voormeting III, en IV". Nu heet dat getal
   overal *geleende voormeting*, en stap 3 zegt dat hardop.
-- **Jeanne: "want groep I kreeg alles" is een bewering, geen reden** waarom de vier optellen. Stap 1 zegt nu dat het
+- **Testlezer A: "want groep I kreeg alles" is een bewering, geen reden** waarom de vier optellen. Stap 1 zegt nu dat het
   een afspraak is: wat er in groep I overblijft als je de andere drie eraf haalt, noem je S.
 - **De lens: de zwaard-etiketten "T 1" lazen als T1, een meetmoment.** Nu *T = 1*, net als het bijschrift; het eerste
   etiket begint bij de linkerrand, weg van het zwaard. En: een streepje in een tabel zonder noot (de kale tabel van
@@ -860,39 +867,39 @@ weg, de lens rekende alle getallen na en vond er geen fout.
   opgelost; dat doet hij. Bewust niet veranderd: getalkolommen rechts in plaats van gecentreerd (al in 1b besloten),
   tabellen zonder nummer (huisconventie in de speeltjes), en de stip in plaats van × als naam van de interactieterm
   (één teken over de hele bladzij).
-- **Niet veranderd, wel gemeld.** Michelle: stap 8 vraagt drie berekeningen voor één invulvak (bestond al). Michelle:
+- **Niet veranderd, wel gemeld.** Testlezer B: stap 8 vraagt drie berekeningen voor één invulvak (bestond al). Testlezer B:
   bij de hint van stap 7 zou de zwaardbalk al drie sneden mogen hebben (2 | 8 | 1 | ?) zodat S van het plaatje te
-  lezen is; nu is de balk vóór het antwoord één stuk, zoals Ben het zwaard vroeg. Jeanne: de waarschuwing dat sommige
-  boeken T *pretest-sensitisatie* noemen staat ná de ladder; Michelle wilde hem in stuk 1 juist niet in de ladder.
-  Jeanne: *"15 − 2 − 8 − 1"* (stap 7, kaart) tegen *"15 − 2 − 1 − 8"* (stap 11, in *b*-volgorde).
+  lezen is; nu is de balk vóór het antwoord één stuk, zoals Ben het zwaard vroeg. Testlezer A: de waarschuwing dat sommige
+  boeken T *pretest-sensitisatie* noemen staat ná de ladder; testlezer B wilde hem in stuk 1 juist niet in de ladder.
+  Testlezer A: *"15 − 2 − 8 − 1"* (stap 7, kaart) tegen *"15 − 2 − 1 − 8"* (stap 11, in *b*-volgorde).
 
 ## Wat de testlezers en de APA-lens zeiden in stuk 1b, en wat er veranderde
 
-Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.html`), Jeanne en de lens ook de bron.
+Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.html`), testlezer A en de lens ook de bron.
 
-- **Michelle stopte na stap 9**, om twee aanwijsbare redenen: de titel *"Tot slot"* terwijl er nog twee treden
+- **Testlezer B stopte na stap 9**, om twee aanwijsbare redenen: de titel *"Tot slot"* terwijl er nog twee treden
   volgden (*"een kers werkt alleen als ik weet dat de taart al af is"*), en de vraag naar *b*₃ in stap 10 direct
   na de formule (*"ik kan geen regressie uit mijn hoofd draaien"*) terwijl de zin die het slot eraf haalt —
   dezelfde vier sommen als stap 4–7 — pas in de uitwerking stond. Nu: stap 9 heet *De proef op de som: de kale
   tabel* en sluit af met *"Hiermee is de ladder af. Wat volgt is een toegift"*; de inleiding zegt *"Negen stapjes,
   en daarna een toegift van twee"* (geteld); stap 10 en 11 dragen *Toegift ·* in hun kop; de zin over dezelfde vier
   sommen staat vóór de vraag; en stap 10 vraagt nu het makkelijke (*b*₀ aflezen), stap 11 de ketting (*b*₃).
-- **Michelle, de grootste verrassing: vier volgordes voor dezelfde vier stukjes.** Kolom *bevat* zei S + T + H/M + X
+- **Testlezer B, de grootste verrassing: vier volgordes voor dezelfde vier stukjes.** Kolom *bevat* zei S + T + H/M + X
   (Bens eigen notatie uit zijn methode), de trap en het zwaard H/M, X, T, S, de som van stap 7 T, H/M, X, het
-  zwaardbijschrift H/M, T, X, S (Jeanne en de APA-lens zagen die laatste ook). Nu staat overal de volgorde waarin
+  zwaardbijschrift H/M, T, X, S (testlezer A en de APA-lens zagen die laatste ook). Nu staat overal de volgorde waarin
   de ladder ze vindt: H/M, X, T, S, ook in de sommen (*"verbetering I − H/M − X − T"*). **Dat wijkt af van Bens
   geschreven volgorde** S + T + H/M + X; de reden is dat de lezer de som op het plaatje moet kunnen leggen.
-- **Michelle en Jeanne, allebei: *startgetal* naast *startniveau*.** Twee woorden die op elkaar lijken voor twee
+- **Testlezers B en A, allebei: *startgetal* naast *startniveau*.** Twee woorden die op elkaar lijken voor twee
   dingen (*b*₀ = 52 en de geleende voormeting 50). *Startgetal* (Bens Bib-woord voor het intercept) is van de
   bladzij; *startniveau* (zijn woord uit de briefing) blijft, met de omschrijving *"waar iedereen gemiddeld begon"*,
   en 50 + 2 = 52 staat nu als som onder elkaar, niet tussen komma's in proza.
-- **Jeanne en de APA-lens: de letter X deed twee dingen, en de kleurstreep stond onder de verkeerde.** *kl()*
+- **Testlezer A en de APA-lens: de letter X deed twee dingen, en de kleurstreep stond onder de verkeerde.** *kl()*
   streept elke losse X; in het model stond de schakelaar X (0/1) dus met de streep van het stukje X (8 punten), en
   V zonder. De lens: in een model zijn *V* en *X* variabelen, dus cursief (huis-ijkpunt Hayes' ω = a(b₁ + b₃V),
   alles cursief); het stukje X blijft rechtop met zijn streep. Zo gedaan: *V* en *X* cursief in model, tabelkoppen
   en hint, zonder streep (een onzichtbare woordvoeger U+2060 achter de schakelaar-X houdt *kl()* tegen), en stap 10
   zegt het hardop: *"die schuine X is een schakelaar, niet het stukje X van 8 punten."*
-- **Jeanne: stap 9 beloofde de kale tabel en verwees terug naar de geleende voormeting**; hoe je S uit alleen de
+- **Testlezer A: stap 9 beloofde de kale tabel en verwees terug naar de geleende voormeting**; hoe je S uit alleen de
   vier nametingen haalt stond nergens, en de natuurlijkste fout uit een kale tabel — nameting I − nameting IV = 13
   (= X + T + S) — zat niet bij de keuzes; 12 kan ook via nameting I − nameting II, wat de uitleg niet noemde. Nu:
   de uitwerking rekent (65 − 53) − (60 − 52) = 4 voor, met de reden waarom lenen daar wegvalt; 13 staat bij de
@@ -902,19 +909,19 @@ Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.ht
   zijn nu 48 en 52, de uitwerking rekent voor waarom de som met alleen nametingen dan 0 geeft, en de toets eist het
   omgekeerde: ongelijke voormetingen. De lijst van nameting-verschillen telt een weg alleen nog mee als hij met deze
   getallen echt zijn stukjes meet.)*
-- **Jeanne: *"dezelfde vier sommen"* en dan andere sommen** (stap 5: (60 − 50) − 2; stap 10: 60 − 52). Nu staat
+- **Testlezer A: *"dezelfde vier sommen"* en dan andere sommen** (stap 5: (60 − 50) − 2; stap 10: 60 − 52). Nu staat
   erbij waarom: de 50 en de 2 zitten samen in *b*₀ = 52.
-- **Jeanne: *"factor"* zonder uitleg** in de uitklapper, en haar paniek-verrassing dat een echte tweeweg-analyse een
+- **Testlezer A: *"factor"* zonder uitleg** in de uitklapper, en haar paniek-verrassing dat een echte tweeweg-analyse een
   hoofdeffect therapie van (12 + 8) / 2 = 10 geeft en geen 8. Allebei toegevoegd, de getallen uitgerekend. (Ingetrokken voor 48/52: dit gold bij 50/50.
   Sinds 48/52 geeft de tweeweganalyse van de nametingen (8 + 8) / 2 = 8; zie *Ronde 2 van C*.)
-- **Michelle: stap 8 herhaalde de slotzin van stap 7** en had geen beeld. De herhaling is weg; er staat nu een
+- **Testlezer B: stap 8 herhaalde de slotzin van stap 7** en had geen beeld. De herhaling is weg; er staat nu een
   figuurtje met twee balken (therapie mét voormeting 12, zonder 8; wat uitsteekt is S), en het woord *interactie*
   valt daar voor het eerst. *Sensitisatie* valt nu al in stap 3 (de stukjestabel) in plaats van pas in stap 9.
-- **Michelle: stap 10 en 11 zonder beeld.** Stap 10 heeft nu de trap met de vloer op 50 (de eerste trede eindigt
+- **Testlezer B: stap 10 en 11 zonder beeld.** Stap 10 heeft nu de trap met de vloer op 50 (de eerste trede eindigt
   op 52: dat is *b*₀, en daarom zit H/M erin verstopt); stap 11 dezelfde trap met *b*₀, *b*₂, *b*₁, *b*₃ onder de
   treden. De tabel "wat het model per groep zegt" heeft de boekhouding van stap 3 ernaast, zodat de paren *b*₂–X,
   *b*₁–T, *b*₃–S te zien zijn.
-- **Michelle: de som van stap 7 ging sneller dan zij** (15 − 1 − 2 − 8 → 4). Nu één aftrekking per regel.
+- **Testlezer B: de som van stap 7 ging sneller dan zij** (15 − 1 − 2 − 8 → 4). Nu één aftrekking per regel.
 - **De APA-lens, verder:** *b* in *"heten de stukjes nu b"* stond plat (nu cursief); H/M en de andere letters stonden
   kaal overal waar tekst niet door *kl()* ging (aannametabel, lege kaart naast de gestreepte ingevulde, "Hier en
   elders", speelbord-oordeel, "En in je eigen onderzoek?"): nu streept een `.kl`-pas ook de vaste tekst; het streepje
@@ -923,24 +930,24 @@ Alle drie lazen de gerenderde bladzij met alle uitklappers open (`.kladje/dom.ht
   zegt centreren; hier zijn het hele getallen met tabular-nums), en de kolomkop *"H/M los te zien?"* blijft een
   vraag. De lens rekende alle getallen na en vond er geen fout; de middenstip als vermenigvuldigingsteken is in
   orde, × niet (APA reserveert dat voor 2 × 2).
-- **Niet veranderd, wel gemeld.** Michelle leest de aannametabel niet en zakt weg in stap 3 (drie tabellen vóór het
+- **Niet veranderd, wel gemeld.** Testlezer B leest de aannametabel niet en zakt weg in stap 3 (drie tabellen vóór het
   eerste vinkje); de kaart en de schuifjes, waar zij het liefst mee speelt, staan ná de treden die zij overslaat.
-  Jeanne opent de uitklapper *"andere namen"* niet uit zichzelf, dus de waarschuwing dat sommige boeken T
+  Testlezer A opent de uitklapper *"andere namen"* niet uit zichzelf, dus de waarschuwing dat sommige boeken T
   pretest-sensitisatie noemen bereikt haar niet; midden in de ladder wil ze hem ook niet (stuk 1). Beide zijn
   ontwerpkeuzes voor Ben.
 
 ## Wat de testlezers zeiden in stuk 1, en wat er veranderde
 
-- **Jeanne** (en los van haar de APA-lens): met de getallen van 2015 waren T en S allebei 2. Nu zijn ze 1 en 4; de
+- **Testlezer A** (en los van haar de APA-lens): met de getallen van 2015 waren T en S allebei 2. Nu zijn ze 1 en 4; de
   waarschuwing "T is hier toevallig óók …" staat nog in de code en gaat alleen af als ze weer samenvallen.
-- Jeanne: waar de 5 in stap 7 vandaan kwam stond nergens; nu staat er S + X = 4 + 8 = 12.
-- Jeanne: bij een foute vinkjesmatrix stond alleen "2 van de 4 rijen kloppen"; nu staat er welke groepen.
-- Jeanne: de Campbell-en-Stanley-alinea las als "wat je net leerde is fout". Nu zegt hij dat de rekenwijze klopt om
+- Testlezer A: waar de 5 in stap 7 vandaan kwam stond nergens; nu staat er S + X = 4 + 8 = 12.
+- Testlezer A: bij een foute vinkjesmatrix stond alleen "2 van de 4 rijen kloppen"; nu staat er welke groepen.
+- Testlezer A: de Campbell-en-Stanley-alinea las als "wat je net leerde is fout". Nu zegt hij dat de rekenwijze klopt om
   S te vinden, dat het om het toetsen gaat, en dat de toets op de nametingen de regressie van stap 10 is.
-- Michelle: de trap hoort bij de ladder, niet erna. Nu kleurt hij per stap in.
-- Michelle: stap 8 voelde als paniek ("waarom nog een keer?"). Nu staat erboven dat het een tweede weg naar
+- Testlezer B: de trap hoort bij de ladder, niet erna. Nu kleurt hij per stap in.
+- Testlezer B: stap 8 voelde als paniek ("waarom nog een keer?"). Nu staat erboven dat het een tweede weg naar
   hetzelfde getal is, die narekent of je goed zat.
-- Niet veranderd: de voetregel *"De regressieve ruggengraat"* (Jeanne kende hem niet). Het is de vaste voetregel van
+- Niet veranderd: de voetregel *"De regressieve ruggengraat"* (testlezer A kende hem niet). Het is de vaste voetregel van
   alle speeltjes.
 
 ## Open vragen voor Ben

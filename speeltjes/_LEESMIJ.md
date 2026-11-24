@@ -26,18 +26,18 @@ vijf rubrieken paste, want *Ontleden* begint met *"Eén verandering"*, en dat is
 Solomon. *"met op elke dummy een 0"* leunt op Bens eigen zin in een bijles (*"staat
 er bij beide dummies een nul, dan weet je dat het die weggelaten categorie is"*,
 Bib-unit `uitleg-bij-dummies-is-alles-ten-opzichte-van-de-referentiegroep`,
-`auteur: Ben`). Drie rondes met testlezers michelle en jeanne; wat ze vonden en wat er
-daarom staat:
+`auteur: Ben`). Drie rondes met twee testlezers, A en B (dezelfde letters als in
+`_solomon_ontwerp.md`); wat ze vonden en wat er daarom staat:
 
-- *"de gewichten springen"* las michelle naast wandelaars als lichaamsgewicht → het woord
+- *"de gewichten springen"* las testlezer B naast wandelaars als lichaamsgewicht → het woord
   staat er niet meer.
-- *"Zes groepen"* deed jeanne één factor met zes niveaus verwachten → de zes bij naam
+- *"Zes groepen"* deed testlezer A één factor met zes niveaus verwachten → de zes bij naam
   (wachtlijst, stappenteller of wandelmaatje × zomer of winter).
 - De kaart gaf eerst het antwoord (*"de voorspellingen blijven staan"*) vóór het speeltje
-  vraagt *"Gok eerst"* — jeanne: *"de gok is er daarmee wel uit"* → de kaart eindigt nu
-  zoals de lede van het speeltje: *"kijk wat er springt, en wat er blijft staan"*. Ronde
-  3, jeanne: *"Ik wil klikken — juist omdat ik nu níét weet wat er springt."*
-- *"nullijn"* in de inleiding was voor jeanne een derde naam naast vertrekpunt en
+  vraagt *"Gok eerst"* — testlezer A: *"de gok is er daarmee wel uit"* → de kaart eindigt nu
+  zoals de lede van het speeltje: *"kijk wat er springt, en wat er blijft staan"*. Lezersronde
+  3, testlezer A: *"Ik wil klikken — juist omdat ik nu níét weet wat er springt."*
+- *"nullijn"* in de inleiding was voor testlezer A een derde naam naast vertrekpunt en
   referentiecategorie → *"een ander vertrekpunt"*.
 
 Wat de lezers bij het speeltje zelf vonden (de lede is nu moeilijker dan de kaart) staat

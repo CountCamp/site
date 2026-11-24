@@ -48,6 +48,9 @@ nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
   # Sinds 21-11-2026 een VIERDE: de taalstukkenwachter. Zelfde reden; zijn eigen
   # zaken staan onder 6.
   printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$r/_tools/taalonderdelen.py"
+  # Sinds 24-11-2026 een VIJFDE: de namenwacht. Zelfde reden; zijn eigen toets is
+  # namenwacht_test.sh (die proeft hem ook via --nakijken).
+  printf 'print("namenwacht - nagemaakt, alles in orde")\n' > "$r/_tools/namenwacht.py"
   echo "$r"
 }
 

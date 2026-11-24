@@ -74,7 +74,7 @@ De aanname in de opdracht klopte niet: de **rug**-vorm is de krappere van de
 twee, niet de ruimere. Kaart zet alles 8 tot 19 % verder uit elkaar
 (uitgerekend over de negen afstanden die verschillen; mediaan 14 %).
 
-Michelle (testlezer, Pedagogiek Leiden) las het net zo: *"als ik alleen
+Een testlezer las het net zo: *"als ik alleen
 'Pedagogiek' boven mijn boeken zie, dan ben ik zelf naar beneden gescrold, dus
 ik ben al langs die kop geweest."* Ze struikelde wél kort bij de tweede
 `Psychologie`: *"hè, nog een keer Psychologie?"* — en herstelde door omhoog te
@@ -96,7 +96,7 @@ Alle gemeten eigenschappen gelijk, in beide vormen:
 Ter vergelijking: een boek dat er wél is reageert wel — in rug licht de regel op
 naar `rgb(228, 237, 231)`, in kaart tilt hij `-2 px`.
 
-**Oogt een kop zonder link als een kapotte link?** Michelle kon dat niet
+**Oogt een kop zonder link als een kapotte link?** De testlezer kon dat niet
 beoordelen uit de bron. Gemeten (`meet_link.R`), en het verschil zit op vier
 punten tegelijk, in beide vormen gelijk:
 
@@ -148,7 +148,7 @@ commit hem mee. Ik heb hem meteen weggehaald.
 **Er staan drie manieren op de plank om "niet af" te zeggen, niet twee.**
 "in opbouw" (niets te lezen — OZP 2, STAT 3), "twee van de zeven thema's staan
 online" plus chip "nieuw" (Psychometrie), en "voorlopige versie" (MVDA).
-Michelle zag het paar OZP 2/STAT 3 meteen als één categorie, en juist daardoor
+De testlezer zag het paar OZP 2/STAT 3 meteen als één categorie, en juist daardoor
 viel de rest uit de toon.
 
 **Het OZP 1-werkboek is vanochtend hernoemd en de plank liep achter.** Sinds

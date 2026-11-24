@@ -1,6 +1,6 @@
 # Ziet een kop zonder link eruit als een kapotte link?
 #
-# Michelle kon dit niet beoordelen: zij las de bron en niet de gerenderde
+# De testlezer kon dit niet beoordelen: zij las de bron en niet de gerenderde
 # bladzij. Haar zorg was concreet -- "als de kop dezelfde kleur heeft als
 # een link maar niet klikt, dan klik ik erop, er gebeurt niets, en dan denk
 # ik: stuk." Dus meet ik kleur, pijl, muisaanwijzer en onderstreping naast

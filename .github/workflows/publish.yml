@@ -16,6 +16,8 @@
 # (_tools/taalonderdelen.py los --controleer). Rood = er gaat niets live.
 # Erna, sinds 23-11-2026 (spoor pers_commentaar): de commentaarwacht
 # (_tools/commentaarwacht.py) op de gebouwde _site/. Rood = er gaat niets live.
+# Daarvóór ook, sinds 24-11-2026: de namenwacht (_tools/namenwacht.py) op de
+# bestanden van de repo zelf. Rood = er gaat niets live.
 #
 # Tot 14-11-2026 deed quarto-actions/publish@v2 bouwen en publiceren in één
 # stap, en was er geen plek om ertussen te kijken: main publiceerde zonder
@@ -93,6 +95,24 @@ jobs:
         # geen bouw en geen git-geschiedenis nodig. Afloop 1 = een gat, 3 = niet
         # gekeken; allebei rood, en dan gaat er niets live.
         run: python3 _tools/taalonderdelen.py los --controleer
+
+      - name: pdftotext voor de namenwacht
+        # De namenwacht leest de tekst van elke pdf in de repo met pdftotext, en
+        # zonder pdftotext is een pdf voor hem BLIND (afloop 3): de tekst van een
+        # gewone pdf staat in tekenopdrachten, niet als hele woorden. Op de
+        # ubuntu-runner staat hij niet (nakijker, 24-11-2026: niet in de lijst van
+        # runner-images voor Ubuntu 24.04), dus eerst installeren.
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends poppler-utils
+
+      - name: Namenwacht
+        # Ben, 23-11-2026: "Site + speeltjes schoonmaken" -- geen voornaam van een
+        # testlezer in een bestand van deze openbare repo. Leest elk bestand dat
+        # git kent (ook wat er in een zip, .RData of pdf zit), niet de bouw: wat in
+        # git staat is openbaar, ook als het nooit op een bladzij komt. Daarom vóór
+        # de bouw. Afloop 1 = een naam buiten _tools/namenwacht_uitzonderingen.tsv,
+        # 3 = niet gekeken; allebei rood, en dan gaat er niets live. Zijn uitvoer
+        # noemt de naam niet (<naam1>/<naam2>): dit logboek is openbaar.
+        run: python3 _tools/namenwacht.py
 
       - name: Render
         # QUARTO_PROFILE staat er met opzet bij, al is `echt` ook de standaard

@@ -235,6 +235,50 @@ taalstukken_nakijken() {   # $1 = blokkerend | melden
   return 0
 }
 
+# ---- geen testlezer-naam in een bestand van deze repo -------------------
+# Deze repo is openbaar. Ben, 23-11-2026: "Site + speeltjes schoonmaken" -- de
+# voornamen van de testlezers uit elk openbaar bestand, en een wachter erop.
+# _tools/namenwacht.py leest elk bestand dat git kent (ook wat er in een zip, een
+# .RData of een pdf zit) en kent alleen de uitzonderingen in
+# _tools/namenwacht_uitzonderingen.tsv, elk met een reden.
+# Geen bouw nodig: hij leest de repo, niet _site/. Hij moet ook niet wachten op
+# een bouw, want wat in git staat is al openbaar zodra het gepusht is -- ook als
+# het nooit op een bladzij komt (zo stonden de spoorverslagen in _logs/ er).
+# Zelfde afweging als hierboven: rood kan hij alleen worden doordat er een naam
+# in een bestand staat, en dat is altijd een echte fout. Blokkerend op
+# --productie, meldend op de proefwegen. Bij een rode uitslag staat er
+# <naam1>/<naam2> in plaats van de naam: zijn uitvoer komt ook in de openbare
+# logboeken van de Actions.
+# Ook alles wat de push nieuw openbaar maakt ($2, een bereik): de commitberichten,
+# en elke TUSSENVERSIE van een bestand -- een push publiceert elke commit, niet
+# alleen de top, en de Actions zien het pas daarna. Op --productie is dat
+# origin/main..main, vlak na de fetch; zonder bereik (een repo zonder origin/main,
+# zoals in de toetsen) zegt hij dat hardop. Staat een naam alleen in een
+# tussenversie, dan zegt de wacht dat ook: lever de tak dan met een squash-merge.
+namen_nakijken() {   # $1 = blokkerend | melden   $2 = bereik van de commitberichten (mag leeg)
+  local streng="$1" bereik="${2:-}" code=0
+  if [ -n "$bereik" ]; then
+    python3 "$HIER/_tools/namenwacht.py" --bereik "$bereik" | sed 's/^/  /' || code=$?
+  else
+    echo "  (geen origin/main: commitberichten en tussenversies niet nagelezen, alleen de bestanden)"
+    python3 "$HIER/_tools/namenwacht.py" | sed 's/^/  /' || code=$?
+  fi
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) echo "  Er staat een testlezer-naam in een bestand van deze openbare repo."
+       echo "  Herstellen: schrijf hem neutraal ('een testlezer', 'lezersronde 2'); de"
+       echo "  regels staan hierboven. Wie de namen wil zien: python3 _tools/namenwacht.py --toon" ;;
+    3) echo "  De namenwacht kon niet kijken (geen git, een bestand dat niet te lezen is,"
+       echo "  of een uitzondering zonder reden). Stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De namenwacht zelf liep vast (afloopcode $code). Wat hij had"
+       echo "  moeten meten is dus ONGEMETEN -- dit zegt niets over de bestanden."
+       echo "  Staat _tools/namenwacht.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 # ---- de GEBOUWDE site: elke bladzij precies één teller, of geen ---------
 # `tellers_nakijken` hierboven leest de BRONNEN van de bijlagen. Sinds
 # 14-11-2026 (spoor teller2; ontworpen 9-10, spoor teller) zet de bouw zelf de
@@ -301,6 +345,9 @@ gebouwd_commentaar_nakijken() {   # $1 = blokkerend | melden
 }
 
 huidige_tak() { git branch --show-current; }
+# Het bereik van de commitberichten die nog niet op GitHub staan, voor namen_nakijken;
+# leeg als er geen origin/main is.
+nog_te_pushen() { git rev-parse --verify --quiet origin/main >/dev/null && echo "origin/main..HEAD" || true; }
 
 # ============================================================
 case "$WEG" in
@@ -322,6 +369,7 @@ case "$WEG" in
   tellers_nakijken     blokkerend || code=1
   doorstuur_nakijken   blokkerend || code=1
   taalstukken_nakijken blokkerend || code=1
+  namen_nakijken       blokkerend "$(nog_te_pushen)" || code=1
   echo
   if [ "$code" = 0 ]; then
     echo "Alle poorten staan groen. --productie zou hierop niet struikelen."
@@ -338,6 +386,7 @@ case "$WEG" in
   tellers_nakijken melden
   doorstuur_nakijken melden
   taalstukken_nakijken melden
+  namen_nakijken melden "$(nog_te_pushen)"
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
     # Niet ter plaatse: Quarto loopt dan de hele map af, ook .claude/worktrees/
@@ -366,6 +415,7 @@ case "$WEG" in
   tellers_nakijken melden
   doorstuur_nakijken melden
   taalstukken_nakijken melden
+  namen_nakijken melden "$(nog_te_pushen)"
   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
   if [ -n "$(git status --porcelain)" ]; then
@@ -417,6 +467,7 @@ case "$WEG" in
   tellers_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
   doorstuur_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   taalstukken_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+  namen_nakijken blokkerend origin/main..main || { echo "  Niet geleverd."; exit 1; }
   echo
   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
   if [ -z "$DROOG" ]; then
