@@ -29,6 +29,22 @@ Wat het doet
          bijlage in de Nederlandse bouw -- daar krijgen ze hun canonical en hun
          plek in de sitemap, net als het boek en de oefenboeken.
 
+De canonical is ook de GoatCounter-reparatie
+--------------------------------------------
+Ben, 14-11-2026: GoatCounter moet `…/index.html` tellen als `…/`. Dat doet
+deze canonical, zonder dat _tools/teller.html verandert: count.js neemt het pad
+uit de eerste <link rel="canonical"> als die op dezelfde host staat, en valt
+alleen zonder canonical terug op location.pathname. Nagelezen op 24-11-2026 in
+de bron (gc.zgo.at/count.js, gelijk aan public/count.js in arp242/goatcounter,
+functie get_path) en in de handleiding (goatcounter.com/help/js: "Default is
+the value of <link rel="canonical"> if it exists"). De server haalt daarna de
+schuine streep aan het eind weg (hit.go, cleanPath), dus `/oefenboeken/` en
+`/oefenboeken/index.html` worden allebei de bestaande rij `/oefenboeken`. Oude
+bezoeken onder `…/index.html` blijven een eigen rij; die schuift dit niet om.
+Een tweede canonical zou dit breken: count.js neemt de eerste, Google negeert
+ze dan allemaal. Daarom vervangt dit script een canonical, en zet het er nooit
+een naast.
+
 Waar het in <head> komt, en waarom
 ----------------------------------
 Vooraan, direct na <meta charset> (tellerregel.kopplek), net als de teller. Vlak
@@ -54,6 +70,9 @@ Ook geen hreflang in de sitemap: elke tweeling draagt die al in <head>
 (taalwissel.lua, taalonderdelen.py), en een tweede opgave kan alleen uiteenlopen
 met de eerste. sitemapwacht.py toetst wel dat elke hreflang naar een adres in
 de sitemap wijst.
+En niet Quarto's eigen `canonical-url: true` (sinds 1.4, voor index-bladzijden
+pas goed sinds 1.5): dat bereikt alleen wat Quarto zelf rendert, 12 van de 276
+bladzijden, en zou naast deze stap een tweede bron van canonicals zijn.
 
 Afloopcode: 0 klaar, 1 weigert, 3 niets gezien.
 """
