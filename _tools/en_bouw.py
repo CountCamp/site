@@ -25,7 +25,7 @@ volgorde kan zetten en een toets ze één voor één kan proeven:
 
     python3 _tools/en_bouw.py foto --site <map> --uit <bestand>
         een vingerafdruk (sha256 per bestand) van de NEDERLANDSE site: alles
-        behalve en/.
+        behalve en/ -- en van sitemap.xml alleen de adressen buiten /en/.
     python3 _tools/en_bouw.py vergelijk <foto-voor> <foto-na>
         afloop 0 als ze byte voor byte gelijk zijn, 1 met de lijst als niet.
 
@@ -61,6 +61,7 @@ HIER = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HIER)
 sys.path.insert(0, HIER)
 from tellerregel import tellerstand  # noqa: E402
+from sitemapregel import sitemap_zonder_engels  # noqa: E402
 # De tabel en de stukken van de taalwissel lezen we op één plek, zodat keuring,
 # filter en wachtrij nooit twee lezingen van dezelfde tabel hebben.
 from taalonderdelen import paren, vol_adres, stuk, pas_toe_los, BASIS  # noqa: E402
@@ -1099,7 +1100,14 @@ def cmd_foto(a) -> int:
         for f in fs:
             p = os.path.join(dp, f)
             with open(p, "rb") as g:
-                m[os.path.relpath(p, site)] = hashlib.sha256(g.read()).hexdigest()
+                inhoud = g.read()
+            # sitemap.xml noemt ook de Engelse bladzijden (sinds 24-11-2026, spoor
+            # sitemap_canoniek: _tools/sitemap_zetten.py schrijft hem uit de hele
+            # gebouwde site). Een Engelse bladzij erbij is geen Nederlands bestand
+            # dat veranderde, dus hier telt alleen het Nederlandse deel van de lijst.
+            if rel_dp == "." and f == "sitemap.xml":
+                inhoud = sitemap_zonder_engels(inhoud.decode("utf-8", "replace")).encode("utf-8")
+            m[os.path.relpath(p, site)] = hashlib.sha256(inhoud).hexdigest()
     with open(a.uit, "w", encoding="utf-8") as f:
         json.dump(m, f, indent=0, sort_keys=True)
     zeg(f"  foto: {len(m)} Nederlandse bestanden (alles behalve en/) -> {os.path.relpath(a.uit, REPO)}")

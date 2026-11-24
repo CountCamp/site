@@ -168,6 +168,19 @@ def lees_anders(pad: str = ANDERS_TABEL) -> dict[str, str]:
     return uit
 
 
+_LOC = re.compile(r'<loc>\s*(.*?)\s*</loc>', re.S)
+
+
+def sitemap_zonder_engels(tekst: str) -> str:
+    """De sitemap zoals de Nederlandse kant hem ziet: elk adres BEHALVE die onder
+    /en/, gesorteerd, één per regel. Voor de vingerafdruk van en_bouw.py
+    ("Nederlands ongemoeid"): een Engelse bladzij erbij of eraf verandert de
+    sitemap, en dat is geen Nederlands bestand dat veranderde. Verandert er een
+    Nederlands adres, dan verandert dit wel."""
+    eng = SITE_URL + '/en/'
+    return '\n'.join(sorted(a for a in _LOC.findall(tekst) if not a.startswith(eng))) + '\n'
+
+
 def afdeling(rel: str) -> str:
     """Voor de telling per afdeling: `oefenboeken/ozp1/…` -> `oefenboeken/ozp1`,
     `en/book/h0.html` -> `en/book`, `index.html` -> `(wortel)`."""

@@ -298,11 +298,48 @@ in_uitvoer "28b ... bij naam" "oefenboeken/ggz_vs/index.html  [/oefenboeken/ggz_
 echo "== profielen, weigeren en blind"
 zaak "29 bouwstap leest het profiel uit QUARTO_PROFILE (spook)" 0 env QUARTO_PROFILE=spook,nl python3 "$G/_tools/sitemap_zetten.py" --site "$M/spook"
 in_uitvoer "29b ... en doet dan wat bij spook hoort" "sitemap_zetten (spook)"
-zaak "30 Engelse ronde: niets gedaan" 0 env QUARTO_PROFILE=en,echt python3 "$G/_tools/sitemap_zetten.py" --site "$M/spook"
-in_uitvoer "30b ... en zegt dat" "Engelse ronde -- niets gedaan"
+# De Engelse ronde: canonicals wel, sitemap niet. En daarna moet de Nederlandse
+# bouw die bladzijden byte voor byte laten staan -- dat eist en_bouw.py gelijk in
+# stap 5 van publiceer_en.sh (een Engelse bladzij uit de repo moet in de
+# Nederlandse bouw precies zo terugkomen).
+verse_boom en
+zaak "30 Engelse ronde (en,echt): canonicals gezet" 0 env QUARTO_PROFILE=en,echt python3 "$G/_tools/sitemap_zetten.py" --anders "$G/_tools/canoniek_anders.tsv" --site "$M/en"
+in_uitvoer "30b ... in 5 van de 8, en geen sitemap" "canonical gezet in 5 van de 8 echte bladzijden, 3 hadden hem al goed. Geen sitemap"
 getoetst=$((getoetst + 1))
-if [ ! -e "$M/spook/sitemap.xml" ]; then echo "  ok    30c ... ook echt niets geschreven"
-else echo "  ZAKT  30c de Engelse ronde schreef een sitemap"; gezakt=$((gezakt + 1)); fi
+if [ ! -e "$M/en/sitemap.xml" ] && command grep -qF '<link rel="canonical" href="https://countcamp.org/en/">' "$M/en/en/index.html"; then
+  echo "  ok    30c ... geen sitemap geschreven, en en/index.html wijst naar /en/"
+else echo "  ZAKT  30c de Engelse ronde schreef een sitemap, of zette de canonical niet"; gezakt=$((gezakt + 1)); fi
+( cd "$M/en" && find . -name '*.html' -exec shasum {} + | sort ) > "$M/en_voor.sha"
+zaak "30d daarna de Nederlandse bouw" 0 zetten --echt --site "$M/en"
+in_uitvoer "30e ... zet er geen canonical meer bij" "canonical gezet in 0 bladzijden, 8 hadden hem al goed"
+( cd "$M/en" && find . -name '*.html' -exec shasum {} + | sort ) > "$M/en_na.sha"
+getoetst=$((getoetst + 1))
+if cmp -s "$M/en_voor.sha" "$M/en_na.sha"; then echo "  ok    30f ... elke bladzij byte voor byte gelijk (en_bouw.py gelijk zakt dus niet)"
+else echo "  ZAKT  30f de Nederlandse bouw veranderde bladzijden uit de Engelse ronde:"; diff "$M/en_voor.sha" "$M/en_na.sha" | sed 's/^/          /'; gezakt=$((gezakt + 1)); fi
+zaak "30g Engelse proefdruk (en,spook): niets gedaan" 0 env QUARTO_PROFILE=en,spook python3 "$G/_tools/sitemap_zetten.py" --site "$M/spook"
+in_uitvoer "30h ... en zegt dat" "Engelse proefdruk -- niets gedaan"
+# De vingerafdruk van en_bouw.py: alleen het Nederlandse deel van de sitemap telt.
+waar_fn() { python3 - "$@" <<'PYY'
+import sys
+sys.path.insert(0, sys.argv[1])
+from sitemapregel import sitemap_zonder_engels as z
+a = '<urlset><url><loc>https://countcamp.org/</loc></url><url><loc>https://countcamp.org/en/</loc></url></urlset>'
+b = a.replace('</urlset>', '<url><loc>https://countcamp.org/en/nieuw.html</loc></url></urlset>')
+c = a.replace('</urlset>', '<url><loc>https://countcamp.org/nieuw.html</loc></url></urlset>')
+d = a.replace('<url><loc>https://countcamp.org/</loc></url>', '') + '<url><loc>https://countcamp.org/</loc></url>'
+fout = []
+if z(a) != z(b): fout.append("een Engelse bladzij erbij verandert de Nederlandse vingerafdruk")
+if z(a) == z(c): fout.append("een Nederlandse bladzij erbij verandert hem NIET")
+if z(a) != z(d): fout.append("een andere volgorde verandert hem")
+sys.exit("; ".join(fout) or 0)
+PYY
+}
+getoetst=$((getoetst + 1))
+if waar_fn "$G/_tools" > "$M/uit" 2>&1; then echo "  ok    30i vingerafdruk van de sitemap: Engels erbij telt niet, Nederlands erbij wel"
+else echo "  ZAKT  30i vingerafdruk van de sitemap:"; sed 's/^/          /' "$M/uit"; gezakt=$((gezakt + 1)); fi
+getoetst=$((getoetst + 1))
+if command grep -qF 'inhoud = sitemap_zonder_engels(' _tools/en_bouw.py; then echo "  ok    30j en_bouw.py foto gebruikt hem"
+else echo "  ZAKT  30j en_bouw.py foto gebruikt sitemap_zonder_engels niet"; gezakt=$((gezakt + 1)); fi
 zaak "31 bouwstap met onbekend profiel weigert" 1 env QUARTO_PROFILE=spok python3 "$G/_tools/sitemap_zetten.py" --site "$M/schoon"
 mkdir -p "$M/leeg"
 zaak "32 lege map: kon niet kijken" 3 wacht --echt --site "$M/leeg"

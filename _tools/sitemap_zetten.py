@@ -26,10 +26,17 @@ Wat het doet
          Quarto schrijft. Er komt geen canonical bij; wat een bron zelf meebrengt,
          blijft staan (dat wijst naar countcamp.org, en dat is voor een
          proefdruk het goede adres).
-  en     De Engelse ronde (`--profile en`, naar _site_en/) doet niets. Uit die
-         bouw neemt en_bouw.py alleen en/ mee, en die bladzijden komen als
-         bijlage in de Nederlandse bouw -- daar krijgen ze hun canonical en hun
-         plek in de sitemap, net als het boek en de oefenboeken.
+  en     De Engelse ronde (`--profile en`, naar _site_en/) zet de canonicals,
+         net als bij echt, maar schrijft geen sitemap: uit die bouw neemt
+         en_bouw.py alleen en/ mee, en de sitemap van de hele site, en/ incluis,
+         schrijft de Nederlandse bouw. Waarom dan wel de canonicals: en_bouw.py
+         gelijk eist dat elke Engelse bladzij die deze ronde bouwt, in de
+         Nederlandse bouw byte voor byte terugkomt. Draagt hij zijn canonical al
+         uit de Engelse ronde, dan vindt de Nederlandse bouw hem goed en laat hem
+         staan -- zo gaat het met de teller ook. Zonder canonical zette de
+         Nederlandse bouw er een bij, en dan zakte elke run van publiceer_en.sh
+         op stap 5 (gevonden 24-11-2026, vóór het in gebruik was).
+         Een Engelse proefdruk (`--profile en,spook`) doet niets.
 
 De canonical is ook de GoatCounter-reparatie
 --------------------------------------------
@@ -134,11 +141,12 @@ def main() -> int:
     args = ap.parse_args()
 
     site = os.path.abspath(args.site)
-    if args.profiel is None and taal_uit_omgeving() == 'en':
-        print('sitemap_zetten: Engelse ronde -- niets gedaan. De Nederlandse bouw zet '
-              'canonical en sitemap voor de hele site, en/ incluis.')
-        return 0
+    engels = args.profiel is None and taal_uit_omgeving() == 'en'
     profiel = args.profiel or profiel_uit_omgeving()
+    if engels and profiel == 'spook':
+        print('sitemap_zetten: Engelse proefdruk -- niets gedaan (geen sitemap, geen '
+              'canonical; en_bouw.py neemt hier alleen en/ uit mee).')
+        return 0
     if profiel is None:
         print('sitemap_zetten: WEIGER -- QUARTO_PROFILE is %r. Ik ken alleen `echt` en '
               '`spook`, en zonder dat te weten kan ik niet zeggen of hier een sitemap '
@@ -204,7 +212,9 @@ def main() -> int:
         return 1
 
     weiger: list[str] = []
-    for kopie, doel in sorted(anders.items()):
+    # De Engelse ronde ziet alleen en/: de tabel nakijken kan alleen de Nederlandse
+    # bouw, die de hele site ziet. Hier geldt een regel alleen voor wat er staat.
+    for kopie, doel in sorted(anders.items()) if not engels else []:
         if kopie not in bladen:
             weiger.append('%s staat in %s, maar is geen echte bladzij van deze bouw'
                           % (kopie, os.path.basename(args.anders)))
@@ -247,6 +257,14 @@ def main() -> int:
 
     for rel, tekst in nieuw.items():
         schrijf(os.path.join(site, rel), tekst)
+
+    if engels:
+        print('sitemap_zetten (Engelse ronde): %d html in %s -- canonical gezet in %d van de '
+              '%d echte bladzijden, %d hadden hem al goed. Geen sitemap: die schrijft de '
+              'Nederlandse bouw voor de hele site, en/ incluis.' % (
+                  gezien, os.path.relpath(site, REPO), len(nieuw), len(bladen),
+                  len(bladen) - len(nieuw)))
+        return 0
 
     adressen = sorted(R.adres(rel) for rel in bladen if rel not in anders)
     xml = sitemap_xml(adressen)
