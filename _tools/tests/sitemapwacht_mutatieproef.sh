@@ -97,6 +97,10 @@ mutatie "kapotte XML is goed" \
   "        return [], ['sitemap.xml is geen geldige XML: %s' % e]" "        return [], []"
 mutatie "sitemap in een proefdruk toegestaan" \
   "            fout('sitemap in een proefdruk', 'sitemap.xml')" "            pass"
+mutatie "robots.txt in een proefdruk niet gekeurd" \
+  "            fout('robots.txt wijst in een proefdruk naar een sitemap', r_)" "            pass"
+mutatie "robots.txt op de echte site niet gekeurd" \
+  "        if r_ != R.SITE_URL + '/sitemap.xml':" "        if False:"
 mutatie "relatieve canonical in een proefdruk toegestaan" \
   "                    if not href.startswith(R.SITE_URL + '/'):" "                    if False:"
 mutatie "blind is groen" \

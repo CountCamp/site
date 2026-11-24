@@ -98,6 +98,21 @@ def is_404(rel: str) -> bool:
     return os.path.basename(site_pad(rel)) == '404.html'
 
 
+_QUARTO_ROBOTS = re.compile(r'\s*Sitemap:\s*\S*sitemap\.xml\s*', re.I)
+
+
+def is_quarto_robots(tekst: str) -> bool:
+    """Is dit de robots.txt die Quarto zelf schrijft als het project er geen heeft?
+    Dat is precies één regel: `Sitemap: <site-url>sitemap.xml`."""
+    return bool(_QUARTO_ROBOTS.fullmatch(tekst))
+
+
+def robots_sitemaps(tekst: str) -> list[str]:
+    """Elke `Sitemap:`-regel in een robots.txt."""
+    return [r.split(':', 1)[1].strip() for r in tekst.splitlines()
+            if r.strip().lower().startswith('sitemap:')]
+
+
 def noindex(tekst: str) -> bool:
     """Draagt de bladzij `<meta name="robots" content="…noindex…">` (of googlebot)?"""
     return any('noindex' in m.group(0).lower() for m in _ROBOTS.finditer(tekst))

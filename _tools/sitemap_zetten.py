@@ -21,7 +21,9 @@ Wat het doet
          Uitzondering: een bladzij in `_tools/canoniek_anders.tsv` wijst naar
          een ander adres en komt zelf niet in de sitemap.
   spook  Een proefdruk heeft geen sitemap: die wordt weggehaald als Quarto er
-         een schreef. Er komt geen canonical bij; wat een bron zelf meebrengt,
+         een schreef (dat doet hij ook bij een lege site-url), en zijn
+         robots.txt die ernaar wijst ook -- maar alleen als die precies is wat
+         Quarto schrijft. Er komt geen canonical bij; wat een bron zelf meebrengt,
          blijft staan (dat wijst naar countcamp.org, en dat is voor een
          proefdruk het goede adres).
   en     De Engelse ronde (`--profile en`, naar _site_en/) doet niets. Uit die
@@ -173,12 +175,26 @@ def main() -> int:
         return 3
 
     if profiel == 'spook':
-        weg = os.path.isfile(smp)
-        if weg:
+        # Quarto schrijft ook met een lege site-url een sitemap (gemeten 24-11-2026,
+        # 1.9.38: adressen als /index.html), en een robots.txt die ernaar wijst. Die
+        # robots.txt gaat alleen weg als hij precies is wat Quarto schrijft: één
+        # Sitemap-regel. Een eigen robots.txt blijft staan, en wordt genoemd.
+        weg = []
+        if os.path.isfile(smp):
             os.remove(smp)
+            weg.append('sitemap.xml')
+        rbt = os.path.join(site, 'robots.txt')
+        if os.path.isfile(rbt):
+            if R.is_quarto_robots(lees(rbt)):
+                os.remove(rbt)
+                weg.append('robots.txt')
+            else:
+                print('sitemap_zetten (spook): robots.txt is niet die van Quarto en blijft '
+                      'staan -- kijk of hij naar een sitemap wijst.')
         print('sitemap_zetten (spook): %d html in %s; een proefdruk heeft geen sitemap%s, '
-              'en krijgt geen canonical.' % (gezien, os.path.relpath(site, REPO),
-                                             ' (die van Quarto weggehaald)' if weg else ''))
+              'en krijgt geen canonical.' % (
+                  gezien, os.path.relpath(site, REPO),
+                  (' (weggehaald wat Quarto schreef: %s)' % ', '.join(weg)) if weg else ''))
         return 0
 
     try:

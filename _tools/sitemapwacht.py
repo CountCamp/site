@@ -23,8 +23,12 @@ Wat er geëist wordt
     hreflang      elke <link rel="alternate" hreflang> op een echte bladzij
                   wijst naar een adres dat in de sitemap staat. Google negeert
                   een hreflang naar een adres dat niet het echte is.
+    robots.txt    als hij een Sitemap-regel heeft, wijst die naar
+                  https://countcamp.org/sitemap.xml (Quarto schrijft hem zo).
   --spook
-    Een proefdruk heeft geen sitemap.xml. En geen enkele canonical is relatief
+    Een proefdruk heeft geen sitemap.xml, en geen robots.txt die naar een
+    sitemap wijst (Quarto schrijft er ook bij een lege site-url een, naar
+    /sitemap.xml -- gemeten 24-11-2026). En geen enkele canonical is relatief
     of wijst buiten https://countcamp.org: dan zou de proefdruk zichzelf als het
     echte adres opgeven.
 
@@ -198,11 +202,18 @@ def main() -> int:
         return 3
 
     smp = os.path.join(site, 'sitemap.xml')
+    rbt = os.path.join(site, 'robots.txt')
+    robots = []
+    if os.path.isfile(rbt):
+        with open(rbt, encoding='utf-8', errors='replace') as h:
+            robots = R.robots_sitemaps(h.read())
 
     # ---------------------------------------------------------------- spook --
     if args.profiel == 'spook':
         if os.path.exists(smp):
             fout('sitemap in een proefdruk', 'sitemap.xml')
+        for r_ in robots:
+            fout('robots.txt wijst in een proefdruk naar een sitemap', r_)
         alle = 0
         for dp, dn, fn in os.walk(site):
             for f in fn:
@@ -229,6 +240,10 @@ def main() -> int:
         print('\nFOUT -- %s' % e)
         return 1
 
+    for r_ in robots:
+        if r_ != R.SITE_URL + '/sitemap.xml':
+            fout('robots.txt wijst naar een andere sitemap', '%s (verwacht %s/sitemap.xml)'
+                 % (r_, R.SITE_URL))
     if not os.path.isfile(smp):
         fout('geen sitemap.xml', smp)
         adressen = []

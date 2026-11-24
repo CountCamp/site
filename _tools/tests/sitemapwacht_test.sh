@@ -266,10 +266,13 @@ herstel
 echo "== spook: de proefdruk"
 verse_boom spook
 printf '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>/index.html</loc></url></urlset>\n' > "$M/spook/sitemap.xml"
+# Precies wat Quarto 1.9.38 bij `site-url: ""` schrijft (gemeten 24-11-2026).
+printf 'Sitemap: /sitemap.xml' > "$M/spook/robots.txt"
 zaak "24 bouwstap --spook" 0 zetten --spook --site "$M/spook"
-in_uitvoer "24b ... haalt de sitemap van Quarto weg" "die van Quarto weggehaald"
+in_uitvoer "24b ... haalt de sitemap en de robots.txt van Quarto weg" "weggehaald wat Quarto schreef: sitemap.xml, robots.txt"
 getoetst=$((getoetst + 1))
-if [ ! -e "$M/spook/sitemap.xml" ] && cmp -s oefenboeken/ggz_vs/index.html "$M/spook/oefenboeken/ggz_vs/index.html"; then
+if [ ! -e "$M/spook/sitemap.xml" ] && [ ! -e "$M/spook/robots.txt" ] \
+   && cmp -s oefenboeken/ggz_vs/index.html "$M/spook/oefenboeken/ggz_vs/index.html"; then
   echo "  ok    24c geen sitemap, en geen canonical bijgezet"
 else echo "  ZAKT  24c er staat nog een sitemap, of de bouwstap veranderde een bladzij"; gezakt=$((gezakt + 1)); fi
 zaak "25 wachter --spook groen" 0 wacht --spook --site "$M/spook"
@@ -277,6 +280,17 @@ in_uitvoer "25b ... en telt wat de bronnen meebrachten (power, solomon, solomon-
 zaak "26 wachter --spook op de echte bouw -> rood" 1 wacht --spook --site "$M/schoon"
 in_uitvoer "26b ... sitemap in een proefdruk" "sitemap in een proefdruk"
 zaak "27 wachter --echt op een proefdruk -> rood" 1 wacht --echt --site "$M/spook"
+printf 'User-agent: *\nDisallow:\nSitemap: /sitemap.xml\n' > "$M/spook/robots.txt"
+zaak "27b een eigen robots.txt laat de bouwstap staan" 0 zetten --spook --site "$M/spook"
+in_uitvoer "27c ... en zegt dat" "robots.txt is niet die van Quarto en blijft staan"
+zaak "27d ... en de wachter bijt op zijn Sitemap-regel" 1 wacht --spook --site "$M/spook"
+in_uitvoer "27e ... bij naam" "robots.txt wijst in een proefdruk naar een sitemap"
+rm -f "$M/spook/robots.txt"
+printf 'Sitemap: https://countcamp.org/sitemap.xml\n' > "$M/schoon/robots.txt"
+zaak "27f echt: robots.txt naar de echte sitemap is goed" 0 wacht --echt --site "$M/schoon"
+printf 'Sitemap: https://countcamp.org/oud/sitemap.xml\n' > "$M/schoon/robots.txt"
+zaak "27g echt: robots.txt naar een andere sitemap -> rood" 1 wacht --echt --site "$M/schoon"
+rm -f "$M/schoon/robots.txt"
 muteer "$M/spook/oefenboeken/ggz_vs/index.html" "s.replace('<head>', '<head>\n<link rel=\"canonical\" href=\"/oefenboeken/ggz_vs/\">', 1)"
 zaak "28 proefdruk met een relatieve canonical -> rood" 1 wacht --spook --site "$M/spook"
 in_uitvoer "28b ... bij naam" "oefenboeken/ggz_vs/index.html  [/oefenboeken/ggz_vs/]"
