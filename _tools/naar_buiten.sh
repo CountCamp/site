@@ -332,7 +332,8 @@ gebouwd_commentaar_nakijken() {   # $1 = blokkerend | melden
   python3 "$HIER/_tools/commentaarwacht.py" --site "$HIER/_site" | sed 's/^/  /' || code=$?
   if [ "$code" -eq 0 ]; then return 0; fi
   case "$code" in
-    1) echo "  Er staat HTML-commentaar in de gebouwde site (zie de regels hierboven)." ;;
+    1) echo "  Er staat HTML-commentaar in de gebouwde site, of een woord dat een bezoeker"
+       echo "  niet meer mag zien ('werknotities' / 'work notes'); zie de regels hierboven." ;;
     3) echo "  De commentaarwacht kon niet (helemaal) kijken. Dat is geen schone uitslag"
        echo "  maar een blinde: stilte betekent ongeldig, nooit goed." ;;
     *) echo "  De commentaarwacht zelf liep vast (afloopcode $code). Wat hij had"
