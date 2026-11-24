@@ -25,7 +25,7 @@ volgorde kan zetten en een toets ze één voor één kan proeven:
 
     python3 _tools/en_bouw.py foto --site <map> --uit <bestand>
         een vingerafdruk (sha256 per bestand) van de NEDERLANDSE site: alles
-        behalve en/.
+        behalve en/ -- en van sitemap.xml alleen de adressen buiten /en/.
     python3 _tools/en_bouw.py vergelijk <foto-voor> <foto-na>
         afloop 0 als ze byte voor byte gelijk zijn, 1 met de lijst als niet.
 
@@ -1084,6 +1084,10 @@ def na_manifest(manifest: str = MANIFEST) -> list[str]:
 
 # ---------------------------------------------------- foto / vergelijk ----
 def cmd_foto(a) -> int:
+    # Hier en niet bovenaan: alleen foto heeft hem nodig, en twee toetsen
+    # (en_na_manifest_test.sh, en_werkboek_lab_test.py) zetten en_bouw.py los neer
+    # met alleen tellerregel.py en taalonderdelen.py ernaast.
+    from sitemapregel import sitemap_zonder_engels
     site = os.path.abspath(a.site)
     if not os.path.isfile(os.path.join(site, "index.html")):
         zeg(f"FOUT: {site} is geen gebouwde site — kon niet kijken")
@@ -1099,7 +1103,14 @@ def cmd_foto(a) -> int:
         for f in fs:
             p = os.path.join(dp, f)
             with open(p, "rb") as g:
-                m[os.path.relpath(p, site)] = hashlib.sha256(g.read()).hexdigest()
+                inhoud = g.read()
+            # sitemap.xml noemt ook de Engelse bladzijden (sinds 24-11-2026, spoor
+            # sitemap_canoniek: _tools/sitemap_zetten.py schrijft hem uit de hele
+            # gebouwde site). Een Engelse bladzij erbij is geen Nederlands bestand
+            # dat veranderde, dus hier telt alleen het Nederlandse deel van de lijst.
+            if rel_dp == "." and f == "sitemap.xml":
+                inhoud = sitemap_zonder_engels(inhoud.decode("utf-8", "replace")).encode("utf-8")
+            m[os.path.relpath(p, site)] = hashlib.sha256(inhoud).hexdigest()
     with open(a.uit, "w", encoding="utf-8") as f:
         json.dump(m, f, indent=0, sort_keys=True)
     zeg(f"  foto: {len(m)} Nederlandse bestanden (alles behalve en/) -> {os.path.relpath(a.uit, REPO)}")

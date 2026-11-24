@@ -33,10 +33,23 @@ project:
   # bladzijden als bijlage binnenkomen: pas hier is te zien of de link ergens
   # landt. Vóór de teller en het commentaar, zodat die twee de plank zien zoals
   # hij blijft.
+  #
+  # Als laatste de sitemap en de canonicals (24-11-2026, spoor sitemap_canoniek;
+  # Ben: "Sitemap + dubbele adressen"). Quarto's eigen sitemap kende alleen de
+  # bladzijden die hij uit een .qmd bouwt (11 van de 276), en schreef ze als
+  # .../index.html. _tools/sitemap_zetten.py leest de GEBOUWDE site: elke echte
+  # bladzij in sitemap.xml, en in elke echte bladzij één canonical naar haar eigen
+  # adres in de vorm .../ -- daaraan telt GoatCounter ook (count.js neemt het pad
+  # uit de canonical), dus .../index.html en .../ worden één pad. Een proefdruk
+  # krijgt geen sitemap en geen canonical. Als laatste, zodat hij de bladzijden
+  # ziet zoals ze de deur uitgaan (een noindex die een eerdere stap zet, houdt de
+  # bladzij uit de sitemap). Nalezen: python3 _tools/sitemapwacht.py --echt
+  # (of --spook).
   post-render:
     - _tools/taallabel.py
     - _tools/teller_zetten.py
     - _tools/commentaar_weg.py
+    - _tools/sitemap_zetten.py
 
 website:
   title: "CountCamp"
