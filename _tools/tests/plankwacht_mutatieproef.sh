@@ -132,5 +132,38 @@ proef "geen thuiskaart telt als goed" \
   '        if reden:
             uit.append(Bevinding("blind"|||        if reden and False:
             uit.append(Bevinding("blind"'
+# De bijwerkregel (24-11-2026). Ben: "alleen een wanneer was laatste update en een
+# zin". Elke verslapping hieronder laat de lijst van 67 woorden weer door, of
+# maakt de datum zelf onbewaakt.
+proef "een lange bijwerkregel wordt nooit afgekeurd" \
+  'if n_zinnen <= MAX_ZINNEN and woorden <= MAX_WOORDEN:|||if True:'
+proef "alleen het woordental telt (drie korte zinnen mogen)" \
+  'if n_zinnen <= MAX_ZINNEN and woorden <= MAX_WOORDEN:|||if woorden <= MAX_WOORDEN:'
+proef "alleen het zinnental telt (één lange lijstzin mag)" \
+  'if n_zinnen <= MAX_ZINNEN and woorden <= MAX_WOORDEN:|||if n_zinnen <= MAX_ZINNEN:'
+proef "de cursieve datum wordt niet herkend (de vorm van voor 24-11)" \
+  'r"\bBijgewerkt[\s:,]+(\d{1,2})|||r"\*\*Bijgewerkt\s+(\d{1,2})&&&(\d{4})", re.IGNORECASE
+)|||(\d{4})\*\*", re.IGNORECASE
+)'
+proef "een dubbele punt achter Bijgewerkt verbergt de datum" \
+  'Bijgewerkt[\s:,]+(\d{1,2})|||Bijgewerkt\s+(\d{1,2})'
+proef "een commentaar telt als bijwerkregel" \
+  'tekst = zonder_voorwerk(zonder_commentaar(f.read()))|||tekst = zonder_voorwerk(f.read())'
+proef "de YAML-kop telt als bijwerkregel" \
+  'tekst = zonder_voorwerk(zonder_commentaar(f.read()))|||tekst = zonder_commentaar(f.read())'
+proef "de bijwerkregel loopt door na een lege regel" \
+  'if not r2.strip() or r2.lstrip().startswith((":::", "#")):|||if r2.lstrip().startswith((":::", "#")):'
+proef "elke punt met witruimte erna is een zinseinde" \
+  'if volgend[:1].isupper() or volgend[:1].isdigit():|||if True:'
+proef "Eerste versie is geen bijwerkregel" \
+  '|eerste\s+versie|||'
+proef "een Engelse maand wordt niet herkend" \
+  'if maand not in MAANDEN and maand not in MAANDEN_EN:|||if maand not in MAANDEN:'
+proef "de Engelse plank wordt niet op bijwerkregels gelezen" \
+  '[args.plank, args.en_plank, args.thuis, args.en_thuis]|||[args.plank, args.thuis, args.en_thuis]'
+proef "de Nederlandse thuispagina wordt niet op bijwerkregels gelezen" \
+  '[args.plank, args.en_plank, args.thuis, args.en_thuis]|||[args.plank, args.en_plank, args.en_thuis]'
+proef "de Engelse thuispagina wordt niet op bijwerkregels gelezen" \
+  '[args.plank, args.en_plank, args.thuis, args.en_thuis]|||[args.plank, args.en_plank, args.thuis]'
 rm -rf "$M"
 [ "$SLECHT" -eq 0 ] || { echo "mutatieproef: $SLECHT proef/proeven zonder uitslag of zonder beet"; exit 1; }
