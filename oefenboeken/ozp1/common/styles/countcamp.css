@@ -432,3 +432,64 @@ a[href*="woordenlijst.html#"] {
 a[href*="woordenlijst.html#"]:hover {
   border-bottom-style: solid;
 }
+
+/* === wiskunde: begin ===================================================
+   Dit blok staat woordelijk gelijk in de countcamp.css van OZP 1 (het
+   origineel), MVDA en Psychometrie, met de fonts/-map ernaast. Wijzig het
+   alleen hier, in OZP 1, en trek het daarna door met
+       python3 _tools/wiskunde_uitrollen.py
+   (met --controleer vergelijkt hij alleen; MVDA en Psychometrie draaien dat
+   vóór elke render, en zakken als hun kopie afwijkt).
+
+   1. EEN EIGEN WISKUNDEFONT. De boeken laten de browser de wiskunde zelf
+   tekenen (html-math-method: mathml). Dat gaat alleen goed met een font dat
+   een OpenType MATH-tabel heeft: daarin staat hoe ver een wortelteken
+   meegroeit, hoe groot een som in een losse formuleregel wordt en waar een
+   subscript zakt. Zonder zo'n font blijft het wortelteken op de hoogte van
+   de eerste breuk staan, alsof alleen die onder de wortel valt, en is de
+   streep van "gegeven dat" kort en dun. macOS heeft zo'n font aan boord
+   (STIX Two Math), Windows ook (Cambria Math), maar dat de browser daar ook
+   naar grijpt, is per apparaat anders. Dus leveren we het font zelf mee.
+
+   STIX Two Math 2.13 b171, ongewijzigd, van github.com/stipub/stixfonts
+   (tag v2.13b171, fonts/static_ttf_woff2/). Licentie: SIL Open Font License
+   1.1, zie fonts/OFL.txt; het font draagt copyright en licentie ook zelf mee
+   in zijn naamtabel. 559 kB, één keer per bezoeker. Gekozen boven Latin
+   Modern Math (de LaTeX-letter) omdat de x-hoogte bij Georgia past, gemeten
+   in Chrome: 0,473 em tegen 0,481 em, waar Latin Modern 0,431 em haalt --
+   een formule in de lopende tekst zou daarmee een maat kleiner ogen, en zijn
+   streepjes zijn dunner (0,040 em tegen 0,068 em voor de streep van
+   "gegeven dat").
+   Een eigen familienaam, zodat een mislukte download terugvalt op een
+   wiskundefont van het systeem in plaats van op een gewone letter.
+
+   2. RUIMTE ROND EEN TEKEN TUSSEN TWEE WOORDEN staat NIET hier maar in
+   common/filters/wiskunde.lua (rijtotaal × kolomtotaal kreeg in Chrome 0
+   lucht). Een marge in CSS zou in Chrome werken en in Safari de lucht
+   verdubbelen; de reden staat bovenin dat filter.
+
+   3. LUCHT TUSSEN EEN CURSIEVE LETTER EN HET HAAKJE. LaTeX zet na een
+   cursieve letter zijn "italic correction", Chrome en Safari niet (MathML
+   Core vraagt het wel; in Chrome staat het als crbug.com/1125136 open).
+   Daardoor plakt de P aan het haakje in P(A). Gaat een browser het ooit
+   wél doen, dan komt deze marge erbovenop. De marge hieronder is het gewogen
+   gemiddelde verschil tussen xelatex en Chrome, met hetzelfde font, over de
+   383 plekken in TS, OZP 2 en MVDA waar een letter vóór een haakje stond
+   toen deze regel erin kwam (F, P, t, n, C, N, Y, k, I, g): 0,048 em. Per
+   letter verschilt het (P 0,040, F 0,070, n 0,010); één regel kan dat niet
+   volgen.
+   Hij geldt ook na een niet-letter die als <mi> binnenkomt (een / of een
+   − vóór een haakje): daar zet LaTeX niets, en hier 0,05 em.
+   ===================================================================== */
+@font-face {
+  font-family: "STIX Two Math Web";
+  src: url("fonts/STIXTwoMath-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+math {
+  font-family: "STIX Two Math Web", "STIX Two Math", "Cambria Math", math;
+}
+mi:not([mathvariant]) + mo[form="prefix"] {
+  margin-inline-start: 0.05em;
+}
+/* === wiskunde: eind ==================================================== */
