@@ -25,8 +25,11 @@
     background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='10' viewBox='0 0 210 10'><path d='M2 6 Q 14 2, 28 5.5 T 55 5 T 82 6 T 110 4.5 T 138 6 T 165 5 T 192 5.5 T 208 5' fill='none' stroke='%23c8963e' stroke-width='2.2' stroke-linecap='round'/></svg>") no-repeat;
     background-size:210px 10px}
   .lede{color:#6b5f45;font-size:17.5px;line-height:1.6;margin:14px 0 22px;max-width:680px}
-  .panels{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-  @media (max-width:760px){ .panels{grid-template-columns:1fr} }
+  /* minmax(0,1fr): een kolom mag smaller worden dan de tabel breed is. Met 1fr
+     duwde de tabel op een telefoon van 390 het rooster naar 422 pixels, en viel
+     de rechterkant van het histogram — de echte χ² — buiten beeld (25-11-2026). */
+  .panels{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+  @media (max-width:760px){ .panels{grid-template-columns:minmax(0,1fr)} }
   .panel h2{font-weight:600;font-size:16px;font-style:italic;color:var(--dim);
     margin:0 0 8px;letter-spacing:.2px}
   canvas{width:100%;display:block;border-radius:12px;background:#faf6ea;
@@ -35,7 +38,8 @@
 
   /* --- de kruistabel (houten kraam, geen dashboard) --- */
   .tblcard{background:#faf6ea;border:1.5px solid #d8c69b;border-radius:12px;
-    box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 16px 12px;transform:rotate(-.25deg)}
+    box-shadow:0 8px 26px rgba(120,95,45,.18);padding:16px 16px 12px;transform:rotate(-.25deg);
+    overflow-x:auto}
   table.kruis{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
   table.kruis caption{caption-side:top;text-align:left;font-style:italic;color:var(--dim);
     font-size:13.5px;margin-bottom:8px}
@@ -107,12 +111,12 @@
           </tfoot>
         </table>
         <p class="chi">De scheefheid als één getal — de echte <b id="chiReal">χ²</b>.
-           <span style="color:var(--dim);font-size:14px">(df = 3)</span></p>
+           <span style="color:var(--dim);font-size:14px">(<i>df</i> = 3)</span></p>
       </div>
     </div>
 
     <div class="panel">
-      <h2>de geschudde werelden — nulverdeling van χ²</h2>
+      <h2>de geschudde werelden — nulverdeling van <span style="font-style:normal">χ²</span></h2>
       <canvas id="hist"></canvas>
       <div class="controls">
         <button id="schud1" class="primary">Schud 1×</button>
@@ -238,6 +242,14 @@
   };
   const SERIF='"Iowan Old Style",Palatino,Georgia,serif';
   function fnt(px,style,weight){ return (style?style+' ':'')+(weight?weight+' ':'')+px+'px '+SERIF; }
+  // Eén regel uit stukken met elk een eigen letter, zodat χ² rechtop staat in een
+  // cursieve regel (Grieks rechtop, TAALGIDS §2; cursief leest hij als x²).
+  function tekstStukken(ctx,stukken,x,y,uitlijn){
+    let w=0; stukken.forEach(s=>{ ctx.font=s[1]; w+=ctx.measureText(s[0]).width; });
+    let x0 = uitlijn==='right' ? x-w : uitlijn==='center' ? x-w/2 : x;
+    ctx.textAlign='left';
+    stukken.forEach(s=>{ ctx.font=s[1]; ctx.fillText(s[0],x0,y); x0+=ctx.measureText(s[0]).width; });
+  }
   function paperBg(ctx,W,H){
     const sky=ctx.createLinearGradient(0,0,0,H); sky.addColorStop(0,'#fbf5e6'); sky.addColorStop(1,'#f2e9d2');
     ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
@@ -245,19 +257,27 @@
 
   // ================================================================
   //  HISTOGRAM — de geschudde nulverdeling van χ²
-  //  as loopt 0..XHI; de echte χ² (190.4) valt VÉR buiten het plaatje
+  //  as loopt 0..XHI voor het bergje, is dan gebroken (//), en gaat verder
+  //  met een kort stuk rond de echte χ², op dezelfde schaal
   // ================================================================
   const hcv=document.getElementById('hist'), hctx=hcv.getContext('2d');
   const DPR=Math.min(window.devicePixelRatio||1,2);
   let hW=460, hH=380;
   const XLO=0, XHI=25, NB=50;                     // bins over χ² in [0,25]
   const binw=(XHI-XLO)/NB;
+  // De echte χ² ligt ver voorbij XHI. Zonder breuk stond zijn lijn op de
+  // rechterrand, en las het oog daar 25. Nu: na XHI een gat met het
+  // breukteken, dan een kort stuk as met een eigen streepje bij een rond getal.
+  const BREUK=CHI_REAL>XHI;
+  const TIK2=Math.round(CHI_REAL/5)*5;            // 190: het streepje op het korte stuk
   // De muur begint laag: pas vanaf zo'n twintig treffers in één bak gaat
   // de schaal meegroeien. Anders lijkt één schud al een volle muur.
   const BODEM=20;
   let bins=new Float64Array(NB), drawn=new Float64Array(NB);
   let total=0, extreme=0, maxSeen=0, lastX=null, markerAge=1, scaleT=1, scaleNow=1;
   function binOf(x){ return Math.max(0,Math.min(NB-1,Math.floor((x-XLO)/binw))); }
+  // hoeveel keer verder dan het verste toeval — uit de data, voor canvas én telregel
+  function verderN(){ return maxSeen>0 ? (CHI_REAL/maxSeen).toFixed(0) : '—'; }
 
   function oneShuffle(animate){
     const x=shuffleChi();
@@ -277,7 +297,15 @@
   function drawHist(){
     const ctx=hctx, W=hW, H=hH; paperBg(ctx,W,H);
     const L=22, R=W-16, AX_Y=H-40, T=30;
-    const px=x=>lerp(L,R,(x-XLO)/(XHI-XLO));
+    // links het bergje-stuk L..B1 (0..XHI), dan het gat B1..B2, dan het korte
+    // stuk B2..R. Eén χ²-eenheid is links en rechts even breed: alleen het lege
+    // stuk ertussen is eruit geknipt.
+    const GAT=BREUK?34:0, INSPR=10, STUK=BREUK?Math.max(58,Math.round((R-L)*0.18)):0;
+    const B1=R-STUK-GAT, B2=R-STUK;
+    const pxu=(B1-L)/(XHI-XLO);                   // pixels per χ²-eenheid
+    const px=x=>L+(x-XLO)*pxu;
+    const S0=(TIK2+CHI_REAL)/2-STUK/pxu/2;        // χ² aan het begin van het korte stuk
+    const pxr=x=>B2+(x-S0)*pxu;
     scaleNow=lerp(scaleNow,scaleT,0.12);
     for(let i=0;i<NB;i++) drawn[i]=lerp(drawn[i],bins[i],0.18);
     if(markerAge<1) markerAge=Math.min(1,markerAge+0.05);
@@ -293,34 +321,36 @@
       wrectPath(ctx,bx,AX_Y-h,bwid,h,0.7); ctx.fillStyle=g; ctx.fill();
       ctx.strokeStyle=C.woodEdge; ctx.lineWidth=1; ctx.stroke();
     }
-    // as
-    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,AX_Y,R,AX_Y,1);
+    // as — bij een breuk in twee stukken, met het breukteken // ertussen. De
+    // streepjes staan een eindje het gat in, zodat het streepje bij 25 vrij blijft.
+    const K1=B1+INSPR, K2=B2-INSPR;
+    ctx.strokeStyle=C.axis; ctx.lineWidth=1.3; wline(ctx,L,AX_Y,BREUK?K1:R,AX_Y,1);
     ctx.fillStyle=C.dim; ctx.font=fnt(11); ctx.textAlign='center';
     for(let x=0;x<=XHI+0.01;x+=5){ const xx=px(x); wline(ctx,xx,AX_Y,xx,AX_Y+4,0.5); ctx.fillText(x,xx,AX_Y+16); }
-
-    // "de echte χ² valt buiten het plaatje" — pijl naar rechts bij de rechterrand
-    const ex=R-2;
-    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
-    wline(ctx,ex,T-2,ex,AX_Y,1.0); ctx.setLineDash([]);
-    // pijltje richting buiten-het-plaatje
-    const ay=T+16;
-    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.2;
-    wline(ctx,ex-30,ay,ex+8,ay,0.6);
-    ctx.beginPath(); ctx.moveTo(ex+8,ay); ctx.lineTo(ex,ay-5); ctx.lineTo(ex,ay+5); ctx.closePath();
-    ctx.fillStyle=C.bordeaux; ctx.fill();
-    ctx.textAlign='right'; ctx.fillStyle=C.bordeaux; ctx.font=fnt(13,'italic','600');
-    ctx.fillText('echte χ² = '+CHI_SHOW, ex-2, T+10);
-    ctx.font=fnt(11.5,'italic');
-    const verder = maxSeen>0 ? (CHI_REAL/maxSeen).toFixed(0) : '9';
-    ctx.fillText('buiten het plaatje →', ex-2, T-6);
-    if(total>0){
-      ctx.fillStyle=C.dim; ctx.font=fnt(11,'italic'); ctx.textAlign='right';
-      ctx.fillText('≈ '+verder+'× verder dan het verste toeval', ex-2, ay+18);
+    if(BREUK){
+      wline(ctx,K2,AX_Y,R,AX_Y,1);
+      const tx=pxr(TIK2); wline(ctx,tx,AX_Y,tx,AX_Y+4,0.5); ctx.fillText(TIK2,tx,AX_Y+16);
+      ctx.strokeStyle=C.ink; ctx.lineWidth=2.2; ctx.lineCap='round';
+      // onder de as korter dan erboven: de voet blijft boven de getallen
+      [K1,K2].forEach(bx=>{ ctx.beginPath(); ctx.moveTo(bx-4,AX_Y+6); ctx.lineTo(bx+5,AX_Y-10); ctx.stroke(); });
+      ctx.lineCap='butt';
     }
 
-    // as-label
-    ctx.fillStyle=C.dim; ctx.font=fnt(12,'italic'); ctx.textAlign='center';
-    ctx.fillText('geschudde scheefheid  χ²', (L+R)/2, H-6);
+    // de echte χ² — op zijn eigen getal, op het korte stuk achter de breuk
+    const ex=BREUK?pxr(CHI_REAL):px(CHI_REAL);
+    ctx.strokeStyle=C.bordeaux; ctx.lineWidth=2.4; ctx.setLineDash([6,4]);
+    wline(ctx,ex,T-2,ex,AX_Y,1.0); ctx.setLineDash([]);
+    ctx.fillStyle=C.bordeaux;
+    tekstStukken(ctx,[['echte ',fnt(13,'italic','600')],['χ²',fnt(13,null,'600')],[' = '+CHI_SHOW,fnt(13,'italic','600')]],ex-7,T+10,'right');
+    if(total>0){
+      ctx.fillStyle=C.dim; ctx.font=fnt(11,'italic'); ctx.textAlign='right';
+      ctx.fillText('≈ '+verderN()+'× verder dan het verste toeval', ex-7, T+27);
+    }
+
+    // as-label, en onder het gat wat het breukteken betekent
+    ctx.fillStyle=C.dim;
+    tekstStukken(ctx,[['geschudde scheefheid  ',fnt(12,'italic')],['χ²',fnt(12)]],(L+B1)/2,H-6,'center');
+    if(BREUK){ ctx.font=fnt(10.5,'italic'); ctx.textAlign='center'; ctx.fillText('as gebroken', (B1+B2)/2, H-6); }
 
     // vallend vonkje bij losse schud
     if(lastX!=null && markerAge<1 && lastX<XHI){
@@ -338,10 +368,9 @@
   const countEl=document.getElementById('count');
   function updateCount(){
     if(total===0){ countEl.innerHTML='De muur is nog leeg. Schud de overleefd-kolom door elkaar en kijk waar χ² landt.'; return; }
-    const verder = maxSeen>0 ? (CHI_REAL/maxSeen).toFixed(0) : '9';
     countEl.innerHTML='<b>'+extreme+' van '+total+'</b> geschudde werelden kwamen zo ver als de echte tabel '+
       '(χ² ≥ '+CHI_SHOW+'). Het verste toeval haalde χ² ≈ '+maxSeen.toFixed(1)+' — de echte tabel ligt daar nog '+
-      '<b>'+verder+'×</b> voorbij.';
+      '<b>'+verderN()+'×</b> voorbij.';
   }
 
   // ---- narratie ----
@@ -367,9 +396,14 @@
     say('Eén geschudde wereld. Deze χ² hangt <b>laag</b> — ergens tussen bijna-nul en een paar — want klasse '+
         'en overleven zijn nu vreemden. Toch niet exact nul: schudden maakt nooit een perfect gelijke tabel. Schud er honderd, duizend.'); };
   document.getElementById('schud100').onclick=()=>{ animateMany(100,1400);
-    say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien laag tegen de nul aan — en de echte tabel staat er niet eens; die valt ver rechts buiten het plaatje.'); };
+    say('Honderd toeval-werelden. Het <b>bergje</b> begint te groeien laag tegen de nul aan — en de echte tabel staat ver daarvandaan, voorbij de breuk in de as.'); };
+  // Tot 25-11-2026 stond hier met de hand "rond de twintig" en "negen keer
+  // verder"; na duizend keer schudden is het verste toeval meestal rond de 17,
+  // en dan is het elf keer. De getallen staan in de telregel hierboven, uit de
+  // data; deze zin herhaalt ze niet (testlezer haakte af op de herhaling).
   document.getElementById('schud1000').onclick=()=>{ animateMany(1000,2400);
-    say('Duizend keer schudden. Het toeval kruipt hooguit tot een χ² van rond de twintig. De echte tabel zit op <b>'+CHI_SHOW+'</b> — negen keer verder dan het verste dat het toeval ooit haalde. Dát is een afstand die je ziet, geen p-waarde die je gelooft.'); };
+    say('Duizend keer schudden. Het bergje houdt op vóór de breuk in de as. De echte tabel zit op <b>'+CHI_SHOW+'</b>, '+
+        'aan de andere kant. Dát is een afstand die je ziet, geen <i>p</i>-waarde die je gelooft.'); };
   document.getElementById('wis').onclick=()=>{ if(anim){cancelAnimationFrame(anim);anim=null;}
     bins=new Float64Array(NB); drawn=new Float64Array(NB); total=0; extreme=0; maxSeen=0; lastX=null; scaleT=1;
     updateCount(); say(narrBase); };
