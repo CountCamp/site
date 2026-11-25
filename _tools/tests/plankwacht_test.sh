@@ -610,6 +610,107 @@ SPIEGEL_LATEN=1 zaak "17g een anker naar een kop die er niet (meer) is, vuurt" 1
      "wijst naar #on-its-way op en/workbooks/index.qmd, maar daar staat geen kop" "$T16"
 rm -rf "$T16"
 
+# ---- zaak 18 t/m 18m: de bijwerkregel (24-11-2026) -----------------------
+# Ben, 24-11-2026: "niet meer benoemen wat allemaal nieuw is ... alleen een
+# wanneer was laatste update en een zin is dan meer dan voldoende". De grens:
+# na de datum hooguit één zin, en de hele regel hooguit 25 woorden. Zaak 18 is
+# de OZP 1-alinea die er tot die dag stond, woord voor woord (601effa, r85).
+# 18b is de regel die ervoor in de plaats kwam. OZP 1 krijgt hier een commit op
+# 23-11, zodat de datum klopt en alleen de lengte kan vuren.
+T18="$(mktemp -d)"; klaarzetten "$T18"
+echo '<p>opnieuw gezet</p>' >> "$T18/$OZP"
+op "$T18" 2026-11-23 "OZP 1 opnieuw gezet"
+bijwerk_plank() {   # $1 = map, $2 = wat er onder de intro van het OZP 1-kaartje staat
+  cat > "$1/oefenboeken/index.qmd" <<QMD
+---
+title: "Oefenboeken"
+# Bijgewerkt 23 november 2026 -- een notitie in de kop. Nieuw: A. En B. En C.
+---
+::: {.cc-boek .cc-boek-vak}
+### [Oefenboek Psychometrie →](psychometrie/index.html) [R]{.cc-chip}
+Een tweedejaarsvak. **Vier van de zeven thema's staan online:** meten.
+:::
+
+::: {.cc-boek .cc-boek-vak}
+### [Oefenboek OZP 1 →](ozp1/index.html) [SPSS]{.cc-chip}
+Een eerstejaarsvak.
+
+$2
+:::
+QMD
+}
+OUD_OZP1='**Bijgewerkt 23 november 2026** — In **Methodenleer** is T13.12 rechtgezet: de sportclub van Wouter is quasi-experimenteel, met uitleg waarom één oefentoets toch (cor)relationeel zegt. *Kritieke waarde* heet nu overal **kritieke grens**. In **Correlatie** volgt de vuistregel voor *r* nu Cohen: vanaf ,1 zwak, vanaf ,3 matig, vanaf ,5 sterk. En bij de *z*-toets en de *t*-toets staan de modelzinnen in een eigen blok *Zo rapporteer je het*.'
+bijwerk_plank "$T18" "$OUD_OZP1"
+zaak "18  de oude OZP 1-alinea (alleen correcties) vuurt" 1 \
+     "OZP 1 (regel 14): de bijwerkregel telt 66 woorden en 4 zin(nen) na de datum" "$T18"
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.*"
+# Ook de datum moet dan nog nagerekend worden: tot 24-11 zocht de wachter alleen
+# "**Bijgewerkt ...**", en met de cursieve vorm viel die belofte stil weg.
+zaak "18b alleen de datum, cursief, blijft stil en de datum telt mee" 0 \
+     "2 belofte(s) nagerekend" "$T18"
+bijwerk_plank "$T18" "*Bijgewerkt 10 september 2026.*"
+zaak "18c een verouderde cursieve datum vuurt" 1 \
+     "is voor het laatst veranderd op 2026-11-23" "$T18"
+bijwerk_plank "$T18" "*Bijgewerkt: 10 september 2026.*"
+zaak "18c2 ook met een dubbele punt achter Bijgewerkt" 1 \
+     "is voor het laatst veranderd op 2026-11-23" "$T18"
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.* Nieuw: een speeltje waarmee je zelf een steekproef trekt."
+zaak "18d de datum plus één korte zin blijft stil" 0 \
+     "bijwerkregels: 1 gevonden op 4 bladzijde(n)" "$T18"
+bijwerk_plank "$T18" "**Bijgewerkt 23 november 2026** — Nieuw thema. Nieuwe bijlage. Nieuwe opgaven."
+zaak "18e drie korte zinnen vuren, ook onder de woordgrens" 1 \
+     "telt 10 woorden en 3 zin(nen)" "$T18"
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.* Nieuw zijn de bijlage met het formuleblad, de kansverdeling-tabellen, een keuzehulp voor de analyse, twee speeltjes over de normaalverdeling en zesentwintig extra opgaven over meten en methodenleer."
+zaak "18f één zin die een lijst is, vuurt op de woordgrens" 1 \
+     "telt 31 woorden en 1 zin(nen)" "$T18"
+# 18g: in een commentaar is het een notitie, geen bijwerkregel
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.*
+
+<!-- zo stond het er tot 24-11: $OUD_OZP1 -->"
+zaak "18g een lange bijwerkregel in een commentaar telt niet" 0 \
+     "bijwerkregels: 1 gevonden op 4 bladzijde(n)" "$T18"
+# 18h: de regel houdt op bij het eind van zijn alinea
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.*
+
+Daarna komt een gewone alinea over het boek. Die telt niet mee. Ook niet als hij lang is. Het gaat alleen om de regel met de datum, en die is hier kort."
+zaak "18h een alinea na de bijwerkregel telt niet mee" 0 \
+     "1 daarvan zijn hooguit de datum en één zin" "$T18"
+# 18i: "o.a. twee" is geen zinseinde, "o.a. Twee" zou dat wel zijn (en dan vuurt hij te vaak, niet te weinig)
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.* Nieuw zijn o.a. twee speeltjes over de normaalverdeling."
+zaak "18i een afkorting maakt geen tweede zin" 0 \
+     "1 daarvan zijn hooguit de datum en één zin" "$T18"
+# 18j: de OZP 2-regel van 19-11 -- een ander woord vóór de datum, dezelfde opsomming
+bijwerk_plank "$T18" "**Eerste versie, 19 november 2026.** Wat er al staat: de *t*-toetsen, de rangtoetsen van Wilcoxon, Kruskal-Wallis, de meerweg-ANOVA en **Welke toets?**. Eenweg-ANOVA, post-hoc-toetsen, regressie, ANCOVA en methodenleer komen er de komende dagen bij."
+zaak "18j 'Eerste versie, <datum>' met een opsomming vuurt ook" 1 \
+     "telt 33 woorden en 2 zin(nen)" "$T18"
+# 18k: de Engelse plank, met de Amerikaanse datumvorm
+# (en met October: november, september, december en april zijn ook Nederlandse
+#  maanden, dus met November meet deze zaak niet of de Engelse maand herkend wordt --
+#  de mutatieproef van 24-11 liet dat zien)
+bijwerk_plank "$T18" "*Bijgewerkt 23 november 2026.*"
+spiegel_schrijven "$T18"
+python3 - "$T18/en/workbooks/index.qmd" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p, encoding="utf-8").read()
+s = s.replace('{hreflang="nl"}\n:::', '{hreflang="nl"}\n**Updated October 23, 2026** — New: the *t*-tests. Also the rank tests. And Kruskal-Wallis.\n:::', 1)
+open(p, "w", encoding="utf-8").write(s)
+PY
+SPIEGEL_LATEN=1 zaak "18k een lange bijwerkregel op de Engelse plank vuurt" 1 \
+     "en/workbooks/index.qmd: Oefenboek Psychometrie (in Dutch) (regel 7): de bijwerkregel telt 13 woorden en 3 zin(nen)" "$T18"
+# 18l: de thuispagina
+spiegel_schrijven "$T18"
+printf '\n**Bijgewerkt 23 november 2026** — Nieuw thema. Nieuwe bijlage.\n' >> "$T18/index.qmd"
+SPIEGEL_LATEN=1 zaak "18l een lange bijwerkregel op de thuispagina vuurt" 1 "FOUT  index.qmd (regel" "$T18"
+spiegel_schrijven "$T18"
+printf '\n**Updated October 23, 2026** — New theme. New appendix.\n' >> "$T18/en/index.qmd"
+SPIEGEL_LATEN=1 zaak "18l2 en op de Engelse thuispagina ook" 1 "FOUT  en/index.qmd (regel" "$T18"
+# 18m: de YAML-kop van bijwerk_plank draagt een lange bijwerkregel als notitie
+# (een #-regel). Elke zaak hierboven die stil bleef, bewees al dat die niet
+# telt; deze zegt het hardop, met de telling van alleen de ene echte regel.
+zaak "18m een notitie in de YAML-kop telt niet als bijwerkregel" 0 \
+     "bijwerkregels: 1 gevonden op 4 bladzijde(n)" "$T18"
+rm -rf "$T18"
+
 # ---- zaak 7 en 8: de BEDRADING, niet de wachter ------------------------
 # Een wachter die werkt maar nergens aan hangt, gaat nooit af. Dat is hier op
 # 18-8-2026 gebeurd met zeven mechanismen tegelijk: alle zelftests groen, geen

@@ -47,6 +47,12 @@ Wat hij toetst
      `en/index.qmd`. Dat zijn geen getallen maar plekken die met de plank mee
      moeten; Ben besliste op 14-11 dat ze dat doen. Ze tellen niet mee in
      "belofte(s) nagerekend": de spiegel meldt zijn eigen telling.
+  5. De bijwerkregel (sinds 24-11-2026, zie `bijwerkwacht`): een regel als
+     "Bijgewerkt 23 november 2026" of "Updated 23 November 2026" op een van de
+     twee planken of de twee thuispagina's is de datum en hooguit één zin, en
+     telt hooguit 25 woorden. Ben, 24-11-2026: "niet meer benoemen wat allemaal
+     nieuw is". Dat is geen getal maar een lengte; ook die meldt zijn eigen
+     telling.
 
 Welke boekmap bij welk kaartje hoort, wordt NIET ergens bijgehouden: het staat
 al in het kaartje zelf, in de link van de kop. Een tweede lijstje zou precies
@@ -124,9 +130,14 @@ MAANDEN = {
     "november": 11, "december": 12,
 }
 
-# "**Bijgewerkt 10 september 2026**"
+# "**Bijgewerkt 10 september 2026**", en sinds 24-11-2026 "*Bijgewerkt 23
+# november 2026.*". Zonder eis aan de opmaak eromheen: tot 24-11 zocht deze
+# regel alleen de vette vorm, en de cursieve vorm die Ben die dag vroeg, zette
+# de datumcontrole van OZP 1 stil uit -- gemeten: 5 beloftes werden er 4, en
+# de wachter bleef groen. Een andere opmaak mag een belofte niet onzichtbaar maken;
+# daarom mag er ook een dubbele punt of komma achter "Bijgewerkt" staan.
 RE_BIJGEWERKT = re.compile(
-    r"\*\*Bijgewerkt\s+(\d{1,2})\s+([a-zA-Zé]+)\s+(\d{4})\*\*", re.IGNORECASE
+    r"\bBijgewerkt[\s:,]+(\d{1,2})\s+([a-zA-Zé]+)\s+(\d{4})", re.IGNORECASE
 )
 
 # "**Vier van de zeven thema's staan online:**" -- het sterretje mag ook ontbreken.
@@ -819,6 +830,140 @@ def spiegel(wortel: str, plank: str, en_plank: str, thuis: str, en_thuis: str
     return uit, regel
 
 
+# ------------------------------------------------------------------
+# De bijwerkregel (24-11-2026): de datum, en hooguit één zin.
+# ------------------------------------------------------------------
+# Ben, 24-11-2026: "Wil je in begeleidende of introducerende teksten korten
+# maken en niet meer benoemen wat allemaal nieuw is, voor de meesten maakt dat
+# helemaal niet uit, alleen een wanneer was laatste update en een zin is dan
+# meer dan voldoende, vooral als er wat leuks is bij gekomen." En: "Ik bedoel
+# op de site, waar we de boeken introduceren".
+#
+# Waarom deze twee grenzen. Gemeten op 24-11-2026 in de geschiedenis van
+# oefenboeken/index.qmd: er hebben negen verschillende bijwerkregels gestaan,
+# en alle negen telden 33 tot 96 woorden en 2 tot 5 zinnen na de datum. De
+# zinsgrens alleen had ze alle negen gevangen. De woordgrens is er voor de lijst
+# die in één lange zin past ("nieuw: A, B, C, D, E en F"). Met 25 woorden, de
+# datum meegeteld, blijft er voor die ene zin ruim twintig over: genoeg voor iets
+# leuks dat erbij kwam, te weinig voor de inhoud van een heel hoofdstuk.
+#
+# Wat hij NIET ziet: een opsomming in één zin die onder de woordgrens blijft
+# ("nieuw: A, B, C en D"). Hij meet lengte en herkent geen lijst. Ook kijkt hij
+# niet naar de voorpagina's van de boeken zelf: die worden in het lab gemaakt, en
+# wie ze hier aanpast, ziet ze bij de volgende pers weer verdwijnen.
+MAX_ZINNEN = 1
+MAX_WOORDEN = 25
+
+MAANDEN_EN = {
+    "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
+    "july": 7, "august": 8, "september": 9, "october": 10,
+    "november": 11, "december": 12,
+}
+
+# Het woord en de datum: "Bijgewerkt 23 november 2026", "Laatst bijgewerkt: 23
+# november 2026", "Eerste versie, 19 november 2026", "Updated 23 November 2026",
+# "Updated November 23, 2026". Zonder datum is het geen bijwerkregel: "A first
+# version, with t-tests" is een zin over het boek en geen datumregel.
+RE_BIJWERKREGEL = re.compile(
+    r"(?<!\w)(?:laatst\s+bijgewerkt|bijgewerkt|eerste\s+versie|last\s+updated|updated|first\s+version)"
+    r"[\s,:]+(?:(?:op|on)\s+)?"
+    r"(?:(?P<dag>\d{1,2})\s+(?P<maand>[A-Za-zé]+)|(?P<maand_en>[A-Za-z]+)\s+(?P<dag_en>\d{1,2}),?)"
+    r"\s+(?P<jaar>\d{4})",
+    re.IGNORECASE,
+)
+
+
+def zonder_voorwerk(tekst: str) -> str:
+    """De YAML-kop bovenaan leeg, met zijn regelovergangen bewaard (zoals `zonder_commentaar`)."""
+    m = re.match(r"---\n.*?\n---\n", tekst, flags=re.S)
+    return "\n" * m.group(0).count("\n") + tekst[m.end():] if m else tekst
+
+
+def zinnen(tekst: str) -> list[str]:
+    """De zinnen in `tekst`.
+
+    Een zin eindigt op . ! of ? (eventueel gevolgd door * _ ) of een
+    aanhalingsteken), daarna witruimte en een hoofdletter of cijfer. Daarom
+    eindigt een zin niet bij "o.a. twee" en ook niet in "T13.12". "bijv. De"
+    telt wel als twee zinnen. Gaat het mis, dan meldt de wachter dus te veel
+    in plaats van te weinig, en dat ziet iemand.
+    """
+    stukken, begin = [], 0
+    for m in re.finditer(r"[.!?][*_)\]\"'”’]*\s+", tekst):
+        volgend = tekst[m.end():].lstrip("*_([\"'“‘")
+        if volgend[:1].isupper() or volgend[:1].isdigit():
+            stukken.append(tekst[begin:m.end()])
+            begin = m.end()
+    stukken.append(tekst[begin:])
+    return [s.strip() for s in stukken if re.search(r"\w", s)]
+
+
+def bijwerkregels(tekst: str) -> list[tuple[int, str, str, str]]:
+    """(regelnummer, de kop, de hele regel, wat er na de datum staat) per bijwerkregel.
+
+    "De hele regel" loopt van het woord "Bijgewerkt" tot het eind van zijn alinea:
+    tot een lege regel, een `:::` of een kop. Wat ervoor in de alinea staat, telt
+    niet mee; wat in de volgende alinea staat ook niet.
+    """
+    regels = tekst.splitlines()
+    uit = []
+    for i, r in enumerate(regels):
+        for m in RE_BIJWERKREGEL.finditer(r):
+            maand = (m.group("maand") or m.group("maand_en")).lower()
+            if maand not in MAANDEN and maand not in MAANDEN_EN:
+                continue
+            vervolg = []
+            for r2 in regels[i + 1:]:
+                if not r2.strip() or r2.lstrip().startswith((":::", "#")):
+                    break
+                vervolg.append(r2.strip())
+            # de regel mét het nadrukteken ervoor, zodat het citaat in de melding klopt
+            begin = len(r[:m.start()].rstrip("*_"))
+            vol = " ".join([r[begin:].strip()] + vervolg)
+            rest = " ".join([r[m.end():].strip()] + vervolg)
+            rest = re.sub(r"^[.:,]?[*_]*[.:,]?\s*(?:[—–:-]+\s*)?", "", rest)
+            uit.append((i + 1, m.group(0), vol, rest))
+    return uit
+
+
+def bijwerkwacht(wortel: str, paginas: list[str]) -> tuple[list[Bevinding], str]:
+    """(bevindingen, één regel met wat er gemeten is).
+
+    Een bladzij die er niet is, slaat hij over. De spiegel meldt die al als blind,
+    en de regel hieronder zegt hoeveel bladzijden er gelezen zijn.
+    """
+    uit: list[Bevinding] = []
+    gelezen: list[str] = []
+    gevonden = 0
+    for pagina in paginas:
+        vol = os.path.join(wortel, pagina)
+        if not os.path.isfile(vol):
+            continue
+        with open(vol, encoding="utf-8") as f:
+            tekst = zonder_voorwerk(zonder_commentaar(f.read()))
+        gelezen.append(pagina)
+        kaartjes = lees_kaartjes(vol)
+        for regelnr, kop, regel, rest in bijwerkregels(tekst):
+            gevonden += 1
+            woorden = len([w for w in regel.split() if re.search(r"\w", w)])
+            n_zinnen = len(zinnen(rest))
+            if n_zinnen <= MAX_ZINNEN and woorden <= MAX_WOORDEN:
+                continue
+            # het kaartje waar de regel in staat, zodat de melding het bij naam noemt
+            k = next((k for k in kaartjes if k.regel < regelnr <= k.regel + len(k.tekst)), None)
+            plek = f"{pagina}: {k.titel}" if k else pagina
+            begin = regel if len(regel) <= 70 else regel[:70].rsplit(" ", 1)[0] + " …"
+            uit.append(Bevinding("fout", Kaartje(plek, None, regelnr),
+                f"de bijwerkregel telt {woorden} woorden en {n_zinnen} zin(nen) na de datum "
+                f"(grens: {MAX_ZINNEN} zin, {MAX_WOORDEN} woorden) -- \"{begin}\". "
+                f"Ben, 24-11-2026: alleen wanneer de laatste update was, en hooguit één zin. "
+                f"Zonder zin wordt het: *{kop}.*"))
+    regel = (f"bijwerkregels: {gevonden} gevonden op {len(gelezen)} bladzijde(n) "
+             f"({', '.join(gelezen)}); {gevonden - len(uit)} daarvan zijn hooguit de datum "
+             f"en één zin van ten hoogste {MAX_WOORDEN} woorden")
+    return uit, regel
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="toetst de beloftes op de plank")
     ap.add_argument("--plank", default="oefenboeken/index.qmd",
@@ -839,6 +984,8 @@ def main() -> int:
     bevindingen, aantal_kaartjes, getoetst = toets(wortel, args.plank)
     gespiegeld, spiegelregel = spiegel(wortel, args.plank, args.en_plank, args.thuis, args.en_thuis)
     bevindingen += gespiegeld
+    te_lang, bijwerkregel = bijwerkwacht(wortel, [args.plank, args.en_plank, args.thuis, args.en_thuis])
+    bevindingen += te_lang
     fouten = [b for b in bevindingen if b.soort == "fout"]
     blind = [b for b in bevindingen if b.soort == "blind"]
     overgeslagen = [b for b in bevindingen if b.soort == "overgeslagen"]
@@ -853,6 +1000,8 @@ def main() -> int:
     # die nul boeken vergeleek, mag niet lezen als een spiegel die er nul miste.
     if spiegelregel and (fouten or blind or overgeslagen or not args.stil):
         print(f"  {spiegelregel}")
+    if fouten or blind or overgeslagen or not args.stil:
+        print(f"  {bijwerkregel}")
     for b in overgeslagen:
         print(f"  NB    {b.kaartje.titel} (regel {b.kaartje.regel}): {b.regel}")
     for b in fouten:
