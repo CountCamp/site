@@ -348,6 +348,7 @@ Figure&nbsp;1: The χ²-distribution at <em>df</em> = 1, zoomed in on a piece of
 </div>
 </div>
 </div>
+<p><em>How to read it:</em> the further to the right a stroke is, the smaller the tail behind it (the picture is zoomed in, so the orange area is really much smaller than it looks). Your stroke (6.25) is to the right of 5.41 and to the left of 6.63, so your tail is smaller than the one for column .02 and bigger than the one for column .01: .01 &lt; <em>p</em> &lt; .02. Not times two, because χ² has only one tail; even the top end, .02, is below .05, so you reject <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> without knowing the exact number.</p>
 <p>If your χ² lies beyond the last number in the row, <em>p</em> is even smaller than .0005. And if your <em>df</em> isn’t in the table, take the next smaller one that is, just as with <a href="../08_tabellen/08_tabel_d.html">table D</a>.</p>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Check in R">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -363,15 +364,23 @@ Figure&nbsp;1: The χ²-distribution at <em>df</em> = 1, zoomed in on a piece of
 <div class="callout-body-container callout-body">
 <p><code>qchisq()</code> gives the critical value, <code>pchisq()</code> the probability in the tail.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(.<span class="dv">05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># which χ² has .05 to its right, at df = 1? In full, every argument by name:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(<span class="at">p =</span> .<span class="dv">05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.841459</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">6.25</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the default is lower.tail = TRUE: then R uses the probability on the left. Short:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(.<span class="dv">05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.841459</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the probability to the right of your χ² = 6.25</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">6.25</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01241933</code></pre>
 </div>
 </div>
+<p><code>qchisq()</code> gives the 3.84 from row 1, column .05, both times, and <code>pchisq()</code> gives your <em>p</em>: .012, between .01 and .02, as the table said. Forget <code>lower.tail = FALSE</code>, and <code>qchisq(.05, df = 1)</code> gives the boundary with .05 to its <strong>left</strong>: 0.0039, a completely different number.</p>
 </div>
 </div>
 </div>
@@ -883,4 +892,4 @@ document.addEventListener('click', function (e) {
 
 
 </body></html>
-<!-- countcamp-oefenboek inferential-statistics lab-commit=e01b670abf727aae491c05ddb3291bce6314fe5f geleverd=2026-11-25T18:02:59 -->
+<!-- countcamp-oefenboek inferential-statistics lab-commit=bb187519c6d0cd1aca7a001ca04aba73f6824995 geleverd=2026-11-26T08:32:40 -->

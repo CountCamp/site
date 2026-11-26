@@ -396,6 +396,7 @@ Figuur&nbsp;1: De χ²-verdeling bij <em>df</em> = 1, ingezoomd op een stuk van 
 </div>
 </div>
 </div>
+<p><em>Zo lees je het:</em> hoe verder naar rechts een streep staat, hoe kleiner de staart erachter (het plaatje is ingezoomd, dus het oranje vlak is in het echt veel kleiner dan het lijkt). Jouw streep (6.25) staat rechts van 5.41 en links van 6.63, dus jouw staart is kleiner dan die van kolom .02 en groter dan die van kolom .01: .01 &lt; <em>p</em> &lt; .02. Niet maal twee, want χ² heeft maar één staart; ook de bovenkant, .02, ligt onder .05, dus je verwerpt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> zonder het precieze getal te kennen.</p>
 <p>Ligt je χ² voorbij het laatste getal van de rij, dan is <em>p</em> nog kleiner dan .0005. En staat je <em>df</em> er niet in, neem dan de eerstvolgende kleinere die er wél staat, net als bij <a href="../08_tabellen/08_tabel_d.html">tabel D</a>.</p>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Controle in R">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -411,15 +412,23 @@ Figuur&nbsp;1: De χ²-verdeling bij <em>df</em> = 1, ingezoomd op een stuk van 
 <div class="callout-body-container callout-body">
 <p><code>qchisq()</code> geeft de kritieke waarde, <code>pchisq()</code> de kans in de staart.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(.<span class="dv">05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># welke χ² heeft .05 rechts van zich, bij df = 1? Voluit, elk argument bij naam:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(<span class="at">p =</span> .<span class="dv">05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.841459</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">6.25</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standaard is lower.tail = TRUE: dan rekent R met de kans links. Kort:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(.<span class="dv">05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.841459</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># de kans rechts van jouw χ² = 6.25</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pchisq</span>(<span class="fl">6.25</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.01241933</code></pre>
 </div>
 </div>
+<p><code>qchisq()</code> geeft twee keer de 3.84 uit rij 1, kolom .05, en <code>pchisq()</code> jouw <em>p</em>: .012, tussen .01 en .02, zoals de tabel zei. Vergeet je <code>lower.tail = FALSE</code>, dan geeft <code>qchisq(.05, df = 1)</code> de grens met .05 <strong>links</strong> ervan: 0.0039, een heel ander getal.</p>
 </div>
 </div>
 </div>
