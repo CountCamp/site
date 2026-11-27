@@ -284,12 +284,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#counting-instead-of-measuring" id="toc-counting-instead-of-measuring" class="nav-link active" data-scroll-target="#counting-instead-of-measuring">Counting instead of measuring</a></li>
-  <li><a href="#probabilities-from-a-contingency-table" id="toc-probabilities-from-a-contingency-table" class="nav-link" data-scroll-target="#probabilities-from-a-contingency-table">Probabilities from a contingency table</a></li>
-  <li><a href="#independent-or-not" id="toc-independent-or-not" class="nav-link" data-scroll-target="#independent-or-not">Independent or not</a>
+  <li><a href="#probabilities-from-a-contingency-table" id="toc-probabilities-from-a-contingency-table" class="nav-link" data-scroll-target="#probabilities-from-a-contingency-table">Probabilities from a contingency table</a>
   <ul class="collapse">
-  <li><a href="#the-multiplication-rule" id="toc-the-multiplication-rule" class="nav-link" data-scroll-target="#the-multiplication-rule">The multiplication rule</a></li>
+  <li><a href="#the-contingency-table" id="toc-the-contingency-table" class="nav-link" data-scroll-target="#the-contingency-table">The contingency table</a></li>
+  <li><a href="#the-marginal-probability-from-the-edge" id="toc-the-marginal-probability-from-the-edge" class="nav-link" data-scroll-target="#the-marginal-probability-from-the-edge">The marginal probability: from the edge</a></li>
+  <li><a href="#the-joint-probability-from-one-cell" id="toc-the-joint-probability-from-one-cell" class="nav-link" data-scroll-target="#the-joint-probability-from-one-cell">The joint probability: from one cell</a></li>
+  <li><a href="#the-conditional-probability-a-smaller-barrel" id="toc-the-conditional-probability-a-smaller-barrel" class="nav-link" data-scroll-target="#the-conditional-probability-a-smaller-barrel">The conditional probability: a smaller barrel</a></li>
+  </ul></li>
+  <li><a href="#is-there-an-association-at-all" id="toc-is-there-an-association-at-all" class="nav-link" data-scroll-target="#is-there-an-association-at-all">Is there an association at all?</a>
+  <ul class="collapse">
   <li><a href="#in-this-group-or-in-the-population" id="toc-in-this-group-or-in-the-population" class="nav-link" data-scroll-target="#in-this-group-or-in-the-population">In this group, or in the population?</a></li>
   </ul></li>
+  <li><a href="#the-multiplication-rule-the-same-question-from-the-other-side" id="toc-the-multiplication-rule-the-same-question-from-the-other-side" class="nav-link" data-scroll-target="#the-multiplication-rule-the-same-question-from-the-other-side">The multiplication rule: the same question, from the other side</a></li>
   <li><a href="#what-you-expect-when-nothing-is-going-on" id="toc-what-you-expect-when-nothing-is-going-on" class="nav-link" data-scroll-target="#what-you-expect-when-nothing-is-going-on">What you expect when nothing is going on</a></li>
   <li><a href="#the-χ²-test-how-far-apart-are-counted-and-expected" id="toc-the-χ²-test-how-far-apart-are-counted-and-expected" class="nav-link" data-scroll-target="#the-χ²-test-how-far-apart-are-counted-and-expected">The χ² test: how far apart are counted and expected?</a></li>
   <li><a href="#how-strange-is-6.25-counting-dots-again" id="toc-how-strange-is-6.25-counting-dots-again" class="nav-link" data-scroll-target="#how-strange-is-6.25-counting-dots-again">How strange is 6.25? Counting dots again</a></li>
@@ -347,7 +353,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>counting instead of measuring: categorical variables in a contingency table</li>
 <li>three probabilities from one table: marginal, joint and conditional</li>
-<li>when two variables are independent, and the multiplication rule</li>
+<li>using conditional probabilities to see whether there is an association in your group, and when two variables are independent</li>
+<li>the same question with the multiplication rule</li>
 <li>the expected counts when nothing is going on</li>
 <li>the χ² test of independence, by hand and in R</li>
 <li>why χ² has one tail and still doesn’t pick a side</li>
@@ -365,9 +372,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Are two categorical variables related in the <strong>population</strong>, or do you happen to see a pattern in your sample by chance?</p>
 </blockquote>
 <p>For that you need two things this week: a bit of probability theory, and one test, the <strong>χ² test</strong> (<em>chi-square</em>).</p>
+<p>You build it up calmly, with one table that stays the same all week. First you take probabilities from it. Then you use those probabilities to see whether there is an association in your group at all. And only after that comes the test.</p>
 </section>
 <section id="probabilities-from-a-contingency-table" class="level1">
 <h1>Probabilities from a contingency table</h1>
+<section id="the-contingency-table" class="level2">
+<h2 class="anchored" data-anchor-id="the-contingency-table">The contingency table</h2>
 <p>A researcher asks 100 first-year students two things: where is your phone at night, and how do you usually sleep? Two categorical variables, phone location and sleep, each with two categories. Set them out against each other and you get a <strong>contingency table</strong>:</p>
 <table class="caption-top table">
 <caption>Phone location and sleep for 100 first-year students</caption>
@@ -400,31 +410,81 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
+<p>Read it first, without working anything out yet. Inside are four <strong>cells</strong>. Each cell counts the people who meet two conditions at once: top left are the 30 students who have their phone in the bedroom <strong>and</strong> sleep poorly.</p>
+<p>Along the edge are the <strong>marginal totals</strong>. On the right, the row totals: 60 people have their phone in the bedroom, 40 have it elsewhere. At the bottom, the column totals: 40 sleep poorly, 60 sleep well. And in the bottom-right corner, where the total row and the total column cross, is everyone: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">N = 100</annotation></semantics></math>. The row totals add up to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and so do the column totals.</p>
+</section>
+<section id="the-marginal-probability-from-the-edge" class="level2">
+<h2 class="anchored" data-anchor-id="the-marginal-probability-from-the-edge">The marginal probability: from the edge</h2>
 <p>Every probability you take from a table like this is a fraction. Think of a <strong>lucky-dip barrel</strong>. Below the fraction line is the barrel: everyone you draw from. Above the line are the <em>hits</em>: the ones in it who match what you are asking about.</p>
 <div class="kt kt-legenda">
 <p>With each fraction below, the table appears too, and every number from the fraction sits in it in the same box: <span class="kt-getal kt-rol-hit">hit</span> <span class="kt-getal kt-rol-rij">row total</span> <span class="kt-getal kt-rol-kol">column total</span> <span class="kt-getal kt-rol-n">grand total <em>N</em></span>. That way you can see where every number comes from.</p>
 </div>
-<p><strong>The marginal probability</strong> is about one variable. Draw one student at random from all 100. What is the probability that they sleep poorly?</p>
+<p>The <strong>marginal probability</strong> is about one variable. Draw one student at random from all 100. What is the probability that they sleep poorly?</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-1"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-ton kt-rand-b kt-rand-l">30</td><td class="kt-ton kt-rand-b">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-ton kt-rand-l">10</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l"><span class="kt-getal kt-rol-hit">40</span></td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">40</mn><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.40</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-1"><li><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">40</span> above the line: everyone in the column <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-n">100</span> below the line: everyone, the whole barrel</li></ul></div>
 </div>
 </div>
-<p>It is called <em>marginal</em> because you take it from the margin: the edge of the table, where the totals are. The 40 is at the bottom, in the total row. Where the phone is plays no part: you fold that variable away for a moment. In the same way, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) = \dfrac{60}{100} = .60</annotation></semantics></math>, with the row total on the right.</p>
-<p><strong>The joint probability</strong> is about two things at once. What is the probability that this one student has their phone in the bedroom <strong>and</strong> sleeps poorly? The barrel is still everyone; the hits are the ones who meet both conditions. That is one cell:</p>
+<p>It is called <em>marginal</em> because you take it from the margin: the edge of the table, where the marginal totals are. The 40 is at the bottom, in the total row. Where the phone is plays no part: you fold that variable away for a moment. In the same way, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) = \dfrac{60}{100} = .60</annotation></semantics></math>, with the row total on the right.</p>
+</section>
+<section id="the-joint-probability-from-one-cell" class="level2">
+<h2 class="anchored" data-anchor-id="the-joint-probability-from-one-cell">The joint probability: from one cell</h2>
+<p>The <strong>joint probability</strong> is about two things at once. What is the probability that this one student has their phone in the bedroom <strong>and</strong> sleeps poorly? The barrel is still everyone; the hits are the ones who meet both conditions. That is one cell:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-2"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-ton kt-rand-b kt-rand-l"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-ton kt-rand-l">10</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l">40</td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>bedroom and poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.30</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-2"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps poorly</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">100</span> below the line: everyone, the whole barrel</li></ul></div>
 </div>
 </div>
 <p>Look where the box above the line is now. You take the marginal probability from the edge, from a total. You take the joint probability from inside the table, from one cell: you simply read it off.</p>
-<p><strong>The conditional probability</strong> changes the barrel. What is the probability of sleeping poorly, <strong>given that</strong> the phone is in the bedroom? Now you only draw from the 60 people with their phone in the bedroom. That is your new barrel, and it goes below the line:</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — the addition rule">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>If you want to go further — the addition rule
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Besides <em>and</em>, there is <em>or</em>. With <em>or</em> you may think: at least one of the two. The phone is in the bedroom, or you sleep poorly, or both. That is different from ordering at a snack bar: fries or a burger? Then you pick one. In statistics, it may be both.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ or } B) = P(A) + P(B) - P(A \text{ and } B)
+</annotation></semantics></math></p>
+<p>You subtract that last term so that you don’t count the overlap twice. In the table:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom or poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">
+P(\text{bedroom or poor sleep}) = .60 + .40 - .30 = .70
+</annotation></semantics></math></p>
+<p>Count it yourself: 30 + 30 + 10 = 70 people have their phone in the bedroom, sleep poorly, or both. Only the 30 in the cell <em>elsewhere, sleeps well</em> are left out.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kt kt-krap"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-7"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-ton kt-rand-b kt-rand-l"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-ton kt-rand-l"><span class="kt-getal kt-rol-hit">10</span></td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l">40</td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>bedroom or poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">10</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>70</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.70</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-7"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps well</i></li><li><span class="kt-getal kt-rol-hit">10</span> above the line: the cell <i>elsewhere</i>, <i>sleeps poorly</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">100</span> below the line: everyone, the whole barrel</li></ul></div>
+</div>
+</div>
+<p>Leave out the minus, and you get <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>=</mo><mn>1.00</mn></mrow><annotation encoding="application/x-tex">.60 + .40 = 1.00</annotation></semantics></math>, and that is too much. The top-left cell, bedroom <strong>and</strong> poor sleep, is in both probabilities, so you count it twice. Take it off once: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.00</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">1.00 - .30 = .70</annotation></semantics></math>.</p>
+<p>If two events don’t overlap, they are called <strong>disjoint</strong>. Sleeping poorly with the phone in the bedroom, and sleeping poorly with the phone elsewhere: both at once is impossible. The probability of both is then zero, the minus drops out, and you may simply add: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.30</mn><mo>+</mo><mn>.10</mn><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">.30 + .10 = .40</annotation></semantics></math>, the probability of poor sleep. So it is still one rule.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-conditional-probability-a-smaller-barrel" class="level2">
+<h2 class="anchored" data-anchor-id="the-conditional-probability-a-smaller-barrel">The conditional probability: a smaller barrel</h2>
+<p>The <strong>conditional probability</strong> changes the barrel. What is the probability of sleeping poorly, <strong>given that</strong> the phone is in the bedroom? Now you only draw from the 60 people with their phone in the bedroom. That is your new barrel, and it goes below the line:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-3"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">in the bedroom</th><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b kt-rand-o">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">60</span></td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-vaag">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-vaag">40</td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>poor sleep</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">bedroom</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-rij">60</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.50</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-3"><li><span class="kt-staal kt-band-rij"></span><b>the barrel</b> (solid border, also under the words in the fraction): only the row <i>in the bedroom</i> is still in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-rij">60</span> below the line: everyone in the row <i>in the bedroom</i>, the whole barrel</li><li><span class="kt-staal kt-staal-vaag"></span>light numbers, outside the border of the barrel: not in it</li></ul></div>
 </div>
 </div>
+<p>The same 30 above the line as in the joint probability, but the barrel below it is smaller: 60 instead of 100.</p>
 <p>You read the vertical bar <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>∣</mi><annotation encoding="application/x-tex">\mid</annotation></semantics></math> as <em>given that</em>: what comes after it is the condition, and the condition decides the barrel.</p>
+<p>Now the other row. Given that the phone is elsewhere, the barrel is the group of 40 people with their phone elsewhere:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-4"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-vaag">30</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">60</td></tr><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">elsewhere</th><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">10</span></td><td class="kt-ton kt-rand-b kt-rand-o">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">40</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-vaag">40</td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>poor sleep</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">elsewhere</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">10</mn><mn class="kt-getal kt-rol-rij">40</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.25</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-4"><li><span class="kt-staal kt-band-rij"></span><b>the barrel</b> (solid border, also under the words in the fraction): only the row <i>elsewhere</i> is still in it</li><li><span class="kt-getal kt-rol-hit">10</span> above the line: the cell <i>elsewhere</i>, <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-rij">40</span> below the line: everyone in the row <i>elsewhere</i>, the whole barrel</li><li class="visually-hidden"><span class="kt-staal kt-staal-vaag"></span>light numbers, outside the border of the barrel: not in it</li></ul></div>
+</div>
+</div>
+<p>Two rows, so two barrels, and two probabilities of sleeping poorly: with the phone in the bedroom .50, with the phone elsewhere only .25.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="The order matters">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -438,7 +498,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{bedroom})</annotation></semantics></math> is not the same as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo>∣</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{bedroom} \mid \text{poor sleep})</annotation></semantics></math>. In the second one, the barrel is the 40 poor sleepers, and 30 of them have their phone in the bedroom:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-kol" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-4"><thead><tr><th class="kt-hoek" scope="col">phone</th><th class="kt-ton kt-rand-l kt-rand-r kt-rand-b" scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-ton kt-rand-l kt-rand-r"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">60</td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-ton kt-rand-l kt-rand-r">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-l kt-rand-r kt-rand-o"><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>bedroom</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-kol">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-kol">40</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.75</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-4"><li><span class="kt-staal kt-band-kol"></span><b>the barrel</b> (dashed border, also under the words in the fraction): only the column <i>sleeps poorly</i> is still in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-kol">40</span> below the line: everyone in the column <i>sleeps poorly</i>, the whole barrel</li><li class="visually-hidden"><span class="kt-staal kt-staal-vaag"></span>light numbers, outside the border of the barrel: not in it</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-kol" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-5"><thead><tr><th class="kt-hoek" scope="col">phone</th><th class="kt-ton kt-rand-l kt-rand-r kt-rand-b" scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-ton kt-rand-l kt-rand-r"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">60</td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-ton kt-rand-l kt-rand-r">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-l kt-rand-r kt-rand-o"><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>bedroom</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-kol">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-kol">40</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.75</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-5"><li><span class="kt-staal kt-band-kol"></span><b>the barrel</b> (dashed border, also under the words in the fraction): only the column <i>sleeps poorly</i> is still in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-kol">40</span> below the line: everyone in the column <i>sleeps poorly</i>, the whole barrel</li><li class="visually-hidden"><span class="kt-staal kt-staal-vaag"></span>light numbers, outside the border of the barrel: not in it</li></ul></div>
 </div>
 </div>
 <p>The same 30 above the line, but below it there is now a column instead of a row. A different number, because a different barrel.</p>
@@ -446,90 +506,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="independent-or-not" class="level1">
-<h1>Independent or not</h1>
+</section>
+<section id="is-there-an-association-at-all" class="level1">
+<h1>Is there an association at all?</h1>
+<p>Now the question that this week is about: are phone location and sleep related? You don’t need a test for that yet. First you simply look at your table, with the two conditional probabilities from just now.</p>
 <p>Two variables are <strong>independent</strong> if one tells you nothing about the other. You know where someone’s phone is at night, and that changes nothing about your guess of how they sleep? Then they are independent. Two rules of thumb go with that, and they say the same thing:</p>
 <ol type="1">
 <li><strong>The conditional probabilities are equal in all groups.</strong> The probability of sleeping poorly is just as big with the phone in the bedroom as without.</li>
 <li><strong>The conditional probabilities are equal to the marginal probability.</strong> In each group, the same share sleeps poorly as in the whole table.</li>
 </ol>
-<p>In the table:</p>
+<p>Put the two conditional probabilities side by side, with the marginal probability below them:</p>
 <ul>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{bedroom}) = .50</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>60</mn></mfrac></mstyle><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{bedroom}) = \dfrac{30}{60} = .50</annotation></semantics></math></li>
 <li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">elsewhere</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>10</mn><mn>40</mn></mfrac></mstyle><mo>=</mo><mn>.25</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{elsewhere}) = \dfrac{10}{40} = .25</annotation></semantics></math></li>
 <li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">P(\text{poor sleep}) = .40</annotation></semantics></math></li>
 </ul>
 <p>Not equal. So in this group of 100, phone location and sleep are related: people with their phone in the bedroom sleep poorly more often.</p>
-<section id="the-multiplication-rule" class="level2">
-<h2 class="anchored" data-anchor-id="the-multiplication-rule">The multiplication rule</h2>
-<p>When you see <em>and</em>, you quickly think of <em>times</em>. That’s allowed, but only with independence. You also meet this rule as the <strong>multiplicative law for independent events</strong>, or the <strong>product rule</strong> for short:</p>
-<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Multiplication rule — only for independent variables">
-<div class="callout-header d-flex align-content-center">
+<p>The .40 of everyone lies between the two, because it counts both groups together: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>30</mn><mo>+</mo><mn>10</mn><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">30 + 10 = 40</annotation></semantics></math> poor sleepers out of 100. If the two conditional probabilities are equal, say 24 out of 60 and 16 out of 40, the .40 is too: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mo>+</mo><mn>16</mn><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">24 + 16 = 40</annotation></semantics></math>. That is how the hollow bars stand on the right in <a href="#fig-gelijk" class="quarto-xref">Figure&nbsp;1</a>. That is why the two rules of thumb say the same thing.</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Rows or columns?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Multiplication rule — only for independent variables
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-P(A \text{ and } B) = P(A) \times P(B)
-</annotation></semantics></math></p>
-<p>Here, <em>independent variables</em> are two variables that tell you nothing about each other, and <em>dependent</em> means dependent <strong>on each other</strong>. That is not the same as the independent and the dependent variable of a study; see <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html#three-uses-of-independent">Three uses of <em>independent</em></a> in week 3.</p>
-</div>
-</div>
-<p>Try it on the table: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) \times P(\text{poor sleep}) = .60 \times .40 = .24</annotation></semantics></math>. But in the table, the joint probability is .30. The rule gives the wrong number, and that is exactly the sign that the two variables are not independent.</p>
-<p>Why does a wrong number say <em>dependent</em>? You didn’t work out that .30 with a rule: you <strong>read it off</strong> the table, 30 out of 100. Reading off always works, and what you read off is right. The rule is only allowed when the two variables are independent. Here it doesn’t give what you read off. So it wasn’t allowed here: the variables are dependent. That is why you always read off first.</p>
-<p>The rule you may <strong>always</strong> use, the <strong>general multiplicative law</strong>, has a conditional probability in it:</p>
-<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Multiplication rule — always">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Multiplication rule — always
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-P(A \text{ and } B) = P(A) \times P(B \mid A)
-</annotation></semantics></math></p>
-</div>
-</div>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) \times P(\text{poor sleep} \mid \text{bedroom}) = .60 \times .50 = .30</annotation></semantics></math>. That one <em>does</em> work. If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are independent, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B \mid A)</annotation></semantics></math> is simply <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math>, and the rule becomes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math>. So you may always calculate with this rule. But because it always works, you can’t check anything with it: it also works when the variables are related. If you want to know whether they are independent, compare the rule for independent variables, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math>, with what you read off.</p>
-<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — the addition rule">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>If you want to go further — the addition rule
+<span class="screen-reader-only">Note</span>Rows or columns?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Besides <em>and</em>, there is <em>or</em>. With <em>or</em> you may think: at least one of the two. The phone is in the bedroom, or you sleep poorly, or both. That is different from ordering at a snack bar: fries or a burger? Then you pick one. In statistics, it may be both.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> or </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-P(A \text{ or } B) = P(A) + P(B) - P(A \text{ and } B)
-</annotation></semantics></math></p>
-<p>You subtract that last term so that you don’t count the overlap twice. In the table:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom or poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">
-P(\text{bedroom or poor sleep}) = .60 + .40 - .30 = .70
-</annotation></semantics></math></p>
-<p>Count it yourself: 30 + 30 + 10 = 70 people have their phone in the bedroom, sleep poorly, or both. Only the 30 in the cell <em>elsewhere, sleeps well</em> are left out.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="kt kt-krap"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-6"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-ton kt-rand-b kt-rand-l"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-ton kt-rand-l"><span class="kt-getal kt-rol-hit">10</span></td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l">40</td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>bedroom or poor sleep</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">10</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>70</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.70</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-6"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>in the bedroom</i>, <i>sleeps well</i></li><li><span class="kt-getal kt-rol-hit">10</span> above the line: the cell <i>elsewhere</i>, <i>sleeps poorly</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">100</span> below the line: everyone, the whole barrel</li></ul></div>
-</div>
-</div>
-<p>Leave out the minus, and you get <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>=</mo><mn>1.00</mn></mrow><annotation encoding="application/x-tex">.60 + .40 = 1.00</annotation></semantics></math>, and that is too much. The top-left cell, bedroom <strong>and</strong> poor sleep, is in both probabilities, so you count it twice. Take it off once: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.00</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">1.00 - .30 = .70</annotation></semantics></math>.</p>
-<p>If two events don’t overlap, they are called <strong>disjoint</strong>. Sleeping poorly with the phone in the bedroom, and sleeping poorly with the phone elsewhere: both at once is impossible. The probability of both is then zero, the minus drops out, and you may simply add: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.30</mn><mo>+</mo><mn>.10</mn><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">.30 + .10 = .40</annotation></semantics></math>, the probability of poor sleep. So it is still one rule.</p>
+<p>You can also compare within the columns instead of the rows. Then the barrel is a column, as in the box <em>The order matters</em>:</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo>∣</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>40</mn></mfrac></mstyle><mo>=</mo><mn>.75</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom} \mid \text{poor sleep}) = \dfrac{30}{40} = .75</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo>∣</mo><mtext mathvariant="normal">good sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>60</mn></mfrac></mstyle><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom} \mid \text{good sleep}) = \dfrac{30}{60} = .50</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) = .60</annotation></semantics></math></li>
+</ul>
+<p>Not equal either: .75 against .50. Rows or columns: you always reach the same verdict.</p>
+<p>Careful: the second line has, just like <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{poor sleep} \mid \text{bedroom})</annotation></semantics></math>, 30 above the line and 60 below it. Still, it is something else: above the line the cell <em>bedroom, sleeps well</em>, and below it the column <em>sleeps well</em> instead of the row <em>in the bedroom</em>.</p>
 </div>
 </div>
 </div>
-</section>
+<p>Had the probabilities been equal, there would have been no association to see, and you would be done here. Since they differ, you do see an association in this group. Is it there among all first-year students too? Maybe. That is what the rest of the week is about.</p>
 <section id="in-this-group-or-in-the-population" class="level2">
 <h2 class="anchored" data-anchor-id="in-this-group-or-in-the-population">In this group, or in the population?</h2>
 <p>Look closely at what you just did. You looked at <strong>these 100 first-year students</strong>, and saw a difference: .50 against .25. For this group, that is a fact. But almost every sample shows <em>some</em> difference, even when the two variables are completely independent in the population. Just as in week 1, where a sample mean almost never came out at exactly 50.</p>
@@ -566,12 +583,55 @@ Figure&nbsp;1: Left: the phone table from this week, .50 against .25. Right: no 
 </div>
 </section>
 </section>
+<section id="the-multiplication-rule-the-same-question-from-the-other-side" class="level1">
+<h1>The multiplication rule: the same question, from the other side</h1>
+<p>You can also ask the same question from the other side: not with a probability within one group, but with the joint probability from one cell.</p>
+<p>When you see <em>and</em>, you quickly think of <em>times</em>. That’s allowed, but only with independence. You also meet this rule as the <strong>multiplicative law for independent events</strong>, or the <strong>product rule</strong> for short:</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Multiplication rule — only for independent variables">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Multiplication rule — only for independent variables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ and } B) = P(A) \times P(B)
+</annotation></semantics></math></p>
+<p>Here, <em>independent variables</em> are two variables that tell you nothing about each other, and <em>dependent</em> means dependent <strong>on each other</strong>. That is not the same as the independent and the dependent variable of a study; see <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html#three-uses-of-independent">Three uses of <em>independent</em></a> in week 3.</p>
+</div>
+</div>
+<p>Try it on the table: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) \times P(\text{poor sleep}) = .60 \times .40 = .24</annotation></semantics></math>. But in the table, the joint probability is .30. The rule gives the wrong number, and that is exactly the sign that the two variables are not independent.</p>
+<p>Why does a wrong number say <em>dependent</em>? You didn’t work out that .30 with a rule: you <strong>read it off</strong> the table, 30 out of 100. Reading off always works, and what you read off is right. The rule is only allowed when the two variables are independent. Here it doesn’t give what you read off. So it wasn’t allowed here: the variables are dependent. That is why you always read off first.</p>
+<p>The rule you may <strong>always</strong> use, the <strong>general multiplicative law</strong>, is almost the same: a conditional probability takes the place of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math>.</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Multiplication rule — always">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Multiplication rule — always
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ and } B) = P(A) \times P(B \mid A)
+</annotation></semantics></math></p>
+</div>
+</div>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">poor sleep</mtext><mo>∣</mo><mtext mathvariant="normal">bedroom</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">P(\text{bedroom}) \times P(\text{poor sleep} \mid \text{bedroom}) = .60 \times .50 = .30</annotation></semantics></math>. That one <em>does</em> work.</p>
+<p>Put the two calculations side by side: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">.60 \times .50 = .30</annotation></semantics></math> against <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">.60 \times .40 = .24</annotation></semantics></math>. The only difference is .50 against .40: the conditional probability against the marginal one. You already put those two side by side in <em>Is there an association at all?</em> So the multiplication rule asks the same question, from the other side, and reaches the same answer: dependent, in this group.</p>
+<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> are independent, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B \mid A)</annotation></semantics></math> is simply <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math>, and the rule becomes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math>. So you may always calculate with the general rule. But because it always works, you can’t check anything with it: it also works when the variables are related. If you want to know whether they are independent, compare the rule for independent variables, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math>, with what you read off.</p>
+<p>Still, you don’t throw that .24 away. It is exactly the joint probability you would expect if <em>nothing</em> were going on, and that is where the next step begins.</p>
+</section>
 <section id="what-you-expect-when-nothing-is-going-on" class="level1">
 <h1>What you expect when nothing is going on</h1>
 <p>Every test calculates from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: pretend nothing is going on, and see how strange your data are then. Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says: phone location and sleep are independent. Which counts should the table have in that case?</p>
 <p>Reason it out first. In the whole group, the proportion of poor sleepers is .40. If the two variables are independent, then in <strong>each</strong> group the proportion of poor sleepers is that same .40: those are the hollow bars of <a href="#fig-gelijk" class="quarto-xref">Figure&nbsp;1</a>. Of the 60 people with their phone in the bedroom, you therefore expect <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.40</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">.40 \times 60 = 24</annotation></semantics></math>.</p>
 <p>That is the multiplication rule for independent variables, times the number of people: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .40 = 24</annotation></semantics></math>. The probability <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">.60 \times .40 = .24</annotation></semantics></math> was the wrong number a moment ago: the table said .30. Here the rule <em>is</em> allowed. You are not working out what you actually counted, but what you would count <em>if</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> were true, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says precisely that the two variables are independent.</p>
-<p>With the rule you may always use, you would only get back what you actually counted (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .50 = 30</annotation></semantics></math>), and χ² would always be 0.</p>
+<p>With the rule you may always use, you would only get back what you actually counted (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .50 = 30</annotation></semantics></math>), and the same in every cell of every table.</p>
 <p>Write the two probabilities as fractions over the grand total <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and one <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> cancels out:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>60</mn><mo>×</mo><mn>40</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">
 100 \times \dfrac{60}{100} \times \dfrac{40}{100}
@@ -601,7 +661,7 @@ f_\text{e} = \dfrac{\text{row total} \times \text{column total}}{N}
 <p>The movement for each cell: look sideways to the row total, down to the column total, multiply, and divide by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. For the cell <em>bedroom, poor sleep</em>. There are no hits in the fraction now, only totals:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-5"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-vaag kt-doel"><span class="kt-etiket">counted</span>30</td><td class="kt-vaag">30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">60</span></td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-vaag">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">row total</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">column total</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">60</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">40</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2400</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>24</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-5"><li><span class="kt-getal kt-rol-rij">60</span> the <b>row total</b>: everyone in the row <i>in the bedroom</i></li><li><span class="kt-getal kt-rol-kol">40</span> the <b>column total</b>: everyone in the column <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-n">100</span> the <b>grand total</b> <i>N</i>: everyone</li><li><span class="kt-staal kt-staal-doel"></span>the cell you work out <i>f</i><sub>e</sub> for; you counted <span class="kt-cijfer">30</span> there, and you do not need that number for <i>f</i><sub>e</sub></li><li><span class="kt-staal kt-staal-vaag"></span>light numbers without a box: not in the sum</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-6"><thead><tr><th class="kt-hoek" scope="col">phone</th><th scope="col">sleeps poorly</th><th scope="col">sleeps well</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in the bedroom</th><td class="kt-vaag kt-doel"><span class="kt-etiket">counted</span>30</td><td class="kt-vaag">30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">60</span></td></tr><tr><th class="kt-rijkop" scope="row">elsewhere</th><td class="kt-vaag">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">row total</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">column total</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">60</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">40</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2400</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>24</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-6"><li><span class="kt-getal kt-rol-rij">60</span> the <b>row total</b>: everyone in the row <i>in the bedroom</i></li><li><span class="kt-getal kt-rol-kol">40</span> the <b>column total</b>: everyone in the column <i>sleeps poorly</i></li><li><span class="kt-getal kt-rol-n">100</span> the <b>grand total</b> <i>N</i>: everyone</li><li><span class="kt-staal kt-staal-doel"></span>the cell you work out <i>f</i><sub>e</sub> for; you counted <span class="kt-cijfer">30</span> there, and you do not need that number for <i>f</i><sub>e</sub></li><li><span class="kt-staal kt-staal-vaag"></span>light numbers without a box: not in the sum</li></ul></div>
 </div>
 </div>
 <p>And the same for all four:</p>
@@ -647,7 +707,8 @@ f_\text{e} = \dfrac{\text{row total} \times \text{column total}}{N}
 </section>
 <section id="the-χ²-test-how-far-apart-are-counted-and-expected" class="level1">
 <h1>The χ² test: how far apart are counted and expected?</h1>
-<p>You want one number that says how far the whole table is from ‘independent’. Start with the deviation in each cell, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math>:</p>
+<p>Only now the test. In this group you saw an association: .50 against .25, and 30 poor sleepers with their phone in the bedroom where you expected 24. But even in a world without an association, a table almost never comes out at exactly its expected counts. How big does the difference have to be before you stop calling it chance?</p>
+<p>The answer comes in two steps. First you make one number that says how far the whole table is from ‘independent’: χ². Then you look at how strange that number is when nothing is going on. Start with the deviation in each cell, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math>:</p>
 <table class="caption-top table">
 <caption>The deviation in each cell</caption>
 <thead>
@@ -881,7 +942,7 @@ Figure&nbsp;4: On the left, the bell of <em>z</em>, with .025 beyond −1.96 and
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="04_categorisch_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" alt="A small sketch shows a whale lying on a horizontal axis, with 0 below it on the left and χ² in the middle. Its back is the χ² distribution with three degrees of freedom: just after 0 it rises steeply to a hump, and then it runs out to the right in a long, thin tail, until just above the axis. There is an eye at the front, and a spout of water rises above its head." width="268"></p>
+<p><img src="04_categorisch_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="A small sketch shows a whale lying on a horizontal axis, with 0 below it on the left and χ² in the middle. Its back is the χ² distribution with three degrees of freedom: just after 0 it rises steeply to a hump, and then it runs out to the right in a long, thin tail, until just above the axis. There is an eye at the front, and a spout of water rises above its head." width="268"></p>
 <figcaption>Drawn as a whale: its back is the χ² distribution with three degrees of freedom from <a href="#fig-krommen" class="quarto-xref">Figure&nbsp;3</a>.</figcaption>
 </figure>
 </div>
@@ -918,7 +979,7 @@ This is how you report it
 <p>For the phone: in the cell <em>bedroom, poorly</em>, you counted 30 where you expected 24, so +6. That’s where your story is: people with their phone in the bedroom sleep poorly more often than you would expect if the location didn’t matter.</p>
 <p>The probabilities tell the same story: in that group the proportion of poor sleepers is .50, more than the .40 of everyone together. That .40 was in your expectation too: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.40</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">.40 \times 60 = 24</annotation></semantics></math>. In a two-by-two table you don’t need to read the other three cells separately: they say the same from the other side. In <em>elsewhere, poorly</em>, for example, it says −6: fewer people there sleep poorly than expected.</p>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Check in R — chisq.test() and pchisq()">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -927,7 +988,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>You worked it out by hand. R does the same calculation alongside you, so that you can see it’s right. Type in the table row by row.</p>
 <div class="cell">
@@ -962,7 +1023,7 @@ X-squared = 6.25, df = 1, p-value = 0.01242</code></pre>
 </div>
 </div>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="With a graphing calculator (TI-84)">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -971,7 +1032,7 @@ X-squared = 6.25, df = 1, p-value = 0.01242</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>In the exam a graphing calculator is allowed, but a simple one is enough: everything above works on any calculator. If you have a TI-84, it does the whole test in one go. That is fine in the exam too; here it is a check on your work by hand.</p>
 <ol type="1">
@@ -1025,7 +1086,7 @@ X-squared = 5.2517, df = 1, p-value = 0.02192</code></pre>
 </div>
 </div>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="If you want to go further — no approximation: Fisher’s exact test">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1034,7 +1095,7 @@ X-squared = 5.2517, df = 1, p-value = 0.02192</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Yates’ correction is a patch: the smooth χ² distribution doesn’t exactly fit counts that jump. There is also a test that doesn’t approximate at all, but works out every table with the same marginal totals exactly: <strong>Fisher’s exact test</strong>. In R it is called <code>fisher.test()</code>, and you give it the same table.</p>
 <p>For the phone and sleep it gives <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.014</mn></mrow><annotation encoding="application/x-tex">p = .014</annotation></semantics></math>, close to the .012 without and the .022 with correction. For the earplugs of exercise 4.6 it gives .057: there it sides with Yates. So a borderline case really is a borderline case.</p>
@@ -1191,7 +1252,7 @@ sleepstudy$progress control training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1200,7 +1261,7 @@ sleepstudy$progress control training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>In a χ² test: categorical (nominal or ordinal); you count how often each combination occurs. In a <em>t</em> test, the dependent variable is a score on a scale (interval or ratio), because you compare means.</p></li>
@@ -1269,7 +1330,7 @@ sleepstudy$progress control training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1278,7 +1339,7 @@ sleepstudy$progress control training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Row total times column total, divided by 100:</p>
@@ -1402,7 +1463,7 @@ sleepstudy$progress control training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Short answer 4.3">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1411,7 +1472,7 @@ sleepstudy$progress control training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol start="3" type="a">
 <li>The expected counts are 41.25, 48.75, 68.75 and 81.25.</li>
@@ -1424,7 +1485,7 @@ sleepstudy$progress control training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Full worked answer 4.3 — step by step">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1433,7 +1494,7 @@ sleepstudy$progress control training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Whether having an evening job is related to how long first-year students sleep. In other words: whether the two variables are dependent.</p></li>
@@ -1552,7 +1613,7 @@ X-squared = 5.4825, df = 1, p-value = 0.01921</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.4">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1561,7 +1622,7 @@ X-squared = 5.4825, df = 1, p-value = 0.01921</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. the new column ----</span></span>
@@ -1661,7 +1722,7 @@ sleepstudy$worried control training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.5">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1670,24 +1731,24 @@ sleepstudy$worried control training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a.</strong> A joint probability: one cell, divided by everyone.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-7"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">70</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l">160</td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>first year and very tired</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">70</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.175</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-7"><li><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">70</span> above the line: the cell <i>first year</i>, <i>very</i></li><li><span class="kt-getal kt-rol-n">400</span> below the line: everyone, the whole barrel</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-8"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">70</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l">160</td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>first year and very tired</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">70</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.175</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-8"><li><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">70</span> above the line: the cell <i>first year</i>, <i>very</i></li><li><span class="kt-getal kt-rol-n">400</span> below the line: everyone, the whole barrel</li></ul></div>
 </div>
 </div>
 <p><strong>b.</strong> A marginal probability: the column total, divided by everyone.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-8"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b">70</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l"><span class="kt-getal kt-rol-hit">160</span></td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>hardly tired</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">160</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.40</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-8"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">160</span> above the line: everyone in the column <i>hardly</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">400</span> below the line: everyone, the whole barrel</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-9"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b">70</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-ton kt-rand-o kt-rand-l"><span class="kt-getal kt-rol-hit">160</span></td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>hardly tired</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">160</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.40</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-9"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>the barrel is everyone</b> (double border): the whole table is in it</li><li><span class="kt-getal kt-rol-hit">160</span> above the line: everyone in the column <i>hardly</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">400</span> below the line: everyone, the whole barrel</li></ul></div>
 </div>
 </div>
 <p><strong>c.</strong> A conditional probability: the barrel is now only the 150 students in a later year.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-9"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-vaag">85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol kt-vaag">250</td></tr><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">later years</th><td class="kt-ton kt-rand-b kt-rand-o">75</td><td class="kt-ton kt-rand-b kt-rand-o">45</td><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-vaag">160</td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>very tired</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">later years</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-rij">150</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.20</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-9"><li><span class="kt-staal kt-band-rij"></span><b>the barrel</b> (solid border, also under the words in the fraction): only the row <i>later years</i> is still in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>later years</i>, <i>very</i></li><li><span class="kt-getal kt-rol-rij">150</span> below the line: everyone in the row <i>later years</i>, the whole barrel</li><li><span class="kt-staal kt-staal-vaag"></span>light numbers, outside the border of the barrel: not in it</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-10"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-vaag">85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol kt-vaag">250</td></tr><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">later years</th><td class="kt-ton kt-rand-b kt-rand-o">75</td><td class="kt-ton kt-rand-b kt-rand-o">45</td><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td class="kt-vaag">160</td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>very tired</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">later years</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-rij">150</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.20</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-10"><li><span class="kt-staal kt-band-rij"></span><b>the barrel</b> (solid border, also under the words in the fraction): only the row <i>later years</i> is still in it</li><li><span class="kt-getal kt-rol-hit">30</span> above the line: the cell <i>later years</i>, <i>very</i></li><li><span class="kt-getal kt-rol-rij">150</span> below the line: everyone in the row <i>later years</i>, the whole barrel</li><li><span class="kt-staal kt-staal-vaag"></span>light numbers, outside the border of the barrel: not in it</li></ul></div>
 </div>
 </div>
 <p><strong>d.</strong> No.&nbsp;The barrel here is the row: all first-year students, or all students in a later year. Then go along column by column and compare the two rows:</p>
@@ -1726,14 +1787,14 @@ sleepstudy$worried control training
 <p>Why two? Suppose you only know the totals in the margins of this table. Then you can fill in two cells freely, and you complete the rest straight away: not guessing, but working it out. Here the free cells are black: those are the ones you choose.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-11"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td><span class="kt-etiket">free</span><span class="kt-getal kt-rol-hit">85</span></td><td><span class="kt-etiket">free</span><span class="kt-getal kt-rol-hit">95</span></td><td><span class="kt-etiket">follows</span>70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td><span class="kt-etiket">follows</span>75</td><td><span class="kt-etiket">follows</span>45</td><td><span class="kt-etiket">follows</span>30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td><span class="kt-getal kt-rol-kol">160</span></td><td><span class="kt-getal kt-rol-kol">140</span></td><td><span class="kt-getal kt-rol-kol">100</span></td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><ul class="kt-sleutel" id="kt-sleutel-11"><li><span class="kt-getal kt-rol-hit">85</span> <span class="kt-getal kt-rol-hit">95</span> <b>free</b>: you may choose these two cells yourself; the totals around them are fixed</li><li><b>follows</b>: work it out with a row or column total; a number without a box in such a sum followed already</li><li><i>first year, very</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-rij">250</span> − <span class="kt-getal kt-rol-hit">85</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">70</span></span></li><li><i>later years, hardly</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">160</span> − <span class="kt-getal kt-rol-hit">85</span> = <span class="kt-cijfer">75</span></span></li><li><i>later years, somewhat</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">140</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">45</span></span></li><li><i>later years, very</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">100</span> − <span class="kt-cijfer">70</span> = <span class="kt-cijfer">30</span></span></li><li>check, the row <i>later years</i>: <span style="white-space: nowrap"><span class="kt-cijfer">75</span> + <span class="kt-cijfer">45</span> + <span class="kt-cijfer">30</span> = <span class="kt-getal kt-rol-rij">150</span></span></li><li><span class="kt-staal kt-staal-vaag"></span>you don't need the grand total <i>N</i>, <span class="kt-cijfer">400</span>, here</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-12"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td><span class="kt-etiket">free</span><span class="kt-getal kt-rol-hit">85</span></td><td><span class="kt-etiket">free</span><span class="kt-getal kt-rol-hit">95</span></td><td><span class="kt-etiket">follows</span>70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td><span class="kt-etiket">follows</span>75</td><td><span class="kt-etiket">follows</span>45</td><td><span class="kt-etiket">follows</span>30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td><span class="kt-getal kt-rol-kol">160</span></td><td><span class="kt-getal kt-rol-kol">140</span></td><td><span class="kt-getal kt-rol-kol">100</span></td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><ul class="kt-sleutel" id="kt-sleutel-12"><li><span class="kt-getal kt-rol-hit">85</span> <span class="kt-getal kt-rol-hit">95</span> <b>free</b>: you may choose these two cells yourself; the totals around them are fixed</li><li><b>follows</b>: work it out with a row or column total; a number without a box in such a sum followed already</li><li><i>first year, very</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-rij">250</span> − <span class="kt-getal kt-rol-hit">85</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">70</span></span></li><li><i>later years, hardly</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">160</span> − <span class="kt-getal kt-rol-hit">85</span> = <span class="kt-cijfer">75</span></span></li><li><i>later years, somewhat</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">140</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">45</span></span></li><li><i>later years, very</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">100</span> − <span class="kt-cijfer">70</span> = <span class="kt-cijfer">30</span></span></li><li>check, the row <i>later years</i>: <span style="white-space: nowrap"><span class="kt-cijfer">75</span> + <span class="kt-cijfer">45</span> + <span class="kt-cijfer">30</span> = <span class="kt-getal kt-rol-rij">150</span></span></li><li><span class="kt-staal kt-staal-vaag"></span>you don't need the grand total <i>N</i>, <span class="kt-cijfer">400</span>, here</li></ul></div>
 </div>
 </div>
 <p>So two cells are free, and the other four are fixed. In any table you can choose the block at the top left: all rows except the last, and all columns except the last. That is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(2 - 1) \times (3 - 1)</annotation></semantics></math>. Two cells in one column won’t do: at <em>later years, hardly</em> you can see that the 75 is fixed as soon as the 85 is there.</p>
 <p><strong>f.</strong> Row total times column total, divided by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. There are no hits in the fraction, only totals:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-10"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-vaag kt-doel"><span class="kt-etiket">counted</span>85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td class="kt-vaag">75</td><td class="kt-vaag">45</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td><span class="kt-getal kt-rol-kol">160</span></td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">row total</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">column total</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">250</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">160</mn></mrow><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>40000</mn><mn>400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>100</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-10"><li><span class="kt-getal kt-rol-rij">250</span> the <b>row total</b>: everyone in the row <i>first year</i></li><li><span class="kt-getal kt-rol-kol">160</span> the <b>column total</b>: everyone in the column <i>hardly</i></li><li><span class="kt-getal kt-rol-n">400</span> the <b>grand total</b> <i>N</i>: everyone</li><li><span class="kt-staal kt-staal-doel"></span>the cell you work out <i>f</i><sub>e</sub> for; you counted <span class="kt-cijfer">85</span> there, and you do not need that number for <i>f</i><sub>e</sub></li><li><span class="kt-staal kt-staal-vaag"></span>light numbers without a box: not in the sum</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-11"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">hardly</th><th scope="col">somewhat</th><th scope="col">very</th><th class="kt-totaalkol" scope="col">total</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">first year</th><td class="kt-vaag kt-doel"><span class="kt-etiket">counted</span>85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">later years</th><td class="kt-vaag">75</td><td class="kt-vaag">45</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">total</th><td><span class="kt-getal kt-rol-kol">160</span></td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">row total</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">column total</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">250</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">160</mn></mrow><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>40000</mn><mn>400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>100</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-11"><li><span class="kt-getal kt-rol-rij">250</span> the <b>row total</b>: everyone in the row <i>first year</i></li><li><span class="kt-getal kt-rol-kol">160</span> the <b>column total</b>: everyone in the column <i>hardly</i></li><li><span class="kt-getal kt-rol-n">400</span> the <b>grand total</b> <i>N</i>: everyone</li><li><span class="kt-staal kt-staal-doel"></span>the cell you work out <i>f</i><sub>e</sub> for; you counted <span class="kt-cijfer">85</span> there, and you do not need that number for <i>f</i><sub>e</sub></li><li><span class="kt-staal kt-staal-vaag"></span>light numbers without a box: not in the sum</li></ul></div>
 </div>
 </div>
 <p>You counted 85, fewer than the 100 you would expect if year of study made no difference.</p>
@@ -1804,7 +1865,7 @@ X-squared = 3.6, df = 1, p-value = 0.05778</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer 4.6">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1813,7 +1874,7 @@ X-squared = 3.6, df = 1, p-value = 0.05778</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>The expected counts are 15, 45, 15 and 45, and each deviation is 5:</p>
@@ -1932,7 +1993,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1941,7 +2002,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> The barrel is the 50 people with two alarms: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>50</mn></mfrac></mstyle><mo>=</mo><mn>.80</mn></mrow><annotation encoding="application/x-tex">\dfrac{40}{50} = .80</annotation></semantics></math>. With one alarm it is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>18</mn><mn>30</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">\dfrac{18}{30} = .60</annotation></semantics></math>. Not equal, so dependent, in this group. .50 is the trap: that is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>80</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{40}{80}</annotation></semantics></math>, the joint probability of two alarms <strong>and</strong> on time.</p>
 </div>
@@ -1967,7 +2028,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1976,7 +2037,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>C.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>50</mn><mo>×</mo><mn>22</mn></mrow><mn>80</mn></mfrac></mstyle><mo>=</mo><mn>13.75</mn></mrow><annotation encoding="application/x-tex">\dfrac{50 \times 22}{80} = 13.75</annotation></semantics></math>. A is the number you counted, not the one you expected. B is the expected count in the row below. D is the probability of being late, not yet a count: you still have to multiply it by 50.</p>
 </div>
@@ -2040,7 +2101,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 3">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2049,7 +2110,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> The expected counts are 27.5 and 22.5 in both rows, and the deviation is 2.5 in every cell:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>27.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>22.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>27.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>22.5</mn></mfrac></mstyle><mo>=</mo><mn>1.01</mn></mrow><annotation encoding="application/x-tex">
@@ -2075,7 +2136,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 4">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2084,7 +2145,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>No.</strong> 1.01 lies below the critical value 3.84 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.31</mn></mrow><annotation encoding="application/x-tex">p = .31</annotation></semantics></math>). You do <strong>not</strong> reject the null hypothesis that sport in the evening and falling asleep quickly are independent.</p>
 </div>
@@ -2104,7 +2165,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 5">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2113,7 +2174,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>6.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">(3 - 1) \times (4 - 1) = 2 \times 3 = 6</annotation></semantics></math>.</p>
 </div>
@@ -2139,7 +2200,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 6">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2148,7 +2209,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> Squaring removes the minus sign, so too many and too few both end up on the right. A is the trap: you look at one tail, but the test is not one-sided; it reacts to an association in either direction. C is wrong: the χ² distribution is skewed to the right. D is wrong: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says that the variables are independent.</p>
 </div>
@@ -2174,7 +2235,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 7">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2183,7 +2244,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>A.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> says that nothing is going on: no association. B is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>. C picks a direction, and χ² has none. D is about means; year of study is a category here.</p>
 </div>
@@ -2209,7 +2270,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 8">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2218,7 +2279,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> With the correction, R first moves each deviation half a unit closer to zero; that makes χ² smaller. With <code>correct = FALSE</code> you get the 5.48 of your handwork back. C is wrong: even <em>with</em> the correction, <em>p</em> = .027 ≤ .05. D is wrong: χ² has one tail, and that one tail already holds both directions of the association.</p>
 </div>
@@ -2238,7 +2299,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 9">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2247,7 +2308,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>No.</strong> Significant says <em>that</em> there is an association, not how strong it is. With a great many people, even a small association becomes significant. How strong it is, an effect size tells you (week 5).</p>
 </div>
@@ -2274,7 +2335,7 @@ This is how you report it
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Answer question 10">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2283,7 +2344,7 @@ This is how you report it
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-47" class="callout-47-contents callout-collapse collapse">
+<div id="callout-48" class="callout-48-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>C.</strong> There is no table here, so first you put the counts into a contingency table yourself. <em>Quick</em> means: asleep within half an hour. What the question doesn’t give you, you find by subtracting and adding:</p>
 <table class="caption-top table">
@@ -2795,4 +2856,4 @@ P(\text{coffee}) \times P(\text{quick}) &amp;= .40 \times .65 = .26
 
 
 </body></html>
-<!-- countcamp-oefenboek inferential-statistics lab-commit=0de67d0c5b00130777d9ff4ca03399466cd82235 geleverd=2026-11-27T12:01:10 -->
+<!-- countcamp-oefenboek inferential-statistics lab-commit=e7a38327480d977af2817a0a708966e7880ee59e geleverd=2026-11-27T12:29:52 -->

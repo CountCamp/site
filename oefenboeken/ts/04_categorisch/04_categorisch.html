@@ -332,12 +332,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#tellen-in-plaats-van-meten" id="toc-tellen-in-plaats-van-meten" class="nav-link active" data-scroll-target="#tellen-in-plaats-van-meten">Tellen in plaats van meten</a></li>
-  <li><a href="#kansen-uit-een-kruistabel" id="toc-kansen-uit-een-kruistabel" class="nav-link" data-scroll-target="#kansen-uit-een-kruistabel">Kansen uit een kruistabel</a></li>
-  <li><a href="#onafhankelijk-of-niet" id="toc-onafhankelijk-of-niet" class="nav-link" data-scroll-target="#onafhankelijk-of-niet">Onafhankelijk of niet</a>
+  <li><a href="#kansen-uit-een-kruistabel" id="toc-kansen-uit-een-kruistabel" class="nav-link" data-scroll-target="#kansen-uit-een-kruistabel">Kansen uit een kruistabel</a>
   <ul class="collapse">
-  <li><a href="#de-vermenigvuldigingsregel" id="toc-de-vermenigvuldigingsregel" class="nav-link" data-scroll-target="#de-vermenigvuldigingsregel">De vermenigvuldigingsregel</a></li>
+  <li><a href="#de-kruistabel" id="toc-de-kruistabel" class="nav-link" data-scroll-target="#de-kruistabel">De kruistabel</a></li>
+  <li><a href="#de-marginale-kans-van-de-rand" id="toc-de-marginale-kans-van-de-rand" class="nav-link" data-scroll-target="#de-marginale-kans-van-de-rand">De marginale kans: van de rand</a></li>
+  <li><a href="#de-gezamenlijke-kans-uit-één-cel" id="toc-de-gezamenlijke-kans-uit-één-cel" class="nav-link" data-scroll-target="#de-gezamenlijke-kans-uit-één-cel">De gezamenlijke kans: uit één cel</a></li>
+  <li><a href="#de-conditionele-kans-een-kleinere-grabbelton" id="toc-de-conditionele-kans-een-kleinere-grabbelton" class="nav-link" data-scroll-target="#de-conditionele-kans-een-kleinere-grabbelton">De conditionele kans: een kleinere grabbelton</a></li>
+  </ul></li>
+  <li><a href="#is-er-überhaupt-een-verband" id="toc-is-er-überhaupt-een-verband" class="nav-link" data-scroll-target="#is-er-überhaupt-een-verband">Is er überhaupt een verband?</a>
+  <ul class="collapse">
   <li><a href="#in-deze-groep-of-in-de-populatie" id="toc-in-deze-groep-of-in-de-populatie" class="nav-link" data-scroll-target="#in-deze-groep-of-in-de-populatie">In deze groep, of in de populatie?</a></li>
   </ul></li>
+  <li><a href="#de-vermenigvuldigingsregel-dezelfde-vraag-van-de-andere-kant" id="toc-de-vermenigvuldigingsregel-dezelfde-vraag-van-de-andere-kant" class="nav-link" data-scroll-target="#de-vermenigvuldigingsregel-dezelfde-vraag-van-de-andere-kant">De vermenigvuldigingsregel: dezelfde vraag, van de andere kant</a></li>
   <li><a href="#wat-je-verwacht-als-er-niets-aan-de-hand-is" id="toc-wat-je-verwacht-als-er-niets-aan-de-hand-is" class="nav-link" data-scroll-target="#wat-je-verwacht-als-er-niets-aan-de-hand-is">Wat je verwacht als er niets aan de hand is</a></li>
   <li><a href="#de-χ²-toets-hoe-ver-liggen-geteld-en-verwacht-uit-elkaar" id="toc-de-χ²-toets-hoe-ver-liggen-geteld-en-verwacht-uit-elkaar" class="nav-link" data-scroll-target="#de-χ²-toets-hoe-ver-liggen-geteld-en-verwacht-uit-elkaar">De χ²-toets: hoe ver liggen geteld en verwacht uit elkaar?</a></li>
   <li><a href="#hoe-raar-is-6.25-weer-stippen-tellen" id="toc-hoe-raar-is-6.25-weer-stippen-tellen" class="nav-link" data-scroll-target="#hoe-raar-is-6.25-weer-stippen-tellen">Hoe raar is 6.25? Weer stippen tellen</a></li>
@@ -377,7 +383,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<!-- reden: ONTWERP.md, "Notities uit de paginabron", week 4, nr. 1 -->
 <div class="verhaal">
 <p>De nachtvlinder kende elk hol in het bos waar ’s nachts nog een schermpje brandde, en in veel van die holen lag iemand te woelen.</p>
 <p>“Telefoon naast het bed, slecht slapen,” zei hij, “altijd samen.”</p>
@@ -396,7 +401,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>tellen in plaats van meten: categorische variabelen in een kruistabel</li>
 <li>drie kansen uit één tabel: marginaal, gezamenlijk en conditioneel</li>
-<li>wanneer twee variabelen onafhankelijk zijn, en de vermenigvuldigingsregel</li>
+<li>met conditionele kansen zien of er in je groep een verband is, en wanneer twee variabelen onafhankelijk zijn</li>
+<li>dezelfde vraag met de vermenigvuldigingsregel</li>
 <li>de verwachte aantallen als er niets aan de hand is</li>
 <li>de χ²-toets voor onafhankelijkheid, met de hand en in R</li>
 <li>waarom χ² één staart heeft en toch geen kant kiest</li>
@@ -414,9 +420,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Hangen twee categorische variabelen samen in de <strong>populatie</strong>, of zie je in je steekproef toevallig een patroon?</p>
 </blockquote>
 <p>Daarvoor heb je deze week twee dingen nodig: een beetje kansrekening, en één toets, de <strong>χ²-toets</strong> (<em>chi-kwadraat</em>).</p>
+<p>Je bouwt het rustig op, met één tabel die de hele week dezelfde blijft. Eerst haal je er kansen uit. Dan kijk je met die kansen of er in je groep überhaupt een verband is. En pas daarna komt de toets.</p>
 </section>
 <section id="kansen-uit-een-kruistabel" class="level1">
 <h1>Kansen uit een kruistabel</h1>
+<section id="de-kruistabel" class="level2">
+<h2 class="anchored" data-anchor-id="de-kruistabel">De kruistabel</h2>
 <p>Een onderzoeker vraagt 100 eerstejaars twee dingen: waar ligt je telefoon ’s nachts, en hoe slaap je meestal? Twee categorische variabelen, elk met twee categorieën. Zet je ze tegen elkaar uit, dan krijg je een <strong>kruistabel</strong>:</p>
 <table class="caption-top table">
 <caption>De telefoon en de slaap van 100 eerstejaars</caption>
@@ -449,31 +458,81 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
+<p>Lees hem eerst, nog zonder te rekenen. Binnenin staan vier <strong>cellen</strong>. Elke cel telt de mensen die aan twee dingen tegelijk voldoen: linksboven staan de 30 eerstejaars die hun telefoon in de slaapkamer hebben <strong>en</strong> slecht slapen.</p>
+<p>Langs de rand staan de <strong>randtotalen</strong>. Rechts de rijtotalen: 60 mensen hebben hun telefoon in de slaapkamer, 40 erbuiten. Onderaan de kolomtotalen: 40 slapen slecht, 60 goed. En in de hoek rechtsonder, waar de totaalrij en de totaalkolom elkaar kruisen, staat iedereen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">N = 100</annotation></semantics></math>. De rijtotalen tellen op tot <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, en de kolomtotalen ook.</p>
+</section>
+<section id="de-marginale-kans-van-de-rand" class="level2">
+<h2 class="anchored" data-anchor-id="de-marginale-kans-van-de-rand">De marginale kans: van de rand</h2>
 <p>Elke kans die je uit zo’n tabel haalt, is een breuk. Denk aan een <strong>grabbelton</strong>. Onder de breukstreep staat de grabbelton: iedereen uit wie je grabbelt. Boven de streep staan de <em>hits</em>: wie daaruit voldoet aan wat je vraagt.</p>
 <div class="kt kt-legenda">
 <p>Bij elke breuk hieronder staat de tabel erbij, en elk getal uit de breuk staat daarin in hetzelfde doosje: <span class="kt-getal kt-rol-hit">hit</span> <span class="kt-getal kt-rol-rij">rijtotaal</span> <span class="kt-getal kt-rol-kol">kolomtotaal</span> <span class="kt-getal kt-rol-n">totaal <em>N</em></span>. Zo zie je waar elk getal vandaan komt.</p>
 </div>
-<p><strong>De marginale kans</strong> gaat over één variabele. Grabbel één eerstejaars uit alle 100. Hoe groot is de kans dat die slecht slaapt?</p>
+<p>De <strong>marginale kans</strong> gaat over één variabele. Grabbel één eerstejaars uit alle 100. Hoe groot is de kans dat die slecht slaapt?</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-1"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-b kt-rand-l">30</td><td class="kt-ton kt-rand-b">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-ton kt-rand-l">10</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l"><span class="kt-getal kt-rol-hit">40</span></td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">40</mn><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.40</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-1"><li><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">40</span> boven de streep: iedereen in de kolom <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-n">100</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
 </div>
 </div>
-<p>Hij heet <em>marginaal</em> omdat je hem uit de marge haalt: de rand van de tabel, waar de totalen staan. De 40 staat onderaan, bij het totaal. Waar de telefoon ligt, doet niet mee: die variabele klap je even dicht. Zo is ook <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) = \dfrac{60}{100} = .60</annotation></semantics></math>, met het rijtotaal rechts.</p>
-<p><strong>De gezamenlijke kans</strong> gaat over twee dingen tegelijk. Hoe groot is de kans dat die ene eerstejaars de telefoon in de slaapkamer heeft <strong>en</strong> slecht slaapt? De grabbelton is nog steeds iedereen; de hits zijn wie aan allebei voldoet. Dat is één cel:</p>
+<p>Hij heet <em>marginaal</em> omdat je hem uit de marge haalt: de rand van de tabel, waar de randtotalen staan. De 40 staat onderaan, bij het totaal. Waar de telefoon ligt, doet niet mee: die variabele klap je even dicht. Zo is ook <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) = \dfrac{60}{100} = .60</annotation></semantics></math>, met het rijtotaal rechts.</p>
+</section>
+<section id="de-gezamenlijke-kans-uit-één-cel" class="level2">
+<h2 class="anchored" data-anchor-id="de-gezamenlijke-kans-uit-één-cel">De gezamenlijke kans: uit één cel</h2>
+<p>De <strong>gezamenlijke kans</strong> gaat over twee dingen tegelijk. Hoe groot is de kans dat die ene eerstejaars de telefoon in de slaapkamer heeft <strong>en</strong> slecht slaapt? De grabbelton is nog steeds iedereen; de hits zijn wie aan allebei voldoet. Dat is één cel:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-2"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-b kt-rand-l"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-ton kt-rand-l">10</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l">40</td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slaapkamer en slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.30</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-2"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt slecht</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">100</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
 </div>
 </div>
 <p>Kijk waar het doosje boven de streep nu staat. De marginale kans haal je van de rand, uit een totaal. De gezamenlijke haal je van binnen in de tabel, uit één cel: die lees je gewoon af.</p>
-<p><strong>De conditionele kans</strong> verandert de grabbelton. Hoe groot is de kans op slecht slapen, <strong>gegeven dat</strong> de telefoon in de slaapkamer ligt? Nu grabbel je alleen nog uit de 60 mensen met hun telefoon in de slaapkamer. Dat is je nieuwe grabbelton, en die komt onder de streep:</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Voor wie verder wil — de optelregel">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Voor wie verder wil — de optelregel
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Naast <em>en</em> is er <em>of</em>. Bij <em>of</em> mag je denken: tenminste één van de twee. De telefoon ligt in de slaapkamer, of je slaapt slecht, of allebei. Dat is anders dan aan de snackbar: wil je patat of een frikandel? Dan kies je er één. In de statistiek mag het allebei.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> of </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> en </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ of } B) = P(A) + P(B) - P(A \text{ en } B)
+</annotation></semantics></math></p>
+<p>Die laatste term trek je eraf om de overlap niet dubbel te tellen. In de tabel:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer of slecht</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">
+P(\text{slaapkamer of slecht}) = .60 + .40 - .30 = .70
+</annotation></semantics></math></p>
+<p>Tel maar na: 30 + 30 + 10 = 70 mensen hebben hun telefoon in de slaapkamer, slapen slecht, of allebei. Alleen de 30 in de cel <em>erbuiten, slaapt goed</em> tellen niet mee.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kt kt-krap"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-7"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-b kt-rand-l"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-ton kt-rand-l"><span class="kt-getal kt-rol-hit">10</span></td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l">40</td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slaapkamer of slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">10</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>70</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.70</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-7"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt goed</i></li><li><span class="kt-getal kt-rol-hit">10</span> boven de streep: de cel <i>erbuiten</i>, <i>slaapt slecht</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">100</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
+</div>
+</div>
+<p>Laat je de min weg, dan kom je op <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>=</mo><mn>1.00</mn></mrow><annotation encoding="application/x-tex">.60 + .40 = 1.00</annotation></semantics></math>, en dat is te veel. De cel linksboven, slaapkamer <strong>en</strong> slecht, zit in allebei de kansen, dus die tel je twee keer. Haal hem er één keer af: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.00</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">1.00 - .30 = .70</annotation></semantics></math>.</p>
+<p>Overlappen twee gebeurtenissen niet, dan heten ze <strong>disjunct</strong>. Slecht slapen met de telefoon in de slaapkamer, en slecht slapen met de telefoon erbuiten: allebei tegelijk kan niet. De kans op allebei is dan nul, de min valt weg, en je mag gewoon optellen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.30</mn><mo>+</mo><mn>.10</mn><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">.30 + .10 = .40</annotation></semantics></math>, de kans op slecht slapen. Het blijft dus één regel.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="de-conditionele-kans-een-kleinere-grabbelton" class="level2">
+<h2 class="anchored" data-anchor-id="de-conditionele-kans-een-kleinere-grabbelton">De conditionele kans: een kleinere grabbelton</h2>
+<p>De <strong>conditionele kans</strong> verandert de grabbelton. Hoe groot is de kans op slecht slapen, <strong>gegeven dat</strong> de telefoon in de slaapkamer ligt? Nu grabbel je alleen nog uit de 60 mensen met hun telefoon in de slaapkamer. Dat is je nieuwe grabbelton, en die komt onder de streep:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-3"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b kt-rand-o">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">60</span></td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-vaag">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-vaag">40</td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slecht</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-rij">60</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.50</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-3"><li><span class="kt-staal kt-band-rij"></span><b>de grabbelton</b> (doorgetrokken rand, ook onder de woorden in de breuk): alleen de rij <i>in de slaapkamer</i> doet nog mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-rij">60</span> onder de streep: iedereen in de rij <i>in de slaapkamer</i>, de hele grabbelton</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers, buiten de rand van de grabbelton: die doen niet mee</li></ul></div>
 </div>
 </div>
+<p>Dezelfde 30 boven de streep als bij de gezamenlijke kans, maar de grabbelton eronder is kleiner: 60 in plaats van 100.</p>
 <p>De verticale streep <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>∣</mi><annotation encoding="application/x-tex">\mid</annotation></semantics></math> lees je als <em>gegeven dat</em>: wat erachter staat, is de voorwaarde, en die bepaalt de grabbelton.</p>
+<p>Nu de andere rij. Gegeven dat de telefoon erbuiten ligt, is de grabbelton de groep van 40 mensen met hun telefoon erbuiten:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-4"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-vaag">30</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">60</td></tr><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">erbuiten</th><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">10</span></td><td class="kt-ton kt-rand-b kt-rand-o">30</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">40</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-vaag">40</td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slecht</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">erbuiten</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">10</mn><mn class="kt-getal kt-rol-rij">40</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.25</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-4"><li><span class="kt-staal kt-band-rij"></span><b>de grabbelton</b> (doorgetrokken rand, ook onder de woorden in de breuk): alleen de rij <i>erbuiten</i> doet nog mee</li><li><span class="kt-getal kt-rol-hit">10</span> boven de streep: de cel <i>erbuiten</i>, <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-rij">40</span> onder de streep: iedereen in de rij <i>erbuiten</i>, de hele grabbelton</li><li class="visually-hidden"><span class="kt-staal kt-staal-vaag"></span>lichte cijfers, buiten de rand van de grabbelton: die doen niet mee</li></ul></div>
+</div>
+</div>
+<p>Twee rijen, dus twee grabbeltonnen, en twee kansen op slecht slapen: met de telefoon in de slaapkamer .50, met de telefoon erbuiten maar .25.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="De volgorde doet ertoe">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -487,7 +546,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{slecht} \mid \text{slaapkamer})</annotation></semantics></math> is niet hetzelfde als <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo>∣</mo><mtext mathvariant="normal">slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer} \mid \text{slecht})</annotation></semantics></math>. Bij de tweede is de grabbelton de 40 slechte slapers, en daarvan hebben er 30 hun telefoon in de slaapkamer:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-kol" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-4"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th class="kt-ton kt-rand-l kt-rand-r kt-rand-b" scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-l kt-rand-r"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">60</td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-ton kt-rand-l kt-rand-r">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-l kt-rand-r kt-rand-o"><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slaapkamer</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-kol">slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-kol">40</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.75</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-4"><li><span class="kt-staal kt-band-kol"></span><b>de grabbelton</b> (gestreepte rand, ook onder de woorden in de breuk): alleen de kolom <i>slaapt slecht</i> doet nog mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-kol">40</span> onder de streep: iedereen in de kolom <i>slaapt slecht</i>, de hele grabbelton</li><li class="visually-hidden"><span class="kt-staal kt-staal-vaag"></span>lichte cijfers, buiten de rand van de grabbelton: die doen niet mee</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-kol" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-5"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th class="kt-ton kt-rand-l kt-rand-r kt-rand-b" scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-l kt-rand-r"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">60</td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-ton kt-rand-l kt-rand-r">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-l kt-rand-r kt-rand-o"><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol kt-vaag">100</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slaapkamer</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-kol">slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-kol">40</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.75</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-5"><li><span class="kt-staal kt-band-kol"></span><b>de grabbelton</b> (gestreepte rand, ook onder de woorden in de breuk): alleen de kolom <i>slaapt slecht</i> doet nog mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-kol">40</span> onder de streep: iedereen in de kolom <i>slaapt slecht</i>, de hele grabbelton</li><li class="visually-hidden"><span class="kt-staal kt-staal-vaag"></span>lichte cijfers, buiten de rand van de grabbelton: die doen niet mee</li></ul></div>
 </div>
 </div>
 <p>Dezelfde 30 boven de streep, maar eronder staat nu een kolom in plaats van een rij. Een ander getal, want een andere grabbelton.</p>
@@ -495,90 +554,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="onafhankelijk-of-niet" class="level1">
-<h1>Onafhankelijk of niet</h1>
+</section>
+<section id="is-er-überhaupt-een-verband" class="level1">
+<h1>Is er überhaupt een verband?</h1>
+<p>Nu de vraag waar het deze week om draait: hangen de plek van de telefoon en de slaap samen? Daar heb je nog geen toets voor nodig. Je kijkt eerst gewoon in je tabel, met de twee conditionele kansen van net.</p>
 <p>Twee variabelen zijn <strong>onafhankelijk</strong> als de ene niets zegt over de andere. Weet je waar iemands telefoon ligt, en verandert dat niets aan je gok over hoe die slaapt? Dan zijn ze onafhankelijk. Daar horen twee vuistregels bij, en ze zeggen hetzelfde:</p>
 <ol type="1">
 <li><strong>De conditionele kansen zijn in alle groepen gelijk.</strong> De kans op slecht slapen is even groot met de telefoon in de slaapkamer als zonder.</li>
 <li><strong>De conditionele kansen zijn gelijk aan de marginale kans.</strong> In elke groep slaapt hetzelfde deel slecht als in de hele tabel.</li>
 </ol>
-<p>In de tabel:</p>
+<p>Leg de twee conditionele kansen naast elkaar, met de marginale kans eronder:</p>
 <ul>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{slecht} \mid \text{slaapkamer}) = .50</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>60</mn></mfrac></mstyle><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{slecht} \mid \text{slaapkamer}) = \dfrac{30}{60} = .50</annotation></semantics></math></li>
 <li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">erbuiten</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>10</mn><mn>40</mn></mfrac></mstyle><mo>=</mo><mn>.25</mn></mrow><annotation encoding="application/x-tex">P(\text{slecht} \mid \text{erbuiten}) = \dfrac{10}{40} = .25</annotation></semantics></math></li>
 <li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">P(\text{slecht}) = .40</annotation></semantics></math></li>
 </ul>
 <p>Niet gelijk. In deze groep van 100 hangen de plek van de telefoon en de slaap dus samen: wie de telefoon in de slaapkamer heeft, slaapt vaker slecht.</p>
-<section id="de-vermenigvuldigingsregel" class="level2">
-<h2 class="anchored" data-anchor-id="de-vermenigvuldigingsregel">De vermenigvuldigingsregel</h2>
-<p>Bij <em>en</em> denk je al snel <em>keer</em>. Dat mag, maar alleen bij onafhankelijkheid. Je komt deze regel ook tegen als de <strong>vermenigvuldigingswet voor onafhankelijke gebeurtenissen</strong>, of kort de <strong>productregel</strong>:</p>
-<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Vermenigvuldigingsregel — alleen bij onafhankelijke variabelen">
-<div class="callout-header d-flex align-content-center">
+<p>De .40 van iedereen ligt tussen de twee in, want hij telt beide groepen samen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>30</mn><mo>+</mo><mn>10</mn><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">30 + 10 = 40</annotation></semantics></math> slechte slapers van de 100. Zijn de twee conditionele kansen gelijk, bijvoorbeeld 24 van de 60 en 16 van de 40, dan is de .40 dat ook: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>24</mn><mo>+</mo><mn>16</mn><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">24 + 16 = 40</annotation></semantics></math>. Zo staan de open staven rechts in <a href="#fig-gelijk" class="quarto-xref">Figuur&nbsp;1</a>. Daarom zeggen de twee vuistregels hetzelfde.</p>
+<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Rijen of kolommen?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Vermenigvuldigingsregel — alleen bij onafhankelijke variabelen
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> en </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-P(A \text{ en } B) = P(A) \times P(B)
-</annotation></semantics></math></p>
-<p><em>Onafhankelijke variabelen</em> zijn hier twee variabelen die niets over elkaar zeggen, en <em>afhankelijk</em> betekent hier: afhankelijk <strong>van elkaar</strong>. Dat is iets anders dan de onafhankelijke en de afhankelijke variabele van een onderzoek; zie <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html#drie-keer-onafhankelijk">Drie keer <em>onafhankelijk</em></a> in week 3.</p>
-</div>
-</div>
-<p>Probeer hem op de tabel: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) \times P(\text{slecht}) = .60 \times .40 = .24</annotation></semantics></math>. Maar in de tabel is de gezamenlijke kans .30. De regel geeft het verkeerde getal, en dat is precies het teken dat de twee variabelen niet onafhankelijk zijn.</p>
-<p>Waarom zegt een verkeerd getal <em>afhankelijk</em>? Die .30 heb je niet met een regel uitgerekend: je hebt hem <strong>afgelezen</strong>, 30 van de 100. Aflezen lukt altijd, en wat je afleest, klopt. De regel mag alleen als de twee variabelen onafhankelijk zijn. Hier komt hij niet uit op wat je afleest. Dus mocht hij hier niet: de variabelen zijn afhankelijk. Daarom lees je altijd eerst af.</p>
-<p>De regel die <strong>altijd</strong> mag, de <strong>algemene vermenigvuldigingswet</strong>, heeft een conditionele kans erin:</p>
-<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Vermenigvuldigingsregel — altijd">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Vermenigvuldigingsregel — altijd
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> en </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-P(A \text{ en } B) = P(A) \times P(B \mid A)
-</annotation></semantics></math></p>
-</div>
-</div>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) \times P(\text{slecht} \mid \text{slaapkamer}) = .60 \times .50 = .30</annotation></semantics></math>. Dat klopt wél. Zijn <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> onafhankelijk, dan is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B \mid A)</annotation></semantics></math> gewoon <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math>, en krijg je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math> terug. Uitrekenen mag je met deze regel dus altijd. Maar omdat hij altijd klopt, kun je er niets mee controleren: hij komt ook uit als de variabelen samenhangen. Wil je weten of ze onafhankelijk zijn, dan leg je de regel voor onafhankelijke variabelen, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math>, naast wat je afleest.</p>
-<div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Voor wie verder wil — de optelregel">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Opmerking</span>Voor wie verder wil — de optelregel
+<span class="screen-reader-only">Opmerking</span>Rijen of kolommen?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Naast <em>en</em> is er <em>of</em>. Bij <em>of</em> mag je denken: tenminste één van de twee. De telefoon ligt in de slaapkamer, of je slaapt slecht, of allebei. Dat is anders dan aan de snackbar: wil je patat of een frikandel? Dan kies je er één. In de statistiek mag het allebei.</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> of </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> en </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-P(A \text{ of } B) = P(A) + P(B) - P(A \text{ en } B)
-</annotation></semantics></math></p>
-<p>Die laatste term trek je eraf om de overlap niet dubbel te tellen. In de tabel:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer of slecht</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">
-P(\text{slaapkamer of slecht}) = .60 + .40 - .30 = .70
-</annotation></semantics></math></p>
-<p>Tel maar na: 30 + 30 + 10 = 70 mensen hebben hun telefoon in de slaapkamer, slapen slecht, of allebei. Alleen de 30 in de cel <em>erbuiten, slaapt goed</em> tellen niet mee.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="kt kt-krap"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-6"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-ton kt-rand-b kt-rand-l"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">60</td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-ton kt-rand-l"><span class="kt-getal kt-rol-hit">10</span></td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l">40</td><td class="kt-ton kt-rand-o">60</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>slaapkamer of slecht</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">30</mn><mo>+</mo><mn class="kt-getal kt-rol-hit">10</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>70</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.70</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-6"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>in de slaapkamer</i>, <i>slaapt goed</i></li><li><span class="kt-getal kt-rol-hit">10</span> boven de streep: de cel <i>erbuiten</i>, <i>slaapt slecht</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">100</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
-</div>
-</div>
-<p>Laat je de min weg, dan kom je op <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>+</mo><mn>.40</mn><mo>=</mo><mn>1.00</mn></mrow><annotation encoding="application/x-tex">.60 + .40 = 1.00</annotation></semantics></math>, en dat is te veel. De cel linksboven, slaapkamer <strong>en</strong> slecht, zit in allebei de kansen, dus die tel je twee keer. Haal hem er één keer af: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.00</mn><mo>−</mo><mn>.30</mn><mo>=</mo><mn>.70</mn></mrow><annotation encoding="application/x-tex">1.00 - .30 = .70</annotation></semantics></math>.</p>
-<p>Overlappen twee gebeurtenissen niet, dan heten ze <strong>disjunct</strong>. Slecht slapen met de telefoon in de slaapkamer, en slecht slapen met de telefoon erbuiten: allebei tegelijk kan niet. De kans op allebei is dan nul, de min valt weg, en je mag gewoon optellen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.30</mn><mo>+</mo><mn>.10</mn><mo>=</mo><mn>.40</mn></mrow><annotation encoding="application/x-tex">.30 + .10 = .40</annotation></semantics></math>, de kans op slecht slapen. Het blijft dus één regel.</p>
+<p>Je kunt ook in de kolommen vergelijken in plaats van in de rijen. Dan is de grabbelton een kolom, zoals in het kader <em>De volgorde doet ertoe</em>:</p>
+<ul>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo>∣</mo><mtext mathvariant="normal">slecht</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>40</mn></mfrac></mstyle><mo>=</mo><mn>.75</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer} \mid \text{slecht}) = \dfrac{30}{40} = .75</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo>∣</mo><mtext mathvariant="normal">goed</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>30</mn><mn>60</mn></mfrac></mstyle><mo>=</mo><mn>.50</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer} \mid \text{goed}) = \dfrac{30}{60} = .50</annotation></semantics></math></li>
+<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) = .60</annotation></semantics></math></li>
+</ul>
+<p>Ook niet gelijk: .75 tegen .50. Rijen of kolommen: je komt altijd op hetzelfde oordeel uit.</p>
+<p>Let op: in de tweede regel staat, net als bij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\text{slecht} \mid \text{slaapkamer})</annotation></semantics></math>, 30 boven de streep en 60 eronder. Toch is het iets anders: boven de streep de cel <em>slaapkamer, slaapt goed</em>, en eronder de kolom <em>slaapt goed</em> in plaats van de rij <em>in de slaapkamer</em>.</p>
 </div>
 </div>
 </div>
-</section>
+<p>Waren de kansen gelijk geweest, dan was er geen verband te zien, en dan was je hier klaar. Nu ze verschillen, zie je in deze groep wél een verband. Of het er ook is bij alle eerstejaars? Misschien. Daar gaat de rest van de week over.</p>
 <section id="in-deze-groep-of-in-de-populatie" class="level2">
 <h2 class="anchored" data-anchor-id="in-deze-groep-of-in-de-populatie">In deze groep, of in de populatie?</h2>
 <p>Let goed op wat je net deed. Je keek naar <strong>deze 100 eerstejaars</strong>, en zag een verschil: .50 tegenover .25. Voor deze groep is dat een feit. Maar bijna elke steekproef laat wel íéts van een verschil zien, ook als de twee variabelen in de populatie volkomen onafhankelijk zijn. Net zoals in week 1 een steekproefgemiddelde bijna nooit precies op 50 uitkwam.</p>
@@ -615,12 +631,55 @@ Figuur&nbsp;1: Links de telefoontabel van deze week, .50 tegenover .25. Rechts g
 </div>
 </section>
 </section>
+<section id="de-vermenigvuldigingsregel-dezelfde-vraag-van-de-andere-kant" class="level1">
+<h1>De vermenigvuldigingsregel: dezelfde vraag, van de andere kant</h1>
+<p>Dezelfde vraag kun je ook van de andere kant stellen: niet met een kans binnen één groep, maar met de gezamenlijke kans uit één cel.</p>
+<p>Bij <em>en</em> denk je al snel <em>keer</em>. Dat mag, maar alleen bij onafhankelijkheid. Je komt deze regel ook tegen als de <strong>vermenigvuldigingswet voor onafhankelijke gebeurtenissen</strong>, of kort de <strong>productregel</strong>:</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Vermenigvuldigingsregel — alleen bij onafhankelijke variabelen">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vermenigvuldigingsregel — alleen bij onafhankelijke variabelen
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> en </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ en } B) = P(A) \times P(B)
+</annotation></semantics></math></p>
+<p><em>Onafhankelijke variabelen</em> zijn hier twee variabelen die niets over elkaar zeggen, en <em>afhankelijk</em> betekent hier: afhankelijk <strong>van elkaar</strong>. Dat is iets anders dan de onafhankelijke en de afhankelijke variabele van een onderzoek; zie <a href="../03_twee_gemiddelden/03_twee_gemiddelden.html#drie-keer-onafhankelijk">Drie keer <em>onafhankelijk</em></a> in week 3.</p>
+</div>
+</div>
+<p>Probeer hem op de tabel: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) \times P(\text{slecht}) = .60 \times .40 = .24</annotation></semantics></math>. Maar in de tabel is de gezamenlijke kans .30. De regel geeft het verkeerde getal, en dat is precies het teken dat de twee variabelen niet onafhankelijk zijn.</p>
+<p>Waarom zegt een verkeerd getal <em>afhankelijk</em>? Die .30 heb je niet met een regel uitgerekend: je hebt hem <strong>afgelezen</strong>, 30 van de 100. Aflezen lukt altijd, en wat je afleest, klopt. De regel mag alleen als de twee variabelen onafhankelijk zijn. Hier komt hij niet uit op wat je afleest. Dus mocht hij hier niet: de variabelen zijn afhankelijk. Daarom lees je altijd eerst af.</p>
+<p>De regel die <strong>altijd</strong> mag, de <strong>algemene vermenigvuldigingswet</strong>, is bijna dezelfde: op de plek van <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math> staat een conditionele kans.</p>
+<div class="formule callout callout-style-default callout-note no-icon callout-titled" title="Vermenigvuldigingsregel — altijd">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Opmerking</span>Vermenigvuldigingsregel — altijd
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> en </mtext><mspace width="0.333em"></mspace></mrow><mi>B</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+P(A \text{ en } B) = P(A) \times P(B \mid A)
+</annotation></semantics></math></p>
+</div>
+</div>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">slecht</mtext><mo>∣</mo><mtext mathvariant="normal">slaapkamer</mtext><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">P(\text{slaapkamer}) \times P(\text{slecht} \mid \text{slaapkamer}) = .60 \times .50 = .30</annotation></semantics></math>. Dat klopt wél.</p>
+<p>Leg de twee berekeningen naast elkaar: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>.30</mn></mrow><annotation encoding="application/x-tex">.60 \times .50 = .30</annotation></semantics></math> tegen <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">.60 \times .40 = .24</annotation></semantics></math>. Het enige verschil is .50 tegen .40: de conditionele kans tegen de marginale. Die twee legde je bij <em>Is er überhaupt een verband?</em> al naast elkaar. De vermenigvuldigingsregel stelt dus dezelfde vraag, van de andere kant, en komt op hetzelfde uit: afhankelijk, in deze groep.</p>
+<p>Zijn <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math> en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math> onafhankelijk, dan is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo>∣</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B \mid A)</annotation></semantics></math> gewoon <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(B)</annotation></semantics></math>, en krijg je <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math> terug. Uitrekenen mag je met de algemene regel dus altijd. Maar omdat hij altijd klopt, kun je er niets mee controleren: hij komt ook uit als de variabelen samenhangen. Wil je weten of ze onafhankelijk zijn, dan leg je de regel voor onafhankelijke variabelen, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(A) \times P(B)</annotation></semantics></math>, naast wat je afleest.</p>
+<p>Toch gooi je die .24 niet weg. Het is precies de gezamenlijke kans die je zou verwachten als er níéts aan de hand was, en daar begint de volgende stap.</p>
+</section>
 <section id="wat-je-verwacht-als-er-niets-aan-de-hand-is" class="level1">
 <h1>Wat je verwacht als er niets aan de hand is</h1>
 <p>Elke toets rekent vanuit <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: doe alsof er niets aan de hand is, en kijk hoe raar je data dan zijn. Hier zegt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math>: de plek van de telefoon en de slaap zijn onafhankelijk. Welke aantallen hoort de tabel dan te hebben?</p>
 <p>Redeneer het eerst. In de hele groep slaapt .40 slecht. Zijn de twee variabelen onafhankelijk, dan slaapt in <strong>elke</strong> groep diezelfde .40 slecht: dat zijn de open staven van <a href="#fig-gelijk" class="quarto-xref">Figuur&nbsp;1</a>. Van de 60 mensen met hun telefoon in de slaapkamer verwacht je er dus <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.40</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">.40 \times 60 = 24</annotation></semantics></math>.</p>
 <p>Dat is de vermenigvuldigingsregel voor onafhankelijke variabelen, maal het aantal mensen: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .40 = 24</annotation></semantics></math>. De kans <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.60</mn><mo>×</mo><mn>.40</mn><mo>=</mo><mn>.24</mn></mrow><annotation encoding="application/x-tex">.60 \times .40 = .24</annotation></semantics></math> was net nog het verkeerde getal: de tabel zei .30. Hier mag de regel wél. Je rekent nu niet uit wat er ís, maar wat je zou tellen áls <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> waar is, en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> zegt juist dat de twee variabelen onafhankelijk zijn.</p>
-<p>Neem je hier de regel die altijd mag, dan kom je alleen terug op wat je telde (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .50 = 30</annotation></semantics></math>), en dan zou χ² altijd 0 zijn.</p>
+<p>Neem je hier de regel die altijd mag, dan kom je alleen terug op wat je telde (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>.60</mn><mo>×</mo><mn>.50</mn><mo>=</mo><mn>30</mn></mrow><annotation encoding="application/x-tex">100 \times .60 \times .50 = 30</annotation></semantics></math>), en zo in elke cel van elke tabel.</p>
 <p>Schrijf je de twee kansen als breuken, dan valt er één <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> weg:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>60</mn><mn>100</mn></mfrac></mstyle><mo>×</mo><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>100</mn></mfrac></mstyle><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn>60</mn><mo>×</mo><mn>40</mn></mrow><mn>100</mn></mfrac></mstyle><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">
 100 \times \dfrac{60}{100} \times \dfrac{40}{100}
@@ -650,7 +709,7 @@ f_\text{e} = \dfrac{\text{rijtotaal} \times \text{kolomtotaal}}{N}
 <p>De beweging per cel: kijk opzij naar het rijtotaal, omlaag naar het kolomtotaal, vermenigvuldig, en deel door <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. Voor de cel <em>slaapkamer, slecht</em>. Er staan nu geen hits in de breuk, alleen totalen:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-5"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-vaag kt-doel"><span class="kt-etiket">geteld</span>30</td><td class="kt-vaag">30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">60</span></td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-vaag">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">rijtotaal</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">kolomtotaal</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">60</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">40</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2400</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>24</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-5"><li><span class="kt-getal kt-rol-rij">60</span> het <b>rijtotaal</b>: iedereen in de rij <i>in de slaapkamer</i></li><li><span class="kt-getal kt-rol-kol">40</span> het <b>kolomtotaal</b>: iedereen in de kolom <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-n">100</span> het <b>totaal</b> <i>N</i>: iedereen</li><li><span class="kt-staal kt-staal-doel"></span>de cel waarvoor je <i>f</i><sub>e</sub> uitrekent; daar telde je <span class="kt-cijfer">30</span>, en dat getal heb je voor <i>f</i><sub>e</sub> niet nodig</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers zonder doosje: staan niet in de som</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-6"><thead><tr><th class="kt-hoek" scope="col">telefoon</th><th scope="col">slaapt slecht</th><th scope="col">slaapt goed</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">in de slaapkamer</th><td class="kt-vaag kt-doel"><span class="kt-etiket">geteld</span>30</td><td class="kt-vaag">30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">60</span></td></tr><tr><th class="kt-rijkop" scope="row">erbuiten</th><td class="kt-vaag">10</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">40</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td><span class="kt-getal kt-rol-kol">40</span></td><td class="kt-vaag">60</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">100</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">rijtotaal</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">kolomtotaal</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">60</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">40</mn></mrow><mn class="kt-getal kt-rol-n">100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>2400</mn><mn>100</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>24</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-6"><li><span class="kt-getal kt-rol-rij">60</span> het <b>rijtotaal</b>: iedereen in de rij <i>in de slaapkamer</i></li><li><span class="kt-getal kt-rol-kol">40</span> het <b>kolomtotaal</b>: iedereen in de kolom <i>slaapt slecht</i></li><li><span class="kt-getal kt-rol-n">100</span> het <b>totaal</b> <i>N</i>: iedereen</li><li><span class="kt-staal kt-staal-doel"></span>de cel waarvoor je <i>f</i><sub>e</sub> uitrekent; daar telde je <span class="kt-cijfer">30</span>, en dat getal heb je voor <i>f</i><sub>e</sub> niet nodig</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers zonder doosje: staan niet in de som</li></ul></div>
 </div>
 </div>
 <p>En zo voor alle vier:</p>
@@ -696,7 +755,8 @@ f_\text{e} = \dfrac{\text{rijtotaal} \times \text{kolomtotaal}}{N}
 </section>
 <section id="de-χ²-toets-hoe-ver-liggen-geteld-en-verwacht-uit-elkaar" class="level1">
 <h1>De χ²-toets: hoe ver liggen geteld en verwacht uit elkaar?</h1>
-<p>Je wilt één getal dat zegt hoe ver de hele tabel van “onafhankelijk” ligt. Begin bij de afwijking per cel, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math>:</p>
+<p>Nu pas de toets. In deze groep zag je een verband: .50 tegen .25, en 30 slechte slapers met de telefoon in de slaapkamer waar je er 24 verwachtte. Maar ook in een wereld zonder verband komt een tabel bijna nooit precies op zijn verwachte aantallen uit. Hoe groot moet het verschil zijn voordat je het geen toeval meer noemt?</p>
+<p>Het antwoord komt in twee stappen. Eerst maak je één getal dat zegt hoe ver de hele tabel van “onafhankelijk” ligt: χ². Daarna kijk je hoe raar dat getal is als er niets aan de hand is. Begin bij de afwijking per cel, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mtext mathvariant="normal">o</mtext></msub><mo>−</mo><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mrow><annotation encoding="application/x-tex">f_\text{o} - f_\text{e}</annotation></semantics></math>:</p>
 <table class="caption-top table">
 <caption>De afwijking per cel</caption>
 <thead>
@@ -930,7 +990,7 @@ Figuur&nbsp;4: Links de klok van <em>z</em>, met .025 voorbij −1.96 en .025 vo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="04_categorisch_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" alt="Een klein schetsje toont een walvis op een liggende as, met 0 links eronder en χ² in het midden. Zijn rug is de χ²-verdeling bij drie vrijheidsgraden: vlak na 0 stijgt hij steil tot een bult, en dan loopt hij in een lange, dunne staart naar rechts, tot vlak boven de as. Vooraan zit een oog, en boven de kop spuit een fontein." width="268"></p>
+<p><img src="04_categorisch_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="Een klein schetsje toont een walvis op een liggende as, met 0 links eronder en χ² in het midden. Zijn rug is de χ²-verdeling bij drie vrijheidsgraden: vlak na 0 stijgt hij steil tot een bult, en dan loopt hij in een lange, dunne staart naar rechts, tot vlak boven de as. Vooraan zit een oog, en boven de kop spuit een fontein." width="268"></p>
 <figcaption>Als walvis getekend: zijn rug is de χ²-verdeling bij drie vrijheidsgraden uit <a href="#fig-krommen" class="quarto-xref">Figuur&nbsp;3</a>.</figcaption>
 </figure>
 </div>
@@ -966,7 +1026,7 @@ Zo rapporteer je het
 <p>Welke kant het verband op gaat, haal je in stap 6 <strong>uit de tabel</strong>, niet uit χ²: χ² heeft geen kant. Kijk naar de conditionele kansen, of naar welke cellen boven hun verwachte aantal zitten.</p>
 <p>Bij de telefoon: in de cel <em>slaapkamer, slecht</em> telde je er 30 waar je er 24 verwachtte, dus +6. Daar zit je verhaal: wie de telefoon in de slaapkamer heeft, slaapt vaker slecht dan je zou verwachten als de plek er niet toe deed. Het is hetzelfde verhaal als dat van de kansen: in die groep slaapt .50 slecht, meer dan de .40 van iedereen samen. Die .40 zat ook in je verwachting: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>.40</mn><mo>×</mo><mn>60</mn><mo>=</mo><mn>24</mn></mrow><annotation encoding="application/x-tex">.40 \times 60 = 24</annotation></semantics></math>. Bij twee bij twee hoef je de andere drie cellen niet apart te lezen: ze vertellen hetzelfde van de andere kant. Bij <em>erbuiten, slecht</em> staat bijvoorbeeld −6: daar slapen minder mensen slecht dan verwacht.</p>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Controle in R — chisq.test() en pchisq()">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -975,7 +1035,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Je rekende met de hand. R rekent mee, zodat je ziet dat het klopt. Typ de tabel rij voor rij over:</p>
 <div class="cell">
@@ -1010,7 +1070,7 @@ X-squared = 6.25, df = 1, p-value = 0.01242</code></pre>
 </div>
 </div>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Met de grafische rekenmachine (TI-84)">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1019,7 +1079,7 @@ X-squared = 6.25, df = 1, p-value = 0.01242</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Op het tentamen mag een grafische rekenmachine, maar een eenvoudige volstaat: alles hierboven lukt met elke rekenmachine. Heb je een TI-84, dan doet hij de hele toets in één keer. Op het tentamen mag dat gewoon; hier is het een controle op je handwerk.</p>
 <p>Staat je rekenmachine in het Nederlands, dan heten de menu’s anders: EDIT heet daar BEWERKEN, TESTS heet TOETSEN, enzovoort.</p>
@@ -1053,7 +1113,6 @@ X-squared = 5.2517, df = 1, p-value = 0.02192</code></pre>
 </div>
 </div>
 <p>χ² is nu 5.25 in plaats van 6.25, en <em>p</em> is .022 in plaats van .012. De kopregel zegt waarom: <em>with Yates’ continuity correction</em>, de <strong>continuïteitscorrectie</strong> van Yates.</p>
-<!-- reden: ONTWERP.md, "Notities uit de paginabron", week 4, nr. 2 -->
 <p>Wat is dat? Aantallen springen: je telt 30 of 31 slechte slapers, nooit 30.4. De χ²-verdeling waar je de <em>p</em> uit haalt, is glad. Bij een tabel van twee bij twee, zeker met weinig mensen, past die gladde verdeling net niet, en valt de <em>p</em> iets te klein uit. De correctie van Yates haalt daarom van elke afwijking eerst een halve af, vóór het kwadrateren: hier <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>6</mn><mo>−</mo><mn>0.5</mn><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>=</mo><mn>30.25</mn></mrow><annotation encoding="application/x-tex">(6 - 0.5)^2 = 30.25</annotation></semantics></math> in plaats van <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>6</mn><mn>2</mn></msup><mo>=</mo><mn>36</mn></mrow><annotation encoding="application/x-tex">6^2 = 36</annotation></semantics></math>. Daardoor wordt χ² kleiner en <em>p</em> groter: de toets wordt voorzichtiger.</p>
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="Wat jij doet">
 <div class="callout-header d-flex align-content-center">
@@ -1075,7 +1134,7 @@ X-squared = 5.2517, df = 1, p-value = 0.02192</code></pre>
 </div>
 </div>
 <div class="tidy-alt callout callout-style-default callout-note no-icon callout-titled" title="Voor wie verder wil — zonder benadering: de exacte toets van Fisher">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1084,7 +1143,7 @@ X-squared = 5.2517, df = 1, p-value = 0.02192</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>De correctie van Yates is een lapmiddel: de gladde χ²-verdeling past niet precies op aantallen die springen. Er is ook een toets die helemaal niet benadert, maar alle tabellen met dezelfde randtotalen precies doorrekent: de <strong>exacte toets van Fisher</strong>. In R heet hij <code>fisher.test()</code>, en je geeft hem dezelfde tabel.</p>
 <p>Bij de telefoon en de slaap geeft hij <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.014</mn></mrow><annotation encoding="application/x-tex">p = .014</annotation></semantics></math>, dicht bij de .012 zonder en de .022 met correctie. Bij de oordopjes van opgave 4.6 geeft hij .057: daar staat hij aan de kant van Yates. Een randgeval is dus echt een randgeval.</p>
@@ -1240,7 +1299,7 @@ slaapstudie$vooruit controle training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 4.1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1249,7 +1308,7 @@ slaapstudie$vooruit controle training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Bij χ²: categorisch (nominaal of ordinaal); je telt hoe vaak elke combinatie voorkomt. Bij een <em>t</em>-toets is de afhankelijke variabele een score op een schaal (interval of ratio), want je vergelijkt gemiddelden.</p></li>
@@ -1318,7 +1377,7 @@ slaapstudie$vooruit controle training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 4.2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1327,7 +1386,7 @@ slaapstudie$vooruit controle training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Rijtotaal maal kolomtotaal, gedeeld door 100:</p>
@@ -1451,7 +1510,7 @@ slaapstudie$vooruit controle training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Kort antwoord 4.3">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1460,7 +1519,7 @@ slaapstudie$vooruit controle training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol start="3" type="a">
 <li>De verwachte aantallen zijn 41.25, 48.75, 68.75 en 81.25.</li>
@@ -1473,7 +1532,7 @@ slaapstudie$vooruit controle training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Volledige uitwerking 4.3 — stap voor stap">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1482,7 +1541,7 @@ slaapstudie$vooruit controle training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>Of het hebben van een bijbaan in de avond samenhangt met hoe lang eerstejaars slapen. Anders gezegd: of de twee variabelen afhankelijk zijn.</p></li>
@@ -1601,7 +1660,7 @@ X-squared = 5.4825, df = 1, p-value = 0.01921</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 4.4">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1610,7 +1669,7 @@ X-squared = 5.4825, df = 1, p-value = 0.01921</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## a. de nieuwe kolom ----</span></span>
@@ -1710,7 +1769,7 @@ slaapstudie$veel controle training
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 4.5">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1719,24 +1778,24 @@ slaapstudie$veel controle training
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>a.</strong> Een gezamenlijke kans: één cel, gedeeld door iedereen.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-7"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">70</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l">160</td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>eerstejaars en erg moe</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">70</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.175</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-7"><li><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">70</span> boven de streep: de cel <i>eerstejaars</i>, <i>erg</i></li><li><span class="kt-getal kt-rol-n">400</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-8"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b"><span class="kt-getal kt-rol-hit">70</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l">160</td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>eerstejaars en erg moe</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">70</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.175</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-8"><li><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">70</span> boven de streep: de cel <i>eerstejaars</i>, <i>erg</i></li><li><span class="kt-getal kt-rol-n">400</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
 </div>
 </div>
 <p><strong>b.</strong> Een marginale kans: het kolomtotaal, gedeeld door iedereen.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-8"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b">70</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l"><span class="kt-getal kt-rol-hit">160</span></td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>weinig moe</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">160</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.40</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-8"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">160</span> boven de streep: iedereen in de kolom <i>weinig</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">400</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-n" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-9"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-ton kt-rand-b kt-rand-l">85</td><td class="kt-ton kt-rand-b">95</td><td class="kt-ton kt-rand-b">70</td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-r">250</td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td class="kt-ton kt-rand-l">75</td><td class="kt-ton">45</td><td class="kt-ton">30</td><td class="kt-totaalkol kt-ton kt-rand-r">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-ton kt-rand-o kt-rand-l"><span class="kt-getal kt-rol-hit">160</span></td><td class="kt-ton kt-rand-o">140</td><td class="kt-ton kt-rand-o">100</td><td class="kt-totaalkol kt-ton kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>weinig moe</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">160</mn><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.40</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-9"><li class="visually-hidden"><span class="kt-staal kt-band-n"></span><b>de grabbelton is iedereen</b> (dubbele rand): de hele tabel doet mee</li><li><span class="kt-getal kt-rol-hit">160</span> boven de streep: iedereen in de kolom <i>weinig</i></li><li class="visually-hidden"><span class="kt-getal kt-rol-n">400</span> onder de streep: iedereen, de hele grabbelton</li></ul></div>
 </div>
 </div>
 <p><strong>c.</strong> Een conditionele kans: de grabbelton is nu alleen de 150 ouderejaars.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-9"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-vaag">85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol kt-vaag">250</td></tr><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">ouderejaars</th><td class="kt-ton kt-rand-b kt-rand-o">75</td><td class="kt-ton kt-rand-b kt-rand-o">45</td><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-vaag">160</td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>erg moe</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">ouderejaars</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-rij">150</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.20</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-9"><li><span class="kt-staal kt-band-rij"></span><b>de grabbelton</b> (doorgetrokken rand, ook onder de woorden in de breuk): alleen de rij <i>ouderejaars</i> doet nog mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>ouderejaars</i>, <i>erg</i></li><li><span class="kt-getal kt-rol-rij">150</span> onder de streep: iedereen in de rij <i>ouderejaars</i>, de hele grabbelton</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers, buiten de rand van de grabbelton: die doen niet mee</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa kt-band-rij" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-10"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-vaag">85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol kt-vaag">250</td></tr><tr><th class="kt-rijkop kt-ton kt-rand-b kt-rand-o kt-rand-l" scope="row">ouderejaars</th><td class="kt-ton kt-rand-b kt-rand-o">75</td><td class="kt-ton kt-rand-b kt-rand-o">45</td><td class="kt-ton kt-rand-b kt-rand-o"><span class="kt-getal kt-rol-hit">30</span></td><td class="kt-totaalkol kt-ton kt-rand-b kt-rand-o kt-rand-r"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td class="kt-vaag">160</td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mtext>erg moe</mtext><mo>∣</mo><mtext class="kt-woord kt-rol-rij">ouderejaars</mtext><mo stretchy="false" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn class="kt-getal kt-rol-hit">30</mn><mn class="kt-getal kt-rol-rij">150</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>.20</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-10"><li><span class="kt-staal kt-band-rij"></span><b>de grabbelton</b> (doorgetrokken rand, ook onder de woorden in de breuk): alleen de rij <i>ouderejaars</i> doet nog mee</li><li><span class="kt-getal kt-rol-hit">30</span> boven de streep: de cel <i>ouderejaars</i>, <i>erg</i></li><li><span class="kt-getal kt-rol-rij">150</span> onder de streep: iedereen in de rij <i>ouderejaars</i>, de hele grabbelton</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers, buiten de rand van de grabbelton: die doen niet mee</li></ul></div>
 </div>
 </div>
 <p><strong>d.</strong> Nee. De grabbelton is hier de rij: alle eerstejaars, of alle ouderejaars. Loop dan kolom voor kolom langs en vergelijk de twee rijen:</p>
@@ -1775,14 +1834,14 @@ slaapstudie$veel controle training
 <p>Waarom twee? Stel dat je van deze tabel alleen de randtotalen kent. Dan kun je twee cellen vrij invullen, en de rest maak je zo af: niet gokken, maar berekenen. Hier zijn de vrije cellen zwart: die kies jij.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-11"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td><span class="kt-etiket">vrij</span><span class="kt-getal kt-rol-hit">85</span></td><td><span class="kt-etiket">vrij</span><span class="kt-getal kt-rol-hit">95</span></td><td><span class="kt-etiket">volgt</span>70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td><span class="kt-etiket">volgt</span>75</td><td><span class="kt-etiket">volgt</span>45</td><td><span class="kt-etiket">volgt</span>30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td><span class="kt-getal kt-rol-kol">160</span></td><td><span class="kt-getal kt-rol-kol">140</span></td><td><span class="kt-getal kt-rol-kol">100</span></td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><ul class="kt-sleutel" id="kt-sleutel-11"><li><span class="kt-getal kt-rol-hit">85</span> <span class="kt-getal kt-rol-hit">95</span> <b>vrij</b>: deze twee cellen mag je zelf kiezen, de totalen eromheen liggen vast</li><li><b>volgt</b>: reken je uit met een rij- of kolomtotaal; een getal zonder doosje in zo'n som volgde zelf al</li><li><i>eerstejaars, erg</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-rij">250</span> − <span class="kt-getal kt-rol-hit">85</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">70</span></span></li><li><i>ouderejaars, weinig</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">160</span> − <span class="kt-getal kt-rol-hit">85</span> = <span class="kt-cijfer">75</span></span></li><li><i>ouderejaars, een beetje</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">140</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">45</span></span></li><li><i>ouderejaars, erg</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">100</span> − <span class="kt-cijfer">70</span> = <span class="kt-cijfer">30</span></span></li><li>controle, de rij <i>ouderejaars</i>: <span style="white-space: nowrap"><span class="kt-cijfer">75</span> + <span class="kt-cijfer">45</span> + <span class="kt-cijfer">30</span> = <span class="kt-getal kt-rol-rij">150</span></span></li><li><span class="kt-staal kt-staal-vaag"></span>het totaal <i>N</i>, <span class="kt-cijfer">400</span>, heb je hier niet nodig</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-12"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td><span class="kt-etiket">vrij</span><span class="kt-getal kt-rol-hit">85</span></td><td><span class="kt-etiket">vrij</span><span class="kt-getal kt-rol-hit">95</span></td><td><span class="kt-etiket">volgt</span>70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td><span class="kt-etiket">volgt</span>75</td><td><span class="kt-etiket">volgt</span>45</td><td><span class="kt-etiket">volgt</span>30</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">150</span></td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td><span class="kt-getal kt-rol-kol">160</span></td><td><span class="kt-getal kt-rol-kol">140</span></td><td><span class="kt-getal kt-rol-kol">100</span></td><td class="kt-totaalkol kt-vaag">400</td></tr></tbody></table><ul class="kt-sleutel" id="kt-sleutel-12"><li><span class="kt-getal kt-rol-hit">85</span> <span class="kt-getal kt-rol-hit">95</span> <b>vrij</b>: deze twee cellen mag je zelf kiezen, de totalen eromheen liggen vast</li><li><b>volgt</b>: reken je uit met een rij- of kolomtotaal; een getal zonder doosje in zo'n som volgde zelf al</li><li><i>eerstejaars, erg</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-rij">250</span> − <span class="kt-getal kt-rol-hit">85</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">70</span></span></li><li><i>ouderejaars, weinig</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">160</span> − <span class="kt-getal kt-rol-hit">85</span> = <span class="kt-cijfer">75</span></span></li><li><i>ouderejaars, een beetje</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">140</span> − <span class="kt-getal kt-rol-hit">95</span> = <span class="kt-cijfer">45</span></span></li><li><i>ouderejaars, erg</i>: <span style="white-space: nowrap"><span class="kt-getal kt-rol-kol">100</span> − <span class="kt-cijfer">70</span> = <span class="kt-cijfer">30</span></span></li><li>controle, de rij <i>ouderejaars</i>: <span style="white-space: nowrap"><span class="kt-cijfer">75</span> + <span class="kt-cijfer">45</span> + <span class="kt-cijfer">30</span> = <span class="kt-getal kt-rol-rij">150</span></span></li><li><span class="kt-staal kt-staal-vaag"></span>het totaal <i>N</i>, <span class="kt-cijfer">400</span>, heb je hier niet nodig</li></ul></div>
 </div>
 </div>
 <p>Zo hebben twee cellen vrijheid, en zitten de andere vier vast. Bij elke tabel kun je het blok linksboven kiezen: alle rijen behalve de laatste, en alle kolommen behalve de laatste. Dat is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(2 - 1) \times (3 - 1)</annotation></semantics></math>. Twee cellen in één kolom gaat niet: bij <em>ouderejaars, weinig</em> zie je dat de 75 al vastligt zodra de 85 er staat.</p>
 <p><strong>f.</strong> Rijtotaal maal kolomtotaal, gedeeld door <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. In de breuk staan geen hits, alleen totalen:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-10"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-vaag kt-doel"><span class="kt-etiket">geteld</span>85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td class="kt-vaag">75</td><td class="kt-vaag">45</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td><span class="kt-getal kt-rol-kol">160</span></td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">rijtotaal</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">kolomtotaal</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">250</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">160</mn></mrow><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>40000</mn><mn>400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>100</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-10"><li><span class="kt-getal kt-rol-rij">250</span> het <b>rijtotaal</b>: iedereen in de rij <i>eerstejaars</i></li><li><span class="kt-getal kt-rol-kol">160</span> het <b>kolomtotaal</b>: iedereen in de kolom <i>weinig</i></li><li><span class="kt-getal kt-rol-n">400</span> het <b>totaal</b> <i>N</i>: iedereen</li><li><span class="kt-staal kt-staal-doel"></span>de cel waarvoor je <i>f</i><sub>e</sub> uitrekent; daar telde je <span class="kt-cijfer">85</span>, en dat getal heb je voor <i>f</i><sub>e</sub> niet nodig</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers zonder doosje: staan niet in de som</li></ul></div>
+<div class="kt"><table class="kt-tabel geen-apa" data-quarto-disable-processing="true" aria-describedby="kt-sleutel-11"><thead><tr><th class="kt-hoek" scope="col"></th><th scope="col">weinig</th><th scope="col">een beetje</th><th scope="col">erg</th><th class="kt-totaalkol" scope="col">totaal</th></tr></thead><tbody><tr><th class="kt-rijkop" scope="row">eerstejaars</th><td class="kt-vaag kt-doel"><span class="kt-etiket">geteld</span>85</td><td class="kt-vaag">95</td><td class="kt-vaag">70</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-rij">250</span></td></tr><tr><th class="kt-rijkop" scope="row">ouderejaars</th><td class="kt-vaag">75</td><td class="kt-vaag">45</td><td class="kt-vaag">30</td><td class="kt-totaalkol kt-vaag">150</td></tr><tr class="kt-totaalrij"><th class="kt-rijkop" scope="row">totaal</th><td><span class="kt-getal kt-rol-kol">160</span></td><td class="kt-vaag">140</td><td class="kt-vaag">100</td><td class="kt-totaalkol"><span class="kt-getal kt-rol-n">400</span></td></tr></tbody></table><div class="kt-formule" data-som-ok="gestapeld in een MathML-mtable: elke = staat in beeld op een eigen regel"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>f</mi><mtext mathvariant="normal">e</mtext></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mtext class="kt-woord kt-rol-rij">rijtotaal</mtext><mo>×</mo><mtext class="kt-woord kt-rol-kol">kolomtotaal</mtext><mi></mi></mrow><mi class="kt-woord kt-rol-n">N</mi></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mrow><mn class="kt-getal kt-rol-rij">250</mn><mo>×</mo><mn class="kt-getal kt-rol-kol">160</mn></mrow><mn class="kt-getal kt-rol-n">400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mstyle displaystyle="true"><mfrac><mn>40000</mn><mn>400</mn></mfrac></mstyle></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>100</mn></mtd></mtr></mtable></math></div><ul class="kt-sleutel" id="kt-sleutel-11"><li><span class="kt-getal kt-rol-rij">250</span> het <b>rijtotaal</b>: iedereen in de rij <i>eerstejaars</i></li><li><span class="kt-getal kt-rol-kol">160</span> het <b>kolomtotaal</b>: iedereen in de kolom <i>weinig</i></li><li><span class="kt-getal kt-rol-n">400</span> het <b>totaal</b> <i>N</i>: iedereen</li><li><span class="kt-staal kt-staal-doel"></span>de cel waarvoor je <i>f</i><sub>e</sub> uitrekent; daar telde je <span class="kt-cijfer">85</span>, en dat getal heb je voor <i>f</i><sub>e</sub> niet nodig</li><li><span class="kt-staal kt-staal-vaag"></span>lichte cijfers zonder doosje: staan niet in de som</li></ul></div>
 </div>
 </div>
 <p>Geteld zijn het er 85, minder dan de 100 die je zou verwachten als studiejaar er niet toe deed.</p>
@@ -1853,7 +1912,7 @@ X-squared = 3.6, df = 1, p-value = 0.05778</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord 4.6">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-27-contents" aria-controls="callout-27" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1862,7 +1921,7 @@ X-squared = 3.6, df = 1, p-value = 0.05778</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-27" class="callout-27-contents callout-collapse collapse">
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="a">
 <li><p>De verwachte aantallen zijn 15, 45, 15 en 45, en elke afwijking is 5:</p>
@@ -1981,7 +2040,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 1">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-30-contents" aria-controls="callout-30" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1990,7 +2049,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div id="callout-30" class="callout-30-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> De grabbelton is de 50 mensen met twee wekkers: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>50</mn></mfrac></mstyle><mo>=</mo><mn>.80</mn></mrow><annotation encoding="application/x-tex">\dfrac{40}{50} = .80</annotation></semantics></math>. Met één wekker is het <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mn>18</mn><mn>30</mn></mfrac></mstyle><mo>=</mo><mn>.60</mn></mrow><annotation encoding="application/x-tex">\dfrac{18}{30} = .60</annotation></semantics></math>. Niet gelijk, dus afhankelijk, in deze groep. .50 is de val: dat is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mstyle displaystyle="true"><mfrac><mn>40</mn><mn>80</mn></mfrac></mstyle><annotation encoding="application/x-tex">\dfrac{40}{80}</annotation></semantics></math>, de gezamenlijke kans op twee wekkers <strong>en</strong> op tijd.</p>
 </div>
@@ -2016,7 +2075,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 2">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-32-contents" aria-controls="callout-32" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2025,7 +2084,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div id="callout-32" class="callout-32-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>C.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle displaystyle="true"><mfrac><mrow><mn>50</mn><mo>×</mo><mn>22</mn></mrow><mn>80</mn></mfrac></mstyle><mo>=</mo><mn>13.75</mn></mrow><annotation encoding="application/x-tex">\dfrac{50 \times 22}{80} = 13.75</annotation></semantics></math>. A is het aantal dat je telde, niet dat je verwachtte. B is het verwachte aantal in de rij eronder. D is de kans om te laat te komen, nog geen aantal: die moet je nog maal 50 doen.</p>
 </div>
@@ -2089,7 +2148,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 3">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-33-contents" aria-controls="callout-33" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-34-contents" aria-controls="callout-34" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2098,7 +2157,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-33" class="callout-33-contents callout-collapse collapse">
+<div id="callout-34" class="callout-34-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> De verwachte aantallen zijn 27.5 en 22.5 in beide rijen, en de afwijking is in elke cel 2.5:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="normal">χ</mi><mn>2</mn></msup><mo>=</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>27.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>22.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>27.5</mn></mfrac></mstyle><mo>+</mo><mstyle displaystyle="true"><mfrac><msup><mn>2.5</mn><mn>2</mn></msup><mn>22.5</mn></mfrac></mstyle><mo>=</mo><mn>1.01</mn></mrow><annotation encoding="application/x-tex">
@@ -2124,7 +2183,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 4">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-35-contents" aria-controls="callout-35" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-36-contents" aria-controls="callout-36" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2133,7 +2192,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-35" class="callout-35-contents callout-collapse collapse">
+<div id="callout-36" class="callout-36-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Nee.</strong> 1.01 ligt onder de kritieke waarde 3.84 (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>.31</mn></mrow><annotation encoding="application/x-tex">p = .31</annotation></semantics></math>). Je verwerpt <strong>niet</strong> de nulhypothese dat sport in de avond en snel inslapen onafhankelijk zijn.</p>
 </div>
@@ -2153,7 +2212,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 5">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-37-contents" aria-controls="callout-37" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-38-contents" aria-controls="callout-38" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2162,7 +2221,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-37" class="callout-37-contents callout-collapse collapse">
+<div id="callout-38" class="callout-38-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>6.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mo>×</mo><mn>3</mn><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">(3 - 1) \times (4 - 1) = 2 \times 3 = 6</annotation></semantics></math>.</p>
 </div>
@@ -2188,7 +2247,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 6">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-39-contents" aria-controls="callout-39" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-40-contents" aria-controls="callout-40" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2197,7 +2256,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-39" class="callout-39-contents callout-collapse collapse">
+<div id="callout-40" class="callout-40-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> Het kwadraat haalt het minteken weg, dus te veel en te weinig belanden allebei rechts. A is de val: je kijkt naar één staart, maar de toets is niet eenzijdig; hij slaat aan op een verband in elke richting. C is fout: de χ²-verdeling is scheef naar rechts. D is fout: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> zegt dat de variabelen onafhankelijk zijn.</p>
 </div>
@@ -2223,7 +2282,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 7">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-41-contents" aria-controls="callout-41" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-42-contents" aria-controls="callout-42" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2232,7 +2291,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-41" class="callout-41-contents callout-collapse collapse">
+<div id="callout-42" class="callout-42-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>A.</strong> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>0</mn></msub><annotation encoding="application/x-tex">H_0</annotation></semantics></math> zegt dat er niets aan de hand is: geen samenhang. B is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mtext mathvariant="normal">a</mtext></msub><annotation encoding="application/x-tex">H_\text{a}</annotation></semantics></math>. C kiest een richting, en χ² heeft er geen. D gaat over gemiddelden; studiejaar is hier een categorie.</p>
 </div>
@@ -2258,7 +2317,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 8">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-43-contents" aria-controls="callout-43" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-44-contents" aria-controls="callout-44" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2267,7 +2326,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-43" class="callout-43-contents callout-collapse collapse">
+<div id="callout-44" class="callout-44-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>B.</strong> Met correctie trekt R van elke afwijking eerst een halve af; daardoor wordt χ² kleiner. Met <code>correct = FALSE</code> krijg je de 5.48 van de hand terug. C is fout: ook mét correctie is <em>p</em> = .027 ≤ .05. D is fout: χ² heeft één staart, en die is al tweezijdig.</p>
 </div>
@@ -2287,7 +2346,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 9">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-45-contents" aria-controls="callout-45" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-46-contents" aria-controls="callout-46" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2296,7 +2355,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-45" class="callout-45-contents callout-collapse collapse">
+<div id="callout-46" class="callout-46-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Nee.</strong> Significant zegt dát er een verband is, niet hoe sterk. Met heel veel mensen wordt een klein verband al significant. Hoe sterk het is, zegt een effectmaat (week 5).</p>
 </div>
@@ -2323,7 +2382,7 @@ Zo rapporteer je het
 </div>
 </div>
 <div class="callout callout-style-default callout-caution no-icon callout-titled" title="Antwoord vraag 10">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-47-contents" aria-controls="callout-47" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-48-contents" aria-controls="callout-48" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2332,7 +2391,7 @@ Zo rapporteer je het
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-47" class="callout-47-contents callout-collapse collapse">
+<div id="callout-48" class="callout-48-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>C.</strong> Er staat geen tabel bij, dus zet je de aantallen eerst zelf in een kruistabel. Wat de vraag niet noemt, vind je door af te trekken en op te tellen:</p>
 <table class="caption-top table">
