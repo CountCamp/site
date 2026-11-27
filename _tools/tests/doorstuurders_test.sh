@@ -211,6 +211,8 @@ bedraad() {  # $1 = naam -> proefsite met de echte pers, en nagemaakte plank- en
   printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$S/_tools/taalonderdelen.py"
   # Sinds 24-11-2026 ook de namenpoort; zijn eigen zaken staan in namenwacht_test.sh.
   printf 'print("namenwacht - nagemaakt, alles in orde")\n' > "$S/_tools/namenwacht.py"
+  # Sinds 27-11-2026 ook de variabelenpoort; zijn eigen zaken staan in variabelenwacht_test.sh.
+  printf 'print("variabelenwacht - nagemaakt, alles in orde")\n' > "$S/_tools/variabelenwacht.py"
   echo "$S"
 }
 S="$(bedraad pers_groen)"

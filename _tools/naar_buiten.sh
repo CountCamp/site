@@ -235,6 +235,35 @@ taalstukken_nakijken() {   # $1 = blokkerend | melden
   return 0
 }
 
+# ---- de gebouwde Engelse bladzijden dragen de waarden van nu ------------
+# _variables.yml houdt een waarde die op meer dan één bladzij staat op één plek
+# (27-11-2026, spoor site_steun: de Stripe-link en het KvK-nummer op steun.qmd en
+# en/support.qmd). Het Nederlands bouwt de Action vers, dus dat leest altijd de
+# waarde van nu. Het Engels staat GEBOUWD in de repo en gaat onveranderd mee: wie
+# de waarde verandert en _tools/publiceer_en.sh vergeet, levert een echte knop in
+# het Nederlands en een dode in het Engels, en tot die dag zag geen poort dat.
+# _tools/variabelenwacht.py leest de repo, geen bouw nodig. Zelfde afweging als
+# hierboven: rood kan hij alleen worden doordat een Engelse bladzij een waarde
+# niet draagt, en dat is altijd een echte fout.
+# Getoetst in _tools/tests/variabelenwacht_test.sh.
+variabelen_nakijken() {   # $1 = blokkerend | melden
+  local streng="$1" code=0
+  # Dankzij `set -o pipefail` bovenaan is de afloop van de pijp die van de wachter.
+  python3 "$HIER/_tools/variabelenwacht.py" | sed 's/^/  /' || code=$?
+  if [ "$code" -eq 0 ]; then return 0; fi
+  case "$code" in
+    1) echo "  Een Engelse bladzij draagt een waarde uit _variables.yml niet (meer)."
+       echo "  Herstellen: bash _tools/publiceer_en.sh, en commit wat hij in en/ zet." ;;
+    3) echo "  De variabelenwacht kon niet kijken (de reden staat hierboven)."
+       echo "  Dat zegt niets over de bladzijden -- stilte betekent ongeldig, nooit goed." ;;
+    *) echo "  De variabelenwacht zelf liep vast (afloopcode $code). Wat hij had moeten"
+       echo "  meten is dus ONGEMETEN. Staat _tools/variabelenwacht.py er, en draait hij los?" ;;
+  esac
+  if [ "$streng" = blokkerend ]; then return 1; fi
+  echo "  (op een proefweg houdt dit je niet tegen -- op --productie wel)"
+  return 0
+}
+
 # ---- geen testlezer-naam in een bestand van deze repo -------------------
 # Deze repo is openbaar. Ben, 23-11-2026: "Site + speeltjes schoonmaken" -- de
 # voornamen van de testlezers uit elk openbaar bestand, en een wachter erop.
@@ -402,6 +431,7 @@ case "$WEG" in
   tellers_nakijken     blokkerend || code=1
   doorstuur_nakijken   blokkerend || code=1
   taalstukken_nakijken blokkerend || code=1
+  variabelen_nakijken  blokkerend || code=1
   namen_nakijken       blokkerend "$(nog_te_pushen)" || code=1
   echo
   if [ "$code" = 0 ]; then
@@ -419,6 +449,7 @@ case "$WEG" in
   tellers_nakijken melden
   doorstuur_nakijken melden
   taalstukken_nakijken melden
+  variabelen_nakijken melden
   namen_nakijken melden "$(nog_te_pushen)"
   doe bash _spooksite/maak_banner.sh "lokale proefdruk" "tak $(huidige_tak)"
   if [ -z "$DROOG" ]; then
@@ -449,6 +480,7 @@ case "$WEG" in
   tellers_nakijken melden
   doorstuur_nakijken melden
   taalstukken_nakijken melden
+  variabelen_nakijken melden
   namen_nakijken melden "$(nog_te_pushen)"
   [ "$TAK" != main ] || { echo "STOP: main is de echte site, niet een proefdruk."; echo "  Maak eerst een tak: git switch -c <naam>"; exit 1; }
   git rev-parse --verify --quiet "$TAK" >/dev/null || { echo "STOP: tak '$TAK' bestaat niet"; exit 1; }
@@ -501,6 +533,7 @@ case "$WEG" in
   tellers_nakijken blokkerend   || { echo "  Niet geleverd."; exit 1; }
   doorstuur_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   taalstukken_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
+  variabelen_nakijken blokkerend || { echo "  Niet geleverd."; exit 1; }
   namen_nakijken blokkerend origin/main..main || { echo "  Niet geleverd."; exit 1; }
   echo
   echo "  dan bouwen en controleren dat dit géén proefdruk is:"
