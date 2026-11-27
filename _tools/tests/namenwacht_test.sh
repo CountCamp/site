@@ -429,6 +429,7 @@ nep_pers() {  # $1 = naam -> een proefrepo met naar_buiten.sh erbij
   printf 'print("tellers - nagemaakt, alles in orde")\n'       > "$r/_tools/controleer_tellers.py"
   printf 'print("doorstuurders - nagemaakt, alles in orde")\n' > "$r/_tools/doorstuurders.py"
   printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$r/_tools/taalonderdelen.py"
+  printf 'print("variabelenwacht - nagemaakt, alles in orde")\n' > "$r/_tools/variabelenwacht.py"
   G "$r" add -A && G "$r" commit -q -m pers
   echo "$r"
 }

@@ -51,6 +51,9 @@ nep_basis() {  # $1 = naam -> maakt de repo, geeft het pad terug
   # Sinds 24-11-2026 een VIJFDE: de namenwacht. Zelfde reden; zijn eigen toets is
   # namenwacht_test.sh (die proeft hem ook via --nakijken).
   printf 'print("namenwacht - nagemaakt, alles in orde")\n' > "$r/_tools/namenwacht.py"
+  # Sinds 27-11-2026 een ZESDE: de variabelenwacht. Zelfde reden; zijn eigen toets
+  # is variabelenwacht_test.sh.
+  printf 'print("variabelenwacht - nagemaakt, alles in orde")\n' > "$r/_tools/variabelenwacht.py"
   echo "$r"
 }
 

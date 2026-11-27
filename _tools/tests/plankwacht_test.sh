@@ -737,6 +737,9 @@ printf 'print("  losse bladzijden: 0 nagelopen, 0 gat(en) - nagemaakt")\n' > "$T
 # Sinds 24-11-2026 een VIJFDE: de namenwacht. Zelfde reden; zijn eigen zaken
 # staan in namenwacht_test.sh.
 printf 'print("namenwacht - nagemaakt, alles in orde")\n' > "$T7/_tools/namenwacht.py"
+# Sinds 27-11-2026 een ZESDE: de variabelenwacht. Zelfde reden; zijn eigen zaken
+# staan in variabelenwacht_test.sh.
+printf 'print("variabelenwacht - nagemaakt, alles in orde")\n' > "$T7/_tools/variabelenwacht.py"
 # Eén echte bladzij mét teller, zodat de tellerwachter hier groen staat omdat
 # hij iets ZAG en niet omdat er niets te zien was.
 mkdir -p "$T7/oefenboeken/geteld"
