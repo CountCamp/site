@@ -1,0 +1,253 @@
+/* kleurtabel.css — herkomst in kleur: welk getal in de breuk uit welke cel komt.
+
+   Hoort bij kleurtabel.R (zelfde map). Bouwt voort op tabel_apa.css hiernaast:
+   dezelfde APA-lijnen (boven en onder dik, onder de kop dun), dezelfde tokens
+   --ink en --lijn. Een pagina die tabel_apa.css al laadt, botst niet.
+
+   Ben, 25-11-2026: "de rijtotaal en kolom totaal en totaal zijn ingekleurd en de
+   getallen in de breuk meegekleurd, zodat herkomst duidelijk is" -- en bij de
+   conditionele kans "dat alleen die rij of rijen nog als grabbelton werken ipv
+   grote totaal of hele tabel". Netjes, geen handschets: de lezer moet er exacte
+   getallen uit halen.
+
+   DRIE REGELS DIE HIER VASTLIGGEN
+   1. Elk getal dat in de breuk staat, staat in de tabel in precies hetzelfde
+      doosje: dezelfde kleur, dezelfde rand. Kleur is de eerste wegwijzer, de rand
+      de tweede, zodat het ook in zwart-wit en voor een kleurenblinde lezer klopt
+      (Ben is zelf rood-groen-kleurenblind; daarom blauw tegen oranje, nooit rood
+      tegen groen). De rollen:
+        rij  -> blauw, doorgetrokken rand      kol -> oranje, gestreepte rand
+        n    -> grafiet, dubbele rand          hit -> zwart, dikke rand, wit vlak
+   2. De grabbelton licht op: een band met een eigen rand om de hele rij (of
+      kolom, of de hele tabel); alles erbuiten wordt grijs. Een rij-ton is blauw
+      en doorgetrokken, een kolom-ton oranje en gestreept: zo zie je ook zonder
+      kleur dat sensitiviteit en PPV een andere ton hebben.
+   3. Een vlak (achtergrond) is extra, nooit het enige kenmerk: een printer laat
+      vlakken standaard weg. Randen drukt hij altijd. print-color-adjust zet de
+      vlakken bij het afdrukken terug waar de browser dat toestaat.
+
+   De kleuren zijn nagerekend met _logs/kleurtabel/scripts/kleurtoets.py (WCAG-
+   contrast van elk getal tegen wit en tegen zijn eigen vlak, en de afstand tussen
+   de rollen bij protan- en deutan-zicht, Machado 2009). Die toets leest de
+   waarden uit DIT bestand; verander je hier een kleur, draai hem dan opnieuw.
+   Uitkomst 25-11: elk getal haalt 4.5:1 (oranje op zijn eigen vlak het krapst,
+   4.71); de rol-inkten liggen onderling ver uit elkaar (kleinste afstand 13.4,
+   rij tegen n bij deutan; doel 8). De VLAKKEN van rij, kol en n worden in
+   zwart-wit alle drie even grijs (218-219 van 255): daar draagt alleen de rand
+   het verschil, en dat is met opzet zo. */
+
+.kt {
+  --ink: #1a1a1a;
+  --lijn: #b8b8b8;
+  --kt-rij: #2b4a7d;      --kt-rij-tint: #cddbf0;  --kt-rij-ton: #e8eff9;
+  --kt-kol: #8a4f12;      --kt-kol-tint: #f4d6b2;  --kt-kol-ton: #fcefdf;
+  --kt-n: #33322e;        --kt-n-tint: #dcdad3;    --kt-n-ton: #f1f0eb;
+  --kt-hit: #111111;
+  --kt-vaag: #6b6b6b;     --kt-vaag-tint: #f5f5f3;
+  margin: 1.4em 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ---- de tabel ----------------------------------------------------------- */
+.kt table.kt-tabel {
+  border-collapse: separate;   /* eigen randen per cel: de ton-rand botst zo niet met de APA-lijnen */
+  border-spacing: 0;
+  margin: 0 0 .5em 0;
+  font-variant-numeric: tabular-nums lining-nums;
+  width: auto;
+}
+.kt table.kt-tabel caption {
+  caption-side: top;
+  text-align: left;
+  color: var(--ink);
+  padding: 0 0 .4em 0;
+}
+.kt table.kt-tabel th,
+.kt table.kt-tabel td {
+  padding: .32em .7em;
+  text-align: right;
+  vertical-align: middle;
+  border: 0 solid transparent;
+  color: var(--ink);
+  background: transparent;
+}
+.kt table.kt-tabel th { font-weight: 600; }
+/* Bootstrap (Quarto) mag hier niets overleggen: geen streep-laag, geen eigen
+   lijnen. kleurtabel.R zet data-quarto-disable-processing op elke tabel; dit is
+   de vangrail voor een pagina die de tabel toch door Bootstrap laat halen. */
+.kt table.kt-tabel > :not(caption) > * > * { box-shadow: none !important; }
+.kt .kt-schuif { overflow-x: auto; margin: 0 0 .5em 0; }
+@media (max-width: 560px) {
+  .kt table.kt-tabel th,
+  .kt table.kt-tabel td { padding: .28em .35em; }
+  .kt .kt-schuif table.kt-tabel { font-size: .9em; }
+}
+.kt table.kt-tabel th.kt-rijkop,
+.kt table.kt-tabel th.kt-hoek { text-align: left; }
+.kt table.kt-tabel td.kt-tekst { text-align: left; }
+
+/* APA: dik boven, dun onder de kop, dik onder. Zelfde als tabel_apa.css. */
+.kt table.kt-tabel thead tr:first-child > th { border-top: 2px solid var(--ink); }
+.kt table.kt-tabel thead tr:last-child > th { border-bottom: 1px solid var(--ink); }
+.kt table.kt-tabel tbody tr:last-child > th,
+.kt table.kt-tabel tbody tr:last-child > td { border-bottom: 2px solid var(--ink); }
+/* de totaalrij en -kolom: een dun lijntje ervoor, zodat je ziet waar de marge begint */
+.kt table.kt-tabel tr.kt-totaalrij > th,
+.kt table.kt-tabel tr.kt-totaalrij > td { border-top: 1px solid var(--lijn); }
+.kt table.kt-tabel .kt-totaalkol { border-left: 1px solid var(--lijn); }
+
+/* een klein etiket boven een getal (TP, FN, ...) */
+.kt .kt-etiket {
+  display: block;
+  font-size: .72em;
+  font-weight: 400;
+  letter-spacing: .02em;
+  color: inherit;
+  line-height: 1.1;
+  margin-bottom: .1em;
+}
+
+/* ---- de grabbelton ------------------------------------------------------ */
+.kt .kt-band-rij { --kt-band: var(--kt-rij); --kt-band-ton: var(--kt-rij-ton); --kt-band-stijl: solid;  --kt-band-dikte: 3px; }
+.kt .kt-band-kol { --kt-band: var(--kt-kol); --kt-band-ton: var(--kt-kol-ton); --kt-band-stijl: dashed; --kt-band-dikte: 3px; }
+.kt .kt-band-n   { --kt-band: var(--kt-n);   --kt-band-ton: var(--kt-n-ton);   --kt-band-stijl: double; --kt-band-dikte: 4px; }
+.kt table.kt-tabel .kt-ton { background: var(--kt-band-ton); }
+.kt table.kt-tabel .kt-rand-b { border-top:    var(--kt-band-dikte) var(--kt-band-stijl) var(--kt-band); }
+.kt table.kt-tabel .kt-rand-o { border-bottom: var(--kt-band-dikte) var(--kt-band-stijl) var(--kt-band); }
+.kt table.kt-tabel .kt-rand-l { border-left:   var(--kt-band-dikte) var(--kt-band-stijl) var(--kt-band); }
+.kt table.kt-tabel .kt-rand-r { border-right:  var(--kt-band-dikte) var(--kt-band-stijl) var(--kt-band); }
+
+/* buiten de ton: grijs, maar nog leesbaar (4.88:1) */
+.kt table.kt-tabel td.kt-vaag {
+  color: var(--kt-vaag);
+  background: var(--kt-vaag-tint);
+}
+/* de cel waarvoor je f_e uitrekent */
+.kt table.kt-tabel td.kt-doel {
+  outline: 2px dotted var(--ink);
+  outline-offset: -4px;
+}
+
+/* ---- het doosje om een getal: in de tabel EN in de breuk ----------------- */
+span.kt-getal {
+  display: inline-block;
+  min-width: 1.6em;
+  text-align: center;
+  padding: 0 .28em;
+  border-radius: 3px;
+  line-height: 1.4;
+}
+.kt-getal.kt-rol-rij { color: var(--kt-rij); background: var(--kt-rij-tint); border: 2px solid  var(--kt-rij); font-weight: 600; }
+.kt-getal.kt-rol-kol { color: var(--kt-kol); background: var(--kt-kol-tint); border: 2px dashed var(--kt-kol); font-weight: 600; }
+.kt-getal.kt-rol-n   { color: var(--kt-n);   background: var(--kt-n-tint);   border: 3px double var(--kt-n);   font-weight: 600; }
+.kt-getal.kt-rol-hit { color: var(--kt-hit); background: #ffffff;            border: 3px solid  var(--kt-hit); font-weight: 700; }
+
+/* in MathML: geen display wijzigen (dan is het geen wiskunde meer), alleen
+   lucht, rand en vlak. Chrome tekent rand, padding en marge op een <mn>
+   (gemeten 25-11, Chrome 158: 11 van 11 doosjes); de marge boven en onder houdt
+   het doosje van de breukstreep af. Zie het rapport voor Safari. */
+math .kt-getal { padding: 0 .18em; margin: 3px 1px; border-radius: 3px; }
+
+/* een woord in de formule (rijtotaal, slaapkamer, TP + FN): de kleur, en een
+   streep eronder in de randvorm van zijn rol. Zonder die streep werd de noemer
+   in zwart-wit gewoon grijs, en grijs betekent op deze bladzij "telt niet mee"
+   (een lezer, 25-11: "precies de verkeerde boodschap, en het is de noemer
+   waar het hele verhaal om draait"). Geen vet voor de hits: vet betekent in de
+   wiskunde van het huis een matrix of vector (APA-lens 25-11). */
+.kt-woord { text-underline-offset: .18em; text-decoration-thickness: 1.5px; }
+.kt-woord.kt-rol-rij { color: var(--kt-rij); text-decoration: underline solid  var(--kt-rij); }
+.kt-woord.kt-rol-kol { color: var(--kt-kol); text-decoration: underline dashed var(--kt-kol); }
+.kt-woord.kt-rol-n   { color: var(--kt-n);   text-decoration: underline double var(--kt-n); }
+.kt-woord.kt-rol-hit { color: var(--kt-hit); }
+
+/* Cijfers: Georgia heeft alleen mediaevalcijfers (de 3, 4, 5, 7 en 9 zakken
+   onder de regel), en dan lijkt de punt in 3.5 halverwege te zweven: 3·5, dat
+   een student als "maal" leest (APA-lens 25-11). lining-nums doet niets bij een
+   letter die ze niet heeft. Dus de getallen in de tabel en de doosjes in het
+   wiskundefont van de bladzij: rechte cijfers, en dezelfde vorm als in de breuk. */
+.kt table.kt-tabel td,
+.kt .kt-getal,
+.kt .kt-cijfer {
+  font-family: "STIX Two Math Web", "STIX Two Math", "Cambria Math", Georgia, serif;
+}
+
+/* ---- de formule en de sleutel ------------------------------------------- */
+.kt .kt-formule { margin: .3em 0 .5em 0; overflow-x: auto; }
+.kt .kt-formule math { font-size: 1.08em; }
+.kt ul.kt-sleutel {
+  list-style: none;
+  padding: 0;
+  margin: .2em 0 0 0;
+  font-size: .92em;
+}
+.kt ul.kt-sleutel li { margin: .3em 0; }
+.kt ul.kt-sleutel li > .kt-getal,
+.kt ul.kt-sleutel li > .kt-staal { margin-right: .45em; }
+/* een staaltje van de ton of van de doelcel, voor in de sleutel */
+.kt .kt-staal {
+  display: inline-block;
+  width: 2.2em;
+  height: 1.15em;
+  vertical-align: -.2em;
+  border-radius: 2px;
+}
+.kt .kt-staal.kt-band-rij,
+.kt .kt-staal.kt-band-kol,
+.kt .kt-staal.kt-band-n { background: var(--kt-band-ton); border: var(--kt-band-dikte) var(--kt-band-stijl) var(--kt-band); }
+.kt .kt-staal.kt-staal-vaag { background: var(--kt-vaag-tint); border: 1px solid var(--lijn); }
+.kt .kt-staal.kt-staal-doel { background: #fff; outline: 2px dotted var(--ink); outline-offset: -3px; }
+
+/* twee kleurtabellen naast elkaar (sensitiviteit | PPV), onder elkaar op een telefoon */
+.kt-naast {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2em 2.4em;
+  align-items: flex-start;
+}
+.kt-naast > .kt { margin: 0; flex: 1 1 18em; }
+.kt .kt-kop { font-weight: 600; margin: 0 0 .3em 0; }
+
+/* ---- rangnummers: één lichte kleur per groep ----------------------------- */
+/* een derde groep (Kruskal-Wallis): grafiet met een dubbele rand, zoals N */
+.kt .kt-g1 { --kt-g: var(--kt-rij); --kt-g-tint: var(--kt-rij-ton); --kt-g-vlak: var(--kt-rij-tint); --kt-g-stijl: solid;  --kt-g-dikte: 2px; }
+.kt .kt-g2 { --kt-g: var(--kt-kol); --kt-g-tint: var(--kt-kol-ton); --kt-g-vlak: var(--kt-kol-tint); --kt-g-stijl: dashed; --kt-g-dikte: 2px; }
+.kt .kt-g3 { --kt-g: var(--kt-n);   --kt-g-tint: var(--kt-n-ton);   --kt-g-vlak: var(--kt-n-tint);   --kt-g-stijl: double; --kt-g-dikte: 3px; }
+.kt table.kt-tabel td.kt-g1,
+.kt table.kt-tabel td.kt-g2,
+.kt table.kt-tabel td.kt-g3,
+.kt table.kt-tabel th.kt-g1,
+.kt table.kt-tabel th.kt-g2,
+.kt table.kt-tabel th.kt-g3 { background: var(--kt-g-tint); }
+.kt-getal.kt-g1,
+.kt-getal.kt-g2,
+.kt-getal.kt-g3 {
+  color: var(--kt-g);
+  background: var(--kt-g-vlak);
+  border: var(--kt-g-dikte) var(--kt-g-stijl) var(--kt-g);
+  font-weight: 600;
+}
+/* de strook: 1 tot en met N op één rij. Breekt hij af, dan lijkt het laatste
+   vakje op de tweede regel iets te betekenen (een lezer, 25-11: "die
+   eenzame blauwe 17 ziet eruit alsof hij iets betekent"). Dus niet afbreken,
+   hooguit opzij schuiven; pas op een telefoon mag hij omlopen. */
+.kt .kt-strook {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: .2em;
+  margin: .2em 0 .4em 0;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.kt .kt-strook .kt-getal { min-width: 1.9em; flex: 0 0 auto; padding: 0 .2em; }
+@media (max-width: 560px) {
+  .kt .kt-strook { flex-wrap: wrap; }
+}
+.kt .kt-strook-as {
+  display: flex;
+  justify-content: space-between;
+  font-size: .8em;
+  color: var(--kt-vaag);
+  max-width: 100%;
+}
+.kt p.kt-onder { margin: .2em 0 0 0; font-size: .92em; }
