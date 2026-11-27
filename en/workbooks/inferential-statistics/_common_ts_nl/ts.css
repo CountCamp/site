@@ -14,6 +14,108 @@ table:not(.geen-apa):not(.gt_table) tr:last-child > td { border-bottom: 2px soli
 table:not(.geen-apa):not(.gt_table) th { border-bottom: 1px solid var(--ink); color: var(--ink); font-weight: 600; text-align: left; }
 table:not(.geen-apa):not(.gt_table) td { border-bottom: 1px solid var(--lijn); }
 
+/* OP EEN TELEFOON PAST ELKE TABEL, ZONDER SCHUIFBALK (spoor ts_w4_vervolg,
+   26-11-2026). Ben, bij opgave 4.2 op zijn telefoon: "Ik zie wel dat er op de tel
+   wat weg valt van de tabel. Moet het dan tabel met slider worden of kan je dit
+   nog laten passen?", en bij de keuze daarna: "Laten passen". Gemeten op 390 px
+   (_werk/tabellen_390.py): 46 tabellen in het Nederlands en 29 in het Engels
+   waren breder dan hun plek (waarvan één gt-tabel in week 1, die in zijn eigen
+   doos opzij schoof), en de laatste kolom viel dan weg.
+   Twee trappen. Onder 992 px (daar klapt quarto het zijmenu in, en daar begon het
+   te wringen: op 768 px waren er zes te breed) mag een woord dat niet past,
+   afbreken met een koppelteken (hyphens: auto; de lettergrepen komen uit de taal
+   van de bladzijde, lang="nl" of "en-GB"), en mag code in een cel na elk teken naar
+   de volgende regel, want een R-regel heeft geen lettergrepen. Een tabel die al
+   past, merkt daar niets van. Een gt-tabel zet zijn kolomkoppen op nowrap
+   !important (gt_apa); die mogen hier wél omlopen. Onder 576 px (een telefoon)
+   komen er een kleinere letter en krappere cellen bij. Vanaf 992 px verandert er
+   niets. De kanstabellen achterin (.kanstabel) vallen erbuiten: die hebben dertien
+   kolommen en een eigen schuifdoos met kleefkoppen (kanstabellen.css, spoor
+   ts_tabellen). */
+@media (max-width: 991.98px) {
+  /* Alleen lange woorden: pas vanaf negen letters, en met minstens vier letters
+     voor en na het streepje. Zonder die grens brak de eerste proef ook "to-taal"
+     en "ontbe-ten" af (opgave 4.2, 390 px): afbreken laat ELKE kolom krimpen, ook
+     een woord dat heel had kunnen blijven. Zonder afbreken bleven er 16 tabellen
+     te breed, door woorden als "vrijheidsgraden" en "standaardfout". De
+     -webkit-regels zijn voor Safari, dat hyphenate-limit-chars niet kent (niet
+     gemeten: hier draait alleen Chrome). */
+  table:not(.kanstabel) > * > tr > th,
+  table:not(.kanstabel) > * > tr > td {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphenate-limit-chars: 9 4 4;
+    -webkit-hyphenate-limit-before: 4;
+    -webkit-hyphenate-limit-after: 4;
+  }
+  /* Zes kolommen of meer (de rangnummers en reactietijden van week 6, de
+     uitwerkingen van 2.2 en 7.5): krappere cellen, en afbreken al vanaf zes
+     letters, met twee ervoor en erna. Zonder dit bleef de uitwerking van 6.4 te
+     breed op 600 en 768 px, en in het Engels antwoord 2.2 op 390 px
+     ("re-searcher"). */
+  table:not(.kanstabel):has(tr > :nth-child(6)) > * > tr > th,
+  table:not(.kanstabel):has(tr > :nth-child(6)) > * > tr > td {
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    hyphenate-limit-chars: 6 2 2;
+    -webkit-hyphenate-limit-before: 2;
+    -webkit-hyphenate-limit-after: 2;
+  }
+  table.gt_table th.gt_col_heading { white-space: normal !important; }
+  /* hyphens: manual, want een koppelteken midden in code is een ander teken: de
+     eerste proef zette "wilcox.-test" op het scherm (week 7, 390 px). */
+  table:not(.kanstabel) td code {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: manual;
+    -webkit-hyphens: manual;
+  }
+}
+@media (max-width: 575.98px) {
+  table:not(.kanstabel) { font-size: 0.8rem; }
+  table.gt_table { font-size: 0.8rem !important; }
+  table:not(.kanstabel) > * > tr > th,
+  table:not(.kanstabel) > * > tr > td { padding: 0.3rem 0.2rem; }
+  /* Zes kolommen of meer: nog iets kleiner en krapper, want daar zijn het vooral
+     getallen, en die breken niet af. */
+  table:not(.kanstabel):has(tr > :nth-child(6)) { font-size: 0.72rem; }
+  table:not(.kanstabel):has(tr > :nth-child(6)) > * > tr > th,
+  table:not(.kanstabel):has(tr > :nth-child(6)) > * > tr > td {
+    padding-left: 0.12rem;
+    padding-right: 0.12rem;
+  }
+  /* Een breuk of een wortel in een cel loopt niet om (de formules van de
+     rangtoetsen in week 6): die wordt nog iets kleiner. Met 0.9em paste die
+     tabel op 390 px, maar niet op 375 (iPhone SE en mini); met 0.85em wel. */
+  table:not(.kanstabel) td math:has(mfrac, msqrt) { font-size: 0.85em; }
+}
+
+/* DE KLEURTABEL OP EEN TELEFOON (spoor kleurtabel_ts, 27-11-2026). De kleurtabel
+   zelf (kleurtabel.css) is een kopie van de canonieke en blijft ongemoeid; dit is
+   de TS-eigen aanvulling, gemeten met _werk/kleurtabel_390.py.
+   DE BREUK onder de tabel werd niet te breed maar te smal: een mtable die niet
+   past, perst Chrome samen, en dan schuift de breuk over de woorden ervoor. In de
+   optelregel stond op 390 px "P(slaapkamer of =)" (nodig 332 px, plek 279).
+   Daarom mag hij nooit smaller dan zijn inhoud; past hij niet, dan schuift hij
+   opzij in zijn eigen doos (overflow-x: auto staat al in kleurtabel.css). En een
+   kleurtabel die de week met kt_krap() markeert (de optelregel, in een smal kader),
+   krijgt op een telefoon een kleinere letter in de breuk (1.08em in kleurtabel.css,
+   hier 0.85em): dan past hij op 390 px (gemeten 266 tegen 279; op 375 px 266 tegen
+   264, en dan schuift hij). Eerst gold dat voor elke breuk in een kader; dan stonden
+   ook breuken die ruim pasten klein.
+   Een kleurtabel in een LIJST in een kader kreeg op 390 px maar 245 px, en daar
+   paste de 2 x 3 van antwoord 4.5 alleen met cellen zo krap dat de getallen tegen
+   elkaar plakten (een lezer en de APA-lens, 27-11). Daarom staat dat antwoord niet
+   meer als lijst; hier staat er geen regel meer voor. */
+.kt .kt-formule math { min-width: max-content; }
+/* De legenda bovenaan de kansen (week 4): vier doosjes met een woord erin. Niet vet
+   zoals een getal in de tabel: dan werd ook de N in "totaal N" vet, en vet betekent
+   in dit huis een matrix (APA-lens, 27-11, ronde 2). Kleur en rand dragen het. */
+.kt.kt-legenda .kt-getal { font-weight: 400; }
+@media (max-width: 575.98px) {
+  .kt.kt-krap .kt-formule math { font-size: 0.85em; }
+}
+
 /* Een hypothesenpaar staat onder elkaar, nooit op één regel. */
 .hypothesen { margin: 0.4rem 0 0.8rem 1.2rem; line-height: 1.9; }
 
