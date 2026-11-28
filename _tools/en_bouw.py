@@ -448,6 +448,67 @@ def keur_links(site: str, bladzijden: list[str]) -> tuple[list[str], int, str]:
     return gaten, n, voorbeeld
 
 
+# ----------------------------------------------------- contactgegevens ----
+# Elk mailadres en elke IBAN op een Engelse bladzij staat ook op zijn Nederlandse
+# tweeling. Een tikfout in een rekeningnummer is het soort fout dat niemand ziet
+# tot het geld nergens aankomt.
+#
+# IBAN: landcode, twee cijfers, dan groepjes van hooguit vier (de laatste mag
+# korter: "… 1306 05"). Een te krappe vorm zou het staartje missen, en een
+# tikfout zit net zo goed in het staartje.
+IBAN = re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{1,4}){2,8}\b")
+# ALLEEN WAT EEN BEZOEKER ZIET (28-11-2026, spoor contactwacht_script). Tot die dag
+# las de keuring de hele HTML, en in het script van de werknotities-knop in het
+# boek staat `a.href = 'mailto:' + ADRES;`. Dat las hij als een mailadres, tot het
+# eerste aanhalingsteken: zes regels script en commentaar. Zolang de Engelse en de
+# Nederlandse h1 hetzelfde commentaar droegen, stond dat "adres" op beide en kwam
+# het door; toen lab 72a83989 dat commentaar veranderde, werd het het enige gat
+# in de spooksite van en_bij_boek_h1 — terwijl er geen enkel adres verschilde.
+# Daarom gaan script, stijl en HTML-commentaar er vóór het zoeken af, aan de
+# Engelse kant. Een adres staat in de tekst of in een href.
+ONZICHTBAAR = re.compile(r"<(script|style)\b[^>]*>.*?</\1\s*>|<!--.*?-->", re.S | re.I)
+# Een mailadres houdt op bij het eerste teken dat er niet in kan staan. Tot
+# 28-11-2026 alleen bij " en ?, en dan liep een mailto: buiten een href door tot
+# het volgende aanhalingsteken, hoe ver dat ook stond.
+MAILTO = re.compile(r"mailto:([^\"'?<>\s]+)")
+
+
+def heel_in(ding: str, tekst: str) -> bool:
+    """Staat `ding` in `tekst` als geheel, en niet als stukje van een langer adres
+    of nummer? Tot 28-11-2026 een gewone `in`, en dan kwam "vragen@countcamp.or"
+    door omdat het een stukje is van "vragen@countcamp.org"."""
+    return re.search(r"(?<![\w.+%-])" + re.escape(ding) + r"(?![\w-]|\.\w)", tekst) is not None
+
+
+def keur_contact(t_en: str, t_nl: str) -> tuple[list[tuple[str, str]], list[tuple[str, str]], int]:
+    """Eén tweeling: ([(soort, wat) nagelopen], [(soort, wat) dat niet op de
+    Nederlandse staat], hoeveel keer "mailto:" in script/stijl/commentaar is
+    overgeslagen).
+
+    De Engelse kant: alleen wat een bezoeker ziet. De Nederlandse kant blijft heel
+    (op de data:-adressen na): die is de maat, en een adres dat daar alleen in een
+    script staat, bestaat wel. Wat de Nederlandse kant daar extra draagt, kan een
+    Engels adres niet goedpraten zolang het als geheel moet staan (heel_in)."""
+    # NIET in data:-adressen zoeken (25-10-2026, spoor en_boekpers). Een bladzij uit
+    # het lab sluit zijn figuren en lettertypes in als base64 (embed-resources), en
+    # daarin vond dit patroon op en/book/h0.html vijf "rekeningnummers", alle vijf in
+    # een data:-adres. Drie kwamen door omdat hetzelfde lettertype ook in de
+    # Nederlandse h0 zit; "ZJ11OT" en "JP38UR0" zaten in de Engelse figuur en
+    # werden twee gaten die er niet waren. Een rekeningnummer staat in de tekst.
+    zonder_data = lambda t: re.sub(r"data:[^\"')\s]*", "", t)  # noqa: E731
+    weg = "".join(m.group(0) for m in ONZICHTBAAR.finditer(t_en))
+    zichtbaar = zonder_data(ONZICHTBAAR.sub(" ", t_en))
+    t_nl = zonder_data(t_nl)
+    nagelopen, fout = [], []
+    for soort, gevonden in (("mailadres", MAILTO.findall(zichtbaar)),
+                            ("rekeningnummer", IBAN.findall(zichtbaar))):
+        for ding in sorted(set(gevonden)):
+            nagelopen.append((soort, ding))
+            if not heel_in(ding, t_nl):
+                fout.append((soort, ding))
+    return nagelopen, fout, weg.count("mailto:")
+
+
 # ------------------------------------------------ bijlagen uit het lab ----
 # De Engelse boekbladzijden worden in countcamp_lab gedrukt (boek/publiceer.sh
 # --en) en komen hier als BIJLAGE onder en/book/, precies zoals de Nederlandse
@@ -858,35 +919,22 @@ def cmd_keur(a) -> int:
     zeg(f"  losse tweelingen: {n_l} paar, {len(fout_l)} fout")
     gaten += fout_l
 
-    # 5. contactgegevens: elk mailadres en elke IBAN op een Engelse bladzij staat
-    #    ook op zijn Nederlandse tweeling. Een tikfout in een rekeningnummer is
-    #    het soort fout dat niemand ziet tot het geld nergens aankomt.
-    fout_c, n_c = [], 0
-    # IBAN: landcode, twee cijfers, dan groepjes van hooguit vier (de laatste mag
-    # korter: "… 1306 05"). Een te krappe vorm zou het staartje missen, en een
-    # tikfout zit net zo goed in het staartje.
-    iban = re.compile(r"\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{1,4}){2,8}\b")
-    # NIET in data:-adressen zoeken (25-10-2026, spoor en_boekpers). Een bladzij uit
-    # het lab sluit zijn figuren en lettertypes in als base64 (embed-resources), en
-    # daarin vond dit patroon op en/book/h0.html vijf "rekeningnummers", alle vijf in
-    # een data:-adres. Drie kwamen door omdat hetzelfde lettertype ook in de
-    # Nederlandse h0 zit; "ZJ11OT" en "JP38UR0" zaten in de Engelse figuur en
-    # werden twee gaten die er niet waren. Een rekeningnummer staat in de tekst.
-    zonder_data = lambda t: re.sub(r"data:[^\"')\s]*", "", t)  # noqa: E731
+    # 5. contactgegevens (zie keur_contact): alleen wat een bezoeker op de Engelse
+    #    bladzij ziet, als geheel terug te vinden op de Nederlandse tweeling.
+    fout_c, n_c, n_weg, vb_c = [], 0, 0, ""
     for p in tabel:
         en_p, nl_p = os.path.join(site, p["en"]), os.path.join(site, p["nl"])
         if not (os.path.isfile(en_p) and os.path.isfile(nl_p)):
             continue
-        t_en, t_nl = zonder_data(lees(en_p)), zonder_data(lees(nl_p))
-        for adres in set(re.findall(r'mailto:([^"?]+)', t_en)):
-            n_c += 1
-            if adres not in t_nl:
-                fout_c.append(f"{p['en']}: mailadres {adres} staat niet op {p['nl']}")
-        for nr in set(iban.findall(t_en)):
-            n_c += 1
-            if nr not in t_nl:
-                fout_c.append(f"{p['en']}: rekeningnummer {nr} staat niet op {p['nl']}")
-    zeg(f"  contactgegevens: {n_c} mailadres(sen)/IBAN(s) nagelopen tegen de Nederlandse tweeling, {len(fout_c)} wijken af")
+        nagelopen, fout, weg = keur_contact(lees(en_p), lees(nl_p))
+        n_c, n_weg = n_c + len(nagelopen), n_weg + weg
+        goed = [ding for soort, ding in nagelopen if (soort, ding) not in fout]
+        if goed and not vb_c:
+            vb_c = f"{p['en']}: {goed[0]}"
+        fout_c += [f"{p['en']}: {soort} {ding} staat niet op {p['nl']}" for soort, ding in fout]
+    zeg(f"  contactgegevens: {n_c} mailadres(sen)/IBAN(s) nagelopen tegen de Nederlandse tweeling, {len(fout_c)} wijken af"
+        + (f" — bv. {vb_c}" if vb_c else "")
+        + f"; {n_weg} keer mailto: in een script, stijlblok of commentaar niet meegeteld (ziet geen bezoeker)")
     gaten += fout_c
 
     # 6. werkbriefjes: geen MIEKE:/BEN:-regel op de echte of de proef-site
