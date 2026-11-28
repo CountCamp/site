@@ -22,6 +22,8 @@ Drie lezers moeten precies dezelfde bytes zien, en daarom staat elk stuk één k
     python3 _tools/taalonderdelen.py regels            de nl_negeer-regels voor de wachtrij
     python3 _tools/taalonderdelen.py los               zet de stukken in de losse bladzijden
     python3 _tools/taalonderdelen.py los --controleer  kijk alleen of ze er goed in staan
+                                                        (en, sinds 28-11-2026, of beide kanten
+                                                        van elk auto- en eigen-paar er staan)
     python3 _tools/taalonderdelen.py ruim <pad> ...     haal ze uit een wees (niet in de tabel)
 
 DE UITZONDERING IS SMAL, en zo is ze bedoeld (Ben, 24-10-2026: het knopje mag op de
@@ -319,6 +321,38 @@ def wezen(tabel: list[dict]) -> tuple[int, list[str], list[str]]:
     return n, uit, blind
 
 
+# DE BLADZIJDEN VAN EEN auto- OF eigen-PAAR BESTAAN (spoor sitemap_hreflang, 28-11-2026).
+# taalwissel.lua zet knopje en hreflang op zo'n bladzij zonder te kijken of de tweeling
+# er is. Beide kanten bouwt Quarto, dus elk heeft een .qmd -- maar de Action bouwt en/
+# niet ("!en/" in _quarto-nl.yml): een kant onder en/ komt als bijlage mee, en staat er
+# live alleen als publiceer_en.sh hem bouwde en iemand de .html committe. Op 28-11-2026
+# gebeurde dat niet: 4bfecabe zette en/book/index.qmd en het paar met manuscript/index.html
+# neer, en manuscript/ wees live met hreflang naar een en/book/ die er niet was. Pas de
+# sitemapwacht zag het, na een hele bouw; twee runs rood, de site bleef staan.
+# Tot die dag stond dit alleen als zin in taalparen.tsv ("Daarom weigert publiceer_en.sh
+# dan"), en die weigert alleen als iemand hem draait.
+def quarto_tweelingen(tabel: list[dict]) -> tuple[int, list[str]]:
+    """(aantal nagelopen kanten, ['<pad>: …']) voor de auto- en eigen-paren."""
+    n, gaten = 0, []
+    for p in tabel:
+        if p["wissel"] not in ("auto", "eigen"):
+            continue
+        for kant in ("nl", "en"):
+            sitepad = p[kant]
+            n += 1
+            bron = sitepad[:-len(".html")] + ".qmd" if sitepad.endswith(".html") else None
+            if not bron or not os.path.isfile(os.path.join(REPO, bron)):
+                gaten.append(f"{sitepad}: er staat geen {bron or 'bron'} om hem uit te bouwen "
+                             f"({p['wissel']} = Quarto bouwt hem) — zet de bron neer, of haal het paar "
+                             f"uit taalparen.tsv")
+            elif sitepad.startswith("en/") and not os.path.isfile(os.path.join(REPO, sitepad)):
+                gaten.append(f"{sitepad}: nooit gebouwd — {bron} staat er, maar de Action bouwt en/ "
+                             f"niet, en dan wijst {p['nl'] if kant == 'en' else p['en']} met hreflang "
+                             f"naar niets. Herstellen: bash _tools/publiceer_en.sh, en commit wat hij in "
+                             f"en/ zet")
+    return n, gaten
+
+
 def zonder_alle_stukken(tekst: str) -> str:
     """Alles wat pas_toe_los ooit in een bladzij zet, aan beide kanten, ongeacht een
     paar: voor een wees, die geen paar meer heeft om zonder_stukken mee te vragen."""
@@ -407,6 +441,11 @@ def cmd_los(a) -> int:
     print(f"  losse bladzijden: {n} nagelopen, {len(gaten)} gat(en)")
     for g in gaten:
         print("    - " + g)
+    n_q, gaten_q = quarto_tweelingen(tabel)
+    print(f"  tweelingen die Quarto bouwt (auto, eigen): {n_q} kant(en) nagelopen, {len(gaten_q)} die er niet staan")
+    for g in gaten_q:
+        print("    - " + g)
+    gaten += gaten_q
     # Ook bij `los` zonder --controleer alleen gemeld, nooit weggehaald: zonder paar
     # weet niemand of de tabel of de bladzij achterloopt. Weghalen is `ruim`.
     n_buiten, wees, blind = wezen(tabel)

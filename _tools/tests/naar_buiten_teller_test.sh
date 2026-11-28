@@ -350,8 +350,13 @@ fi
 ECHT_TAAL="$(nep_repo echtetaal 0 "teller-controle - nagemaakt, alles in orde")"
 cp _tools/taalonderdelen.py _tools/taalparen.tsv "$ECHT_TAAL/_tools/"
 cp -R _tools/taalwissel "$ECHT_TAAL/_tools/taalwissel"
-for m in oefenboeken en manuscript speeltjes tabellen tables; do
+for m in oefenboeken en manuscript speeltjes tabellen tables archief; do
   [ -e "$m" ] && ln -s "$PWD/$m" "$ECHT_TAAL/$m"
+done
+# Sinds 28-11-2026 kijkt hij ook of beide kanten van elk auto- en eigen-paar er staan
+# (zaak 6o), en die hebben hun bron in de wortel: index.qmd, cv-en.qmd ...
+for f in *.qmd; do
+  ln -s "$PWD/$f" "$ECHT_TAAL/$f"
 done
 keur     "6c de echte taalstukken van deze repo: laat door" 0 "$ECHT_TAAL"
 getoetst=$((getoetst + 1))
@@ -426,7 +431,14 @@ fi
 
 LEEG_TAAL="$(echte_taal_repo leegtaal)"
 printf 'index.html\ten/index.html\tauto\n' > "$LEEG_TAAL/_tools/taalparen.tsv"   # geen enkele losse tweeling
-keur     "6f een tabel zonder losse tweeling: HOUDT TEGEN (niets nagelopen is niet groen)" 1 "$LEEG_TAAL"
+# Het auto-paar zelf in orde (bron aan beide kanten, de Engelse gebouwd), zodat deze
+# zaak blijft meten wat hij meet: geen losse tweeling. Zonder deze drie is het sinds
+# 28-11-2026 een gat (zaak 6o), en dan zegt de wachter terecht iets anders.
+mkdir -p "$LEEG_TAAL/en"
+printf -- '---\ntitle: x\n---\n' > "$LEEG_TAAL/index.qmd"
+cp "$LEEG_TAAL/index.qmd" "$LEEG_TAAL/en/index.qmd"
+printf '<html><head><title>x</title>\n</head>\n<body>\n<p>x</p></body></html>\n' > "$LEEG_TAAL/en/index.html"
+keur    "6f een tabel zonder losse tweeling: HOUDT TEGEN (niets nagelopen is niet groen)" 1 "$LEEG_TAAL"
 verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
 
 ZONDER_KOP="$(echte_taal_repo zonderkop)"
@@ -546,6 +558,31 @@ keur     "6n een map die niet te lezen is: HOUDT TEGEN" 1 "$BLINDE_MAP"
 chmod 755 "$BLINDE_MAP/oefenboeken/dicht"   # anders kan de opruimer hem niet weghalen
 verwacht "  en zegt dat hij niet kon kijken" "De taalstukkenwachter kon niet kijken"
 verwacht "  en welke map" "oefenboeken/dicht"
+
+# Een auto-paar waarvan de Engelse kant nooit gebouwd is (spoor sitemap_hreflang,
+# 28-11-2026). Zo stond het die dag op main: en/book/index.qmd en het paar met
+# manuscript/index.html in de tabel, en geen en/book/index.html, want niemand draaide
+# publiceer_en.sh. De Action bouwt en/ niet; manuscript/ wees live met hreflang naar
+# niets, en pas de sitemapwacht zag het, na een hele bouw. Hier: vóór de bouw.
+ZONDER_EN="$(echte_taal_repo zonderen)"
+printf 'oefenboeken/x/h<n>.html\ten/workbooks/x/h<n>.html\tlos\nmanuscript/index.html\ten/book/index.html\tauto\n' \
+  > "$ZONDER_EN/_tools/taalparen.tsv"
+mkdir -p "$ZONDER_EN/oefenboeken/x" "$ZONDER_EN/en/workbooks/x" "$ZONDER_EN/manuscript" "$ZONDER_EN/en/book"
+printf '<html><head><title>h0</title>\n</head>\n<body>\n<p>h0</p></body></html>\n' > "$ZONDER_EN/oefenboeken/x/h0.html"
+cp "$ZONDER_EN/oefenboeken/x/h0.html" "$ZONDER_EN/en/workbooks/x/h0.html"
+python3 "$ZONDER_EN/_tools/taalonderdelen.py" los > /dev/null 2>&1 || true
+printf -- '---\ntitle: Het boek\n---\n' > "$ZONDER_EN/manuscript/index.qmd"
+printf -- '---\ntitle: The book\n---\n' > "$ZONDER_EN/en/book/index.qmd"
+keur     "6o een auto-paar waarvan de Engelse kant nooit gebouwd is: HOUDT TEGEN" 1 "$ZONDER_EN"
+verwacht "  en noemt hem" "en/book/index.html: nooit gebouwd"
+verwacht "  en de bladzij die naar niets wijst" "manuscript/index.html met hreflang naar niets"
+verwacht "  met het herstel" "bash _tools/publiceer_en.sh"
+printf '<html><head><title>The book</title>\n</head>\n<body>\n<p>x</p></body></html>\n' > "$ZONDER_EN/en/book/index.html"
+keur     "6o na de Engelse bouw: laat door" 0 "$ZONDER_EN"
+verwacht "  en zegt dat hij de auto-kanten naliep" "tweelingen die Quarto bouwt (auto, eigen): 2 kant(en) nagelopen, 0"
+rm -f "$ZONDER_EN/manuscript/index.qmd"
+keur     "6o de Nederlandse kant heeft geen bron: HOUDT TEGEN" 1 "$ZONDER_EN"
+verwacht "  en noemt hem" "manuscript/index.html: er staat geen manuscript/index.qmd"
 
 # De Action (21-11-2026, spoor taalpers): naar_buiten.sh leest de werkkopie, en wat
 # er naar main gaat kan daarvan afwijken (lever.sh commit alleen zijn eigen
