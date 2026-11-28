@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 2.1 · Median, quartiles and skewness – The JASP Exercise Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_correlatie_scatterplot.html" rel="next">
+<link href="../20_blokken/blok_gemiddelde_spreiding.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+<link rel="stylesheet" href="../werkboek_en.css">
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_mediaan_scheefheid.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/workbooks/jasp/20_blokken/blok_mediaan_scheefheid.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_mediaan_scheefheid.html">
+<style>
+/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
+.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
+.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.taalwissel-los [aria-current]{font-weight:600;}
+.taalwissel-los .taalwissel-sep{margin:0 .45em;}
+</style>
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+<nav class="taalwissel taalwissel-los" aria-label="language"><a href="../../../../oefenboeken/broertjes/jasp/20_blokken/blok_mediaan_scheefheid.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">First movement · Difference under the microscope</li><li class="breadcrumb-item"><a href="../20_blokken/blok_mediaan_scheefheid.html">Chapter 2 · The Shape of the Heap</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_mediaan_scheefheid.html">Exercise 2.1 · Median, quartiles and skewness</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The JASP Exercise Book</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/book/h0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Back to the book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The JASP Exercise Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">First movement · Difference under the microscope</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 0 · In the Beginning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.0 · Installing &amp; setting up</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.1 · Looking at the data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 1 · The Average Gulp</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 1.1 · The mean and the standard deviation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Chapter 2 · The Shape of the Heap</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Exercise 2.1 · Median, quartiles and skewness</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Second movement · Coupling differences</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 3 · The Little Rectangle</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.1 · Correlation and the scatterplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.2 · Simple regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.3 · Looking at the residuals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic moves in JASP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../91_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Shuffle toys</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/toys/shuffle-correlation.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Shuffle the correlation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<p class="beweging">First movement · Difference under the microscope</p>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">First movement · Difference under the microscope</li><li class="breadcrumb-item"><a href="../20_blokken/blok_mediaan_scheefheid.html">Chapter 2 · The Shape of the Heap</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_mediaan_scheefheid.html">Exercise 2.1 · Median, quartiles and skewness</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Exercise 2.1 · Median, quartiles and skewness</h1>
+<p class="subtitle lead">Median, boxplot, skewness</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">In this exercise</h2>
+   
+  <ul>
+  <li><a href="#the-middle-that-lies-above-the-middle" id="toc-the-middle-that-lies-above-the-middle">The middle that lies above the middle</a></li>
+  <li><a href="#two-middles-and-two-pictures-in-jasp" id="toc-two-middles-and-two-pictures-in-jasp">Two middles and two pictures in JASP</a></li>
+  <li><a href="#why-the-tail-lifts-the-mean" id="toc-why-the-tail-lifts-the-mean">Why the tail lifts the mean</a></li>
+  <li><a href="#from-smog-to-wind" id="toc-from-smog-to-wind">From smog to wind</a></li>
+  <li><a href="#write-it-up-like-a-researcher" id="toc-write-it-up-like-a-researcher">Write it up like a researcher</a></li>
+  <li><a href="#exam-style-questions" id="toc-exam-style-questions">Exam-style questions</a></li>
+  </ul>
+</nav>
+<div class="datastrook">
+<p><strong>Data for this exercise</strong> — <a href="../10_data/airquality.csv" download="airquality.csv">airquality.csv</a> air readings from New York · <a href="../10_data/stones.csv" download="stones.csv">stones.csv</a> the twelve stones from the book · <a href="../91_datasets.html">what each column means</a></p>
+</div>
+<div class="kicker">
+<p>hook</p>
+</div>
+<section id="the-middle-that-lies-above-the-middle" class="level2">
+<h2 class="anchored" data-anchor-id="the-middle-that-lies-above-the-middle">The middle that lies above the middle</h2>
+<p><span class="begrippen">mean · typical day · shape of the heap</span></p>
+<p>New York, the summer of 1973. On a narrow island in the East River stands a measuring box that does the same thing every day: sniff, count, write down how much ozone is hanging in the air.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Ozone at street level is the stuff smog is made of — the higher the number, the harder the city breathes. The box passes no judgement. All it does is collect a heap of numbers, a hundred and sixteen days long. And in the shape of that heap — for anyone who looks closely — sits the whole summer.</p>
+<p>And now us. The first question anyone asks of a column like this is the one from the exercise on the mean: what is an <em>average</em> ozone day? Add up, divide, done: <strong>42.1</strong>. A nice, tidy story — until you leaf through the column itself. It starts like this: 41, 36, 12, 18, 28, 23, 19, 8… mostly numbers that stay <em>below</em> 42, and then suddenly, further on, a day of 168. Count it: of the 116 days, only 44 come out above the mean. So the ‘average day’ is a day that most days don’t reach.</p>
+<p>How can a middle lie above the middle? And what, then, <em>is</em> a typical ozone day in that summer? Come along for a moment — the answer isn’t in yet another number, but in the shape of the heap.</p>
+<div class="kicker">
+<p>play with it</p>
+</div>
+</section>
+<section id="two-middles-and-two-pictures-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="two-middles-and-two-pictures-in-jasp">Two middles and two pictures in JASP</h2>
+<p><span class="begrippen">mean · median · quartiles · histogram · boxplot</span></p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="First as in the book — the twelve stones · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>First as in the book — the twelve stones · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Descriptives</strong>, <code>shine</code> to <strong>Variables</strong>.</li>
+<li>Under <strong>Statistics</strong>, tick: <strong>Median</strong>, <strong>Quartiles</strong>.</li>
+<li>Under <strong>Customizable Plots</strong>: <strong>Boxplots</strong>.</li>
+</ol>
+<p>Median 50, <em>Q</em><sub>1</sub> = 30, <em>Q</em><sub>3</sub> = 70 — the middle half lies in a band of 40 points.</p>
+</div>
+</div>
+<p>The median of the shine is 50, with <em>Q</em><sub>1</sub> = 30 and <em>Q</em><sub>3</sub> = 70: the middle half of the stones sits in a band of 40 points, neatly symmetric around the middle. That’s what a boxplot looks like when nothing odd is going on.</p>
+<p><strong>Now you</strong> — with something you haven’t seen yet: air readings from New York. Those <em>do</em> lean to one side, and that is exactly when the median and the quartiles take on the work the mean fails at.</p>
+<p>Bring the summer in and ask for two things: the middles, and a picture of the whole heap.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · give it a tug · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · give it a tug · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>airquality.csv</code> in JASP (menu top left → Open).</li>
+<li>Click <strong>Descriptives</strong> at the top.</li>
+<li>Drag <code>ozone</code> to the <strong>Variables</strong> box.</li>
+<li>Open the <strong>Statistics</strong> section and, next to <strong>Mean (arithmetic)</strong> (that one is already on), also tick <strong>Median</strong>, <strong>Quartiles</strong> and <strong>Skewness</strong>.</li>
+<li>Open the <strong>Basic Plots</strong> section and tick <strong>Distribution plots</strong>, and under <strong>Customizable Plots</strong> the <strong>Boxplots</strong>.</li>
+</ol>
+</div>
+</div>
+<p>There they are, two middles side by side. The <strong>mean</strong> is 42.1. The <strong>median</strong> — lay all 116 days in order and take the middle one — is 31.5. Eleven points apart — for two numbers that both claim to be ‘the middle’. Add the <strong>quartiles</strong>: a quarter of the days stay below 18, a quarter come out above 63.25; in between lives the middle half of the summer.</p>
+<p>And then the pictures. The histogram is no neat bell but a heap leaning against the left-hand side, with a long stretch trailing off to the right — plenty of clean days, a thin wisp of smog days. The boxplot sums that same heap up in five lines: a box from 18 to 63.25 with the median line low <em>inside</em> that box, a short whisker downwards, a long whisker upwards, and above that two more lone dots: 135 and 168. Everything there is to see points the same way. Up.</p>
+<div class="kicker">
+<p>get it</p>
+</div>
+</section>
+<section id="why-the-tail-lifts-the-mean" class="level2">
+<h2 class="anchored" data-anchor-id="why-the-tail-lifts-the-mean">Why the tail lifts the mean</h2>
+<p><span class="begrippen">right-skewed · balance point · robustness · choice of middle</span></p>
+<p>What you’re looking at is called a <strong>right-skewed</strong> distribution. Careful: the skew is named after the <em>tail</em>, not after the hump. The hump leans left, but the tail points right — towards the high end — so right-skewed. (In a histogram lying flat; in the upright boxplot that same tail points up.)</p>
+<p>And that tail explains the riddle from the hook. The mean, you see, is a <em>balance point</em>: every day pulls on it, and the further a day lies from the middle, the harder it pulls. Those few smog days — seven days of 100 or higher, with 168 as the champion — hang like weights on the end of a lever and lift the mean up to 42.1. The median doesn’t do levers. It only counts who sits above and who sits below, and says, unruffled: the middle day of this summer was 31.5.</p>
+<p>Want to feel how unruffled? Thought experiment: suppose the top day hadn’t been 168 but a disastrous 500. The mean then jumps from 42.1 to 45.0 — one single day pushes the whole ‘middle’ up three points. And the median? It stays at exactly 31.5. There is still exactly one day above it on the high side, and that is all the median cares about. That’s what statisticians call <strong>robust</strong>: unmoved by what happens in the tail.</p>
+<p>There was a hint in the numbers from the start, by the way. The standard deviation from the exercise on the mean is 33.0 here — almost as large as the mean itself. But ozone can’t go below zero: a symmetric bell around 42 with a spread of 33 would sink through the floor on the left. So the distribution <em>couldn’t</em> have been symmetric at all; the skew was already blinking in the summary before we had drawn a single picture.</p>
+<p>When does the mean mislead? Right here — with skewed heaps. And the world is full of them: incomes (a handful of millionaires lifts the ‘average income’ above what almost everyone earns), waiting times, house prices, insurance claims. Wherever a distribution <em>does</em> have a long tail upwards and <em>doesn’t</em> have one downwards, the mean lies above the median and above most people’s experience. Compare it with the penguin weight from the exercise on the mean: mean 4202 grams, median 4050 — a few per cent apart, take your pick, it hardly mattered there. Here the difference is a third of the median. Hence the rule of this exercise: <strong>look at the shape of the heap first, and only then choose your middle.</strong></p>
+<p>One more nuance, because ‘the mean misleads’ is <em>also</em> too quick a verdict. Neither middle is wrong; they answer different questions. If you want to know how much ozone the city had to cope with that summer <em>in total</em>, the mean is exactly right — mean times number of days <em>is</em> the total, tail and all. If you want to know what a typical day was, what you’ll probably be breathing tomorrow, then the median should do the talking. In plain words: <em>“the middle summer day had 31.5 parts of ozone per billion, but a handful of smog days — up to 168 — pulled the mean up to 42.”</em> Whoever reports only ‘a mean of 42’ tells you about the tail and keeps quiet about the summer.</p>
+<div class="kicker">
+<p>your turn</p>
+</div>
+</section>
+<section id="from-smog-to-wind" class="level2">
+<h2 class="anchored" data-anchor-id="from-smog-to-wind">From smog to wind</h2>
+<p><span class="begrippen">median · quartiles · boxplot · describing shape</span></p>
+<p>Your turn — from smog to wind. <code>airquality.csv</code> also holds the column <code>wind</code> (wind speed in miles per hour, the same 116 days). The same measures, a different heap — and this one is nowhere near as skewed.</p>
+<p>First set up the analysis below, then answer the questions. In brackets, each time, is what belongs in a complete answer, so you can check yourself without opening our answer. Where it says <em>more than one answer is right</em>, the wording is up to you — for the rest, the answer is fixed. The last one is called <strong>Z)</strong> again: the assumptions always come last. And under <em>Exam-style questions</em>, at the end of this exercise, the same topics come round once more, in the form an exam would ask them in.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · the wind">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · the wind
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>In the same <strong>Descriptives</strong> analysis, drag <code>wind</code> to the <strong>Variables</strong> box (and <code>ozone</code> out).</li>
+<li>Under <strong>Statistics</strong>, <strong>Median</strong> and <strong>Quartiles</strong> are already on; leave <strong>Mean (arithmetic)</strong> on as well. To check: <em>Mdn</em> = 9.70 with <em>Q</em><sub>1</sub> = 7.40 and <em>Q</em><sub>3</sub> = 11.50.</li>
+<li>Under <strong>Basic Plots</strong> the <strong>Distribution plots</strong> and under <strong>Customizable Plots</strong> the <strong>Boxplots</strong> are still on; leave them on.</li>
+</ol>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Your turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Look up the median and the two quartiles of the wind. (three numbers, to two decimal places)</p>
+<p><strong>b)</strong> Work out the <em>IQR</em>. Why is that one number and not two? (one number, and one sentence)</p>
+<p><strong>c)</strong> Work out the mean as well and subtract the median from it. (two numbers, and which way the difference points)</p>
+<p><strong>d)</strong> Do that same subtraction for the ozone from this exercise. (one number, and one sentence on how the two compare)</p>
+<p><strong>e)</strong> How many of the 116 days lie <em>above</em> their own mean — for the wind, and for the ozone? (two numbers, each also as a percentage)</p>
+<p><strong>f)</strong> Look at the boxplot of the wind. How many lone dots stand outside it, and on which side? (one number, the side, and the values themselves)</p>
+<p><strong>g)</strong> At c) the wind looked almost symmetric, and yet all the dots stand on one side. Do those two contradict each other? (one sentence; whether you call 0.16 ‘almost symmetric’ is up to you, which way it points is not)</p>
+<p><strong>h)</strong> Look up the minimum and the maximum and set the distance between them next to the <em>IQR</em>. (three numbers, and one sentence on why they lie so far apart)</p>
+<p><strong>i)</strong> Which middle would you report for the wind, and which for the ozone? (two choices, with one sentence per choice)</p>
+<p><strong>j)</strong> Put the rule of thumb of this exercise into your own words. (one sentence, with the word <em>shape</em> in it; more than one answer is right)</p>
+<p><strong>k)</strong> Write a conclusion about what it all means, in no more than five sentences. (about the summer of 1973 — a number is allowed, as long as the unit is next to it; more than one answer is right)</p>
+<p><strong>Z) Can you believe everything above?</strong> Check:</p>
+<ul>
+<li>are there readings missing in this column, and what does your program do then?</li>
+<li>does every day measure the same thing — the same box, the same unit?</li>
+<li>is this one heap, or are there seasons running through it?</li>
+</ul>
+<p>And then the question that always belongs at the end: if something goes wrong, which answers above do you redo, and which may stand?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <em>Mdn</em> = <strong>9.70</strong>, with <em>Q</em><sub>1</sub> = <strong>7.40</strong> and <em>Q</em><sub>3</sub> = <strong>11.50</strong>. So the middle half of the summer days lives between a little over seven and eleven and a half miles per hour.</p>
+<p><strong>b)</strong> <em>IQR</em> = 11.50 − 7.40 = <strong>4.10</strong>. It’s one number because it isn’t the box itself but its <strong>width</strong> — <em>Q</em><sub>1</sub> and <em>Q</em><sub>3</sub> tell you where the box lies, the <em>IQR</em> tells you how wide it is. That distinction is worth holding on to: two summers can have the same <em>IQR</em> and still lie somewhere else entirely.</p>
+<p><strong>c)</strong> <em>M</em> = <strong>9.86</strong>, and 9.86 − 9.70 = <strong>0.16</strong>. So the mean lies a fraction <strong>above</strong> the median — the same way round as with the ozone, but by sixteen hundredths of a mile per hour instead of a good ten parts per billion.</p>
+<p><strong>d)</strong> Ozone: 42.13 − 31.50 = <strong>10.63</strong>. That is <strong>65.59</strong> times the 0.16 of the wind — divide the two rounded numbers on this line and you get 66, and that small difference is exactly why you round only at the end. The two columns come from the same file and cover the same 116 days. But those two differences are in different units — miles per hour against parts per billion — so that ‘sixty-six times’ puts apples next to oranges. If you want to lay them side by side fairly, divide each difference by the spread of its own column: for the wind that gives <strong>0.045</strong> and for the ozone <strong>0.322</strong>. Those are two numbers without a unit, and <em>those</em> you may compare — the ozone remains a good <strong>seven</strong> times as skewed as the wind.</p>
+<p><strong>e)</strong> Wind: <strong>54</strong> of the 116 days, or <strong>46.6%</strong> — nearly half, as it should be with a neat heap. Ozone: <strong>44</strong> of the 116, or <strong>37.9%</strong>. That second number was the whole hook of this exercise: an ‘average day’ that most days don’t reach.</p>
+<p><strong>f)</strong> <strong>Three</strong> dots, all three at the <strong>top</strong>: <strong>18.4</strong>, <strong>20.1</strong> and <strong>20.7</strong> miles per hour. At the bottom there isn’t a single one, and there hardly <em>could</em> be — the fence there lies at 7.40 − 1.5 × 4.10 = <strong>1.25</strong>, and the calmest day of the summer still managed <strong>2.3</strong>. Mind the difference between those two numbers: 1.25 is the <strong>fence</strong>, and the <strong>whisker</strong> runs to the furthest day that still falls inside that fence. So the lower whisker ends here at 2.3 and not at 1.25.</p>
+<p><strong>g)</strong> More than one answer is right, because the question hangs on a judgement: whether you find 0.16 miles per hour <em>‘almost symmetric’</em> is up to you. The direction is not. So no — the dots and the two middles point the same way, only much more gently. The wind too leans a little to the right; that’s exactly what the 0.16 at c) was already telling you. The difference from the ozone is not a difference in <em>direction</em> but in <em>degree</em>: skewness is not a switch that’s on or off. That degree is the soft part of the answer, and that’s why an exam can’t ask for it. The direction it can — see the exam-style questions at the end.</p>
+<p><strong>h)</strong> Minimum <strong>2.3</strong>, maximum <strong>20.7</strong>, so a distance of <strong>18.4</strong> — a good four times the <em>IQR</em> of 4.10. That’s as it should be: the distance between the extremes hangs on exactly two days, and there is nothing typical about the wilder of the two. The <em>IQR</em> counts only the middle half and pays those two no attention at all. That’s the same robustness the median showed with the ozone.</p>
+<p><strong>i)</strong> For the <strong>wind</strong> it makes no difference — the two middles differ by 0.16, so by all means pick the mean, with the standard deviation beside it. For the <strong>ozone</strong> the median should do the talking, with the quartiles beside it, because there the two middles are a third apart and the mean says more about the seven smog days than about the summer.</p>
+<p><strong>j)</strong> More than one answer is right; there’s no prescribed wording. For example: <em>look at the shape of the heap first, and only then choose your middle</em> — and if the mean and the median barely differ, the shape has just told you that the choice doesn’t matter.</p>
+<p><strong>k)</strong> More than one answer is right. Numbers are allowed — the point is that next to every number it says what it measures, because ‘9.70’ is nothing and ‘9.70 miles per hour on the middle day’ is a summer. For example: in the summer of 1973 the wind on Roosevelt Island blew at 9.70 miles per hour on the middle day, and half of all days sat between 7.40 and 11.50 miles per hour. That heap is nearly symmetric: the mean lies 0.16 miles per hour above the middle day, on a range running from 2.3 to 20.7. Three days stuck out at 18.4, 20.1 and 20.7 miles per hour, but they barely dragged the middle along. For the ozone from the same summer the mean lay 10.63 parts per billion above the middle day — the same 116 days, two columns, two shapes.</p>
+<p><strong>Z)</strong> Yes, and just as in <a href="../20_blokken/blok_gemiddelde_spreiding.html">Exercise 1.1</a> without a distributional assumption: nothing here has been tested, only described. Each of the three questions does take a bite out of it here, though.</p>
+<ul>
+<li><strong>Stands:</strong> a) up to and including j). In the column <code>wind</code> not one of the 116 readings is missing, so you’re working with every day. That can’t be taken for granted here: in the column <code>solar_r</code> of <em>this</em> file, five are missing. What your program does with a gap like that — refuse, or quietly carry on — you can read in the box <em>What is switched on?</em> of <a href="../20_blokken/blok_gemiddelde_spreiding.html">Exercise 1.1</a>.</li>
+<li><strong>Stands, with a warning attached:</strong> the median of 9.70 as <em>‘the typical summer day’</em>, and with it k). These 116 days run from May to September, and that is not one homogeneous heap: per month the median lies at 11.50 (May), 11.50 (June), 7.70 (July), 8.00 (August) and 10.30 (September). So there is clearly less wind in July and August than in spring. That 9.70 is a correct number for the summer as a whole, and at the same time a day that is not particularly typical of any single month — exactly the same pitfall as the mean that mixed three penguin species.</li>
+</ul>
+<p>What does <em>not</em> fall over is the measuring itself: it’s one box on one island, the same every day, in the same unit. That’s the dullest of the three questions and usually the most important — change what you’re measuring halfway through, and no measure of spread can help you any more.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>reporting</p>
+</div>
+</section>
+<section id="write-it-up-like-a-researcher" class="level2">
+<h2 class="anchored" data-anchor-id="write-it-up-like-a-researcher">Write it up like a researcher</h2>
+<p><span class="begrippen"><em>Mdn</em> · <em>IQR</em> · reporting a skewed distribution</span></p>
+<div class="apa callout callout-style-default callout-note callout-titled" title="Reporting">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reporting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remember from <a href="../20_blokken/blok_gemiddelde_spreiding.html">Exercise 1.1</a>: reporting is a <strong>shopping list in sentence form</strong>. But with a skewed heap there’s something different on the list: not <em>M</em> and <em>SD</em>, but the shape, the median and the quartiles. Look:</p>
+<blockquote class="blockquote">
+<p>The ozone concentration (in ppb) on the 116 measured summer days was right-skewed (<em>Mdn</em> = 31.50, <em>IQR</em> = 45.25; the middle half of the days lay between <em>Q</em><sub>1</sub> = 18.00 and <em>Q</em><sub>3</sub> = 63.25).</p>
+</blockquote>
+<p>That’s it. One sentence that stands on its own feet: which days, which variable, the shape, the robust middle, and in brackets the box of the boxplot — how wide it is and where it lies. <em>Mdn</em> is the proper abbreviation for the median. <em>Q</em><sub>1</sub> and <em>Q</em><sub>3</sub> are the lower and the upper quartile: the two edges of the box. And <em>IQR</em> (<em>interquartile range</em>) is not that box itself but its <strong>width</strong> — 63.25 − 18.00 = 45.25. In the model sentence <em>only</em> the symbols are in italics; the ordinary words stay upright. And do you see what’s quietly going on? By reporting the median instead of the mean, the whole shape story is already tucked away inside the sentence.</p>
+<p>Your turn: write a sentence like that yourself for the wind, in miles per hour (<em>Mdn</em> = 9.70, <em>IQR</em> = 4.10; the middle half of the days lay between <em>Q</em><sub>1</sub> = 7.40 and <em>Q</em><sub>3</sub> = 11.50). Choose deliberately <em>which</em> middle you report, now that you know the shape.</p>
+</div>
+</div>
+<div class="kicker">
+<p>exam practice</p>
+</div>
+</section>
+<section id="exam-style-questions" class="level2">
+<h2 class="anchored" data-anchor-id="exam-style-questions">Exam-style questions</h2>
+<p><span class="begrippen">choice of middle · robustness · 1.5 × <em>IQR</em> · direction of the skew</span></p>
+<p>These six have the form an exam would ask this topic in: four options, and exactly one is the best — the other three may well be true and still not the best answer. Only question 3 needs any arithmetic.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Exam-style questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exam-style questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> You’re reporting the ozone of these 116 days and have to choose one middle. Which description is the best?</p>
+<ol type="a">
+<li>The median, because with a skewed distribution you aren’t allowed to use the mean.</li>
+<li>The median, because it gives the typical day, while the smog days have pulled the mean upwards.</li>
+<li>The mean, because it uses all 116 days and the median throws information away.</li>
+<li>It makes no difference: <em>M</em> = 42.13 and <em>Mdn</em> = 31.50 lie less than one standard deviation (<em>SD</em> = 32.99) apart.</li>
+</ol>
+<p><strong>2.</strong> In the boxplot of the wind there are three lone dots, all three at the top, and the mean lies 0.16 miles per hour above the median. Which statement about the shape of the wind heap is the best?</p>
+<ol type="a">
+<li>The wind heap is symmetric; three lone dots on one side say nothing about the shape.</li>
+<li>The wind heap leans slightly to the right: the dots and the two middles point the same way.</li>
+<li>The wind heap is right-skewed, because as soon as there are dots on one side a distribution is skewed.</li>
+<li>The wind heap is left-skewed, because the median (9.70) lies below the mean (9.86).</li>
+</ol>
+<p><strong>3.</strong> For the wind, <em>Q</em><sub>1</sub> = 7.40 and <em>Q</em><sub>3</sub> = 11.50 miles per hour, so <em>IQR</em> = 4.10 miles per hour. A day counts as a lone point above the whisker as soon as it comes out above <em>Q</em><sub>3</sub> + 1.5 × <em>IQR</em>. Which of these four wind days is the lowest one that still lies above that?</p>
+<ol type="a">
+<li>14.9 miles per hour</li>
+<li>16.6 miles per hour</li>
+<li>18.4 miles per hour</li>
+<li>20.1 miles per hour</li>
+</ol>
+<p><strong>4.</strong> In your mind, lift the top day of the ozone from 168 to 500 ppb. The mean then climbs from 42.13 to 44.99, and the median stays put at 31.50. What is the reason?</p>
+<ol type="a">
+<li>The median counts how many days lie above and below, not how far away they lie.</li>
+<li>The median leaves days out of the calculation as soon as they come out above <em>Q</em><sub>3</sub> + 1.5 × <em>IQR</em>.</li>
+<li>The median is calculated over the middle half of the days, so the tail doesn’t count.</li>
+<li>The median stays put as long as there are equally many days on both sides.</li>
+</ol>
+<p><strong>5.</strong> The <em>IQR</em> of the ozone is 45.25 ppb and that of the wind 4.10 miles per hour. What does the <em>IQR</em> say about a distribution?</p>
+<ol type="a">
+<li>Where the middle half of the readings lies.</li>
+<li>How wide the middle half of the readings is.</li>
+<li>The difference between the highest and the lowest reading, divided by four.</li>
+<li>How far the furthest lone point lies from the median.</li>
+</ol>
+<p><strong>6.</strong> Of the ozone you know only this: the mean is 42.13 ppb, the highest day was 168 ppb, and an ozone reading can’t go below zero. What may you conclude from that about the shape of the ozone heap, <em>before</em> you have drawn a single picture?</p>
+<ol type="a">
+<li>Nothing — for the shape of a distribution you need a histogram or a boxplot.</li>
+<li>The ozone heap can’t be symmetric: a day as far <em>below</em> the mean as 168 is above it would come out at −83.74 ppb.</li>
+<li>The ozone heap is symmetric, because 42.13 lies roughly midway between zero and the highest day.</li>
+<li>The ozone heap is left-skewed, because there’s more room above the mean than below it.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 b · 2 b · 3 c · 4 a · 5 b · 6 b</strong></p>
+<p>Below, for each question, is <em>why</em> — and why the other three options are tempting. If you got one right, you can skip it.</p>
+<p><strong>1. b.</strong> The median gives the typical day, and the seven days of 100 ppb or higher have pulled the mean to 42.13. <strong>a</strong> picks the same middle on the strength of a ban that doesn’t exist: a mean <em>is</em> allowed with a skewed heap, it just answers a different question. If you want to know how much ozone the city had to cope with that summer in total, the mean is exactly right — mean times number of days <em>is</em> that total. That’s the difference between <em>wrong</em> and <em>a different question</em>, and an exam asks about that difference. <strong>c</strong> is right in what it claims — the mean really does use all 116 days — and draws the wrong conclusion from it; ‘more days included’ is not the same as ‘better middle’. <strong>d</strong> tempts you with a real calculation: 10.63 really is less than 32.99. But that says nothing, because that <em>SD</em> of 32.99 is itself inflated by the very tail that causes the problem.</p>
+<p><strong>2. b.</strong> Direction: right. Degree: small. <strong>a</strong> throws the dots away while they count as a clue. <strong>c</strong> turns skewness into a switch that’s on or off, and it isn’t one — the wind leans the same way as the ozone, and a seventh as far. <strong>d</strong> has the right reason and the wrong label: the median lying below the mean is exactly what right-skewed means. That’s the confusion that names the skew after the hump instead of after the tail.</p>
+<p><strong>3. c.</strong> The fence lies at 11.50 + 1.5 × 4.10 = 17.65 miles per hour, and 18.4 is the lowest wind day that comes out above it. <strong>a</strong> and <strong>b</strong> are both days of hard wind that <em>still</em> fall inside the whisker — 14.9 and 16.6 stay below 17.65, and high here is not the same as lone point. That <strong>b</strong> lies so close is no accident: 16.6 is the highest day that still just falls inside, and that one draws the end of the line. So the whisker stops at 16.6 and not at 17.65. <strong>d</strong> <em>is</em> a lone point, only not the lowest of the three — the question asks for the first one that falls outside, not the worst.</p>
+<p><strong>4. a.</strong> The median counts places in the row, not distances. Whether the top day is 168 or 500: equally many days lie above the median, so the middle day doesn’t change. The mean <em>does</em> count distances, and so climbs to 44.99. <strong>b</strong> confuses robustness with crossing out: the 1.5 × <em>IQR</em> rule decides what gets <em>drawn</em> as a lone point in a boxplot, but the median throws nothing away — that 500 simply takes part, it just counts as one day and not as a far-off day. <strong>c</strong> mixes the median up with the <em>IQR</em>; the median uses all 116 days. (And it gives a different number: the median of only the middle half is 31.00, not 31.50.) <strong>d</strong> sounds right and can’t be: above and below the median there are by definition always equally many days — that’s what a median <em>is</em>, not a condition it has to meet.</p>
+<p><strong>5. b.</strong> The <em>IQR</em> is <em>Q</em><sub>3</sub> − <em>Q</em><sub>1</sub>, so the width of the box. <strong>a</strong> is the answer almost everyone gives first, and it’s the <em>position</em>: where the middle half lies is what <em>Q</em><sub>1</sub> and <em>Q</em><sub>3</sub> tell you. Two summers can have the same <em>IQR</em> of 4.10 and still lie somewhere else entirely. <strong>c</strong> sounds like a quartile sum but isn’t one; the range divided by four hangs on the two extreme days, and that’s exactly what the <em>IQR</em> doesn’t do. <strong>d</strong> measures from the median to a lone point and so uses the tail, of all things.</p>
+<p><strong>6. b.</strong> In a symmetric heap, for every day <em>above</em> the mean there’s a day just as far below it. The top day of 168 lies 168 − 42.13 = 125.87 above the mean, so its mirror image would lie at 42.13 − 125.87 = −83.74 ppb. No such day exists: ozone stops at zero. So the heap <em>can’t</em> be symmetric, and you knew that before the histogram. <strong>a</strong> is the safe habit and too modest here: a floor that nature lays down is itself information about the shape. <strong>c</strong> is the most tempting, because it sounds like a test for symmetry — but work it out: the midpoint between zero and the highest day lies at 84.00 ppb, and the mean lies at 42.13 ppb, so 41.87 ppb lower. In a symmetric heap those two coincide. That they lie so far apart here points <em>to</em> skewness. <strong>d</strong> sniffs out the skew correctly and sticks the wrong label on it: the room is at the top, so the tail points right, and that’s called right-skewed.</p>
+<p>If you want to see for yourself where the numbers from these six questions come from: the sums in answers 3 and 6 are written out in full above, and those you can check with your calculator. Question 4 can be done with the calculator too, and then you see straight away <em>why</em> the mean shifts. The mean is the sum of all 116 days, divided by 116. If one day becomes 500 − 168 = 332 ppb heavier, the mean shifts by 332 / 116 = 2.86: 42.13 + 2.86 = 44.99. The median doesn’t shift, because the middle day stays the same day.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · the wind days around the fence">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · the wind days around the fence
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Click the <a href="../90_basishandelingen.html#filteren">funnel</a> above the data and type in the <strong>R</strong> box <code>wind &lt;= 17.65</code>. Put <code>wind</code> in <strong>Descriptives</strong>: next to <em>Maximum</em> you’ll find 16.600, the highest day that still falls inside the whisker.</li>
+<li>Change the filter to <code>wind &gt; 17.65</code>: next to <em>Minimum</em> you’ll find 18.400, the lowest that falls outside.</li>
+<li>Switch the filter off again afterwards — otherwise everything after this is computed on only a handful of days.</li>
+</ol>
+</div>
+</div>
+<p>And this is how you check the two numbers from answer d) of <em>Your turn</em>: divide the difference between mean and median by the standard deviation of the same column, as <strong>Descriptives</strong> shows it.</p>
+<ul>
+<li>wind: 0.16 / 3.575 = 0.045</li>
+<li>ozone: 10.63 / 32.988 = 0.322</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W2">
+<p>◠ <strong>Same shape in the book</strong></p>
+<p>Here: two middles pulling apart, and the heap that gives away why.</p>
+<p>In the book: <strong><a href="https://countcamp.org/en/book/h2.html">Chapter 2 — The Shape of the Heap</a></strong></p>
+<p><em>There you learn to read distributions before you summarise them — first the shape, then the number that may stand for the shape.</em></p>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Daily ozone readings in ppb (parts per billion) on Roosevelt Island, New York, May–September 1973; New York State Department of Conservation / National Weather Service. Available as the classic R dataset <code>airquality</code>; these are the 116 days on which the ozone reading succeeded. Every number in this exercise has been recomputed on that real data.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="pagination-link" aria-label="Exercise 1.1 · The mean and the standard deviation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Exercise 1.1 · The mean and the standard deviation</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_correlatie_scatterplot.html" class="pagination-link" aria-label="Exercise 3.1 · Correlation and the scatterplot">
+        <span class="nav-page-text">Exercise 3.1 · Correlation and the scatterplot</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ contents':'⌫ hide contents';">⌫ hide contents</button>
+
+
+
+
+</body></html>
+<!-- countcamp-oefenboek jasp lab-commit=45ef2ee911a7e01f364602aa9f40e556aaaff302 geleverd=2026-11-28T12:08:50 -->

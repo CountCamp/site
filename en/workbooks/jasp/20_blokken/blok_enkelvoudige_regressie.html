@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 3.2 · Simple regression – The JASP Exercise Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_residuen.html" rel="next">
+<link href="../20_blokken/blok_correlatie_scatterplot.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+<link rel="stylesheet" href="../werkboek_en.css">
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_enkelvoudige_regressie.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/workbooks/jasp/20_blokken/blok_enkelvoudige_regressie.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_enkelvoudige_regressie.html">
+<style>
+/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
+.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
+.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.taalwissel-los [aria-current]{font-weight:600;}
+.taalwissel-los .taalwissel-sep{margin:0 .45em;}
+</style>
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+<nav class="taalwissel taalwissel-los" aria-label="language"><a href="../../../../oefenboeken/broertjes/jasp/20_blokken/blok_enkelvoudige_regressie.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Second movement · Coupling differences</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">Chapter 3 · The Little Rectangle</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_enkelvoudige_regressie.html">Exercise 3.2 · Simple regression</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The JASP Exercise Book</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/book/h0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Back to the book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The JASP Exercise Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">First movement · Difference under the microscope</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 0 · In the Beginning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.0 · Installing &amp; setting up</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.1 · Looking at the data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 1 · The Average Gulp</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 1.1 · The mean and the standard deviation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 2 · The Shape of the Heap</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 2.1 · Median, quartiles and skewness</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Second movement · Coupling differences</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Chapter 3 · The Little Rectangle</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.1 · Correlation and the scatterplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Exercise 3.2 · Simple regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.3 · Looking at the residuals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic moves in JASP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../91_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Shuffle toys</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/toys/shuffle-correlation.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Shuffle the correlation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+<p class="beweging">Second movement · Coupling differences</p>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Second movement · Coupling differences</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">Chapter 3 · The Little Rectangle</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_enkelvoudige_regressie.html">Exercise 3.2 · Simple regression</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Exercise 3.2 · Simple regression</h1>
+<p class="subtitle lead">One continuous predictor, one straight line, and what the direction costs</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">In this exercise</h2>
+   
+  <ul>
+  <li><a href="#fifty-grams-or-a-hundredth-of-a-millimetre" id="toc-fifty-grams-or-a-hundredth-of-a-millimetre">Fifty grams, or a hundredth of a millimetre?</a></li>
+  <li><a href="#draw-the-line-in-jasp" id="toc-draw-the-line-in-jasp">Draw the line in JASP</a></li>
+  <li><a href="#who-predicts-whom" id="toc-who-predicts-whom">Who predicts whom</a></li>
+  <li><a href="#the-penguins-and-what-the-direction-costs-you" id="toc-the-penguins-and-what-the-direction-costs-you">The penguins, and what the direction costs you</a></li>
+  <li><a href="#predict-a-person-from-a-questionnaire" id="toc-predict-a-person-from-a-questionnaire">Predict a person from a questionnaire</a></li>
+  <li><a href="#exam-style-questions" id="toc-exam-style-questions">Exam-style questions</a></li>
+  </ul>
+</nav>
+<div class="datastrook">
+<p><strong>Data for this exercise</strong> — <a href="../10_data/stones.csv" download="stones.csv">stones.csv</a> the twelve stones from the book · <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 penguins · <a href="../10_data/bigfive.csv" download="bigfive.csv">bigfive.csv</a> 2634 completed questionnaires · <a href="../91_datasets.html">what each column means</a></p>
+</div>
+<div class="kicker">
+<p>hook</p>
+</div>
+<section id="fifty-grams-or-a-hundredth-of-a-millimetre" class="level2">
+<h2 class="anchored" data-anchor-id="fifty-grams-or-a-hundredth-of-a-millimetre">Fifty grams, or a hundredth of a millimetre?</h2>
+<p><span class="begrippen">slope · units · the direction of the question</span></p>
+<p>The same 342 penguins as in <a href="../20_blokken/blok_correlatie_scatterplot.html">Exercise 3.1</a>, the same two columns: flipper length in millimetres, weight in grams. And now two numbers, both worked out properly, both on the same data.</p>
+<p>Ask how weight goes along with flipper length, and out comes: <strong>49.69 grams per millimetre</strong>. A penguin with one millimetre more flipper weighs almost fifty grams more.</p>
+<p>Ask it the other way round — how flipper length goes along with weight — and out comes: <strong>0.01528 millimetres per gram</strong>.</p>
+<p>Two numbers about the same bunch of animals. And if they said the same thing, then the one would have to be the other <strong>upside down</strong>. Do it with round numbers for a moment: <em>fifty grams per millimetre</em> is exactly the same message as <em>a fiftieth of a millimetre per gram</em>, or 0.02. Divide one way, divide back the other — the same ratio, read from the other end.</p>
+<p>Now check it with the real numbers: 1 / 0.01528 comes out at <strong>65.45</strong>.</p>
+<p>And 65.45 is not 49.69. There’s a good fifteen grams per millimetre between them, and that gap didn’t creep in — it’s there because something was decided along the way. With the correlation in Exercise 3.1 you could have turned that round without anything happening: the association between bill length and bill depth is the same number, whichever of the two you put first.</p>
+<p>Not here. Come along for a moment: we’re going to find out <em>what</em> gets decided, who decides it, and what it costs.</p>
+<div class="kicker">
+<p>play with it</p>
+</div>
+</section>
+<section id="draw-the-line-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="draw-the-line-in-jasp">Draw the line in JASP</h2>
+<p><span class="begrippen">regression line · intercept · slope · predicted value</span></p>
+<p>A line through a cloud — you already saw one lying there in Exercise 3.1. Now you’re going to <em>read</em> it. One question makes it small straight away: <em>if you had to tell someone who can’t see the picture how that line runs, how many things would you have to say?</em> Two. Where it starts, and how steep it is. A straight line has nothing more.</p>
+<p>Those two have names. The <strong>intercept</strong> (<em>b</em><sub>0</sub>) is where the line meets the vertical axis. The <strong>slope</strong> (<em>b</em><sub>1</sub>) is how much the outcome changes when the predictor moves one unit along.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="First as in the book — the twelve stones · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>First as in the book — the twelve stones · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>stones.csv</code>.</li>
+<li><strong>Regression → Linear Regression</strong>: <code>shine</code> to <strong>Dependent Variable</strong>, <code>carat</code> to <strong>Covariates</strong>.</li>
+<li>Under <strong>Statistics</strong>, <em>Model fit</em> is already ticked.</li>
+</ol>
+<p>In <strong>Coefficients</strong> it says <code>(Intercept)</code> −1.429 and <code>carat</code> 32.143. In <strong>Model Summary</strong> it says <em>R</em>² = 0.334 and <em>RMSE</em> = 18.613.</p>
+<p>JASP shows three decimals everywhere, and that is exactly enough — except for one number, and that one comes along in a moment.</p>
+</div>
+</div>
+<p>And look straight away at what JASP just had you do. You dragged <code>shine</code> into a box called <strong>Dependent Variable</strong>, and <code>carat</code> into a box called <strong>Covariates</strong>. Two different boxes, and you had to choose. That choice isn’t layout — it <em>is</em> the choice this exercise is about.</p>
+<p>So the line reads: shine = −1.43 + 32.14 × carat. A stone one carat heavier shines a good thirty-two points more.</p>
+<p>And now you can do something you couldn’t in Exercise 3.1: <strong>give a number to a stone you haven’t looked at.</strong> Put in a carat and the line spits out a shine.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · a 2-carat stone">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · a 2-carat stone
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>JASP has no button for this, and you don’t need one: this is adding and multiplying with the two numbers from <strong>Coefficients</strong>.</p>
+<p>−1.429 + 32.143 × 2 = 62.857</p>
+</div>
+</div>
+<p>The line is a <strong>little machine, a factory</strong>: something goes in, the factory multiplies it by the slope, adds the intercept, and spits it out. And mind where you start — you start at the carat, and the shine rolls out. Not the other way round.</p>
+<section id="now-do-it-wrong-on-purpose" class="level3">
+<h3 class="anchored" data-anchor-id="now-do-it-wrong-on-purpose">Now do it wrong on purpose</h3>
+<p>Because that’s the move this exercise makes. Swap the two variables round and see what happens.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · swap the two boxes · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · swap the two boxes · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Same analysis, but now <code>carat</code> to <strong>Dependent Variable</strong> and <code>shine</code> to <strong>Covariates</strong>. In <strong>Coefficients</strong> it says <code>(Intercept)</code> 1.081, and next to <code>shine</code> it says <code>0.010</code>.</p>
+<p>And <em>there</em> is the one number for which three decimals aren’t enough. One divided by 0.010 is 100, and that is not what ought to be there. Go to <strong>Preferences → Results</strong>, tick <strong>Fix the number of decimals</strong> and set it to <strong>5</strong>: now next to <code>shine</code> it says <strong>0.01038</strong>. Turn <em>that</em> one upside down — 1 / 0.01038 — and out comes <strong>96.34</strong>. Not 32.14. (After that your decimals can go back to three; only this slope needs five, and in a moment the penguins’ slope does too.)</p>
+<p>But look at <strong>Model Summary</strong> at the same time: <em>R</em>² is still 0.334, to the last decimal. And if you ask for the correlation in <strong>Regression → Correlation</strong>, it is 0.578 both ways.</p>
+</div>
+</div>
+<p>Look carefully at those four results, because they seem to contradict each other. The correlation is the same number both ways. <em>R</em>² is the same number both ways. And the <strong>line</strong> is not — a good 96 against 32.14, a factor of three.</p>
+<p>That’s exactly what happened with the penguins in the hook, only there it was less noticeable: 65.45 against 49.69. Twelve stones, three hundred and forty-two animals, the same phenomenon. So not a coincidence, and not a quirk of one dataset.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="First the twelve stones">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>First the twelve stones
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two questions before you read on — five minutes at most, and they sharpen the rest of this page.</p>
+<p><strong>a)</strong> Multiply the two slopes by each other: 32.14 times 0.01038. (one number, and say which familiar number from this page that is)</p>
+<p><strong>b)</strong> Subtract the mean from every carat and draw the line again (make a column <code>carat_c</code> with <code>carat - mean(carat)</code> and put it in <strong>Covariates</strong>). What does the intercept become? (one number, and say where you saw it before)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> .33 — and that is the <em>R</em>² of this model. Not roughly: that’s it. Two slopes multiplied by each other give the share of the differences that the line covers. <em>Why</em> that is so comes below.</p>
+<p>32.14 × 0.01038 = .3336 — and <strong>Model Summary</strong> said 0.334. That difference of four ten-thousandths is the rounding of the two slopes, not a different number.</p>
+<p><strong>b)</strong> <strong>50.00</strong>, and that is, to the last decimal, the mean shine across all twelve stones. That’s no fluke either, and that too comes below.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run the same <strong>Linear Regression</strong> with <code>carat_c</code> in <strong>Covariates</strong>. In <strong>Coefficients</strong> it says <code>(Intercept)</code> 50.000 and <code>carat_c</code> 32.143; <strong>Descriptives</strong> says that <code>shine</code> has a mean of 50.000.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>get it</p>
+</div>
+</section>
+</section>
+<section id="who-predicts-whom" class="level2">
+<h2 class="anchored" data-anchor-id="who-predicts-whom">Who predicts whom</h2>
+<p><span class="begrippen">dependent variable · independent variable · the empty address · centring</span></p>
+<p>Now the names, and only now — you’ve already had the thing itself in your hands.</p>
+<p>The variable you put in is called the <strong>independent variable</strong>, also the <strong>predictor</strong>; in JASP that is the <strong>Covariates</strong> box. The variable that rolls out is called the <strong>dependent variable</strong>, also the <strong>outcome</strong>; which is why, in JASP, that box is simply called <strong>Dependent Variable</strong>. Here <em>x</em> is the beginning — think of it as the cause, even though you may never call it that — and <em>y</em> the effect. Note that those two warnings belong together: you <em>may</em> think cause in order to remember the direction, and you may not write it down that way. The arrow is in your head and in your question, not in the data.</p>
+<p>Because that’s what the swap test showed. The correlation you could turn round without anything changing: <em>r</em> = .58 forward, <em>r</em> = .58 back. That measure is <strong>symmetric</strong> — it knows no direction, so it doesn’t force you into anything either. A regression line is not. By dragging <code>shine</code> into the <em>Dependent</em> box you’ve said: <em>the carat I know, the shine I want to know.</em> Drag them the other way round and you’re asking a different question, and a different question gets a different answer.</p>
+<p>And then the question that comes by itself: which of the two lines is the right one, then? Neither, and both. If you want to guess the shine of a stone that’s sitting on the scales, 32.14 is the right one. If you want to guess the weight of a stone whose shine you’ve looked at, 0.01038 is the right one. There is no third line that is ‘the real relationship’ and that these two are approximations of.</p>
+<section id="together-the-two-slopes-know-exactly-how-good-the-line-is" class="level3">
+<h3 class="anchored" data-anchor-id="together-the-two-slopes-know-exactly-how-good-the-line-is">Together, the two slopes know exactly how good the line is</h3>
+<p>That was question a) above, and this is why it works. You have the slope forward (32.14) and the slope back (0.01038), and those two times each other give .33 — the <em>R</em>² of this model. Not roughly: that’s it.</p>
+<p>It follows from the bridge the book builds in this chapter. Forward, the slope is <em>r</em> · <em>S<sub>y</sub></em>/<em>S<sub>x</sub></em>; back, it’s <em>r</em> · <em>S<sub>x</sub></em>/<em>S<sub>y</sub></em> — the same <em>r</em>, and the two spreads exactly the other way up. Multiply them and the spreads cancel out. What’s left is <em>r</em> × <em>r</em>, and that is <em>R</em>².</p>
+</section>
+<section id="the-empty-address" class="level3">
+<h3 class="anchored" data-anchor-id="the-empty-address">The empty address</h3>
+<p>Look again at the intercept of the diamond line: <strong>−1.43</strong>. Take it literally. A stone of zero carats, according to this line, shines minus one and a half points — a stone that weighs nothing and shines less than nothing.</p>
+<p>That’s not a calculation error and not a bad line. It’s an <strong>address where nobody lives</strong> — and here, even an address that <em>can’t</em> exist. The lightest stone in this file is 1 carat, the heaviest 2.1. Zero lies a whole carat outside anything that was ever weighed; the line has been neatly extended that far, but nobody has ever looked.</p>
+<p>The intercept can always be read as the prediction for someone who scores zero on the predictor. That is always true. The only question is: what does that zero mean? Here zero means: a stone that isn’t there. So the intercept is true <em>and</em> worthless, at the same time.</p>
+<p>There is one move that repairs that, and it’s nothing more than a subtraction. <strong>Centring</strong>: subtract the mean from every carat, so that zero no longer means ‘no stone’ but ‘an average stone’. That was question b) above.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · centring is subtracting · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · centring is subtracting · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Make the column in the <strong>R</strong> box (type <strong>Scale</strong>), as in the <a href="../90_basishandelingen.html#centreren">toolbox</a>: left of the arrow the name of the column, right of it what goes in the <strong>R</strong> box; you don’t type the arrow itself.</p>
+<pre><code>carat_c   -&gt;   carat - mean(carat)</code></pre>
+<p>Copy the right-hand side exactly. It says <em>“the carat minus the mean carat”</em>.</p>
+<p>Run the same <strong>Linear Regression</strong> with <code>carat_c</code> in <strong>Covariates</strong>. In <strong>Coefficients</strong> it says <code>(Intercept)</code> 50.000 and <code>carat_c</code> 32.143 — the slope hasn’t moved — and <strong>Model Summary</strong> keeps <em>R</em>² = 0.334.</p>
+</div>
+</div>
+<p>Look at what happens there. The intercept is now <strong>50.00</strong>, and that is, to the last decimal, the mean shine of all twelve stones.</p>
+<p>That’s no fluke. A regression line always passes through one fixed point: the crossing of the two means — mean carat, mean shine. Shift the zero to the mean carat and that crossing slides exactly onto the vertical axis, so that’s where you read off the mean shine. Mean in, mean out.</p>
+<p>Now somebody lives at the address: where an impossible stone used to stand, the average stone stands. The slope hasn’t moved, <em>R</em>² hasn’t moved, not a single prediction has moved — all you’ve done is shift the zero to a place where somebody lives.</p>
+<p>That’s all centring does, and in this book you’ll meet it twice more: in multiple regression as a move, and in interaction as a fixed habit. Here it’s enough to have seen it happen once.</p>
+</section>
+<section id="one-word-and-in-a-moment-two-meanings" class="level3">
+<h3 class="anchored" data-anchor-id="one-word-and-in-a-moment-two-meanings">One word, and in a moment two meanings</h3>
+<p>One more thing, because you’ll meet the word again. You’ve learned here that the predictor is called the <strong>independent variable</strong>. Further on, this exercise book also deals with rows that are <strong>independent</strong> of each other — and that is something quite different. There it’s not about a variable but about your <em>rows</em>: does every row in your table carry information that isn’t already there somewhere else, or are you measuring the same person or the same place twice?</p>
+<p>The same word, two meanings. Pin it down here, and you won’t have to wonder later.</p>
+<p>And then the part this line still owes you. You’ve drawn it, read it and turned it round — but you haven’t yet looked anywhere at how far off it is, stone by stone. That’s the next exercise.</p>
+<div class="kicker">
+<p>your turn</p>
+</div>
+</section>
+</section>
+<section id="the-penguins-and-what-the-direction-costs-you" class="level2">
+<h2 class="anchored" data-anchor-id="the-penguins-and-what-the-direction-costs-you">The penguins, and what the direction costs you</h2>
+<p><span class="begrippen">the swap test · naming the units</span></p>
+<p>Back to the 342 penguins. Familiar animals, new question: in Exercise 3.1 you looked at the <em>association</em> between flipper length and weight; now you’re going to predict the one from the other — and then the reverse, to see what that choice costs. These are the two numbers from the hook; now you make them yourself.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · set it up · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · set it up · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>penguins.csv</code>. Everything below comes from <strong>Regression → Linear Regression</strong>; your decimals may go back to three. Where a slope needs five, it says so.</p>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Your turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Answer the questions in order; they build on each other. The last one is deliberately called <strong>Z)</strong> and not j): the cloud question always comes last.</p>
+<p>There are ten of them, and that’s too many for one sitting. <strong>After d) you’ll have drawn the line, read it and rehoused it</strong> — a good moment to stop. At e) the swap test begins, and that’s a story of its own.</p>
+<p>In brackets, each time, is what belongs in a complete answer. Where it says that a part is up to you, the wording is free — for the rest, the answer is fixed. And under <em>Exam-style questions</em>, at the end of this exercise, the same topics come round once more, in the form an exam would ask them in.</p>
+<p><strong>a)</strong> First draw the cloud — flipper length horizontal, weight vertical — and run the line of weight on flipper length through it — <code>body_mass_g</code> to <strong>Dependent Variable</strong>, <code>flipper_length_mm</code> to <strong>Covariates</strong>. Then read it off. (report <em>b</em><sub>0</sub> and <em>b</em><sub>1</sub>, and put its unit after the slope; you’ll need the cloud again at Z))</p>
+<p><strong>b)</strong> Say out loud what that slope means. (one sentence, about penguins and with the unit in it — the number and the unit are fixed, the wording is up to you; more than one answer is right)</p>
+<p><strong>c)</strong> The empty address. Take <em>b</em><sub>0</sub> literally: what does this line promise for a penguin with a flipper of zero millimetres? (one number, and one sentence on why that address stands empty here — name the shortest flipper that really is in the file)</p>
+<p><strong>d)</strong> Centre the flipper length and see what the intercept becomes. Then ask for the mean of <code>body_mass_g</code>. (two numbers, and one sentence about what you recognise — and say what has <em>not</em> changed)</p>
+<p><span class="naslag">Centring is taking the mean off: from every flipper length you subtract the mean flipper length, exactly as you did with the carats of the twelve stones. More about centring is in the <a href="../90_basishandelingen.html#centreren">toolbox</a>. The book comes back to it at length later.</span></p>
+<p><strong>e)</strong> Turn the question round: swap the two boxes, <code>flipper_length_mm</code> to <strong>Dependent Variable</strong> and <code>body_mass_g</code> to <strong>Covariates</strong>. (report <em>b</em><sub>0</sub> and <em>b</em><sub>1</sub>, again <em>with</em> the unit)</p>
+<p><strong>f)</strong> If those two lines said the same thing, the one would have to be the other upside down. Work out 1 divided by the slope back and put it next to the slope forward. (two numbers, and say whether they’re equal)</p>
+<p><strong>g)</strong> Now do the test with the <strong>multiplication</strong>: the two slopes times each other. (one number, and say which familiar number that is)</p>
+<p><strong>h)</strong> Ask both models for their <em>R</em>², and also for the plain correlation. (three numbers, and say which of the three changes when you turn the direction round)</p>
+<p><strong>i)</strong> Write down your finding in one sentence. (which two measures you chose, which way round, how many grams per millimetre, and how much the model covers — those four have to be in it, the words around them are up to you; more than one answer is right)</p>
+<p><strong>Z) Is the cloud straight, and are there no points in it screwing the whole thing up?</strong> A straight line is a choice, not a law of nature. Look at the cloud from a) — does it bend anywhere? And is there one penguin hanging so far out that it’s pulling on the slope all by itself? (two short statements, and say which of your answers above depend on them)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <em>b</em><sub>0</sub> = −5780.83 and <em>b</em><sub>1</sub> = 49.69 grams per millimetre. The line reads: weight = −5780.83 + 49.69 × flipper length, and <em>R</em>² = .76.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>body_mass_g</code> to <strong>Dependent Variable</strong>, <code>flipper_length_mm</code> to <strong>Covariates</strong>. In <strong>Coefficients</strong> it says <code>(Intercept)</code> −5780.831 and <code>flipper_length_mm</code> 49.686; in <strong>Model Summary</strong> it says <em>R</em>² = 0.759. You get the cloud with the line in it from <strong>Regression → Correlation</strong>, with <strong>Scatter plots</strong> switched on.</p>
+</div>
+</div>
+<p><strong>b)</strong> Every extra millimetre of flipper goes with almost fifty grams more weight. Not that the flipper <em>makes</em> the weight — that the two rise together, and that’s all it says.</p>
+<p><strong>c)</strong> <strong>−5780.83 grams</strong>, or minus 5.8 kilos. A penguin with a flipper of zero millimetres weighs, according to this line, less than nothing. That address stands empty: the shortest flipper in this file is 172 millimetres, so zero lies a hundred and seventy millimetres outside anything that was ever measured. The line has been neatly extended that far; nobody has ever looked.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>flipper_length_mm</code>: <em>Minimum</em> 172.000 and <em>Maximum</em> 231.000.</p>
+</div>
+</div>
+<p><strong>d)</strong> The centred intercept is <strong>4201.75</strong>, and the mean weight is <em>also</em> 4201.75. That’s no fluke: the line passes through the crossing of the two means, and by shifting the zero to the mean flipper length you put that crossing exactly on the vertical axis. Mean in, mean out.</p>
+<p>And note what did <strong>not</strong> change: the slope still stands at 49.69 and the <em>R</em>² still at .76. Centring only shifts the zero; the model stays the same model.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code>flipper_c   -&gt;   flipper_length_mm - mean(flipper_length_mm)</code></pre>
+<p>Run the regression again with <code>flipper_c</code> in <strong>Covariates</strong>: <code>(Intercept)</code> 4201.754 and <code>flipper_c</code> 49.686. <strong>Descriptives</strong> says that <code>body_mass_g</code> has a mean of 4201.754.</p>
+</div>
+</div>
+<p><strong>e)</strong> <em>b</em><sub>0</sub> = 136.73 and <em>b</em><sub>1</sub> = 0.01528 millimetres per gram. That line reads: flipper length = 136.73 + 0.01528 × weight.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>flipper_length_mm</code> to <strong>Dependent Variable</strong>, <code>body_mass_g</code> to <strong>Covariates</strong>: <code>(Intercept)</code> 136.730 and next to <code>body_mass_g</code> <code>0.015</code>. That is the second slope that needs more decimals: set <strong>Fix the number of decimals</strong> to <strong>5</strong> again, as with the swapped diamond line, and it says 0.01528. After that they may go back to three.</p>
+</div>
+</div>
+<p><strong>f)</strong> The slope back, upside down, is <strong>65.45</strong>, and the slope forward is <strong>49.69</strong>. Not equal, and not by a little either: there’s a good fifteen grams per millimetre between them. Those are exactly the two numbers from the hook, and now you’ve made them yourself.</p>
+<p>1 / 0.01528 = 65.45</p>
+<p>(Mind <em>which</em> division it is. Divide by the 0.01528 on your screen and you get 65.45 — and that’s the number from the hook. The R exercise book divides by the unrounded 0.0152759 and lands on 65.46. A number on your screen is rounded, and whoever calculates on with it calculates the rounding in as well.)</p>
+<p><strong>g)</strong> 49.69 × 0.01528 = <strong>.76</strong> — the <em>R</em>² of this model. Two slopes multiplied by each other give the share of the differences that the line covers, just as with the stones.</p>
+<p>49.69 × 0.01528 = .7593</p>
+<p><strong>h)</strong> <em>R</em>² = .76 forward, <em>R</em>² = .76 back, and <em>r</em> = .87. None of the three changes when you turn the direction round. <strong>Only the line changes</strong>; everything that is symmetric stays put. That’s the whole tension of this exercise in a single sentence.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Model Summary</strong> of both models: <em>R</em>² = 0.759. And <strong>Regression → Correlation</strong> with <code>flipper_length_mm</code> and <code>body_mass_g</code>: <em>Pearson’s r</em> 0.871.</p>
+</div>
+</div>
+<p><strong>i)</strong> For example:</p>
+<blockquote class="blockquote">
+<p>In 342 penguins we predicted weight from flipper length: every millimetre of flipper went with almost fifty grams more weight (<em>b</em> = 49.69), and the line covered a good three quarters of the differences in weight (<em>R</em>² = .76).</p>
+</blockquote>
+<p><strong>Z)</strong> Half and half — and the half that’s wrong is the one you learn most from.</p>
+<p><em>Your eye says straight; the sums say: not quite.</em> Look at your picture from a) — dots from bottom left to top right, the line through the middle, not a bend in sight. Now split the penguins by flipper length into three roughly equal-sized groups and look at how far off the line is, on average, in each group. Plus means: the penguins lie <em>above</em> the line, so the line sits too low. Out comes: <strong>+57 grams</strong> for the short flippers, <strong>−106</strong> in the middle, <strong>+41</strong> for the long ones. Up, down, up — that’s a dip, not noise.</p>
+<p>Where that dip comes from: <strong>the mixture.</strong> Give each species its own line and the bend is gone. They’re three straight clouds lying at different places along the axis, and pressed together into one cloud they make a shallow arc. The same lesson as in Exercise 3.1 — now with a line through it.</p>
+<p>And mind <em>why</em> we look at those distances and not at the <em>R</em>². Because you could also try it like this: let the line stop being a straight line and give it a bend, and see whether it covers the cloud better then. It does — the <em>R</em>² goes from .76 to .78. Only that proves nothing, because an extra bend <strong>always</strong> pushes the <em>R</em>² up and never down, even a bend that makes no sense at all. The distances do prove something. They have a name — <strong>residuals</strong> — and that’s what the next exercise is about. There you learn to <em>draw</em> them instead of averaging them, and then you see a dip like this at a glance.</p>
+<p><em>What does hold up: no penguin is pulling on the slope all by itself.</em> Leave them out one at a time and the biggest shift is 0.33 grams per millimetre — on a slope of 49.69, so not even one per cent.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · and what can't be done here">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · and what can’t be done here
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The mean distance per third of the flipper length, and the test with a line of its own per species, have no button in JASP. The R exercise book checks them in a few lines: +57, −106 and +41 grams, and as soon as each species gets its own line the bend adds nothing more (<em>p</em> = .39).</p>
+</div>
+</div>
+<p>What depends on it: here, not much — the bend is shallow, and your slope, intercept and <em>R</em>² remain usable summaries of these 342 animals. Had it been stronger, then it wouldn’t have been one of your answers that was wrong — they’d <strong>all</strong> have been a poor summary: the slope, the intercept, the <em>R</em>², the swap test. That’s the difference from Exercise 3.1, where the species means simply stayed put: those were descriptions of the table, and a line is a model.</p>
+<p>And one thing is still open that you <em>can’t</em> see here. How far off this line is, penguin by penguin, you can’t read from <em>b</em><sub>0</sub>, <em>b</em><sub>1</sub> or <em>R</em>² — for that you need the <strong>residuals</strong>, and that’s the next exercise.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>your turn</p>
+</div>
+</section>
+<section id="predict-a-person-from-a-questionnaire" class="level2">
+<h2 class="anchored" data-anchor-id="predict-a-person-from-a-questionnaire">Predict a person from a questionnaire</h2>
+<p><span class="begrippen">scale score · the same route, a different subject</span></p>
+<p>With penguins you choose the direction and that’s that. With people the same choice becomes uncomfortable straight away, and that is exactly why it has to come round once more here.</p>
+<p><code>bigfive.csv</code> holds <strong>2634 people</strong> who rated twenty-five statements about themselves on a scale from 1 to 6. You use ten of them here — five about <strong>neuroticism</strong>, how easily you get upset, and five about <strong>openness</strong>, the taste for new things. First reverse <code>O2</code> and <code>O5</code>, the two openness statements worded the other way round, then take each person’s mean of their five answers, and you have two variables, both still on the scale from 1 to 6: the two <strong>scale scores</strong> from <a href="../20_blokken/blok_correlatie_scatterplot.html">Exercise 3.1</a>.</p>
+<p>And then you get to choose what you predict from what. Do you predict neuroticism from openness, or the other way round? You can’t tell from the people; the arrow is in your question.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · build the two scales · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · build the two scales · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>bigfive.csv</code> and make two columns in the <strong>R</strong> box (type <strong>Scale</strong>; after the name <strong>Create Column</strong>, after the line <strong>Compute column</strong>), as in <a href="../20_blokken/blok_correlatie_scatterplot.html">Exercise 3.1</a> and as in the <a href="../90_basishandelingen.html#twee-routes-één-handeling">toolbox</a>: left of the arrow the name of the column, right of it what goes in the <strong>R</strong> box.</p>
+<pre><code>neuroticism   -&gt;   rowMeans(data.frame(N1, N2, N3, N4, N5))
+openness       -&gt;   rowMeans(data.frame(O1, 7 - O2, O3, O4, 7 - O5))</code></pre>
+<p>Copy the right-hand side exactly; you don’t have to read it. It says <em>“give me, per person, the mean of these five”</em>, with the reversal of <code>O2</code> and <code>O5</code> right in it.</p>
+<p><span class="even-checken">Put <code>openness</code> in <strong>Descriptives</strong>: <em>Minimum</em> and <em>Maximum</em> should give 1.2 and 6.0. If it says 1.0 and 5.8, you forgot the reversal. If it says anything else, your reversal is off (it is 7 minus the score, for both) or you’ve got hold of the wrong column.</span></p>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="The same route on questionnaires">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The same route on questionnaires
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Four steps, and then the sentence this chapter leads up to.</p>
+<p><strong>a)</strong> Draw the line of neuroticism on openness — <code>neuroticism</code> to <strong>Dependent Variable</strong>, <code>openness</code> to <strong>Covariates</strong> — and read it off. (report <em>b</em><sub>0</sub>, <em>b</em><sub>1</sub> <em>with</em> its unit, and <em>R</em>²)</p>
+<p><strong>b)</strong> Take <em>b</em><sub>0</sub> literally, and then centre openness. (two numbers, and one sentence on whether that empty address is <em>worse</em> or less bad here than with the penguins — look at the range of openness)</p>
+<p><strong>c)</strong> Turn it round and multiply the two slopes. (two numbers, say which familiar number that product is — and one sentence on how heavily your choice of a moment ago weighs here)</p>
+<p><strong>d)</strong> Write down what you found, in <strong>two sentences</strong> and in this fixed form:</p>
+<blockquote class="blockquote">
+<p>Within these <em>n</em> people: … (<em>b</em> = …). Whether that also holds beyond these <em>n</em>, you don’t know yet.</p>
+</blockquote>
+<p>(fill in the <em>n</em>, the finding in plain words and the slope — and leave that second sentence exactly as it stands)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <em>b</em><sub>0</sub> = 3.77 and <em>b</em><sub>1</sub> = −0.13 scale points of neuroticism per scale point of openness. <em>R</em>² = .01.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In <strong>Coefficients</strong> it says <code>(Intercept)</code> 3.774 and <code>openness</code> −0.133; in <strong>Model Summary</strong> it says <em>R</em>² = 0.008.</p>
+</div>
+</div>
+<p><strong>b)</strong> The intercept 3.77 is the prediction for someone who scores <strong>zero</strong> on openness, and after centring it reads 3.16 — the mean neuroticism, exactly as with the stones.</p>
+<p>And that empty address is <strong>less bad</strong> here than with the penguins, but still empty. The lowest openness in this file is 1.2 and the highest 6.0, so zero lies only just over one scale point below instead of a hundred and seventy millimetres. Only: zero <em>can’t</em> happen on this scale at all. Whoever answers all five questions in the least open way possible ends up at 1. So the address doesn’t exist, and that’s a different kind of empty from a penguin without a flipper — there the zero was thinkable and simply never measured.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>openness</code>: <em>Minimum</em> 1.200 and <em>Maximum</em> 6.000.</p>
+<pre><code>openness_c   -&gt;   openness - mean(openness)</code></pre>
+<p>With <code>openness_c</code> in <strong>Covariates</strong> it says <code>(Intercept)</code> 3.163 — and in <strong>Descriptives</strong> <code>neuroticism</code> has a mean of 3.163.</p>
+</div>
+</div>
+<p><strong>c)</strong> The slope back is −0.0606 scale points of openness per scale point of neuroticism, and their product is <strong>.01</strong> — the <em>R</em>², just as with the stones and just as with the penguins. (Minus times minus is plus: an <em>R</em>² is never negative.)</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Swap the boxes: <code>openness</code> to <strong>Dependent Variable</strong>, <code>neuroticism</code> to <strong>Covariates</strong>. To three decimals the slope back says −0.061; set <strong>Fix the number of decimals</strong> to <strong>5</strong> again for a moment, and it says −0.06059 — −0.0606 to four decimals, as in the answer above. Swap the boxes back and run the line forward once more: there <code>openness</code> now says −0.13294. The multiplying you do yourself: −0.13294 × (−0.06059) = .0081.</p>
+</div>
+</div>
+<p>And then the sentence about your choice. If the two lines said the same thing, the one would be the other upside down — that was the test with the penguins, and there it was already off: 65.45 against 49.69. Here you don’t even need to calculate. The slope back is −0.0606, not even a tenth in size, so upside down it comes out far from zero: −16.5 — and the slope forward says −0.13. The two lines stand almost at right angles to each other. Your choice of a moment ago — neuroticism from openness, and not the other way round — therefore weighs more heavily here than anywhere else in this chapter, precisely where the association is weakest. With people that’s the rule and not the exception; associations there are seldom tight.</p>
+<p><strong>d)</strong> For example:</p>
+<blockquote class="blockquote">
+<p>Within these 2634 people: whoever scores one scale point higher on openness scores, on average, a good tenth of a scale point lower on neuroticism (<em>b</em> = −0.13). Whether that also holds beyond these 2634, you don’t know yet.</p>
+</blockquote>
+<p>Note that it says <em>on average</em>, and note what it does <em>not</em> say: that openness makes you less neurotic. You’ve drawn a line through a cloud of people you’ve seen once. What it takes to say something that <em>does</em> hold beyond these 2634 is what the next movement is about.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>exam practice</p>
+</div>
+</section>
+<section id="exam-style-questions" class="level2">
+<h2 class="anchored" data-anchor-id="exam-style-questions">Exam-style questions</h2>
+<p><span class="begrippen">intercept · centring · the direction of the question</span></p>
+<p>These six have the form an exam would ask this topic in: four options, and exactly one is the best — the other three may well be true and still not be the best answer. Only questions 1 and 6 need any arithmetic.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Exam-style questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exam-style questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> The line of weight on flipper length reads: weight = −5780.83 + 49.69 × flipper length. What does this line predict for a penguin with a flipper of 200 millimetres?</p>
+<ol type="a">
+<li>−5731 grams</li>
+<li>4157 grams</li>
+<li>4202 grams</li>
+<li>9938 grams</li>
+</ol>
+<p><strong>2.</strong> Take that intercept of −5780.83 literally. What is the best description of what it says?</p>
+<ol type="a">
+<li>The line has been drawn wrongly, because a penguin can’t weigh less than nothing.</li>
+<li>The mean weight of these 342 penguins, shifted to the vertical axis.</li>
+<li>An error in the file: there’s a negative weight in it somewhere.</li>
+<li>The weight the line predicts for a flipper of zero millimetres — an address that stands empty here, because the shortest flipper in the file is 172 millimetres.</li>
+</ol>
+<p><strong>3.</strong> You centre the flipper length: from every flipper length you subtract the mean flipper length, and then you draw the line again. What changes as a result?</p>
+<ol type="a">
+<li>Only the intercept: it becomes 4201.75, the mean weight. The slope and the <em>R</em>² stay put.</li>
+<li>The intercept <em>and</em> the slope: both shift along with the mean.</li>
+<li>Nothing: the output reads line for line the same as before.</li>
+<li>The intercept <em>and</em> the <em>R</em>²: the line fits better once zero lies within the data.</li>
+</ol>
+<p><strong>4.</strong> You turn the question round and predict flipper length from weight instead of weight from flipper length. Which of these measures changes as a result?</p>
+<ol type="a">
+<li>The correlation between flipper length and weight.</li>
+<li>The <em>R</em>² of the model.</li>
+<li>The slope.</li>
+<li>None of the three — they’re the same 342 animals, so the same results.</li>
+</ol>
+<p><strong>5.</strong> The slope forward is 49.69 grams per millimetre, the slope back 0.01528 millimetres per gram. One divided by 0.01528 gives 65.45, and that is not 49.69. Which explanation is the best?</p>
+<ol type="a">
+<li>One of the two lines has been drawn wrongly; only the line with the highest <em>R</em>² is right.</li>
+<li>The two lines answer a different question, and that’s why the one is not the other upside down.</li>
+<li>It’s down to rounding: calculate with all the decimals and they do come out at the same number.</li>
+<li>The units differ — grams per millimetre against millimetres per gram — and so the two numbers can’t be compared.</li>
+</ol>
+<p><strong>6.</strong> Multiply the two slopes by each other: 49.69 × 0.01528. Which familiar number from this page comes out?</p>
+<ol type="a">
+<li>The correlation between flipper length and weight, <em>r</em> = .87.</li>
+<li>The intercept, divided by the mean flipper length.</li>
+<li>The standard deviation of weight, divided by that of flipper length.</li>
+<li>The <em>R</em>² of this model, .76.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 b · 2 d · 3 a · 4 c · 5 b · 6 d</strong></p>
+<p>Below, for each question, is <em>why</em> — and why the other three options are tempting. If you got one right, you can skip it.</p>
+<p><strong>1. b.</strong> Fill it in: −5780.83 + 49.69 × 200 = <strong>4157</strong> grams. (Let the model do it itself and it says 4156.28 — it works with the unrounded slope. The same rounding lesson as 65.45 against 65.46 above: round off only at the end.) <strong>a</strong> adds the slope once instead of two hundred times: −5780.83 + 49.69 = −5731. <strong>c</strong> is 4201.75, the mean weight, and that’s the finest distractor of the six — it’s only forty-five grams off. That’s because the mean flipper is 200.92 millimetres and not 200: that’s the same mean you subtracted from every flipper length at d) to centre, and you can ask for it there. The line passes through the crossing of the two means, so at 200.92 millimetres 4201.75 grams <em>would</em> be the answer. <strong>d</strong> forgets the intercept: 49.69 × 200 = 9938.</p>
+<p><strong>2. d.</strong> The intercept is the prediction for whoever scores zero on the predictor — always true, and here worthless, because zero lies a hundred and seventy millimetres outside anything that was ever measured. <strong>a</strong> confuses <em>impossible</em> with <em>wrong</em>: the line is laid properly, it has just been extended past the animals. <strong>b</strong> is the intercept <em>after</em> centring and not this intercept; that’s question 3. <strong>c</strong> looks for the error in the data while there is no negative weight in the file — the lightest animal weighs 2700 grams.</p>
+<p><strong>3. a.</strong> Centring shifts the zero and nothing else. The intercept lands on the mean weight because the line passes through the crossing of the two means; the slope and the <em>R</em>² don’t move with it. <strong>b</strong> has the slope shift along, and that can’t be: the slope says how many grams come with each millimetre, and that doesn’t change because you number the millimetres differently. <strong>c</strong> is right about the <em>model</em> and not about the output — the model is the same model, but the intercept appears as a different number, and that’s exactly the gain. <strong>d</strong> has centring improve the fit; that doesn’t happen, because not a single prediction changes.</p>
+<p><strong>4. c.</strong> Only the line changes. The correlation and the <em>R</em>² are symmetric: they know no direction, so they can’t be changed by it either. <strong>a</strong> and <strong>b</strong> name exactly those two. <strong>d</strong> is the most tempting, because it <em>is</em> true that the data are the same — but by choosing the direction you ask a different question, and a different question gets a different answer.</p>
+<p><strong>5. b.</strong> <em>The weight I know, the flipper length I want to know</em> is a different question from the other way round, and each line is the best for its own question. <strong>a</strong> looks for a winner where there is none; the <em>R</em>², by the way, is .76 both ways, so that criterion doesn’t even point to one. <strong>c</strong> can be checked and isn’t true: with all the decimals it says 65.46, still a good fifteen grams per millimetre away from 49.69. <strong>d</strong> has the right difference and the wrong conclusion — grams per millimetre and millimetres per gram are each other’s upside down, and <em>that</em> is precisely why, after one division, you <em>may</em> compare them.</p>
+<p><strong>6. d.</strong> 49.69 × 0.01528 = <strong>.76</strong>, the <em>R</em>² of this model. Forward, the slope is <em>r</em> · <em>S<sub>y</sub></em>/<em>S<sub>x</sub></em> and back it’s <em>r</em> · <em>S<sub>x</sub></em>/<em>S<sub>y</sub></em> — with <em>S<sub>y</sub></em> and <em>S<sub>x</sub></em> the standard deviations of weight and flipper length. Multiply them and those two spreads cancel out, leaving <em>r</em> × <em>r</em>. <strong>a</strong> names <em>r</em> itself, and that is the square root of the answer and not the answer. <strong>c</strong> is the most dangerous of the three, because it’s a <em>real</em> quantity: <em>S<sub>y</sub></em>/<em>S<sub>x</sub></em> is in that formula above, and it comes out at about 57 grams per millimetre. That’s the exchange rate between the two measures — how many grams would come with each millimetre if the two were perfectly associated. The exchange rate doesn’t say how well the line fits; only times <em>r</em> does it become the slope, and that’s why it’s a little bigger here than the 49.69 you found. <strong>b</strong> isn’t a quantity at all but looks like a formula because there’s a division in it.</p>
+<p>The numbers in these six questions all appear earlier on this page. What’s new is the prediction at 200 millimetres and the wrong distractors — and those are all written out above as sums, so you can check them without having to take them on trust.</p>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W4">
+<p>◠ <strong>Same shape in the book</strong></p>
+<p>Here: the line drawn and read, and the test that shows a direction has been chosen.</p>
+<p>In the book: <strong><a href="https://countcamp.org/en/book/h3.html">Chapter 3 — The Little Rectangle</a></strong></p>
+<p><em>There the line gets its two numbers and its bridge to r; here you see what happens when you turn the question round — and what the intercept means at a place where nobody lives.</em></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_correlatie_scatterplot.html" class="pagination-link" aria-label="Exercise 3.1 · Correlation and the scatterplot">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Exercise 3.1 · Correlation and the scatterplot</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_residuen.html" class="pagination-link" aria-label="Exercise 3.3 · Looking at the residuals">
+        <span class="nav-page-text">Exercise 3.3 · Looking at the residuals</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script data-goatcounter="https://countcamp.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ contents':'⌫ hide contents';">⌫ hide contents</button>
+
+
+
+
+</body></html>
+<!-- countcamp-oefenboek jasp lab-commit=45ef2ee911a7e01f364602aa9f40e556aaaff302 geleverd=2026-11-28T12:08:50 -->
