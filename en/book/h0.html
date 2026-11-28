@@ -3163,10 +3163,15 @@ max-width: calc(100vw - 2.5rem);
      herhalen (keuzes.md, besluit 3 bij "de knop zegt waarom": één adres).
      De naam. Tot 23-11-2026 zei de dichte knop "meekijken: waar ik twijfel".
      Nu heten knop en briefje hetzelfde (boek.css, html.werk-lezer
-     .werk::before). Twee scripts lezen deze teksten: en/_maak_afterbody_en.py
+     .werk::before). Sinds 24-11-2026 zegt ook de open knop geen "werknotities"
+     meer ("twijfels dichtklappen"; de reden: zie WERKNOTITIES.md §9, PB33), en
+     de knop van een niet-omgezet hoofdstuk zegt
+     "toon aantekeningen": daar belooft hij geen twijfel (zie hierboven). De
+     commentaarwacht van de site houdt het woord tegen in alles wat een bezoeker
+     ziet, ook in deze labels. Twee scripts lezen deze teksten: en/_maak_afterbody_en.py
      (vertaalt ze, en zakt als hij een tekst niet precies één keer vindt) en
      _tools/slotregel_meet.py (zoekt de knop op id).
-     Herkomst: WERKNOTITIES.md §9, PB22. */
+     Herkomst: WERKNOTITIES.md §9, PB22 en PB33. */
   var lezer = !!document.querySelector('meta[name="cc-werknotities"][content="lezer"]');
   var LEZER_DICHT = '✎ where I have doubts (';
   var WERK_DICHT = '✎ show notes (';
@@ -3192,9 +3197,9 @@ max-width: calc(100vw - 2.5rem);
   /* ---- de scheidingslijn boven een werk-blok hoort BIJ dat blok ----
      In de bron staat er een losse `---` boven `::: {.werk-blok}`, en die
      draagt geen enkel merkteken. Verdween het blok in tekst-puur, dan bleef
-     de streep als wees achter -- onder H12 stond hij daardoor ná Bens
+     de streep als wees achter -- onder H12 stond hij daardoor ná de
      slotregel (gevonden 11-8-2026). Hier krijgt hij alsnog zijn merkteken
-     (.werk-hr); boek.css laat hem meeverdwijnen.
+     (.werk-hr); boek.css laat hem meeverdwijnen (keuzes.md, PB23).
 
      Waarom hier en niet met een selector in boek.css: Quarto zet `## Open
      punten` in een eigen <section class="werk-blok"> en laat de <hr> achter
@@ -3270,11 +3275,11 @@ max-width: calc(100vw - 2.5rem);
   // of mat. Stil, want een naam die nergens in de tabel voorkomt geeft geen
   // fout: hij geeft niets.
   //
-  // Twee zetters liepen erin en losten het allebei voor zichzelf op, in hun
-  // eigen script: stilte op 11-8 (maak_stilte_varianten.py) en phi op 12-8
-  // (slotregel_meet.py). Geen van beiden kon de ander zien. De val zat niet in
-  // hun scripts maar hier, dus is hij hier weggehaald: de bladzij vertaalt zijn
-  // eigen naam. Achtergrond: boek/_tools/LEESMIJ_lokaal_meten.md.
+  // Twee meetscripts kregen er elk een eigen omweg omheen, los van elkaar
+  // gebouwd: maak_stilte_varianten.py (11-8) en slotregel_meet.py (12-8). De
+  // val zat niet in die scripts maar hier, dus is hij hier weggehaald: de
+  // bladzij vertaalt zijn eigen naam. Achtergrond:
+  // boek/_tools/LEESMIJ_lokaal_meten.md, en keuzes.md, PB24.
   //
   // De vertaling is dezelfde naamregel als pub_doelnaam in
   // boek/_tools/publicatie/_gemeenschappelijk.sh (H4_schets -> h4, en een
@@ -3285,9 +3290,10 @@ max-width: calc(100vw - 2.5rem);
 
   // Blijft er toch een schets over die de tabel niet kent -- een nieuw
   // hoofdstuk dat nog niet in CH staat, een hernoemde schets -- dan moet dat
-  // LUID misgaan en niet stil. Anders zit de volgende zetter weer te meten aan
-  // een bladzij die half leeg is zonder dat iets dat zegt. Alleen lokaal: op
-  // countcamp.org bestaat het geval niet en hoort er geen balk te staan.
+  // LUID misgaan en niet stil. Anders meet het volgende script weer aan een
+  // bladzij die half leeg is zonder dat iets dat zegt. Alleen lokaal: op
+  // countcamp.org bestaat het geval niet en hoort er geen balk te staan
+  // (keuzes.md, PB25).
   (function () {
     if (!/_en\.html$/i.test(bestand)) return;      // geen lokale schets
     for (var i = 0; i < CH.length; i++) { if (CH[i].f === here) return; }   // gewoon bekend
@@ -3342,7 +3348,7 @@ max-width: calc(100vw - 2.5rem);
 
   // ---- laatste hoofdstuk: een stille "Dank" echt onderaan, waar je vanzelf aankomt ----
   (function () {
-    return;   // Engels: er is geen Engels dankwoord, dus geen Dank-link (en_h0)
+    return;   // Engels: er is geen Engels dankwoord, dus geen Dank-link
     var host = document.getElementById('quarto-document-content') || document.querySelector('main.content') || document.body;
     var wrap = el('div', 'slot-dank');
     var a = el('a'); a.href = 'dankwoord.html';
@@ -3358,7 +3364,7 @@ max-width: calc(100vw - 2.5rem);
   var home = el('a', 'sb-home', 'Contents'); home.href = 'index.html';
   if (here === 'index.html') home.classList.add('hier');
   var allesKnop = el('button', 'sb-alles'); allesKnop.type = 'button';
-  top.appendChild(terug); top.appendChild(allesKnop); /* geen Engelse inhoudsopgave (en_h0) */ sb.appendChild(top);
+  top.appendChild(terug); top.appendChild(allesKnop); /* geen Engelse inhoudsopgave */ sb.appendChild(top);
 
   // ---- sectielijsten ----
   // Het hoofdstuk waar je IN zit leest zijn secties uit de bladzij zelf: die
@@ -3411,8 +3417,8 @@ max-width: calc(100vw - 2.5rem);
       if (c.f === here) a.classList.add('hier');
 
       // Elk hoofdstuk kan zijn onderwerpen tonen, niet alleen het hoofdstuk
-      // waar je op staat (Ben, 10-8). Dat van jou staat open; de rest klapt
-      // open als je op het pijltje klikt -- of in één keer, hierboven.
+      // waar je op staat. Dat van jou staat open; de rest klapt open als je
+      // op het pijltje klikt -- of in één keer, hierboven (keuzes.md, PB26).
       var rij = sectiesVan(c.f);
       if (rij.length) {
         var knop = el('button', 'sb-uit'); knop.type = 'button';
@@ -3424,7 +3430,7 @@ max-width: calc(100vw - 2.5rem);
           sa.appendChild(el('span', 'sb-sec-titel', sec.t));
           // De droge termen eronder -- alleen als ze er zijn. Een sectie
           // zonder statistische term krijgt geen lege regel en geen extra
-          // ruimte: dan wordt de span niet aangemaakt (Ben, 10-8).
+          // ruimte: dan wordt de span niet aangemaakt (keuzes.md, PB27).
           if (sec.d) {
             var dt = el('span', 'sb-sec-termen');
             dt.innerHTML = sec.d;      // door genereer_secties.py opgemaakt
@@ -3617,15 +3623,14 @@ geeft elke <p> uitvulling, afbreekstreepjes en een ondermarge voor de
     line-height: 1.1em; padding: 0 .3rem 0 1.6rem; border-left: 2px solid transparent; }
   .sb-sec-titel { display: block; }
   /* De droge termen dragen de inkt; de beeldtitel erboven zakt terug, en
-     alleen door KLEUR -- grootte en gewicht blijven wat ze waren. Ben,
-     30-9-2026, variant C uit _atelier/menu_proef_licht_donker.html: "ja, zet
-     C erin". Het menu wordt gescand, en wie scant zoekt de term
-     ("correlatie"), niet het beeld ("De rechthoek"). Dit vervangt de
-     fluistertoon van 10-8 (termen bleker dan de titel) en de stille titel
-     van 21-7; beide haalden de WCAG-norm van 4,5:1 niet. Reden en getallen:
-     keuzes.md, het besluit van 30-9-2026 over het zijbalkmenu. Meet na op
-     de render met _atelier/_menu_c_bewijs/meet_gerenderd.py, niet uit deze
-     CSS.
+     alleen door KLEUR -- grootte en gewicht blijven wat ze waren. Dit is
+     variant C uit _atelier/menu_proef_licht_donker.html. Het menu wordt
+     gescand, en wie scant zoekt de term ("correlatie"), niet het beeld ("De
+     rechthoek"). Dit vervangt de fluistertoon van 10-8 (termen bleker dan de
+     titel) en de stille titel van 21-7; beide haalden de WCAG-norm van 4,5:1
+     niet. Reden en getallen: keuzes.md, het besluit "het zijbalkmenu: de termen
+     dragen de inkt" (herkomst: PB28). Meet na op de render met
+     _atelier/_menu_c_bewijs/meet_gerenderd.py, niet uit deze CSS.
      De termen zijn in elke toestand inkt, dus hover en actief hoeven voor de
      termen niets te zeggen; de titel wordt bij hover en actief inkt
      (.sb-secties a:hover en a.actief, hieronder).
@@ -4120,4 +4125,4 @@ geeft elke <p> uitvulling, afbreekstreepjes en een ondermarge voor de
 
 
 </body></html>
-<!-- countcamp-publicatie H0 bron-hash=37deeeb9c170bdf9436701acc6356174c3a9c43ba46f001ea7d29ee0206f3086 geleverd=2026-11-23T17:12:56 -->
+<!-- countcamp-publicatie H0 bron-hash=88eda5ce257f0d1662615d91ba52bee080d441e58816381d150f003b92a0e09d geleverd=2026-11-28T19:43:07 -->
