@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<link rel="canonical" href="https://countcamp.org/en/book/">
+<!-- teller:begin — bezoekersteller (GoatCounter). Bron: _tools/teller.html; de bouw zet hem erin, nooit met de hand plakken. -->
+<script>
+(function () {
+  // Alleen de echte site telt. Op een proefdruk (broodje:8788, countcamp.org/pr-preview/),
+  // op localhost of in een los geopend bestand wordt count.js niet eens opgehaald.
+  var h = location.hostname, p = location.pathname;
+  if (h !== 'countcamp.org' && h !== 'www.countcamp.org') return;
+  if (p.indexOf('/pr-preview/') === 0) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://countcamp.goatcounter.com/count');
+  document.head.appendChild(s);
+})();
+</script>
+<!-- teller:eind -->
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A statistics book — from difference and the mean to correlation, multiple linear regression and logistic regression, explained in plain language.">
+
+<title>The Regressive Backbone – CountCamp</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<link href="../../favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-6388ad00bb6ecaefa25b9a98db1edf18.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/manuscript/">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/book/">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/manuscript/">
+<style>
+/* taalknopje NL · EN, alleen op bladzijden met een tweeling (_tools/taalwissel/stijl_knop.html) */
+#quarto-document-content{position:relative;padding-top:1.9rem;}
+.taalwissel{position:absolute;top:0;right:0;font-size:.86rem;letter-spacing:.05em;line-height:1.9rem;color:#6c757d;}
+.taalwissel a{text-decoration:none;}
+.taalwissel a:hover{text-decoration:underline;}
+.taalwissel [aria-current]{font-weight:600;color:inherit;}
+.taalwissel-sep{margin:0 .45em;}
+</style>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="The Regressive Backbone – CountCamp">
+<meta property="og:description" content="A statistics book — from difference and the mean to correlation, multiple linear regression and logistic regression, explained in plain language.">
+<meta property="og:site_name" content="CountCamp">
+<meta name="twitter:title" content="The Regressive Backbone – CountCamp">
+<meta name="twitter:description" content="A statistics book — from difference and the mean to correlation, multiple linear regression and logistic regression, explained in plain language.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../en/index.html">
+    <span class="navbar-title">CountCamp</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../../en/book/index.html" aria-current="page"> 
+<span class="menu-text">The book</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/workbooks/index.html"> 
+<span class="menu-text">Practice books</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/toys/index.html"> 
+<span class="menu-text">Toys</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/archive/index.html"> 
+<span class="menu-text">Archive</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/services.html"> 
+<span class="menu-text">Services</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../en/about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../cv-en.html"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+</ul>
+          </div> 
+            <div class="quarto-navbar-tools">
+</div>
+      </div> 
+    </nav>
+</header>
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+    
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Regressive Backbone</h1>
+<p class="subtitle lead">Learn to feel statistics. Learn to read research.</p>
+</div>
+
+<div>
+  <div class="description">
+    A statistics book — from difference and the mean to correlation, multiple linear regression and logistic regression, explained in plain language.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Statistics has a reputation for being cold. Formulas, tests, tables — something for people with a knack for it. I don’t believe a word of it. Statistics is about difference, and you could feel difference before you could talk. That’s where this book begins: first the nerves out, then the material in.</p>
+<nav class="taalwissel" aria-label="language"><a href="../../manuscript/index.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>
+<p>The backbone in the title is regression: the movement back. A cloud of points comes home to a single line — the mean, only a slightly different one at every point along it. Each chapter adds a vertebra. The subtitle is the promise: <em>learn to feel statistics, learn to read research</em>. First feel what a mean, a relationship, a model <em>is</em>; after that, a results section turns out to be perfectly readable.</p>
+<p>This book takes uncertainty and doubt seriously, precisely to stay in touch with reality.</p>
+<section id="the-vertebrae" class="level2">
+<h2 class="anchored" data-anchor-id="the-vertebrae">The vertebrae</h2>
+<p>They come in order, and the order matters. Just start at chapter 0 — even if you already know some statistics. Below, each chapter has <strong>the statistics beside it, in plain terms</strong>, so you can see at a glance what it’s about: if you’re looking for covariance, you don’t need to know the chapter is called <em>The Little Rectangle</em>. Open a chapter and the sidebar lists its sections. A chapter in grey isn’t in English yet; it takes you to the Dutch edition.</p>
+<style>
+/* ---- Inhoudsopgave — LETTERLIJK het stijlblok van manuscript/index.qmd (zie DUBBELINGEN.md),
+   met daaronder alleen wat er in het Engels bij komt: de grijze rij. Verander je het Nederlandse
+   blok, verander dit mee. Het kan niet naar styles.css: dat raakt elke Nederlandse bladzij, en een
+   Engelse stap verandert niets aan de Nederlandse site. ---- */
+.cc-toc { margin: 1.4em 0 2.2em; }
+.cc-toc .cc-bew {
+  margin: 2em 0 .55em;
+  font-variant: small-caps;
+  letter-spacing: .05em;
+  font-weight: 600;
+  color: #8a8378;
+}
+.cc-toc .cc-bew:first-child { margin-top: .4em; }
+.cc-toc-h { margin: 0; padding: .34em 0 .34em 1.6em; border-left: 1px solid #e0dacc; }
+.cc-toc-kop { display: grid; grid-template-columns: 1.9em 1fr; align-items: baseline;
+  text-decoration: none; color: var(--cc-ink); padding: 0; line-height: 1.45; }
+.cc-toc-kop:hover { text-decoration: none; }
+.cc-toc-num { color: var(--cc-blue); font-weight: 700; font-variant-numeric: tabular-nums; }
+.cc-toc-titel { font-weight: 700; color: var(--cc-blue-deep); }
+.cc-toc-kop:hover .cc-toc-titel { text-decoration: underline; text-underline-offset: 3px; }
+.cc-toc-sub { grid-column: 2; font-size: .88em; color: var(--cc-ink-soft); line-height: 1.45; }
+@media (max-width: 700px) {
+  .cc-toc-h { padding-left: 1em; }
+}
+/* ---- Alleen Engels: een hoofdstuk dat er nog niet in het Engels is (Ben, 27-10-2026: grijs, met
+   "coming soon" en een link naar het Nederlands). Grijs is #6a655c, het grijs van de kicker in de
+   boekbladzijden: 5,64 : 1 op het papier (#fdfcf9), boven de 4,5 van WCAG AA. Het lichtere grijs van
+   de bewegingslabels hierboven (#8a8378) haalt 3,66 en is voor gewone tekst te licht. ---- */
+.cc-toc-later .cc-toc-num,
+.cc-toc-later .cc-toc-titel,
+.cc-toc-later .cc-toc-sub { color: #6a655c; font-weight: 400; }
+.cc-toc-later .cc-toc-titel { font-style: italic; }
+.cc-toc-later-regel { grid-column: 2; font-size: .8em; color: #6a655c; line-height: 1.45;
+  letter-spacing: .02em; }
+/* "read it in Dutch ›" in het blauw van een link: op een telefoon is er geen hover, en een grijze
+   rij leest daar als "uitgeschakeld" (Engelse testlezer, 28-11). Dit is het teken dat hij werkt. */
+.cc-toc-later .cc-toc-nl { color: var(--cc-blue); }
+.cc-toc-later .cc-toc-kop:hover .cc-toc-nl { text-decoration: underline; text-underline-offset: 3px; }
+.cc-toc-later .cc-toc-kop:hover .cc-toc-titel { text-decoration: none; }
+.cc-later { color: #6a655c; }
+</style>
+<div class="cc-toc">
+<p class="cc-bew">First movement · Difference under the microscope</p>
+<div class="cc-toc-h">
+<a class="cc-toc-kop" href="h0.html"><span class="cc-toc-num">0</span><span class="cc-toc-titel">In the Beginning</span></a>
+</div>
+<div class="cc-toc-h">
+<a class="cc-toc-kop" href="h1.html"><span class="cc-toc-num">1</span><span class="cc-toc-titel">The Average Gulp</span><span class="cc-toc-sub">Mean and standard deviation</span></a>
+</div>
+<div class="cc-toc-h">
+<a class="cc-toc-kop" href="h2.html"><span class="cc-toc-num">2</span><span class="cc-toc-titel">The Shape of the Heap</span><span class="cc-toc-sub">Median, quartiles, boxplot and skewness</span></a>
+</div>
+<p class="cc-bew">Second movement · Coupling differences</p>
+<div class="cc-toc-h">
+<a class="cc-toc-kop" href="h3.html"><span class="cc-toc-num">3</span><span class="cc-toc-titel">The Little Rectangle</span><span class="cc-toc-sub">Covariance, correlation and simple regression</span></a>
+</div>
+<p class="cc-bew">Third movement · Difference put to the test</p>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h4.html" hreflang="nl"><span class="cc-toc-num">4</span><span class="cc-toc-titel" lang="nl">De grabbelton geschud</span><span class="cc-toc-sub">The sampling distribution and the standard error</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h5.html" hreflang="nl"><span class="cc-toc-num">5</span><span class="cc-toc-titel" lang="nl">Bestaat het echt?</span><span class="cc-toc-sub">Confidence interval, bootstrap and permutation</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h6.html" hreflang="nl"><span class="cc-toc-num">6</span><span class="cc-toc-titel" lang="nl">Hoe beslis je?</span><span class="cc-toc-sub">Null hypothesis, <em>p</em>-value, Type I and II errors, power</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h7.html" hreflang="nl"><span class="cc-toc-num">7</span><span class="cc-toc-titel" lang="nl">Tien keer welnee</span><span class="cc-toc-sub">Reliability, items and Cronbach’s alpha</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<p class="cc-bew">Fourth movement · Uncoupling difference</p>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h8.html" hreflang="nl"><span class="cc-toc-num">8</span><span class="cc-toc-titel" lang="nl">Meer dan één verschil</span><span class="cc-toc-sub">Multiple regression, confounding and partial correlation</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h9.html" hreflang="nl"><span class="cc-toc-num">9</span><span class="cc-toc-titel" lang="nl">Groepen zijn ook getallen</span><span class="cc-toc-sub">Dummy coding, <em>t</em>-test, ANOVA and ANCOVA</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h10.html" hreflang="nl"><span class="cc-toc-num">10</span><span class="cc-toc-titel" lang="nl">Verschil in verschil</span><span class="cc-toc-sub">Interaction and moderation</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h11.html" hreflang="nl"><span class="cc-toc-num">11</span><span class="cc-toc-titel" lang="nl">Het doorgegeven verschil</span><span class="cc-toc-sub">Mediation: the total effect, split into direct and indirect</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+<p class="cc-bew">Coda · Difference that bends</p>
+<div class="cc-toc-h cc-toc-later">
+<a class="cc-toc-kop" href="../../manuscript/h12.html" hreflang="nl"><span class="cc-toc-num">12</span><span class="cc-toc-titel" lang="nl">En hij buigt</span><span class="cc-toc-sub">Logistic regression: probabilities, odds and odds ratios</span><span class="cc-toc-later-regel">Coming soon in English · <span class="cc-toc-nl">read it in Dutch ›</span></span></a>
+</div>
+</div>
+<p class="cc-etym"><em>regression</em> — Latin <em>regredi</em>, to go back. Not a fall, not a relapse; simply back to where you started.</p>
+<p>Stuck somewhere, or see it differently? Let us know: <a href="mailto:vragen@countcamp.org">vragen@countcamp.org</a>.</p>
+<div class="cc-later">
+<p>Every chapter opens with a short story. They’re coming soon in English, all in one place, with notes on why the animals do what they do and which idea lies underneath. For now they’re <a href="../../manuscript/verhalen.html" hreflang="nl">in Dutch</a>, and also <a href="../../manuscript/verhalen_puur.html" hreflang="nl">without the notes</a>, to read or to read aloud.</p>
+</div>
+</section>
+<section id="the-practice-books" class="level2">
+<h2 class="anchored" data-anchor-id="the-practice-books">The practice books</h2>
+<div class="oefen-belofte">
+<p>Learn to do statistics, and to write down what you found</p>
+</div>
+<p>This is where you get your hands on the controls. Every chapter above has a practice book that goes with it: the same material, the same order, the same numbers — but now you run it yourself, in the tool you use. You shuffle the data to see what chance alone can do, and for each chapter you can download the dataset.</p>
+<div class="cc-plank">
+<section id="the-r-practice-book-in-dutch-r" class="level3 cc-boek">
+<h3 class="anchored" data-anchor-id="the-r-practice-book-in-dutch-r"><a href="../../oefenboeken/broertjes/r/index.html" hreflang="nl">The R practice book (in Dutch) →</a> <span class="cc-chip">R</span></h3>
+<p>The book’s own practice book in <strong>R</strong>: you run the code yourself, the shuffling simulations included.</p>
+</section>
+<section id="the-jasp-practice-book-in-dutch-jasp" class="level3 cc-boek">
+<h3 class="anchored" data-anchor-id="the-jasp-practice-book-in-dutch-jasp"><a href="../../oefenboeken/broertjes/jasp/index.html" hreflang="nl">The JASP practice book (in Dutch) →</a> <span class="cc-chip">JASP</span></h3>
+<p>The same material in <strong>JASP</strong>: click paths instead of code, with the shuffling toys in your browser.</p>
+</section>
+<section id="the-spss-practice-book-in-dutch-spss" class="level3 cc-boek">
+<h3 class="anchored" data-anchor-id="the-spss-practice-book-in-dutch-spss"><a href="../../oefenboeken/broertjes/spss/index.html" hreflang="nl">The SPSS practice book (in Dutch) →</a> <span class="cc-chip">SPSS</span></h3>
+<p>The same material in <strong>SPSS</strong>, through the <em>Analyze</em> menus.</p>
+</section>
+</div>
+<p>There are also practice books that don’t follow this book: tailored to a degree programme — like the one for mental-health nurse specialists, where you learn to <em>read</em> and judge other people’s research — and made for single courses. You’ll find them all on the <a href="../../en/workbooks/index.html">practice books</a> page.</p>
+
+
+</section>
+
+</main> 
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/countcamp\.org");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> 
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Benjamin Telkamp — CountCamp</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Everything here is free for your own use — <a href="../../en/use.html">what you may do with it</a></p>
+</div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
