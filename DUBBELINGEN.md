@@ -230,3 +230,29 @@ Kaarten zonder link (OZP 2, STAT 3) mogen in het Engels wegblijven.
 
 Aanleiding: Toetsende Statistiek kwam op 12-11-2026 op de Nederlandse plank en
 stond twee dagen niet op de Engelse; niets zei het (`_logs/site_wegen_2026-11-14.md`).
+
+## 11. Het boekoverzicht in twee talen
+
+| | |
+|---|---|
+| **bron** | `manuscript/index.qmd` — de tekst en het stijlblok van de inhoudsopgave (`.cc-toc`); de onderwerpregels per hoofdstuk staan in de Nederlandse bladzijden zelf (`manuscript/h<n>.html`, `<p class="subtitle lead">`) |
+| **kopie 1** | `en/book/index.qmd` (28-11-2026, spoor boek_overzicht_en) — een vertaling van de tekst; het stijlblok **letterlijk**, met daaronder alleen de grijze rij |
+| **kopie 2** | `en/book/index.qmd`, "The practice books" — de drie kaarten zijn **letterlijk** die van "With the book" op `en/workbooks/index.qmd` |
+| **bewaakt door** | de tekst: het `nl_bron`-stempel (stap 0 van `publiceer_en.sh`, BIJ TE WERKEN). De onderwerpregels: `_tools/boek_inhoud_en.lua` leest ze bij elke bouw uit de bladzijden en meldt een tabelrij die achterloopt (BIJ TE WERKEN in de uitvoer van `en_bouw.py`). Het stijlblok en de drie kaarten: **niets** — met het oog |
+| **handeling** | Nederlands stijlblok veranderd → het Engelse blok erboven mee. Een kaart op `en/workbooks/index.qmd` veranderd → die op `en/book/index.qmd` mee. Daarna `bash _tools/publiceer_en.sh` |
+
+Waarom het stijlblok niet naar `styles.css` gaat, waar het maar één keer zou staan:
+`styles.css` hoort bij elke Nederlandse bladzij, en een Engelse stap verandert niets
+aan de Nederlandse site (Ben, 27-10-2026: *"een en_-stap mag de NL-uitvoer niet
+raken"*). Wie het boekoverzicht in beide talen tegelijk aanpakt, kan het daar wel
+heen verhuizen.
+
+Wat níét dubbel is: welke hoofdstukken er zijn en welke Engels. Dat rekent het
+filter bij elke bouw uit (`manuscript/h<n>.html`, `en/book/h<n>.html`), en titels en
+bewegingen leest het uit die bladzijden. Alleen de vertaling van wat nog niet Engels
+is, staat getikt — in de tabel op `en/book/index.qmd`, naast het Nederlands.
+
+`vorm.js` (zie 9) laadt de Engelse boekbladzij niet, net als `en/workbooks/index.qmd`:
+zonder het scriptje geldt de rug-vorm, en dat is ook `VORM_STANDAARD` (nagekeken
+28-11-2026). Zet iemand de standaard op `"kaart"`, dan blijven de twee Engelse planken
+rug — en die zou dan ook hier vermeld moeten staan.
