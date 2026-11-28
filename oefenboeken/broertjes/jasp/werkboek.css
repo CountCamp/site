@@ -490,6 +490,31 @@ img[src*="/pics/"], img[src*="screenshot"], img[src*="_figuren/klik"] {
 }
 a:has(> img[src*="_figuren/klik"]) { cursor: zoom-in; }
 
+/* De klikbeelden achter een knop (27-11-2026, spoor `jasp_klik_uitklap`).
+   Ben, 27-11: "Wel heftig groot die JASP plaatjes ... zodat het de lopende
+   tekst en uitleg niet verstoord?" -- hij koos uitklapbaar. Elk beeld staat
+   in een dichtgeklapt `.callout-note .jasp collapse="true"`, dezelfde vorm
+   als de andere uitklapkaders; hier verandert alleen de maat:
+   (1) Binnen zo'n kader is de zijmarge smal, want het beeld is de reden dat
+       je hem opent. Beeld 01 op 390 px, gemeten 27-11: zonder kader 214 px
+       breed (`_werk/jasp_klikbeelden_31/390px/meting.json`), in een kader
+       met de gewone marge (1.15rem + 0.5em aan elke kant) 158 px, met deze
+       marge 185 px (`_werk/jasp_klik_uitklap_foto/maak_fotos.py`).
+   (2) Quarto geeft het laatste kind van een kaderlijf 0.5rem ruimte onderaan.
+       Is dat laatste kind een dichtgeklapt kader, dan valt die ruimte binnen
+       zijn rand en zie je onder de knop een los randje. */
+.callout-note.jasp:has(img[src*="_figuren/klik"]) > div.callout-collapse {
+  padding-left: 0.4rem !important;
+  padding-right: 0.4rem !important;
+}
+.callout-note.jasp:has(img[src*="_figuren/klik"]) > div.callout-collapse > .callout-body {
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.callout-body > .callout:last-child:has(> div.callout-collapse) {
+  padding-bottom: 0 !important;
+}
+
 /* ============================================================
    E. PRINT — schaduw weg, wit papier
    ============================================================ */
