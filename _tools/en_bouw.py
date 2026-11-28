@@ -275,6 +275,18 @@ def cmd_bouw(a) -> int:
         f.write(r.stdout + "\n" + r.stderr)
     waarsch = [l for l in (r.stdout + r.stderr).splitlines()
                if re.search(r"WARN|ERROR|Unable to resolve", l)]
+    # Een filter dat iets hardop moet zeggen zonder de bouw te laten stoppen, schrijft
+    # een regel die met "MELD: " begint (28-11-2026, spoor boek_overzicht_en:
+    # _tools/boek_inhoud_en.lua zegt zo wat hij zag, en BIJ TE WERKEN als de tabel in
+    # en/book/index.qmd achterloopt). Zonder deze regels stond dat alleen in de log,
+    # en die leest niemand: een melding die niemand ziet, is stilte.
+    # Gezocht ná het weghalen van Quarto's kleurcodes, niet aan het begin van de regel:
+    # Quarto zet de stderr van een filter achter de kleurcode van zijn vorige regel
+    # (gemeten: "\x1b[39mMELD: inhoud ..."), en dan miste startswith hem.
+    for l in (r.stdout + r.stderr).splitlines():
+        m = re.search(r"MELD: (.*)", re.sub(r"\x1b\[[0-9;]*m", "", l))
+        if m:
+            zeg("  " + m.group(1))
     if r.returncode != 0:
         zeg(f"  FOUT: de Engelse bouw liep vast (afloop {r.returncode}); log: {log}")
         for l in (r.stderr or r.stdout).splitlines()[-15:]:
