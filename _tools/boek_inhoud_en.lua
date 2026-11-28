@@ -53,8 +53,21 @@ local EN = "en/book"
 local VOORVOEGSEL = { nl = "Hoofdstuk", en = "Chapter" }
 local NAAM = "boek_inhoud_en.lua"
 
+-- HOE DIT FILTER STOPT, en waarom niet met error(). Gemeten 28-11-2026 op Quarto
+-- 1.9.38, in een wegwerpproject, zestien combinaties: error() in een eigen filter
+-- stopt de bouw NIET. Quarto vervangt de globale error door een melding ("ERROR
+-- ([C]:-1) ..."), het filter loopt gewoon door, de bladzij wordt toch gemaakt, en
+-- quarto render eindigt met afloop 0 — met het filter in de kop van de bladzij of in
+-- _quarto.yml, in een website- of een default-project, met of zonder niveau.
+-- assert(false, ...) en os.exit(1) stoppen wel: afloop 1, geen bladzij. Hier
+-- os.exit, omdat assert een Lua-traceback van tien regels achter de melding zet, en
+-- en_bouw.py toont van een mislukte bouw alleen de laatste vijftien.
+-- "ERROR:" vooraan, zodat en_bouw.py hem ook als fout leest als een volgende Quarto
+-- os.exit ooit net zo opvangt als error().
 local function fout(tekst)
-  error(NAAM .. ": " .. tekst .. "  (zie de kop van _tools/" .. NAAM .. ")", 0)
+  io.stderr:write("ERROR: " .. NAAM .. ": " .. tekst .. "  (zie de kop van _tools/" .. NAAM .. ")\n")
+  io.stderr:flush()
+  os.exit(1)
 end
 
 -- Naar stderr: Quarto geeft het door, en en_bouw.py herhaalt elke regel die met
