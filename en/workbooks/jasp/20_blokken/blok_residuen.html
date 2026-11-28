@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<link rel="canonical" href="https://countcamp.org/en/workbooks/jasp/20_blokken/blok_residuen.html">
+<!-- teller:begin — bezoekersteller (GoatCounter). Bron: _tools/teller.html; de bouw zet hem erin, nooit met de hand plakken. -->
+<script>
+(function () {
+  // Alleen de echte site telt. Op een proefdruk (broodje:8788, countcamp.org/pr-preview/),
+  // op localhost of in een los geopend bestand wordt count.js niet eens opgehaald.
+  var h = location.hostname, p = location.pathname;
+  if (h !== 'countcamp.org' && h !== 'www.countcamp.org') return;
+  if (p.indexOf('/pr-preview/') === 0) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://countcamp.goatcounter.com/count');
+  document.head.appendChild(s);
+})();
+</script>
+<!-- teller:eind -->
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 3.3 · Looking at the residuals – The JASP Exercise Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../90_basishandelingen.html" rel="next">
+<link href="../20_blokken/blok_enkelvoudige_regressie.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+<link rel="stylesheet" href="../werkboek_en.css">
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_residuen.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/workbooks/jasp/20_blokken/blok_residuen.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_residuen.html">
+<style>
+/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
+.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
+.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.taalwissel-los [aria-current]{font-weight:600;}
+.taalwissel-los .taalwissel-sep{margin:0 .45em;}
+</style>
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+<nav class="taalwissel taalwissel-los" aria-label="language"><a href="../../../../oefenboeken/broertjes/jasp/20_blokken/blok_residuen.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Second movement · Coupling differences</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">Chapter 3 · The Little Rectangle</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_residuen.html">Exercise 3.3 · Looking at the residuals</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The JASP Exercise Book</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/book/h0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Back to the book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The JASP Exercise Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">First movement · Difference under the microscope</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 0 · In the Beginning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.0 · Installing &amp; setting up</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.1 · Looking at the data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 1 · The Average Gulp</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 1.1 · The mean and the standard deviation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 2 · The Shape of the Heap</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 2.1 · Median, quartiles and skewness</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Second movement · Coupling differences</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Chapter 3 · The Little Rectangle</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.1 · Correlation and the scatterplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.2 · Simple regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Exercise 3.3 · Looking at the residuals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic moves in JASP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../91_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Shuffle toys</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/toys/shuffle-correlation.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Shuffle the correlation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<main class="content" id="quarto-document-content">
+<p class="beweging">Second movement · Coupling differences</p>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Second movement · Coupling differences</li><li class="breadcrumb-item"><a href="../20_blokken/blok_correlatie_scatterplot.html">Chapter 3 · The Little Rectangle</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_residuen.html">Exercise 3.3 · Looking at the residuals</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Exercise 3.3 · Looking at the residuals</h1>
+<p class="subtitle lead">What the line left behind, and where <em>R</em>² comes from</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">In this exercise</h2>
+   
+  <ul>
+  <li><a href="#twenty-two-penguins-of-exactly-190-millimetres" id="toc-twenty-two-penguins-of-exactly-190-millimetres">Twenty-two penguins of exactly 190 millimetres</a></li>
+  <li><a href="#work-out-the-misses-on-the-twelve-stones" id="toc-work-out-the-misses-on-the-twelve-stones">Work out the misses on the twelve stones</a></li>
+  <li><a href="#the-residual-and-where-r²-comes-from" id="toc-the-residual-and-where-r²-comes-from">The residual, and where <em>R</em>² comes from</a></li>
+  <li><a href="#the-bookkeeping-of-the-penguin-line" id="toc-the-bookkeeping-of-the-penguin-line">The bookkeeping of the penguin line</a></li>
+  <li><a href="#the-same-bookkeeping-on-2634-questionnaires" id="toc-the-same-bookkeeping-on-2634-questionnaires">The same bookkeeping on 2634 questionnaires</a></li>
+  <li><a href="#exam-style-questions" id="toc-exam-style-questions">Exam-style questions</a></li>
+  </ul>
+</nav>
+<div class="datastrook">
+<p><strong>Data for this exercise</strong> — <a href="../10_data/stones.csv" download="stones.csv">stones.csv</a> the twelve stones from the book · <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 penguins · <a href="../10_data/bigfive.csv" download="bigfive.csv">bigfive.csv</a> 2634 completed questionnaires · <a href="../91_datasets.html">what each column means</a></p>
+</div>
+<div class="kicker">
+<p>hook</p>
+</div>
+<section id="twenty-two-penguins-of-exactly-190-millimetres" class="level2">
+<h2 class="anchored" data-anchor-id="twenty-two-penguins-of-exactly-190-millimetres">Twenty-two penguins of exactly 190 millimetres</h2>
+<p><span class="begrippen">prediction · miss</span></p>
+<p>The penguins are old acquaintances — in <a href="../20_blokken/blok_enkelvoudige_regressie.html">Exercise 3.2</a> you drew a line through them yourself: the weight predicted from the flipper length, nearly fifty grams of penguin per millimetre of flipper, and <em>R</em>² = .76.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Three quarters of all the difference in weight runs along with the flipper. That’s a lot, for living animals, and it sounds as if the line now more or less <em>knows</em> the weight.</p>
+<p>And now something odd. The file holds <strong>twenty-two</strong> penguins with a flipper of exactly 190 millimetres. The line knows only the flipper length, so all twenty-two get the same prediction: 3659.4 grams. What the scales actually said, in grams:</p>
+<blockquote class="blockquote">
+<p><strong>3050</strong> · 3325 · 3400 · 3450 · 3450 · 3450 · 3575 · 3600 · 3600 · 3650 · 3700 · 3700 · 3725 · 3800 · 3900 · 3900 · 3900 · 3950 · 4250 · 4250 · 4250 · <strong>4600</strong></p>
+</blockquote>
+<p>From 3050 to 4600 — a kilo and a half of difference, at one and the same flipper length. The line can do nothing about that: it knows just one thing about a penguin, and that one thing was the same twenty-two times over.</p>
+<p>And those twenty-two are no oddity you just happened to hit on. Pick another flipper length and you see the same thing, only with fewer animals in a huddle at once: all along the line, reality sits above it and below it. That sharpens a question we’ve left to one side until now: <strong>how far is the line off, penguin by penguin — and what can you do with those misses?</strong></p>
+<p>Come along for a moment. The line has had its guess; now we mark its work.</p>
+<div class="kicker">
+<p>play with it</p>
+</div>
+</section>
+<section id="work-out-the-misses-on-the-twelve-stones" class="level2">
+<h2 class="anchored" data-anchor-id="work-out-the-misses-on-the-twelve-stones">Work out the misses on the twelve stones</h2>
+<p><span class="begrippen">residual · predicted value</span></p>
+<p>You’ve already seen a miss like that written down in the book: <strong>DATA = FIT + RESIDUAL</strong>. The <em>fit</em> is what the line guesses, the <strong>residual</strong> is what’s left over — the miss, now no longer measured from the mean but from the line.</p>
+<p>You’ll come across this one thing under four names: <strong>miss</strong>, <strong>residual</strong>, <strong>deviation</strong>, and, in software output and in articles, <em>error</em>. Each time it’s the distance between what is really there and what the line guessed. In this exercise it’s called <em>the miss</em>; when JASP says <em>Residual</em> or a plot says <em>residual</em>, it’s exactly the same thing.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="First as in the book — the twelve stones · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>First as in the book — the twelve stones · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>stones.csv</code> and make two columns in the <strong>R</strong> box (type <strong>Scale</strong>; after the name <strong>Create Column</strong>, after the line <strong>Compute column</strong>), as in the <a href="../90_basishandelingen.html#twee-routes-één-handeling">toolbox</a>: left of the arrow the name of the column, right of it what goes in the <strong>R</strong> box.</p>
+<pre><code>guess      -&gt;   fitted(lm(shine ~ carat))
+residual   -&gt;   resid(lm(shine ~ carat))</code></pre>
+<p>Copy the right-hand side exactly; you don’t have to read it. The top one says <em>“give me what the line guesses”</em>, the bottom one <em>“give me what is left over”</em>. Rounded to one decimal:</p>
+<pre><code>guess       30.7   33.9   33.9   40.4   50.0   50.0   53.2   56.4   59.6   59.6   66.1   66.1
+residual   -10.7   -3.9   -3.9  -10.4    0.0   20.0   26.8    3.6   10.4   20.4  -36.1  -16.1</code></pre>
+<p>Then add up <code>residual</code>: <strong>Descriptives</strong>, <code>residual</code> in <strong>Variables</strong>, and under <em>Statistics</em> the <strong>Sum</strong> tick box.</p>
+<p><span class="even-checken">Check whether that sum comes to zero for you too — give or take a little rounding dust. If it doesn’t, somewhere along the way you’ve got hold of something other than the residuals of this model.</span></p>
+</div>
+</div>
+<p>Those are exactly the two columns from the table in the book: Else lands on zero (the line runs straight through her), Kees is furthest off, at −36.1. New is only the <strong>picture</strong> below — you set those two columns against each other instead of reading them:</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · the misses in a picture · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · the misses in a picture · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run <strong>Regression → Linear Regression</strong> with <code>shine</code> as <strong>Dependent Variable</strong> and <code>carat</code> in <strong>Covariates</strong>, and under <strong>Plots</strong> tick the option <strong>Residuals vs. predicted</strong>: the guess on the horizontal axis, the miss on the vertical one, and the zero line straight through it.</p>
+</div>
+</div>
+<p>Look closely at what that picture does. The regression line has <strong>gone flat</strong>: everything the line already knew has been calculated out, so what’s left over should hover around the zero line. A residual plot is a scatterplot swept clean — you’re no longer looking at the association, you’re looking at what the association left behind.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="First the twelve stones">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>First the twelve stones
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two questions before you read on.</p>
+<p><strong>a)</strong> Ask for the standard deviation of shine, and that of the residuals. (two numbers, and one sentence on what the difference between the two means)</p>
+<p><strong>b)</strong> Put two columns next to the data: how far each shine lies from the mean (the <code>deviation</code> column from Exercise 1.1, the blue stroke in the book), and the residual (the burgundy stroke). Square both of those columns and add up each column of squares. (two sums, and say what share of the first is swallowed by the second)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Shine itself spreads with <em>SD</em> = 21.74 shine points, the residuals with <em>SD</em> = 17.75. Without the line your best guess for every stone is the mean, and how widely the misses fan out around that mean is what the standard deviation of shine sums up: nearly 22 shine points. Guess <em>with</em> the line, and the residuals fan out around the line instead, and that fan is narrower: nearly 18. So the line does save you something, but not much — with these twelve stones, carat is nowhere near everything.</p>
+<p>Don’t confuse that 17.75 with the 18.61 from Exercise 3.2, the number the regression itself prints for the spread around the line. Both come from the same squares of the residuals, the ones you add up in b). A standard deviation divides them by eleven, <em>n</em> − 1, because the mean costs one number; the 18.61 divides by ten, <em>n</em> − 2, because the line costs two (the intercept and the slope). Both then take the square root. In the book that second one is called the standard error of the estimate, <em>S</em><sub>e</sub>. If someone asks for the standard error of the estimate, it’s that one: 18.61.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>shine</code> and <code>residual</code>: <em>Std. Deviation</em> 21.742 and 17.746.</p>
+<p>The 18.61 from Exercise 3.2 is in the <strong>Model Summary</strong> of your regression, under <em>RMSE</em>: 18.613.</p>
+</div>
+</div>
+<p><strong>b)</strong> Shine around its own mean gives <strong>5200.0</strong>; shine around the line gives <strong>3464.3</strong>. So of all the difference in shine, two thirds is left over once the line has had its share — and the one third it <em>does</em> take is exactly the <em>R</em>² = .33 you saw in Exercises 3.1 and 3.2.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You already have <code>residual</code>. Make three more columns in the <strong>R</strong> box (type <strong>Scale</strong>):</p>
+<pre><code>deviation    -&gt;   shine - mean(shine)
+deviation2   -&gt;   deviation^2
+residual2      -&gt;   residual^2</code></pre>
+<p>Add up the two columns of squares: <strong>Descriptives</strong>, <code>deviation2</code> and <code>residual2</code> in <strong>Variables</strong>, and under <em>Statistics</em> the <strong>Sum</strong> tick box. It says 5200.000 and 3464.286.</p>
+<p>The same two are in the <strong>ANOVA</strong> table of your regression, under <em>Sum of Squares</em>: <em>Total</em> 5200.000 and <em>Residual</em> 3464.286. The top row, <em>Regression</em> 1735.714, is the part the line <em>does</em> take.</p>
+</div>
+</div>
+<p><em>Why</em> that is so, you’ll find below.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>get it</p>
+</div>
+</section>
+<section id="the-residual-and-where-r²-comes-from" class="level2">
+<h2 class="anchored" data-anchor-id="the-residual-and-where-r²-comes-from">The residual, and where <em>R</em>² comes from</h2>
+<p><span class="begrippen">residual · residual plot · <em>R</em>²</span></p>
+<p>Look at that sum of the residuals once more. Zero — not roughly, but exactly, give or take rounding. That’s no coincidence and no compliment to the line either: it’s the construction. That’s how the line was laid — for every miss on the plus side there’s just as much on the minus side, because if anything were left over, the whole line could shift a bit, and then it wouldn’t have been the best-fitting line.</p>
+<p>Build in small moments to check — it ought to be zero; is it? So do hold on to that zero as a checkpoint: if your column of residuals doesn’t add up to zero, something has gone wrong along the way.</p>
+<p>But mind what it <em>also</em> means. Precisely because that sum is always zero — with a line that runs tight through the cloud <em>and</em> with a line that leaves all sorts behind — it says <em>nothing</em> about how well the line guesses. Plus and minus cancel out regardless. If you want to know how well, you mustn’t add up but look: <strong>how widely do the misses lie around zero?</strong></p>
+<p>And that’s exactly what you see in the residual plot. The twenty-two this exercise opened with stand there as a single column: same guess, twenty-two misses, above and below zero.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · draw the misses and count the garden · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · draw the misses and count the garden · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>penguins.csv</code> and run <strong>Regression → Linear Regression</strong> with <code>body_mass_g</code> as <strong>Dependent Variable</strong> and <code>flipper_length_mm</code> in <strong>Covariates</strong>; under <strong>Plots</strong>, tick <strong>Residuals vs.&nbsp;predicted</strong>. Then make the same column as with the stones:</p>
+<pre><code>residual   -&gt;   resid(lm(body_mass_g ~ flipper_length_mm))</code></pre>
+<p><strong>Descriptives</strong> gives you the two numbers you need: <code>body_mass_g</code> spreads with <em>Std. Deviation</em> 801.955, <code>residual</code> with 393.700. Divide one by the other and square, in three small steps you can all check by hand:</p>
+<pre><code>393.700 / 801.955 = 0.491
+0.491 x 0.491     = 0.241
+1 - 0.241         = .759</code></pre>
+<p>Mind one number in <strong>Model Summary</strong>: there it says <em>RMSE</em> 394.278 and not 393.700. Neither is wrong — the <em>RMSE</em> divides by 340 (342 animals minus the two numbers that describe the line, the intercept and the slope), a standard deviation by 341.</p>
+</div>
+</div>
+<p>Without the line your best guess for every weight was the mean — you know that game. The standard deviation of the weight measures how widely the weights lie around that one guess: 801.95 grams. <em>With</em> the line they lie closer together. The standard deviation of the misses measures how widely they lie around the line: 393.70 grams. So the line makes the spread 408.25 grams narrower, <strong>just over half</strong> of the spread without the line.</p>
+<p>And yet Exercise 3.2 said <em>R</em>² = .76. Three quarters. Who’s lying — the half or the three quarters? Neither; they count in a different measure. Think of all the difference in weight as a <strong>garden full of variation</strong>. Explaining an association isn’t explaining a length but an area, and area goes in squares — so square the two standard deviations <em>before</em> you divide one by the other. Then it says .24: the part of the garden the line leaves behind, divided by the whole garden. The rest the line <em>does</em> take: one minus .24 is .76. In metres along the edge the line wins just over half; in garden area, three quarters. It’s the same gain, measured twice.</p>
+<p>And <em>R</em>² needs nothing new for that: everything it knows is already in the misses. Do the same on the twelve stones and out comes .33 — exactly the square of the <em>r</em> you put together yourself at the start of this chapter, with all its decimals (the rounded .58 squared gives .34). Two routes, one number: square the correlation, or keep the books on the misses.</p>
+<div class="kicker">
+<p>your turn</p>
+</div>
+</section>
+<section id="the-bookkeeping-of-the-penguin-line" class="level2">
+<h2 class="anchored" data-anchor-id="the-bookkeeping-of-the-penguin-line">The bookkeeping of the penguin line</h2>
+<p><span class="begrippen">sum of the residuals · residual plot · <em>R</em>² from the misses</span></p>
+<p>Now you, on the line from the hook: the weight of 342 penguins, predicted from their flipper length. You drew it and read it in Exercise 3.2; now you’re going to work out what it left behind.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · set it up · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · set it up · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>penguins.csv</code> is open and the regression of <code>body_mass_g</code> on <code>flipper_length_mm</code> is running. One more column to add, next to <code>residual</code>:</p>
+<pre><code>guess      -&gt;   fitted(lm(body_mass_g ~ flipper_length_mm))</code></pre>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Your turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Answer the questions in order; they build on each other. The last one is deliberately called <strong>Z)</strong> and not k): the cloud question always comes last.</p>
+<p>There are eleven of them, and that’s too many for one sitting. <strong>After e) you have the misses in hand and you’ve found the hook again</strong> — a good moment to stop. At f) the bookkeeping starts, and that’s the part <em>R</em>² rolls out of.</p>
+<p>In brackets, each time, is what belongs in a complete answer. Where it says that a part is up to you, the wording is free — for the rest, the answer is fixed. And under <em>Exam-style questions</em>, at the end of this exercise, the same topics come round once more, in the form an exam would ask them in.</p>
+<p><strong>a)</strong> Ask for the prediction and the residual of the first six penguins (the first six rows of <code>guess</code> and <code>residual</code>). For one of the six, add the two together and set the result beside its real weight. (two rows of six, and one sum)</p>
+<p><strong>b)</strong> Add up all 342 residuals. What comes out, and why is that <em>not</em> a compliment to the line? (one number, and two sentences)</p>
+<p><strong>c)</strong> Draw the residual plot. What should be there, and what do you see? (two sentences)</p>
+<p><strong>d)</strong> Find the penguin where the line is furthest off, upwards and downwards. (two numbers <em>with</em> their unit, and say which species they are)</p>
+<p><strong>e)</strong> Back to the twenty-two from the hook. Ask for the residuals of the penguins with a flipper of exactly 190 millimetres. (the smallest and the largest, and one sentence on what stands above that one guess in the residual plot)</p>
+<p><strong>f)</strong> Now the bookkeeping. Add up the squared deviations of the weight around its own mean, and those of the residuals around zero. Then add up the squared distances from the line to the mean (all three are in the <strong>ANOVA</strong> table, under <em>Sum of Squares</em>: at <em>Total</em>, <em>Residual</em> and <em>Regression</em>). (three numbers — and add the last two together)</p>
+<p><strong>g)</strong> Work out <em>R</em>² from those numbers: one minus the residual sum divided by the total sum. Set it beside the <em>R</em>² in <strong>Model Summary</strong>. (two numbers)</p>
+<p><strong>h)</strong> Ask for the standard deviation of the weight and that of the residuals. By what percentage does the line make the spread narrower — and why is that a <em>different</em> number from the <em>R</em>² in g)? (two numbers, and two sentences)</p>
+<p><strong>i)</strong> Colour the residual plot by species and ask for the mean residual per species. What does that say about the line? (three numbers, and two sentences)</p>
+<p><strong>j)</strong> Write down your finding in one sentence. (what the line covers, and what it leaves behind per penguin — those two have to be in it, the words around them are up to you; more than one answer is right)</p>
+<p><strong>Z) Is the cloud straight, and are there no points in it screwing the whole thing up?</strong> Look at your residual plot from c) — is there an arc in it, or does one animal hang so far out that it pulls on the line all by itself? (two short statements, and say which of your answers above depend on them)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> The six predictions are 3212.3 · 3460.7 · 3907.9 · 3808.5 · 3659.4 · 3212.3 grams, and the six residuals 537.7 · 339.3 · −657.9 · −358.5 · −9.4 · 412.7. Add them up per animal and you have the weight back: the first penguin weighs 3212.3 + 537.7 = 3750 grams, and that’s what’s in the file too. <strong>DATA = FIT + RESIDUAL</strong>, literally.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Look in your data at the first six rows of <code>guess</code>, <code>residual</code> and <code>body_mass_g</code>. If you want them as a table: under <strong>Statistics</strong>, at <em>Residuals</em>, tick the option <strong>Casewise diagnostics</strong> and set it to <strong>All</strong>.</p>
+</div>
+</div>
+<p><strong>b)</strong> Zero, give or take rounding. And that’s no compliment: it’s the way the line was laid. Every miss on the plus side has a miss on the minus side standing opposite it, and that goes for <em>every</em> best-fitting line — including one that’s completely off. A number that’s always the same can’t tell you anything about how well it’s going.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>residual</code>, <strong>Sum</strong> ticked: it says zero, give or take a little rounding dust.</p>
+</div>
+</div>
+<p><strong>c)</strong> What should be there is a shapeless cloud around the zero line: everything the line already knew has been calculated out, so what’s left over may no longer carry any pattern. And at first sight that’s what you see, too — a band of points that stays about equally wide from left to right and nowhere clearly runs up or down; at Z) you look more closely. What you <em>do</em> see is the vertical stripes: penguins were measured to whole millimetres, so the guesses land on a limited number of spots.</p>
+<p><strong>d)</strong> Upwards the line is off by 1288.69 grams (an Adelie, row 39) and downwards by 1058.80 grams (a Chinstrap, row 313). A good kilo, both of them — on animals that weigh a good four kilos on average.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>residual</code> gives <em>Minimum</em> −1058.797 and <em>Maximum</em> 1288.687. Which two animals those are, you find with the <a href="../90_basishandelingen.html#filteren">filter</a>: <code>residual == max(residual)</code> leaves one row, and there you read off the species. Switch the filter off again afterwards.</p>
+</div>
+</div>
+<p><strong>e)</strong> From −609 to +941 grams. So in the residual plot, above that one guess of 3659.4, stands a single vertical stripe of twenty-two points, a good kilo and a half tall. That’s the hook, now as a picture: the same prediction, twenty-two different misses.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Put <code>flipper_length_mm == 190</code> in the <a href="../90_basishandelingen.html#filteren">filter</a> — 22 animals remain — and ask for the <em>Minimum</em> and <em>Maximum</em> of <code>residual</code>: −609.426 and 940.574. Switch the filter off again afterwards.</p>
+</div>
+</div>
+<p><strong>f)</strong> The total sum is <strong>219 307 697</strong>, the residual sum <strong>52 854 796</strong> and the fit sum <strong>166 452 902</strong>. Add those last two together and you get the first one back. That’s <code>DATA = FIT + RESIDUAL</code>, but in squared deviations — and <em>that</em> is the form in which the bookkeeping balances.</p>
+<p>Check it by hand and you come out one too high: 166 452 902 + 52 854 796 is 219 307 698, and above it says 219 307 697. That’s no crack in the bookkeeping but rounding crumbs — all three sums were rounded separately, and unrounded they coincide, give or take machine noise.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All three are in the <strong>ANOVA</strong> table, under <em>Sum of Squares</em>: <em>Total</em> 219307697.368, <em>Residual</em> 52854795.628 and <em>Regression</em> 166452901.740. Those are the same three numbers as above, only without the spaces and with three decimals after them.</p>
+</div>
+</div>
+<p><strong>g)</strong> <strong>.76</strong>, both of them.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Working it out yourself: 1 − 52854795.628 / 219307697.368 = .759 — your own number, so without the zero in front. And in <strong>Model Summary</strong> it says 0.759, because JASP does carry its zero along.</p>
+</div>
+</div>
+<p>And that’s the point of this exercise. <em>R</em>² is not a separate measure that JASP conjures up from somewhere: it’s the garden the line takes, divided by the whole garden. You’ve just worked it out from the misses yourself.</p>
+<p><strong>h)</strong> The standard deviation of the weight is 801.95 grams, that of the residuals 393.70. So the line makes the spread 408.25 grams narrower, and that’s <strong>51 per cent</strong> of the spread without the line — just over half, not three quarters.</p>
+<p>Two sentences on why both those numbers are right: the 51 per cent counts in grams, along the edge of the garden, and the .76 counts in area. Squaring turns just over half into three quarters — check it: 393.70 divided by 801.95 is .49, and .49 squared is .24, and one minus .24 is .76.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>body_mass_g</code> and <code>residual</code>: <em>Std. Deviation</em> 801.955 and 393.700. (The <em>RMSE</em> of 394.278 in <strong>Model Summary</strong> is a different number — see the box above, at the garden.)</p>
+</div>
+</div>
+<p><strong>i)</strong> Adelie <strong>+43.5</strong>, Chinstrap <strong>−215.7</strong>, Gentoo <strong>+65.8</strong> grams.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong>, <code>residual</code> in <strong>Variables</strong> and <code>species</code> in <strong>Split</strong>: 43.539, −215.683 and 65.789 grams. The coloured residual plot you make in that same <strong>Descriptives</strong>: take <code>residual</code> out of <strong>Variables</strong> for a moment, then put in first <code>guess</code> and then <code>residual</code> (the first one goes on the horizontal axis), leave <code>species</code> in <strong>Split</strong> and, under <strong>Customizable Plots</strong>, tick <strong>Scatter plots</strong>.</p>
+</div>
+</div>
+<p>Two sentences: across all 342 the mean residual is zero, but per species it isn’t — for the Chinstraps the line sits systematically a good two hundred grams too high, and for the other two a little too low. That means there’s a third player in the cloud here too, exactly as in Exercise 3.1; only this time it’s small enough not to tip the line over.</p>
+<p><strong>j)</strong> For example:</p>
+<blockquote class="blockquote">
+<p>The line of weight on flipper length covered just over three quarters of the differences in weight among 342 penguins (<em>R</em>² = .76), but still left nearly four hundred grams of spread behind per animal (<em>SD</em> of the residuals = 393.70).</p>
+</blockquote>
+<p><strong>Z)</strong> Half and half — and the half that doesn’t hold, you know already.</p>
+<p><em>There’s a slight arc in it.</em> A slanting stripe <em>can’t</em> be in it: the association between the guess and the miss is exactly zero, and that’s no finding but the construction — that’s precisely what “the line has gone flat” means. An arc can. Look carefully at your plot from c): at the low and the high guesses the points lie on average a little <em>above</em> the zero line, in the middle on average below it. That’s the dip from <a href="../20_blokken/blok_enkelvoudige_regressie.html">Exercise 3.2</a> — +57, −106 and +41 grams per third of flipper length — now as a picture instead of as three numbers. You can barely see it, and that’s why 3.2 worked it out for you. Where it comes from, you know already too: from the species. At i) the line sat a good two hundred grams too high for the Chinstraps, on average.</p>
+<p><em>And no penguin pulls on the line all by itself.</em> The biggest miss is 1288.69 grams, and that’s a good three times the standard deviation of the residuals — an animal that stands out, but not one that tips the line. Leave it out and the slope barely moves.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Regression → Correlation</strong> with <code>guess</code> and <code>residual</code>: <em>Pearson’s r</em> 0.000 — exactly zero, give or take machine noise.</p>
+</div>
+</div>
+<p>What hangs on it: little here, because the arc is slight. Had it been stronger, the whole bookkeeping would still stand — the sums at f), the <em>R</em>² at g), the standard deviations at h) and the species means at i) are sums over these 342 animals, and those stay right whatever is bent. What you would then redo is every sentence in which you <em>recommend</em> the line: at j) it says it covers three quarters, and if the association runs strongly curved, that’s no lie, but it is a line that lets you down in the wrong place.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>final task</p>
+</div>
+</section>
+<section id="the-same-bookkeeping-on-2634-questionnaires" class="level2">
+<h2 class="anchored" data-anchor-id="the-same-bookkeeping-on-2634-questionnaires">The same bookkeeping on 2634 questionnaires</h2>
+<p><span class="begrippen">scale score · <em>R</em>² from the misses · the sample sentence</span></p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Final task">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Final task
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The last word of the whole chapter, and it ends where this book always ends: with people.</p>
+<p><code>bigfive.csv</code> holds <strong>2634 people</strong> who rated twenty-five statements about themselves on a scale from 1 to 6. You use ten of them here — five on <strong>neuroticism</strong>, how easily you get upset, and five on <strong>openness</strong>, the taste for new things. You met them in Exercises 3.1 and 3.2, with <code>O2</code> and <code>O5</code> reversed first; now you do this exercise’s bookkeeping on them.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · set up the people · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · set up the people · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open <code>bigfive.csv</code> and make three columns in the <strong>R</strong> box (type <strong>Scale</strong>), as in the <a href="../90_basishandelingen.html#twee-routes-één-handeling">toolbox</a>: left of the arrow the name of the column, right of it what goes in the <strong>R</strong> box.</p>
+<pre><code>neuroticism   -&gt;   rowMeans(data.frame(N1, N2, N3, N4, N5))
+openness       -&gt;   rowMeans(data.frame(O1, 7 - O2, O3, O4, 7 - O5))
+residual_people    -&gt;   resid(lm(neuroticism ~ openness))</code></pre>
+<p>Copy the right-hand side exactly; you don’t have to read it. The top two are the scales from Exercise 3.1, with the reversal of <code>O2</code> and <code>O5</code> in them; the bottom one says <em>“give me what the line leaves behind”</em>.</p>
+<p>Then run <strong>Regression → Linear Regression</strong> with <code>neuroticism</code> as <strong>Dependent Variable</strong> and <code>openness</code> in <strong>Covariates</strong>.</p>
+</div>
+</div>
+<p><strong>a)</strong> Ask for the residuals and add them up. (one number, and one sentence on why you could have predicted that)</p>
+<p><strong>b)</strong> Ask for the standard deviation of neuroticism and that of the residuals. How much does the line save you? (two numbers, and one sentence)</p>
+<p><strong>c)</strong> Work out <em>R</em>² from the misses, just as with the penguins. (one number, and set it beside the <em>R</em>² in <strong>Model Summary</strong>)</p>
+<p><strong>d)</strong> Now the people version of the twenty-two penguins. How many people score exactly 4.0 on openness, what prediction do they all get, and how far apart does their <em>real</em> neuroticism run? (three answers, and one sentence)</p>
+<p><strong>e)</strong> Write down what you’ve found, in <strong>two sentences</strong> and in this fixed form:</p>
+<blockquote class="blockquote">
+<p>Within these <em>n</em> people: … (<em>R</em>² = …). Whether that also holds beyond these <em>n</em>, you don’t know yet.</p>
+</blockquote>
+<p>(fill in the <em>n</em>, the finding in plain words and the <em>R</em>² — and leave that second sentence exactly as it stands; for the finding, more than one answer is right)</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-26-contents" aria-controls="callout-26" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-26" class="callout-26-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Zero, give or take rounding — and you could have predicted that, because it holds for <em>every</em> best-fitting line, however well or badly it fits. It was so with the diamonds, it was so with the penguins, and so it is here.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong> with <code>residual_people</code>, <strong>Sum</strong> ticked: zero, give or take a little rounding dust.</p>
+</div>
+</div>
+<p><strong>b)</strong> Neuroticism spreads with <em>SD</em> = 1.1946 scale points, the residuals with <em>SD</em> = 1.1897. So the line saves you 0.0049 of a scale point on a scale from 1 to 6 — in other words: next to nothing. (Four decimals here on purpose: at two you can’t even see the difference any more.) Whoever knows someone’s openness knows hardly any more about their neuroticism than whoever knows only the mean.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Descriptives</strong>: <em>Std. Deviation</em> 1.195 for <code>neuroticism</code> and 1.190 for <code>residual_people</code>. If you want to see the four decimals from the text — 1.1946 and 1.1897 — set <strong>Preferences → Results → Fix the number of decimals</strong> to 4.</p>
+</div>
+</div>
+<p><strong>c)</strong> <strong>.01</strong>, both of them. Of the whole garden this line takes barely one per cent.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>1 − 1.1897² / 1.1946² = .008 — your own number, without the zero in front. In <strong>Model Summary</strong> it says 0.008.</p>
+</div>
+</div>
+<p><strong>d)</strong> <strong>188</strong> people score exactly 4.0 on openness. All 188 of them get the same prediction: <strong>3.24</strong> scale points of neuroticism. And their <em>real</em> neuroticism runs from <strong>1.0 to 6.0</strong> — from the lowest score that exists on this scale to the highest, all within that one guess.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Put <code>openness == 4</code> in the <a href="../90_basishandelingen.html#filteren">filter</a>: 188 rows remain, and that count is in <strong>Descriptives</strong> at <em>Valid</em>. For <code>neuroticism</code> it says <em>Minimum</em> 1.000 and <em>Maximum</em> 6.000 there. The prediction you work out yourself from the two numbers in <strong>Coefficients</strong>: 3.774 − 0.133 × 4 = 3.242. Switch the filter off again afterwards.</p>
+</div>
+</div>
+<p>That’s the same figure as the twenty-two penguins this exercise opened with, only harder: there the real weight ran across a kilo and a half at one guess, here the real neuroticism runs across the <strong>whole scale</strong> at one guess. With people that’s the rule, not the exception.</p>
+<p><strong>e)</strong> For example:</p>
+<blockquote class="blockquote">
+<p>Within these 2634 people: whoever is more open scores on average slightly lower on neuroticism, but openness and neuroticism share barely one per cent of their differences (<em>R</em>² = .01). Whether that also holds beyond these 2634, you don’t know yet.</p>
+</blockquote>
+<p>Look at what that second sentence does. Everything you’ve worked out in this chapter — the covariance, the correlation, the line, the residuals, the <em>R</em>² — describes the people in front of you, and nobody else. You’ve been given no reason at all to assume that the next 2634 people would show the same, and no way either of saying how likely that is.</p>
+<p>That is exactly where the next movement begins.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>exam practice</p>
+</div>
+</section>
+<section id="exam-style-questions" class="level2">
+<h2 class="anchored" data-anchor-id="exam-style-questions">Exam-style questions</h2>
+<p><span class="begrippen">DATA = FIT + RESIDUAL · <em>R</em>² from the misses · residual plot</span></p>
+<p>These six have the form an exam would ask this topic in: four options, and exactly one is the best — the other three may well be true and still not be the best answer. Only questions 2 and 3 need any arithmetic.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Exam-style questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exam-style questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> You add up all 342 misses of the line and zero comes out. What may you conclude from that about how well this line guesses?</p>
+<ol type="a">
+<li>Nothing: with every best-fitting line that sum is zero, even with a line that’s completely off.</li>
+<li>The line fits well: the misses above and below the line keep each other neatly in balance.</li>
+<li>The <em>R</em>² must be 1, because on balance nothing is left over.</li>
+<li>The line guesses neither too high nor too low on average, and that’s exactly what you want from a good line.</li>
+</ol>
+<p><strong>2.</strong> One of the twenty-two penguins with a flipper of 190 millimetres weighs 4250 grams. The line predicts 3659.4 grams for all twenty-two. How big is the miss for this animal?</p>
+<ol type="a">
+<li>−590.6 grams</li>
+<li>590.6 grams</li>
+<li>4250.0 grams</li>
+<li>7909.4 grams</li>
+</ol>
+<p><strong>3.</strong> For the line of weight on flipper length, the total sum of the squared deviations is 219 307 697 and the residual sum 52 854 796. What is the <em>R</em>² of this line?</p>
+<ol type="a">
+<li>.24</li>
+<li>.51</li>
+<li>.76</li>
+<li>3.15</li>
+</ol>
+<p><strong>4.</strong> The standard deviation of the weight is 801.95 grams, that of the misses 393.70 grams. In grams, then, the line makes the spread 51 per cent narrower, while the <em>R</em>² is .76. Which statement about those two numbers is the best?</p>
+<ol type="a">
+<li>One of the two must be wrong; the same gain can’t have two numbers.</li>
+<li>The 51 per cent counts in grams and the .76 in squared grams; it’s the same gain, measured twice.</li>
+<li>The .76 belongs to the line and the 51 per cent to the misses, so they’re about different things.</li>
+<li>The .76 is too optimistic: 51 per cent is what the line really saves you, and the <em>R</em>² inflates that by squaring.</li>
+</ol>
+<p><strong>5.</strong> You draw the residual plot: the guess on one axis, the miss on the other. What should be there, and what does it mean if there <em>is</em> a pattern in it?</p>
+<ol type="a">
+<li>A rising cloud — the miss should run along with the guess; if it lies flat, something has gone wrong.</li>
+<li>A shapeless cloud around the zero line; a pattern means the line has left something behind that it could have taken along.</li>
+<li>A shapeless cloud around the zero line; a pattern means there are measurement errors in the file.</li>
+<li>A falling cloud — big guesses always go with smaller misses.</li>
+</ol>
+<p><strong>6.</strong> You ask for the mean miss per species and it says: Adelie +43.5, Chinstrap −215.7 and Gentoo +65.8 grams. Yet the mean miss over all 342 animals is zero. Which statement is the best?</p>
+<ol type="a">
+<li>Those can’t both be true: three means that aren’t zero can’t add up to zero between them.</li>
+<li>The line is useless for Chinstraps and must be drawn separately for that species.</li>
+<li>The species carries information the line doesn’t have: within a group the balance may tilt, even though over all 342 animals it stands at zero.</li>
+<li>The three species differ too much in size, and so the biggest species pulls the mean towards zero.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-28-contents" aria-controls="callout-28" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-28" class="callout-28-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 a · 2 b · 3 c · 4 b · 5 b · 6 c</strong></p>
+<p>Below, for each question, is <em>why</em> — and why the other three options are tempting. If you got one right, you can skip it.</p>
+<p><strong>1. a.</strong> That zero is the construction and not the outcome: that’s how the line was laid. A number that’s always the same can’t tell you anything about what differs. <strong>b</strong> reads the balance as a compliment, and that’s the trap — plus and minus cancel out with a line that leaves all sorts behind, too. <strong>c</strong> confuses <em>nothing on balance</em> with <em>nothing</em>: the misses aren’t zero, their sum is zero, and the <em>R</em>² is .76. <strong>d</strong> is the trickiest, because the statement is true — the line guesses neither too high nor too low on average — and precisely <em>because of that</em> it says nothing: it holds for <em>every</em> best-fitting line, so it distinguishes this line from nothing.</p>
+<p><strong>2. b.</strong> DATA = FIT + RESIDUAL, so the miss is what’s really there minus what the line guessed: 4250 − 3659.4 = <strong>590.6</strong> grams. <strong>a</strong> has the sign the wrong way round and computes fit minus data; then this animal would be lighter than predicted, while it’s heavier. <strong>c</strong> names the weight itself. <strong>d</strong> adds instead of subtracting: 4250 + 3659.4 = 7909.4, and that’s heavier than the heaviest penguin in the file.</p>
+<p><strong>3. c.</strong> One minus the residual sum divided by the total sum: 1 − 52 854 796 / 219 307 697 = <strong>.76</strong>. <strong>a</strong> is the division without that one-minus in front — .24 is exactly the part the line does <em>not</em> take, and that’s exactly why the minus is there. <strong>b</strong> is the 51 per cent from question 4, the number in grams rather than in squared grams. <strong>d</strong> divides the fit sum by the residual sum: 166 452 902 / 52 854 796 = <strong>3.15</strong>. A share coming out above 1 is your clue that something hasn’t been divided by the total.</p>
+<p><strong>4. b.</strong> Think of all the difference in weight as a garden: along the edge the line wins just over half, in area three quarters. Area goes in squares, so square first and then divide. <strong>a</strong> looks for a mistake where there is none; both numbers can be checked. <strong>c</strong> sets the line and the misses against each other, but they come from the same bookkeeping — the <em>R</em>² <em>was</em> worked out from the misses. <strong>d</strong> calls squaring an inflating move. It’s a choice of measure, and it’s the measure that explaining an association comes in: area, not length.</p>
+<p><strong>5. b.</strong> Everything the line already knew has been calculated out, so what’s left over may no longer carry any pattern — and if there <em>is</em> a pattern in it, then there was still something in the misses the line could have used. <strong>a</strong> and <strong>d</strong> expect a direction in the residual plot, and there <em>can’t</em> be one: with a best-fitting line the association between the guess and the miss is exactly zero. That the plot is flat is therefore no sign that something has gone wrong, but the intention. <strong>c</strong> has the right cloud and the wrong conclusion: a pattern points to something the model is missing, not to faults in the scales.</p>
+<p>Note that <em>pattern</em> has two guises here, and you meet both. A pattern <strong>along the axis</strong> is an arc, or a fan that gets wider: then the miss goes with the height of the guess. A pattern <strong>per group</strong> is what you work out at i): within one species the misses lie on one side on average, while over all 342 animals together they come out at zero. The second you don’t see if you don’t colour the points — and that’s exactly why i) asks you to.</p>
+<p><strong>6. c.</strong> Over all 342 animals the mean miss is zero, because that’s how the line was laid — but within a group that balance is quite free to tilt. That the Chinstraps are systematically a good two hundred grams off means the species knows something the line doesn’t: the third player from 3.1, now visible in the misses. <strong>a</strong> is too quick: negative and positive <em>do</em> add up to zero between them, and these are unequal groups besides (151, 68 and 123 animals), so it doesn’t even count with the same number of animals per species. <strong>b</strong> jumps from an observation to an intervention; two hundred grams on an animal of a good three and a half kilos is small, and this exercise deliberately lets that line stand. <strong>d</strong> has the biggest species pulling the mean towards zero, and that’s the wrong way round: the zero isn’t there in spite of the species but by construction.</p>
+<p>The numbers in these six questions all appear earlier on this page. What’s new is the miss in question 2 and the wrong distractors — and those are all written out above as sums, so you can check them without having to take them on trust.</p>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W4">
+<p>◠ <strong>Same shape in the book</strong></p>
+<p>Here: the misses worked out yourself, and <em>R</em>² from the bookkeeping instead of from a button.</p>
+<p>In the book: <strong><a href="https://countcamp.org/en/book/h3.html">Chapter 3 — The Little Rectangle</a></strong></p>
+<p><em>That’s where DATA = FIT + RESIDUAL first lands; here you see what’s inside that third term, and that the explained part can simply be counted out of it.</em></p>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via the R package <code>palmerpenguins</code> (CC0). Every number in this exercise has been recomputed on that real data.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> 
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="pagination-link" aria-label="Exercise 3.2 · Simple regression">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Exercise 3.2 · Simple regression</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../90_basishandelingen.html" class="pagination-link" aria-label="Basic moves in JASP">
+        <span class="nav-page-text">Basic moves in JASP</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> 
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ contents':'⌫ hide contents';">⌫ hide contents</button>
+
+
+
+
+</body></html>
+<!-- countcamp-oefenboek jasp lab-commit=45ef2ee911a7e01f364602aa9f40e556aaaff302 geleverd=2026-11-28T12:08:50 -->

@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB"><head>
+
+<meta charset="utf-8">
+<link rel="canonical" href="https://countcamp.org/en/workbooks/jasp/20_blokken/blok_gemiddelde_spreiding.html">
+<!-- teller:begin — bezoekersteller (GoatCounter). Bron: _tools/teller.html; de bouw zet hem erin, nooit met de hand plakken. -->
+<script>
+(function () {
+  // Alleen de echte site telt. Op een proefdruk (broodje:8788, countcamp.org/pr-preview/),
+  // op localhost of in een los geopend bestand wordt count.js niet eens opgehaald.
+  var h = location.hostname, p = location.pathname;
+  if (h !== 'countcamp.org' && h !== 'www.countcamp.org') return;
+  if (p.indexOf('/pr-preview/') === 0) return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://gc.zgo.at/count.js';
+  s.setAttribute('data-goatcounter', 'https://countcamp.goatcounter.com/count');
+  document.head.appendChild(s);
+})();
+</script>
+<!-- teller:eind -->
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exercise 1.1 · The mean and the standard deviation – The JASP Exercise Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../libs/quarto-nav/quarto-nav.js"></script>
+<script src="../libs/quarto-nav/headroom.min.js"></script>
+<script src="../libs/clipboard/clipboard.min.js"></script>
+<script src="../libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../libs/quarto-search/fuse.min.js"></script>
+<script src="../libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../20_blokken/blok_mediaan_scheefheid.html" rel="next">
+<link href="../20_blokken/blok_voor_je_begint.html" rel="prev">
+<script src="../libs/quarto-html/quarto.js" type="module"></script>
+<script src="../libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../libs/quarto-html/popper.min.js"></script>
+<script src="../libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../libs/quarto-html/anchor.min.js"></script>
+<link href="../libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../libs/bootstrap/bootstrap.min.js"></script>
+<link href="../libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../libs/bootstrap/bootstrap-48057d16311d9d91ed8b4f19d25c6006.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../werkboek.css">
+<link rel="stylesheet" href="../werkboek_en.css">
+<link rel="alternate" hreflang="nl" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_gemiddelde_spreiding.html">
+<link rel="alternate" hreflang="en" href="https://countcamp.org/en/workbooks/jasp/20_blokken/blok_gemiddelde_spreiding.html">
+<link rel="alternate" hreflang="x-default" href="https://countcamp.org/oefenboeken/broertjes/jasp/20_blokken/blok_gemiddelde_spreiding.html">
+<style>
+/* taalknopje NL · EN op een losse bladzij die Quarto niet bouwt (_tools/taalwissel/stijl_knop_los.html) */
+.taalwissel-los{float:right;margin-left:1rem;font-size:.92rem;letter-spacing:.05em;line-height:1.6;color:inherit;}
+.taalwissel-los a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.taalwissel-los [aria-current]{font-weight:600;}
+.taalwissel-los .taalwissel-sep{margin:0 .45em;}
+</style>
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+<nav class="taalwissel taalwissel-los" aria-label="language"><a href="../../../../oefenboeken/broertjes/jasp/20_blokken/blok_gemiddelde_spreiding.html" hreflang="nl" lang="nl" title="Deze bladzij in het Nederlands">NL</a><span class="taalwissel-sep" aria-hidden="true">·</span><span aria-current="page">EN</span></nav>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">First movement · Difference under the microscope</li><li class="breadcrumb-item"><a href="../20_blokken/blok_gemiddelde_spreiding.html">Chapter 1 · The Average Gulp</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_gemiddelde_spreiding.html">Exercise 1.1 · The mean and the standard deviation</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">The JASP Exercise Book</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/book/h0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">← Back to the book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The JASP Exercise Book</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">First movement · Difference under the microscope</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 0 · In the Beginning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../installatie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.0 · Installing &amp; setting up</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_voor_je_begint.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 0.1 · Looking at the data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Chapter 1 · The Average Gulp</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_gemiddelde_spreiding.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Exercise 1.1 · The mean and the standard deviation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 2 · The Shape of the Heap</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_mediaan_scheefheid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 2.1 · Median, quartiles and skewness</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Second movement · Coupling differences</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Chapter 3 · The Little Rectangle</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_correlatie_scatterplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.1 · Correlation and the scatterplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_enkelvoudige_regressie.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.2 · Simple regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../20_blokken/blok_residuen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exercise 3.3 · Looking at the residuals</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../90_basishandelingen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic moves in JASP</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../91_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Shuffle toys</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://countcamp.org/en/toys/shuffle-correlation.html" class="sidebar-item-text sidebar-link" target="_blank">
+ <span class="menu-text">Shuffle the correlation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<main class="content" id="quarto-document-content">
+<p class="beweging">First movement · Difference under the microscope</p>
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">First movement · Difference under the microscope</li><li class="breadcrumb-item"><a href="../20_blokken/blok_gemiddelde_spreiding.html">Chapter 1 · The Average Gulp</a></li><li class="breadcrumb-item"><a href="../20_blokken/blok_gemiddelde_spreiding.html">Exercise 1.1 · The mean and the standard deviation</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Exercise 1.1 · The mean and the standard deviation</h1>
+<p class="subtitle lead">Mean and standard deviation</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">In this exercise</h2>
+   
+  <ul>
+  <li><a href="#no-penguin-weighs-exactly-the-mean" id="toc-no-penguin-weighs-exactly-the-mean">No penguin weighs exactly the mean</a></li>
+  <li><a href="#work-out-the-mean-in-jasp" id="toc-work-out-the-mean-in-jasp">Work out the mean in JASP</a></li>
+  <li><a href="#what-4202-grams-does-and-does-not-tell-you" id="toc-what-4202-grams-does-and-does-not-tell-you">What 4202 grams does and does not tell you</a></li>
+  <li><a href="#from-belly-to-bill" id="toc-from-belly-to-bill">From belly to bill</a></li>
+  <li><a href="#write-it-up-like-a-researcher" id="toc-write-it-up-like-a-researcher">Write it up like a researcher</a></li>
+  <li><a href="#exam-style-questions" id="toc-exam-style-questions">Exam-style questions</a></li>
+  </ul>
+</nav>
+<div class="datastrook">
+<p><strong>Data for this exercise</strong> — <a href="../10_data/penguins.csv" download="penguins.csv">penguins.csv</a> 342 penguins · <a href="../10_data/stones.csv" download="stones.csv">stones.csv</a> the twelve stones from the book · <a href="../91_datasets.html">what each column means</a></p>
+</div>
+<div class="kicker">
+<p>hook</p>
+</div>
+<section id="no-penguin-weighs-exactly-the-mean" class="level2">
+<h2 class="anchored" data-anchor-id="no-penguin-weighs-exactly-the-mean">No penguin weighs exactly the mean</h2>
+<p><span class="begrippen">mean · why nobody sits exactly in the middle</span></p>
+<p>Somewhere on a bare rock off Antarctica stands a set of scales, and around it shuffle 342 penguins who never asked for this.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> One by one they are picked up, set on the scales, and let go again. Each time, someone writes down one number. Weight, in grams. Nothing more: 342 animals, 342 numbers.</p>
+<p>Add up those 342 numbers, divide by 342, and out comes something tidy: <strong>4202 grams</strong>. There you have it, the average penguin: 4.2 kilos. Only — I have been through the list, and on that whole rock there is <strong>not a single penguin that weighs 4202 grams</strong>. Not one. The average penguin is not among them.</p>
+<p>That itches. One number that sums up 342 animals and belongs to none of them — what does a number like that actually tell you? And, perhaps more exciting: what does it leave out? Come along for a moment; we’re going to open that number up.</p>
+<div class="kicker">
+<p>play with it</p>
+</div>
+</section>
+<section id="work-out-the-mean-in-jasp" class="level2">
+<h2 class="anchored" data-anchor-id="work-out-the-mean-in-jasp">Work out the mean in JASP</h2>
+<p><span class="begrippen">mean · standard deviation · median</span></p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="First as in the book — the twelve stones · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>First as in the book — the twelve stones · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>stones.csv</code> and click <strong>Descriptives</strong>.</li>
+<li>Drag <code>shine</code> to <strong>Variables</strong>.</li>
+<li>Make sure that under <strong>Statistics</strong> <strong>Mean (arithmetic)</strong>, <strong>Std. deviation</strong> and <strong>Median</strong> are ticked (the first two are on already).</li>
+</ol>
+<p>The table now reads <em>M</em> = 50.00, <em>SD</em> = 21.74 and a median of 50.</p>
+</div>
+</div>
+<p>Twelve stones, the same three numbers as in the book. The mean is 50 and the median is 50 too — for these twelve, the two coincide.</p>
+<p>But where does that 21.74 come from? In the book the answer stands as a table, at the sum of squares: for each stone the deviation from the mean, that deviation squared, and at the bottom the sum of each column. Build that table here yourself. Two columns added, two sums, and you can lay your own table next to the one in the book.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="The table from the book, built yourself · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The table from the book, built yourself · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Stay in <code>stones.csv</code>. In the data view, click the <strong>+</strong> to the right of the last column (<em>Add computed column</em>), name the column <code>deviation</code>, choose type <strong>Scale</strong> and the <strong>R</strong> icon, and click <strong>Create Column</strong>. Type <code>shine - mean(shine)</code>: the shine minus the mean. Click <strong>Compute column</strong>. What you type there is a line of <strong>R</strong>. You don’t need to know that language; copying it exactly is enough. The steps are also in the <a href="../90_basishandelingen.html#twee-routes-één-handeling">toolbox</a>.</li>
+<li>One more column like that: <code>square</code>, with <code>deviation^2</code>. In the data view your two columns now stand next to <code>shine</code>: that is your table.</li>
+<li><strong>Descriptives</strong>: drag <code>deviation</code> and <code>square</code> to <strong>Variables</strong>, and under <strong>Statistics</strong> tick <strong>Sum</strong>.</li>
+</ol>
+<p>Under <strong>Sum</strong> you now read 0 for <code>deviation</code> and 5200 for <code>square</code> (JASP puts zeros after the point; the number is the same). The last two steps you do on your calculator: 5200 / 11 = 472.73, and the square root of that is 21.74.</p>
+</div>
+</div>
+<p>Lay your table next to the one in the book, beside the shine columns on the right. Anna stands at −30 and 900, Kees at −20 and 400: the same numbers. (The book puts a plus in front of the positive deviations, your program does not; the number is the same.) The sum of the deviations is 0, not roughly but exactly. The sum of the squares is 5200: the <em>sum of squares</em>. Divide that by eleven, twelve stones minus one, and you have the variance. The book shows why it is minus one, with three envelopes; here all you have to do is divide. Take the square root of that, and there it is: 21.74, the standard deviation you just got. Behind that one number is nothing but this table.</p>
+<p><strong>Now you</strong> — with the penguins you already looked at in <a href="../20_blokken/blok_voor_je_begint.html">Exercise 0.1</a>. So you know the data; the move is new. Watch what happens to that mean and that median once the heap stops being so well-behaved.</p>
+<p>Bring in the penguins and have three numbers worked out: the mean, the standard deviation and the median of the weight.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · give it a tug · JASP 0.99.0">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · give it a tug · JASP 0.99.0
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Open <code>penguins.csv</code> in JASP (menu top left → Open).</li>
+<li>Click <strong>Descriptives</strong> at the top.</li>
+<li>Drag <code>body_mass_g</code> to the <strong>Variables</strong> box.</li>
+<li>Open the <strong>Statistics</strong> section and make sure that <strong>Mean (arithmetic)</strong>, <strong>Std. deviation</strong> and <strong>Median</strong> are ticked (the first two are on already). The table appears on the right and recalculates as you go.</li>
+</ol>
+</div>
+</div>
+<p>Three numbers. Read them one at a time:</p>
+<ul>
+<li><strong>Mean: <em>M</em> = 4202.</strong> The balance point. Think of all the weights as marbles on a long plank: put your finger under 4202 and the plank sits level. The “middle” — but the middle the weight pivots around.</li>
+<li><strong>Standard deviation: <em>SD</em> = 802.</strong> The answer to the question that comes straight after the middle: <em>and how far around it do they lie?</em> Something like the average distance to the middle: a penguin here typically sits 800 grams or so from the mean — some much closer, some much further. (For the purist: the formula squares those distances first and takes the square root afterwards, as you just did with the stones. You can simply keep the reading intuition “typical distance to the mean”.)</li>
+<li><strong>Median = 4050.</strong> The middle penguin: put all 342 in a row from light to heavy and see who stands halfway. Hang on — that one sits a fair bit lower than the mean. Hold on to that itch; it comes back in a moment.</li>
+</ul>
+<div class="formule callout callout-style-default callout-note callout-titled" title="The strict reading — average distance or standard deviation?">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The strict reading — average distance or standard deviation?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Fair is fair: <em>“the average distance to the middle”</em> is not exactly what a standard deviation is. In this book I mostly choose that cosy, slightly wrong reading anyway, because it works. Here, just this once, you see how things really stand.</p>
+<p>Take your table of the twelve stones. In the <code>deviation</code> column, strip off the minus signs and add everything up: 220. Divide by twelve, so simply averaging: 220 / 12 = 18.33. <em>That</em> is the average distance to the middle. The standard deviation of the shine was 21.74: a different number, and a bigger one.</p>
+<p>That is mostly the square’s doing. Anna lies three times as far from the middle as Hans, 30 against 10, but in the <code>square</code> column she counts nine times as heavily, 900 against 100. That is how the stones far from the middle pull the standard deviation up. A small part comes from dividing by eleven instead of twelve: divide the 5200 by twelve as well and take the root, and you land on 20.82, still a good way above the 18.33. With or without that minus one, the standard deviation never comes out below the plain average distance.</p>
+<p>A report always gives the standard deviation. And if someone asks what that number is, you may say it the cosy way, with one thing added: roughly the typical distance to the middle, but by way of the squares, and so a little bigger.</p>
+</div>
+</div>
+</div>
+<p>But there is another column in the file: <code>species</code>. Three species of penguin walk that rock — Adelie, Chinstrap and Gentoo. Work out the mean per species, and throw the weights into a picture as well.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · per species">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · per species
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>In the same <strong>Descriptives</strong> analysis, open the <strong>Basic Plots</strong> section and tick <strong>Distribution plots</strong> — there are all 342 weights in one picture.</li>
+<li>Now drag <code>species</code> to the <strong>Split</strong> box: the table splits into three columns, one per species, and you read the three means straight off. (The picture splits along with it; if you want the one big hill back, take <code>species</code> out of <strong>Split</strong> for a moment.)</li>
+</ol>
+</div>
+</div>
+<p>And there, the one number comes apart. <strong>Adelie: <em>M</em> = 3701. Chinstrap: <em>M</em> = 3733. Gentoo: <em>M</em> = 5076.</strong> Two species sitting close together around 3.7 kilos — and one species hanging a good kilo above them. The picture says the same thing in shape: not a neat hill with one top, but a hill with a thick shoulder on the right. That shoulder is the Gentoos.</p>
+<div class="kicker">
+<p>get it</p>
+</div>
+</section>
+<section id="what-4202-grams-does-and-does-not-tell-you" class="level2">
+<h2 class="anchored" data-anchor-id="what-4202-grams-does-and-does-not-tell-you">What 4202 grams does and does not tell you</h2>
+<p><span class="begrippen"><em>M</em> and <em>SD</em> together · outliers · what one number leaves unsaid</span></p>
+<p>Back to 4202. What is that number still worth?</p>
+<p>More than you might think — and less. First the gain. <strong><em>M</em></strong> says where the middle is, and <strong><em>SD</em></strong> says how widely the animals live around it. Those two together are already half a distribution: “mean 4202, typically 800 or so either side” tells you that a penguin of 3500 or of 4900 grams is perfectly ordinary here (within one <em>SD</em> of the middle), and that the heaviest on the rock — 6300 grams — is a hefty outlier. Whoever reports only the mean gives you a place without an outline; the <em>SD</em> is the outline.</p>
+<p>Then the loss. That one mean, 4202, mixes three species together. Two species live around 3700, one around 5076 — and 4202 is the middle of none of the three: for the two light species it is a heavy penguin, for the Gentoos a light one. The average penguin does not exist, and now you can see <em>why</em> not: it is not a typical animal, it is the balance point of a mixed crowd. (That nobody weighs exactly 4202 grams says little in itself: the scales on the rock weigh in steps of 25 grams, so 4202 <em>can’t</em> even appear on them.)</p>
+<p>And look what that mixing does to the <em>SD</em>. Within one species the spread is much smaller — Adelie 459, Chinstrap 384, Gentoo 504 — but across everything it was 802. That difference is not extra individual variation: it is the difference between the species, dressed up as spread. One number for the middle hides three middles; one number for the spread counts the distance between groups as if it were ordinary wobble.</p>
+<p>Now for the median’s itch. 4050 against 4202: the mean lies higher, because the heavy Gentoo shoulder on the right pulls the balance point towards itself — the median couldn’t care less about shoulders and outliers, it only counts who stands halfway along the row. When mean and median drift apart, that is a signal: this distribution is skewed, or made of pieces. That is what the exercise on the <em>shape</em> of distributions is about; and whether such a difference between groups is real or could also have been chance, that we will shuffle later. For now, the signal will do.</p>
+<p>In plain words, one sentence: <em>these 342 penguins weigh about 4.2 kilos on average, with a typical deviation of a little over 800 grams — but that mean mixes three species that each live around a middle of their own.</em></p>
+<p>And that is, from now on, how you read every mean you come across — “the average Dutchman”, “the average income”, “the average patient”. Two questions to go with it, always: <em>how far around it do they lie?</em> (ask for the <em>SD</em>) and <em>who exactly is in that mean?</em> (ask for the groups). A mean without those two answers is an address without a town.</p>
+<div class="kicker">
+<p>your turn</p>
+</div>
+</section>
+<section id="from-belly-to-bill" class="level2">
+<h2 class="anchored" data-anchor-id="from-belly-to-bill">From belly to bill</h2>
+<p><span class="begrippen">the same two measures on a second variable</span></p>
+<p>Your turn — from belly to bill. <code>penguins.csv</code> also holds the column <code>bill_length_mm</code> (in mm). The same two measures, a different variable — and a heap that lies just a little differently from the one for weight.</p>
+<p>But first, one column that is <em>not</em> complete. Until now every penguin had a weight and a bill. In <code>nitrogen</code> the measurement is missing for a few animals. That number is not an amount of nitrogen but a measure of <em>what</em> a penguin ate, read from its blood (see <a href="../91_datasets.html">what each column means</a>). That is where question a) starts.</p>
+<p>First set up the analysis below, then answer the questions. In brackets, each time, is what belongs in a complete answer, so you can check yourself without opening our answer. Where it says <em>more than one answer is right</em>, the wording is up to you — for the rest, the answer is fixed. The last question is called <strong>Z)</strong> on purpose, and not m): the assumptions always come last, and the odd letter says <em>“and also, every time, this one”</em>.</p>
+<div class="jasp callout callout-style-default callout-note callout-titled" title="In JASP · first the gaps, then the bills">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>In JASP · first the gaps, then the bills
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>In the same <strong>Descriptives</strong> analysis, drag <code>nitrogen</code> to the <strong>Variables</strong> box (and <code>body_mass_g</code> out). To check: <strong>Valid</strong> 330, <strong>Missing</strong> 12, <em>M</em> = 8.73.</li>
+<li><strong>What is switched on?</strong> JASP leaves a penguin without a measurement out by itself and carries on with the rest. It does say so, in the <strong>Missing</strong> row, but only whoever looks there sees it. The number you computed with is under <strong>Valid</strong>, and that is not the number of rows in your file.</li>
+<li>Then put <code>bill_length_mm</code> in the <strong>Variables</strong> box (and <code>nitrogen</code> out). Under <strong>Statistics</strong>, <strong>Mean (arithmetic)</strong>, <strong>Std. deviation</strong> and <strong>Median</strong> are already on. To check: <em>M</em> = 43.92, <em>SD</em> = 5.46, <em>Mdn</em> = 44.45. Under <strong>Basic Plots</strong>, <strong>Distribution plots</strong> is still on: there is the whole heap of bill lengths.</li>
+<li>Drag <code>species</code> to the <strong>Split</strong> box: the same three measures, now per species in a column of its own. Put <code>nitrogen</code> in alongside for a moment, and the <strong>Missing</strong> row also shows you how many gaps each species has. Then take <code>species</code> out of <strong>Split</strong> again.</li>
+<li>For question e) you make a column that says, for each penguin, whether its bill lies within one standard deviation. In the data view, click the <strong>+</strong> to the right of the last column (<em>Add computed column</em>), name the column <code>inside</code>, choose the <strong>R</strong> icon, click <strong>Create Column</strong> and type <code>abs(bill_length_mm - mean(bill_length_mm)) &lt;= sd(bill_length_mm)</code>. Copy it exactly; you don’t have to read it. For each penguin it asks: <em>is this bill no further from the mean than one standard deviation?</em> Click <strong>Compute column</strong>, put <code>inside</code> under <strong>Variables</strong> and tick <strong>Frequency tables</strong>. To check: true 204 times.</li>
+</ol>
+</div>
+</div>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Your turn">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Your turn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> Work out the mean of <code>nitrogen</code>. How many penguins are you computing with then, and why isn’t that 342? (two numbers, and one sentence)</p>
+<p><strong>b)</strong> Compute the mean and the standard deviation of the bill length. (two numbers to two decimals, with their unit)</p>
+<p><strong>c)</strong> Say in one sentence what that mean says about the bills. (about bills — a number is allowed, as long as its unit is there)</p>
+<p><strong>d)</strong> And what does that standard deviation say? (one sentence, with the word <em>distance</em> in it)</p>
+<p><strong>e)</strong> Count how many penguins have a bill that lies within one standard deviation of the mean, so between 43.92 − 5.46 and 43.92 + 5.46 mm. What percentage of the 342 is that? For a heap shaped like a bell (one hill, thick in the middle) a rule of thumb says about 68% lie there. Does that hold here, and why or why not? (a count, a percentage, and one sentence about the shape of the heap in your picture)</p>
+<p><strong>f)</strong> Look up the median. Does it lie above or below the mean? (one number, and which way)</p>
+<p><strong>g)</strong> For weight the median was 4050 and the mean 4201.75. For both variables, subtract the median from the mean. (two numbers, and one sentence about what the sign tells you)</p>
+<p><strong>h)</strong> Is that 5.46 mm a lot, then? For both variables, divide the standard deviation by its own mean — why may you lay <em>those</em> two side by side, and not the bare 5.46 mm and 801.95 g? (two percentages, and one sentence)</p>
+<p><strong>i)</strong> Work out the mean per species. (three numbers, with their <em>n</em>)</p>
+<p><strong>j)</strong> For weight, Adelie and Chinstrap lay close together and Gentoo hung a good kilo above them. Which two lie together here? (two species names, and one sentence)</p>
+<p><strong>k)</strong> Work out the standard deviation per species and lay those three next to the 5.46 of all 342 together. (three numbers, and one sentence about where the difference comes from)</p>
+<p><strong>l)</strong> Write a conclusion about what it all means, in no more than five sentences. (about penguins and species — a number is allowed, as long as its unit is there; more than one answer is right)</p>
+<p><strong>Z) Can you believe everything above?</strong> Check:</p>
+<ul>
+<li>are measurements missing, and would they shift your mean and spread?</li>
+<li>does every row measure the same thing — the same bill, the same unit?</li>
+<li>does that one mean describe one heap, or three heaps mixed together?</li>
+</ul>
+<p>And then the question that always belongs at the end: if something goes wrong, which answers above do you redo, and which may stand?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>a)</strong> <strong><em>M</em> = 8.73 ‰</strong>, computed on <strong>330</strong> of the 342 penguins. For twelve animals the nitrogen measurement is missing (too little blood, no blood sample, or a result that never came back from the lab), and those twelve cannot take part. So always put the <em>n</em> with it: “mean 8.73” without <em>n</em> hides the fact that twelve penguins are missing. The box <em>What is switched on?</em> above tells you whether your program refuses at such a gap or quietly carries on computing.</p>
+<p><strong>b)</strong> <strong><em>M</em> = 43.92 mm</strong> and <strong><em>SD</em> = 5.46 mm</strong>.</p>
+<p><strong>c)</strong> The balance point of all 342 bills lies at almost 44 millimetres. And just as with weight, nobody lives there: rounded to one decimal, not a single penguin has a bill of 43.9 mm.</p>
+<p><strong>d)</strong> A bill here lies typically some 5.5 mm from that balance point — the average distance to the middle, roughly.</p>
+<p><strong>e)</strong> <strong>204</strong> of the 342 penguins, or <strong>59.6%</strong>: a good way below the 68%. The rule of thumb holds for a bell, and the bills are not a bell. In your picture you see two humps: the Adelies with short bills, around 39 mm, and the Chinstraps and Gentoos with long ones, around 48 mm. The mean of 43.92 falls in the thin stretch between them. So right around that middle there are fewer penguins than in a bell, and then fewer fall within one standard deviation too. It is the <em>shape</em> that breaks the 68%: two humps with a thin middle. The bell shape itself you will meet further on in the book.</p>
+<p><strong>f)</strong> The median is <strong>44.45 mm</strong> and so lies <strong>above</strong> the mean.</p>
+<p><strong>g)</strong> Weight: 4201.75 − 4050 = <strong>+151.75 grams</strong>. Bill: 43.92 − 44.45 = <strong>−0.53 mm</strong>. The sign flips, and that is the news. For weight, the heavy Gentoo shoulder pulled the balance point to the right, above the middle penguin; for the bills the heap leans a touch the other way. The same 342 animals, two variables, two shapes.</p>
+<p><strong>h)</strong> Bill: 5.46 / 43.92 = <strong>12.4%</strong>. Weight: 801.95 / 4201.75 = <strong>19.1%</strong>. Millimetres and grams cannot be laid side by side — 5.46 against 801.95 only says that a gram is smaller than a millimetre is big. Divide each spread by its own middle and the unit drops out above <em>and</em> below the fraction bar, leaving you a bare number that you <em>may</em> compare. And then it turns out the weight spreads, relatively, a good one and a half times as widely as the bill.</p>
+<p><strong>i)</strong> Adelie <strong><em>M</em> = 38.79</strong> (<em>n</em> = 151), Chinstrap <strong><em>M</em> = 48.83</strong> (<em>n</em> = 68), Gentoo <strong><em>M</em> = 47.50</strong> (<em>n</em> = 123).</p>
+<p><strong>j)</strong> <strong>Chinstrap and Gentoo</strong> lie close together here, 48.83 against 47.50; <strong>Adelie</strong> stands apart, nine to ten millimetres below. For weight the grouping was exactly the other way round — there Adelie and Chinstrap belonged together and Gentoo stood alone. So which species “belong together” depends on <em>what</em> you measure, and not on the species.</p>
+<p><strong>k)</strong> Adelie <strong>2.66</strong>, Chinstrap <strong>3.34</strong>, Gentoo <strong>3.08</strong> — all three well below the <strong>5.46</strong> of the whole rock. You saw the same thing happen with weight: within a species the spread is small, and what you measure on top of that, across the whole rock, is no longer individual difference but the difference between the species, dressed up as spread.</p>
+<p><strong>l)</strong> More than one answer is right; which five sentences you choose is up to you. Numbers are allowed — what matters is that every number says what it measures, because “43.92” is nothing and “43.92 millimetres of bill” is a penguin. For example: the 342 penguins have a bill of almost 44 millimetres on average, with a typical deviation of about five and a half millimetres. That one mean describes no penguin at all, because three species are mixed together: the Adelies have clearly shorter bills than the Chinstraps and the Gentoos, which hardly differ from each other. Within a species the spread is about three millimetres — well below the five and a half of the whole rock. So whoever knows the species already knows a good deal about how long the bill is.</p>
+<p><strong>Z)</strong> Yes — and mind <em>why</em>, because the answer here is different from the one you will get later. In this exercise nothing was tested and nothing was estimated: you have only described these 342 penguins. So almost nowhere does a distributional assumption sit under your answers. The only one is the 68% at e), and you already saw that one go down: that rule belongs to a bell, and the bills are not one. What fell there is the expectation of 68%; your count of 204 simply stands.</p>
+<p>What <em>can</em> fall over here is the data itself.</p>
+<ul>
+<li><strong>Stands, as long as the <em>n</em> is there:</strong> a). That mean is about 330 penguins, not 342. Then also look at <em>where</em> the gaps are: count them per species (the box at the top shows how). Ten of the twelve are among the Adelies, while that species is not even half the rock (151 of the 342). So the mean of the 330 leans a little less on Adelies than that of all 342 would have. How much difference that makes, you don’t know: those twelve measurements you simply don’t have.</li>
+<li><strong>Stands:</strong> d) up to and including k). They are descriptions of exactly these 342 animals, and they stay right as long as the measurements are right. If a row were added or one dropped out, they would all shift along — not because an assumption breaks, but because you are describing something else.</li>
+<li><strong>Stands, with a warning attached:</strong> b), and with it c) and l). The number 43.92 is simply right. But the sentence <em>“the average penguin has a bill of 43.9 mm”</em> is misleading, and the third question above is exactly why: that mean mixes three species. The number answers a different question from the one you thought you were asking.</li>
+</ul>
+<p>And that is the habit this exercise wants to send you off with: <strong>before you read out a mean, first check whether it is about one heap.</strong> Later, once there is testing, a second list joins this one — the answers you have to redo.</p>
+</div>
+</div>
+</div>
+<div class="kicker">
+<p>reporting</p>
+</div>
+</section>
+<section id="write-it-up-like-a-researcher" class="level2">
+<h2 class="anchored" data-anchor-id="write-it-up-like-a-researcher">Write it up like a researcher</h2>
+<p><span class="begrippen">reporting · <em>M</em> and <em>SD</em> in one sentence · italics</span></p>
+<div class="apa callout callout-style-default callout-note callout-titled" title="Reporting">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reporting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Reporting sounds like something with thick handbooks and cold sweat, but it is a <strong>shopping list in sentence form</strong>: what did you study, where did it lie, how spread out — done. Look:</p>
+<blockquote class="blockquote">
+<p>The 342 penguins in the sample weighed over four kilos on average (<em>M</em> = 4201.75 g, <em>SD</em> = 801.95).</p>
+</blockquote>
+<p>That’s it. The whole report — and the sentence stands on its own feet: who got weighed, what was measured, and in brackets the two numbers. Almost too simple for words, and that is exactly the nice part: it is allowed to be this simple. Two small conventions are already creeping in: <em>only</em> the symbols <em>M</em> and <em>SD</em> are in italics — the ordinary words stay upright — and decimals get a point (43.9, not a comma).</p>
+<p>Your turn: write a self-standing sentence like that for the bill length (<em>M</em> = 43.92, <em>SD</em> = 5.46). Reading it out loud is allowed. You get used to it quickly, promise.</p>
+</div>
+</div>
+<div class="kicker">
+<p>exam practice</p>
+</div>
+</section>
+<section id="exam-style-questions" class="level2">
+<h2 class="anchored" data-anchor-id="exam-style-questions">Exam-style questions</h2>
+<p><span class="begrippen">what an <em>SD</em> measures · mean against median · relative spread · reporting with <em>n</em></span></p>
+<p>Above were the open questions; here are the same topics once more, in the form an exam would ask them in. Six of them, four options, and exactly one is the best — the other three may well be true and still not the best answer. Calculating is only needed for question 1, and there the options lie far enough apart to estimate; you don’t need an exact number.</p>
+<div class="opgave callout callout-style-default callout-note callout-titled" title="Exam-style questions">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exam-style questions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>1.</strong> “Within one standard deviation of the mean” means: between <em>M</em> − <em>SD</em> and <em>M</em> + <em>SD</em>. The mean weight is <em>M</em> = 4201.75 grams and the standard deviation <em>SD</em> = 801.95 grams. Where do those two limits lie?</p>
+<ol type="a">
+<li>2597.85 and 5805.66 grams</li>
+<li>2700 and 6300 grams</li>
+<li>3399.80 and 5003.70 grams</li>
+<li>3800.78 and 4602.73 grams</li>
+</ol>
+<p><strong>2.</strong> The mean weight on the rock is 4202 grams, and not a single penguin weighs exactly that. Why does this mean not describe an ordinary penguin?</p>
+<ol type="a">
+<li>Because not a single penguin weighs exactly 4202 grams: a mean that nobody weighs describes nobody.</li>
+<li>The weights are right-skewed, and then the mean lies beside the hump.</li>
+<li>The mean is the balance point of three species that each live around a middle of their own: for the two light species 4202 is heavy, for the Gentoos it is light.</li>
+<li>The heaviest penguin, at 6300 grams, lifts the mean away from the other animals.</li>
+</ol>
+<p><strong>3.</strong> For weight the mean lies at 4201.75 grams and the median at 4050 grams. Which statement about those two is the best?</p>
+<ol type="a">
+<li>The mean lies higher because the heavy Gentoos pull the balance point towards themselves; the median only counts who stands halfway along the row.</li>
+<li>The median is the better measure here, because with a mixed heap you may not use the mean.</li>
+<li>The mean is the better measure here, because it uses all 342 animals and the median throws information away.</li>
+<li>That the two lie 151.75 grams apart points to measurement errors in the weights.</li>
+</ol>
+<p><strong>4.</strong> Weight spreads with <em>SD</em> = 801.95 grams, bill length with <em>SD</em> = 5.46 mm. You want to know which of the two spreads <strong>relatively</strong> more widely. Which calculation goes with that question?</p>
+<ol type="a">
+<li>801.95 − 5.46, the difference between the two standard deviations.</li>
+<li>801.95 / 5.46, the one standard deviation divided by the other.</li>
+<li>Simply lay the two side by side; weight clearly spreads more widely.</li>
+<li>Divide each standard deviation by its own mean, and lay those two bare numbers side by side.</li>
+</ol>
+<p><strong>5.</strong> Of the 342 penguins, 204 (59.6%) have a bill within one standard deviation of the mean. For a heap shaped like a bell, a rule of thumb says about 68% lie there. Why does this heap not get there?</p>
+<ol type="a">
+<li>342 penguins is too few; with more animals that 68% does turn up.</li>
+<li>The heap has two humps with a thin middle, so right around the mean there are fewer animals than in a bell.</li>
+<li>The mean, at 43.92 mm, lies below the median of 44.45 mm, and a difference like that always pushes the count below the 68%.</li>
+<li>The rule of thumb belongs to the median and not to the mean.</li>
+</ol>
+<p><strong>6.</strong> The mean of <code>nitrogen</code> is 8.73 ‰, and for twelve of the 342 penguins that measurement is missing. Which report is the best?</p>
+<ol type="a">
+<li><em>M</em> = 8.73 ‰ (<em>n</em> = 342) — that is how many penguins are in the file.</li>
+<li>You may not report this mean, because JASP left out the twelve penguins without a measurement and computed over the rest.</li>
+<li><em>M</em> = 8.73 ‰ (<em>n</em> = 330) — with twelve missing measurements you computed over 330 animals.</li>
+<li>Set the twelve gaps to zero, then you compute over all 342 and hide nothing.</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="Answer — open after your own attempt">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Answer — open after your own attempt
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>1 c · 2 c · 3 a · 4 d · 5 b · 6 c</strong></p>
+<p>Below, for each question, is <em>why</em> — and why the other three options are tempting. If you got one right, you can skip it.</p>
+<p><strong>1. c.</strong> The <em>SD</em> taken off once and added on once: <strong>3399.80</strong> and <strong>5003.70</strong> grams. In between lives the perfectly ordinary middle of the rock — a penguin of 5000 grams still <em>just</em> fits inside. <strong>a</strong> works with two standard deviations instead of one. <strong>b</strong> is the lightest and the heaviest penguin; that is the range, and it hangs on two animals. <strong>d</strong> halves the <em>SD</em> and shares it out over the two sides, as if “within one <em>SD</em>” meant that the whole band is one <em>SD</em> wide — it is two.</p>
+<p><strong>2. c.</strong> Two species live around 3700 grams and one around 5076, and 4202 is an ordinary weight for none of the three. <strong>a</strong> is the hook of this exercise, and it proves less than it seems: the scales on the rock weigh in steps of 25 grams — all 342 weights are a multiple of 25 — so a weight like 4202 <em>cannot</em> even be there. There are plenty of penguins around 4200: five weigh exactly 4200, thirty from 4100 up to and including 4300. That nobody weighs exactly the mean says something about the scales; that the mean fits none of the species says something about the penguins — and an exam asks about that difference. <strong>b</strong> names the shape and not the cause. <em>That</em> the heap leans to the right, this exercise says itself — but that explains why the mean lies <em>higher</em> than the median, not why it fits none of the species. The two are easily confused: skewness shifts the mean <em>up</em>, the mixing of species puts it between the species. <strong>d</strong> makes one animal of what is a whole group — take that 6300 away and the mean shifts a few grams; take the Gentoos away and it shifts hundreds of grams.</p>
+<p><strong>3. a.</strong> The median counts places in the row, the mean weighs the distances too, and so the heavy Gentoo shoulder pulls only on the mean. <strong>b</strong> picks the same middle on the strength of a ban that does not exist: a mean <em>is</em> allowed with a mixed heap, it just answers a different question — if you want to know how much these 342 animals weigh together, the mean is exactly right. <strong>c</strong> is right in what it claims (the mean really does use all 342) and draws the wrong conclusion; “more animals taken in” is not the same as “better middle”. <strong>d</strong> invents a cause that isn’t there: the two middles drift apart <em>because</em> the heap is skewed or made of pieces, not because the weighing was sloppy.</p>
+<p><strong>4. d.</strong> Divide each spread by its own mean and the unit drops out above <em>and</em> below the fraction bar, leaving you two bare numbers: 12.4% for the bill and 19.1% for the weight. <em>Those</em> you may compare. <strong>a</strong> subtracts grams from millimetres, and then the result is neither. <strong>b</strong> is the most tempting, because a ratio already <em>feels</em> unit-free — but above the bar are grams and below it millimetres, and those do not cancel each other out. <strong>c</strong> draws the very conclusion the question warns against: 801.95 is only a bigger number, not a wider spread.</p>
+<p><strong>5. b.</strong> Your histogram shows two humps — the Adelies around 39 mm, the Chinstraps and Gentoos around 48 — with the mean of 43.92 in the thin stretch between them. So right around that middle there are fewer animals than in a bell, and then fewer fall within one standard deviation too. It is the <strong>shape</strong> that breaks the rule of thumb. <strong>a</strong> points at the sample size, and that is exactly what plays no part here: the rule of thumb hangs on the shape of the heap, not on how many animals are in it. <strong>c</strong> builds, on two correct numbers, a cause that isn’t there. That the two middles lie apart is indeed a sign <em>that</em> the heap is not a bell — at g) that is called <em>“the news”</em>, and so it is. But that sign is in the <strong>direction</strong>, not in the size: 0.53 mm on a spread of 5.46 mm is too small to tell <em>which</em> way the count goes, let alone “always”. <strong>d</strong> moves the rule over to the median; the rule of thumb was written with the mean and the standard deviation.</p>
+<p><strong>6. c.</strong> The <em>n</em> belongs with it, and the <em>n</em> is 330. “Mean 8.73” without <em>n</em> hides the fact that twelve penguins are missing. <strong>a</strong> gives the number of rows in the file instead of the number of animals computed with, and here those are two different numbers — that is the whole trap of a column with gaps. <strong>b</strong> confuses what JASP does with what you may do: that it leaves out the twelve is stated plainly in the <strong>Missing</strong> row, and what remains is a perfectly reportable mean over the animals that <em>are</em> there. <strong>d</strong> is the most dangerous of the three, because it looks like honesty: zero is not a missing measurement but a measured zero, and twelve zeros added in pull the mean down to a number that describes no penguin at all.</p>
+<p>If you want to see for yourself where the numbers from question 1 come from: you work out the right two on your calculator from the numbers in the question, 4201.75 − 801.95 = 3399.80 and 4201.75 + 801.95 = 5003.70. The lightest and the heaviest penguin of option <strong>b</strong> are in <strong>Descriptives</strong> under <em>Minimum</em> and <em>Maximum</em>. Options <strong>a</strong> and <strong>d</strong> were computed on the unrounded mean and the unrounded standard deviation; if you check them with the rounded numbers from the question, the last digit can differ by a hundredth. That is rounding, not a different sum.</p>
+</div>
+</div>
+</div>
+<div class="boekvorm" data-w="W1">
+<p>◠ <strong>Same shape in the book</strong></p>
+<p>Here: one number for the middle, one for the room around it — and the discovery that this middle fits none of the species.</p>
+<p>In the book: <strong><a href="https://countcamp.org/en/book/h1.html">Chapter 1 — The Average Gulp</a></strong></p>
+<p><em>There, you taste why some things can be averaged and others cannot.</em></p>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Palmer Penguins — Gorman, Williams &amp; Fraser (2014), Palmer Station Antarctica LTER; via the R package <code>palmerpenguins</code> (CC0). Every number in this exercise has been recomputed on that real data.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> 
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../20_blokken/blok_voor_je_begint.html" class="pagination-link" aria-label="Exercise 0.1 · Looking at the data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Exercise 0.1 · Looking at the data</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../20_blokken/blok_mediaan_scheefheid.html" class="pagination-link" aria-label="Exercise 2.1 · Median, quartiles and skewness">
+        <span class="nav-page-text">Exercise 2.1 · Median, quartiles and skewness</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> 
+<button id="toc-toggle" onclick="document.documentElement.classList.toggle('toc-weg'); this.textContent=document.documentElement.classList.contains('toc-weg')?'☰ contents':'⌫ hide contents';">⌫ hide contents</button>
+
+
+
+
+</body></html>
+<!-- countcamp-oefenboek jasp lab-commit=45ef2ee911a7e01f364602aa9f40e556aaaff302 geleverd=2026-11-28T12:08:50 -->
